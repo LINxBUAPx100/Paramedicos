@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R.E.S.C.A.T.E. - Plan de Estudios Paramedico</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+</head>
+<body>
+    <!-- Botón para modo oscuro/claro -->
+    <button id="theme-toggle" class="theme-toggle" aria-label="Cambiar tema">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <!-- Barra de navegación -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1>R.E.S.C.A.T.E.</h1>
+                <p class="nav-subtitle">Red de Enseñanza en Sistemas de Capacitación y Atención Técnica de Emergencias</p>
+            </div>
+            
+            <button class="nav-toggle" aria-label="Menú de navegación">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <ul class="nav-menu">
+                <!-- INSTRUCCIÓN: Para agregar nuevas secciones a la navegación, añade un nuevo <li> con un enlace al ID correspondiente -->
+                <li><a href="#inicio" class="nav-link">Inicio</a></li>
+                <li><a href="#modulo1" class="nav-link">Módulo 1</a></li>
+                <li><a href="#modulo2" class="nav-link">Módulo 2</a></li>
+                <li><a href="#modulo3" class="nav-link">Módulo 3</a></li>
+                <li><a href="#modulo4" class="nav-link">Módulo 4</a></li>
+                <li><a href="#modulo5" class="nav-link">Módulo 5</a></li>
+                <li><a href="#modulo6" class="nav-link">Módulo 6</a></li>
+                <li><a href="#modulo7" class="nav-link">Módulo 7</a></li>
+                <li><a href="#servicio" class="nav-link">Servicio Social</a></li>
+                <li><a href="#cursos" class="nav-link">Cursos Extra</a></li>
+                <li><a href="#recursos" class="nav-link">Mis Recursos</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Sección de inicio -->
+    <section id="inicio" class="section hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2 class="hero-title">Plan de Estudios<br><span class="highlight">PARAMÉDICO</span></h2>
+                <p class="hero-subtitle">TU VOCACIÓN TIENE PULSO</p>
+                <p class="hero-description">Programa de formación integral para técnicos en urgencias médicas con enfoque práctico y certificación oficial.</p>
+                <div class="hero-cta">
+                    <a href="#modulo1" class="btn btn-primary">Comenzar Estudio</a>
+                    <a href="#recursos" class="btn btn-secondary">Ver Mis Recursos</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <!-- INSTRUCCIÓN: Para cambiar la imagen principal, sustituye el src por la ruta de tu imagen -->
+                <img src="assets/images/placeholder.jpg" alt="Estudiante paramédico" class="hero-img">
+            </div>
+        </div>
+    </section>
+
+    <!-- Contenedor principal para los módulos -->
+    <main class="main-content">
+        <!-- 
+        INSTRUCCIÓN: PARA AGREGAR UN NUEVO MÓDULO:
+        1. Copia la estructura de una sección <section> existente
+        2. Cambia el id (ej: #modulo8) y el contenido
+        3. Añade el enlace correspondiente en la barra de navegación
+        4. Agrega los datos de flashcards y quizzes en los archivos JSON correspondientes
+        -->
+
+        <!-- Módulo 1: Propedéutico -->
+        <section id="modulo1" class="section module">
+            <div class="container">
+                <div class="module-header">
+                    <span class="module-number">Módulo 1</span>
+                    <h2 class="module-title">PROPEDÉUTICO (PRIMEROS AUXILIOS BÁSICOS E INTERMEDIOS)</h2>
+                    <div class="module-tags">
+                        <span class="tag">Básico</span>
+                        <span class="tag">Certificación</span>
+                    </div>
+                </div>
+                
+                <div class="module-content">
+                    <div class="module-topics">
+                        <h3>Temas del Módulo:</h3>
+                        <ul>
+                            <li>Primeros auxilios básicos</li>
+                            <li>Primeros auxilios intermedios</li>
+                            <li>Introducción al sistema médico de urgencias</li>
+                            <!-- INSTRUCCIÓN: Para añadir más temas, agrega nuevos <li> aquí -->
+                        </ul>
+                    </div>
+                    
+                    <!-- INSTRUCCIÓN: ZONA PARA AÑADIR IMÁGENES DE APUNTES -->
+                    <div class="notes-section">
+                        <h3>Mis Apuntes y Recursos Visuales</h3>
+                        <div class="notes-gallery">
+                            <p class="instructions">
+                                <i class="fas fa-info-circle"></i> 
+                                Para agregar imágenes de tus apuntes o dibujos:
+                                <br>1. Sube tus imágenes a la carpeta "assets/images/"
+                                <br>2. Añade un elemento &lt;img&gt; como el ejemplo siguiente
+                                <br>3. Cambia el "src" por la ruta de tu imagen
+                            </p>
+                            
+                            <!-- EJEMPLO: Así se agrega una imagen de apuntes -->
+                            <div class="note-item">
+                                <img src="assets/images/placeholder.jpg" alt="Apuntes primeros auxilios" class="note-image">
+                                <p class="note-caption">Ejemplo: Técnica de RCP básica</p>
+                            </div>
+                            
+                            <!-- 
+                            PLANTILLA PARA AÑADIR MÁS IMÁGENES:
+                            <div class="note-item">
+                                <img src="ruta/de/tu/imagen.jpg" alt="Descripción de la imagen" class="note-image">
+                                <p class="note-caption">Tu descripción aquí</p>
+                            </div>
+                            -->
+                        </div>
+                        
+                        <div class="upload-hint">
+                            <i class="fas fa-upload"></i>
+                            <p>Sube imágenes de tus apuntes, diagramas o dibujos para repasar visualmente</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Flash Cards para repaso -->
+                    <div class="flashcards-section">
+                        <h3>Flash Cards de Repaso</h3>
+                        <div class="flashcards-container" data-module="1">
+                            <!-- Las flash cards se cargan dinámicamente con JavaScript -->
+                            <div class="flashcards-controls">
+                                <button id="prev-card" class="flashcard-btn">
+                                    <i class="fas fa-chevron-left"></i> Anterior
+                                </button>
+                                <span id="card-counter">1/5</span>
+                                <button id="next-card" class="flashcard-btn">
+                                    Siguiente <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                            <div class="flashcard">
+                                <div class="flashcard-inner">
+                                    <div class="flashcard-front">
+                                        <p class="flashcard-question">¿Cuál es el primer paso en la evaluación de un paciente?</p>
+                                        <div class="flashcard-hint">
+                                            <i class="fas fa-lightbulb"></i> Toca la tarjeta para ver la respuesta
+                                        </div>
+                                    </div>
+                                    <div class="flashcard-back">
+                                        <p class="flashcard-answer">Evaluación primaria: verificar consciencia, vía aérea, respiración y circulación (ABC).</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flashcards-actions">
+                                <button id="flip-card" class="btn btn-outline">
+                                    <i class="fas fa-sync-alt"></i> Voltear Tarjeta
+                                </button>
+                                <button id="shuffle-cards" class="btn btn-outline">
+                                    <i class="fas fa-random"></i> Mezclar
+                                </button>
+                            </div>
+                        </div>
+                        <!-- INSTRUCCIÓN: Para agregar más flash cards, edita el archivo flashcards.json -->
+                    </div>
+                    
+                    <!-- Quiz de evaluación -->
+                    <div class="quiz-section">
+                        <h3>Quiz de Evaluación</h3>
+                        <div class="quiz-container" data-module="1">
+                            <div class="quiz-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 0%"></div>
+                                </div>
+                                <p class="progress-text">Pregunta <span id="current-question">1</span> de <span id="total-questions">5</span></p>
+                            </div>
+                            <div class="quiz-question">
+                                <p id="question-text">¿Cuál es la frecuencia de compresiones torácicas en RCP para adultos?</p>
+                            </div>
+                            <div class="quiz-options">
+                                <div class="option">
+                                    <input type="radio" id="option1" name="quiz-option" value="A">
+                                    <label for="option1">60-80 compresiones por minuto</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="option2" name="quiz-option" value="B">
+                                    <label for="option2">100-120 compresiones por minuto</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="option3" name="quiz-option" value="C">
+                                    <label for="option3">80-100 compresiones por minuto</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="option4" name="quiz-option" value="D">
+                                    <label for="option4">120-140 compresiones por minuto</label>
+                                </div>
+                            </div>
+                            <div class="quiz-actions">
+                                <button id="submit-quiz" class="btn btn-primary" disabled>Verificar Respuesta</button>
+                                <button id="next-question" class="btn btn-secondary">Siguiente Pregunta</button>
+                            </div>
+                            <div class="quiz-feedback" id="quiz-feedback"></div>
+                            <div class="quiz-results" id="quiz-results"></div>
+                        </div>
+                        <!-- INSTRUCCIÓN: Para agregar más preguntas al quiz, edita el archivo quizzes.json -->
+                    </div>
+                </div>
+                
+                <div class="module-navigation">
+                    <a href="#inicio" class="nav-arrow">
+                        <i class="fas fa-arrow-up"></i> Inicio
+                    </a>
+                    <a href="#modulo2" class="nav-arrow">
+                        Siguiente Módulo <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 
+        NOTA: Los demás módulos (2-7, servicio social y cursos) siguen la misma estructura.
+        Para ahorrar espacio en este ejemplo, solo he incluido el Módulo 1 completo.
+        Para agregar los demás módulos, copia la sección anterior y cambia:
+        1. El id de la sección (ej: id="modulo2")
+        2. El contenido del módulo (título, temas, etc.)
+        3. El atributo data-module en los contenedores de flashcards y quiz
+        -->
+
+        <!-- Módulo 2: El Cuerpo Humano (estructura mínima como ejemplo) -->
+        <section id="modulo2" class="section module">
+            <div class="container">
+                <div class="module-header">
+                    <span class="module-number">Módulo 2</span>
+                    <h2 class="module-title">EL CUERPO HUMANO (PRINCIPIOS DE ANATOMÍA Y FISIOLOGÍA)</h2>
+                    <div class="module-tags">
+                        <span class="tag">Anatomía</span>
+                        <span class="tag">Fisiología</span>
+                    </div>
+                </div>
+                
+                <div class="module-content">
+                    <div class="module-topics">
+                        <h3>Temas del Módulo:</h3>
+                        <ul>
+                            <li>Anatomía y fisiología esencial</li>
+                            <li>Anatomía y fisiología intermedia</li>
+                            <li>Anatomía opcional</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Zona para imágenes de apuntes -->
+                    <div class="notes-section">
+                        <h3>Mis Apuntes de Anatomía</h3>
+                        <div class="notes-gallery">
+                            <!-- INSTRUCCIÓN: Agrega aquí tus imágenes de apuntes de anatomía -->
+                            <div class="note-item empty-note">
+                                <i class="fas fa-image fa-3x"></i>
+                                <p>Aquí puedes subir imágenes de tus diagramas anatómicos</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Flash Cards y Quiz (estructura similar al Módulo 1) -->
+                    <div class="flashcards-section">
+                        <h3>Flash Cards de Anatomía</h3>
+                        <div class="flashcards-container" data-module="2">
+                            <!-- Las flash cards se cargarán dinámicamente -->
+                        </div>
+                    </div>
+                    
+                    <div class="quiz-section">
+                        <h3>Quiz de Anatomía</h3>
+                        <div class="quiz-container" data-module="2">
+                            <!-- El quiz se cargará dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="module-navigation">
+                    <a href="#modulo1" class="nav-arrow">
+                        <i class="fas fa-arrow-left"></i> Módulo Anterior
+                    </a>
+                    <a href="#modulo3" class="nav-arrow">
+                        Siguiente Módulo <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección para subir recursos propios -->
+        <section id="recursos" class="section resources">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Mis Recursos de Estudio</h2>
+                    <p>Área personal para subir y organizar apuntes, imágenes y materiales de estudio</p>
+                </div>
+                
+                <div class="upload-guide">
+                    <h3><i class="fas fa-upload"></i> Cómo agregar tus recursos</h3>
+                    <div class="guide-steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <h4>Prepara tus imágenes</h4>
+                            <p>Toma fotos de tus apuntes, diagramas o dibujos. Asegúrate de que sean claras y bien iluminadas.</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <h4>Sube a la carpeta</h4>
+                            <p>Guarda las imágenes en la carpeta <code>assets/images/</code> de tu proyecto.</p>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <h4>Edita el HTML</h4>
+                            <p>En cada módulo, busca la sección "notes-gallery" y añade un nuevo elemento &lt;div class="note-item"&gt; con tu imagen.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="code-example">
+                        <h4>Ejemplo de código para agregar una imagen:</h4>
+                        <pre><code>&lt;div class="note-item"&gt;
+    &lt;img src="assets/images/mis-apuntes/trauma-torax.jpg" 
+         alt="Apuntes de trauma de tórax" 
+         class="note-image"&gt;
+    &lt;p class="note-caption"&gt;Mi diagrama de trauma torácico&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+                    </div>
+                </div>
+                
+                <div class="resources-grid">
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-file-pdf fa-2x"></i>
+                        </div>
+                        <h3>Plantilla para Flashcards</h3>
+                        <p>Descarga la plantilla para agregar tus propias flashcards en formato JSON.</p>
+                        <button class="btn btn-outline" onclick="downloadFlashcardTemplate()">
+                            <i class="fas fa-download"></i> Descargar Plantilla
+                        </button>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-question-circle fa-2x"></i>
+                        </div>
+                        <h3>Plantilla para Quizzes</h3>
+                        <p>Estructura para añadir nuevas preguntas de evaluación a los módulos.</p>
+                        <button class="btn btn-outline" onclick="downloadQuizTemplate()">
+                            <i class="fas fa-download"></i> Descargar Plantilla
+                        </button>
+                    </div>
+                    
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-code fa-2x"></i>
+                        </div>
+                        <h3>Guía de Edición</h3>
+                        <p>Instrucciones detalladas para modificar cada sección del sitio web.</p>
+                        <a href="#editing-guide" class="btn btn-outline">
+                            <i class="fas fa-book"></i> Ver Guía
+                        </a>
+                    </div>
+                </div>
+                
+                <div id="editing-guide" class="editing-guide">
+                    <h3>Guía de Edición del Código</h3>
+                    
+                    <div class="guide-item">
+                        <h4><i class="fas fa-edit"></i> Para cambiar el contenido de texto:</h4>
+                        <p>Busca en el archivo <code>index.html</code> las secciones correspondientes a cada módulo y modifica el texto dentro de las etiquetas &lt;p&gt;, &lt;h2&gt;, &lt;h3&gt;, &lt;li&gt;, etc.</p>
+                    </div>
+                    
+                    <div class="guide-item">
+                        <h4><i class="fas fa-palette"></i> Para cambiar colores o estilos:</h4>
+                        <p>Abre el archivo <code>style.css</code> y modifica las variables en la sección <code>:root</code> para el modo claro, y <code>.dark-theme</code> para el modo oscuro.</p>
+                    </div>
+                    
+                    <div class="guide-item">
+                        <h4><i class="fas fa-database"></i> Para agregar más flashcards o preguntas:</h4>
+                        <p>Edita los archivos JSON en la carpeta <code>assets/data/</code>. Cada módulo tiene su propio conjunto de datos.</p>
+                    </div>
+                    
+                    <div class="guide-item">
+                        <h4><i class="fas fa-image"></i> Para agregar nuevas secciones:</h4>
+                        <p>Copia la estructura de un módulo existente y cambia el ID, contenido y enlaces. No olvides agregar el enlace en la barra de navegación.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>R.E.S.C.A.T.E.</h3>
+                    <p>Red de Enseñanza en Sistemas de Capacitación y Atención Técnica de Emergencias</p>
+                    <p class="footer-tagline">TU VOCACIÓN TIENE PULSO</p>
+                </div>
+                
+                <div class="footer-contact">
+                    <h4>Contacto</h4>
+                    <p><i class="fas fa-globe"></i> <a href="https://www.rescate.pro" target="_blank">www.rescate.pro</a></p>
+                    <p><i class="fas fa-phone"></i> 220 175 2227</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 9 Río Conchos 5142, Jardines de San Manuel, 72560, Puebla, Pue.</p>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul>
+                        <li><a href="#inicio">Inicio</a></li>
+                        <li><a href="#modulo1">Módulo 1</a></li>
+                        <li><a href="#modulo5">Módulo 5 (Certificación)</a></li>
+                        <li><a href="#servicio">Servicio Social</a></li>
+                        <li><a href="#recursos">Mis Recursos</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023 R.E.S.C.A.T.E. - Plan de Estudios Paramedico. Todos los derechos reservados.</p>
+                <p class="footer-note">Esta es una herramienta de estudio personal. El plan de estudios oficial está sujeto a cambios por la institución.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
