@@ -6,7 +6,7 @@
 // 1. Para agregar más flashcards: Busca la variable 'flashcardsData' y añade nuevas entradas
 // 2. Para agregar más preguntas de quiz: Busca la variable 'quizData' y añade nuevas entradas
 // 3. Para cambiar la configuración: Modifica las variables en 'CONFIGURACIÓN INICIAL'
-// 4. Para agregar nuevas funcionalidades: Añade nuevas funciones al final del archivo
+// 4. Para agregar nuevas funcionalidades: Añade nuevas funciones al final del archivo, ahuevo
 //
 // ============================================
 
@@ -1674,3 +1674,4 @@ window.addEventListener('load', function() {
 // ============================================
 // FIN DEL ARCHIVO script.js
 // ============================================
+
