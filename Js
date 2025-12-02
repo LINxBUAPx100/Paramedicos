@@ -1,0 +1,804 @@
+// INSTRUCCIÓN: PARA AGREGAR MÁS FLASHCARDS O PREGUNTAS DE QUIZ:
+// 1. Modifica los arrays 'flashcardsData' y 'quizData' más abajo
+// 2. Sigue la estructura de los ejemplos proporcionados
+// 3. Asegúrate de que el módulo corresponda con el atributo data-module en el HTML
+
+// Datos de ejemplo para flashcards
+const flashcardsData = {
+    1: [
+        {
+            question: "¿Cuál es el primer paso en la evaluación de un paciente?",
+            answer: "Evaluación primaria: verificar consciencia, vía aérea, respiración y circulación (ABC)."
+        },
+        {
+            question: "¿Qué es el triage y cuál es su propósito?",
+            answer: "El triage es el proceso de clasificación de pacientes según la gravedad de sus lesiones para priorizar la atención en situaciones con múltiples víctimas."
+        },
+        {
+            question: "¿Cuáles son los signos de una vía aérea obstruida?",
+            answer: "Sonidos respiratorios anormales (estridor, estertores), uso de músculos accesorios, cianosis, agitación o disminución del nivel de consciencia."
+        },
+        {
+            question: "¿Qué es el shock y cuáles son sus tipos principales?",
+            answer: "El shock es un estado de perfusión tisular inadecuada. Los tipos principales son: hipovolémico, cardiogénico, distributivo y obstructivo."
+        },
+        {
+            question: "¿Cómo se realiza la maniobra de Heimlich en adultos?",
+            answer: "Colocarse detrás del paciente, rodearlo con los brazos, hacer un puño con una mano y colocar el pulgar por encima del ombligo, agarrar el puño con la otra mano y realizar compresiones abdominales hacia arriba y adentro."
+        }
+    ],
+    2: [
+        {
+            question: "¿Cuáles son los huesos del cráneo?",
+            answer: "Frontal, parietal (2), temporal (2), occipital, esfenoides y etmoides."
+        },
+        {
+            question: "¿Qué es el sistema cardiovascular y qué órganos lo componen?",
+            answer: "El sistema cardiovascular está formado por el corazón, vasos sanguíneos (arterias, venas, capilares) y la sangre. Su función es transportar oxígeno, nutrientes y hormonas a las células."
+        }
+    ]
+    // INSTRUCCIÓN: Para agregar flashcards para más módulos, añade más propiedades aquí
+    // Ejemplo: 3: [ {question: "...", answer: "..."}, ... ]
+};
+
+// Datos de ejemplo para quizzes
+const quizData = {
+    1: {
+        questions: [
+            {
+                question: "¿Cuál es la frecuencia de compresiones torácicas en RCP para adultos?",
+                options: [
+                    "60-80 compresiones por minuto",
+                    "100-120 compresiones por minuto",
+                    "80-100 compresiones por minuto",
+                    "120-140 compresiones por minuto"
+                ],
+                correctAnswer: 1 // Índice de la respuesta correcta (0-based)
+            },
+            {
+                question: "¿Cuál es la relación compresiones:ventilaciones en RCP para adultos con un solo reanimador?",
+                options: [
+                    "15:2",
+                    "30:2",
+                    "5:1",
+                    "10:1"
+                ],
+                correctAnswer: 1
+            },
+            {
+                question: "¿Qué signo NO es parte de la evaluación primaria (ABCDE)?",
+                options: [
+                    "Vía aérea (Airway)",
+                    "Exposición (Exposure)",
+                    "Temperatura (Temperature)",
+                    "Circulación (Circulation)"
+                ],
+                correctAnswer: 2
+            }
+        ]
+    },
+    2: {
+        questions: [
+            {
+                question: "¿Cuál es el hueso más largo del cuerpo humano?",
+                options: [
+                    "Fémur",
+                    "Tibia",
+                    "Húmero",
+                    "Peroné"
+                ],
+                correctAnswer: 0
+            }
+        ]
+    }
+    // INSTRUCCIÓN: Para agregar quizzes para más módulos, añade más propiedades aquí
+};
+
+// Variables globales
+let currentTheme = localStorage.getItem('theme') || 'light';
+let currentFlashcardModule = 1;
+let currentFlashcardIndex = 0;
+let currentQuizModule = 1;
+let currentQuizQuestion = 0;
+let quizScore = 0;
+let userAnswers = [];
+
+// INSTRUCCIÓN: Inicialización cuando el DOM está cargado
+document.addEventListener('DOMContentLoaded', function() {
+    // Aplicar tema guardado
+    applyTheme(currentTheme);
+    
+    // Configurar botón de cambio de tema
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+        updateThemeIcon(currentTheme);
+    }
+    
+    // Configurar menú de navegación móvil
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            navMenu.classList.toggle('active');
+            const icon = navToggle.querySelector('i');
+            if (navMenu.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+        
+        // Cerrar menú al hacer clic en un enlace
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                navMenu.classList.remove('active');
+                const icon = navToggle.querySelector('i');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            });
+        });
+    }
+    
+    // Inicializar flashcards para cada módulo
+    initializeFlashcards();
+    
+    // Inicializar quizzes para cada módulo
+    initializeQuizzes();
+    
+    // Configurar navegación suave
+    setupSmoothScrolling();
+    
+    // Configurar eventos para los botones de descarga de plantillas
+    if (typeof downloadFlashcardTemplate !== 'undefined') {
+        document.querySelector('button[onclick="downloadFlashcardTemplate()"]').addEventListener('click', downloadFlashcardTemplate);
+    }
+    
+    if (typeof downloadQuizTemplate !== 'undefined') {
+        document.querySelector('button[onclick="downloadQuizTemplate()"]').addEventListener('click', downloadQuizTemplate);
+    }
+});
+
+// INSTRUCCIÓN: Funciones para el cambio de tema claro/oscuro
+function toggleTheme() {
+    currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+    applyTheme(currentTheme);
+    updateThemeIcon(currentTheme);
+    localStorage.setItem('theme', currentTheme);
+}
+
+function applyTheme(theme) {
+    if (theme === 'dark') {
+        document.body.classList.add('dark-theme');
+    } else {
+        document.body.classList.remove('dark-theme');
+    }
+}
+
+function updateThemeIcon(theme) {
+    const icon = document.querySelector('#theme-toggle i');
+    if (icon) {
+        if (theme === 'dark') {
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        } else {
+            icon.classList.remove('fa-sun');
+            icon.classList.add('fa-moon');
+        }
+    }
+}
+
+// INSTRUCCIÓN: Funciones para las flashcards
+function initializeFlashcards() {
+    // Encontrar todos los contenedores de flashcards
+    const flashcardContainers = document.querySelectorAll('.flashcards-container');
+    
+    flashcardContainers.forEach(container => {
+        const module = parseInt(container.getAttribute('data-module'));
+        
+        // Verificar si hay datos para este módulo
+        if (flashcardsData[module] && flashcardsData[module].length > 0) {
+            setupFlashcardModule(container, module);
+        } else {
+            // Si no hay datos, mostrar mensaje
+            container.innerHTML = `
+                <div class="empty-flashcards">
+                    <i class="fas fa-info-circle fa-2x"></i>
+                    <p>No hay flashcards disponibles para este módulo.</p>
+                    <p class="instructions">Para agregar flashcards, edita el archivo script.js y añade datos al módulo ${module}.</p>
+                </div>
+            `;
+        }
+    });
+}
+
+function setupFlashcardModule(container, module) {
+    currentFlashcardModule = module;
+    currentFlashcardIndex = 0;
+    
+    // Configurar controles
+    const prevBtn = container.querySelector('#prev-card');
+    const nextBtn = container.querySelector('#next-card');
+    const flipBtn = container.querySelector('#flip-card');
+    const shuffleBtn = container.querySelector('#shuffle-cards');
+    const counter = container.querySelector('#card-counter');
+    const flashcard = container.querySelector('.flashcard');
+    
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => navigateFlashcard(-1, module));
+    }
+    
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => navigateFlashcard(1, module));
+    }
+    
+    if (flipBtn) {
+        flipBtn.addEventListener('click', () => {
+            if (flashcard) {
+                flashcard.classList.toggle('flipped');
+            }
+        });
+    }
+    
+    if (shuffleBtn) {
+        shuffleBtn.addEventListener('click', () => shuffleFlashcards(module));
+    }
+    
+    // Cargar la primera flashcard
+    updateFlashcardDisplay(module);
+}
+
+function navigateFlashcard(direction, module) {
+    const flashcards = flashcardsData[module];
+    if (!flashcards) return;
+    
+    currentFlashcardIndex += direction;
+    
+    // Ajustar índices para bucle circular
+    if (currentFlashcardIndex < 0) {
+        currentFlashcardIndex = flashcards.length - 1;
+    } else if (currentFlashcardIndex >= flashcards.length) {
+        currentFlashcardIndex = 0;
+    }
+    
+    updateFlashcardDisplay(module);
+}
+
+function updateFlashcardDisplay(module) {
+    const flashcards = flashcardsData[module];
+    if (!flashcards || flashcards.length === 0) return;
+    
+    const currentCard = flashcards[currentFlashcardIndex];
+    const container = document.querySelector(`.flashcards-container[data-module="${module}"]`);
+    
+    if (!container) return;
+    
+    // Actualizar contador
+    const counter = container.querySelector('#card-counter');
+    if (counter) {
+        counter.textContent = `${currentFlashcardIndex + 1}/${flashcards.length}`;
+    }
+    
+    // Actualizar contenido de la flashcard
+    const front = container.querySelector('.flashcard-front .flashcard-question');
+    const back = container.querySelector('.flashcard-back .flashcard-answer');
+    
+    if (front) {
+        front.textContent = currentCard.question;
+    }
+    
+    if (back) {
+        back.textContent = currentCard.answer;
+    }
+    
+    // Asegurarse de que la tarjeta esté en el frente
+    const flashcard = container.querySelector('.flashcard');
+    if (flashcard) {
+        flashcard.classList.remove('flipped');
+    }
+}
+
+function shuffleFlashcards(module) {
+    const flashcards = flashcardsData[module];
+    if (!flashcards) return;
+    
+    // Algoritmo de Fisher-Yates para mezclar
+    for (let i = flashcards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [flashcards[i], flashcards[j]] = [flashcards[j], flashcards[i]];
+    }
+    
+    currentFlashcardIndex = 0;
+    updateFlashcardDisplay(module);
+    
+    // Mostrar notificación de mezcla
+    showNotification('Flashcards mezcladas correctamente', 'success');
+}
+
+// INSTRUCCIÓN: Funciones para los quizzes
+function initializeQuizzes() {
+    // Encontrar todos los contenedores de quiz
+    const quizContainers = document.querySelectorAll('.quiz-container');
+    
+    quizContainers.forEach(container => {
+        const module = parseInt(container.getAttribute('data-module'));
+        
+        // Verificar si hay datos para este módulo
+        if (quizData[module] && quizData[module].questions.length > 0) {
+            setupQuizModule(container, module);
+        } else {
+            // Si no hay datos, mostrar mensaje
+            container.innerHTML = `
+                <div class="empty-quiz">
+                    <i class="fas fa-info-circle fa-2x"></i>
+                    <p>No hay preguntas disponibles para este módulo.</p>
+                    <p class="instructions">Para agregar preguntas, edita el archivo script.js y añade datos al módulo ${module}.</p>
+                </div>
+            `;
+        }
+    });
+}
+
+function setupQuizModule(container, module) {
+    currentQuizModule = module;
+    currentQuizQuestion = 0;
+    quizScore = 0;
+    userAnswers = [];
+    
+    // Configurar botones
+    const submitBtn = container.querySelector('#submit-quiz');
+    const nextBtn = container.querySelector('#next-question');
+    
+    if (submitBtn) {
+        submitBtn.addEventListener('click', () => checkAnswer(module));
+    }
+    
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => nextQuestion(module));
+        nextBtn.style.display = 'none'; // Ocultar inicialmente
+    }
+    
+    // Configurar selección de opciones
+    const options = container.querySelectorAll('.option input');
+    options.forEach(option => {
+        option.addEventListener('change', function() {
+            // Habilitar botón de verificar cuando se selecciona una opción
+            if (submitBtn) {
+                submitBtn.disabled = false;
+            }
+            
+            // Resaltar la opción seleccionada
+            options.forEach(opt => {
+                const parent = opt.parentElement;
+                parent.classList.remove('selected');
+            });
+            
+            if (this.checked) {
+                this.parentElement.classList.add('selected');
+            }
+        });
+    });
+    
+    // Cargar la primera pregunta
+    loadQuestion(module);
+}
+
+function loadQuestion(module) {
+    const quiz = quizData[module];
+    if (!quiz || !quiz.questions[currentQuizQuestion]) return;
+    
+    const currentQuestion = quiz.questions[currentQuizQuestion];
+    const container = document.querySelector(`.quiz-container[data-module="${module}"]`);
+    
+    if (!container) return;
+    
+    // Actualizar contador de progreso
+    const progressText = container.querySelector('.progress-text');
+    const currentQuestionSpan = container.querySelector('#current-question');
+    const totalQuestionsSpan = document.querySelector('#total-questions');
+    const progressFill = container.querySelector('.progress-fill');
+    
+    if (currentQuestionSpan) {
+        currentQuestionSpan.textContent = currentQuizQuestion + 1;
+    }
+    
+    if (totalQuestionsSpan) {
+        totalQuestionsSpan.textContent = quiz.questions.length;
+    }
+    
+    if (progressFill) {
+        const progressPercent = ((currentQuizQuestion) / quiz.questions.length) * 100;
+        progressFill.style.width = `${progressPercent}%`;
+    }
+    
+    // Actualizar texto de la pregunta
+    const questionText = container.querySelector('#question-text');
+    if (questionText) {
+        questionText.textContent = currentQuestion.question;
+    }
+    
+    // Actualizar opciones
+    const optionInputs = container.querySelectorAll('.option input');
+    const optionLabels = container.querySelectorAll('.option label');
+    
+    optionInputs.forEach((input, index) => {
+        input.checked = false;
+        input.value = index; // Establecer valor como índice
+        
+        const parent = input.parentElement;
+        parent.classList.remove('selected');
+        
+        // Limpiar feedback anterior
+        parent.classList.remove('correct', 'incorrect');
+    });
+    
+    optionLabels.forEach((label, index) => {
+        if (currentQuestion.options[index]) {
+            label.textContent = currentQuestion.options[index];
+        }
+    });
+    
+    // Restablecer botones
+    const submitBtn = container.querySelector('#submit-quiz');
+    const nextBtn = container.querySelector('#next-question');
+    
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Verificar Respuesta';
+        submitBtn.style.display = 'block';
+    }
+    
+    if (nextBtn) {
+        nextBtn.style.display = 'none';
+    }
+    
+    // Limpiar feedback anterior
+    const feedback = container.querySelector('#quiz-feedback');
+    if (feedback) {
+        feedback.textContent = '';
+        feedback.className = 'quiz-feedback';
+        feedback.style.display = 'none';
+    }
+    
+    const results = container.querySelector('#quiz-results');
+    if (results) {
+        results.textContent = '';
+        results.className = 'quiz-results';
+        results.style.display = 'none';
+    }
+}
+
+function checkAnswer(module) {
+    const quiz = quizData[module];
+    if (!quiz || !quiz.questions[currentQuizQuestion]) return;
+    
+    const container = document.querySelector(`.quiz-container[data-module="${module}"]`);
+    if (!container) return;
+    
+    // Obtener la opción seleccionada
+    const selectedOption = container.querySelector('input[name="quiz-option"]:checked');
+    if (!selectedOption) return;
+    
+    const selectedIndex = parseInt(selectedOption.value);
+    const correctIndex = quiz.questions[currentQuizQuestion].correctAnswer;
+    const isCorrect = selectedIndex === correctIndex;
+    
+    // Guardar respuesta del usuario
+    userAnswers[currentQuizQuestion] = {
+        selected: selectedIndex,
+        correct: correctIndex,
+        isCorrect: isCorrect
+    };
+    
+    // Actualizar puntuación
+    if (isCorrect) {
+        quizScore++;
+    }
+    
+    // Mostrar feedback
+    const feedback = container.querySelector('#quiz-feedback');
+    if (feedback) {
+        if (isCorrect) {
+            feedback.textContent = '¡Correcto! Has respondido adecuadamente.';
+            feedback.className = 'quiz-feedback correct';
+        } else {
+            const correctAnswerText = quiz.questions[currentQuizQuestion].options[correctIndex];
+            feedback.textContent = `Incorrecto. La respuesta correcta es: "${correctAnswerText}"`;
+            feedback.className = 'quiz-feedback incorrect';
+        }
+        feedback.style.display = 'block';
+    }
+    
+    // Resaltar opciones correctas e incorrectas
+    const options = container.querySelectorAll('.option');
+    options.forEach((option, index) => {
+        if (index === correctIndex) {
+            option.classList.add('correct');
+        } else if (index === selectedIndex && !isCorrect) {
+            option.classList.add('incorrect');
+        }
+    });
+    
+    // Actualizar botones
+    const submitBtn = container.querySelector('#submit-quiz');
+    const nextBtn = container.querySelector('#next-question');
+    
+    if (submitBtn) {
+        submitBtn.style.display = 'none';
+    }
+    
+    if (nextBtn) {
+        nextBtn.style.display = 'block';
+        
+        // Cambiar texto del botón si es la última pregunta
+        if (currentQuizQuestion === quiz.questions.length - 1) {
+            nextBtn.textContent = 'Ver Resultados';
+        } else {
+            nextBtn.textContent = 'Siguiente Pregunta';
+        }
+    }
+}
+
+function nextQuestion(module) {
+    const quiz = quizData[module];
+    if (!quiz) return;
+    
+    // Si es la última pregunta, mostrar resultados
+    if (currentQuizQuestion === quiz.questions.length - 1) {
+        showQuizResults(module);
+        return;
+    }
+    
+    // Ir a la siguiente pregunta
+    currentQuizQuestion++;
+    loadQuestion(module);
+}
+
+function showQuizResults(module) {
+    const quiz = quizData[module];
+    if (!quiz) return;
+    
+    const container = document.querySelector(`.quiz-container[data-module="${module}"]`);
+    if (!container) return;
+    
+    // Calcular porcentaje
+    const percentage = Math.round((quizScore / quiz.questions.length) * 100);
+    
+    // Crear mensaje de resultados
+    let resultsHTML = `
+        <h4>Resultados del Quiz</h4>
+        <p class="score">Puntuación: ${quizScore} de ${quiz.questions.length} (${percentage}%)</p>
+    `;
+    
+    if (percentage >= 80) {
+        resultsHTML += `<p class="score-message excellent">¡Excelente! Dominas este tema.</p>`;
+    } else if (percentage >= 60) {
+        resultsHTML += `<p class="score-message good">Buen trabajo, pero puedes mejorar.</p>`;
+    } else {
+        resultsHTML += `<p class="score-message needs-improvement">Necesitas repasar más este tema.</p>`;
+    }
+    
+    // Botón para reiniciar el quiz
+    resultsHTML += `<button id="restart-quiz" class="btn btn-primary">Repetir Quiz</button>`;
+    
+    // Mostrar resultados
+    const resultsDiv = container.querySelector('#quiz-results');
+    if (resultsDiv) {
+        resultsDiv.innerHTML = resultsHTML;
+        resultsDiv.classList.add('show');
+        resultsDiv.style.display = 'block';
+        
+        // Configurar botón de reinicio
+        const restartBtn = resultsDiv.querySelector('#restart-quiz');
+        if (restartBtn) {
+            restartBtn.addEventListener('click', () => {
+                currentQuizQuestion = 0;
+                quizScore = 0;
+                userAnswers = [];
+                resultsDiv.classList.remove('show');
+                resultsDiv.style.display = 'none';
+                loadQuestion(module);
+            });
+        }
+    }
+    
+    // Ocultar otros elementos del quiz
+    const questionDiv = container.querySelector('.quiz-question');
+    const optionsDiv = container.querySelector('.quiz-options');
+    const actionsDiv = container.querySelector('.quiz-actions');
+    const feedbackDiv = container.querySelector('#quiz-feedback');
+    
+    if (questionDiv) questionDiv.style.display = 'none';
+    if (optionsDiv) optionsDiv.style.display = 'none';
+    if (actionsDiv) actionsDiv.style.display = 'none';
+    if (feedbackDiv) feedbackDiv.style.display = 'none';
+}
+
+// INSTRUCCIÓN: Funciones auxiliares
+function setupSmoothScrolling() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                const navbarHeight = document.querySelector('.navbar').offsetHeight;
+                const targetPosition = targetElement.offsetTop - navbarHeight - 20;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+}
+
+function showNotification(message, type = 'info') {
+    // Crear elemento de notificación
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    
+    // Estilos para la notificación
+    notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 5px;
+        color: white;
+        font-weight: 500;
+        z-index: 2000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        animation: slideIn 0.3s ease, fadeOut 0.3s ease 2.7s;
+    `;
+    
+    if (type === 'success') {
+        notification.style.backgroundColor = '#4CAF50';
+    } else if (type === 'error') {
+        notification.style.backgroundColor = '#f44336';
+    } else {
+        notification.style.backgroundColor = '#2196F3';
+    }
+    
+    // Agregar al documento
+    document.body.appendChild(notification);
+    
+    // Eliminar después de 3 segundos
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 3000);
+}
+
+// Plantillas para descargar
+function downloadFlashcardTemplate() {
+    const template = {
+        "module_number": 1,
+        "flashcards": [
+            {
+                "question": "Tu pregunta aquí",
+                "answer": "Tu respuesta aquí"
+            },
+            {
+                "question": "Otra pregunta",
+                "answer": "Otra respuesta"
+            }
+        ]
+    };
+    
+    downloadJSON(template, 'plantilla-flashcards.json');
+    showNotification('Plantilla de flashcards descargada', 'success');
+}
+
+function downloadQuizTemplate() {
+    const template = {
+        "module_number": 1,
+        "questions": [
+            {
+                "question": "Tu pregunta aquí",
+                "options": [
+                    "Opción A",
+                    "Opción B",
+                    "Opción C",
+                    "Opción D"
+                ],
+                "correctAnswer": 0 // Índice de la respuesta correcta (0 = A, 1 = B, etc.)
+            }
+        ]
+    };
+    
+    downloadJSON(template, 'plantilla-quiz.json');
+    showNotification('Plantilla de quiz descargada', 'success');
+}
+
+function downloadJSON(data, filename) {
+    const jsonStr = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// INSTRUCCIÓN: Para agregar más funcionalidades, añade nuevas funciones aquí
+// Asegúrate de documentar con comentarios para facilitar las modificaciones futuras
+
+// Añadir estilos CSS para animaciones de notificación
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+        }
+        to {
+            opacity: 0;
+        }
+    }
+    
+    .empty-flashcards, .empty-quiz {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--text-light);
+    }
+    
+    .empty-flashcards i, .empty-quiz i {
+        margin-bottom: 20px;
+        color: var(--primary-color);
+    }
+    
+    .score {
+        font-size: 24px;
+        font-weight: 700;
+        margin: 20px 0;
+        color: var(--primary-color);
+    }
+    
+    .score-message {
+        font-size: 18px;
+        margin-bottom: 20px;
+        padding: 10px;
+        border-radius: 5px;
+    }
+    
+    .excellent {
+        background-color: rgba(76, 175, 80, 0.2);
+        color: #2e7d32;
+    }
+    
+    .good {
+        background-color: rgba(255, 193, 7, 0.2);
+        color: #ff8f00;
+    }
+    
+    .needs-improvement {
+        background-color: rgba(244, 67, 54, 0.2);
+        color: #c62828;
+    }
+`;
+document.head.appendChild(style);
