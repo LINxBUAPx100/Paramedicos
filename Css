@@ -1,0 +1,1366 @@
+/* =================================================================================
+   ULTIMATE ENGLISH STUDY GUIDE - APPLE GLASS THEME (GitHub Pages Edition)
+   VERSION: 2.1
+   DATE: 21 Nov 2025
+   DESCRIPTION: Optimized for GitHub Pages with Apple-style glassmorphism
+================================================================================== */
+
+/* =================================================================================
+   1. RESET & BASE STYLES - GITHUB PAGES OPTIMIZED
+   ================================================================================= */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.92);
+    background: #000000;
+    background-image: 
+        radial-gradient(circle at 20% 30%, rgba(41, 151, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(120, 86, 255, 0.08) 0%, transparent 50%);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* GitHub Pages Specific Notice */
+.github-pages-notice {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 16px 24px;
+    margin: 20px auto;
+    max-width: 800px;
+    text-align: center;
+    animation: slideDown 0.5s ease-out;
+}
+
+.github-pages-notice p {
+    margin-bottom: 12px;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.deploy-info {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 12px;
+    text-align: left;
+}
+
+.deploy-info ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.deploy-info li {
+    padding: 4px 0;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* =================================================================================
+   2. CONTAINER & LAYOUT
+   ================================================================================= */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+}
+
+/* =================================================================================
+   3. TYPOGRAPHY - APPLE STYLE
+   ================================================================================= */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    line-height: 1.2;
+    color: rgba(255, 255, 255, 0.95);
+    letter-spacing: -0.5px;
+    margin-bottom: 1rem;
+}
+
+h1 {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.8));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+h2 {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    margin-bottom: 1.5rem;
+}
+
+h3 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+}
+
+p {
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+    max-width: 70ch;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 600px;
+    margin: 0 auto 2rem;
+}
+
+/* =================================================================================
+   4. GLASS EFFECT COMPONENTS - APPLE STYLE
+   ================================================================================= */
+.header {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 60px 40px;
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.1) 0%,
+        rgba(255, 255, 255, 0.05) 50%,
+        rgba(255, 255, 255, 0.1) 100%
+    );
+    pointer-events: none;
+    z-index: -1;
+}
+
+.section-wrapper,
+.verbs-section,
+.activities-section {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 
+        0 4px 20px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+}
+
+.section-wrapper:hover,
+.verbs-section:hover,
+.activities-section:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 
+        0 8px 40px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+}
+
+.section-wrapper::before,
+.verbs-section::before,
+.activities-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.08) 0%,
+        rgba(255, 255, 255, 0.03) 50%,
+        rgba(255, 255, 255, 0.08) 100%
+    );
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* =================================================================================
+   5. SECTION HEADERS & COLLAPSIBLE
+   ================================================================================= */
+.section-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    cursor: pointer;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.section-header-row:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.collapsible-content {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.collapsed-content {
+    max-height: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-top: 0 !important;
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* =================================================================================
+   6. BUTTONS & CONTROLS - APPLE GLASS
+   ================================================================================= */
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 14px 28px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    min-height: 48px;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.15) 0%,
+        rgba(255, 255, 255, 0.05) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.btn:hover::before {
+    opacity: 1;
+}
+
+.btn:active {
+    transform: translateY(0) scale(1);
+}
+
+.btn-icon {
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.btn-icon:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+    color: rgba(255, 255, 255, 1);
+}
+
+/* =================================================================================
+   7. FLASHCARDS SYSTEM - GLASS EFFECT
+   ================================================================================= */
+.legend {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 25px 0;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.legend-item:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateY(-1px);
+}
+
+.legend-item.active-filter {
+    background: rgba(41, 151, 255, 0.2);
+    border-color: rgba(41, 151, 255, 0.3);
+    color: #2997FF;
+}
+
+.color-box {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.card-count {
+    text-align: center;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 20px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 20px;
+    display: inline-block;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    transition: all 0.4s ease;
+}
+
+.card {
+    height: 240px;
+    perspective: 1200px;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    outline: none;
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+}
+
+.card.flipped .card-inner {
+    transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+        0 4px 20px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+}
+
+.card-front {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.card-back {
+    background: linear-gradient(135deg, 
+        rgba(41, 151, 255, 0.9), 
+        rgba(120, 86, 255, 0.9));
+    color: white;
+    transform: rotateY(180deg);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.unit-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    padding: 6px 14px;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.question {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 15px;
+}
+
+.answer {
+    font-size: 1.05rem;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+/* Unit Colors */
+.welcome-color { border-top: 4px solid #5AC8FA; }
+.unit1-color { border-top: 4px solid #FF9500; }
+.unit2-color { border-top: 4px solid #30D158; }
+.unit3-color { border-top: 4px solid #BF5AF2; }
+.unit4-color { border-top: 4px solid #FF375F; }
+.unit5-color { border-top: 4px solid #FFD60A; }
+.verbs-color { border-top: 4px solid #007AFF; }
+.tips-color { border-top: 4px solid #8E8E93; }
+
+/* Card Back Colors */
+.unit-welcome .card-back { background: linear-gradient(135deg, rgba(90, 200, 250, 0.9), rgba(90, 200, 250, 0.7)); }
+.unit-unit1 .card-back { background: linear-gradient(135deg, rgba(255, 149, 0, 0.9), rgba(255, 149, 0, 0.7)); }
+.unit-unit2 .card-back { background: linear-gradient(135deg, rgba(48, 209, 88, 0.9), rgba(48, 209, 88, 0.7)); }
+.unit-unit3 .card-back { background: linear-gradient(135deg, rgba(191, 90, 242, 0.9), rgba(191, 90, 242, 0.7)); }
+.unit-unit4 .card-back { background: linear-gradient(135deg, rgba(255, 55, 95, 0.9), rgba(255, 55, 95, 0.7)); }
+.unit-unit5 .card-back { background: linear-gradient(135deg, rgba(255, 214, 10, 0.9), rgba(255, 214, 10, 0.7)); }
+.unit-verbs .card-back { background: linear-gradient(135deg, rgba(0, 122, 255, 0.9), rgba(0, 122, 255, 0.7)); }
+.unit-tips .card-back { background: linear-gradient(135deg, rgba(142, 142, 147, 0.9), rgba(142, 142, 147, 0.7)); }
+
+/* =================================================================================
+   8. VERBS TABLE - GLASS STYLE
+   ================================================================================= */
+.verbs-filter {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.btn-filter {
+    padding: 12px 24px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-filter.active,
+.btn-filter:hover {
+    background: linear-gradient(135deg, rgba(41, 151, 255, 0.9), rgba(120, 86, 255, 0.9));
+    color: white;
+    border-color: transparent;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(41, 151, 255, 0.3);
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+        0 4px 20px rgba(0, 0, 0, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+}
+
+.verbs-table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+    background: transparent;
+}
+
+.verbs-table th,
+.verbs-table td {
+    padding: 16px 20px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.verbs-table th {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: sticky;
+    top: 0;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.verbs-table tbody tr {
+    transition: background-color 0.3s ease;
+}
+
+.verbs-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.tag-irregular,
+.tag-regular {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    display: inline-block;
+}
+
+.tag-irregular {
+    background: rgba(255, 214, 10, 0.15);
+    border: 1px solid rgba(255, 214, 10, 0.3);
+    color: #FFD60A;
+}
+
+.tag-regular {
+    background: rgba(48, 209, 88, 0.15);
+    border: 1px solid rgba(48, 209, 88, 0.3);
+    color: #30D158;
+}
+
+/* =================================================================================
+   9. ACTIVITIES & EXERCISES
+   ================================================================================= */
+.activity {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    margin-bottom: 25px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.activity:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.activity-header {
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+}
+
+.activity-header h3 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.activity-content {
+    padding: 24px;
+    transition: all 0.4s ease;
+}
+
+.exercise {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 14px 18px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: rgba(41, 151, 255, 0.5);
+    box-shadow: 0 0 0 3px rgba(41, 151, 255, 0.2);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.input-group input.correct-input {
+    border-color: rgba(48, 209, 88, 0.5);
+    background: rgba(48, 209, 88, 0.1);
+}
+
+.input-group input.incorrect-input {
+    border-color: rgba(255, 69, 58, 0.5);
+    background: rgba(255, 69, 58, 0.1);
+}
+
+.result {
+    margin-top: 20px;
+    padding: 16px;
+    border-radius: 10px;
+    font-weight: 500;
+    display: none;
+    animation: slideIn 0.3s ease;
+}
+
+/* =================================================================================
+   10. MATCHING GAME & QUIZ
+   ================================================================================= */
+.matching-game-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.match-column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.match-card {
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s ease;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.match-card:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.match-card.selected {
+    background: rgba(41, 151, 255, 0.2);
+    border-color: rgba(41, 151, 255, 0.3);
+    color: #2997FF;
+    transform: scale(1.02);
+}
+
+.match-card.matched {
+    background: rgba(48, 209, 88, 0.2);
+    border-color: rgba(48, 209, 88, 0.3);
+    color: #30D158;
+    cursor: default;
+    opacity: 0.8;
+}
+
+.match-card.error {
+    background: rgba(255, 69, 58, 0.2);
+    border-color: rgba(255, 69, 58, 0.3);
+    color: #FF453A;
+    animation: shake 0.4s ease;
+}
+
+.quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.quiz-option {
+    padding: 18px 22px;
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.3s ease;
+}
+
+.quiz-option:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.quiz-option.selected {
+    background: rgba(41, 151, 255, 0.2);
+    border-color: rgba(41, 151, 255, 0.3);
+}
+
+.quiz-option.correct-quiz {
+    background: rgba(48, 209, 88, 0.2);
+    border-color: rgba(48, 209, 88, 0.3);
+    cursor: default;
+}
+
+.quiz-option.incorrect-quiz {
+    background: rgba(255, 69, 58, 0.2);
+    border-color: rgba(255, 69, 58, 0.3);
+    cursor: default;
+}
+
+.opt-letter {
+    font-weight: 700;
+    color: rgba(41, 151, 255, 0.9);
+    min-width: 24px;
+}
+
+/* =================================================================================
+   11. FINAL SCORE SECTION
+   ================================================================================= */
+.final-score-section {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.btn-final-score {
+    padding: 20px 60px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, rgba(41, 151, 255, 0.9), rgba(120, 86, 255, 0.9));
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    box-shadow: 
+        0 8px 40px rgba(41, 151, 255, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+.btn-final-score:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 
+        0 12px 50px rgba(41, 151, 255, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+}
+
+.global-result {
+    margin-top: 40px;
+    padding: 40px;
+    border-radius: 20px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: slideIn 0.6s ease-out;
+}
+
+.global-result.hidden {
+    display: none;
+}
+
+.score-high {
+    background: rgba(48, 209, 88, 0.1);
+    border-color: rgba(48, 209, 88, 0.3);
+}
+
+.score-mid {
+    background: rgba(255, 214, 10, 0.1);
+    border-color: rgba(255, 214, 10, 0.3);
+}
+
+.score-low {
+    background: rgba(255, 69, 58, 0.1);
+    border-color: rgba(255, 69, 58, 0.3);
+}
+
+.error-report {
+    margin-top: 30px;
+    padding: 30px;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    display: none;
+}
+
+.error-item {
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.error-item:last-child {
+    border-bottom: none;
+}
+
+/* =================================================================================
+   12. FOOTER
+   ================================================================================= */
+.footer {
+    text-align: center;
+    margin-top: 60px;
+    padding: 30px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+}
+
+.footer a {
+    color: rgba(41, 151, 255, 0.9);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer a:hover {
+    color: rgba(41, 151, 255, 1);
+}
+
+.footer-note {
+    margin-top: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    font-size: 0.85rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* =================================================================================
+   13. ANIMATIONS
+   ================================================================================= */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    20%, 60% {
+        transform: translateX(-5px);
+    }
+    40%, 80% {
+        transform: translateX(5px);
+    }
+}
+
+@keyframes gradient-pan {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* =================================================================================
+   14. RESPONSIVE DESIGN - GITHUB PAGES OPTIMIZED
+   ================================================================================= */
+@media (max-width: 1024px) {
+    .card-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .header {
+        padding: 40px 25px;
+        margin-bottom: 30px;
+    }
+    
+    .section-wrapper,
+    .verbs-section,
+    .activities-section {
+        padding: 20px;
+        border-radius: 16px;
+    }
+    
+    .section-header-row {
+        padding: 14px 18px;
+    }
+    
+    .card-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 15px;
+    }
+    
+    .card {
+        height: 220px;
+    }
+    
+    .card-front,
+    .card-back {
+        padding: 20px;
+    }
+    
+    .matching-game-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .verbs-filter {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .btn-filter {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+    
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .legend {
+        padding: 15px;
+        gap: 8px;
+    }
+    
+    .legend-item {
+        padding: 8px 14px;
+        font-size: 0.8rem;
+    }
+    
+    .btn-final-score {
+        padding: 18px 40px;
+        font-size: 1.1rem;
+    }
+    
+    .global-result {
+        padding: 25px;
+    }
+    
+    .footer {
+        margin-top: 40px;
+        padding: 25px 0;
+    }
+}
+
+/* =================================================================================
+   15. PRINT STYLES - GITHUB PAGES
+   ================================================================================= */
+@media print {
+    .github-pages-notice,
+    .controls,
+    .btn-icon,
+    .legend,
+    .verbs-filter,
+    .btn-check,
+    .btn-final-score,
+    .btn-reset {
+        display: none !important;
+    }
+    
+    body {
+        background: white !important;
+        color: black !important;
+        font-size: 12pt;
+    }
+    
+    .container {
+        max-width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+    
+    .header,
+    .section-wrapper,
+    .verbs-section,
+    .activities-section,
+    .activity,
+    .exercise {
+        background: white !important;
+        color: black !important;
+        border: 1px solid #ddd !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        margin-bottom: 20px;
+        break-inside: avoid;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        color: black !important;
+    }
+    
+    p, .subtitle {
+        color: #333 !important;
+    }
+    
+    .card-grid {
+        display: block !important;
+    }
+    
+    .card {
+        height: auto;
+        margin-bottom: 20px;
+        page-break-inside: avoid;
+    }
+    
+    .card-inner {
+        transform: none !important;
+    }
+    
+    .card-front,
+    .card-back {
+        position: relative;
+        transform: none;
+        backface-visibility: visible;
+        page-break-inside: avoid;
+        border: 1px solid #ccc !important;
+        background: white !important;
+        color: black !important;
+        margin-bottom: 10px;
+    }
+    
+    .card-back {
+        border-left: 4px solid #2997FF !important;
+    }
+    
+    .verbs-table {
+        border: 1px solid #ddd;
+    }
+    
+    .verbs-table th,
+    .verbs-table td {
+        border: 1px solid #ddd;
+        color: black !important;
+    }
+    
+    a {
+        color: #0066cc !important;
+        text-decoration: underline;
+    }
+    
+    .footer {
+        border-top: 1px solid #ddd;
+        color: #666 !important;
+    }
+}
+
+/* =================================================================================
+   16. ACCESSIBILITY IMPROVEMENTS
+   ================================================================================= */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+:focus-visible {
+    outline: 2px solid rgba(41, 151, 255, 0.8);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* =================================================================================
+   17. CUSTOM SCROLLBAR - GLASS EFFECT
+   ================================================================================= */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
+}
+
+/* =================================================================================
+   18. UTILITY CLASSES
+   ================================================================================= */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+.mb-1 { margin-bottom: 0.5rem; }
+.mb-2 { margin-bottom: 1rem; }
+.mb-3 { margin-bottom: 1.5rem; }
+.mb-4 { margin-bottom: 2rem; }
+.mt-1 { margin-top: 0.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-3 { margin-top: 1.5rem; }
+.mt-4 { margin-top: 2rem; }
+.hidden { display: none !important; }
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.gap-2 { gap: 0.5rem; }
+.gap-4 { gap: 1rem; }
+.gap-8 { gap: 2rem; }
+
+/* =================================================================================
+   19. INSTRUCTION STEPS
+   ================================================================================= */
+.instructions-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.instruction-step {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 25px;
+    transition: all 0.3s ease;
+}
+
+.instruction-step:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.instruction-step h3 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.instruction-step h3 i {
+    color: #2997FF;
+    font-size: 1.2rem;
+}
+
+/* =================================================================================
+   20. LOADING STATES
+   ================================================================================= */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.loading-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* =================================================================================
+   END OF CSS - OPTIMIZED FOR GITHUB PAGES
+   ================================================================================= */
