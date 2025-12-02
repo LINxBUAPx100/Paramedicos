@@ -1,0 +1,1676 @@
+// ============================================
+// script.js - R.E.S.C.A.T.E. Plan de Estudios
+// ============================================
+// 
+// INSTRUCCIONES PARA EDITAR ESTE ARCHIVO:
+// 1. Para agregar más flashcards: Busca la variable 'flashcardsData' y añade nuevas entradas
+// 2. Para agregar más preguntas de quiz: Busca la variable 'quizData' y añade nuevas entradas
+// 3. Para cambiar la configuración: Modifica las variables en 'CONFIGURACIÓN INICIAL'
+// 4. Para agregar nuevas funcionalidades: Añade nuevas funciones al final del archivo
+//
+// ============================================
+
+// CONFIGURACIÓN INICIAL
+// ============================================
+const CONFIG = {
+    temaInicial: 'light', // 'light' o 'dark'
+    sonidosHabilitados: true,
+    animacionesHabilitadas: true,
+    tiempoTransicionFlashcard: 600, // ms
+    tiempoMostrarFeedback: 3000, // ms
+    puntajeMinimoAprobacion: 60, // porcentaje
+    localStorageKey: 'rescate_paramedico_data'
+};
+
+// DATOS DEL PLAN DE ESTUDIOS
+// ============================================
+const planEstudios = {
+    institucion: "R.E.S.C.A.T.E.",
+    nombreCompleto: "Red de Enseñanza en Sistemas de Capacitación y Atención Técnica de Emergencias",
+    plan: "PARAMÉDICO",
+    eslogan: "TU VOCACIÓN TIENE PULSO",
+    modulos: [
+        {
+            id: 1,
+            nombre: "PROPEDÉUTICO (PRIMEROS AUXILIOS BÁSICOS E INTERMEDIOS)",
+            temas: [
+                "Primeros auxilios básicos",
+                "Primeros auxilios intermedios",
+                "Introducción al sistema médico de urgencias"
+            ],
+            horas: 40,
+            color: "#0d47a1",
+            icono: "fa-stethoscope"
+        },
+        {
+            id: 2,
+            nombre: "EL CUERPO HUMANO (PRINCIPIOS DE ANATOMÍA Y FISIOLOGÍA)",
+            temas: [
+                "Anatomía y fisiología esencial",
+                "Anatomía y fisiología intermedia",
+                "Anatomía opcional"
+            ],
+            horas: 50,
+            color: "#d32f2f",
+            icono: "fa-heart-pulse"
+        },
+        {
+            id: 3,
+            nombre: "EVALUACIÓN INICIAL Y SOPORTE VITAL",
+            temas: [
+                "Evaluación primaria",
+                "Evaluación secundaria",
+                "Manejo de la vía aérea",
+                "Vía intravenosa",
+                "Monitor desfibrilador"
+            ],
+            horas: 60,
+            color: "#388e3c",
+            icono: "fa-heart-circle-plus"
+        },
+        {
+            id: 4,
+            nombre: "MANEJO DE URGENCIAS MÉDICO QUIRÚRGICAS",
+            temas: [
+                "Epidemiología y clasificación de enfermedades",
+                "Farmacología",
+                "Prácticas",
+                "Urgencias respiratorias",
+                "Urgencias gastrointestinales",
+                "Urgencias cardiológicas",
+                "Urgencias metabólicas",
+                "Urgencias urinarias",
+                "Urgencias del sistema nervioso",
+                "Urgencias gineco-obstétricas",
+                "Urgencias toxicológicas"
+            ],
+            horas: 80,
+            color: "#f57c00",
+            icono: "fa-briefcase-medical"
+        },
+        {
+            id: 5,
+            nombre: "EMERGENCIAS TRAUMATOLÓGICAS",
+            temas: [
+                "Cinemática de trauma y mecanismos de lesión",
+                "Hemorragia y estado de shock",
+                "Trauma de tórax",
+                "Trauma de abdomen",
+                "Trauma de cráneo y columna",
+                "Trauma de ojo, cara y cuello",
+                "Trauma musculoesquelético",
+                "Lesiones ambientales",
+                "Quemaduras"
+            ],
+            horas: 70,
+            color: "#7b1fa2",
+            icono: "fa-user-injured",
+            certificacion: "CERTIFICADO RED CONOCER (SEP)"
+        },
+        {
+            id: 6,
+            nombre: "POBLACIONES ESPECIALES (URGENCIAS PEDIÁTRICAS Y GERIÁTRICAS)",
+            temas: [
+                "Introducción a la pediatría y evaluación del paciente pediátrico",
+                "Situaciones especiales",
+                "Soporte vital en pediátrico",
+                "Emergencias médico quirúrgicas en pediatría",
+                "Traumatismo en el paciente pediátrico",
+                "Introducción a la geriatría",
+                "Evaluación y manejo del paciente geriátrico"
+            ],
+            horas: 55,
+            color: "#0288d1",
+            icono: "fa-children"
+        },
+        {
+            id: 7,
+            nombre: "OPERACIONES ESPECIALES",
+            temas: [
+                "Operaciones de ambulancias",
+                "Obtención de acceso y extracción",
+                "Operaciones especiales",
+                "Manejo de escenarios con múltiples víctimas (Triage)",
+                "Campamento y supervivencia"
+            ],
+            horas: 45,
+            color: "#5d4037",
+            icono: "fa-truck-medical"
+        }
+    ],
+    requisitos: {
+        servicioSocial: 320,
+        cursosEspecializacion: 2,
+        campamento: 1
+    },
+    contacto: {
+        sitioWeb: "www.rescate.pro",
+        telefono: "220 175 2227",
+        direccion: "9 Río Conchos 5142, Jardines de San Manuel, 72560, Puebla, Pue.",
+        redes: {
+            facebook: "rescate.pro",
+            instagram: "rescate.pro",
+            twitter: "rescate.pro"
+        }
+    }
+};
+
+// DATOS DE FLASHCARDS - PARA AGREGAR MÁS, AÑADE NUEVAS ENTRADAS AQUÍ
+// ============================================
+const flashcardsData = {
+    1: [  // Módulo 1
+        {
+            id: 1,
+            pregunta: "¿Cuál es el primer paso en la evaluación de un paciente?",
+            respuesta: "Evaluación primaria: verificar consciencia, vía aérea, respiración y circulación (ABC).",
+            dificultad: "básica",
+            categoria: "Evaluación"
+        },
+        {
+            id: 2,
+            pregunta: "¿Qué es el triage y cuál es su propósito?",
+            respuesta: "El triage es el proceso de clasificación de pacientes según la gravedad de sus lesiones para priorizar la atención en situaciones con múltiples víctimas.",
+            dificultad: "intermedia",
+            categoria: "Terminología"
+        },
+        {
+            id: 3,
+            pregunta: "¿Cuáles son los signos de una vía aérea obstruida?",
+            respuesta: "Sonidos respiratorios anormales (estridor, estertores), uso de músculos accesorios, cianosis, agitación o disminución del nivel de consciencia.",
+            dificultad: "básica",
+            categoria: "Síntomas"
+        },
+        {
+            id: 4,
+            pregunta: "¿Qué es el shock y cuáles son sus tipos principales?",
+            respuesta: "El shock es un estado de perfusión tisular inadecuada. Los tipos principales son: hipovolémico, cardiogénico, distributivo y obstructivo.",
+            dificultad: "avanzada",
+            categoria: "Fisiopatología"
+        },
+        {
+            id: 5,
+            pregunta: "¿Cómo se realiza la maniobra de Heimlich en adultos?",
+            respuesta: "Colocarse detrás del paciente, rodearlo con los brazos, hacer un puño con una mano y colocar el pulgar por encima del ombligo, agarrar el puño con la otra mano y realizar compresiones abdominales hacia arriba y adentro.",
+            dificultad: "básica",
+            categoria: "Técnicas"
+        }
+    ],
+    2: [  // Módulo 2
+        {
+            id: 1,
+            pregunta: "¿Cuáles son los huesos del cráneo?",
+            respuesta: "Frontal, parietal (2), temporal (2), occipital, esfenoides y etmoides.",
+            dificultad: "básica",
+            categoria: "Anatomía"
+        },
+        {
+            id: 2,
+            pregunta: "¿Qué es el sistema cardiovascular y qué órganos lo componen?",
+            respuesta: "El sistema cardiovascular está formado por el corazón, vasos sanguíneos (arterias, venas, capilares) y la sangre. Su función es transportar oxígeno, nutrientes y hormonas a las células.",
+            dificultad: "intermedia",
+            categoria: "Fisiología"
+        }
+    ],
+    3: [  // Módulo 3
+        {
+            id: 1,
+            pregunta: "¿Cuál es la secuencia ABCDE en la evaluación primaria?",
+            respuesta: "A: Vía aérea, B: Respiración, C: Circulación, D: Discapacidad neurológica, E: Exposición/Control ambiental.",
+            dificultad: "básica",
+            categoria: "Protocolos"
+        },
+        {
+            id: 2,
+            pregunta: "¿Cuál es la frecuencia de compresiones torácicas en RCP para adultos?",
+            respuesta: "100-120 compresiones por minuto, con una profundidad de 5-6 cm.",
+            dificultad: "básica",
+            categoria: "RCP"
+        }
+    ],
+    4: [  // Módulo 4
+        {
+            id: 1,
+            pregunta: "¿Cuáles son los signos de un infarto agudo de miocardio?",
+            respuesta: "Dolor torácico opresivo, irradiado a brazo izquierdo, mandíbula o espalda; diaforesis, náuseas, disnea y sensación de muerte inminente.",
+            dificultad: "intermedia",
+            categoria: "Cardiología"
+        },
+        {
+            id: 2,
+            pregunta: "¿Qué es el status asmático y cómo se maneja?",
+            respuesta: "Crisis asmática severa que no responde al tratamiento convencional. Manejo: oxígeno, broncodilatadores nebulizados, corticosteroides y posible intubación.",
+            dificultad: "avanzada",
+            categoria: "Respiratorio"
+        }
+    ],
+    5: [  // Módulo 5
+        {
+            id: 1,
+            pregunta: "¿Qué es el trauma penetrante vs. trauma contuso?",
+            respuesta: "Penetrante: lesión por objeto que perfora la piel y tejidos. Contuso: lesión por impacto sin penetración de la piel.",
+            dificultad: "básica",
+            categoria: "Trauma"
+        },
+        {
+            id: 2,
+            pregunta: "¿Cuáles son los signos de un neumotórax a tensión?",
+            respuesta: "Dificultad respiratoria severa, desviación traqueal, distensión venosa yugular, hipotensión y sonidos respiratorios disminuidos en el lado afectado.",
+            dificultad: "intermedia",
+            categoria: "Torácico"
+        }
+    ],
+    6: [  // Módulo 6
+        {
+            id: 1,
+            pregunta: "¿Cuál es la frecuencia cardiaca normal en un lactante?",
+            respuesta: "100-160 latidos por minuto.",
+            dificultad: "básica",
+            categoria: "Pediatría"
+        },
+        {
+            id: 2,
+            pregunta: "¿Qué es la regla de Broselow y para qué se usa?",
+            respuesta: "Cinta de colores que correlaciona la longitud del niño con peso, dosis de medicamentos y tamaño de equipo en emergencias pediátricas.",
+            dificultad: "intermedia",
+            categoria: "Pediatría"
+        }
+    ],
+    7: [  // Módulo 7
+        {
+            id: 1,
+            pregunta: "¿Qué es el triage START y cuáles son sus categorías?",
+            respuesta: "Sistema Simple de Triage y Tratamiento Rápido. Categorías: Rojo (inmediato), Amarillo (urgente), Verde (mínimo), Negro (fallecido/expectante).",
+            dificultad: "intermedia",
+            categoria: "Operaciones"
+        },
+        {
+            id: 2,
+            pregunta: "¿Cuáles son los componentes del equipo de protección personal (EPP) en ambulancias?",
+            respuesta: "Guantes, bata, protección ocular, mascarilla/respirador y protección para calzado según el riesgo.",
+            dificultad: "básica",
+            categoria: "Seguridad"
+        }
+    ]
+};
+
+// DATOS DE QUIZZES - PARA AGREGAR MÁS PREGUNTAS, AÑADE NUEVAS ENTRADAS AQUÍ
+// ============================================
+const quizData = {
+    1: {
+        titulo: "Quiz - Módulo 1: Propedéutico",
+        preguntas: [
+            {
+                id: 1,
+                pregunta: "¿Cuál es la frecuencia de compresiones torácicas en RCP para adultos?",
+                opciones: [
+                    "60-80 compresiones por minuto",
+                    "100-120 compresiones por minuto",
+                    "80-100 compresiones por minuto",
+                    "120-140 compresiones por minuto"
+                ],
+                respuestaCorrecta: 1,
+                explicacion: "La AHA recomienda 100-120 compresiones por minuto para RCP en adultos.",
+                puntos: 10
+            },
+            {
+                id: 2,
+                pregunta: "¿Cuál es la relación compresiones:ventilaciones en RCP para adultos con un solo reanimador?",
+                opciones: [
+                    "15:2",
+                    "30:2",
+                    "5:1",
+                    "10:1"
+                ],
+                respuestaCorrecta: 1,
+                explicacion: "Para un solo reanimador en adultos, la relación es 30 compresiones por 2 ventilaciones.",
+                puntos: 10
+            },
+            {
+                id: 3,
+                pregunta: "¿Qué signo NO es parte de la evaluación primaria (ABCDE)?",
+                opciones: [
+                    "Vía aérea (Airway)",
+                    "Exposición (Exposure)",
+                    "Temperatura (Temperature)",
+                    "Circulación (Circulation)"
+                ],
+                respuestaCorrecta: 2,
+                explicacion: "ABCDE significa: Airway, Breathing, Circulation, Disability, Exposure. Temperatura no es parte de esta evaluación inicial.",
+                puntos: 10
+            },
+            {
+                id: 4,
+                pregunta: "¿Cuál es el tiempo máximo recomendado para interrumpir compresiones torácicas?",
+                opciones: [
+                    "5 segundos",
+                    "10 segundos",
+                    "20 segundos",
+                    "30 segundos"
+                ],
+                respuestaCorrecta: 1,
+                explicacion: "Las interrupciones en las compresiones torácicas no deben exceder los 10 segundos.",
+                puntos: 10
+            },
+            {
+                id: 5,
+                pregunta: "¿Cuál es el primer paso al encontrar a una víctima inconsciente?",
+                opciones: [
+                    "Verificar pulso",
+                    "Abrir la vía aérea",
+                    "Verificar respiración",
+                    "Evaluar respuesta"
+                ],
+                respuestaCorrecta: 3,
+                explicacion: "El primer paso es evaluar respuesta: tocar los hombros y preguntar '¿Está bien?'",
+                puntos: 10
+            }
+        ]
+    },
+    2: {
+        titulo: "Quiz - Módulo 2: Anatomía y Fisiología",
+        preguntas: [
+            {
+                id: 1,
+                pregunta: "¿Cuál es el hueso más largo del cuerpo humano?",
+                opciones: [
+                    "Fémur",
+                    "Tibia",
+                    "Húmero",
+                    "Peroné"
+                ],
+                respuestaCorrecta: 0,
+                explicacion: "El fémur es el hueso más largo y fuerte del cuerpo humano.",
+                puntos: 10
+            },
+            {
+                id: 2,
+                pregunta: "¿Qué órgano produce la bilis?",
+                opciones: [
+                    "Páncreas",
+                    "Hígado",
+                    "Vesícula biliar",
+                    "Estómago"
+                ],
+                respuestaCorrecta: 1,
+                explicacion: "El hígado produce bilis, que se almacena en la vesícula biliar y se libera para digerir grasas.",
+                puntos: 10
+            }
+        ]
+    },
+    // NOTA: Para agregar quizzes para más módulos, sigue la misma estructura
+    // Ejemplo para módulo 3:
+    // 3: { titulo: "...", preguntas: [...] }
+};
+
+// VARIABLES GLOBALES DE LA APLICACIÓN
+// ============================================
+let estado = {
+    temaActual: CONFIG.temaInicial,
+    moduloActual: 1,
+    flashcardActual: {
+        modulo: 1,
+        indice: 0,
+        volteada: false
+    },
+    quizActual: {
+        modulo: 1,
+        indicePregunta: 0,
+        respuestasUsuario: [],
+        completado: false,
+        puntaje: 0
+    },
+    progresoUsuario: {
+        modulosCompletados: [],
+        flashcardsEstudiadas: 0,
+        quizzesCompletados: [],
+        ultimoAcceso: null
+    },
+    recursosUsuario: {
+        imagenesSubidas: [],
+        notasPersonales: {}
+    }
+};
+
+// INICIALIZACIÓN DE LA APLICACIÓN
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('R.E.S.C.A.T.E. - Inicializando aplicación...');
+    
+    // Cargar estado guardado del usuario
+    cargarEstadoUsuario();
+    
+    // Inicializar componentes
+    inicializarTema();
+    inicializarNavegacion();
+    inicializarModulos();
+    inicializarFlashcards();
+    inicializarQuizzes();
+    inicializarRecursos();
+    inicializarEventosGlobales();
+    
+    // Actualizar interfaz
+    actualizarInterfaz();
+    
+    console.log('Aplicación inicializada correctamente');
+});
+
+// FUNCIONES DE GESTIÓN DEL TEMA (CLARO/OSCURO)
+// ============================================
+function inicializarTema() {
+    const temaGuardado = localStorage.getItem('rescate_tema');
+    if (temaGuardado) {
+        estado.temaActual = temaGuardado;
+    }
+    
+    aplicarTema(estado.temaActual);
+    
+    // Configurar botón de cambio de tema
+    const botonTema = document.getElementById('theme-toggle');
+    if (botonTema) {
+        botonTema.addEventListener('click', alternarTema);
+        actualizarIconoTema();
+    }
+}
+
+function aplicarTema(tema) {
+    if (tema === 'dark') {
+        document.body.classList.add('dark-theme');
+    } else {
+        document.body.classList.remove('dark-theme');
+    }
+    estado.temaActual = tema;
+    localStorage.setItem('rescate_tema', tema);
+}
+
+function alternarTema() {
+    estado.temaActual = estado.temaActual === 'light' ? 'dark' : 'light';
+    aplicarTema(estado.temaActual);
+    actualizarIconoTema();
+    mostrarNotificacion(`Tema cambiado a ${estado.temaActual === 'light' ? 'claro' : 'oscuro'}`, 'info');
+}
+
+function actualizarIconoTema() {
+    const icono = document.querySelector('#theme-toggle i');
+    if (icono) {
+        icono.className = estado.temaActual === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+    }
+}
+
+// FUNCIONES DE NAVEGACIÓN
+// ============================================
+function inicializarNavegacion() {
+    // Menú hamburguesa para móviles
+    const botonMenu = document.querySelector('.nav-toggle');
+    const menu = document.querySelector('.nav-menu');
+    
+    if (botonMenu && menu) {
+        botonMenu.addEventListener('click', function() {
+            menu.classList.toggle('active');
+            const icono = botonMenu.querySelector('i');
+            icono.classList.toggle('fa-bars');
+            icono.classList.toggle('fa-times');
+        });
+        
+        // Cerrar menú al hacer clic en un enlace
+        const enlaces = document.querySelectorAll('.nav-link');
+        enlaces.forEach(enlace => {
+            enlace.addEventListener('click', function() {
+                menu.classList.remove('active');
+                const icono = botonMenu.querySelector('i');
+                icono.className = 'fas fa-bars';
+            });
+        });
+    }
+    
+    // Navegación suave entre secciones
+    document.querySelectorAll('a[href^="#"]').forEach(enlace => {
+        enlace.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href === '#' || href === '#!') return;
+            
+            e.preventDefault();
+            const objetivo = document.querySelector(href);
+            if (objetivo) {
+                const alturaNav = document.querySelector('.navbar').offsetHeight;
+                const posicion = objetivo.offsetTop - alturaNav - 20;
+                
+                window.scrollTo({
+                    top: posicion,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+}
+
+// FUNCIONES DE GESTIÓN DE MÓDULOS
+// ============================================
+function inicializarModulos() {
+    // Esta función se encarga de crear dinámicamente los módulos en la página
+    // Si prefieres que los módulos sean estáticos en el HTML, puedes omitir esta función
+    console.log('Inicializando módulos del plan de estudios...');
+    
+    // Ejemplo de cómo podrías crear módulos dinámicamente:
+    // const contenedorModulos = document.getElementById('modulos-container');
+    // if (contenedorModulos) {
+    //     planEstudios.modulos.forEach(modulo => {
+    //         contenedorModulos.appendChild(crearElementoModulo(modulo));
+    //     });
+    // }
+}
+
+// FUNCIONES DE FLASHCARDS
+// ============================================
+function inicializarFlashcards() {
+    // Inicializar flashcards para cada módulo
+    const contenedoresFlashcards = document.querySelectorAll('.flashcards-container');
+    
+    contenedoresFlashcards.forEach(contenedor => {
+        const modulo = parseInt(contenedor.getAttribute('data-module'));
+        
+        if (flashcardsData[modulo] && flashcardsData[modulo].length > 0) {
+            configurarFlashcardsModulo(contenedor, modulo);
+        } else {
+            mostrarMensajeSinDatos(contenedor, 'flashcards', modulo);
+        }
+    });
+}
+
+function configurarFlashcardsModulo(contenedor, modulo) {
+    // Configurar controles de navegación
+    const botonAnterior = contenedor.querySelector('#prev-card');
+    const botonSiguiente = contenedor.querySelector('#next-card');
+    const botonVoltear = contenedor.querySelector('#flip-card');
+    const botonMezclar = contenedor.querySelector('#shuffle-cards');
+    const contador = contenedor.querySelector('#card-counter');
+    const flashcard = contenedor.querySelector('.flashcard');
+    
+    // Actualizar estado
+    estado.flashcardActual.modulo = modulo;
+    estado.flashcardActual.indice = 0;
+    
+    // Configurar eventos
+    if (botonAnterior) {
+        botonAnterior.addEventListener('click', () => navegarFlashcard(-1, modulo));
+    }
+    
+    if (botonSiguiente) {
+        botonSiguiente.addEventListener('click', () => navegarFlashcard(1, modulo));
+    }
+    
+    if (botonVoltear) {
+        botonVoltear.addEventListener('click', () => {
+            if (flashcard) {
+                flashcard.classList.toggle('flipped');
+                estado.flashcardActual.volteada = !estado.flashcardActual.volteada;
+            }
+        });
+    }
+    
+    if (botonMezclar) {
+        botonMezclar.addEventListener('click', () => mezclarFlashcards(modulo));
+    }
+    
+    // Permitir voltear con clic en la tarjeta
+    if (flashcard) {
+        flashcard.addEventListener('click', function(e) {
+            if (!e.target.closest('.flashcard-btn')) {
+                this.classList.toggle('flipped');
+                estado.flashcardActual.volteada = !estado.flashcardActual.volteada;
+            }
+        });
+    }
+    
+    // Cargar la primera flashcard
+    actualizarFlashcard(modulo);
+}
+
+function navegarFlashcard(direccion, modulo) {
+    const flashcards = flashcardsData[modulo];
+    if (!flashcards || flashcards.length === 0) return;
+    
+    estado.flashcardActual.indice += direccion;
+    
+    // Circular entre flashcards
+    if (estado.flashcardActual.indice < 0) {
+        estado.flashcardActual.indice = flashcards.length - 1;
+    } else if (estado.flashcardActual.indice >= flashcards.length) {
+        estado.flashcardActual.indice = 0;
+    }
+    
+    // Resetear estado volteada
+    estado.flashcardActual.volteada = false;
+    
+    actualizarFlashcard(modulo);
+    registrarEstudioFlashcard(modulo);
+}
+
+function actualizarFlashcard(modulo) {
+    const flashcards = flashcardsData[modulo];
+    if (!flashcards || flashcards.length === 0) return;
+    
+    const flashcardActual = flashcards[estado.flashcardActual.indice];
+    const contenedor = document.querySelector(`.flashcards-container[data-module="${modulo}"]`);
+    
+    if (!contenedor) return;
+    
+    // Actualizar contador
+    const contador = contenedor.querySelector('#card-counter');
+    if (contador) {
+        contador.textContent = `${estado.flashcardActual.indice + 1}/${flashcards.length}`;
+    }
+    
+    // Actualizar contenido
+    const frente = contenedor.querySelector('.flashcard-front .flashcard-question');
+    const reverso = contenedor.querySelector('.flashcard-back .flashcard-answer');
+    
+    if (frente) {
+        frente.textContent = flashcardActual.pregunta;
+    }
+    
+    if (reverso) {
+        reverso.textContent = flashcardActual.respuesta;
+        
+        // Añadir información adicional si existe
+        if (flashcardActual.categoria || flashcardActual.dificultad) {
+            let infoExtra = '';
+            if (flashcardActual.categoria) {
+                infoExtra += `<div class="flashcard-categoria">Categoría: ${flashcardActual.categoria}</div>`;
+            }
+            if (flashcardActual.dificultad) {
+                infoExtra += `<div class="flashcard-dificultad">Dificultad: ${flashcardActual.dificultad}</div>`;
+            }
+            reverso.innerHTML = flashcardActual.respuesta + infoExtra;
+        }
+    }
+    
+    // Asegurarse de que la tarjeta no esté volteada
+    const flashcard = contenedor.querySelector('.flashcard');
+    if (flashcard) {
+        flashcard.classList.remove('flipped');
+        estado.flashcardActual.volteada = false;
+    }
+}
+
+function mezclarFlashcards(modulo) {
+    const flashcards = flashcardsData[modulo];
+    if (!flashcards) return;
+    
+    // Algoritmo de Fisher-Yates para mezclar
+    for (let i = flashcards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [flashcards[i], flashcards[j]] = [flashcards[j], flashcards[i]];
+    }
+    
+    estado.flashcardActual.indice = 0;
+    actualizarFlashcard(modulo);
+    
+    mostrarNotificacion('Flashcards mezcladas correctamente', 'success');
+    registrarEstudioFlashcard(modulo);
+}
+
+function registrarEstudioFlashcard(modulo) {
+    // Registrar en el progreso del usuario
+    estado.progresoUsuario.flashcardsEstudiadas++;
+    
+    // Marcar módulo como estudiado si no está en la lista
+    if (!estado.progresoUsuario.modulosCompletados.includes(modulo)) {
+        estado.progresoUsuario.modulosCompletados.push(modulo);
+    }
+    
+    guardarEstadoUsuario();
+}
+
+// FUNCIONES DE QUIZZES
+// ============================================
+function inicializarQuizzes() {
+    // Inicializar quizzes para cada módulo
+    const contenedoresQuizzes = document.querySelectorAll('.quiz-container');
+    
+    contenedoresQuizzes.forEach(contenedor => {
+        const modulo = parseInt(contenedor.getAttribute('data-module'));
+        
+        if (quizData[modulo] && quizData[modulo].preguntas.length > 0) {
+            configurarQuizModulo(contenedor, modulo);
+        } else {
+            mostrarMensajeSinDatos(contenedor, 'quiz', modulo);
+        }
+    });
+}
+
+function configurarQuizModulo(contenedor, modulo) {
+    // Resetear estado del quiz
+    estado.quizActual.modulo = modulo;
+    estado.quizActual.indicePregunta = 0;
+    estado.quizActual.respuestasUsuario = [];
+    estado.quizActual.completado = false;
+    estado.quizActual.puntaje = 0;
+    
+    // Configurar elementos
+    const botonVerificar = contenedor.querySelector('#submit-quiz');
+    const botonSiguiente = contenedor.querySelector('#next-question');
+    const opciones = contenedor.querySelectorAll('.option input');
+    
+    // Configurar eventos de opciones
+    opciones.forEach(opcion => {
+        opcion.addEventListener('change', function() {
+            // Habilitar botón de verificar
+            if (botonVerificar) {
+                botonVerificar.disabled = false;
+            }
+            
+            // Resaltar opción seleccionada
+            opciones.forEach(opt => {
+                opt.parentElement.classList.remove('selected');
+            });
+            
+            if (this.checked) {
+                this.parentElement.classList.add('selected');
+            }
+        });
+    });
+    
+    // Configurar botón verificar
+    if (botonVerificar) {
+        botonVerificar.addEventListener('click', () => verificarRespuesta(modulo));
+        botonVerificar.disabled = true; // Inicialmente deshabilitado
+    }
+    
+    // Configurar botón siguiente
+    if (botonSiguiente) {
+        botonSiguiente.addEventListener('click', () => siguientePregunta(modulo));
+        botonSiguiente.style.display = 'none'; // Ocultar inicialmente
+    }
+    
+    // Cargar primera pregunta
+    cargarPreguntaQuiz(modulo);
+}
+
+function cargarPreguntaQuiz(modulo) {
+    const quiz = quizData[modulo];
+    if (!quiz || !quiz.preguntas[estado.quizActual.indicePregunta]) return;
+    
+    const preguntaActual = quiz.preguntas[estado.quizActual.indicePregunta];
+    const contenedor = document.querySelector(`.quiz-container[data-module="${modulo}"]`);
+    
+    if (!contenedor) return;
+    
+    // Actualizar progreso
+    const textoProgreso = contenedor.querySelector('.progress-text');
+    const preguntaActualSpan = contenedor.querySelector('#current-question');
+    const totalPreguntasSpan = contenedor.querySelector('#total-questions');
+    const barraProgreso = contenedor.querySelector('.progress-fill');
+    
+    if (preguntaActualSpan) {
+        preguntaActualSpan.textContent = estado.quizActual.indicePregunta + 1;
+    }
+    
+    if (totalPreguntasSpan) {
+        totalPreguntasSpan.textContent = quiz.preguntas.length;
+    }
+    
+    if (barraProgreso) {
+        const porcentaje = ((estado.quizActual.indicePregunta) / quiz.preguntas.length) * 100;
+        barraProgreso.style.width = `${porcentaje}%`;
+    }
+    
+    // Actualizar pregunta
+    const textoPregunta = contenedor.querySelector('#question-text');
+    if (textoPregunta) {
+        textoPregunta.textContent = preguntaActual.pregunta;
+    }
+    
+    // Actualizar opciones
+    const inputsOpciones = contenedor.querySelectorAll('.option input');
+    const labelsOpciones = contenedor.querySelectorAll('.option label');
+    
+    inputsOpciones.forEach((input, indice) => {
+        input.checked = false;
+        input.value = indice;
+        
+        const padre = input.parentElement;
+        padre.classList.remove('selected', 'correct', 'incorrect');
+    });
+    
+    labelsOpciones.forEach((label, indice) => {
+        if (preguntaActual.opciones[indice]) {
+            label.textContent = preguntaActual.opciones[indice];
+        }
+    });
+    
+    // Restablecer interfaz
+    const botonVerificar = contenedor.querySelector('#submit-quiz');
+    const botonSiguiente = contenedor.querySelector('#next-question');
+    const feedback = contenedor.querySelector('#quiz-feedback');
+    const resultados = contenedor.querySelector('#quiz-results');
+    
+    if (botonVerificar) {
+        botonVerificar.disabled = true;
+        botonVerificar.textContent = 'Verificar Respuesta';
+        botonVerificar.style.display = 'block';
+    }
+    
+    if (botonSiguiente) {
+        botonSiguiente.style.display = 'none';
+    }
+    
+    if (feedback) {
+        feedback.textContent = '';
+        feedback.className = 'quiz-feedback';
+        feedback.style.display = 'none';
+    }
+    
+    if (resultados) {
+        resultados.style.display = 'none';
+    }
+}
+
+function verificarRespuesta(modulo) {
+    const quiz = quizData[modulo];
+    if (!quiz || !quiz.preguntas[estado.quizActual.indicePregunta]) return;
+    
+    const preguntaActual = quiz.preguntas[estado.quizActual.indicePregunta];
+    const contenedor = document.querySelector(`.quiz-container[data-module="${modulo}"]`);
+    
+    if (!contenedor) return;
+    
+    // Obtener opción seleccionada
+    const opcionSeleccionada = contenedor.querySelector('input[name="quiz-option"]:checked');
+    if (!opcionSeleccionada) return;
+    
+    const indiceSeleccionado = parseInt(opcionSeleccionada.value);
+    const indiceCorrecto = preguntaActual.respuestaCorrecta;
+    const esCorrecta = indiceSeleccionado === indiceCorrecto;
+    
+    // Guardar respuesta del usuario
+    estado.quizActual.respuestasUsuario[estado.quizActual.indicePregunta] = {
+        seleccionada: indiceSeleccionado,
+        correcta: indiceCorrecto,
+        esCorrecta: esCorrecta
+    };
+    
+    // Actualizar puntaje
+    if (esCorrecta) {
+        estado.quizActual.puntaje += preguntaActual.puntos || 10;
+    }
+    
+    // Mostrar feedback
+    const feedback = contenedor.querySelector('#quiz-feedback');
+    if (feedback) {
+        if (esCorrecta) {
+            feedback.textContent = `¡Correcto! ${preguntaActual.explicacion || ''}`;
+            feedback.className = 'quiz-feedback correct';
+        } else {
+            const respuestaCorrectaTexto = preguntaActual.opciones[indiceCorrecto];
+            feedback.textContent = `Incorrecto. La respuesta correcta es: "${respuestaCorrectaTexto}". ${preguntaActual.explicacion || ''}`;
+            feedback.className = 'quiz-feedback incorrect';
+        }
+        feedback.style.display = 'block';
+    }
+    
+    // Resaltar opciones
+    const opciones = contenedor.querySelectorAll('.option');
+    opciones.forEach((opcion, indice) => {
+        if (indice === indiceCorrecto) {
+            opcion.classList.add('correct');
+        } else if (indice === indiceSeleccionado && !esCorrecta) {
+            opcion.classList.add('incorrect');
+        }
+    });
+    
+    // Actualizar botones
+    const botonVerificar = contenedor.querySelector('#submit-quiz');
+    const botonSiguiente = contenedor.querySelector('#next-question');
+    
+    if (botonVerificar) {
+        botonVerificar.style.display = 'none';
+    }
+    
+    if (botonSiguiente) {
+        botonSiguiente.style.display = 'block';
+        
+        // Cambiar texto si es la última pregunta
+        if (estado.quizActual.indicePregunta === quiz.preguntas.length - 1) {
+            botonSiguiente.textContent = 'Ver Resultados';
+        } else {
+            botonSiguiente.textContent = 'Siguiente Pregunta';
+        }
+    }
+}
+
+function siguientePregunta(modulo) {
+    const quiz = quizData[modulo];
+    if (!quiz) return;
+    
+    // Si es la última pregunta, mostrar resultados
+    if (estado.quizActual.indicePregunta === quiz.preguntas.length - 1) {
+        mostrarResultadosQuiz(modulo);
+        return;
+    }
+    
+    // Ir a la siguiente pregunta
+    estado.quizActual.indicePregunta++;
+    cargarPreguntaQuiz(modulo);
+}
+
+function mostrarResultadosQuiz(modulo) {
+    const quiz = quizData[modulo];
+    if (!quiz) return;
+    
+    const contenedor = document.querySelector(`.quiz-container[data-module="${modulo}"]`);
+    if (!contenedor) return;
+    
+    // Calcular porcentaje
+    const puntajeMaximo = quiz.preguntas.reduce((total, pregunta) => total + (pregunta.puntos || 10), 0);
+    const porcentaje = Math.round((estado.quizActual.puntaje / puntajeMaximo) * 100);
+    
+    // Crear HTML de resultados
+    let htmlResultados = `
+        <h4>Resultados del Quiz</h4>
+        <div class="puntaje-final">
+            <div class="puntaje-numero">${estado.quizActual.puntaje}/${puntajeMaximo}</div>
+            <div class="puntaje-porcentaje">${porcentaje}%</div>
+        </div>
+    `;
+    
+    // Mensaje según el puntaje
+    if (porcentaje >= 80) {
+        htmlResultados += `<p class="mensaje-resultado excelente">¡Excelente! Dominas este tema.</p>`;
+    } else if (porcentaje >= 60) {
+        htmlResultados += `<p class="mensaje-resultado bueno">Buen trabajo, pero puedes mejorar.</p>`;
+    } else {
+        htmlResultados += `<p class="mensaje-resultado mejorar">Necesitas repasar más este tema.</p>`;
+    }
+    
+    // Detalle de respuestas
+    htmlResultados += `<div class="detalle-respuestas">`;
+    quiz.preguntas.forEach((pregunta, indice) => {
+        const respuestaUsuario = estado.quizActual.respuestasUsuario[indice];
+        const esCorrecta = respuestaUsuario ? respuestaUsuario.esCorrecta : false;
+        
+        htmlResultados += `
+            <div class="detalle-pregunta ${esCorrecta ? 'correcta' : 'incorrecta'}">
+                <div class="pregunta-texto">${indice + 1}. ${pregunta.pregunta}</div>
+                <div class="respuesta-usuario">Tu respuesta: ${pregunta.opciones[respuestaUsuario?.seleccionada || 0]}</div>
+                <div class="respuesta-correcta">Respuesta correcta: ${pregunta.opciones[pregunta.respuestaCorrecta]}</div>
+            </div>
+        `;
+    });
+    htmlResultados += `</div>`;
+    
+    // Botones de acción
+    htmlResultados += `
+        <div class="acciones-resultados">
+            <button id="reiniciar-quiz" class="btn btn-primary">
+                <i class="fas fa-redo"></i> Repetir Quiz
+            </button>
+            <button id="ver-flashcards" class="btn btn-secondary">
+                <i class="fas fa-cards"></i> Repasar Flashcards
+            </button>
+        </div>
+    `;
+    
+    // Mostrar resultados
+    const resultadosDiv = contenedor.querySelector('#quiz-results');
+    if (resultadosDiv) {
+        resultadosDiv.innerHTML = htmlResultados;
+        resultadosDiv.classList.add('show');
+        resultadosDiv.style.display = 'block';
+        
+        // Configurar botones de acción
+        const botonReiniciar = resultadosDiv.querySelector('#reiniciar-quiz');
+        const botonFlashcards = resultadosDiv.querySelector('#ver-flashcards');
+        
+        if (botonReiniciar) {
+            botonReiniciar.addEventListener('click', () => reiniciarQuiz(modulo));
+        }
+        
+        if (botonFlashcards) {
+            botonFlashcards.addEventListener('click', () => {
+                // Desplazarse a las flashcards del módulo
+                const seccionModulo = document.querySelector(`#modulo${modulo}`);
+                if (seccionModulo) {
+                    seccionModulo.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        }
+    }
+    
+    // Ocultar otros elementos del quiz
+    const elementosAOcultar = [
+        '.quiz-question',
+        '.quiz-options',
+        '.quiz-actions',
+        '#quiz-feedback'
+    ];
+    
+    elementosAOcultar.forEach(selector => {
+        const elemento = contenedor.querySelector(selector);
+        if (elemento) elemento.style.display = 'none';
+    });
+    
+    // Registrar en el progreso del usuario
+    if (!estado.progresoUsuario.quizzesCompletados.includes(modulo)) {
+        estado.progresoUsuario.quizzesCompletados.push(modulo);
+    }
+    
+    // Marcar módulo como completado si no está en la lista
+    if (!estado.progresoUsuario.modulosCompletados.includes(modulo)) {
+        estado.progresoUsuario.modulosCompletados.push(modulo);
+    }
+    
+    guardarEstadoUsuario();
+}
+
+function reiniciarQuiz(modulo) {
+    // Resetear estado del quiz
+    estado.quizActual.indicePregunta = 0;
+    estado.quizActual.respuestasUsuario = [];
+    estado.quizActual.completado = false;
+    estado.quizActual.puntaje = 0;
+    
+    // Recargar pregunta
+    cargarPreguntaQuiz(modulo);
+    
+    // Mostrar elementos del quiz
+    const contenedor = document.querySelector(`.quiz-container[data-module="${modulo}"]`);
+    if (contenedor) {
+        const elementosAMostrar = [
+            '.quiz-question',
+            '.quiz-options',
+            '.quiz-actions'
+        ];
+        
+        elementosAMostrar.forEach(selector => {
+            const elemento = contenedor.querySelector(selector);
+            if (elemento) elemento.style.display = 'block';
+        });
+        
+        // Ocultar resultados
+        const resultados = contenedor.querySelector('#quiz-results');
+        if (resultados) {
+            resultados.style.display = 'none';
+            resultados.classList.remove('show');
+        }
+    }
+}
+
+// FUNCIONES DE RECURSOS DEL USUARIO
+// ============================================
+function inicializarRecursos() {
+    // Inicializar la sección de recursos del usuario
+    console.log('Inicializando recursos del usuario...');
+    
+    // Configurar eventos para la subida de imágenes (simulada)
+    const botonesSubida = document.querySelectorAll('.upload-trigger');
+    botonesSubida.forEach(boton => {
+        boton.addEventListener('click', function() {
+            mostrarGuiaSubidaImagenes();
+        });
+    });
+    
+    // Configurar plantillas descargables
+    const botonPlantillaFlashcards = document.querySelector('button[onclick*="downloadFlashcardTemplate"]');
+    const botonPlantillaQuiz = document.querySelector('button[onclick*="downloadQuizTemplate"]');
+    
+    if (botonPlantillaFlashcards) {
+        botonPlantillaFlashcards.addEventListener('click', descargarPlantillaFlashcards);
+    }
+    
+    if (botonPlantillaQuiz) {
+        botonPlantillaQuiz.addEventListener('click', descargarPlantillaQuiz);
+    }
+}
+
+function mostrarGuiaSubidaImagenes() {
+    mostrarNotificacion(
+        'Para subir imágenes: 1) Guarda tus imágenes en assets/images/ 2) Edita el HTML en la sección notes-gallery 3) Añade etiquetas img con la ruta correcta',
+        'info',
+        5000
+    );
+}
+
+function descargarPlantillaFlashcards() {
+    const plantilla = {
+        formato: "JSON para flashcards",
+        instrucciones: "Añade este objeto al array correspondiente en flashcardsData en script.js",
+        ejemplo: {
+            id: 1,
+            pregunta: "Tu pregunta aquí",
+            respuesta: "Tu respuesta aquí",
+            dificultad: "básica/intermedia/avanzada",
+            categoria: "Categoría del tema"
+        }
+    };
+    
+    descargarJSON(plantilla, 'plantilla-flashcards.json');
+    mostrarNotificacion('Plantilla de flashcards descargada', 'success');
+}
+
+function descargarPlantillaQuiz() {
+    const plantilla = {
+        formato: "JSON para preguntas de quiz",
+        instrucciones: "Añade este objeto al array de preguntas en quizData en script.js",
+        ejemplo: {
+            id: 1,
+            pregunta: "Tu pregunta aquí",
+            opciones: ["Opción A", "Opción B", "Opción C", "Opción D"],
+            respuestaCorrecta: 0,
+            explicacion: "Explicación de la respuesta",
+            puntos: 10
+        }
+    };
+    
+    descargarJSON(plantilla, 'plantilla-quiz.json');
+    mostrarNotificacion('Plantilla de quiz descargada', 'success');
+}
+
+// FUNCIONES DE GESTIÓN DEL ESTADO DEL USUARIO
+// ============================================
+function cargarEstadoUsuario() {
+    const datosGuardados = localStorage.getItem(CONFIG.localStorageKey);
+    if (datosGuardados) {
+        try {
+            const parsed = JSON.parse(datosGuardados);
+            // Actualizar estado con datos guardados
+            estado.progresoUsuario = parsed.progresoUsuario || estado.progresoUsuario;
+            estado.recursosUsuario = parsed.recursosUsuario || estado.recursosUsuario;
+            console.log('Estado del usuario cargado correctamente');
+        } catch (error) {
+            console.error('Error al cargar estado del usuario:', error);
+        }
+    }
+    
+    // Actualizar fecha de último acceso
+    estado.progresoUsuario.ultimoAcceso = new Date().toISOString();
+}
+
+function guardarEstadoUsuario() {
+    try {
+        const datosAGuardar = {
+            progresoUsuario: estado.progresoUsuario,
+            recursosUsuario: estado.recursosUsuario,
+            fechaGuardado: new Date().toISOString()
+        };
+        
+        localStorage.setItem(CONFIG.localStorageKey, JSON.stringify(datosAGuardar));
+        console.log('Estado del usuario guardado');
+    } catch (error) {
+        console.error('Error al guardar estado del usuario:', error);
+    }
+}
+
+// FUNCIONES DE INTERFAZ Y UTILIDADES
+// ============================================
+function inicializarEventosGlobales() {
+    // Eventos globales de la aplicación
+    window.addEventListener('scroll', manejarScroll);
+    window.addEventListener('resize', manejarResize);
+    
+    // Configurar tooltips
+    inicializarTooltips();
+    
+    // Configurar eventos para imprimir
+    const botonesImprimir = document.querySelectorAll('.print-trigger');
+    botonesImprimir.forEach(boton => {
+        boton.addEventListener('click', function() {
+            window.print();
+        });
+    });
+}
+
+function manejarScroll() {
+    // Efecto de navbar al hacer scroll
+    const navbar = document.querySelector('.navbar');
+    if (navbar) {
+        if (window.scrollY > 100) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    }
+    
+    // Mostrar botón de ir arriba
+    const botonIrArriba = document.getElementById('back-to-top');
+    if (botonIrArriba) {
+        if (window.scrollY > 300) {
+            botonIrArriba.classList.add('visible');
+        } else {
+            botonIrArriba.classList.remove('visible');
+        }
+    }
+}
+
+function manejarResize() {
+    // Ajustes responsivos
+    console.log('Ventana redimensionada');
+}
+
+function inicializarTooltips() {
+    // Inicializar tooltips simples
+    const elementosConTooltip = document.querySelectorAll('[data-tooltip]');
+    elementosConTooltip.forEach(elemento => {
+        elemento.addEventListener('mouseenter', function() {
+            const tooltipTexto = this.getAttribute('data-tooltip');
+            mostrarTooltip(this, tooltipTexto);
+        });
+        
+        elemento.addEventListener('mouseleave', function() {
+            ocultarTooltip();
+        });
+    });
+}
+
+function mostrarTooltip(elemento, texto) {
+    // Crear tooltip
+    const tooltip = document.createElement('div');
+    tooltip.className = 'tooltip';
+    tooltip.textContent = texto;
+    
+    // Posicionar tooltip
+    const rect = elemento.getBoundingClientRect();
+    tooltip.style.position = 'fixed';
+    tooltip.style.top = `${rect.top - 40}px`;
+    tooltip.style.left = `${rect.left + (rect.width / 2)}px`;
+    tooltip.style.transform = 'translateX(-50%)';
+    
+    // Añadir al documento
+    tooltip.id = 'current-tooltip';
+    document.body.appendChild(tooltip);
+}
+
+function ocultarTooltip() {
+    const tooltip = document.getElementById('current-tooltip');
+    if (tooltip) {
+        tooltip.remove();
+    }
+}
+
+function mostrarMensajeSinDatos(contenedor, tipo, modulo) {
+    const mensajes = {
+        flashcards: `
+            <div class="sin-datos">
+                <i class="fas fa-info-circle fa-3x"></i>
+                <h4>No hay flashcards disponibles</h4>
+                <p>Para agregar flashcards al módulo ${modulo}, edita el archivo script.js y añade datos a la variable flashcardsData.</p>
+                <button class="btn btn-outline" onclick="descargarPlantillaFlashcards()">
+                    <i class="fas fa-download"></i> Descargar Plantilla
+                </button>
+            </div>
+        `,
+        quiz: `
+            <div class="sin-datos">
+                <i class="fas fa-info-circle fa-3x"></i>
+                <h4>No hay preguntas de quiz disponibles</h4>
+                <p>Para agregar preguntas al módulo ${modulo}, edita el archivo script.js y añade datos a la variable quizData.</p>
+                <button class="btn btn-outline" onclick="descargarPlantillaQuiz()">
+                    <i class="fas fa-download"></i> Descargar Plantilla
+                </button>
+            </div>
+        `
+    };
+    
+    if (mensajes[tipo]) {
+        contenedor.innerHTML = mensajes[tipo];
+    }
+}
+
+function mostrarNotificacion(mensaje, tipo = 'info', duracion = 3000) {
+    // Crear elemento de notificación
+    const notificacion = document.createElement('div');
+    notificacion.className = `notificacion ${tipo}`;
+    notificacion.innerHTML = `
+        <div class="notificacion-contenido">
+            <i class="fas ${obtenerIconoNotificacion(tipo)}"></i>
+            <span>${mensaje}</span>
+        </div>
+        <button class="notificacion-cerrar">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+    
+    // Estilos
+    notificacion.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 8px;
+        color: white;
+        font-weight: 500;
+        z-index: 9999;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        animation: slideInRight 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-width: 300px;
+        max-width: 400px;
+    `;
+    
+    // Colores según tipo
+    const colores = {
+        success: '#4CAF50',
+        error: '#f44336',
+        warning: '#ff9800',
+        info: '#2196F3'
+    };
+    
+    notificacion.style.backgroundColor = colores[tipo] || colores.info;
+    
+    // Botón cerrar
+    const botonCerrar = notificacion.querySelector('.notificacion-cerrar');
+    botonCerrar.addEventListener('click', function() {
+        notificacion.style.animation = 'slideOutRight 0.3s ease';
+        setTimeout(() => {
+            if (notificacion.parentNode) {
+                notificacion.parentNode.removeChild(notificacion);
+            }
+        }, 250);
+    });
+    
+    // Añadir al documento
+    document.body.appendChild(notificacion);
+    
+    // Auto-eliminar después de la duración
+    if (duracion > 0) {
+        setTimeout(() => {
+            if (notificacion.parentNode) {
+                notificacion.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => {
+                    if (notificacion.parentNode) {
+                        notificacion.parentNode.removeChild(notificacion);
+                    }
+                }, 250);
+            }
+        }, duracion);
+    }
+    
+    // Añadir estilos de animación si no existen
+    if (!document.getElementById('notificacion-estilos')) {
+        const estilos = document.createElement('style');
+        estilos.id = 'notificacion-estilos';
+        estilos.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            .notificacion-cerrar {
+                background: none;
+                border: none;
+                color: white;
+                cursor: pointer;
+                margin-left: 15px;
+                opacity: 0.8;
+            }
+            .notificacion-cerrar:hover {
+                opacity: 1;
+            }
+        `;
+        document.head.appendChild(estilos);
+    }
+}
+
+function obtenerIconoNotificacion(tipo) {
+    const iconos = {
+        success: 'fa-check-circle',
+        error: 'fa-exclamation-circle',
+        warning: 'fa-exclamation-triangle',
+        info: 'fa-info-circle'
+    };
+    return iconos[tipo] || iconos.info;
+}
+
+function actualizarInterfaz() {
+    // Actualizar elementos de la interfaz según el estado
+    console.log('Actualizando interfaz...');
+    
+    // Actualizar indicadores de progreso
+    actualizarIndicadoresProgreso();
+    
+    // Actualizar contadores
+    actualizarContadores();
+}
+
+function actualizarIndicadoresProgreso() {
+    // Actualizar indicadores visuales de progreso
+    const modulosCompletados = estado.progresoUsuario.modulosCompletados.length;
+    const totalModulos = planEstudios.modulos.length;
+    
+    // Actualizar barra de progreso general si existe
+    const barraProgresoGeneral = document.getElementById('progreso-general');
+    if (barraProgresoGeneral) {
+        const porcentaje = (modulosCompletados / totalModulos) * 100;
+        barraProgresoGeneral.style.width = `${porcentaje}%`;
+        barraProgresoGeneral.setAttribute('data-progress', `${Math.round(porcentaje)}%`);
+    }
+}
+
+function actualizarContadores() {
+    // Actualizar contadores en la interfaz
+    const contadorFlashcards = document.getElementById('contador-flashcards');
+    const contadorQuizzes = document.getElementById('contador-quizzes');
+    const contadorModulos = document.getElementById('contador-modulos');
+    
+    if (contadorFlashcards) {
+        contadorFlashcards.textContent = estado.progresoUsuario.flashcardsEstudiadas;
+    }
+    
+    if (contadorQuizzes) {
+        contadorQuizzes.textContent = estado.progresoUsuario.quizzesCompletados.length;
+    }
+    
+    if (contadorModulos) {
+        contadorModulos.textContent = estado.progresoUsuario.modulosCompletados.length;
+    }
+}
+
+// FUNCIONES DE UTILIDAD GENERAL
+// ============================================
+function descargarJSON(datos, nombreArchivo) {
+    const jsonStr = JSON.stringify(datos, null, 2);
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const enlace = document.createElement('a');
+    enlace.href = url;
+    enlace.download = nombreArchivo;
+    document.body.appendChild(enlace);
+    enlace.click();
+    document.body.removeChild(enlace);
+    URL.revokeObjectURL(url);
+}
+
+function formatoFecha(fechaISO) {
+    const fecha = new Date(fechaISO);
+    return fecha.toLocaleDateString('es-MX', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
+}
+
+function obtenerModuloActual() {
+    // Determinar el módulo actual basado en la posición de scroll
+    const seccionesModulos = document.querySelectorAll('section[id^="modulo"]');
+    let moduloVisible = 1;
+    
+    seccionesModulos.forEach(seccion => {
+        const rect = seccion.getBoundingClientRect();
+        if (rect.top <= 100 && rect.bottom >= 100) {
+            const id = seccion.id.replace('modulo', '');
+            moduloVisible = parseInt(id) || 1;
+        }
+    });
+    
+    return moduloVisible;
+}
+
+// FUNCIONES PARA AGREGAR NUEVAS FUNCIONALIDADES
+// ============================================
+// INSTRUCCIÓN: Para agregar nuevas funcionalidades, añade funciones aquí
+
+function exportarProgreso() {
+    const datosExportar = {
+        progreso: estado.progresoUsuario,
+        recursos: estado.recursosUsuario,
+        fechaExportacion: new Date().toISOString(),
+        planEstudios: planEstudios.institucion
+    };
+    
+    descargarJSON(datosExportar, `progreso-rescate-${formatoFecha(new Date().toISOString())}.json`);
+    mostrarNotificacion('Progreso exportado correctamente', 'success');
+}
+
+function importarProgreso(event) {
+    const archivo = event.target.files[0];
+    if (!archivo) return;
+    
+    const lector = new FileReader();
+    lector.onload = function(e) {
+        try {
+            const datos = JSON.parse(e.target.result);
+            
+            // Validar datos
+            if (datos.progreso && datos.recursos) {
+                estado.progresoUsuario = datos.progreso;
+                estado.recursosUsuario = datos.recursos;
+                guardarEstadoUsuario();
+                actualizarInterfaz();
+                mostrarNotificacion('Progreso importado correctamente', 'success');
+            } else {
+                mostrarNotificacion('Archivo de progreso inválido', 'error');
+            }
+        } catch (error) {
+            mostrarNotificacion('Error al importar progreso: ' + error.message, 'error');
+        }
+    };
+    
+    lector.readAsText(archivo);
+}
+
+// INICIALIZACIÓN DE FUNCIONALIDADES AVANZADAS
+// ============================================
+function inicializarFuncionalidadesAvanzadas() {
+    // Esta función puede ser llamada cuando el usuario quiera activar características adicionales
+    
+    // 1. Modo examen (mezcla preguntas de todos los módulos)
+    // 2. Temporizador de estudio
+    // 3. Estadísticas detalladas
+    // 4. Recordatorios de estudio
+    
+    console.log('Funcionalidades avanzadas inicializadas');
+}
+
+// EXPORTAR FUNCIONES PARA USO EN HTML
+// ============================================
+// INSTRUCCIÓN: Estas funciones están disponibles para ser llamadas desde atributos onclick en HTML
+window.downloadFlashcardTemplate = descargarPlantillaFlashcards;
+window.downloadQuizTemplate = descargarPlantillaQuiz;
+window.exportarProgreso = exportarProgreso;
+
+// Añadir botón de exportación si no existe
+function agregarBotonesAvanzados() {
+    // Crear botón flotante para exportar progreso
+    const botonExportar = document.createElement('button');
+    botonExportar.className = 'floating-btn export-btn';
+    botonExportar.innerHTML = '<i class="fas fa-file-export"></i>';
+    botonExportar.title = 'Exportar progreso';
+    botonExportar.addEventListener('click', exportarProgreso);
+    
+    // Crear input para importar progreso (oculto)
+    const inputImportar = document.createElement('input');
+    inputImportar.type = 'file';
+    inputImportar.accept = '.json';
+    inputImportar.style.display = 'none';
+    inputImportar.id = 'import-progress-input';
+    inputImportar.addEventListener('change', importarProgreso);
+    
+    // Botón para importar
+    const botonImportar = document.createElement('button');
+    botonImportar.className = 'floating-btn import-btn';
+    botonImportar.innerHTML = '<i class="fas fa-file-import"></i>';
+    botonImportar.title = 'Importar progreso';
+    botonImportar.addEventListener('click', () => {
+        document.getElementById('import-progress-input').click();
+    });
+    
+    // Añadir al documento
+    document.body.appendChild(inputImportar);
+    document.body.appendChild(botonExportar);
+    document.body.appendChild(botonImportar);
+    
+    // Añadir estilos para los botones flotantes
+    const estilos = document.createElement('style');
+    estilos.textContent = `
+        .floating-btn {
+            position: fixed;
+            bottom: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+        .floating-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+        .export-btn {
+            left: 20px;
+        }
+        .import-btn {
+            left: 80px;
+        }
+        .theme-toggle {
+            right: 20px;
+        }
+    `;
+    document.head.appendChild(estilos);
+}
+
+// INICIALIZACIÓN FINAL
+// ============================================
+// Ejecutar después de que todo esté cargado
+window.addEventListener('load', function() {
+    // Agregar botones avanzados
+    agregarBotonesAvanzados();
+    
+    // Mostrar mensaje de bienvenida
+    if (!localStorage.getItem('rescate_bienvenida')) {
+        setTimeout(() => {
+            mostrarNotificacion(
+                '¡Bienvenido al Plan de Estudios Paramedico! Comienza explorando los módulos.',
+                'info',
+                5000
+            );
+            localStorage.setItem('rescate_bienvenida', 'true');
+        }, 1000);
+    }
+    
+    // Registrar primer acceso del día
+    const hoy = new Date().toDateString();
+    const ultimoAcceso = estado.progresoUsuario.ultimoAcceso ? 
+        new Date(estado.progresoUsuario.ultimoAcceso).toDateString() : null;
+    
+    if (ultimoAcceso !== hoy) {
+        console.log('Primer acceso del día');
+    }
+});
+
+// ============================================
+// FIN DEL ARCHIVO script.js
+// ============================================
