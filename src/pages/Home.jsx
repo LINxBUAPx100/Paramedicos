@@ -136,6 +136,17 @@ export default function Home() {
               Hacer examen →
             </Link>
           </div>
+          <div className="modo-card">
+            <span className="modo-ico">🗺️</span>
+            <h3>Atlas visual</h3>
+            <p>
+              Mapas anatómicos y fisiológicos del cuerpo humano: corazón, circulación,
+              vía aérea, nefrona, sistema nervioso y más.
+            </p>
+            <Link to="/atlas" className="link-discreto">
+              Ver el atlas →
+            </Link>
+          </div>
         </div>
       </section>
     </div>

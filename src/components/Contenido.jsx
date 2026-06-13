@@ -1,9 +1,13 @@
 // Renderiza los bloques de contenido de un tema según su tipo.
+import Diagrama from './Diagramas.jsx'
 
 function Bloque({ bloque }) {
   switch (bloque.tipo) {
     case 'p':
       return <p className="c-parrafo">{bloque.texto}</p>
+
+    case 'diagrama':
+      return <Diagrama clave={bloque.clave} titulo={bloque.titulo} descripcion={bloque.descripcion} />
 
     case 'h3':
       return <h3 className="c-subtitulo">{bloque.texto}</h3>

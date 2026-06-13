@@ -3,8 +3,13 @@ import { fase2 } from './fase2.js'
 import { fase3 } from './fase3.js'
 import { fase4 } from './fase4.js'
 import { fase5 } from './fase5.js'
+import { extrasPorFase } from './extras.js'
 
-export const fases = [fase1, fase2, fase3, fase4, fase5]
+// Une los temas base de cada fase con los temas ampliados (sin mutar los originales).
+export const fases = [fase1, fase2, fase3, fase4, fase5].map((f) => ({
+  ...f,
+  temas: [...f.temas, ...(extrasPorFase[f.id] || [])],
+}))
 
 // Lista plana de todos los temas, enriquecida con datos de su fase.
 export const todosLosTemas = fases.flatMap((fase) =>
