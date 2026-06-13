@@ -1,0 +1,22 @@
+{
+  "name": "guia-de-lin",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "La Guía de Lin — Guía de estudio avanzada de Atención Prehospitalaria, Cuidados Críticos y Transición a Medicina",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "deploy": "npm run build"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.4.8"
+  }
+}
