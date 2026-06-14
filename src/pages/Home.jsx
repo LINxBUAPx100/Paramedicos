@@ -31,7 +31,6 @@ export default function Home() {
           <span className="orb orb-3" />
         </div>
         <div className="hero-contenido reveal">
-          <span className="hero-badge">Guía de estudio avanzada · México</span>
           <h1 className="hero-titulo">
             La Guía de <span className="acento">Lin</span>
           </h1>
