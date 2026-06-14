@@ -9,6 +9,7 @@ import FlashcardsPage from './pages/FlashcardsPage.jsx'
 import ProgresoPage from './pages/ProgresoPage.jsx'
 import BuscarPage from './pages/BuscarPage.jsx'
 import AtlasPage from './pages/AtlasPage.jsx'
+import TemarioPage from './pages/TemarioPage.jsx'
 import NotFound from './pages/NotFound.jsx'
 
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
         <Route path="/flashcards" element={<FlashcardsPage />} />
         <Route path="/flashcards/:temaId" element={<FlashcardsPage />} />
         <Route path="/atlas" element={<AtlasPage />} />
+        <Route path="/temario" element={<TemarioPage />} />
         <Route path="/progreso" element={<ProgresoPage />} />
         <Route path="/buscar" element={<BuscarPage />} />
         <Route path="*" element={<NotFound />} />
