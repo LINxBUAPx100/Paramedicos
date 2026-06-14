@@ -71,7 +71,7 @@ export default function Home() {
       <section className="fases-grid">
         <h2 className="seccion-titulo-centro">Recorrido de estudio</h2>
         <p className="seccion-desc-centro">
-          Seis fases progresivas, del fundamento celular a la farmacología avanzada de cuidados críticos.
+          Siete fases progresivas, del fundamento celular a la farmacología avanzada, el marco normativo y las operaciones especiales.
         </p>
         <div className="grid-fases">
           {fases.map((fase) => {

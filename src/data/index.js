@@ -4,6 +4,7 @@ import { fase3 } from './fase3.js'
 import { fase4 } from './fase4.js'
 import { fase5 } from './fase5.js'
 import { fase6 } from './fase6.js'
+import { fase7 } from './fase7.js'
 import { extraFase1 } from './extraFase1.js'
 import { extraFase2 } from './extraFase2.js'
 import { extraFase3 } from './extraFase3.js'
@@ -19,7 +20,7 @@ const extrasPorFase = {
   'fase-5': extraFase5,
 }
 
-export const fases = [fase1, fase2, fase3, fase4, fase5, fase6].map((f) => ({
+export const fases = [fase1, fase2, fase3, fase4, fase5, fase6, fase7].map((f) => ({
   ...f,
   temas: [...f.temas, ...(extrasPorFase[f.id] || [])],
 }))

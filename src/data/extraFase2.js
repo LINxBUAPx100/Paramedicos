@@ -2028,4 +2028,177 @@ export const extraFase2 = [
       },
     ],
   },
+  {
+    id: 'fauna-venenosa-mexico',
+    numero: '2.12',
+    titulo: 'Envenenamiento por Fauna de México',
+    icono: '🦂',
+    duracion: '40 min',
+    resumen:
+      'México concentra una enorme diversidad de animales ponzoñosos: serpientes, alacranes y arañas. Reconocer el cuadro, evitar las maniobras de campo dañinas y trasladar pronto al centro con antiveneno (faboterápico) salva vidas y extremidades.',
+    objetivos: [
+      'Diferenciar el envenenamiento por víboras (hemotóxico) del de coralillo (neurotóxico).',
+      'Reconocer el alacranismo por Centruroides y su gravedad en el niño.',
+      'Distinguir el latrodectismo (viuda negra) del loxoscelismo (violinista).',
+      'Aplicar los principios prehospitalarios y evitar las maniobras contraindicadas.',
+    ],
+    secciones: [
+      {
+        titulo: 'Ofidios: serpientes venenosas',
+        bloques: [
+          {
+            tipo: 'p',
+            texto:
+              'En México las mordeduras de importancia médica las causan dos grupos: las víboras (familia de los crotálidos: cascabel, nauyaca y cantil), con veneno hemotóxico y proteolítico, y las serpientes de coral (coralillos, familia de los elápidos), con veneno neurotóxico. El cuadro y el antiveneno difieren entre ambos.',
+          },
+          {
+            tipo: 'tabla',
+            titulo: 'Víboras vs. coralillo',
+            headers: ['Característica', 'Víboras (cascabel/nauyaca)', 'Coralillo'],
+            filas: [
+              ['Tipo de veneno', 'Hemotóxico/proteolítico', 'Neurotóxico'],
+              ['Local', 'Dolor, edema progresivo, equimosis, ampollas, necrosis', 'Escaso o nulo edema'],
+              ['Sistémico', 'Coagulopatía, sangrado, choque', 'Ptosis, visión borrosa, parálisis, falla respiratoria'],
+              ['Faboterápico', 'Antivipmyn', 'Coralmyn'],
+            ],
+          },
+          {
+            tipo: 'callout',
+            variante: 'alerta',
+            titulo: 'El coralillo engaña',
+            texto:
+              'El coralillo puede dejar una marca mínima y poco dolor al inicio, pero el veneno neurotóxico produce parálisis progresiva horas después, hasta paro respiratorio. No te confíes por la ausencia de edema: vigila la vía aérea y la ventilación y traslada de inmediato.',
+          },
+          {
+            tipo: 'imagen',
+            src: '',
+            alt: 'Serpientes venenosas de México',
+            caption: 'Identificación de víboras (cascabel, nauyaca) y coralillo en México.',
+            busqueda: 'serpientes venenosas Mexico cascabel nauyaca coralillo identificacion',
+          },
+        ],
+      },
+      {
+        titulo: 'Alacranismo (Centruroides)',
+        bloques: [
+          {
+            tipo: 'p',
+            texto:
+              'La picadura de alacrán del género Centruroides es una de las intoxicaciones más frecuentes en México. El veneno es neurotóxico: libera neurotransmisores y produce un cuadro que va del dolor local intenso a manifestaciones sistémicas. Es mucho más grave en niños pequeños y ancianos.',
+          },
+          {
+            tipo: 'tabla',
+            titulo: 'Gravedad del alacranismo',
+            headers: ['Grado', 'Manifestaciones'],
+            filas: [
+              ['I (leve)', 'Dolor y parestesias locales, sin datos sistémicos'],
+              ['II (moderado)', 'Sialorrea, prurito nasal/faríngeo, inquietud, fasciculaciones'],
+              ['III (grave)', 'Distrés respiratorio, nistagmo, convulsiones, arritmias, edema pulmonar'],
+            ],
+          },
+          {
+            tipo: 'callout',
+            variante: 'dosis',
+            titulo: 'Faboterápico Alacramyn',
+            texto:
+              'El antiveneno faboterápico (Alacramyn) es el tratamiento de los casos moderados y graves, y ha reducido drásticamente la mortalidad por alacranismo en México. Se administra según la gravedad y la respuesta. Evita usar de rutina gluconato de calcio o atropina: el pilar es el antiveneno y el soporte.',
+          },
+        ],
+      },
+      {
+        titulo: 'Arañas: viuda negra y violinista',
+        bloques: [
+          {
+            tipo: 'tabla',
+            titulo: 'Latrodectismo vs. loxoscelismo',
+            headers: ['Araña', 'Cuadro', 'Manejo'],
+            filas: [
+              ['Viuda negra (Latrodectus)', 'Latrodectismo: dolor intenso, calambres, rigidez abdominal, diaforesis, hipertensión', 'Analgesia, benzodiacepinas; faboterápico Aracmyn en casos graves'],
+              ['Violinista/reclusa (Loxosceles)', 'Loxoscelismo: lesión cutánea necrótica; rara vez hemólisis sistémica', 'Cuidado de la herida; vigilar forma sistémica'],
+            ],
+          },
+          {
+            tipo: 'callout',
+            variante: 'clinico',
+            titulo: 'La rigidez abdominal de la viuda negra confunde',
+            texto:
+              'El latrodectismo puede simular un abdomen agudo por la rigidez y el dolor. El antecedente de picadura y la diaforesis localizada orientan. El loxoscelismo, en cambio, evoluciona como una úlcera necrótica que crece en días.',
+          },
+        ],
+      },
+      {
+        titulo: 'Principios prehospitalarios',
+        bloques: [
+          {
+            tipo: 'lista',
+            titulo: 'Qué SÍ hacer',
+            items: [
+              'Calmar al paciente e inmovilizar la extremidad a la altura del corazón.',
+              'Retirar anillos, relojes y ropa apretada antes de que progrese el edema.',
+              'Limpiar la herida con agua y jabón; marcar con pluma el borde del edema y anotar la hora para vigilar su avance.',
+              'Trasladar pronto al centro que disponga de antiveneno; identificar al animal con una foto a distancia segura.',
+            ],
+          },
+          {
+            tipo: 'callout',
+            variante: 'alerta',
+            titulo: 'Lo que NUNCA debes hacer',
+            texto:
+              'Nada de torniquetes, succión (boca o dispositivos), incisiones, hielo, calor, descargas eléctricas ni remedios caseros: aumentan el daño local y no eliminan el veneno. Tampoco persigas a la serpiente o el alacrán: arriesgas una segunda víctima.',
+          },
+          {
+            tipo: 'fuentes',
+            items: [
+              { nombre: 'IMSS — GPC Diagnóstico y tratamiento de mordedura de serpiente', url: 'https://edumed.imss.gob.mx/pediatria/toxico/guia_pract_clin_serpientes.pdf' },
+              { nombre: 'UNAM — Instituto de Biotecnología (antivenenos)', url: 'https://biotecmov.ibt.unam.mx/numeros/32/2.html' },
+              { nombre: 'Goldfrank — Toxicologic Emergencies', nota: 'Envenenamiento por animales ponzoñosos' },
+              { nombre: 'Bioclon / Cofepris — Faboterápicos (Antivipmyn, Alacramyn, Aracmyn, Coralmyn)', nota: 'Antivenenos de uso en México' },
+            ],
+          },
+        ],
+      },
+    ],
+    conceptosClave: [
+      { termino: 'Víboras (crotálidos)', definicion: 'Cascabel, nauyaca y cantil; veneno hemotóxico: edema, necrosis y coagulopatía. Antiveneno: Antivipmyn.' },
+      { termino: 'Coralillo', definicion: 'Elápido neurotóxico; poco edema pero parálisis progresiva. Antiveneno: Coralmyn.' },
+      { termino: 'Alacranismo (Centruroides)', definicion: 'Neurotóxico; grave en niños. Tratamiento: faboterápico Alacramyn.' },
+      { termino: 'Latrodectismo', definicion: 'Viuda negra: dolor, calambres y rigidez abdominal; faboterápico Aracmyn en casos graves.' },
+      { termino: 'Loxoscelismo', definicion: 'Araña violinista: lesión cutánea necrótica; rara hemólisis sistémica.' },
+      { termino: 'Faboterápico', definicion: 'Antiveneno de fragmentos de anticuerpo (innovación mexicana) de alta seguridad.' },
+    ],
+    flashcards: [
+      { frente: 'Tipo de veneno de las víboras (cascabel/nauyaca)', reverso: 'Hemotóxico y proteolítico: edema, necrosis y coagulopatía.' },
+      { frente: '¿Por qué el coralillo es peligroso pese a poco edema?', reverso: 'Su veneno es neurotóxico: produce parálisis progresiva y paro respiratorio.' },
+      { frente: 'Antiveneno del alacranismo en México', reverso: 'Faboterápico Alacramyn.' },
+      { frente: 'Cuadro típico de la viuda negra', reverso: 'Latrodectismo: dolor, calambres, rigidez abdominal y diaforesis.' },
+      { frente: 'Tres maniobras prohibidas en mordedura/picadura', reverso: 'Torniquete, succión e incisión (también hielo y descargas).' },
+      { frente: '¿Qué hacer con la extremidad afectada?', reverso: 'Inmovilizarla a la altura del corazón y retirar anillos/ropa apretada.' },
+    ],
+    quiz: [
+      {
+        pregunta: 'Paciente mordido por una serpiente, con marca mínima y poco dolor, que horas después presenta ptosis y dificultad respiratoria. Lo más probable es:',
+        opciones: ['Mordedura de cascabel', 'Envenenamiento por coralillo (neurotóxico)', 'Reacción alérgica leve', 'Picadura de alacrán grado I'],
+        correcta: 1,
+        explicacion: 'El coralillo deja poco daño local pero su neurotoxina produce parálisis progresiva: vigilar vía aérea y trasladar de inmediato.',
+      },
+      {
+        pregunta: 'Ante una mordedura de víbora en el antebrazo, una maniobra prehospitalaria CORRECTA es:',
+        opciones: ['Colocar un torniquete arterial', 'Succionar el veneno', 'Inmovilizar el brazo y retirar anillos/reloj', 'Aplicar hielo y hacer una incisión'],
+        correcta: 2,
+        explicacion: 'Se inmoviliza la extremidad y se retiran anillos antes del edema; torniquete, succión, hielo e incisión están contraindicados.',
+      },
+      {
+        pregunta: 'El faboterápico Alacramyn se utiliza para el envenenamiento por:',
+        opciones: ['Coralillo', 'Alacrán (Centruroides)', 'Viuda negra', 'Cascabel'],
+        correcta: 1,
+        explicacion: 'Alacramyn es el antiveneno faboterápico contra el alacranismo por Centruroides.',
+      },
+      {
+        pregunta: 'El alacranismo es particularmente grave en:',
+        opciones: ['Adultos jóvenes sanos', 'Niños pequeños', 'Solo en ancianos', 'No tiene grupos de riesgo'],
+        correcta: 1,
+        explicacion: 'Los niños pequeños desarrollan con más facilidad el cuadro sistémico grave; requieren atención y antiveneno oportunos.',
+      },
+    ],
+  },
 ]
