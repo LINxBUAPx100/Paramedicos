@@ -1,6 +1,7 @@
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { getTema, getTemaVecinos } from '../data/index.js'
+import { getRecursos } from '../data/recursosDescarga.js'
 import { useProgress } from '../context/ProgressContext.jsx'
 import Contenido from '../components/Contenido.jsx'
 import NotFound from './NotFound.jsx'
@@ -20,6 +21,7 @@ export default function TemaPage() {
 
   const vecinos = getTemaVecinos(temaId)
   const leido = estado.leidos[temaId]
+  const recursos = getRecursos(temaId)
 
   return (
     <article className="tema-page" style={{ '--fase-color': tema.faseColor }}>
@@ -52,6 +54,26 @@ export default function TemaPage() {
               <li key={i}>{o}</li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {recursos.length > 0 && (
+        <div className="descargas">
+          <h3>📚 Material descargable de este tema</h3>
+          <div className="descargas-grid">
+            {recursos.map((r, i) => (
+              <a
+                key={i}
+                className="descarga-btn"
+                href={r.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span className="descarga-ico">📥</span>
+                <span className="descarga-txt">Descarga: {r.titulo} {r.emoji}</span>
+              </a>
+            ))}
+          </div>
         </div>
       )}
 

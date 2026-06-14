@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { temarioOficial, temarioStats } from '../data/temarioOficial.js'
+import { recursosGenerales } from '../data/recursosDescarga.js'
 import { getTema } from '../data/index.js'
 
 export default function TemarioPage() {
@@ -30,6 +31,20 @@ export default function TemarioPage() {
           <span className="sub-tag sub-tag--pend">En desarrollo</span> contemplado en el temario
         </p>
       </header>
+
+      {recursosGenerales.length > 0 && (
+        <div className="descargas descargas--general">
+          <h3>🧠 Recursos generales de estudio</h3>
+          <div className="descargas-grid">
+            {recursosGenerales.map((r, i) => (
+              <a key={i} className="descarga-btn" href={r.url} target="_blank" rel="noopener noreferrer">
+                <span className="descarga-ico">📥</span>
+                <span className="descarga-txt">Descarga: {r.titulo} {r.emoji}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
 
       {temarioOficial.modulos.map((modulo) => (
         <section className="temario-modulo" key={modulo.numero}>

@@ -921,6 +921,44 @@ a.temario-subtema-link:hover {
 .temario-subtema-link--plano { opacity: 0.85; }
 .temario-subtema-txt { font-size: 0.9rem; line-height: 1.4; }
 
+/* ---- Material descargable (botones de libro/recurso) ---- */
+.descargas {
+  margin: 8px 0 28px;
+  padding: 18px 20px;
+  border-radius: var(--radio);
+  background: color-mix(in srgb, var(--fase-color, var(--primario)) 7%, var(--bg-2));
+  border: 1px solid var(--borde);
+  border-left: 3px solid var(--fase-color, var(--primario));
+}
+.descargas--general { margin-bottom: 28px; }
+.descargas h3 { font-size: 1rem; margin-bottom: 12px; color: var(--texto); }
+.descargas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px;
+}
+.descarga-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  border-radius: var(--radio-sm);
+  background: var(--bg-2);
+  border: 1px solid var(--borde-fuerte);
+  color: var(--texto);
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: 0.15s;
+}
+.descarga-btn:hover {
+  text-decoration: none;
+  border-color: var(--fase-color, var(--primario-claro));
+  background: color-mix(in srgb, var(--fase-color, var(--primario)) 10%, var(--bg-2));
+  transform: translateY(-1px);
+}
+.descarga-ico { font-size: 1.2rem; flex-shrink: 0; }
+.descarga-txt { line-height: 1.35; }
+
 /* Diagramas (mapas anatómicos/fisiológicos) */
 .diagrama {
   margin: 24px 0;

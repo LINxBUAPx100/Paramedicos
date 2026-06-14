@@ -1019,9 +1019,11 @@ export const fase6 = {
             },
             {
               tipo: 'imagen',
-              src: '',
+              src: 'https://commons.wikimedia.org/wiki/Special:FilePath/Croup_steeple_sign.jpg?width=720',
               alt: 'Signo del campanario en el crup',
-              caption: 'Estrechamiento subglótico ("signo del campanario") y fisiopatología del crup.',
+              caption: 'Radiografía de cuello: estrechamiento subglótico ("signo del campanario") típico del crup.',
+              fuente: 'Wikimedia Commons',
+              fuenteUrl: 'https://commons.wikimedia.org/wiki/File:Croup_steeple_sign.jpg',
               busqueda: 'croup steeple sign subglottic narrowing radiograph pediatric',
             },
           ],
