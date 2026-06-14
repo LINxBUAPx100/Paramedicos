@@ -1,0 +1,171 @@
+TOTAL PAGES: 8
+
+===== PAGE 1 =====
+Temario  Definitivo:  Medicina  
+Prehospitalaria,
+ 
+Cuidados
+ 
+Críticos
+ 
+y
+ 
+Farmacología
+ 
+Avanzada
+ 
+Este  documento  es  la  hoja  de  ruta  exhaustiva  (115+  temas)  para  el  Paramédico  Avanzado.  
+Combina
+ 
+los
+ 
+fundamentos
+ 
+de
+ 
+fisiología,
+ 
+protocolos
+ 
+operativos
+ 
+oficiales
+ 
+y
+ 
+el
+ 
+manejo
+ 
+de
+ 
+cuidados
+ 
+críticos/farmacología
+ 
+avanzada.
+ 
+Cada
+ 
+módulo
+ 
+está
+ 
+estructurado
+ 
+jerárquicamente
+ 
+para
+ 
+facilitar
+ 
+el
+ 
+estudio
+ 
+sistemático.
+  
+Módulo  I:  Fisiología  Médica  Avanzada  
+Fundamentos  biológicos  y  sistémicos  necesarios  para  comprender  la  fisiopatología  del  paciente  
+crítico.
+ 
+Categoría  A:  Biología  Celular,  Tisular  y  Neurofisiología  
+Subtemas  Específicos  Recursos  de  Investigación  Recomendados    
+1.  Dinámica  de  la  membrana  celular:  Transporte  activo,  pasivo  y  ósmosis.  2.  Electrofisiología  celular:  Potencial  de  reposo  y  de  acción.  3.  Fisiología  muscular:  Mecanismos  de  contracción.  4.  Hematopoyesis:  Origen  y  función  celular.  5.  Hemostasia  y  coagulación:  Vasoconstricción,  tapón  plaquetario,  cascada  y  fibrinólisis.  6.  Transmisión  sináptica:  Neurotransmisores.  7.  Corteza  cerebral:  Mapeo  y  Homúnculo  de  Penfield.  8.  Sistema  Límbico  y  Sistema  Nervioso  Autónomo.  9.  Neurobiología  del  dolor:  Vías  aferentes  y  modulación  central.  10.  Control  motor  extrapiramidal  y  Dinámica  del  LCR.  
+Guyton  &  Hall:  Tratado  de  Fisiología  Médica.   Life  in  the  Fast  Lane  (LITFL)  -  Neurophysiology.  
+
+===== PAGE 2 =====
+Subtemas  Específicos  Recursos  de  Investigación  Recomendados    
+11.  Fisiología  sensorial  integrativa.  
+ 
+Categoría  B:  Fisiología  Cardiovascular  y  Respiratoria  
+Subtemas  Específicos  Recursos  de  Investigación  Recomendados    
+12.  Sistema  de  conducción  cardíaco:  Nodos  y  red  de  Purkinje.  13.  Mecánica  del  ciclo  cardíaco:  Sístole,  diástole,  curvas  presión-volumen.  14.  Gasto  cardíaco:  Precarga,  postcarga  y  Ley  de  Frank-Starling.  15.  Hemodinámica  vascular  y  Regulación  de  la  presión  arterial.  16.  Fisiología  microvascular  y  Circulación  coronaria.  17.  Mecánica  ventilatoria:  Compliance,  resistencia  y  surfactante.  18.  Espirometría  fisiológica  y  Difusión  gaseosa  alveolocapilar.  19.  Transporte  de  oxígeno  (Efecto  Bohr)  y  dióxido  de  carbono  (Efecto  Haldane).  20.  Regulación  ácido-base  respiratoria  y  Control  ventilatorio  central/periférico.  
+West:  Fisiología  Respiratoria.   LITFL  -  Cardiovascular  Physiology.  
+ 
+Categoría  C:  Fisiología  Renal,  Gastrointestinal  y  Endocrina  
+Subtemas  Específicos  Recursos  de  Investigación  Recomendados    
+21.  Dinámica  glomerular:  Determinantes  de  la  TFG.  22.  Procesamiento  tubular  y  Regulación  osmótica  (ADH/Aldosterona).  23.  Motilidad  y  secreción  gastrointestinal.  24.  Fisiología  hepatobiliar  y  Eje  
+Ganong:  Fisiología  Médica.   Endocrine  Society  Protocols.  
+
+===== PAGE 3 =====
+Subtemas  Específicos  Recursos  de  Investigación  Recomendados    
+hipotálamo-hipofisario.  25.  Metabolismo  glucémico:  Fisiología  del  páncreas  endocrino.  26.  Respuesta  fisiológica  al  estrés:  Catecolaminas  y  cortisol.  
+ 
+Módulo  II:  Marco  Normativo,  Operaciones  Especiales  
+y
+ 
+Triage
+ 
+Regulación  oficial  en  México  y  despliegue  en  incidentes  complejos.  
+Categoría  A:  Legislación  Mexicana  y  Operativa  
+Subtemas  Específicos  Recursos  de  Investigación  Recomendados    
+27.  NOM-034-SSA3-2013:  Regulación  de  atención  médica  prehospitalaria.  28.  Ley  General  de  Salud  de  México:  Artículos  sobre  urgencias  y  traslados.  29.  Tipificación  de  Ambulancias  (NOM-034).  30.  Perfil  del  TUM/Paramédico  oficial.  31.  Aspectos  Médico-Legales:  Negligencia,  impericia,  imprudencia.  32.  Llenado  y  valor  legal  del  Formato  de  Registro  de  Atención  Prehospitalaria  (FRAP).  33.  Manejo  de  Casos  Médico-Legales  e  indicios.  34.  NOM-087-ECOL-SSA1-2002:  Manejo  de  RPBI  en  ambulancias.  35.  Coordinación  Médica:  Enlace  con  CRUM  y  despacho  911.  
+Diario  Oficial  de  la  Federación  (DOF).   Manuales  de  la  Cruz  Roja  Mexicana.  
+ 
+Categoría  B:  Desastres,  Triage  y  Táctica  
+
+===== PAGE 4 =====
+Subtemas  Específicos  Recursos  de  Investigación  Recomendados    
+36.  Sistema  de  Comando  de  Incidentes  (SCI).  37.  Triage  Prehospitalario  START  y  JumpSTART.  38.  Despliegue  Operativo:  Puesto  Médico  Avanzado  (PMA).  39.  Medicina  Táctica  Civil  (TECC):  Fases  de  atención  bajo  amenaza.  40.  Incidentes  HazMat  (Materiales  Peligrosos):  Zonas  de  control.  41.  Traslado  de  Pacientes  Infectocontagiosos.  42.  Aeromedicina  de  Evacuación.  43.  Psicología  de  Emergencias  y  Salud  Mental  del  Paramédico  (Defusing/Debriefing).  
+FEMA  (Incident  Command  System).   C-TECC  Guidelines.  
+ 
+Módulo  III:  Evaluación  Clínica  y  Manejo  de  Trauma  
+Avanzado
+ 
+El  pilar  de  la  atención  prehospitalaria.  Abordaje  sistemático  e  intervenciones  críticas.  
+Categoría  A:  Evaluación,  Soporte  Vital  y  Vía  Aérea  
+Subtemas  Específicos  Recursos  de  Investigación  Recomendados    
+44.  Evaluación  de  la  Escena  y  Evaluación  Primaria  Integral  (X-A-B-C-D-E).  45.  Evaluación  Secundaria  Sistemática  (SAMPLE,  OPQRST).  46.  Monitoreo  Fisiológico:  Oximetría,  Capnografía  (EtCO2)  y  Glucometría.  47.  RCP  de  Alta  Calidad  y  Desfibrilación  Prehospitalaria  (DEA/Manual).  48.  Manejo  Básico  de  la  Vía  Aérea  (Cánulas,  BVM).  49.  Manejo  Avanzado  de  la  Vía  Aérea:  Dispositivos  supraglóticos  e  
+Guías  AHA  (BLS/ACLS).   Manual  The  Walls  de  Vía  Aérea.  
+
+===== PAGE 5 =====
+Subtemas  Específicos  Recursos  de  Investigación  Recomendados    
+intubación.  50.  Oxigenoterapia  de  Urgencia  y  Manejo  del  Tubo  de  Tórax.  51.  Ventilación  Mecánica  Prehospitalaria:  Parámetros  básicos  de  traslado.  
+ 
+Categoría  B:  Protocolos  de  Trauma  (Stop  The  Bleed  /  PHTLS)  
+Subtemas  Específicos  Recursos  de  Investigación  Recomendados    
+52.  Cinemática  del  Trauma.  53.  Control  de  Hemorragia  Masiva  (Stop  The  Bleed)  y  Agentes  hemostáticos.  54.  Manejo  de  Torniquetes  en  extremidades  y  Empaquetamiento  de  Heridas  (Wound  Packing).  55.  Shock  Hipovolémico  Hemorrágico:  Reanimación  hídrica  restrictiva.  56.  Manejo  del  Traumatismo  Craneoencefálico  (TCE).  57.  Restricción  de  la  Movilidad  Espinal  (RME)  selectiva.  58.  Trauma  Torácico:  Descompresión  pleural  con  aguja  y  parches  valvulados.  59.  Trauma  Abdominal,  Pélvico  (fajas  pélvicas)  y  Amputaciones/Avulsiones.  60.  Atención  de  Quemaduras  Termo-químicas  (SCQ).  61.  Extracción  Vehicular  (rápida  vs.  chaleco  KED).  
+PHTLS  10ma  Edición.   Stop  The  Bleed  ACS.  
+ 
+Módulo  IV:  Emergencias  Médicas,  Gineco-Obstétricas  
+y
+ 
+Pediátricas
+ 
+Categoría  A:  Emergencias  Clínicas  y  Especiales  
+
+===== PAGE 6 =====
+Subtemas  Específicos  Recursos  de  Investigación  Recomendados    
+62.  Síndrome  Coronario  Agudo  (SCA)  y  Protocolo  "Código  Infarto".  63.  Emergencias  Neurológicas  ("Código  Cerebro",  EVC).  64.  Crisis  Convulsivas  y  Estatus  Epiléptico.  65.  Emergencias  Metabólicas  (Hipoglucemia,  CAD)  y  Estado  Mental  Alterado  (AEIOU-TIPS).  66.  Crisis  Asmática,  EPOC  y  Anafilaxia.  67.  Toxicología  Clínica  y  Toxidromes.  68.  Emergencias  Ambientales  (Hipotermia,  Golpe  de  Calor).  69.  Envenenamiento  por  Fauna  de  México  (Ofidios,  Arácnidos).  
+Tintinalli's  Emergency  Medicine.   Guías  Goldfrank  de  Toxicología.  
+ 
+Categoría  B:  Obstetricia  y  Pediatría  
+Subtemas  Específicos  Recursos  de  Investigación  Recomendados    
+70.  Parto  Fortuito  Prehospitalario  y  Hemorragia  Postparto.  71.  Trastornos  Hipertensivos  del  Embarazo  (Preeclampsia/Eclampsia).  72.  Reanimación  Neonatal  (Minuto  de  oro).  73.  Triángulo  de  Evaluación  Pediátrica  (TEP).  74.  Insuficiencia  Respiratoria  y  Shock  en  Pediatría.  75.  Soporte  Pediátrico  Especial  (Crisis  febriles,  maltrato).  
+Guías  PALS  (Pediatric  Advanced  Life  Support).   Manual  ALSO  (Obstetricia).  
+ 
+Módulo  V:  Farmacología  Prehospitalaria  y  Cuidados  
+Críticos
+ 
+
+===== PAGE 7 =====
+El  arsenal  terapéutico  del  paramédico  avanzado.  
+Categoría  A:  Farmacocinética,  Accesos  y  Reanimación  Inicial  
+Subtemas  Específicos  Recursos  de  Investigación  Recomendados    
+76.  Bases  Farmacológicas:  Farmacodinamia,  agonismo  y  receptores  adrenérgicos/colinérgicos.  77.  Farmacocinética  de  Campo:  Vías  de  administración  (IV,  IO,  IM,  IN,  SL).  78.  Accesos  Vasculares:  Canulación  periférica  y  Acceso  Intraóseo  (IO).  79.  Fluidoterapia  de  Reanimación:  Cristaloides  vs.  Control  de  daños.  80.  Fármacos  Resucitadores  Base:  Adrenalina,  Amiodarona  y  Atropina.  81.  Manejo  de  Disritmias  en  Ruta:  Cardioversión  y  marcapasos  transcutáneo.  
+Goodman  &  Gilman.   Protocolos  AHA  (ACLS).  
+ 
+Categoría  B:  Farmacología  Crítica  Avanzada  (Vía  Aérea,  Hemodinámia  
+y
+ 
+Trauma)
+ 
+Subtemas  Específicos  Recursos  de  Investigación  Recomendados    
+82.  Secuencia  Rápida  y  Demorada  de  Intubación  (SRI/SDA):  Indicaciones  y  protocolos.  83.  Agentes  Inductores:  Ketamina,  Etomidato,  Propofol,  Midazolam.  84.  Bloqueadores  Neuromusculares:  Succinilcolina,  Rocuronio,  Vecuronio.  85.  Fármacos  de  Pretratamiento  de  Vía  Aérea:  Fentanilo,  Lidocaína.  86.  Soporte  Hemodinámico:  Norepinefrina,  Epinefrina  y  Vasopresina  en  infusión.  87.  Vasopresores  en  Dosis  Empuje  (Push-Dose  Pressors).  
+REBEL  EM.   EMCrit  Podcast.   The  Lancet  (CRASH  Trials).  
+
+===== PAGE 8 =====
+Subtemas  Específicos  Recursos  de  Investigación  Recomendados    
+88.  Analgesia  Mayor  Opioide:  Fentanilo,  Morfina,  Buprenorfina  y  reversión  con  Naloxona.  89.  Analgesia  y  Anestesia  Disociativa:  Ketamina  a  dosis  subdisociativas.  90.  Coadyuvantes  y  Antieméticos:  Ondansetrón,  Metoclopramida.  91.  Farmacología  en  Trauma  (Tríada  de  la  Muerte):  Ácido  Tranexámico  (TXA).  92.  Soporte  de  Calcio  en  exanguinación  (Gluconato/Cloruro).  93.  Farmacología  Neurocrítica:  Solución  Salina  Hipertónica  y  Manitol  para  PIC.  94.  Anticonvulsivantes  Avanzados:  Levetiracetam,  Fosfenitoína.  95.  Farmacología  Respiratoria  Refractaria:  Sulfato  de  Magnesio  IV,  Terbutalina,  Epinefrina  Racémica.  96.  Antídotos  Específicos:  Glucagón  (Betabloqueadores),  Pralidoxima,  Bicarbonato  de  Sodio.  97.  Farmacología  Obstétrica  Crítica:  Oxitocina  para  HPP,  Sulfato  de  Magnesio  para  Eclampsia.  
+ 

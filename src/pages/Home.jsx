@@ -11,7 +11,6 @@ export default function Home() {
     <div className="home">
       <section className="hero">
         <div className="hero-contenido">
-          <span className="hero-badge">Guía de estudio avanzada · México 🇲🇽</span>
           <h1 className="hero-titulo">
             La Guía de <span className="acento">Lin</span>
           </h1>
@@ -72,7 +71,7 @@ export default function Home() {
       <section className="fases-grid">
         <h2 className="seccion-titulo-centro">Recorrido de estudio</h2>
         <p className="seccion-desc-centro">
-          Cinco fases progresivas, del fundamento celular a la transición a medicina.
+          Seis fases progresivas, del fundamento celular a la farmacología avanzada de cuidados críticos.
         </p>
         <div className="grid-fases">
           {fases.map((fase) => {

@@ -409,6 +409,63 @@ function Coagulacion() {
   )
 }
 
+// ---------- Receptores adrenérgicos ----------
+function ReceptoresAdrenergicos() {
+  const filas = [
+    { r: 'α1', c: '#ef4444', org: 'Vasos sanguíneos', ef: 'Vasoconstricción → ↑ RVS y ↑ presión arterial' },
+    { r: 'α2', c: '#f59e0b', org: 'Terminal nerviosa / SNC', ef: '↓ liberación de noradrenalina (autorregulación)' },
+    { r: 'β1', c: '#2563eb', org: 'Corazón', ef: '↑ FC, ↑ contractilidad y ↑ conducción AV' },
+    { r: 'β2', c: '#16a34a', org: 'Bronquios y músculo liso', ef: 'Broncodilatación y vasodilatación' },
+    { r: 'D1', c: '#8b5cf6', org: 'Renal y mesentérico', ef: 'Vasodilatación (a dosis baja de dopamina)' },
+  ]
+  return (
+    <svg viewBox="0 0 500 320" role="img" aria-label="Receptores adrenérgicos y sus efectos">
+      <text x="16" y="24" style={lbl}>Receptor</text>
+      <text x="120" y="24" style={lbl}>Localización</text>
+      <text x="300" y="24" style={lbl}>Efecto al activarse</text>
+      <line x1="14" y1="32" x2="486" y2="32" stroke="var(--borde-fuerte, #cbd5e1)" strokeWidth="1.5" />
+      {filas.map((f, i) => {
+        const y = 58 + i * 52
+        return (
+          <g key={f.r}>
+            <rect x="14" y={y - 20} width="56" height="34" rx="9" fill={f.c} />
+            <text x="42" y={y + 2} textAnchor="middle" style={{ fill: '#fff', fontSize: 14, fontWeight: 700 }}>{f.r}</text>
+            <text x="120" y={y + 1} style={txtSm}>{f.org}</text>
+            <text x="300" y={y + 1} style={{ ...txtSm, fontSize: 10 }}>{f.ef}</text>
+            {i < filas.length - 1 && <line x1="14" y1={y + 26} x2="486" y2={y + 26} stroke="var(--borde, #e2e8f0)" strokeWidth="1" />}
+          </g>
+        )
+      })}
+    </svg>
+  )
+}
+
+// ---------- Línea de tiempo de la Secuencia Rápida de Intubación (SRI) ----------
+function SecuenciaRapida() {
+  const hitos = [
+    { x: 70, t: '−10 min', a: 'Preparar y', b: 'preoxigenar', c: '#0ea5e9' },
+    { x: 185, t: '−3 min', a: 'Pretratar', b: '(fentanilo)', c: '#f59e0b' },
+    { x: 300, t: '0 s', a: 'Inducir +', b: 'paralizar', c: '#ef4444' },
+    { x: 400, t: '+45 s', a: 'Parálisis', b: 'completa', c: '#8b5cf6' },
+    { x: 480, t: '+60 s', a: 'Intubar +', b: 'verificar', c: '#16a34a' },
+  ]
+  return (
+    <svg viewBox="0 0 520 220" role="img" aria-label="Línea de tiempo de la secuencia rápida de intubación">
+      <line x1="40" y1="110" x2="500" y2="110" stroke="var(--borde-fuerte, #cbd5e1)" strokeWidth="3" markerEnd="url(#flsri)" />
+      <defs><marker id="flsri" markerWidth="10" markerHeight="10" refX="7" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="var(--borde-fuerte, #cbd5e1)" /></marker></defs>
+      {hitos.map((h, i) => (
+        <g key={i}>
+          <circle cx={h.x} cy="110" r="9" fill={h.c} stroke="#fff" strokeWidth="2" />
+          <text x={h.x} y={i % 2 === 0 ? 70 : 165} textAnchor="middle" style={{ ...lbl, fontSize: 11, fill: h.c }}>{h.t}</text>
+          <text x={h.x} y={i % 2 === 0 ? 86 : 181} textAnchor="middle" style={{ ...txtSm, fontSize: 10 }}>{h.a}</text>
+          <text x={h.x} y={i % 2 === 0 ? 98 : 193} textAnchor="middle" style={{ ...txtSm, fontSize: 10 }}>{h.b}</text>
+          <line x1={h.x} y1={i % 2 === 0 ? 102 : 118} x2={h.x} y2={i % 2 === 0 ? 92 : 128} stroke={h.c} strokeWidth="1.5" />
+        </g>
+      ))}
+    </svg>
+  )
+}
+
 export const diagramas = {
   celula: { comp: Celula, titulo: 'La célula y sus organelos' },
   bombanak: { comp: BombaNaK, titulo: 'Bomba Na⁺/K⁺ ATPasa' },
@@ -429,6 +486,8 @@ export const diagramas = {
   endocrino: { comp: Endocrino, titulo: 'Glándulas endocrinas' },
   digestivo: { comp: Digestivo, titulo: 'Tracto digestivo' },
   coagulacion: { comp: Coagulacion, titulo: 'Cascada de la coagulación' },
+  receptores: { comp: ReceptoresAdrenergicos, titulo: 'Receptores adrenérgicos y sus efectos' },
+  sri: { comp: SecuenciaRapida, titulo: 'Secuencia Rápida de Intubación (línea de tiempo)' },
 }
 
 // Renderiza un diagrama por su clave dentro de una tarjeta etiquetada.

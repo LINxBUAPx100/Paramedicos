@@ -57,6 +57,9 @@ export default function Layout({ children }) {
             <NavLink to="/atlas" className="nav-item" onClick={cerrar}>
               <span className="nav-ico">🗺️</span> Atlas anatómico
             </NavLink>
+            <NavLink to="/temario" className="nav-item" onClick={cerrar}>
+              <span className="nav-ico">📋</span> Temario oficial
+            </NavLink>
             <NavLink to="/progreso" className="nav-item" onClick={cerrar}>
               <span className="nav-ico">📊</span> Mi progreso
             </NavLink>

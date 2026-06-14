@@ -1762,4 +1762,270 @@ export const extraFase2 = [
       },
     ],
   },
+  {
+    id: 'evaluacion-neurologica-avdi-glasgow',
+    numero: '2.11',
+    titulo: 'Evaluacion Neurologica: AVDI, Glasgow y Pupilas',
+    icono: '🧠',
+    duracion: '40 min',
+    resumen:
+      'La "D" (deficit neurologico) de la evaluacion primaria se resuelve con tres herramientas: el tamiz rapido AVDI, la escala de coma de Glasgow para cuantificar y dar tendencia, y la evaluacion pupilar. Juntas detectan el deterioro neurologico y la necesidad de proteger la via aerea.',
+    objetivos: [
+      'Aplicar la escala AVDI como tamiz rapido del estado de conciencia.',
+      'Calcular e interpretar la escala de coma de Glasgow en el adulto y el niño.',
+      'Reconocer los patrones pupilares de alarma y su significado.',
+      'Usar la regla AEIOU-TIPS para buscar la causa del estado mental alterado.',
+    ],
+    secciones: [
+      {
+        titulo: 'AVDI: el tamiz rapido del estado de conciencia',
+        bloques: [
+          {
+            tipo: 'p',
+            texto:
+              'AVDI (en ingles AVPU) es la valoracion mas rapida del nivel de conciencia y se hace durante la "D" de la evaluacion primaria. Clasifica al paciente en cuatro niveles segun el menor estimulo que provoca respuesta. Es ideal para el primer contacto y para reevaluar tendencia en segundos, antes de calcular el Glasgow.',
+          },
+          {
+            tipo: 'tabla',
+            titulo: 'Niveles de la escala AVDI',
+            headers: ['Nivel', 'Que evalua', 'Glasgow aproximado'],
+            filas: [
+              ['A — Alerta', 'Ojos abiertos, responde e interactua espontaneamente', '14 a 15'],
+              ['V — responde a la Voz', 'Reacciona solo al estimulo verbal (llamado)', '9 a 13'],
+              ['D — responde al Dolor', 'Reacciona solo al estimulo doloroso', '6 a 8'],
+              ['I — Inconsciente', 'No responde a ningun estimulo', '3 a 5'],
+            ],
+          },
+          {
+            tipo: 'callout',
+            variante: 'clave',
+            titulo: 'AVDI primero, Glasgow despues',
+            texto:
+              'AVDI se obtiene en segundos y orienta la gravedad de inmediato; el Glasgow cuantifica con detalle y sirve para seguir la tendencia. La correspondencia con Glasgow es aproximada (no exacta): un paciente que solo responde al Dolor ronda un Glasgow de 8, el umbral de via aerea no protegida.',
+          },
+          {
+            tipo: 'callout',
+            variante: 'alerta',
+            titulo: 'La "D" tambien es Dextrosa',
+            texto:
+              'En todo paciente con estado mental alterado mide la glucemia capilar SIEMPRE: la hipoglucemia imita a un evento vascular cerebral y se corrige en minutos. No dejes morir a nadie por no medir el azucar.',
+          },
+          {
+            tipo: 'imagen',
+            src: '',
+            alt: 'Escala AVPU / AVDI',
+            caption: 'Escala AVDI (AVPU): los cuatro niveles de respuesta del estado de conciencia.',
+            busqueda: 'AVPU scale alert verbal pain unresponsive prehospital diagram',
+          },
+        ],
+      },
+      {
+        titulo: 'Escala de Coma de Glasgow (adulto)',
+        bloques: [
+          {
+            tipo: 'p',
+            texto:
+              'La escala de coma de Glasgow (ECG) cuantifica el nivel de conciencia sumando tres respuestas: ocular (1 a 4), verbal (1 a 5) y motora (1 a 6). El total va de 3 (coma profundo) a 15 (normal). Siempre se reporta DESGLOSADO (por ejemplo O3 V4 M5 = 12), porque el componente motor es el de mayor valor pronostico y un mismo total puede significar cosas distintas.',
+          },
+          {
+            tipo: 'tabla',
+            titulo: 'Componentes de la escala de Glasgow',
+            headers: ['Respuesta ocular (O)', 'Respuesta verbal (V)', 'Respuesta motora (M)'],
+            filas: [
+              ['4 Espontanea', '5 Orientada', '6 Obedece ordenes'],
+              ['3 A la voz', '4 Confusa', '5 Localiza el dolor'],
+              ['2 Al dolor', '3 Palabras inapropiadas', '4 Retira al dolor'],
+              ['1 Ninguna', '2 Sonidos incomprensibles', '3 Flexion anormal (decorticacion)'],
+              ['—', '1 Ninguna', '2 Extension anormal (descerebracion)'],
+              ['—', '—', '1 Ninguna'],
+            ],
+          },
+          {
+            tipo: 'callout',
+            variante: 'alerta',
+            titulo: 'Glasgow menor o igual a 8: protege la via aerea',
+            texto:
+              'Un puntaje de 8 o menos indica incapacidad para proteger la via aerea (riesgo de broncoaspiracion): es el umbral clasico para considerar intubacion. En el nivel basico significa posicion de seguridad, aspiracion y apoyo ventilatorio mientras llega el soporte avanzado.',
+          },
+          {
+            tipo: 'pasos',
+            titulo: 'Ejemplo resuelto',
+            items: [
+              'Abre los ojos al dolor → ocular = 2.',
+              'Emite sonidos incomprensibles → verbal = 2.',
+              'Retira al dolor → motora = 4.',
+              'Total: 2 + 2 + 4 = 8. Se reporta O2 V2 M4 = 8 (umbral de via aerea no protegida).',
+            ],
+          },
+          {
+            tipo: 'callout',
+            variante: 'clinico',
+            titulo: 'Trucos para evaluar bien',
+            texto:
+              'Si el paciente esta intubado, la verbal se marca con "T" (por ejemplo O2 VT M4). Aplica el estimulo doloroso de forma central (presion en el trapecio o el reborde supraorbitario) para no confundir un reflejo medular con una respuesta real. Registra siempre el desglose y la hora para ver la tendencia.',
+          },
+          {
+            tipo: 'imagen',
+            src: '',
+            alt: 'Tabla de la escala de coma de Glasgow',
+            caption: 'Escala de coma de Glasgow completa (ocular, verbal y motora) con su puntuacion.',
+            busqueda: 'Glasgow coma scale chart eyes verbal motor scoring',
+          },
+        ],
+      },
+      {
+        titulo: 'Glasgow pediatrico (modificacion)',
+        bloques: [
+          {
+            tipo: 'p',
+            texto:
+              'En el niño que aun no habla, la respuesta verbal se adapta porque no puede estar "orientado". Las respuestas ocular y motora se evaluan igual que en el adulto, ajustando las ordenes a la edad.',
+          },
+          {
+            tipo: 'tabla',
+            titulo: 'Respuesta verbal pediatrica (lactante / preverbal)',
+            headers: ['Puntos', 'Respuesta verbal del lactante'],
+            filas: [
+              ['5', 'Balbucea, sonrie, sigue objetos (apropiado)'],
+              ['4', 'Llanto consolable'],
+              ['3', 'Llanto inconsolable ante el estimulo'],
+              ['2', 'Quejido o gruñido'],
+              ['1', 'Ninguna'],
+            ],
+          },
+          {
+            tipo: 'callout',
+            variante: 'clave',
+            titulo: 'No olvides el TEP',
+            texto:
+              'En pediatria, el Triangulo de Evaluacion Pediatrica (apariencia, trabajo respiratorio y circulacion de la piel) da una impresion del estado neurologico y de gravedad desde la puerta, antes de tocar al niño, y complementa al Glasgow.',
+          },
+        ],
+      },
+      {
+        titulo: 'Evaluacion pupilar',
+        bloques: [
+          {
+            tipo: 'p',
+            texto:
+              'Las pupilas informan del tallo cerebral y de muchas intoxicaciones. Se valora tamaño, simetria y reactividad a la luz (lo normal se resume como PIRRL: Pupilas Iguales, Redondas y Reactivas a la Luz). La anisocoria (pupilas desiguales) nueva en un paciente con deterioro es una urgencia.',
+          },
+          {
+            tipo: 'tabla',
+            titulo: 'Patrones pupilares y su significado',
+            headers: ['Hallazgo', 'Causa probable'],
+            filas: [
+              ['Mioticas puntiformes (ambas)', 'Opioides u organofosforados (toxidrome colinergico)'],
+              ['Midriaticas reactivas (ambas)', 'Simpaticomimeticos, anfetaminas, cocaina, estres'],
+              ['Midriaticas fijas (ambas)', 'Hipoxia grave, paro, lesion grave del tallo'],
+              ['Anisocoria (una dilatada fija)', 'Herniacion con compresion del III par; hipertension intracraneal'],
+            ],
+          },
+          {
+            tipo: 'callout',
+            variante: 'clinico',
+            titulo: 'Pupila dilatada fija + deterioro = herniacion',
+            texto:
+              'Una pupila que se dilata y deja de reaccionar junto con caida del Glasgow sugiere herniacion cerebral. Sumada a la triada de Cushing (hipertension, bradicardia, respiracion irregular) obliga a actuar: via aerea, evitar hipoxia e hipotension y traslado al centro con neurocirugia.',
+          },
+        ],
+      },
+      {
+        titulo: 'AEIOU-TIPS: causas del estado mental alterado',
+        bloques: [
+          {
+            tipo: 'p',
+            texto:
+              'Cuando AVDI o Glasgow estan bajos, AEIOU-TIPS es la regla mnemotecnica para buscar la causa de forma ordenada y no quedarse solo con "esta inconsciente".',
+          },
+          {
+            tipo: 'tabla',
+            titulo: 'Regla AEIOU-TIPS',
+            headers: ['Letra', 'Causa a descartar'],
+            filas: [
+              ['A', 'Alcohol y otras toxinas'],
+              ['E', 'Epilepsia, Electrolitos, Encefalopatia'],
+              ['I', 'Insulina (hipo o hiperglucemia)'],
+              ['O', 'Opioides / sobredosis (Overdose), Oxigeno (hipoxia)'],
+              ['U', 'Uremia (fallo renal) y otras causas metabolicas'],
+              ['T', 'Trauma, Temperatura (hipo o hipertermia)'],
+              ['I', 'Infeccion (sepsis, meningitis)'],
+              ['P', 'Psicogeno, intoxicacion (Poisoning)'],
+              ['S', 'Stroke (EVC) y Shock'],
+            ],
+          },
+          {
+            tipo: 'callout',
+            variante: 'clave',
+            titulo: 'Lo reversible primero',
+            texto:
+              'Ante todo alterado, descarta de inmediato lo que se corrige en la calle: hipoglucemia (glucometria), hipoxia (oxigeno y SpO2) y opioides (naloxona si hay bradipnea y miosis). Son causas frecuentes, rapidas de tratar y mortales si se pasan por alto.',
+          },
+        ],
+      },
+      {
+        titulo: 'Fuentes y evidencia',
+        bloques: [
+          {
+            tipo: 'fuentes',
+            items: [
+              { nombre: 'Glasgow Coma Scale — sitio oficial (estructura y uso)', url: 'https://www.glasgowcomascale.org/' },
+              { nombre: 'PHTLS 10.ma edicion — Evaluacion del paciente', nota: 'AVDI, Glasgow y evaluacion primaria' },
+              { nombre: 'Guias AHA / PALS — Evaluacion pediatrica y TEP', url: 'https://cpr.heart.org/' },
+              { nombre: 'NAEMT — Evaluacion del estado mental (AEIOU-TIPS)', nota: 'Abordaje del estado mental alterado' },
+            ],
+          },
+        ],
+      },
+    ],
+    conceptosClave: [
+      { termino: 'AVDI (AVPU)', definicion: 'Tamiz rapido del estado de conciencia: Alerta, responde a la Voz, responde al Dolor, Inconsciente.' },
+      { termino: 'Escala de Glasgow', definicion: 'Escala de 3 a 15 que suma respuesta ocular (4), verbal (5) y motora (6); se reporta desglosada.' },
+      { termino: 'Glasgow menor o igual a 8', definicion: 'Umbral de via aerea no protegida; considerar intubacion.' },
+      { termino: 'Anisocoria', definicion: 'Pupilas desiguales; con deterioro sugiere herniacion por compresion del III par.' },
+      { termino: 'PIRRL', definicion: 'Pupilas Iguales, Redondas y Reactivas a la Luz: hallazgo pupilar normal.' },
+      { termino: 'AEIOU-TIPS', definicion: 'Regla para buscar la causa del estado mental alterado.' },
+    ],
+    flashcards: [
+      { frente: 'Que significan las siglas AVDI', reverso: 'Alerta, responde a la Voz, responde al Dolor, Inconsciente.' },
+      { frente: 'Rango total de la escala de Glasgow', reverso: 'De 3 (coma profundo) a 15 (normal).' },
+      { frente: 'Puntajes maximos de cada componente del Glasgow', reverso: 'Ocular 4, Verbal 5, Motora 6.' },
+      { frente: 'Glasgow que indica via aerea no protegida', reverso: '8 o menos.' },
+      { frente: 'Nivel de AVDI que corresponde aproximadamente a un Glasgow de 8', reverso: 'D (responde solo al Dolor).' },
+      { frente: 'Pupila dilatada fija unilateral con deterioro sugiere…', reverso: 'Herniacion cerebral con compresion del III par.' },
+      { frente: 'Primer estudio en todo estado mental alterado', reverso: 'Glucemia capilar (descartar hipoglucemia).' },
+    ],
+    quiz: [
+      {
+        pregunta: 'Un paciente solo abre los ojos y se mueve cuando se le aplica un estimulo doloroso. En AVDI se clasifica como:',
+        opciones: ['A (Alerta)', 'V (responde a la Voz)', 'D (responde al Dolor)', 'I (Inconsciente)'],
+        correcta: 2,
+        explicacion: 'Responde unicamente al estimulo doloroso: nivel D, que corresponde aproximadamente a un Glasgow de 8.',
+      },
+      {
+        pregunta: 'Glasgow de un paciente que abre ojos a la voz (3), esta confuso (4) y obedece ordenes (6):',
+        opciones: ['ECG 11', 'ECG 12', 'ECG 13', 'ECG 14'],
+        correcta: 2,
+        explicacion: '3 + 4 + 6 = 13. Se reporta O3 V4 M6 = 13.',
+      },
+      {
+        pregunta: 'Por que se reporta el Glasgow desglosado y no solo el total?',
+        opciones: ['Por costumbre', 'Porque el componente motor tiene mayor valor pronostico y un mismo total puede significar cosas distintas', 'Para ahorrar tiempo', 'Porque el ocular es el mas importante'],
+        correcta: 1,
+        explicacion: 'El desglose (sobre todo la motora) aporta informacion pronostica que el total solo puede ocultar.',
+      },
+      {
+        pregunta: 'Paciente con TCE que pasa de pupilas iguales a una pupila derecha dilatada y fija, con caida del Glasgow. Esto sugiere:',
+        opciones: ['Intoxicacion por opioides', 'Herniacion cerebral con compresion del III par', 'Hipoglucemia', 'Crisis de ansiedad'],
+        correcta: 1,
+        explicacion: 'La anisocoria nueva con deterioro indica herniacion y compresion del tercer par craneal: urgencia neuroquirurgica.',
+      },
+      {
+        pregunta: 'Mujer encontrada inconsciente con pupilas puntiformes y respiracion de 6 por minuto. La causa reversible inmediata a tratar es:',
+        opciones: ['Intoxicacion por opioides (dar naloxona)', 'Evento vascular cerebral', 'Crisis hipertensiva', 'Sepsis'],
+        correcta: 0,
+        explicacion: 'Miosis puntiforme + bradipnea + coma es el toxidrome opioide; la naloxona titulada restaura la ventilacion.',
+      },
+    ],
+  },
 ]

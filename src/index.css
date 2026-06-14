@@ -722,6 +722,205 @@ a:hover { text-decoration: underline; }
 }
 .c-formula-nota { display: block; margin-top: 8px; color: var(--texto-3); font-size: 0.85rem; }
 
+/* Callout de dosificación (variante 'dosis') */
+.c-callout--dosis {
+  background: color-mix(in srgb, var(--morado) 9%, var(--bg-2));
+  border-color: color-mix(in srgb, var(--morado) 35%, transparent);
+}
+
+/* ---- Imágenes / ilustraciones externas ---- */
+.c-imagen {
+  margin: 0 0 24px;
+  border-radius: var(--radio);
+  overflow: hidden;
+}
+.c-imagen img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radio);
+  border: 1px solid var(--borde);
+  background: var(--bg-3);
+}
+.c-imagen figcaption {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: var(--texto-3);
+  text-align: center;
+  line-height: 1.5;
+}
+.c-imagen figcaption a { color: var(--fase-color); }
+
+/* Placeholder cuando no hay imagen o falla al cargar */
+.c-imagen--placeholder { border-radius: var(--radio); }
+.c-imagen-ph {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  padding: 28px 22px;
+  border: 2px dashed var(--borde-fuerte);
+  border-radius: var(--radio);
+  background: var(--bg-3);
+  color: var(--texto-2);
+}
+.c-imagen-ph-ico { font-size: 2rem; opacity: 0.7; }
+.c-imagen-ph strong { color: var(--texto); font-size: 1rem; }
+.c-imagen-ph-desc { color: var(--texto-2); font-size: 0.9rem; max-width: 52ch; }
+.c-imagen-ph-btn {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: var(--radio-sm);
+  background: var(--fase-color);
+  color: #fff;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.c-imagen-ph-btn:hover { filter: brightness(1.08); text-decoration: none; }
+.c-imagen-ph-hint {
+  font-size: 0.76rem;
+  color: var(--texto-3);
+  background: var(--bg-2);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+  padding: 6px 10px;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+}
+.c-imagen-ph-hint b { color: var(--texto-2); }
+
+/* ---- Bloque de fuentes / enlaces ---- */
+.c-fuentes {
+  margin: 8px 0 24px;
+  padding: 16px 18px;
+  border-radius: var(--radio);
+  background: var(--bg-3);
+  border: 1px solid var(--borde);
+  border-left: 3px solid var(--fase-color);
+}
+.c-fuentes-titulo { font-size: 1rem; margin-bottom: 10px; color: var(--texto); }
+.c-fuentes-lista { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.c-fuentes-lista li { font-size: 0.9rem; line-height: 1.5; }
+.c-fuentes-lista a { color: var(--fase-color); font-weight: 600; }
+.c-fuentes-nota { color: var(--texto-3); }
+
+/* ============================================================
+   Página Temario oficial
+   ============================================================ */
+.temario { max-width: 940px; margin: 0 auto; }
+.temario-hero {
+  padding: 24px 26px;
+  border-radius: var(--radio);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--primario) 14%, var(--bg-2)), var(--bg-2));
+  border: 1px solid var(--borde);
+  margin-bottom: 28px;
+}
+.temario-badge {
+  display: inline-block;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--primario-claro);
+  background: color-mix(in srgb, var(--primario) 14%, transparent);
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+.temario-hero h1 { font-size: clamp(1.4rem, 3vw, 2rem); line-height: 1.2; margin-bottom: 8px; }
+.temario-sub { color: var(--texto-2); font-weight: 600; margin-bottom: 8px; }
+.temario-desc { color: var(--texto-2); font-size: 0.94rem; margin-bottom: 18px; }
+.temario-cobertura { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.temario-cobertura-barra {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--bg-3);
+  border: 1px solid var(--borde);
+  overflow: hidden;
+}
+.temario-cobertura-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primario), var(--primario-claro));
+  border-radius: 999px;
+}
+.temario-cobertura span { font-size: 0.84rem; color: var(--texto-3); }
+.temario-leyenda { font-size: 0.84rem; color: var(--texto-3); }
+
+.sub-tag {
+  display: inline-block;
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.sub-tag--ok { color: var(--verde); background: color-mix(in srgb, var(--verde) 14%, transparent); }
+.sub-tag--pend { color: var(--texto-3); background: var(--bg-3); border: 1px solid var(--borde); }
+
+.temario-modulo { margin-bottom: 34px; }
+.temario-modulo-cab {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--borde);
+  margin-bottom: 16px;
+}
+.temario-modulo-ico { font-size: 1.9rem; flex-shrink: 0; }
+.temario-modulo-num {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--primario-claro);
+}
+.temario-modulo-cab h2 { font-size: 1.25rem; margin: 2px 0 4px; }
+.temario-modulo-cab p { color: var(--texto-2); font-size: 0.9rem; }
+
+.temario-categoria { margin-bottom: 18px; }
+.temario-categoria-titulo {
+  font-size: 1rem;
+  color: var(--texto);
+  margin-bottom: 4px;
+}
+.temario-recursos { font-size: 0.8rem; color: var(--texto-3); margin-bottom: 10px; }
+.temario-subtemas { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.temario-subtema { display: flex; gap: 10px; align-items: stretch; }
+.temario-subtema-n {
+  flex-shrink: 0;
+  width: 30px;
+  display: grid;
+  place-items: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--texto-3);
+  background: var(--bg-3);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+}
+.temario-subtema-link {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 14px;
+  border-radius: var(--radio-sm);
+  background: var(--bg-2);
+  border: 1px solid var(--borde);
+  color: var(--texto);
+  transition: 0.15s;
+}
+a.temario-subtema-link:hover {
+  text-decoration: none;
+  border-color: var(--primario-claro);
+  background: color-mix(in srgb, var(--primario) 6%, var(--bg-2));
+}
+.temario-subtema-link--plano { opacity: 0.85; }
+.temario-subtema-txt { font-size: 0.9rem; line-height: 1.4; }
+
 /* Diagramas (mapas anatómicos/fisiológicos) */
 .diagrama {
   margin: 24px 0;
