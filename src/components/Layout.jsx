@@ -1,25 +1,45 @@
 import { useState } from 'react'
-import { NavLink, Link, useLocation } from 'react-router-dom'
+import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom'
 import { fases } from '../data/index.js'
 import { useProgress } from '../context/ProgressContext.jsx'
 import Icon from './Icon.jsx'
+import EstrellaVida from './EstrellaVida.jsx'
 
+// Navegación primaria del header (patrón del diseño PTUM).
+const TOPNAV = [
+  { to: '/', label: 'Inicio', end: true },
+  { to: '/temario', label: 'Temas' },
+  { to: '/examen', label: 'Examen' },
+  { to: '/progreso', label: 'Progreso' },
+  { to: '/atlas', label: 'Atlas' },
+]
+
+// Navegación completa del drawer (incluye accesos que no caben en el header).
 const NAV = [
   { to: '/', icon: 'home', label: 'Inicio', end: true },
+  { to: '/temario', icon: 'temario', label: 'Temario oficial' },
   { to: '/examen', icon: 'examen', label: 'Examen general' },
   { to: '/flashcards', icon: 'flashcards', label: 'Flashcards' },
-  { to: '/atlas', icon: 'atlas', label: 'Atlas anatómico' },
-  { to: '/temario', icon: 'temario', label: 'Temario oficial' },
+  { to: '/atlas', icon: 'atlas', label: 'Atlas' },
   { to: '/progreso', icon: 'progreso', label: 'Mi progreso' },
   { to: '/buscar', icon: 'buscar', label: 'Buscar' },
 ]
 
 export default function Layout({ children }) {
   const [abierto, setAbierto] = useState(false)
+  const [consulta, setConsulta] = useState('')
   const { estado, alternarTema } = useProgress()
   const location = useLocation()
+  const navigate = useNavigate()
 
+  const esHome = location.pathname === '/'
   const cerrar = () => setAbierto(false)
+  const buscar = (e) => {
+    e.preventDefault()
+    const q = consulta.trim()
+    navigate(q ? `/buscar?q=${encodeURIComponent(q)}` : '/buscar')
+    cerrar()
+  }
 
   return (
     <div className="app">
@@ -27,33 +47,48 @@ export default function Layout({ children }) {
         <button
           className="menu-btn"
           aria-label="Abrir menú"
+          aria-expanded={abierto}
           onClick={() => setAbierto((v) => !v)}
         >
           <span /><span /><span />
         </button>
+
         <Link to="/" className="marca" onClick={cerrar}>
-          <span className="marca-logo"><Icon name="cruz" size={20} /></span>
-          <span className="marca-texto">
-            La Guía de <strong>Lin</strong>
-          </span>
+          <span className="marca-logo"><EstrellaVida size={24} /></span>
+          <span className="marca-texto">PTUM</span>
         </Link>
-        <div className="topbar-acciones">
-          <Link to="/buscar" className="icon-link" title="Buscar" aria-label="Buscar" onClick={cerrar}>
-            <Icon name="buscar" size={19} />
-          </Link>
-          <button
-            className="icon-link"
-            onClick={alternarTema}
-            title="Cambiar tema"
-            aria-label="Cambiar tema claro/oscuro"
-          >
-            <Icon name={estado.tema === 'oscuro' ? 'sol' : 'luna'} size={19} />
-          </button>
-        </div>
+
+        <nav className="topnav">
+          {TOPNAV.map((item) => (
+            <NavLink key={item.to} to={item.to} end={item.end} className="topnav-link">
+              {item.label}
+            </NavLink>
+          ))}
+        </nav>
+
+        <form className="topbar-buscar" onSubmit={buscar} role="search">
+          <Icon name="buscar" size={17} />
+          <input
+            type="search"
+            value={consulta}
+            onChange={(e) => setConsulta(e.target.value)}
+            placeholder="Buscador"
+            aria-label="Buscar en el temario"
+          />
+        </form>
+
+        <button
+          className="icon-link tema-btn"
+          onClick={alternarTema}
+          title="Cambiar tema"
+          aria-label="Cambiar tema claro/oscuro"
+        >
+          <Icon name={estado.tema === 'oscuro' ? 'sol' : 'luna'} size={19} />
+        </button>
       </header>
 
       <div className="cuerpo">
-        <aside className={`sidebar ${abierto ? 'abierto' : ''}`}>
+        <aside className={`sidebar ${abierto ? 'abierto' : ''}`} aria-hidden={!abierto}>
           <nav className="nav">
             {NAV.map((item) => (
               <NavLink
@@ -68,7 +103,7 @@ export default function Layout({ children }) {
               </NavLink>
             ))}
 
-            <div className="nav-titulo">Temario</div>
+            <div className="nav-titulo">Recorrido de estudio</div>
             {fases.map((fase) => (
               <div key={fase.id} className="nav-grupo">
                 <NavLink
@@ -101,16 +136,50 @@ export default function Layout({ children }) {
             ))}
           </nav>
           <div className="sidebar-pie">
-            Hecho con dedicación para tu estudio.
+            <Icon name="estrella" size={15} /> PTUM · Hecho para que comprendas el porqué.
           </div>
         </aside>
 
         {abierto && <div className="overlay" onClick={cerrar} />}
 
-        <main className="contenido" key={location.pathname}>
+        <main className={`contenido ${esHome ? 'contenido--full' : ''}`} key={location.pathname}>
           {children}
         </main>
       </div>
+
+      <footer className="app-footer">
+        <div className="footer-in">
+          <div className="footer-col footer-marca">
+            <span className="marca-logo"><EstrellaVida size={22} /></span>
+            <div>
+              <strong>PTUM</strong>
+              <p>Plataforma de estudio en Atención Prehospitalaria y Cuidados Críticos.</p>
+            </div>
+          </div>
+          <div className="footer-col">
+            <h4>Estudio</h4>
+            <Link to="/temario">Temario</Link>
+            <Link to="/examen">Examen</Link>
+            <Link to="/flashcards">FlashCards</Link>
+            <Link to="/atlas">Atlas</Link>
+          </div>
+          <div className="footer-col">
+            <h4>Avanza</h4>
+            <Link to="/progreso">Mi progreso</Link>
+            <Link to="/buscar">Buscar</Link>
+            <Link to="/fase/fase-1">Empezar</Link>
+          </div>
+          <div className="footer-col">
+            <h4>Materiales</h4>
+            <span>Guías descargables</span>
+            <span>Recursos clínicos</span>
+          </div>
+        </div>
+        <div className="footer-pie">
+          <span><strong>PTUM</strong>®</span>
+          <span>Desarrollado por Riders.Media · 2026 · Todos los derechos reservados</span>
+        </div>
+      </footer>
     </div>
   )
 }

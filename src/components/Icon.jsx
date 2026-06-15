@@ -64,6 +64,10 @@ const paths = {
     </>
   ),
   check: <path d="M5 12.5 10 17.5 19.5 7" />,
+  // Estrella de la Vida (asterisco de 6 puntas) — símbolo SUE/paramédico.
+  estrella: <path d="M12 3v18M4.2 7.5l15.6 9M19.8 7.5l-15.6 9" />,
+  chevronIzq: <path d="m15 5-7 7 7 7" />,
+  chevronDer: <path d="m9 5 7 7-7 7" />,
 }
 
 export default function Icon({ name, size = 22, className = '', strokeWidth = 1.75, style }) {

@@ -2,129 +2,176 @@ import { Link } from 'react-router-dom'
 import { fases, stats } from '../data/index.js'
 import { useProgress } from '../context/ProgressContext.jsx'
 import Icon from '../components/Icon.jsx'
+import Reveal from '../components/Reveal.jsx'
+import Imagen from '../components/Imagen.jsx'
+import Contador from '../components/Contador.jsx'
+import FasesCarrusel from '../components/FasesCarrusel.jsx'
+import EstrellaVida from '../components/EstrellaVida.jsx'
+import { IMG } from '../data/imagenes.js'
 
-const STAT_ITEMS = [
-  { key: 'fases', icon: 'capas', label: 'Fases' },
-  { key: 'temas', icon: 'libro', label: 'Temas a fondo' },
-  { key: 'preguntas', icon: 'pregunta', label: 'Preguntas' },
-  { key: 'flashcards', icon: 'flashcards', label: 'Flashcards' },
-]
-
-const MODOS = [
-  { icon: 'libro', titulo: 'Estudia a profundidad', texto: 'Cada tema con teoría, tablas, fórmulas y correlación clínica. No es un cuestionario: es material para entender de verdad.' },
-  { icon: 'flashcards', titulo: 'Repasa con flashcards', texto: 'Tarjetas de repaso activo por tema o globales para fijar los conceptos de alto rendimiento.', link: { to: '/flashcards', label: 'Ir a flashcards' } },
-  { icon: 'matraz', titulo: 'Ponte a prueba', texto: 'Quiz al final de cada tema y un examen general aleatorio con explicación de cada respuesta.', link: { to: '/examen', label: 'Hacer examen' } },
-  { icon: 'atlas', titulo: 'Atlas visual', texto: 'Mapas anatómicos y fisiológicos: corazón, circulación, vía aérea, nefrona, sistema nervioso y más.', link: { to: '/atlas', label: 'Ver el atlas' } },
+const STATS = [
+  { key: 'fases', label: 'Fases' },
+  { key: 'temas', label: 'Temas' },
+  { key: 'flashcards', label: 'FlashCards' },
+  { key: 'preguntas', label: 'Preguntas' },
 ]
 
 export default function Home() {
   const { estado } = useProgress()
-  const temasLeidos = Object.values(estado.leidos).filter(Boolean).length
+  const leidos = estado.leidos
+  const temasLeidos = Object.values(leidos).filter(Boolean).length
   const progresoGlobal = Math.round((temasLeidos / stats.temas) * 100)
 
   return (
-    <div className="home">
-      <section className="hero">
-        <div className="hero-aurora" aria-hidden="true">
-          <span className="orb orb-1" />
-          <span className="orb orb-2" />
-          <span className="orb orb-3" />
-        </div>
-        <div className="hero-contenido reveal">
-          <h1 className="hero-titulo">
-            La Guía de <span className="acento">Lin</span>
-          </h1>
-          <p className="hero-sub">
-            Atención Prehospitalaria, Cuidados Críticos y Transición a Medicina.
-            Una guía exigente diseñada para que no solo memorices, sino que{' '}
-            <strong>comprendas el porqué</strong> fisiológico de cada intervención.
-          </p>
-          <div className="hero-acciones">
-            <Link to="/fase/fase-1" className="btn btn-primario btn-grande">
-              <Icon name="libro" size={20} /> Empezar a estudiar
-            </Link>
-            <Link to="/examen" className="btn btn-secundario btn-grande">
-              <Icon name="matraz" size={20} /> Ponerme a prueba
-            </Link>
+    <div className="ph">
+      {/* ===== HERO ===== */}
+      <section className="ph-hero">
+        <EstrellaVida size={680} className="ph-hero-marca" />
+        <div className="ph-wrap ph-hero-in">
+          <div className="ph-hero-foto reveal" style={{ '--d': '120ms' }}>
+            <Imagen
+              src={IMG.heroParamedico}
+              ratio="1 / 1"
+              eager
+              figura
+              alt="Paramédico"
+              busqueda="paramédico uniforme rojo botiquín"
+            />
           </div>
-        </div>
-        <div className="hero-stats">
-          {STAT_ITEMS.map((s, i) => (
-            <div className="stat-card reveal-pop" key={s.key} style={{ '--d': `${120 + i * 70}ms` }}>
-              <span className="stat-ico"><Icon name={s.icon} size={22} /></span>
-              <div className="stat-num">{stats[s.key]}</div>
-              <div className="stat-label">{s.label}</div>
+          <div className="ph-hero-texto">
+            <span className="ph-eyebrow reveal" style={{ '--d': '40ms' }}>
+              <Icon name="estrella" size={15} /> Atención Prehospitalaria · México
+            </span>
+            <h1 className="ph-wordmark" aria-label="PTUM">
+              {['P', 'T', 'U', 'M'].map((l, i) => (
+                <span key={i} className="ph-wm-l" style={{ '--i': i }}>
+                  {l}
+                </span>
+              ))}
+            </h1>
+            <p className="ph-hero-sub reveal" style={{ '--d': '320ms' }}>
+              Técnico en Urgencias Médicas. Aprende a <strong>comprender el porqué</strong>, no solo a
+              memorizar: teoría, fisiología, farmacología y correlación clínica de verdad.
+            </p>
+            <div className="ph-hero-cta reveal" style={{ '--d': '420ms' }}>
+              <Link to="/fase/fase-1" className="btn-pildora btn-pildora--solido">
+                <Icon name="libro" size={18} /> Empezar a estudiar
+              </Link>
+              <Link to="/examen" className="btn-pildora btn-pildora--urgencia">
+                <Icon name="examen" size={18} /> Ponerme a prueba
+              </Link>
             </div>
-          ))}
+            <div className="ph-stats">
+              {STATS.map((s, i) => (
+                <div className="ph-stat reveal" key={s.key} style={{ '--d': `${500 + i * 80}ms` }}>
+                  <b className="ph-stat-num">
+                    <Contador valor={stats[s.key]} />
+                  </b>
+                  <span className="ph-stat-label">{s.label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
+      {/* ===== Progreso (si ya hay temas leídos) ===== */}
       {temasLeidos > 0 && (
-        <section className="home-progreso reveal">
-          <div className="home-progreso-info">
-            <strong>Tu progreso</strong>
-            <span>{temasLeidos} de {stats.temas} temas completados</span>
-          </div>
-          <div className="barra-global">
-            <div className="barra-global-fill" style={{ width: `${progresoGlobal}%` }}>
-              {progresoGlobal > 8 && `${progresoGlobal}%`}
+        <div className="ph-wrap">
+          <Reveal as="section" className="ph-progreso">
+            <div className="ph-progreso-info">
+              <strong>Tu progreso</strong>
+              <span>
+                {temasLeidos} de {stats.temas} temas · {progresoGlobal}%
+              </span>
             </div>
-          </div>
-          <Link to="/progreso" className="link-discreto">Ver detalle →</Link>
-        </section>
+            <div className="ph-progreso-barra">
+              <span style={{ width: `${progresoGlobal}%` }} />
+            </div>
+            <Link to="/progreso" className="ph-link">
+              Ver detalle <Icon name="chevronDer" size={15} />
+            </Link>
+          </Reveal>
+        </div>
       )}
 
-      <section className="fases-grid">
-        <h2 className="seccion-titulo-centro">Recorrido de estudio</h2>
-        <p className="seccion-desc-centro">
-          Siete fases progresivas, del fundamento celular a la farmacología avanzada, el marco normativo y las operaciones especiales.
-        </p>
-        <div className="grid-fases">
-          {fases.map((fase, i) => {
-            const leidosFase = fase.temas.filter((t) => estado.leidos[t.id]).length
-            const num = String(fase.numero).padStart(2, '0')
-            return (
-              <Link
-                to={`/fase/${fase.id}`}
-                key={fase.id}
-                className="fase-card reveal"
-                style={{ '--fase-color': fase.color, '--d': `${i * 60}ms` }}
-              >
-                <div className="fase-card-top">
-                  <span className="fase-card-num">{num}</span>
-                  <span className="fase-card-flecha"><Icon name="flecha" size={18} /></span>
-                </div>
-                <h3 className="fase-card-titulo">{fase.titulo}</h3>
-                <p className="fase-card-sub">{fase.subtitulo}</p>
-                <p className="fase-card-desc">{fase.descripcion}</p>
-                <div className="fase-card-pie">
-                  <span className="fase-card-temas">{fase.temas.length} temas</span>
-                  <span className="fase-card-prog">{leidosFase}/{fase.temas.length}</span>
-                </div>
-                <div className="fase-card-barra">
-                  <span style={{ width: `${(leidosFase / fase.temas.length) * 100}%` }} />
-                </div>
-              </Link>
-            )
-          })}
+      {/* ===== FASES (carrusel) ===== */}
+      <section className="ph-fases">
+        <div className="ph-wrap">
+          <Reveal as="h2" className="ph-h2">
+            <Icon name="estrella" size={30} /> Fases
+          </Reveal>
+          <Reveal as="p" className="ph-h2-sub" delay={70}>
+            Siete fases progresivas, del fundamento celular a la farmacología avanzada, el marco
+            normativo y las operaciones especiales.
+          </Reveal>
         </div>
+        <FasesCarrusel fases={fases} leidos={leidos} />
       </section>
 
-      <section className="modos">
-        <h2 className="seccion-titulo-centro">Cómo aprenderás</h2>
-        <div className="grid-modos">
-          {MODOS.map((m) => (
-            <div className="modo-card" key={m.titulo}>
-              <span className="modo-ico"><Icon name={m.icon} size={24} /></span>
-              <h3>{m.titulo}</h3>
-              <p>{m.texto}</p>
-              {m.link && (
-                <Link to={m.link.to} className="link-discreto">{m.link.label} →</Link>
-              )}
-            </div>
-          ))}
+      {/* ===== PONTE A PRUEBA ===== */}
+      <Reveal as="section" className="ph-banda ph-prueba">
+        <div className="ph-wrap ph-banda-in">
+          <div className="ph-banda-img">
+            <Imagen src={IMG.ponteAprueba} ratio="4 / 3" figura busqueda="examen test checklist bolígrafo" />
+          </div>
+          <div className="ph-banda-texto">
+            <h2 className="ph-titular">
+              Ponte <span className="ac">a</span> Prueba
+            </h2>
+            <p>
+              Quiz al final de cada tema y un examen general aleatorio que mezcla las 7 fases, con
+              explicación de cada respuesta para que aprendas del error.
+            </p>
+            <Link to="/examen" className="btn-pildora btn-pildora--urgencia btn-grande-p">
+              Iniciar Test <Icon name="chevronDer" size={18} />
+            </Link>
+          </div>
         </div>
-      </section>
+      </Reveal>
+
+      {/* ===== CONSULTA EL ATLAS ===== */}
+      <Reveal as="section" className="ph-banda ph-atlas">
+        <div className="ph-wrap ph-banda-in ph-banda-in--rev">
+          <div className="ph-banda-texto">
+            <h2 className="ph-titular">
+              Consulta nuestro <span className="ac">Atlas</span>
+            </h2>
+            <p>
+              Mapas anatómicos y fisiológicos con imágenes reales: corazón, circulación, vía aérea,
+              nefrona, sistema nervioso y más, como referencia rápida mientras estudias.
+            </p>
+            <Link to="/atlas" className="btn-pildora btn-pildora--oscuro btn-grande-p">
+              Consultar <Icon name="chevronDer" size={18} />
+            </Link>
+          </div>
+          <div className="ph-banda-img">
+            <Imagen src={IMG.atlas} ratio="4 / 3" figura busqueda="atlas anatomía libros medicina" />
+          </div>
+        </div>
+      </Reveal>
+
+      {/* ===== FLASHCARDS ===== */}
+      <Reveal as="section" className="ph-banda ph-flash">
+        <div className="ph-wrap ph-banda-in">
+          <div className="ph-banda-img">
+            <Imagen src={IMG.flashcards} ratio="4 / 3" figura busqueda="estudiante repaso tarjetas botiquín" />
+          </div>
+          <div className="ph-banda-texto ph-flash-texto">
+            <span className="ph-flash-bignum">
+              <Contador valor={stats.flashcards} />
+            </span>
+            <h2 className="ph-titular">
+              Flash<span className="ac">Cards</span>
+            </h2>
+            <p>Repasa con nuestras flashcards por tema o globales para fijar los conceptos de alto rendimiento.</p>
+            <span className="ph-flash-cap">tarjetas de repaso de alto rendimiento</span>
+            <Link to="/flashcards" className="btn-pildora btn-pildora--solido btn-grande-p">
+              Repasar <Icon name="chevronDer" size={18} />
+            </Link>
+          </div>
+        </div>
+      </Reveal>
     </div>
   )
 }

@@ -1,10 +1,17 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { buscar } from '../data/index.js'
 
 export default function BuscarPage() {
-  const [query, setQuery] = useState('')
+  const [params] = useSearchParams()
+  const [query, setQuery] = useState(params.get('q') || '')
   const resultados = buscar(query)
+
+  // Sincroniza con el buscador del header (?q=…) sin remontar la página.
+  useEffect(() => {
+    const q = params.get('q')
+    if (q != null) setQuery(q)
+  }, [params])
 
   return (
     <div className="buscar-page">

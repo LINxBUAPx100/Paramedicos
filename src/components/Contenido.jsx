@@ -1,75 +1,23 @@
 // Renderiza los bloques de contenido de un tema según su tipo.
-import { useState } from 'react'
-import Diagrama from './Diagramas.jsx'
-
-// URL de búsqueda directa en Google Imágenes a partir de un término.
-function googleImagesUrl(termino) {
-  return `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(termino || '')}`
-}
-
-// Bloque de imagen/ilustración externa (complementa a los diagramas SVG propios).
-// - Si `src` trae una URL o ruta local (p. ej. "/img/farmacologia/foo.png") muestra la imagen.
-// - Si `src` está vacío (o la imagen falla) muestra un PLACEHOLDER con un botón que
-//   busca el término sugerido en Google Imágenes e instrucciones para insertar el archivo.
-function BloqueImagen({ bloque }) {
-  const [error, setError] = useState(false)
-  const tieneSrc = bloque.src && bloque.src.trim().length > 0
-
-  if (!tieneSrc || error) {
-    return (
-      <figure className="c-imagen c-imagen--placeholder">
-        <div className="c-imagen-ph">
-          <span className="c-imagen-ph-ico">🖼️</span>
-          <strong>Espacio para ilustración</strong>
-          {bloque.caption && <p className="c-imagen-ph-desc">{bloque.caption}</p>}
-          {bloque.busqueda && (
-            <a
-              className="c-imagen-ph-btn"
-              href={googleImagesUrl(bloque.busqueda)}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              🔍 Buscar «{bloque.busqueda}» en Google Imágenes
-            </a>
-          )}
-          <code className="c-imagen-ph-hint">
-            Pega una URL o coloca el archivo en <b>/public/img/</b> y rellena <b>src</b> de este bloque.
-          </code>
-        </div>
-      </figure>
-    )
-  }
-
-  return (
-    <figure className="c-imagen">
-      <img src={bloque.src} alt={bloque.alt || bloque.caption || ''} loading="lazy" onError={() => setError(true)} />
-      {(bloque.caption || bloque.fuente) && (
-        <figcaption>
-          {bloque.caption}
-          {bloque.fuente &&
-            (bloque.fuenteUrl ? (
-              <>
-                {' '}
-                <a href={bloque.fuenteUrl} target="_blank" rel="noopener noreferrer">
-                  Fuente: {bloque.fuente}
-                </a>
-              </>
-            ) : (
-              <span className="c-imagen-fuente"> Fuente: {bloque.fuente}</span>
-            ))}
-        </figcaption>
-      )}
-    </figure>
-  )
-}
+import Imagen from './Imagen.jsx'
 
 function Bloque({ bloque }) {
   switch (bloque.tipo) {
     case 'p':
       return <p className="c-parrafo">{bloque.texto}</p>
 
+    // Antes era un SVG dibujado por la app; ahora es un hueco para imagen real
+    // (pega el enlace de Drive en `src`). El título queda como pie y permite buscar referencia.
     case 'diagrama':
-      return <Diagrama clave={bloque.clave} titulo={bloque.titulo} descripcion={bloque.descripcion} />
+      return (
+        <Imagen
+          src={bloque.src}
+          alt={bloque.titulo}
+          caption={bloque.titulo}
+          busqueda={bloque.titulo}
+          ratio="16 / 10"
+        />
+      )
 
     case 'h3':
       return <h3 className="c-subtitulo">{bloque.texto}</h3>
@@ -148,7 +96,17 @@ function Bloque({ bloque }) {
       )
 
     case 'imagen':
-      return <BloqueImagen bloque={bloque} />
+      return (
+        <Imagen
+          src={bloque.src}
+          alt={bloque.alt}
+          caption={bloque.caption}
+          fuente={bloque.fuente}
+          fuenteUrl={bloque.fuenteUrl}
+          busqueda={bloque.busqueda}
+          ratio={bloque.ratio || '16 / 10'}
+        />
+      )
 
     case 'fuentes':
       return (
