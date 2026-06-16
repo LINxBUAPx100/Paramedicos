@@ -1,4 +1,4 @@
-# La Guía de Lin 🩺
+PTUM
 
 **Guía de estudio avanzada y exigente de Atención Prehospitalaria, Cuidados Críticos y Transición a Medicina** (enfoque México).
 
