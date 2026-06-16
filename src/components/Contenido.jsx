@@ -1,5 +1,10 @@
 // Renderiza los bloques de contenido de un tema según su tipo.
 import Imagen from './Imagen.jsx'
+import { ATLAS_TEMAS } from '../data/imagenes.js'
+
+// Mapa clave → enlace de imagen del Atlas. Los bloques `diagrama` (antes SVG
+// dibujados) reutilizan las mismas imágenes reales del Atlas vía su `clave`.
+const ATLAS_SRC = Object.fromEntries(ATLAS_TEMAS.map((t) => [t.clave, t.src]))
 
 function Bloque({ bloque }) {
   switch (bloque.tipo) {
@@ -10,13 +15,15 @@ function Bloque({ bloque }) {
     // (pega el enlace de Drive en `src`). El título queda como pie y permite buscar referencia.
     case 'diagrama':
       return (
-        <Imagen
-          src={bloque.src}
-          alt={bloque.titulo}
-          caption={bloque.titulo}
-          busqueda={bloque.titulo}
-          ratio="16 / 10"
-        />
+        <div id={bloque.clave ? `diag-${bloque.clave}` : undefined} className="c-diagrama">
+          <Imagen
+            src={bloque.src || ATLAS_SRC[bloque.clave]}
+            alt={bloque.titulo}
+            caption={bloque.titulo}
+            busqueda={bloque.titulo}
+            completa
+          />
+        </div>
       )
 
     case 'h3':

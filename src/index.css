@@ -1640,6 +1640,18 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
 .atlas-card:hover { transform: translateY(-4px); box-shadow: var(--sombra-md); }
 .atlas-card .imagen { border-radius: 0; }
 .atlas-card-titulo { padding: 14px 18px; font-size: 1.02rem; line-height: 1.3; }
+/* Tarjeta del Atlas que enlaza a su tema */
+.atlas-card--link { display: block; cursor: pointer; color: inherit; text-decoration: none; }
+.atlas-card--link:hover { border-color: color-mix(in srgb, var(--primario) 45%, var(--borde)); box-shadow: var(--sombra-color); }
+.atlas-card--link .atlas-card-titulo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-weight: 600;
+}
+.atlas-card--link .atlas-card-titulo svg { color: var(--primario); flex-shrink: 0; transition: transform 0.2s var(--ease-out); }
+.atlas-card--link:hover .atlas-card-titulo svg { transform: translateX(3px); }
 
 .conceptos { margin: 40px 0; }
 .conceptos-grid {
@@ -2323,6 +2335,34 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
 .imagen--figura { background: none; box-shadow: none; border-radius: 0; }
 .imagen.imagen--figura img { object-fit: contain; object-position: center bottom; }
 .imagen--figura:not(.is-cargada)::after { content: none; }
+/* "Completa": imagen ENTERA a su proporción natural (sin recorte). El ancho se
+   fuerza al 100% del contenedor y el alto se adapta a las medidas de cada imagen. */
+.imagen--completa {
+  border-radius: 16px;
+  background: var(--bg-3);
+  width: 100%;
+}
+.imagen.imagen--completa img {
+  position: static;
+  inset: auto;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+.imagen--completa:not(.is-cargada) { min-height: 200px; }
+/* Diagrama de un tema (imagen completa); deja hueco bajo el nav fijo al saltar
+   desde el Atlas y resalta brevemente el destino. */
+.c-diagrama { scroll-margin-top: 90px; }
+.c-diagrama--destacado .imagen--completa {
+  outline: 3px solid var(--primario);
+  outline-offset: 3px;
+  animation: diagFlash 2.2s var(--ease-out);
+}
+@keyframes diagFlash {
+  0%, 60% { outline-color: var(--primario); }
+  100% { outline-color: transparent; }
+}
 .imagen img {
   position: absolute;
   inset: 0;

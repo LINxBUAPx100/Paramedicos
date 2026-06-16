@@ -36,6 +36,22 @@ export const todosLosTemas = fases.flatMap((fase) =>
   }))
 )
 
+// Mapa: clave de imagen del Atlas (diagrama/imagen) → id del tema donde aparece
+// (el primero encontrado). Permite saltar del Atlas al tema correspondiente.
+export const temaPorClaveImagen = (() => {
+  const map = {}
+  for (const tema of todosLosTemas) {
+    for (const sec of tema.secciones || []) {
+      for (const bloque of sec.bloques || []) {
+        if ((bloque.tipo === 'diagrama' || bloque.tipo === 'imagen') && bloque.clave && !map[bloque.clave]) {
+          map[bloque.clave] = tema.id
+        }
+      }
+    }
+  }
+  return map
+})()
+
 export function getFase(faseId) {
   return fases.find((f) => f.id === faseId)
 }

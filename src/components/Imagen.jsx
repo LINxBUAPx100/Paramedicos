@@ -24,17 +24,21 @@ export default function Imagen({
   className = '',
   rounded = true,
   figura = false,
+  completa = false,
 }) {
   const [error, setError] = useState(false)
   const [cargada, setCargada] = useState(false)
   const tieneSrc = src && String(src).trim().length > 0
 
-  const forma = figura ? 'imagen--figura' : rounded ? 'imagen--round' : ''
+  const forma = completa ? 'imagen--completa' : figura ? 'imagen--figura' : rounded ? 'imagen--round' : ''
   const clases = `imagen ${forma} ${className}`.trim()
+  // En modo "completa" la imagen se muestra entera a su proporción natural
+  // (no se fuerza un aspect-ratio fijo que recortaría).
+  const estiloRatio = completa ? undefined : { aspectRatio: ratio }
 
   if (!tieneSrc || error) {
     return (
-      <figure className={`${clases} imagen--ph`} style={{ aspectRatio: ratio }}>
+      <figure className={`${clases} imagen--ph`} style={completa ? { aspectRatio: '16 / 9' } : estiloRatio}>
         <div className="imagen-ph-in">
           <span className="imagen-ph-ico"><Icon name="estrella" size={26} /></span>
           <strong>enlace de la imagen aquí</strong>
@@ -55,7 +59,7 @@ export default function Imagen({
   }
 
   return (
-    <figure className={`${clases} ${cargada ? 'is-cargada' : ''}`} style={{ aspectRatio: ratio }}>
+    <figure className={`${clases} ${cargada ? 'is-cargada' : ''}`} style={estiloRatio}>
       <img
         src={driveSrc(src, ancho)}
         srcSet={driveSrcSet(src)}

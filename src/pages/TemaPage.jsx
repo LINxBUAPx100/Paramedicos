@@ -1,4 +1,4 @@
-import { useParams, Link, useNavigate } from 'react-router-dom'
+import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useEffect } from 'react'
 import { getTema, getTemaVecinos } from '../data/index.js'
 import { getRecursos } from '../data/recursosDescarga.js'
@@ -8,14 +8,31 @@ import NotFound from './NotFound.jsx'
 
 export default function TemaPage() {
   const { temaId } = useParams()
+  const [searchParams] = useSearchParams()
+  const ref = searchParams.get('ref') // clave de imagen del Atlas a la que saltar
   const navigate = useNavigate()
   const tema = getTema(temaId)
   const { estado, marcarLeido } = useProgress()
 
-  // Sube al inicio al cambiar de tema.
+  // Al cambiar de tema: si venimos del Atlas (?ref=clave), salta a ese diagrama
+  // y lo resalta; si no, sube al inicio.
   useEffect(() => {
+    if (ref) {
+      const el = document.getElementById(`diag-${ref}`)
+      if (el) {
+        const saltar = () => {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          el.classList.add('c-diagrama--destacado')
+          setTimeout(() => el.classList.remove('c-diagrama--destacado'), 2400)
+        }
+        const t = setTimeout(saltar, 250)
+        const img = el.querySelector('img')
+        if (img && !img.complete) img.addEventListener('load', saltar, { once: true })
+        return () => clearTimeout(t)
+      }
+    }
     window.scrollTo(0, 0)
-  }, [temaId])
+  }, [temaId, ref])
 
   if (!tema) return <NotFound />
 
