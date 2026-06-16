@@ -2410,8 +2410,8 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
 @keyframes girarLento { to { transform: translateY(-50%) rotate(360deg); } }
 .ph-hero-in {
   display: grid;
-  grid-template-columns: 0.92fr 1.08fr;
-  gap: clamp(14px, 3vw, 44px);
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: clamp(14px, 3vw, 40px);
   align-items: end;
 }
 /* Foto del paramédico: GRANDE, sin caja ni difuminado, apoyada en la base */
@@ -2420,16 +2420,17 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
   align-self: end;
   justify-self: center;
   width: 100%;
-  max-width: 580px;
+  max-width: 940px;
 }
 .ph-hero-foto::before { content: none; }
 .ph-hero-foto .imagen--round { border-radius: 26px; box-shadow: var(--sombra-lg); }
 .ph-hero-foto .imagen--figura { overflow: visible; }
 .ph-hero-foto .imagen--figura img {
+  object-fit: cover;
   object-position: center bottom;
   filter: drop-shadow(0 14px 24px rgba(0, 0, 0, 0.18));
 }
-.ph-hero-texto { align-self: end; padding-bottom: clamp(34px, 5vw, 56px); }
+.ph-hero-texto { align-self: center; padding: clamp(14px, 4vw, 48px) 0; }
 
 .ph-eyebrow {
   display: inline-flex;
@@ -2682,11 +2683,11 @@ html[data-tema='oscuro'] .ph-eyebrow { color: var(--primario-claro); }
 .ph-flash { background: linear-gradient(160deg, var(--plata-1), var(--bg-2)); }
 .ph-banda-in {
   display: grid;
-  grid-template-columns: 1.18fr 0.82fr;
+  grid-template-columns: 1.3fr 0.7fr;
   gap: clamp(24px, 3.5vw, 52px);
   align-items: center;
 }
-.ph-banda-in--rev { grid-template-columns: 0.82fr 1.18fr; }
+.ph-banda-in--rev { grid-template-columns: 0.7fr 1.3fr; }
 .ph-banda-in--rev .ph-banda-texto { order: -1; }
 /* Imágenes del home SIN recuadro: flotan (figura) con sombra proyectada */
 .ph-banda-img .imagen--round { border-radius: 24px; box-shadow: var(--sombra-lg); }
@@ -2745,7 +2746,7 @@ html[data-tema='oscuro'] .ph-eyebrow { color: var(--primario-claro); }
 /* ---- Responsive Home ---- */
 @media (max-width: 880px) {
   .ph-hero-in { grid-template-columns: 1fr; }
-  .ph-hero-foto { max-width: 400px; }
+  .ph-hero-foto { max-width: 460px; }
   .ph-hero-texto { align-self: auto; padding-bottom: clamp(28px, 6vw, 44px); }
   .ph-banda-in { grid-template-columns: 1fr; }
   .ph-banda-in--rev .ph-banda-texto { order: 0; }

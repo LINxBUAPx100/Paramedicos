@@ -31,7 +31,7 @@ export default function Home() {
           <div className="ph-hero-foto reveal" style={{ '--d': '120ms' }}>
             <Imagen
               src={IMG.heroParamedico}
-              ratio="1 / 1"
+              ratio="4 / 5"
               eager
               figura
               alt="Paramédico"
