@@ -6,7 +6,7 @@ import Reveal from '../components/Reveal.jsx'
 import Imagen from '../components/Imagen.jsx'
 import Contador from '../components/Contador.jsx'
 import FasesCarrusel from '../components/FasesCarrusel.jsx'
-import EstrellaVida from '../components/EstrellaVida.jsx'
+import IconoEstrella from '../components/marca/IconoEstrella.jsx'
 import { IMG } from '../data/imagenes.js'
 
 const STATS = [
@@ -26,7 +26,7 @@ export default function Home() {
     <div className="ph">
       {/* ===== HERO ===== */}
       <section className="ph-hero">
-        <EstrellaVida size={680} className="ph-hero-marca" />
+        <IconoEstrella size={680} className="ph-hero-marca" />
         <div className="ph-wrap ph-hero-in">
           <div className="ph-hero-foto reveal" style={{ '--d': '120ms' }}>
             <Imagen
@@ -40,7 +40,6 @@ export default function Home() {
           </div>
           <div className="ph-hero-texto">
             <span className="ph-eyebrow reveal" style={{ '--d': '40ms' }}>
-              <Icon name="estrella" size={15} /> Atención Prehospitalaria · México
             </span>
             <h1 className="ph-wordmark" aria-label="PTUM">
               {['P', 'T', 'U', 'M'].map((l, i) => (
@@ -99,7 +98,7 @@ export default function Home() {
       <section className="ph-fases">
         <div className="ph-wrap">
           <Reveal as="h2" className="ph-h2">
-            <Icon name="estrella" size={30} /> Fases
+            <IconoEstrella size={26} /> Fases
           </Reveal>
           <Reveal as="p" className="ph-h2-sub" delay={70}>
             Siete fases progresivas, del fundamento celular a la farmacología avanzada, el marco

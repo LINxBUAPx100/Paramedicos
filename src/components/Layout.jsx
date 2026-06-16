@@ -3,7 +3,9 @@ import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom'
 import { fases } from '../data/index.js'
 import { useProgress } from '../context/ProgressContext.jsx'
 import Icon from './Icon.jsx'
-import EstrellaVida from './EstrellaVida.jsx'
+import LogoPTUM from './marca/LogoPTUM.jsx'
+import LogoIcono from './marca/LogoIcono.jsx'
+import IconoEstrella from './marca/IconoEstrella.jsx'
 
 // Navegación primaria del header (patrón del diseño PTUM).
 const TOPNAV = [
@@ -53,9 +55,8 @@ export default function Layout({ children }) {
           <span /><span /><span />
         </button>
 
-        <Link to="/" className="marca" onClick={cerrar}>
-          <span className="marca-logo"><EstrellaVida size={24} /></span>
-          <span className="marca-texto">PTUM</span>
+        <Link to="/" className="marca" onClick={cerrar} aria-label="PTUM — inicio">
+          <LogoPTUM height={28} className="marca-svg" />
         </Link>
 
         <nav className="topnav">
@@ -136,7 +137,7 @@ export default function Layout({ children }) {
             ))}
           </nav>
           <div className="sidebar-pie">
-            <Icon name="estrella" size={15} /> PTUM · Hecho para que comprendas el porqué.
+            <IconoEstrella size={14} /> PTUM · Hecho para que comprendas el porqué.
           </div>
         </aside>
 
@@ -150,7 +151,7 @@ export default function Layout({ children }) {
       <footer className="app-footer">
         <div className="footer-in">
           <div className="footer-col footer-marca">
-            <span className="marca-logo"><EstrellaVida size={22} /></span>
+            <span className="marca-logo"><LogoIcono size={26} /></span>
             <div>
               <strong>PTUM</strong>
               <p>Plataforma de estudio en Atención Prehospitalaria y Cuidados Críticos.</p>

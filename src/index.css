@@ -2,6 +2,12 @@
    La Guía de Lin — Sistema de diseño
    ============================================================ */
 
+/* Cascadia Code (auto-alojada en src/fonts) — fuente de NÚMEROS */
+@font-face { font-family: 'Cascadia Code'; font-style: normal; font-weight: 400; font-display: swap; src: url('./fonts/cascadia-code-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Cascadia Code'; font-style: normal; font-weight: 700; font-display: swap; src: url('./fonts/cascadia-code-latin-700-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Cascadia Code'; font-style: italic; font-weight: 600; font-display: swap; src: url('./fonts/cascadia-code-latin-600-italic.woff2') format('woff2'); }
+@font-face { font-family: 'Cascadia Code'; font-style: italic; font-weight: 700; font-display: swap; src: url('./fonts/cascadia-code-latin-700-italic.woff2') format('woff2'); }
+
 :root {
   --azul: #0ea5e9;
   --verde: #10b981;
@@ -33,9 +39,10 @@
 
   --fase-color: var(--primario);
 
-  --fuente-display: 'Heebo', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --fuente-cifra: 'Oswald', 'Heebo', system-ui, sans-serif;
-  --fuente-cuerpo: 'Heebo', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --fuente-display: 'Heebo', system-ui, -apple-system, 'Segoe UI', sans-serif; /* títulos */
+  --fuente-cifra: 'Cascadia Code', 'Heebo', ui-monospace, monospace;          /* números */
+  --fuente-sub: 'Oswald', 'Heebo', system-ui, sans-serif;                      /* subtítulos/labels */
+  --fuente-cuerpo: 'Fira Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; /* texto */
   --fuente-mono: 'Cascadia Code', 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
 
   /* Tema claro (por defecto) */
@@ -2413,7 +2420,7 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
   align-self: end;
   justify-self: center;
   width: 100%;
-  max-width: 520px;
+  max-width: 580px;
 }
 .ph-hero-foto::before { content: none; }
 .ph-hero-foto .imagen--round { border-radius: 26px; box-shadow: var(--sombra-lg); }
@@ -2428,7 +2435,7 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-family: var(--fuente-cifra);
+  font-family: var(--fuente-sub);
   text-transform: uppercase;
   letter-spacing: 0.16em;
   font-size: 0.82rem;
@@ -2481,7 +2488,7 @@ html[data-tema='oscuro'] .ph-eyebrow { color: var(--primario-claro); }
   font-variant-numeric: tabular-nums;
 }
 .ph-stat-label {
-  font-family: var(--fuente-cifra);
+  font-family: var(--fuente-sub);
   text-transform: uppercase;
   letter-spacing: 0.12em;
   font-size: 0.84rem;
@@ -2599,7 +2606,7 @@ html[data-tema='oscuro'] .ph-eyebrow { color: var(--primario-claro); }
   margin-bottom: 4px;
 }
 .deck-sub {
-  font-family: var(--fuente-cifra);
+  font-family: var(--fuente-sub);
   color: var(--fase-color);
   font-weight: 500;
   font-size: 0.96rem;
@@ -2675,10 +2682,11 @@ html[data-tema='oscuro'] .ph-eyebrow { color: var(--primario-claro); }
 .ph-flash { background: linear-gradient(160deg, var(--plata-1), var(--bg-2)); }
 .ph-banda-in {
   display: grid;
-  grid-template-columns: 1fr 1.05fr;
-  gap: clamp(26px, 4vw, 56px);
+  grid-template-columns: 1.18fr 0.82fr;
+  gap: clamp(24px, 3.5vw, 52px);
   align-items: center;
 }
+.ph-banda-in--rev { grid-template-columns: 0.82fr 1.18fr; }
 .ph-banda-in--rev .ph-banda-texto { order: -1; }
 /* Imágenes del home SIN recuadro: flotan (figura) con sombra proyectada */
 .ph-banda-img .imagen--round { border-radius: 24px; box-shadow: var(--sombra-lg); }
@@ -2726,7 +2734,7 @@ html[data-tema='oscuro'] .ph-eyebrow { color: var(--primario-claro); }
 }
 .ph-flash-cap {
   display: block;
-  font-family: var(--fuente-cifra);
+  font-family: var(--fuente-sub);
   text-transform: uppercase;
   letter-spacing: 0.12em;
   font-size: 0.86rem;
@@ -2737,7 +2745,7 @@ html[data-tema='oscuro'] .ph-eyebrow { color: var(--primario-claro); }
 /* ---- Responsive Home ---- */
 @media (max-width: 880px) {
   .ph-hero-in { grid-template-columns: 1fr; }
-  .ph-hero-foto { max-width: 360px; }
+  .ph-hero-foto { max-width: 400px; }
   .ph-hero-texto { align-self: auto; padding-bottom: clamp(28px, 6vw, 44px); }
   .ph-banda-in { grid-template-columns: 1fr; }
   .ph-banda-in--rev .ph-banda-texto { order: 0; }
@@ -2767,3 +2775,23 @@ html[data-tema='oscuro'] .ph-eyebrow { color: var(--primario-claro); }
   .ph-hero-marca { animation: none; }
   .ph-wm-l { animation: none; }
 }
+
+/* ============================================================
+   Logo oficial PTUM — color por contexto (SVG en b/n recoloreado)
+   ============================================================ */
+.logo-ptum .lp-letras { fill: var(--logo-letras, currentColor); }
+.logo-ptum .lp-simbolo { fill: var(--logo-simbolo, currentColor); }
+.logo-ptum .lp-simbolo-2 { fill: var(--logo-simbolo-2, color-mix(in srgb, var(--logo-simbolo, var(--primario)) 45%, transparent)); }
+.logo-marca .lm-1 { fill: var(--logo-1, currentColor); }
+.logo-marca .lm-2 { fill: var(--logo-2, color-mix(in srgb, var(--logo-1, currentColor) 45%, transparent)); }
+
+/* Header (barra charcoal): letras blancas, símbolo azul */
+.marca-svg { display: block; }
+.marca-svg {
+  --logo-letras: #fff;
+  --logo-simbolo: var(--primario-claro);
+  --logo-simbolo-2: var(--primario);
+}
+.marca-svg:hover { filter: brightness(1.08); }
+/* Footer: badge azul con el símbolo en blanco (gana al color gris del footer) */
+.footer-marca .marca-logo .logo-marca { --logo-1: #fff; --logo-2: rgba(255, 255, 255, 0.55); }
