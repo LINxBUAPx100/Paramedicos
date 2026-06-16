@@ -11,7 +11,7 @@ export const fase6 = {
   color: '#db2777',
   icono: '💊',
   descripcion:
-    'Antes de empujar un fármaco hay que entender a qué receptor llega, qué determinante hemodinámico mueve y qué evidencia lo respalda. Esta fase integra la farmacología de la vía aérea (SRI/SDA), el soporte vasopresor titulado, las arritmias complejas, la neurocrítica, el broncoespasmo casi-fatal, la analgesia mayor, el trauma con coagulopatía y los antídotos toxicológicos.',
+    'Antes de administrar un fármaco, comprende su efecto y evidencia. Esta fase domina la farmacología avanzada: vía aérea, vasopresores, arritmias, neurocrítica, analgesia mayor, trauma y toxicología.',
   temas: [
     // ===================================================================
     // 6.1 — Bases Farmacológicas y Receptores
