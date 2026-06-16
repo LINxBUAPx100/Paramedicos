@@ -16,7 +16,7 @@
 
 // --- Home -------------------------------------------------------------------
 export const IMG = {
-  heroParamedico: 'https://drive.google.com/file/d/1kzgIe98yoLRL96KqdQXDpsU4W0EfJaWC/view?usp=drive_web', // enlace de la imagen aquí — foto del paramédico (hero)
+  heroParamedico: import.meta.env.BASE_URL + 'heroParamedico.png', // foto del paramédico (hero) — archivo local en /public
   ponteAprueba: 'https://drive.google.com/file/d/1nFKl_QgYJ998yDPhEsxN4tPCKiMFIaJn/view?usp=drive_web', // enlace de la imagen aquí — examen / checklist con bolígrafo
   atlas: 'https://drive.google.com/file/d/1faEMyolaKa7Ermyog9sO8VaC3lWuHNmz/view?usp=drive_web', // enlace de la imagen aquí — pila de libros / atlas
   flashcards: 'https://drive.google.com/file/d/1Ef50Mau9pkOkz8GA9BUu7dh9KVNYuxJd/view?usp=drive_web', // enlace de la imagen aquí — persona con botiquín

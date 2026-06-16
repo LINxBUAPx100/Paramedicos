@@ -8,6 +8,8 @@ import Contador from '../components/Contador.jsx'
 import FasesCarrusel from '../components/FasesCarrusel.jsx'
 import IconoEstrella from '../components/marca/IconoEstrella.jsx'
 import { IMG } from '../data/imagenes.js'
+import marcoUrl from '../assets/marco-paramedico.svg'
+import marcoFrenteUrl from '../assets/marco-paramedico - copia.svg'
 
 const STATS = [
   { key: 'fases', label: 'Fases' },
@@ -29,14 +31,16 @@ export default function Home() {
         <IconoEstrella size={680} className="ph-hero-marca" />
         <div className="ph-wrap ph-hero-in">
           <div className="ph-hero-foto reveal" style={{ '--d': '120ms' }}>
-            <Imagen
-              src={IMG.heroParamedico}
-              ratio="4 / 5"
-              eager
-              figura
-              alt="Paramédico"
-              busqueda="paramédico uniforme rojo botiquín"
-            />
+            <div className="ph-marco">
+              {/* SÁNDWICH: marco original (atrás) */}
+              <img className="ph-marco-svg ph-marco-svg--atras" src={marcoUrl} alt="" aria-hidden="true" />
+              {/* paramédico (en medio): recortado al cuadro, cabeza sale por arriba */}
+              <div className="ph-marco-foto">
+                <img src={IMG.heroParamedico} alt="Paramédico" />
+              </div>
+              {/* copia del marco (al frente): enmarca y tapa cualquier mancha */}
+              <img className="ph-marco-svg ph-marco-svg--frente" src={marcoFrenteUrl} alt="" aria-hidden="true" />
+            </div>
           </div>
           <div className="ph-hero-texto">
             <span className="ph-eyebrow reveal" style={{ '--d': '40ms' }}>
