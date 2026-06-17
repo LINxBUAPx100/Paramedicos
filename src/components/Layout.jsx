@@ -4,7 +4,6 @@ import { fases } from '../data/index.js'
 import { useProgress } from '../context/ProgressContext.jsx'
 import Icon from './Icon.jsx'
 import LogoPTUM from './marca/LogoPTUM.jsx'
-import LogoIcono from './marca/LogoIcono.jsx'
 import IconoEstrella from './marca/IconoEstrella.jsx'
 
 // Navegación primaria del header (patrón del diseño PTUM).
@@ -151,7 +150,7 @@ export default function Layout({ children }) {
       <footer className="app-footer">
         <div className="footer-in">
           <div className="footer-col footer-marca">
-            <span className="marca-logo"><LogoIcono size={26} /></span>
+            <span className="marca-logo"><LogoPTUM height={26} className="footer-logo-ptum" /></span>
             <div>
               <strong>PTUM</strong>
               <p>Plataforma de estudio en Atención Prehospitalaria y Cuidados Críticos.</p>

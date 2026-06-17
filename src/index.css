@@ -2600,7 +2600,7 @@ html[data-tema='oscuro'] .ph-eyebrow { color: var(--primario-claro); }
   position: relative;
   display: flex;
   align-items: flex-end;
-  padding: 0 clamp(30px, 3.4vw, 52px) 0.18em 0;
+  padding: 0 clamp(12px, 1.4vw, 18px) 0.18em 0;
 }
 .ph-stat-num {
   position: absolute;
@@ -2930,3 +2930,4 @@ html[data-tema='oscuro'] .ph-eyebrow { color: var(--primario-claro); }
 .marca-svg:hover { filter: brightness(1.08); }
 /* Footer: badge azul con el símbolo en blanco (gana al color gris del footer) */
 .footer-marca .marca-logo .logo-marca { --logo-1: #fff; --logo-2: rgba(255, 255, 255, 0.55); }
+.footer-marca .marca-logo .logo-ptum { --logo-letras: #fff; --logo-simbolo: #fff; --logo-simbolo-2: rgba(255, 255, 255, 0.55); }
