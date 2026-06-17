@@ -1640,9 +1640,16 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
 .atlas-card:hover { transform: translateY(-4px); box-shadow: var(--sombra-md); }
 .atlas-card .imagen { border-radius: 0; }
 .atlas-card-titulo { padding: 14px 18px; font-size: 1.02rem; line-height: 1.3; }
-/* Tarjeta del Atlas que enlaza a su tema */
-.atlas-card--link { display: block; cursor: pointer; color: inherit; text-decoration: none; }
+/* Tarjeta del Atlas que enlaza a su tema (enlace "estirado" que la cubre) */
+.atlas-card { position: relative; }
+.atlas-card--link { cursor: pointer; }
 .atlas-card--link:hover { border-color: color-mix(in srgb, var(--primario) 45%, var(--borde)); box-shadow: var(--sombra-color); }
+.atlas-card-stretch {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+}
 .atlas-card--link .atlas-card-titulo {
   display: flex;
   align-items: center;
