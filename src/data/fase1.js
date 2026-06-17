@@ -137,12 +137,49 @@ export const fase1 = {
             },
           ],
         },
+        {
+          titulo: 'Lesión y muerte celular',
+          bloques: [
+            {
+              tipo: 'p',
+              texto:
+                'Cuando cae el aporte de oxígeno, la lesión celular empieza siendo REVERSIBLE: se detiene la bomba Na⁺/K⁺, la célula se tumefacta y acumula lactato. Si la isquemia persiste, la lesión se vuelve IRREVERSIBLE: entra calcio de forma masiva, se activan enzimas (fosfolipasas y proteasas) y la membrana se rompe. Reconocer esta ventana es la base del "tiempo es músculo" y "tiempo es cerebro".',
+            },
+            {
+              tipo: 'tabla',
+              titulo: 'Apoptosis vs. necrosis',
+              headers: ['Rasgo', 'Apoptosis', 'Necrosis'],
+              filas: [
+                ['Energía (ATP)', 'Requiere ATP (programada)', 'Ocurre sin ATP'],
+                ['Membrana', 'Se mantiene íntegra', 'Se rompe y libera contenido'],
+                ['Inflamación', 'Ausente', 'Marcada'],
+                ['Patrón', 'Células aisladas', 'Grupos de células contiguas'],
+              ],
+            },
+            {
+              tipo: 'callout',
+              variante: 'clinico',
+              titulo: 'Ventana terapéutica',
+              texto:
+                'En el IAM y el ictus el objetivo es revertir la isquemia ANTES de que la lesión sea irreversible: reperfundir el miocardio o el tejido cerebral a tiempo limita la zona de necrosis. Por eso cada minuto cuenta en el prehospitalario.',
+            },
+            {
+              tipo: 'callout',
+              variante: 'alerta',
+              titulo: 'Lesión por reperfusión',
+              texto:
+                'Al restaurar el flujo, el oxígeno que regresa genera radicales libres que pueden dañar aún más la célula (lesión por reperfusión). Por eso la reperfusión debe ser oportuna y controlada.',
+            },
+          ],
+        },
       ],
       conceptosClave: [
         { termino: 'Bomba Na⁺/K⁺ ATPasa', definicion: 'Transporte activo que saca 3 Na⁺ y mete 2 K⁺ por ATP; sostiene el potencial de reposo y el volumen celular.' },
         { termino: 'Fosforilación oxidativa', definicion: 'Producción mayoritaria de ATP en la mitocondria usando O₂ como aceptor final de electrones.' },
         { termino: 'Lactato', definicion: 'Producto del metabolismo anaerobio; marcador de hipoperfusión tisular y severidad del shock.' },
         { termino: 'Henderson-Hasselbalch', definicion: 'Relación entre pH, bicarbonato y pCO₂ que rige el equilibrio ácido-base.' },
+        { termino: 'Lesión irreversible', definicion: 'Entrada masiva de calcio y rotura de membrana tras isquemia prolongada; ya no hay recuperación celular.' },
+        { termino: 'Lesión por reperfusión', definicion: 'Daño adicional por radicales libres al restaurar el flujo de oxígeno a un tejido isquémico.' },
       ],
       flashcards: [
         { frente: '¿Cuántos ATP rinde la glucólisis anaerobia vs. la oxidación aerobia completa de la glucosa?', reverso: '2 ATP (anaerobia) vs. ~30-32 ATP (aerobia).' },
@@ -176,6 +213,74 @@ export const fase1 = {
           explicacion: 'Usa el gradiente de Na⁺ (creado por la bomba ATPasa) para mover glucosa contra su gradiente: transporte activo secundario.',
         },
       ],
+      recursos: {
+        videos: [
+          { titulo: 'Bomba sodio-potasio (ATPasa) explicada', canal: 'Universitat Politècnica de València', url: 'https://www.youtube.com/watch?v=rjYlmKgrHbU' },
+          { titulo: 'Glucólisis: pasos y destino del piruvato (fermentación)', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=PNSi9UJwGII' },
+          { titulo: 'Metabolismo del lactato (enfoque urgencias / FOAMed)', canal: 'ChileEM', url: 'https://www.youtube.com/watch?v=j2ySc_53VTs' },
+        ],
+        fuentes: [
+          { titulo: 'Physiology, Sodium-Potassium Pump', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK537088/' },
+          { titulo: 'Physiology, Active Transport', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK547718/' },
+          { titulo: 'Electrolytes', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK541123/' },
+        ],
+        imagenes: [
+          { src: 'https://upload.wikimedia.org/wikipedia/commons/9/93/Scheme_sodium-potassium_pump-en-2.svg', caption: 'Esquema de la bomba Na⁺/K⁺ ATPasa (Wikimedia Commons, CC)', busqueda: 'bomba sodio potasio ATPasa esquema' },
+          { src: 'https://commons.wikimedia.org/wiki/Special:FilePath/Glycolysis_Simple_Diagram.jpg', caption: 'Vía simplificada de la glucólisis (Wikimedia Commons, CC)', busqueda: 'glucólisis esquema glucosa piruvato lactato' },
+        ],
+      },
+      actividades: {
+        ordenar: {
+          titulo: 'fallo de la bomba Na⁺/K⁺ en isquemia',
+          pasos: [
+            'Cae el aporte de O₂ y se agotan las reservas de ATP.',
+            'La bomba Na⁺/K⁺ ATPasa se detiene por falta de ATP.',
+            'El Na⁺ entra a la célula siguiendo su gradiente.',
+            'El agua sigue al Na⁺ y la célula se tumefacta (edema celular).',
+            'El metabolismo se vuelve anaerobio y se acumula lactato.',
+          ],
+        },
+        completar: [
+          {
+            texto: 'El metabolismo anaerobio produce ___ , un marcador de hipoperfusión tisular y gravedad del shock.',
+            opciones: ['lactato', 'piruvato', 'glucógeno'],
+            correcta: 0,
+            explicacion: 'El piruvato se reduce a lactato cuando falta oxígeno; por eso el lactato sube en la hipoperfusión.',
+          },
+          {
+            texto: 'La bomba Na⁺/K⁺ ATPasa saca ___ iones de sodio e introduce 2 de potasio por cada ATP.',
+            opciones: ['3', '2', '1'],
+            correcta: 0,
+            explicacion: 'Saca 3 Na⁺ y mete 2 K⁺: al extraer una carga positiva neta, es electrogénica.',
+          },
+          {
+            texto: 'El principal sistema tampón del líquido extracelular es el de ___ .',
+            opciones: ['bicarbonato', 'fosfato', 'amoníaco'],
+            correcta: 0,
+            explicacion: 'El par HCO₃⁻/H₂CO₃ es el amortiguador extracelular más importante y se regula por vía respiratoria y renal.',
+          },
+        ],
+        preguntas: [
+          {
+            pregunta: 'La bomba Na⁺/K⁺ saca 3 cargas positivas e introduce solo 2. ¿Qué propiedad le da esto?',
+            opciones: ['Es eléctricamente neutra', 'Es electrogénica (contribuye al potencial de membrana)', 'Funciona sin ATP', 'Solo actúa en neuronas'],
+            correcta: 1,
+            explicacion: 'Al extraer una carga positiva neta por ciclo, la bomba es electrogénica: ayuda a mantener el interior celular negativo (potencial de reposo).',
+          },
+          {
+            pregunta: 'Un paciente acumula ácidos y su HCO₃⁻ desciende. ¿Qué trastorno y compensación esperas?',
+            opciones: ['Alcalosis metabólica con hipoventilación', 'Acidosis metabólica con hiperventilación compensatoria', 'Alcalosis respiratoria pura', 'Ningún cambio'],
+            correcta: 1,
+            explicacion: 'El bicarbonato se consume amortiguando ácidos → acidosis metabólica. El cuerpo compensa hiperventilando para "soplar" CO₂ y subir el pH.',
+          },
+          {
+            pregunta: '¿Por qué la oxidación aerobia completa de la glucosa es tan superior a la glucólisis anaerobia?',
+            opciones: ['Rinde ~30-32 ATP frente a 2 ATP', 'No necesita oxígeno', 'Ocurre en el núcleo', 'Produce lactato como energía'],
+            correcta: 0,
+            explicacion: 'La fosforilación oxidativa en la mitocondria rinde ~30-32 ATP por glucosa, frente a solo 2 ATP de la vía anaerobia: por eso la hipoxia compromete tan rápido a la célula.',
+          },
+        ],
+      },
     },
     {
       id: 'anatomia-sistematica',

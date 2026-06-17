@@ -4,6 +4,8 @@ import { getTema, getTemaVecinos } from '../data/index.js'
 import { getRecursos } from '../data/recursosDescarga.js'
 import { useProgress } from '../context/ProgressContext.jsx'
 import Contenido from '../components/Contenido.jsx'
+import Recursos from '../components/Recursos.jsx'
+import Actividades from '../components/Actividades.jsx'
 import NotFound from './NotFound.jsx'
 
 export default function TemaPage() {
@@ -96,6 +98,8 @@ export default function TemaPage() {
 
       <Contenido secciones={tema.secciones} />
 
+      <Recursos recursos={tema.recursos} />
+
       {tema.conceptosClave && (
         <section className="conceptos">
           <h2 className="seccion-titulo">🔑 Conceptos clave</h2>
@@ -109,6 +113,13 @@ export default function TemaPage() {
           </div>
         </section>
       )}
+
+      <Actividades
+        pares={tema.conceptosClave || []}
+        ordenar={tema.actividades?.ordenar}
+        completar={tema.actividades?.completar || []}
+        preguntas={tema.actividades?.preguntas || []}
+      />
 
       <div className="tema-acciones">
         <button
