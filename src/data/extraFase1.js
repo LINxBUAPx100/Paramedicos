@@ -243,6 +243,39 @@ export const extraFase1 = [
         explicacion: 'El cartilago es avascular y se nutre por difusion lenta desde el pericondrio, lo que limita la llegada de celulas reparadoras y enlentece su cicatrizacion.',
       },
     ],
+    recursos: {
+      videos: [
+        { titulo: 'Tipos de tejido: clasificación, características y funciones', canal: 'Kenhub', url: 'https://www.youtube.com/watch?v=PZVfna5t0wU' },
+        { titulo: 'Tejidos básicos: epitelial, conjuntivo, muscular y nervioso', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=1SPKt032YwI' },
+      ],
+      fuentes: [
+        { titulo: 'Histology, Epithelial Cell', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK559063/' },
+        { titulo: 'Physiology, Connective Tissue', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK542226/' },
+      ],
+      imagenes: [
+        { caption: 'Los cuatro tejidos básicos del cuerpo humano', busqueda: 'cuatro tejidos basicos epitelial conectivo muscular nervioso esquema' },
+      ],
+    },
+    actividades: {
+      ordenar: {
+        titulo: 'fases de la cicatrización de una herida',
+        pasos: [
+          'Hemostasia: vasoconstricción y formación del tapón plaquetario.',
+          'Inflamación: neutrófilos y macrófagos limpian la herida.',
+          'Proliferación: los fibroblastos depositan colágeno y se forma tejido de granulación.',
+          'Remodelación: el colágeno madura y se reorganiza.',
+        ],
+      },
+      completar: [
+        { texto: 'El epitelio que permite la distensión de la vejiga es el de ___ .', opciones: ['transición', 'plano simple', 'cilíndrico'], correcta: 0, explicacion: 'El urotelio (epitelio de transición) cambia de forma al llenarse la vejiga.' },
+        { texto: 'El músculo cardíaco se distingue por tener discos ___ que lo conectan eléctricamente.', opciones: ['intercalares', 'de fricción', 'sinápticos'], correcta: 0, explicacion: 'Los discos intercalares acoplan eléctrica y mecánicamente a los cardiomiocitos.' },
+        { texto: 'La vitamina ___ es esencial para sintetizar colágeno; su déficit (escorbuto) da mala cicatrización.', opciones: ['C', 'D', 'K'], correcta: 0, explicacion: 'La vitamina C es cofactor en la síntesis de colágeno.' },
+      ],
+      preguntas: [
+        { pregunta: 'El tejido de granulación vascularizado aparece sobre todo en la fase de:', opciones: ['Hemostasia', 'Inflamación', 'Proliferación', 'Remodelación'], correcta: 2, explicacion: 'En la proliferación los fibroblastos rellenan la herida con tejido de granulación.' },
+        { pregunta: '¿Qué epitelio recubre superficies sometidas a roce que necesitan protección (piel, esófago)?', opciones: ['Plano estratificado', 'Cilíndrico simple', 'Cúbico simple', 'De transición'], correcta: 0, explicacion: 'El epitelio plano estratificado ofrece protección frente al roce mecánico.' },
+      ],
+    },
   },
   {
     id: 'sistema-tegumentario',
@@ -459,6 +492,38 @@ export const extraFase1 = [
         explicacion: 'Una buena perfusion aporta oxigeno y nutrientes y favorece la cicatrizacion. Diabetes, infeccion y corticoides la retrasan.',
       },
     ],
+    recursos: {
+      videos: [
+        { titulo: 'Anatomía de la piel: epidermis, dermis e hipodermis', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=cwQkH7oMZVU' },
+      ],
+      fuentes: [
+        { titulo: 'Histology, Skin', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK537325/' },
+        { titulo: 'Histology, Dermis', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK535346/' },
+      ],
+      imagenes: [
+        { caption: 'Capas de la piel: epidermis, dermis e hipodermis', busqueda: 'capas de la piel epidermis dermis hipodermis esquema' },
+      ],
+    },
+    actividades: {
+      ordenar: {
+        titulo: 'capas de la piel, de superficial a profunda',
+        pasos: [
+          'Epidermis (capa más externa, sin vasos).',
+          'Dermis papilar (tejido conectivo laxo con capilares).',
+          'Dermis reticular (tejido conectivo denso).',
+          'Hipodermis (tejido subcutáneo graso).',
+        ],
+      },
+      completar: [
+        { texto: 'Cuando un paciente está mojado y expuesto al viento, predomina la pérdida de calor por ___ .', opciones: ['convección y evaporación', 'radiación', 'conducción'], correcta: 0, explicacion: 'El viento aumenta la convección y la humedad favorece la evaporación.' },
+        { texto: 'Las quemaduras extensas causan shock por fuga de ___ al perderse la barrera cutánea.', opciones: ['plasma y agua', 'sangre arterial', 'bilis'], correcta: 0, explicacion: 'Se pierde plasma al intersticio y al exterior → hipovolemia (shock por quemadura).' },
+        { texto: 'Las células ___ de la epidermis presentan antígenos y participan en la inmunidad cutánea.', opciones: ['de Langerhans', 'melanocitos', 'queratinocitos'], correcta: 0, explicacion: 'Las células de Langerhans son presentadoras de antígeno en la piel.' },
+      ],
+      preguntas: [
+        { pregunta: 'El recalentamiento brusco de un paciente hipotérmico es peligroso porque:', opciones: ['Inhibe la sudoración', 'El retorno de sangre fría y ácida puede causar arritmias', 'Sube la presión muy rápido', 'No tiene ningún riesgo'], correcta: 1, explicacion: 'La sangre fría y ácida de la periferia regresa al corazón y puede desencadenar arritmias letales.' },
+        { pregunta: '¿Qué factor NO retrasa la cicatrización?', opciones: ['Diabetes', 'Buena perfusión tisular', 'Infección local', 'Uso de corticoides'], correcta: 1, explicacion: 'Una buena perfusión aporta O₂ y nutrientes y favorece la cicatrización.' },
+      ],
+    },
   },
   {
     id: 'sistema-musculoesqueletico',
@@ -675,6 +740,39 @@ export const extraFase1 = [
         explicacion: 'El osteoclasto reabsorbe la matriz osea, mientras el osteoblasto la forma; el equilibrio entre ambos mantiene la masa osea.',
       },
     ],
+    recursos: {
+      videos: [
+        { titulo: 'Contracción del músculo esquelético (sarcómero, actina y miosina)', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=Xh76B_xleSs' },
+      ],
+      fuentes: [
+        { titulo: 'Physiology, Skeletal Muscle Contraction', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK559006/' },
+        { titulo: 'Anatomy, Skeletal Muscle', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK537236/' },
+      ],
+      imagenes: [
+        { caption: 'Estructura del sarcómero (actina y miosina)', busqueda: 'sarcomero actina miosina estructura esquema' },
+      ],
+    },
+    actividades: {
+      ordenar: {
+        titulo: 'contracción del músculo esquelético',
+        pasos: [
+          'El potencial de acción llega a la unión neuromuscular y libera acetilcolina.',
+          'Se despolariza la fibra y el retículo sarcoplásmico libera Ca²⁺.',
+          'El Ca²⁺ se une a la troponina y deja libres los sitios de la actina.',
+          'Las cabezas de miosina se unen a la actina y traccionan (consumen ATP).',
+          'El sarcómero se acorta y el músculo se contrae.',
+        ],
+      },
+      completar: [
+        { texto: 'La célula ósea que reabsorbe hueso durante la remodelación es el ___ .', opciones: ['osteoclasto', 'osteoblasto', 'osteocito'], correcta: 0, explicacion: 'El osteoclasto reabsorbe matriz; el osteoblasto la forma.' },
+        { texto: 'La región ___ de la columna soporta la mayor carga y es asiento frecuente de hernias.', opciones: ['lumbar', 'cervical', 'torácica'], correcta: 0, explicacion: 'La columna lumbar (L1-L5) soporta el mayor peso corporal.' },
+        { texto: 'El ___ lesiona ligamentos sin perder la relación articular; la luxación sí pierde la congruencia.', opciones: ['esguince', 'desgarro', 'calambre'], correcta: 0, explicacion: 'Esguince = lesión ligamentaria sin desplazamiento; luxación = pérdida de congruencia articular.' },
+      ],
+      preguntas: [
+        { pregunta: 'La fatiga muscular por esfuerzo intenso se debe a:', opciones: ['Exceso de oxígeno en el músculo', 'Agotamiento de ATP y acumulación de ácido láctico (metabolismo anaerobio)', 'Aumento del calcio extracelular', 'Exceso de acetilcolina'], correcta: 1, explicacion: 'Al superar el aporte de O₂, el músculo usa metabolismo anaerobio: agota ATP y acumula lactato.' },
+        { pregunta: '¿Qué célula forma matriz ósea nueva durante la remodelación?', opciones: ['Osteoclasto', 'Osteoblasto', 'Condrocito', 'Adipocito'], correcta: 1, explicacion: 'El osteoblasto sintetiza y mineraliza la matriz ósea nueva.' },
+      ],
+    },
   },
   {
     id: 'neuroanatomia-avanzada',
@@ -900,6 +998,40 @@ export const extraFase1 = [
         explicacion: 'En el periodo refractario absoluto los canales de sodio estan inactivados y no puede dispararse otro potencial, garantizando que el impulso viaje en una sola direccion.',
       },
     ],
+    recursos: {
+      videos: [
+        { titulo: 'Los lóbulos cerebrales y sus funciones', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=BqFjYBSwU-8' },
+        { titulo: 'Tallo cerebral explicado (bulbo, puente y mesencéfalo)', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=9wRLBanhfC4' },
+      ],
+      fuentes: [
+        { titulo: 'Neuroanatomy, Brainstem', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK544297/' },
+        { titulo: 'Neuroanatomy, Cerebral Hemisphere', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK549789/' },
+      ],
+      imagenes: [
+        { caption: 'Lóbulos cerebrales y sus funciones', busqueda: 'lobulos cerebrales funciones esquema' },
+      ],
+    },
+    actividades: {
+      ordenar: {
+        titulo: 'circulación del líquido cefalorraquídeo (LCR)',
+        pasos: [
+          'Se produce en los plexos coroideos de los ventrículos laterales.',
+          'Pasa al III ventrículo por los agujeros de Monro.',
+          'Cruza el acueducto de Silvio hacia el IV ventrículo.',
+          'Sale al espacio subaracnoideo.',
+          'Se reabsorbe en las vellosidades aracnoideas.',
+        ],
+      },
+      completar: [
+        { texto: 'Los centros vitales de la respiración y el ritmo cardíaco están en el ___ .', opciones: ['bulbo raquídeo', 'cerebelo', 'lóbulo frontal'], correcta: 0, explicacion: 'El bulbo raquídeo aloja los centros cardiorrespiratorios.' },
+        { texto: 'Una pupila dilatada fija unilateral en un TCE sugiere compresión del ___ par craneal.', opciones: ['III (oculomotor)', 'VII (facial)', 'II (óptico)'], correcta: 0, explicacion: 'La herniación uncal comprime el III par: midriasis fija ipsilateral.' },
+        { texto: 'El ___ se encarga de la coordinación, el equilibrio y el tono muscular.', opciones: ['cerebelo', 'tálamo', 'bulbo'], correcta: 0, explicacion: 'El cerebelo coordina el movimiento, el equilibrio y el tono.' },
+      ],
+      preguntas: [
+        { pregunta: 'La tríada de Cushing (hipertensión, bradicardia y respiración irregular) indica:', opciones: ['Shock hipovolémico', 'Hipertensión intracraneal grave', 'Crisis asmática', 'Hipoglucemia'], correcta: 1, explicacion: 'Es un signo tardío de hipertensión intracraneal con riesgo de herniación.' },
+        { pregunta: '¿Qué estructura es el principal relevo sensitivo hacia la corteza?', opciones: ['Tálamo', 'Hipotálamo', 'Cerebelo', 'Bulbo'], correcta: 0, explicacion: 'El tálamo es la estación de relevo de la información sensitiva (salvo el olfato).' },
+      ],
+    },
   },
   {
     id: 'cardiovascular-profundo',
@@ -1152,6 +1284,40 @@ export const extraFase1 = [
         explicacion: 'En el shock cardiogenico el corazon no contrae con fuerza suficiente (falla la contractilidad), por lo que cae el gasto cardiaco a pesar de un volumen adecuado.',
       },
     ],
+    recursos: {
+      videos: [
+        { titulo: 'Ciclo cardíaco: sístole, diástole y gasto cardíaco', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=HUYCVRZ2cTQ' },
+        { titulo: 'Fases del ciclo cardíaco (sístole y diástole)', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=MeC2ZYZKCXg' },
+      ],
+      fuentes: [
+        { titulo: 'Physiology, Cardiac Cycle', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK459327/' },
+        { titulo: 'Physiology, Cardiac', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK526089/' },
+      ],
+      imagenes: [
+        { caption: 'Sistema de conducción eléctrica del corazón', busqueda: 'sistema de conduccion cardiaca nodo sinusal AV His Purkinje esquema' },
+      ],
+    },
+    actividades: {
+      ordenar: {
+        titulo: 'sistema de conducción eléctrica del corazón',
+        pasos: [
+          'Nodo sinusal: marcapasos en la aurícula derecha.',
+          'Despolarización auricular por las vías internodales.',
+          'Nodo AV: retraso fisiológico del impulso.',
+          'Haz de His.',
+          'Ramas y fibras de Purkinje: despolarización ventricular.',
+        ],
+      },
+      completar: [
+        { texto: 'El marcapasos natural del corazón es el nodo ___ .', opciones: ['sinusal', 'auriculoventricular', 'de His'], correcta: 0, explicacion: 'El nodo sinusal (SA) marca el ritmo normal del corazón.' },
+        { texto: 'El retraso que permite que las aurículas se vacíen antes de la contracción ventricular ocurre en el nodo ___ .', opciones: ['AV (auriculoventricular)', 'sinusal', 'de Purkinje'], correcta: 0, explicacion: 'El nodo AV introduce un retraso fisiológico del impulso.' },
+        { texto: 'La fase de relajación y llenado de los ventrículos se llama ___ .', opciones: ['diástole', 'sístole', 'sinapsis'], correcta: 0, explicacion: 'Diástole = relajación y llenado; sístole = contracción y eyección.' },
+      ],
+      preguntas: [
+        { pregunta: 'Si el nodo sinusal falla, ¿qué estructura puede asumir el marcapasos (a menor frecuencia)?', opciones: ['Nodo AV', 'La aorta', 'El pericardio', 'La vena cava'], correcta: 0, explicacion: 'El nodo AV es el marcapasos de reserva, a ritmo más lento.' },
+        { pregunta: 'La presión arterial media depende del gasto cardíaco y de:', opciones: ['La resistencia vascular sistémica', 'El número de hematíes', 'La frecuencia respiratoria', 'La temperatura corporal'], correcta: 0, explicacion: 'PAM ≈ gasto cardíaco × resistencia vascular sistémica.' },
+      ],
+    },
   },
   {
     id: 'respiratorio-profundo',
@@ -1368,6 +1534,40 @@ export const extraFase1 = [
         explicacion: 'El espacio muerto es el aire que permanece en las vias de conduccion (traquea, bronquios) y no llega al alveolo, por lo que no participa en el intercambio.',
       },
     ],
+    recursos: {
+      videos: [
+        { titulo: 'Intercambio gaseoso (fisiología del sistema respiratorio)', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=n9zCe7Ye7jM' },
+        { titulo: 'Intercambio de gases: ventilación y difusión alveolar', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=nd6ydyv9D-g' },
+      ],
+      fuentes: [
+        { titulo: 'Physiology, Pulmonary Ventilation and Perfusion', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK539907/' },
+        { titulo: 'Physiology, Respiratory Drive', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK482414/' },
+      ],
+      imagenes: [
+        { caption: 'Árbol traqueobronquial y alvéolos', busqueda: 'arbol traqueobronquial pulmones alveolos esquema' },
+      ],
+    },
+    actividades: {
+      ordenar: {
+        titulo: 'mecánica de la ventilación e intercambio de gases',
+        pasos: [
+          'El diafragma y los intercostales externos se contraen.',
+          'El tórax se expande y la presión intrapleural se hace más negativa.',
+          'El aire entra hasta los alvéolos (inspiración).',
+          'En el alvéolo el O₂ difunde a la sangre y el CO₂ sale.',
+          'La relajación muscular permite la espiración pasiva.',
+        ],
+      },
+      completar: [
+        { texto: 'La relación ventilación/perfusión (V/Q) normal es de aproximadamente ___ .', opciones: ['0,8', '2,0', '0,1'], correcta: 0, explicacion: 'El V/Q normal global es ~0,8.' },
+        { texto: 'El principal músculo de la inspiración es el ___ .', opciones: ['diafragma', 'recto abdominal', 'esternocleidomastoideo'], correcta: 0, explicacion: 'El diafragma realiza la mayor parte del trabajo inspiratorio.' },
+        { texto: 'El intercambio de gases ocurre en los ___ .', opciones: ['alvéolos', 'bronquios', 'la tráquea'], correcta: 0, explicacion: 'La membrana alveolocapilar es donde difunden O₂ y CO₂.' },
+      ],
+      preguntas: [
+        { pregunta: 'Un alvéolo ventilado pero no perfundido representa:', opciones: ['Espacio muerto', 'Cortocircuito (shunt)', 'V/Q normal', 'Atelectasia'], correcta: 0, explicacion: 'Ventilación sin perfusión = espacio muerto (no participa en el intercambio).' },
+        { pregunta: 'El principal estímulo del centro respiratorio en una persona sana es:', opciones: ['La pO₂ baja', 'La pCO₂ y el pH', 'La temperatura', 'La glucosa'], correcta: 1, explicacion: 'El CO₂/pH es el regulador principal; la hipoxia es estímulo secundario.' },
+      ],
+    },
   },
   {
     id: 'renal-hidroelectrolitico',
@@ -1572,6 +1772,40 @@ export const extraFase1 = [
         explicacion: 'El tubulo proximal reabsorbe la mayor parte del agua, glucosa, sodio y otros solutos del filtrado, recuperandolos hacia la sangre.',
       },
     ],
+    recursos: {
+      videos: [
+        { titulo: 'Fisiología de la nefrona', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=z4QQPBo6au4' },
+        { titulo: 'Filtración, reabsorción y secreción renal', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=7GxUld_3r9o' },
+      ],
+      fuentes: [
+        { titulo: 'Physiology, Glomerular Filtration Rate', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK500032/' },
+        { titulo: 'Physiology, Renal', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK538339/' },
+      ],
+      imagenes: [
+        { caption: 'La nefrona y sus segmentos', busqueda: 'nefrona segmentos tubulo asa de Henle esquema' },
+      ],
+    },
+    actividades: {
+      ordenar: {
+        titulo: 'formación de la orina en la nefrona',
+        pasos: [
+          'Filtración glomerular en el corpúsculo renal (cápsula de Bowman).',
+          'Reabsorción en el túbulo contorneado proximal.',
+          'Concentración/dilución en el asa de Henle.',
+          'Ajuste fino en el túbulo contorneado distal (aldosterona).',
+          'Reabsorción de agua en el túbulo colector (ADH) y excreción de orina.',
+        ],
+      },
+      completar: [
+        { texto: 'El mejor índice de función renal es la ___ .', opciones: ['tasa de filtración glomerular (TFG)', 'frecuencia cardíaca', 'diuresis de una hora'], correcta: 0, explicacion: 'La TFG estima cuánto plasma filtran los glomérulos por minuto.' },
+        { texto: 'La hormona ___ aumenta la reabsorción de agua en el túbulo colector.', opciones: ['ADH (vasopresina)', 'insulina', 'adrenalina'], correcta: 0, explicacion: 'La ADH inserta acuaporinas y concentra la orina.' },
+        { texto: 'La aldosterona retiene ___ y elimina potasio.', opciones: ['sodio', 'calcio', 'glucosa'], correcta: 0, explicacion: 'Retiene Na⁺ (y agua) a cambio de excretar K⁺.' },
+      ],
+      preguntas: [
+        { pregunta: 'En la hipovolemia, el riñón responde con:', opciones: ['Poliuria', 'Oliguria y retención de sodio y agua', 'Aumento de la TFG', 'Pérdida de sodio'], correcta: 1, explicacion: 'Activa el SRAA y la ADH: retiene sodio y agua → oliguria.' },
+        { pregunta: 'La hiperpotasemia grave es peligrosa sobre todo porque:', opciones: ['Causa fiebre', 'Provoca arritmias cardíacas', 'Aumenta la diuresis', 'Sube la glucosa'], correcta: 1, explicacion: 'El potasio alto altera el potencial de membrana cardíaco y causa arritmias letales.' },
+      ],
+    },
   },
   {
     id: 'sistema-endocrino',
@@ -1766,6 +2000,40 @@ export const extraFase1 = [
         explicacion: 'El exceso de hormona tiroidea acelera el metabolismo: taquicardia, perdida de peso, temblor e intolerancia al calor son tipicos del hipertiroidismo.',
       },
     ],
+    recursos: {
+      videos: [
+        { titulo: 'Eje hipotálamo-hipófisis (fisiología endocrina)', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=jMMTedpl8Ic' },
+        { titulo: 'La hipófisis o glándula pituitaria: funciones y hormonas', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=mF2dO_ty7gI' },
+      ],
+      fuentes: [
+        { titulo: 'Physiology, Endocrine Hormones', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK538498/' },
+        { titulo: 'Physiology, Thyroid Hormone', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK500006/' },
+      ],
+      imagenes: [
+        { caption: 'Principales glándulas endocrinas', busqueda: 'glandulas endocrinas principales esquema cuerpo humano' },
+      ],
+    },
+    actividades: {
+      ordenar: {
+        titulo: 'eje hipotálamo-hipófisis-tiroides',
+        pasos: [
+          'El hipotálamo libera TRH (hormona liberadora de tirotropina).',
+          'La hipófisis anterior libera TSH.',
+          'La tiroides produce T4 (y algo de T3).',
+          'En los tejidos, la T4 se convierte en T3 (activa).',
+          'Las hormonas tiroideas elevadas frenan TRH y TSH (retroalimentación negativa).',
+        ],
+      },
+      completar: [
+        { texto: 'La respuesta inmediata de "lucha o huida" la da la ___ de la médula suprarrenal.', opciones: ['adrenalina', 'insulina', 'TSH'], correcta: 0, explicacion: 'La médula suprarrenal libera adrenalina/noradrenalina; el cortisol actúa más sostenido.' },
+        { texto: 'La hormona ___ de la hipófisis anterior estimula la liberación de cortisol.', opciones: ['ACTH', 'TSH', 'FSH'], correcta: 0, explicacion: 'La ACTH actúa sobre la corteza suprarrenal.' },
+        { texto: 'La insulina introduce ___ en las células y favorece su almacenamiento como glucógeno.', opciones: ['glucosa', 'sodio', 'calcio'], correcta: 0, explicacion: 'Su falta dispara hiperglucemia y cetogénesis (cetoacidosis).' },
+      ],
+      preguntas: [
+        { pregunta: 'Un paciente con taquicardia, pérdida de peso, temblor e intolerancia al calor probablemente tiene:', opciones: ['Hipotiroidismo', 'Hipertiroidismo', 'Hipoglucemia', 'Insuficiencia suprarrenal'], correcta: 1, explicacion: 'El exceso de hormona tiroidea acelera el metabolismo (hipertiroidismo).' },
+        { pregunta: 'En la retroalimentación negativa, cuando suben las hormonas tiroideas, la TSH:', opciones: ['Aumenta', 'Disminuye', 'No cambia', 'Se vuelve cero siempre'], correcta: 1, explicacion: 'Las hormonas tiroideas altas inhiben la TSH, manteniendo el equilibrio.' },
+      ],
+    },
   },
   {
     id: 'sistema-digestivo',
@@ -1985,5 +2253,39 @@ export const extraFase1 = [
         explicacion: 'La vena porta conduce la sangre rica en nutrientes desde el intestino al higado, que la procesa, almacena y detoxifica antes de enviarla a la circulacion general.',
       },
     ],
+    recursos: {
+      videos: [
+        { titulo: 'Sistema digestivo explicado: funciones, anatomía y órganos', canal: 'Kenhub', url: 'https://www.youtube.com/watch?v=vakyNiNSwTU' },
+        { titulo: 'Etapas del proceso digestivo: ingestión, digestión, absorción y excreción', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=1Bn9635zRtU' },
+      ],
+      fuentes: [
+        { titulo: 'Physiology, Digestion', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK544242/' },
+        { titulo: 'Physiology, Gastrointestinal', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK537103/' },
+      ],
+      imagenes: [
+        { caption: 'Tracto digestivo y órganos accesorios', busqueda: 'tracto digestivo organos esquema higado pancreas' },
+      ],
+    },
+    actividades: {
+      ordenar: {
+        titulo: 'recorrido del tubo digestivo',
+        pasos: [
+          'Boca: digestión mecánica y amilasa salival.',
+          'Esófago: transporte del bolo al estómago.',
+          'Estómago: digestión por ácido y pepsina.',
+          'Intestino delgado: digestión final y absorción de nutrientes.',
+          'Intestino grueso: absorción de agua y formación de heces.',
+        ],
+      },
+      completar: [
+        { texto: 'La digestión química del almidón comienza en la ___ con la amilasa salival.', opciones: ['boca', 'el estómago', 'el intestino grueso'], correcta: 0, explicacion: 'La amilasa salival inicia la digestión del almidón en la boca.' },
+        { texto: 'El intestino ___ absorbe agua y forma las heces.', opciones: ['grueso', 'delgado', 'duodeno'], correcta: 0, explicacion: 'El colon reabsorbe agua y electrolitos y compacta las heces.' },
+        { texto: 'La vena ___ lleva la sangre rica en nutrientes del intestino al hígado.', opciones: ['porta', 'cava', 'pulmonar'], correcta: 0, explicacion: 'La circulación portal procesa los nutrientes en el hígado antes de la circulación general.' },
+      ],
+      preguntas: [
+        { pregunta: 'El hígado convierte el amoníaco tóxico en ___; si falla, se acumula y causa encefalopatía.', opciones: ['urea', 'bilis', 'glucosa', 'insulina'], correcta: 0, explicacion: 'El ciclo de la urea detoxifica el amoníaco; su fallo produce encefalopatía hepática.' },
+        { pregunta: 'En un ayuno prolongado, tras agotar el glucógeno, el cuerpo obtiene energía sobre todo de:', opciones: ['Glucosa de la comida', 'Grasas, formando cuerpos cetónicos', 'Solo agua', 'Bilis'], correcta: 1, explicacion: 'Se quema grasa y se producen cuerpos cetónicos como combustible alternativo.' },
+      ],
+    },
   },
 ]

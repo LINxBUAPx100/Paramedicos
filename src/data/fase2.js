@@ -140,6 +140,40 @@ export const fase2 = {
           explicacion: 'Ec = ½ m·v²: la velocidad está al cuadrado, así que duplicarla multiplica la energía por cuatro.',
         },
       ],
+      recursos: {
+        videos: [
+          { titulo: 'Evaluación primaria ABCDE del trauma', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=fdD7WsYsXvk' },
+          { titulo: 'Valoración primaria y secundaria (PHTLS)', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=vkqyiRMQZtc' },
+        ],
+        fuentes: [
+          { titulo: 'Trauma Assessment', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK555913/' },
+          { titulo: 'Trauma Primary Survey', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK430800/' },
+        ],
+        imagenes: [
+          { caption: 'Secuencia de evaluación ABCDE', busqueda: 'evaluacion ABCDE trauma esquema' },
+        ],
+      },
+      actividades: {
+        ordenar: {
+          titulo: 'evaluación primaria ABCDE',
+          pasos: [
+            'A — Vía aérea con control cervical.',
+            'B — Ventilación y oxigenación.',
+            'C — Circulación y control de hemorragias.',
+            'D — Déficit neurológico (consciencia y pupilas).',
+            'E — Exposición y control de la hipotermia.',
+          ],
+        },
+        completar: [
+          { texto: 'En la evaluación primaria, la "C" corresponde a ___ y control de hemorragias.', opciones: ['circulación', 'consciencia', 'columna'], correcta: 0, explicacion: 'C = Circulación: pulsos, perfusión y control del sangrado.' },
+          { texto: 'El acrónimo ___ recoge los antecedentes en la evaluación secundaria (síntomas, alergias, medicación…).', opciones: ['SAMPLE', 'AVDI', 'OPQRST'], correcta: 0, explicacion: 'SAMPLE: Síntomas, Alergias, Medicación, Patologías, Última ingesta, Eventos.' },
+          { texto: 'La "D" del ABCDE evalúa el ___ neurológico (consciencia y pupilas).', opciones: ['déficit', 'dolor', 'drenaje'], correcta: 0, explicacion: 'D = Disability/Déficit neurológico (AVDI o Glasgow y pupilas).' },
+        ],
+        preguntas: [
+          { pregunta: 'Si en la "A" detectas obstrucción de la vía aérea, ¿qué haces antes de pasar a la "B"?', opciones: ['Resolver la vía aérea primero', 'Continuar con la circulación', 'Exponer al paciente', 'Tomar la presión arterial'], correcta: 0, explicacion: 'El ABCDE se resuelve en orden: no se avanza sin asegurar la vía aérea.' },
+          { pregunta: 'La evaluación de la escena, antes de tocar al paciente, busca sobre todo:', opciones: ['La hora exacta', 'La seguridad de la escena y el número de víctimas', 'El nombre del paciente', 'El hospital de destino'], correcta: 1, explicacion: 'Primero la seguridad: escena segura, mecanismo y número de víctimas.' },
+        ],
+      },
     },
     {
       id: 'oxigenoterapia-via-aerea-basica',
@@ -263,6 +297,40 @@ export const fase2 = {
           explicacion: 'La cánula nasofaríngea puede penetrar a través de una fractura de base de cráneo; se evita ante esa sospecha.',
         },
       ],
+      recursos: {
+        videos: [
+          { titulo: 'Aplicación de la bolsa-válvula-mascarilla (BVM)', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=lDoyJ_r0P9w' },
+          { titulo: 'Cómo usar correctamente la cánula orofaríngea', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=ziNJT1Q-F6A' },
+        ],
+        fuentes: [
+          { titulo: 'Bag-Valve-Mask Ventilation', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK441924/' },
+          { titulo: 'Airway Assessment', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK470477/' },
+        ],
+        imagenes: [
+          { caption: 'Dispositivos de oxigenoterapia y su FiO₂', busqueda: 'dispositivos oxigenoterapia FiO2 mascarilla reservorio puntas nasales' },
+        ],
+      },
+      actividades: {
+        ordenar: {
+          titulo: 'manejo básico de la vía aérea y ventilación',
+          pasos: [
+            'Posiciona la vía aérea (frente-mentón, o tracción mandibular si hay trauma).',
+            'Aspira secreciones si es necesario.',
+            'Coloca una cánula orofaríngea si no hay reflejo nauseoso.',
+            'Sella la mascarilla y ventila con la bolsa (BVM) conectada a O₂.',
+            'Comprueba la elevación torácica y la SpO₂.',
+          ],
+        },
+        completar: [
+          { texto: 'El dispositivo que entrega mayor FiO₂ a un paciente que respira es la mascarilla con ___ .', opciones: ['reservorio', 'Venturi', 'puntas nasales'], correcta: 0, explicacion: 'La mascarilla con reservorio a 10-15 L/min entrega 60-95% de O₂.' },
+          { texto: 'La cánula ___ no debe usarse si hay sospecha de fractura de base de cráneo.', opciones: ['nasofaríngea', 'orofaríngea', 'de Guedel'], correcta: 0, explicacion: 'Podría penetrar por la fractura hacia el cráneo.' },
+          { texto: 'La cánula orofaríngea solo se coloca si el paciente NO tiene reflejo ___ .', opciones: ['nauseoso', 'corneal', 'rotuliano'], correcta: 0, explicacion: 'Si hay reflejo nauseoso, la cánula orofaríngea provoca vómito/aspiración.' },
+        ],
+        preguntas: [
+          { pregunta: 'El principal riesgo hemodinámico de ventilar con demasiada presión positiva es:', opciones: ['Aumento del retorno venoso', 'Disminución del retorno venoso y del gasto cardíaco', 'Bradicardia vagal', 'Hipertensión sostenida'], correcta: 1, explicacion: 'La presión intratorácica alta comprime las venas centrales y baja el gasto cardíaco.' },
+          { pregunta: 'Las puntas nasales a 2-4 L/min entregan una FiO₂ aproximada de:', opciones: ['24-36%', '60-95%', '100%', '15%'], correcta: 0, explicacion: 'Cada litro añade ~4% sobre el 21% ambiental: 2-4 L ≈ 24-36%.' },
+        ],
+      },
     },
   ],
 }

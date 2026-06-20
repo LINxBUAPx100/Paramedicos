@@ -396,6 +396,64 @@ export const fase1 = {
           explicacion: 'El simpático prepara para "lucha o huida": taquicardia, midriasis, broncodilatación y vasoconstricción.',
         },
       ],
+      recursos: {
+        videos: [
+          { titulo: 'Correlación arteria coronaria y ECG (descendente anterior)', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=xC7Rp4hHUbY' },
+        ],
+        fuentes: [
+          { titulo: 'Anatomy, Thorax, Heart Coronary Arteries', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK534790/' },
+          { titulo: 'Physiology, Coronary Circulation', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK482413/' },
+        ],
+        imagenes: [
+          { src: 'https://upload.wikimedia.org/wikipedia/commons/1/18/Coronary_arteries.svg', caption: 'Arterias coronarias (Wikimedia Commons, P. J. Lynch, CC BY)', busqueda: 'arterias coronarias anatomía esquema' },
+        ],
+      },
+      actividades: {
+        ordenar: {
+          titulo: 'acceso intraóseo en tibia proximal',
+          pasos: [
+            'Identifica la tuberosidad tibial.',
+            'Localiza el sitio 1-2 cm medial e inferior a ella (cara plana de la tibia).',
+            'Inserta la aguja intraósea perpendicular al hueso.',
+            'Atraviesa la cortical hasta notar la pérdida de resistencia.',
+            'Confirma la posición (aspira/infunde sin extravasación) y fija el dispositivo.',
+          ],
+        },
+        completar: [
+          {
+            texto: 'La elevación del ST en II, III y aVF indica un infarto de cara ___ , irrigada habitualmente por la coronaria derecha.',
+            opciones: ['inferior', 'anterior', 'lateral'],
+            correcta: 0,
+            explicacion: 'II, III y aVF son las derivaciones de la cara inferior.',
+          },
+          {
+            texto: 'El bronquio principal ___ es más vertical, corto y ancho; por eso la intubación selectiva y los cuerpos extraños tienden a ese lado.',
+            opciones: ['derecho', 'izquierdo'],
+            correcta: 0,
+            explicacion: 'La anatomía del bronquio derecho favorece la intubación selectiva y la aspiración hacia la derecha.',
+          },
+          {
+            texto: 'La arteria descendente anterior irriga la cara ___ y el septo del corazón.',
+            opciones: ['anterior', 'inferior', 'posterior'],
+            correcta: 0,
+            explicacion: 'Su oclusión produce el IAM de cara anterior (V1-V4).',
+          },
+        ],
+        preguntas: [
+          {
+            pregunta: '¿Qué par craneal, al comprimirse por herniación, produce una pupila dilatada fija unilateral?',
+            opciones: ['III (oculomotor)', 'VII (facial)', 'X (vago)', 'XII (hipogloso)'],
+            correcta: 0,
+            explicacion: 'La herniación uncal comprime el III par (oculomotor), dando midriasis fija ipsilateral: signo de alarma en el TCE.',
+          },
+          {
+            pregunta: 'La activación del sistema nervioso parasimpático produce predominantemente:',
+            opciones: ['Taquicardia y midriasis', 'Bradicardia, miosis y aumento del peristaltismo', 'Broncodilatación', 'Vasoconstricción generalizada'],
+            correcta: 1,
+            explicacion: 'El parasimpático es "reposo y digestión": bradicardia, miosis y mayor actividad digestiva.',
+          },
+        ],
+      },
     },
     {
       id: 'fisiologia-medica',
@@ -519,6 +577,65 @@ export const fase1 = {
           explicacion: 'La hipoperfusión renal (como en la hipovolemia) activa el SRAA para retener sodio y agua y vasoconstreñir.',
         },
       ],
+      recursos: {
+        videos: [
+          { titulo: 'Gasto cardíaco — explicación fácil (fisiología)', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=bgczI-aptCU' },
+          { titulo: 'Precarga, poscarga y contractilidad', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=3udMgloGofE' },
+        ],
+        fuentes: [
+          { titulo: 'Physiology, Cardiac Output', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK470455/' },
+          { titulo: 'Physiology, Stroke Volume', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK547686/' },
+        ],
+        imagenes: [
+          { src: 'https://upload.wikimedia.org/wikipedia/commons/d/d9/Oxygen-Haemoglobin_dissociation_curves.svg', caption: 'Curva de disociación de la oxihemoglobina (Wikimedia Commons, CC)', busqueda: 'curva disociación oxihemoglobina efecto Bohr' },
+        ],
+      },
+      actividades: {
+        ordenar: {
+          titulo: 'sistema renina-angiotensina-aldosterona (SRAA)',
+          pasos: [
+            'Cae la presión de perfusión renal y se libera renina.',
+            'La renina convierte el angiotensinógeno en angiotensina I.',
+            'La ECA (en el pulmón) convierte la angiotensina I en angiotensina II.',
+            'La angiotensina II produce vasoconstricción y eleva la RVS.',
+            'La angiotensina II estimula aldosterona y ADH → retención de Na⁺ y agua.',
+          ],
+        },
+        completar: [
+          {
+            texto: 'El gasto cardíaco es igual a la frecuencia cardíaca multiplicada por el ___ .',
+            opciones: ['volumen sistólico', 'volumen residual', 'retorno venoso'],
+            correcta: 0,
+            explicacion: 'GC = FC × Volumen sistólico.',
+          },
+          {
+            texto: 'La acidosis, la fiebre y la hipercapnia desplazan la curva de oxihemoglobina hacia la ___ (efecto Bohr).',
+            opciones: ['derecha', 'izquierda'],
+            correcta: 0,
+            explicacion: 'A la derecha = la hemoglobina cede más O₂ a los tejidos que lo necesitan.',
+          },
+          {
+            texto: 'En el shock cardiogénico el determinante del gasto cardíaco primariamente afectado es el ___ .',
+            opciones: ['inotropismo', 'la precarga', 'la poscarga'],
+            correcta: 0,
+            explicacion: 'Cae la contractilidad; por eso se usan inotrópicos como la dobutamina.',
+          },
+        ],
+        preguntas: [
+          {
+            pregunta: 'Según la ley de Frank-Starling, al aumentar la precarga (hasta un límite):',
+            opciones: ['Disminuye la fuerza de contracción', 'Aumenta la fuerza de contracción', 'No cambia nada', 'El corazón se detiene'],
+            correcta: 1,
+            explicacion: 'Mayor estiramiento de la fibra (precarga) → mayor fuerza de contracción, hasta un punto óptimo.',
+          },
+          {
+            pregunta: '¿Dónde se convierte mayoritariamente la angiotensina I en angiotensina II?',
+            opciones: ['En el riñón', 'En el pulmón (por la ECA)', 'En el hígado', 'En el bazo'],
+            correcta: 1,
+            explicacion: 'La enzima convertidora de angiotensina (ECA) actúa sobre todo en el endotelio pulmonar.',
+          },
+        ],
+      },
     },
   ],
 }

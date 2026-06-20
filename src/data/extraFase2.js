@@ -254,6 +254,39 @@ export const extraFase2 = [
         explicacion: 'La respiracion tiene control voluntario; si el paciente sabe que lo observan, altera el ritmo y la medicion pierde validez.',
       },
     ],
+    recursos: {
+      videos: [
+        { titulo: 'Signos vitales: presión arterial, FR, FC y temperatura', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=hHku17XBzdA' },
+        { titulo: 'Valores normales de los signos vitales', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=99rk1m3eRBw' },
+      ],
+      fuentes: [
+        { titulo: 'Vital Sign Assessment', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK553213/' },
+      ],
+      imagenes: [
+        { caption: 'Valores normales de los signos vitales', busqueda: 'signos vitales valores normales tabla' },
+      ],
+    },
+    actividades: {
+      ordenar: {
+        titulo: 'toma de la presión arterial',
+        pasos: [
+          'Coloca el brazalete a la altura del corazón.',
+          'Palpa la arteria braquial y coloca el estetoscopio.',
+          'Infla el manguito por encima del punto donde desaparece el pulso.',
+          'Desinfla lentamente y escucha el primer ruido (sistólica).',
+          'Sigue hasta que desaparecen los ruidos (diastólica).',
+        ],
+      },
+      completar: [
+        { texto: 'La saturación de oxígeno (SpO₂) normal en aire ambiente es de ___ .', opciones: ['95-100%', '85-90%', '70-80%'], correcta: 0, explicacion: 'Por debajo de 95% suele indicar hipoxemia.' },
+        { texto: 'La frecuencia cardíaca normal de un adulto en reposo es de ___ lpm.', opciones: ['60-100', '100-140', '30-50'], correcta: 0, explicacion: '60-100 lpm es el rango normal del adulto.' },
+        { texto: 'La frecuencia respiratoria se cuenta sin avisar porque al sentirse observado el paciente ___ su patrón.', opciones: ['modifica', 'mantiene', 'detiene'], correcta: 0, explicacion: 'La respiración tiene control voluntario; observarla la altera.' },
+      ],
+      preguntas: [
+        { pregunta: 'Una presión arterial sistólica menor de 90 mmHg con taquicardia sugiere:', opciones: ['Estado normal', 'Posible shock', 'Fiebre', 'Hipertensión'], correcta: 1, explicacion: 'Hipotensión + taquicardia es un signo de alarma de shock.' },
+        { pregunta: '¿Por qué la frecuencia respiratoria se mide de forma disimulada?', opciones: ['Para ahorrar tiempo', 'Porque tiene control voluntario y se altera al observarla', 'Es más higiénico', 'No hay diferencia'], correcta: 1, explicacion: 'Si el paciente nota que lo observan, cambia su ritmo respiratorio.' },
+      ],
+    },
   },
   {
     id: 'svb-rcp',
@@ -500,6 +533,40 @@ export const extraFase2 = [
         explicacion: 'La fraccion de compresion debe ser mayor al 60%; mientras mas tiempo se comprime, mejor se mantiene la presion de perfusion coronaria.',
       },
     ],
+    recursos: {
+      videos: [
+        { titulo: 'RCP, soporte vital básico y DEA', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=0BzqDFUw_aM' },
+        { titulo: 'Reanimación cardiopulmonar (RCP): soporte vital básico', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=yV_5DRrNet8' },
+      ],
+      fuentes: [
+        { titulo: 'Cardiopulmonary Resuscitation', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK470402/' },
+        { titulo: 'Cardiopulmonary Arrest in Adults', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK563231/' },
+      ],
+      imagenes: [
+        { caption: 'Algoritmo de soporte vital básico (SVB) del adulto', busqueda: 'algoritmo soporte vital basico adulto RCP DEA' },
+      ],
+    },
+    actividades: {
+      ordenar: {
+        titulo: 'secuencia de RCP de alta calidad',
+        pasos: [
+          'Comprueba que la escena es segura.',
+          'Verifica respuesta y respiración; si no responde, activa el sistema de emergencias.',
+          'Inicia compresiones torácicas (100-120/min, 5-6 cm).',
+          'Da 2 ventilaciones cada 30 compresiones (si estás entrenado).',
+          'Coloca el DEA en cuanto llegue y sigue sus indicaciones.',
+        ],
+      },
+      completar: [
+        { texto: 'Las compresiones torácicas deben tener una frecuencia de ___ por minuto.', opciones: ['100-120', '60-80', '140-160'], correcta: 0, explicacion: 'La frecuencia recomendada es 100-120 compresiones por minuto.' },
+        { texto: 'La profundidad de las compresiones en un adulto es de ___ cm.', opciones: ['5-6', '2-3', '8-10'], correcta: 0, explicacion: 'Comprimir 5-6 cm permite una perfusión adecuada sin lesionar.' },
+        { texto: 'La relación compresión:ventilación en el adulto con un reanimador es ___ .', opciones: ['30:2', '15:2', '5:1'], correcta: 0, explicacion: '30 compresiones por cada 2 ventilaciones.' },
+      ],
+      preguntas: [
+        { pregunta: 'La fracción de compresión torácica (tiempo comprimiendo) debe ser:', opciones: ['Menor al 30%', 'Mayor al 60%, idealmente 80%', 'No importa', 'Exactamente 50%'], correcta: 1, explicacion: 'Minimizar las pausas mantiene la presión de perfusión coronaria.' },
+        { pregunta: 'El ritmo desfibrilable más frecuente en el paro súbito del adulto es:', opciones: ['Asistolia', 'Fibrilación ventricular', 'Actividad eléctrica sin pulso', 'Bradicardia'], correcta: 1, explicacion: 'La FV es el ritmo inicial más común y responde a la desfibrilación temprana.' },
+      ],
+    },
   },
   {
     id: 'hemorragias-shock-basico',
@@ -713,6 +780,40 @@ export const extraFase2 = [
         explicacion: 'Sin oxigeno la celula recurre al metabolismo anaerobio, genera acido lactico y, de no corregirse, muere.',
       },
     ],
+    recursos: {
+      videos: [
+        { titulo: 'Torniquete y control de hemorragias', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=gLofeZzRiR8' },
+        { titulo: 'Torniquete para control de hemorragias (PHTLS)', canal: 'YouTube', url: 'https://www.youtube.com/watch?v=jEndMhY4N6g' },
+      ],
+      fuentes: [
+        { titulo: 'Hemorrhagic Shock', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK470382/' },
+        { titulo: 'Hypovolemia and Hypovolemic Shock', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK513297/' },
+      ],
+      imagenes: [
+        { caption: 'Clasificación del shock hemorrágico', busqueda: 'clasificacion shock hemorragico clases tabla' },
+      ],
+    },
+    actividades: {
+      ordenar: {
+        titulo: 'control escalonado de una hemorragia externa grave',
+        pasos: [
+          'Aplica presión directa firme sobre la herida.',
+          'Si no cede, coloca un vendaje compresivo.',
+          'Si persiste en una extremidad, aplica un torniquete proximal.',
+          'Anota la hora de colocación del torniquete.',
+          'Trata el shock (abrigo, posición, traslado) y reevalúa.',
+        ],
+      },
+      completar: [
+        { texto: 'El primer paso para controlar una hemorragia externa es la ___ directa.', opciones: ['presión', 'elevación', 'sutura'], correcta: 0, explicacion: 'La presión directa firme controla la mayoría de las hemorragias externas.' },
+        { texto: 'El shock ___ es el más frecuente en el paciente traumatizado por pérdida de sangre.', opciones: ['hemorrágico (hipovolémico)', 'cardiogénico', 'séptico'], correcta: 0, explicacion: 'El shock hemorrágico es un subtipo de shock hipovolémico.' },
+        { texto: 'Al colocar un torniquete hay que anotar la ___ de aplicación.', opciones: ['hora', 'presión', 'temperatura'], correcta: 0, explicacion: 'Registrar la hora es clave para el manejo posterior.' },
+      ],
+      preguntas: [
+        { pregunta: 'El tratamiento prioritario del shock hemorrágico es:', opciones: ['Analgesia', 'Controlar el origen del sangrado y reponer volumen', 'Antibióticos', 'Solo oxígeno'], correcta: 1, explicacion: 'Detener el sangrado y reponer volumen son la base del tratamiento.' },
+        { pregunta: 'Un signo precoz de shock (compensado) es:', opciones: ['Hipotensión marcada', 'Taquicardia y piel pálida y fría', 'Bradicardia', 'Fiebre alta'], correcta: 1, explicacion: 'La taquicardia y la vasoconstricción aparecen antes de que caiga la presión.' },
+      ],
+    },
   },
   {
     id: 'trauma-musculoesqueletico',

@@ -68,10 +68,12 @@ También sirven Khan Academy, MSD Manuals, guías oficiales (AHA, ERC). 2–3 po
 ```
 WebSearch  query: "<tema> diagram"   allowed_domains: ["commons.wikimedia.org"]
 ```
-Del resultado toma el nombre de archivo (aparece como `File:Nombre_Del_Archivo.svg`). Úsalo en una
-de estas dos URLs (ambas funcionan dentro de `<img>`):
-- Estable: `https://commons.wikimedia.org/wiki/Special:FilePath/Nombre_Del_Archivo.svg`
-- Directa: `https://upload.wikimedia.org/wikipedia/commons/x/xx/Nombre_Del_Archivo.svg`
+Del resultado toma el nombre de archivo (aparece como `File:Nombre_Del_Archivo.svg`). **Usa la URL
+directa** `https://upload.wikimedia.org/wikipedia/commons/x/xx/Nombre_Del_Archivo.svg` (más fiable).
+Para obtenerla: `WebFetch` a `https://commons.wikimedia.org/wiki/Special:FilePath/Nombre_Del_Archivo.svg`
+devuelve el "Redirect URL" → esa es la directa que pegas en `src`.
+(La propia `Special:FilePath/...` también funciona en el navegador, pero su redirect es lento/flaky
+en el preview del sandbox; la directa carga siempre.)
 
 > Wikimedia **sí** carga embebida (Google Drive no: el navegador/preview lo bloquea por ORB).
 > Si no encuentras imagen, deja el objeto **sin `src`** (solo `caption` + `busqueda`): se mostrará
