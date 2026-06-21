@@ -6,10 +6,6 @@ function googleImagesUrl(termino) {
   return `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(termino || '')}`
 }
 
-// Imagen responsiva con carga diferida desde Google Drive (o cualquier URL).
-// - `src` vacío (o error de carga) → placeholder "enlace de la imagen aquí".
-// - Drive → srcset por dispositivo (no satura GitHub Pages) + skeleton al cargar.
-// Reserva el espacio con `aspect-ratio` para evitar saltos de layout (CLS).
 export default function Imagen({
   src,
   alt = '',
@@ -24,21 +20,17 @@ export default function Imagen({
   className = '',
   rounded = true,
   figura = false,
-  completa = false,
 }) {
   const [error, setError] = useState(false)
   const [cargada, setCargada] = useState(false)
   const tieneSrc = src && String(src).trim().length > 0
 
-  const forma = completa ? 'imagen--completa' : figura ? 'imagen--figura' : rounded ? 'imagen--round' : ''
+  const forma = figura ? 'imagen--figura' : rounded ? 'imagen--round' : ''
   const clases = `imagen ${forma} ${className}`.trim()
-  // En modo "completa" la imagen se muestra entera a su proporción natural
-  // (no se fuerza un aspect-ratio fijo que recortaría).
-  const estiloRatio = completa ? undefined : { aspectRatio: ratio }
 
   if (!tieneSrc || error) {
     return (
-      <figure className={`${clases} imagen--ph`} style={completa ? { aspectRatio: '16 / 9' } : estiloRatio}>
+      <figure className={`${clases} imagen--ph`} style={{ aspectRatio: ratio }}>
         <div className="imagen-ph-in">
           <span className="imagen-ph-ico"><Icon name="estrella" size={26} /></span>
           <strong>enlace de la imagen aquí</strong>
@@ -59,7 +51,7 @@ export default function Imagen({
   }
 
   return (
-    <figure className={`${clases} ${cargada ? 'is-cargada' : ''}`} style={estiloRatio}>
+    <figure className={`${clases} ${cargada ? 'is-cargada' : ''}`} style={{ aspectRatio: ratio }}>
       <img
         src={driveSrc(src, ancho)}
         srcSet={driveSrcSet(src)}
