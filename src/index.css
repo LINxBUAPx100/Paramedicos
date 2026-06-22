@@ -2669,15 +2669,15 @@ html[data-tema='oscuro'] .ph-marco-svg--frente { filter: brightness(0.92); }
 .ph-marco-foto img {
   position: absolute;
   display: block;
-  width: 144.3%;        /* la persona (59.6% del PNG) ocupa 86% del marco */
+  width: 141.8%;        /* la persona (59.6% del PNG) ocupa 86% del marco */
   height: auto;
   max-width: none;
   left: -20.73%;        /* coloca la persona (volteada) centrada en el cuadro */
-  top: -41%;            /* sube la cabeza claramente por encima del borde del marco */
+  top: -38.5%;          /* sube la cabeza claramente por encima del borde del marco */
   right: auto;
   bottom: auto;
   margin: 0;
-  transform: scaleX(-1);/* VOLTEO horizontal: la cabeza mira a la derecha */
+  transform: scaleX(-1) scaleY(0.98);/* VOLTEO horizontal y ajuste vertical */
 }
 .ph-hero-texto {
   align-self: stretch;
