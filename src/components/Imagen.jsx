@@ -58,6 +58,7 @@ export default function Imagen({
         sizes={sizes}
         alt={alt || caption || ''}
         loading={eager ? 'eager' : 'lazy'}
+        fetchpriority={eager ? 'high' : 'auto'}
         decoding="async"
         onLoad={() => setCargada(true)}
         onError={() => setError(true)}

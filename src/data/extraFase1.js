@@ -253,7 +253,7 @@ export const extraFase1 = [
         { titulo: 'Physiology, Connective Tissue', tipo: 'StatPearls', url: 'https://www.ncbi.nlm.nih.gov/books/NBK542226/' },
       ],
       imagenes: [
-        { caption: 'Los cuatro tejidos básicos del cuerpo humano', busqueda: 'cuatro tejidos basicos epitelial conectivo muscular nervioso esquema' },
+        { src: 'https://commons.wikimedia.org/wiki/Special:FilePath/401_Types_of_Tissue.jpg', caption: 'Los cuatro tejidos básicos del cuerpo humano (Wikimedia Commons / OpenStax, CC BY)', busqueda: 'cuatro tejidos basicos epitelial conectivo muscular nervioso esquema' },
       ],
     },
     actividades: {
