@@ -12,7 +12,7 @@ export default function Recursos({ recursos }) {
     <section className="recursos-tema">
       {videos.length > 0 && (
         <div className="rec-bloque">
-          <h3 className="rec-titulo">🎬 Videos recomendados</h3>
+          <h3 className="rec-titulo"><Icon name="flecha" size={16} /> Videos recomendados</h3>
           <div className="rec-videos">
             {videos.map((v, i) => (
               <a key={i} className="rec-video" href={v.url} target="_blank" rel="noopener noreferrer">
@@ -29,7 +29,7 @@ export default function Recursos({ recursos }) {
 
       {imagenes.length > 0 && (
         <div className="rec-bloque">
-          <h3 className="rec-titulo">🖼️ Imágenes del tema</h3>
+          <h3 className="rec-titulo"><Icon name="atlas" size={16} /> Imágenes del tema</h3>
           <div className="rec-imagenes">
             {imagenes.map((img, i) => (
               <Imagen
@@ -47,7 +47,7 @@ export default function Recursos({ recursos }) {
 
       {fuentes.length > 0 && (
         <div className="rec-bloque">
-          <h3 className="rec-titulo">📚 Fuentes y lecturas</h3>
+          <h3 className="rec-titulo"><Icon name="libro" size={16} /> Fuentes y lecturas</h3>
           <ul className="rec-fuentes">
             {fuentes.map((f, i) => (
               <li key={i}>

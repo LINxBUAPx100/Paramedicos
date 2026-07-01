@@ -38,7 +38,7 @@ export default function ProgresoPage() {
   return (
     <div className="progreso-page">
       <header className="progreso-header">
-        <h1>📊 Mi progreso</h1>
+        <h1>Mi progreso</h1>
         <p>Tu avance se guarda automáticamente en este navegador.</p>
       </header>
 
@@ -127,7 +127,7 @@ export default function ProgresoPage() {
 
       <div className="progreso-reinicio">
         <button className="btn btn-peligro" onClick={confirmarReinicio}>
-          🗑️ Reiniciar mi progreso
+          Reiniciar mi progreso
         </button>
       </div>
     </div>

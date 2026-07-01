@@ -1,23 +1,23 @@
-// Logotipo PTUM oficial (LogoPTUM.svg): letras + Estrella de la Vida con serpiente.
-// Tres tonos vía clases: .lp-letras (PTUM), .lp-simbolo (estrella+serpiente),
+// Logotipo PTEM oficial: letras + Estrella de la Vida con serpiente.
+// Tres tonos vía clases: .lp-letras (PTEM), .lp-simbolo (estrella+serpiente),
 // .lp-simbolo-2 (segundo trazo de la estrella / relieve).
 const RATIO = 1132.14 / 222.61
 
-export default function LogoPTUM({ height = 30, className = '', style }) {
+export default function LogoPTEM({ height = 30, className = '', style }) {
   return (
     <svg
       viewBox="0 0 1132.14 222.61"
       height={height}
       width={Math.round(height * RATIO)}
-      className={`logo-ptum ${className}`}
+      className={`logo-ptem ${className}`}
       style={style}
       role="img"
-      aria-label="PTUM"
+      aria-label="PTEM"
     >
       <g className="lp-letras">
         <path d="M130.61,9.43c12.57,6.29,22.19,14.96,28.88,26.02,6.69,11.06,10.03,23.68,10.03,37.86s-3.32,26.39-9.96,36.95-16.24,18.7-28.81,24.43c-12.57,5.73-27.4,8.6-44.49,8.6h-38.91v76.32H0V0h86.27c16.99,0,31.77,3.14,44.34,9.43ZM112.97,96.53c5.83-5.63,8.75-13.27,8.75-22.92,0-6.43-1.26-12.32-3.77-17.65-2.51-5.33-6.44-9.6-11.76-12.82-5.33-3.22-11.97-4.83-19.91-4.83h-38.91v66.66h38.91c11.96,0,20.86-2.81,26.7-8.45Z" />
         <path d="M367.1,38.31h-66.96v181.29h-47.21V38.31h-65.91V0h180.08v38.31Z" />
-        <path d="M559.85,144.34c0,16.59-3.57,30.77-10.71,42.53-7.14,11.76-17.07,20.66-29.79,26.7-12.72,6.03-27.43,9.05-44.12,9.05s-31.6-3.02-44.42-9.05c-12.82-6.03-22.8-14.93-29.94-26.7-7.14-11.76-10.71-25.94-10.71-42.53V0h47.51v144.34c0,26.75,12.52,40.12,37.55,40.12,12.17,0,21.42-3.24,27.75-9.73,6.33-6.49,9.5-16.61,9.5-30.39V0h47.36v144.34Z" />
+        <path d="M390,0H570V38.31H437.21V90.64H558V128.95H437.21V181.29H570V219.6H390V0Z" />
         <path d="M828.62,219.6h-47.51v-56.71l4.68-104.97-57.61,161.68h-32.12l-57.46-161.68,4.68,104.97v56.71h-47.36V0h61.99l54.3,156.7L766.48,0h62.14v219.6Z" />
       </g>
       <g className="lp-simbolo">

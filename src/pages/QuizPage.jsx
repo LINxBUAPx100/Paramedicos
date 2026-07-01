@@ -3,6 +3,7 @@ import { getTema } from '../data/index.js'
 import { useProgress } from '../context/ProgressContext.jsx'
 import Quiz from '../components/Quiz.jsx'
 import NotFound from './NotFound.jsx'
+import Icon from '../components/Icon.jsx'
 
 export default function QuizPage() {
   const { temaId } = useParams()
@@ -21,7 +22,7 @@ export default function QuizPage() {
 
       <header className="quiz-page-header">
         <h1>
-          <span className="quiz-page-ico">🧪</span> Quiz · {tema.titulo}
+          <span className="quiz-page-ico"><Icon name="matraz" size={24} /></span> Quiz · {tema.titulo}
         </h1>
         <p>Pon a prueba lo aprendido. Necesitas 70% para aprobar. Cada respuesta incluye su explicación.</p>
       </header>

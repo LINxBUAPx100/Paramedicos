@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom'
 import { getFase } from '../data/index.js'
 import { useProgress } from '../context/ProgressContext.jsx'
 import NotFound from './NotFound.jsx'
+import Icon from '../components/Icon.jsx'
 
 export default function FasePage() {
   const { faseId } = useParams()
@@ -47,9 +48,9 @@ export default function FasePage() {
                 </div>
                 <p className="tema-fila-resumen">{tema.resumen}</p>
                 <div className="tema-fila-meta">
-                  <span>⏱️ {tema.duracion}</span>
-                  <span>❓ {tema.quiz.length} preguntas</span>
-                  <span>🎴 {tema.flashcards.length} flashcards</span>
+                  <span><Icon name="reloj" size={14} /> {tema.duracion}</span>
+                  <span><Icon name="pregunta" size={14} /> {tema.quiz.length} preguntas</span>
+                  <span><Icon name="flashcards" size={14} /> {tema.flashcards.length} flashcards</span>
                 </div>
               </div>
               <span className="tema-fila-flecha">→</span>

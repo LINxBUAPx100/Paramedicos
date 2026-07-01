@@ -53,7 +53,7 @@ export default function Quiz({ preguntas, onComplete, titulo }) {
             {aciertos} de {total} correctas
           </div>
         </div>
-        <h3>{aprobado ? '¡Excelente trabajo! 🎉' : 'Sigue practicando 💪'}</h3>
+        <h3>{aprobado ? '¡Excelente trabajo!' : 'Sigue practicando'}</h3>
         <p className="quiz-resultado-msg">
           {aprobado
             ? 'Dominas este contenido. Repasa las que fallaste para asegurar el 100%.'
@@ -76,7 +76,7 @@ export default function Quiz({ preguntas, onComplete, titulo }) {
           ))}
         </div>
         <button className="btn btn-primario" onClick={reiniciar}>
-          🔄 Intentar de nuevo
+          Intentar de nuevo
         </button>
       </div>
     )

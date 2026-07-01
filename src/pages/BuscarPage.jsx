@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { buscar } from '../data/index.js'
+import Icon from '../components/Icon.jsx'
 
 export default function BuscarPage() {
   const [params] = useSearchParams()
@@ -16,7 +17,7 @@ export default function BuscarPage() {
   return (
     <div className="buscar-page">
       <header className="buscar-header">
-        <h1>🔍 Buscar en la guía</h1>
+        <h1>Buscar en la guía</h1>
         <p>Encuentra temas y conceptos clave por palabra.</p>
       </header>
 
@@ -59,7 +60,7 @@ export default function BuscarPage() {
 
       {query.trim() && resultados.length === 0 && (
         <div className="buscar-vacio">
-          <span>🤔</span>
+          <span><Icon name="buscar" size={44} /></span>
           <p>No se encontraron resultados. Prueba con otra palabra.</p>
         </div>
       )}

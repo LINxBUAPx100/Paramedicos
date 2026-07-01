@@ -4,6 +4,7 @@ import { getTema, getTemaVecinos } from '../data/index.js'
 import { getRecursos } from '../data/recursosDescarga.js'
 import { useProgress } from '../context/ProgressContext.jsx'
 import Contenido from '../components/Contenido.jsx'
+import Icon from '../components/Icon.jsx'
 import Recursos from '../components/Recursos.jsx'
 import Actividades from '../components/Actividades.jsx'
 import NotFound from './NotFound.jsx'
@@ -56,9 +57,9 @@ export default function TemaPage() {
           <span className="tema-header-num">Tema {tema.numero}</span>
           <h1>{tema.titulo}</h1>
           <div className="tema-header-meta">
-            <span>⏱️ {tema.duracion}</span>
-            <span>❓ {tema.quiz.length} preguntas</span>
-            <span>🎴 {tema.flashcards.length} flashcards</span>
+            <span><Icon name="reloj" size={15} /> {tema.duracion}</span>
+            <span><Icon name="pregunta" size={15} /> {tema.quiz.length} preguntas</span>
+            <span><Icon name="flashcards" size={15} /> {tema.flashcards.length} flashcards</span>
           </div>
         </div>
       </header>
@@ -67,7 +68,7 @@ export default function TemaPage() {
 
       {tema.objetivos && (
         <div className="objetivos">
-          <h3>🎯 Al terminar este tema podrás</h3>
+          <h3><Icon name="diana" size={17} /> Al terminar este tema podrás</h3>
           <ul>
             {tema.objetivos.map((o, i) => (
               <li key={i}>{o}</li>
@@ -78,7 +79,7 @@ export default function TemaPage() {
 
       {recursos.length > 0 && (
         <div className="descargas">
-          <h3>📚 Material descargable de este tema</h3>
+          <h3><Icon name="libro" size={17} /> Material descargable de este tema</h3>
           <div className="descargas-grid">
             {recursos.map((r, i) => (
               <a
@@ -88,8 +89,8 @@ export default function TemaPage() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <span className="descarga-ico">📥</span>
-                <span className="descarga-txt">Descarga: {r.titulo} {r.emoji}</span>
+                <span className="descarga-ico"><Icon name="descarga" size={19} /></span>
+                <span className="descarga-txt">Descarga: {r.titulo}</span>
               </a>
             ))}
           </div>
@@ -102,7 +103,7 @@ export default function TemaPage() {
 
       {tema.conceptosClave && (
         <section className="conceptos">
-          <h2 className="seccion-titulo">🔑 Conceptos clave</h2>
+          <h2 className="seccion-titulo">Conceptos clave</h2>
           <div className="conceptos-grid">
             {tema.conceptosClave.map((c, i) => (
               <div className="concepto-card" key={i}>
@@ -129,10 +130,10 @@ export default function TemaPage() {
           {leido ? '✓ Marcado como leído' : 'Marcar como leído'}
         </button>
         <Link to={`/tema/${temaId}/quiz`} className="btn btn-primario">
-          🧪 Hacer el quiz de este tema
+          <Icon name="matraz" size={17} /> Hacer el quiz de este tema
         </Link>
         <Link to={`/flashcards/${temaId}`} className="btn btn-secundario">
-          🎴 Repasar flashcards
+          <Icon name="flashcards" size={17} /> Repasar flashcards
         </Link>
       </div>
 

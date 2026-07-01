@@ -1,5 +1,6 @@
 // Renderiza los bloques de contenido de un tema según su tipo.
 import Imagen from './Imagen.jsx'
+import Icon from './Icon.jsx'
 import { ATLAS_TEMAS } from '../data/imagenes.js'
 
 // Mapa clave → enlace de imagen del Atlas. Los bloques `diagrama` (antes SVG
@@ -82,10 +83,10 @@ function Bloque({ bloque }) {
       )
 
     case 'callout': {
-      const iconos = { clave: '💡', clinico: '🩺', alerta: '⚠️', dosis: '💊' }
+      const iconos = { clave: 'chispa', clinico: 'cruz', alerta: 'alerta', dosis: 'pildora' }
       return (
         <div className={`c-callout c-callout--${bloque.variante}`}>
-          <div className="c-callout-ico">{iconos[bloque.variante] || '📌'}</div>
+          <div className="c-callout-ico"><Icon name={iconos[bloque.variante] || 'pin'} size={20} /></div>
           <div>
             {bloque.titulo && <strong className="c-callout-titulo">{bloque.titulo}</strong>}
             <p>{bloque.texto}</p>
@@ -118,7 +119,7 @@ function Bloque({ bloque }) {
     case 'fuentes':
       return (
         <div className="c-fuentes">
-          <h4 className="c-fuentes-titulo">📚 {bloque.titulo || 'Fuentes y lecturas recomendadas'}</h4>
+          <h4 className="c-fuentes-titulo">{bloque.titulo || 'Fuentes y lecturas recomendadas'}</h4>
           <ul className="c-fuentes-lista">
             {bloque.items.map((f, i) => (
               <li key={i}>

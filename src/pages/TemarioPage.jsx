@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { temarioOficial, temarioStats } from '../data/temarioOficial.js'
 import { recursosGenerales } from '../data/recursosDescarga.js'
 import { getTema } from '../data/index.js'
+import Icon from '../components/Icon.jsx'
 
 export default function TemarioPage() {
   useEffect(() => {
@@ -34,12 +35,12 @@ export default function TemarioPage() {
 
       {recursosGenerales.length > 0 && (
         <div className="descargas descargas--general">
-          <h3>🧠 Recursos generales de estudio</h3>
+          <h3><Icon name="libro" size={17} /> Recursos generales de estudio</h3>
           <div className="descargas-grid">
             {recursosGenerales.map((r, i) => (
               <a key={i} className="descarga-btn" href={r.url} target="_blank" rel="noopener noreferrer">
-                <span className="descarga-ico">📥</span>
-                <span className="descarga-txt">Descarga: {r.titulo} {r.emoji}</span>
+                <span className="descarga-ico"><Icon name="descarga" size={19} /></span>
+                <span className="descarga-txt">Descarga: {r.titulo}</span>
               </a>
             ))}
           </div>
@@ -60,7 +61,11 @@ export default function TemarioPage() {
           {modulo.categorias.map((cat, ci) => (
             <div className="temario-categoria" key={ci}>
               <h3 className="temario-categoria-titulo">{cat.titulo}</h3>
-              {cat.recursos && <p className="temario-recursos">📚 {cat.recursos}</p>}
+              {cat.recursos && (
+                <p className="temario-recursos">
+                  <Icon name="libro" size={14} /> {cat.recursos}
+                </p>
+              )}
               <ul className="temario-subtemas">
                 {cat.subtemas.map((s) => {
                   const tema = s.temaId ? getTema(s.temaId) : null

@@ -1,5 +1,5 @@
 // ============================================================
-//  ENLACES DE IMÁGENES  ·  PTUM
+//  ENLACES DE IMÁGENES  ·  PTEM
 // ------------------------------------------------------------
 //  Pega aquí el enlace de Google Drive de cada imagen.
 //  Funciona con:

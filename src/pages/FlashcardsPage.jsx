@@ -66,7 +66,7 @@ export default function FlashcardsPage() {
       </nav>
 
       <header className="flashcards-header">
-        <h1>🎴 Flashcards</h1>
+        <h1>Flashcards</h1>
         <p>
           {tema
             ? `Repaso del tema ${tema.numero}: ${tema.titulo}`
@@ -79,7 +79,7 @@ export default function FlashcardsPage() {
           {indice + 1} / {cartas.length}
         </span>
         <button className="btn btn-secundario btn-mini" onClick={barajar}>
-          🔀 Barajar
+          Barajar
         </button>
       </div>
 

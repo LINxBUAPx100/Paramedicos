@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { todasLasPreguntas } from '../data/index.js'
 import { useProgress } from '../context/ProgressContext.jsx'
 import Quiz from '../components/Quiz.jsx'
+import Icon from '../components/Icon.jsx'
 
 function mezclar(arr) {
   const a = [...arr]
@@ -28,7 +29,7 @@ export default function ExamenPage() {
       <div className="examen-page">
         <header className="quiz-page-header">
           <h1>
-            <span className="quiz-page-ico">📝</span> Examen general
+            <span className="quiz-page-ico"><Icon name="examen" size={24} /></span> Examen general
           </h1>
           <p>{config.preguntas.length} preguntas aleatorias de todo el temario.</p>
         </header>
@@ -50,10 +51,10 @@ export default function ExamenPage() {
   return (
     <div className="examen-page">
       <header className="examen-hero">
-        <span className="examen-hero-ico">📝</span>
+        <span className="examen-hero-ico"><Icon name="examen" size={46} /></span>
         <h1>Examen general</h1>
         <p>
-          Preguntas aleatorias de las cinco fases, con explicación de cada respuesta.
+          Preguntas aleatorias de todas las fases, con explicación de cada respuesta.
           Mide tu dominio integral antes del examen real.
         </p>
       </header>
@@ -78,7 +79,7 @@ export default function ExamenPage() {
           </button>
         </div>
         <button className="btn btn-primario btn-grande" onClick={() => iniciar(cantidad)}>
-          🚀 Comenzar examen de {cantidad} preguntas
+          Comenzar examen de {cantidad} preguntas
         </button>
         <Link to="/" className="link-discreto">
           ← Volver al inicio

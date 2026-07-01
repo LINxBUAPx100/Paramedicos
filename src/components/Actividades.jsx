@@ -67,7 +67,7 @@ function UnirPalabras({ pares }) {
           ))}
         </ul>
       </div>
-      {hechos === total && <p className="act-exito">¡Todo emparejado! 🎉</p>}
+      {hechos === total && <p className="act-exito">¡Todo emparejado!</p>}
     </div>
   )
 }
@@ -118,7 +118,7 @@ function Ordenar({ titulo, pasos }) {
       <button className="btn btn-primario act-comprobar" onClick={() => setComprobado(true)}>
         Comprobar orden
       </button>
-      {comprobado && correctos === pasos.length && <p className="act-exito">¡Secuencia correcta! 🎉</p>}
+      {comprobado && correctos === pasos.length && <p className="act-exito">¡Secuencia correcta!</p>}
     </div>
   )
 }
@@ -209,7 +209,7 @@ export default function Actividades({ pares = [], ordenar, completar = [], pregu
 
   return (
     <section className="actividades">
-      <h2 className="seccion-titulo">🧩 Actividades de repaso</h2>
+      <h2 className="seccion-titulo">Actividades de repaso</h2>
       {hayUnir && <UnirPalabras pares={pares} />}
       {ordenar && <Ordenar titulo={ordenar.titulo} pasos={ordenar.pasos} />}
       {completar.length > 0 && <Completar items={completar} />}

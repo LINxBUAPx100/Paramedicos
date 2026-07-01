@@ -1,12 +1,13 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom'
 import { fases } from '../data/index.js'
 import { useProgress } from '../context/ProgressContext.jsx'
 import Icon from './Icon.jsx'
-import LogoPTUM from './marca/LogoPTUM.jsx'
+import LogoPTEM from './marca/LogoPTEM.jsx'
+import LogoIcono from './marca/LogoIcono.jsx'
 import IconoEstrella from './marca/IconoEstrella.jsx'
 
-// Navegación primaria del header (patrón del diseño PTUM).
+// Navegación primaria del header (patrón del diseño PTEM).
 const TOPNAV = [
   { to: '/', label: 'Inicio', end: true },
   { to: '/temario', label: 'Temas' },
@@ -34,6 +35,13 @@ export default function Layout({ children }) {
   const navigate = useNavigate()
 
   const esHome = location.pathname === '/'
+
+  // Al cambiar de ruta, arranca arriba (sin animación). Las páginas con saltos
+  // propios (p. ej. TemaPage con ?ref=) se reposicionan después por su cuenta.
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }, [location.pathname])
+
   const cerrar = () => setAbierto(false)
   const buscar = (e) => {
     e.preventDefault()
@@ -54,8 +62,8 @@ export default function Layout({ children }) {
           <span /><span /><span />
         </button>
 
-        <Link to="/" className="marca" onClick={cerrar} aria-label="PTUM — inicio">
-          <LogoPTUM height={28} className="marca-svg" />
+        <Link to="/" className="marca" onClick={cerrar} aria-label="PTEM — inicio">
+          <LogoPTEM height={28} className="marca-svg" />
         </Link>
 
         <nav className="topnav">
@@ -72,7 +80,7 @@ export default function Layout({ children }) {
             type="search"
             value={consulta}
             onChange={(e) => setConsulta(e.target.value)}
-            placeholder="Buscador"
+            placeholder="Buscar…"
             aria-label="Buscar en el temario"
           />
         </form>
@@ -136,7 +144,7 @@ export default function Layout({ children }) {
             ))}
           </nav>
           <div className="sidebar-pie">
-            <IconoEstrella size={14} /> PTUM · Hecho para que comprendas el porqué.
+            <IconoEstrella size={14} /> PTEM · Hecho para que comprendas el porqué.
           </div>
         </aside>
 
@@ -150,9 +158,9 @@ export default function Layout({ children }) {
       <footer className="app-footer">
         <div className="footer-in">
           <div className="footer-col footer-marca">
-            <span className="marca-logo"><LogoPTUM height={26} className="footer-logo-ptum" /></span>
+            <span className="marca-logo"><LogoIcono size={26} /></span>
             <div>
-              <strong>PTUM</strong>
+              <strong>PTEM</strong>
               <p>Plataforma de estudio en Atención Prehospitalaria y Cuidados Críticos.</p>
             </div>
           </div>
@@ -160,7 +168,7 @@ export default function Layout({ children }) {
             <h4>Estudio</h4>
             <Link to="/temario">Temario</Link>
             <Link to="/examen">Examen</Link>
-            <Link to="/flashcards">FlashCards</Link>
+            <Link to="/flashcards">Flashcards</Link>
             <Link to="/atlas">Atlas</Link>
           </div>
           <div className="footer-col">
@@ -171,12 +179,12 @@ export default function Layout({ children }) {
           </div>
           <div className="footer-col">
             <h4>Materiales</h4>
-            <span>Guías descargables</span>
-            <span>Recursos clínicos</span>
+            <Link to="/temario">Guías descargables</Link>
+            <Link to="/atlas">Atlas de imágenes</Link>
           </div>
         </div>
         <div className="footer-pie">
-          <span><strong>PTUM</strong>®</span>
+          <span><strong>PTEM</strong></span>
           <span>Desarrollado por Riders.Media · 2026 · Todos los derechos reservados</span>
         </div>
       </footer>

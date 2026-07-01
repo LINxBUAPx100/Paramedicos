@@ -14,7 +14,7 @@ import marcoFrenteUrl from '../assets/marco-paramedico - copia.svg'
 const STATS = [
   { key: 'fases', label: 'Fases' },
   { key: 'temas', label: 'Temas' },
-  { key: 'flashcards', label: 'FlashCards' },
+  { key: 'flashcards', label: 'Flashcards' },
   { key: 'preguntas', label: 'Preguntas' },
 ]
 
@@ -43,10 +43,8 @@ export default function Home() {
             </div>
           </div>
           <div className="ph-hero-texto">
-            <span className="ph-eyebrow reveal" style={{ '--d': '40ms' }}>
-            </span>
-            <h1 className="ph-wordmark" aria-label="PTUM">
-              {['P', 'T', 'U', 'M'].map((l, i) => (
+            <h1 className="ph-wordmark" aria-label="PTEM">
+              {['P', 'T', 'E', 'M'].map((l, i) => (
                 <span key={i} className="ph-wm-l" style={{ '--i': i }}>
                   {l}
                 </span>
@@ -168,7 +166,6 @@ export default function Home() {
               Flash<span className="ac">Cards</span>
             </h2>
             <p>Repasa con nuestras flashcards por tema o globales para fijar los conceptos de alto rendimiento.</p>
-            <span className="ph-flash-cap">tarjetas de repaso de alto rendimiento</span>
             <Link to="/flashcards" className="btn-pildora btn-pildora--solido btn-grande-p">
               Repasar <Icon name="chevronDer" size={18} />
             </Link>

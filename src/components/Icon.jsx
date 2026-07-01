@@ -64,6 +64,9 @@ const paths = {
     </>
   ),
   check: <path d="M5 12.5 10 17.5 19.5 7" />,
+  alerta: <path d="M12 3.5 21.5 20h-19L12 3.5ZM12 10v4.5M12 17.5h.01" />,
+  pildora: <path d="m10.5 20.4-6.9-6.9a4.9 4.9 0 1 1 6.9-6.9l6.9 6.9a4.9 4.9 0 1 1-6.9 6.9ZM8.6 8.6l6.9 6.9" />,
+  pin: <path d="M12 21s-6.5-5.4-6.5-10.3A6.5 6.5 0 0 1 12 4a6.5 6.5 0 0 1 6.5 6.7C18.5 15.6 12 21 12 21Zm0-8.3a2.2 2.2 0 1 0 0-4.4 2.2 2.2 0 0 0 0 4.4Z" />,
   // Estrella de la Vida (asterisco de 6 puntas) — símbolo SUE/paramédico.
   estrella: <path d="M12 3v18M4.2 7.5l15.6 9M19.8 7.5l-15.6 9" />,
   chevronIzq: <path d="m15 5-7 7 7 7" />,
