@@ -16,7 +16,8 @@
 
 // --- Home -------------------------------------------------------------------
 export const IMG = {
-  heroParamedico: import.meta.env.BASE_URL + 'heroParamedico.png', // foto del paramédico (hero) — archivo local en /public
+  // El hero se sirve optimizado (WebP/AVIF responsivos) directamente en Home.jsx
+  // desde public/hero/ (generado por scripts/optimizar-hero.mjs).
   ponteAprueba: 'https://drive.google.com/file/d/1nFKl_QgYJ998yDPhEsxN4tPCKiMFIaJn/view?usp=drive_web', // enlace de la imagen aquí — examen / checklist con bolígrafo
   atlas: 'https://drive.google.com/file/d/1faEMyolaKa7Ermyog9sO8VaC3lWuHNmz/view?usp=drive_web', // enlace de la imagen aquí — pila de libros / atlas
   flashcards: 'https://drive.google.com/file/d/1Ef50Mau9pkOkz8GA9BUu7dh9KVNYuxJd/view?usp=drive_web', // enlace de la imagen aquí — persona con botiquín

@@ -6,6 +6,8 @@
   "description": "La Guía de Lin — Guía de estudio avanzada de Atención Prehospitalaria, Cuidados Críticos y Transición a Medicina",
   "scripts": {
     "dev": "vite",
+    "gen:nav": "node scripts/gen-nav-indice.mjs",
+    "prebuild": "node scripts/gen-nav-indice.mjs",
     "build": "vite build",
     "preview": "vite preview",
     "deploy": "npm run build"

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { fases, stats } from '../data/index.js'
+import { fasesNav as fases, stats } from '../data/navIndice.js'
 import { useProgress } from '../context/ProgressContext.jsx'
 import Icon from '../components/Icon.jsx'
 import Reveal from '../components/Reveal.jsx'
@@ -17,6 +17,16 @@ const STATS = [
   { key: 'flashcards', label: 'Flashcards' },
   { key: 'preguntas', label: 'Preguntas' },
 ]
+
+// Hero optimizado: MISMA imagen del paramédico, servida en WebP/AVIF responsivos
+// (generadas por scripts/optimizar-hero.mjs → public/hero/). Idéntica a la vista;
+// solo cambia el peso (~3.4 MB → ~40-150 KB según dispositivo).
+const HERO_ANCHOS = [480, 800, 1200, 1600, 2000]
+const heroSet = (ext) =>
+  HERO_ANCHOS.map((w) => `${import.meta.env.BASE_URL}hero/paramedico-${w}.${ext} ${w}w`).join(', ')
+const HERO_AVIF = heroSet('avif')
+const HERO_WEBP = heroSet('webp')
+const HERO_SIZES = '(max-width: 880px) 90vw, 850px'
 
 export default function Home() {
   const { estado } = useProgress()
@@ -36,7 +46,19 @@ export default function Home() {
               <img className="ph-marco-svg ph-marco-svg--atras" src={marcoUrl} alt="" aria-hidden="true" />
               {/* paramédico (en medio): recortado al cuadro, cabeza sale por arriba */}
               <div className="ph-marco-foto">
-                <img src={IMG.heroParamedico} alt="Paramédico" />
+                <picture>
+                  <source type="image/avif" srcSet={HERO_AVIF} sizes={HERO_SIZES} />
+                  <source type="image/webp" srcSet={HERO_WEBP} sizes={HERO_SIZES} />
+                  {/* La prioridad de descarga la da el <link rel="preload"> del
+                      index.html (React 18 no reconoce fetchpriority en el <img>). */}
+                  <img
+                    src={`${import.meta.env.BASE_URL}hero/paramedico-800.webp`}
+                    alt="Paramédico"
+                    width="2000"
+                    height="2000"
+                    decoding="async"
+                  />
+                </picture>
               </div>
               {/* copia del marco (al frente): enmarca y tapa cualquier mancha */}
               <img className="ph-marco-svg ph-marco-svg--frente" src={marcoFrenteUrl} alt="" aria-hidden="true" />

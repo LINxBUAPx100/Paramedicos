@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom'
-import { fases } from '../data/index.js'
+import { fasesNav as fases } from '../data/navIndice.js'
 import { useProgress } from '../context/ProgressContext.jsx'
 import Icon from './Icon.jsx'
 import LogoPTEM from './marca/LogoPTEM.jsx'

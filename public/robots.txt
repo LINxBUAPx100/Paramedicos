@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://linxbuapx100.github.io/Paramedicos/sitemap.xml

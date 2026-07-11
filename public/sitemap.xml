@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Nota: la app usa HashRouter, así que hoy solo la home es una URL indexable.
+     Cuando se migre a BrowserRouter + prerender, añadir aquí cada /tema/… -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://linxbuapx100.github.io/Paramedicos/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

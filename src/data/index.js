@@ -1,29 +1,21 @@
-import { fase1 } from './fase1.js'
-import { fase2 } from './fase2.js'
-import { fase3 } from './fase3.js'
-import { fase4 } from './fase4.js'
-import { fase5 } from './fase5.js'
-import { fase6 } from './fase6.js'
-import { fase7 } from './fase7.js'
-import { extraFase1 } from './extraFase1.js'
-import { extraFase2 } from './extraFase2.js'
-import { extraFase3 } from './extraFase3.js'
-import { extraFase4 } from './extraFase4.js'
-import { extraFase5 } from './extraFase5.js'
+import { REGISTRO } from './registro.js'
 
-// Une los temas base de cada fase con los temas ampliados (sin mutar los originales).
-const extrasPorFase = {
-  'fase-1': extraFase1,
-  'fase-2': extraFase2,
-  'fase-3': extraFase3,
-  'fase-4': extraFase4,
-  'fase-5': extraFase5,
-}
-
-export const fases = [fase1, fase2, fase3, fase4, fase5, fase6, fase7].map((f) => ({
-  ...f,
-  temas: [...f.temas, ...(extrasPorFase[f.id] || [])],
-}))
+// Ensambla las fases en ORDEN y con NUMERACIÓN AUTOMÁTICA (ver registro.js).
+//  · El orden lo define el campo `orden` del registro.
+//  · `fase.numero` (1, 2, 3…) y `tema.numero` ('1.1', '1.2'…) se CALCULAN desde
+//    la posición → reordenar el registro renumera todo, sin tocar el contenido.
+//  · El `id` de cada fase/tema es identidad estable (URLs + progreso) y no se toca.
+//  · Cualquier `numero` escrito a mano en los archivos de datos se ignora aquí.
+export const fases = [...REGISTRO]
+  .sort((a, b) => a.orden - b.orden)
+  .map(({ fase, extra }, i) => {
+    const numero = i + 1
+    const temas = [...fase.temas, ...(extra || [])].map((tema, j) => ({
+      ...tema,
+      numero: `${numero}.${j + 1}`,
+    }))
+    return { ...fase, numero, temas }
+  })
 
 // Lista plana de todos los temas, enriquecida con datos de su fase.
 export const todosLosTemas = fases.flatMap((fase) =>

@@ -9,6 +9,31 @@
       name="description"
       content="PTEM — Plataforma de estudio de Atención Prehospitalaria, Cuidados Críticos y Transición a Medicina. Comprende el porqué, no solo memorices."
     />
+    <link rel="canonical" href="https://linxbuapx100.github.io/Paramedicos/" />
+
+    <!-- Open Graph (previsualización al compartir en WhatsApp, Facebook, etc.) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="PTEM" />
+    <meta property="og:locale" content="es_MX" />
+    <meta property="og:url" content="https://linxbuapx100.github.io/Paramedicos/" />
+    <meta property="og:title" content="PTEM — Técnico en Urgencias Médicas" />
+    <meta
+      property="og:description"
+      content="Estudia Atención Prehospitalaria y Cuidados Críticos comprendiendo el porqué: teoría, fisiología, farmacología y correlación clínica."
+    />
+    <meta property="og:image" content="https://linxbuapx100.github.io/Paramedicos/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="PTEM — Técnico en Urgencias Médicas" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="PTEM — Técnico en Urgencias Médicas" />
+    <meta
+      name="twitter:description"
+      content="Estudia Atención Prehospitalaria y Cuidados Críticos comprendiendo el porqué, no solo memorizando."
+    />
+    <meta name="twitter:image" content="https://linxbuapx100.github.io/Paramedicos/og-image.jpg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!-- CDNs de imágenes: adelanta la conexión para que rendericen antes -->
@@ -16,10 +41,36 @@
     <link rel="preconnect" href="https://lh3.googleusercontent.com" crossorigin />
     <link rel="dns-prefetch" href="https://wsrv.nl" />
     <link rel="dns-prefetch" href="https://lh3.googleusercontent.com" />
+    <!-- Hero (LCP): precarga la imagen del paramédico ya optimizada -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Oswald:wght@400;500;600;700&family=Fira+Sans:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
+      rel="preload"
+      as="image"
+      type="image/avif"
+      href="./hero/paramedico-800.avif"
+      imagesrcset="./hero/paramedico-480.avif 480w, ./hero/paramedico-800.avif 800w, ./hero/paramedico-1200.avif 1200w"
+      imagesizes="(max-width: 880px) 90vw, 850px"
+      fetchpriority="high"
     />
+    <!-- Fuentes: carga NO bloqueante (rel=preload + swap a stylesheet al cargar).
+         display=swap muestra el texto de inmediato con la fuente de respaldo y
+         luego intercambia, sin bloquear el primer pintado. -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Oswald:wght@400;500;600;700&family=Fira+Sans:wght@400;500;600;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Oswald:wght@400;500;600;700&family=Fira+Sans:wght@400;500;600;700&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Oswald:wght@400;500;600;700&family=Fira+Sans:wght@400;500;600;700&display=swap"
+      />
+    </noscript>
     <title>PTEM</title>
   </head>
   <body>
