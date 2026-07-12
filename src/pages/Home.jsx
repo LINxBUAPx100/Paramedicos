@@ -125,8 +125,8 @@ export default function Home() {
             <IconoEstrella size={26} /> Fases
           </Reveal>
           <Reveal as="p" className="ph-h2-sub" delay={70}>
-            Siete fases progresivas, del fundamento celular a la farmacología avanzada, el marco
-            normativo y las operaciones especiales.
+            Fases progresivas, del fundamento celular a la farmacología avanzada, las poblaciones
+            especiales y el marco normativo.
           </Reveal>
         </div>
         <FasesCarrusel fases={fases} leidos={leidos} />

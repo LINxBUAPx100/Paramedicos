@@ -12,6 +12,7 @@ export const fase2 = {
   temas: [
     {
       id: 'evaluacion-integral',
+      orden: 1,
       numero: '2.1',
       titulo: 'Evaluación Integral del Paciente',
       icono: '🔎',
@@ -177,6 +178,7 @@ export const fase2 = {
     },
     {
       id: 'oxigenoterapia-via-aerea-basica',
+      orden: 4,
       numero: '2.2',
       titulo: 'Oxigenoterapia y Manejo Básico de Vía Aérea',
       icono: '💨',

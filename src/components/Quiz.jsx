@@ -1,8 +1,12 @@
 import { useState } from 'react'
+import { barajarPreguntas } from '../lib/baraja.js'
 
 // Quiz interactivo reutilizable.
 // props: preguntas [{ pregunta, opciones, correcta, explicacion }], onComplete(aciertos, total), titulo
+//   · `correcta` puede ser un índice o un arreglo de índices (1-3 correctas).
+//   · Las opciones se barajan en cada intento (la correcta no cae siempre en la misma letra).
 export default function Quiz({ preguntas, onComplete, titulo }) {
+  const [baraja, setBaraja] = useState(() => barajarPreguntas(preguntas))
   const [indice, setIndice] = useState(0)
   const [seleccion, setSeleccion] = useState(null)
   const [confirmado, setConfirmado] = useState(false)
@@ -10,12 +14,13 @@ export default function Quiz({ preguntas, onComplete, titulo }) {
   const [terminado, setTerminado] = useState(false)
   const [respuestas, setRespuestas] = useState([])
 
-  const pregunta = preguntas[indice]
-  const total = preguntas.length
+  const pregunta = baraja[indice]
+  const total = baraja.length
+  const esCorrecta = (i) => pregunta.correcta.includes(i)
 
   function confirmar() {
     if (seleccion === null) return
-    const correcto = seleccion === pregunta.correcta
+    const correcto = esCorrecta(seleccion)
     setConfirmado(true)
     if (correcto) setAciertos((a) => a + 1)
     setRespuestas((r) => [...r, { pregunta, seleccion, correcto }])
@@ -24,8 +29,7 @@ export default function Quiz({ preguntas, onComplete, titulo }) {
   function siguiente() {
     if (indice + 1 >= total) {
       setTerminado(true)
-      const final = aciertos // ya actualizado por confirmar
-      onComplete?.(final, total)
+      onComplete?.(aciertos, total)
     } else {
       setIndice((i) => i + 1)
       setSeleccion(null)
@@ -34,6 +38,7 @@ export default function Quiz({ preguntas, onComplete, titulo }) {
   }
 
   function reiniciar() {
+    setBaraja(barajarPreguntas(preguntas)) // nuevo barajado en cada intento
     setIndice(0)
     setSeleccion(null)
     setConfirmado(false)
@@ -67,7 +72,8 @@ export default function Quiz({ preguntas, onComplete, titulo }) {
                 <div className="quiz-repaso-preg">{r.pregunta.pregunta}</div>
                 {!r.correcto && (
                   <div className="quiz-repaso-correcta">
-                    Respuesta correcta: <strong>{r.pregunta.opciones[r.pregunta.correcta]}</strong>
+                    Respuesta correcta:{' '}
+                    <strong>{r.pregunta.correcta.map((idx) => r.pregunta.opciones[idx]).join(' / ')}</strong>
                   </div>
                 )}
                 <div className="quiz-repaso-exp">{r.pregunta.explicacion}</div>
@@ -103,7 +109,7 @@ export default function Quiz({ preguntas, onComplete, titulo }) {
         {pregunta.opciones.map((op, i) => {
           let clase = 'quiz-opcion'
           if (confirmado) {
-            if (i === pregunta.correcta) clase += ' correcta'
+            if (esCorrecta(i)) clase += ' correcta'
             else if (i === seleccion) clase += ' incorrecta'
           } else if (i === seleccion) {
             clase += ' seleccionada'
@@ -117,8 +123,8 @@ export default function Quiz({ preguntas, onComplete, titulo }) {
             >
               <span className="quiz-opcion-letra">{String.fromCharCode(65 + i)}</span>
               <span>{op}</span>
-              {confirmado && i === pregunta.correcta && <span className="quiz-opcion-marca">✓</span>}
-              {confirmado && i === seleccion && i !== pregunta.correcta && (
+              {confirmado && esCorrecta(i) && <span className="quiz-opcion-marca">✓</span>}
+              {confirmado && i === seleccion && !esCorrecta(i) && (
                 <span className="quiz-opcion-marca">✗</span>
               )}
             </button>
@@ -127,8 +133,8 @@ export default function Quiz({ preguntas, onComplete, titulo }) {
       </div>
 
       {confirmado && (
-        <div className={`quiz-explicacion ${seleccion === pregunta.correcta ? 'ok' : 'mal'}`}>
-          <strong>{seleccion === pregunta.correcta ? '✓ Correcto. ' : '✗ Incorrecto. '}</strong>
+        <div className={`quiz-explicacion ${esCorrecta(seleccion) ? 'ok' : 'mal'}`}>
+          <strong>{esCorrecta(seleccion) ? '✓ Correcto. ' : '✗ Incorrecto. '}</strong>
           {pregunta.explicacion}
         </div>
       )}

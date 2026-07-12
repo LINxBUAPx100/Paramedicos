@@ -4,6 +4,7 @@
 export const extraFase2 = [
   {
     id: 'signos-vitales',
+    orden: 6,
     numero: '2.3',
     titulo: 'Signos Vitales e Interpretación',
     icono: '📊',
@@ -290,6 +291,7 @@ export const extraFase2 = [
   },
   {
     id: 'svb-rcp',
+    orden: 5,
     numero: '2.4',
     titulo: 'Soporte Vital Basico y RCP de Alta Calidad',
     icono: '❤️',
@@ -570,6 +572,7 @@ export const extraFase2 = [
   },
   {
     id: 'hemorragias-shock-basico',
+    orden: 3,
     numero: '2.5',
     titulo: 'Control de Hemorragias y Manejo Basico del Shock',
     icono: '🩸',
@@ -817,6 +820,7 @@ export const extraFase2 = [
   },
   {
     id: 'trauma-musculoesqueletico',
+    orden: 7,
     numero: '2.6',
     titulo: 'Trauma Musculoesqueletico e Inmovilizacion',
     icono: '🦴',
@@ -1037,6 +1041,7 @@ export const extraFase2 = [
   },
   {
     id: 'urgencias-medicas-comunes',
+    orden: 9,
     numero: '2.7',
     titulo: 'Urgencias Medicas Comunes',
     icono: '🩺',
@@ -1257,6 +1262,7 @@ export const extraFase2 = [
   },
   {
     id: 'phtls-trauma',
+    orden: 8,
     numero: '2.8',
     titulo: 'Atencion Prehospitalaria del Trauma (PHTLS)',
     icono: '🚨',
@@ -1456,6 +1462,7 @@ export const extraFase2 = [
   },
   {
     id: 'emergencias-ambientales',
+    orden: 10,
     numero: '2.9',
     titulo: 'Emergencias Ambientales',
     icono: '🌡️',
@@ -1666,6 +1673,7 @@ export const extraFase2 = [
   },
   {
     id: 'triage-mci',
+    orden: 12,
     numero: '2.10',
     titulo: 'Triage e Incidentes con Multiples Victimas',
     icono: '🏷️',
@@ -1865,6 +1873,7 @@ export const extraFase2 = [
   },
   {
     id: 'evaluacion-neurologica-avdi-glasgow',
+    orden: 2,
     numero: '2.11',
     titulo: 'Evaluacion Neurologica: AVDI, Glasgow y Pupilas',
     icono: '🧠',
@@ -2131,6 +2140,7 @@ export const extraFase2 = [
   },
   {
     id: 'fauna-venenosa-mexico',
+    orden: 11,
     numero: '2.12',
     titulo: 'Envenenamiento por Fauna de México',
     icono: '🦂',

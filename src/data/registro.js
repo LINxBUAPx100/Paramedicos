@@ -26,14 +26,37 @@ import { extraFase3 } from './extraFase3.js'
 import { extraFase4 } from './extraFase4.js'
 import { extraFase5 } from './extraFase5.js'
 
+// --- Módulo "Poblaciones Especiales" -----------------------------------------
+// Obstetricia/neonatal y pediatría se re-hogarean desde la Fase 5 a su propio
+// módulo, ubicado justo después de Farmacología Avanzada. Se hace filtrando por
+// id (sin mover el contenido de archivo): los temas siguen definidos en
+// extraFase5.js pero se excluyen de la Fase 5 y se agrupan aquí.
+const IDS_POBLACIONES = ['obstetricia-neonatal', 'pediatria-especiales']
+const extraFase5SinPoblaciones = extraFase5.filter((t) => !IDS_POBLACIONES.includes(t.id))
+const temasPoblaciones = IDS_POBLACIONES
+  .map((id) => extraFase5.find((t) => t.id === id))
+  .filter(Boolean)
+
+const fasePoblaciones = {
+  id: 'fase-poblaciones',
+  titulo: 'Poblaciones Especiales',
+  subtitulo: 'Obstetricia, Neonatal y Pediatría',
+  color: '#14b8a6',
+  icono: '👶',
+  descripcion:
+    'Consideraciones especiales para poblaciones con fisiología y manejo distintos: la paciente obstétrica y el recién nacido, y el paciente pediátrico. Complementa la farmacología avanzada con el abordaje propio de cada grupo.',
+  temas: temasPoblaciones,
+}
+
 // `orden` define la posición; `fase` es el contenido base; `extra` (opcional)
-// son temas ampliados que se anexan al final de esa fase.
+// son temas ampliados que se anexan a esa fase.
 export const REGISTRO = [
   { orden: 1, fase: fase1, extra: extraFase1 },
   { orden: 2, fase: fase2, extra: extraFase2 },
   { orden: 3, fase: fase3, extra: extraFase3 },
   { orden: 4, fase: fase4, extra: extraFase4 },
-  { orden: 5, fase: fase5, extra: extraFase5 },
-  { orden: 6, fase: fase6 },
-  { orden: 7, fase: fase7 },
+  { orden: 5, fase: fase5, extra: extraFase5SinPoblaciones },
+  { orden: 6, fase: fase6 }, // Farmacología Avanzada (farma avanzada)
+  { orden: 6.5, fase: fasePoblaciones }, // Poblaciones Especiales (justo después)
+  { orden: 7, fase: fase7 }, // Marco Normativo
 ]

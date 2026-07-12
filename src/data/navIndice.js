@@ -85,34 +85,34 @@ export const fasesNav = [
         "titulo": "Evaluación Integral del Paciente"
       },
       {
-        "id": "oxigenoterapia-via-aerea-basica",
+        "id": "evaluacion-neurologica-avdi-glasgow",
         "numero": "2.2",
-        "titulo": "Oxigenoterapia y Manejo Básico de Vía Aérea"
-      },
-      {
-        "id": "signos-vitales",
-        "numero": "2.3",
-        "titulo": "Signos Vitales e Interpretación"
-      },
-      {
-        "id": "svb-rcp",
-        "numero": "2.4",
-        "titulo": "Soporte Vital Basico y RCP de Alta Calidad"
+        "titulo": "Evaluacion Neurologica: AVDI, Glasgow y Pupilas"
       },
       {
         "id": "hemorragias-shock-basico",
-        "numero": "2.5",
+        "numero": "2.3",
         "titulo": "Control de Hemorragias y Manejo Basico del Shock"
       },
       {
-        "id": "trauma-musculoesqueletico",
-        "numero": "2.6",
-        "titulo": "Trauma Musculoesqueletico e Inmovilizacion"
+        "id": "oxigenoterapia-via-aerea-basica",
+        "numero": "2.4",
+        "titulo": "Oxigenoterapia y Manejo Básico de Vía Aérea"
       },
       {
-        "id": "urgencias-medicas-comunes",
+        "id": "svb-rcp",
+        "numero": "2.5",
+        "titulo": "Soporte Vital Basico y RCP de Alta Calidad"
+      },
+      {
+        "id": "signos-vitales",
+        "numero": "2.6",
+        "titulo": "Signos Vitales e Interpretación"
+      },
+      {
+        "id": "trauma-musculoesqueletico",
         "numero": "2.7",
-        "titulo": "Urgencias Medicas Comunes"
+        "titulo": "Trauma Musculoesqueletico e Inmovilizacion"
       },
       {
         "id": "phtls-trauma",
@@ -120,24 +120,24 @@ export const fasesNav = [
         "titulo": "Atencion Prehospitalaria del Trauma (PHTLS)"
       },
       {
-        "id": "emergencias-ambientales",
+        "id": "urgencias-medicas-comunes",
         "numero": "2.9",
+        "titulo": "Urgencias Medicas Comunes"
+      },
+      {
+        "id": "emergencias-ambientales",
+        "numero": "2.10",
         "titulo": "Emergencias Ambientales"
       },
       {
-        "id": "triage-mci",
-        "numero": "2.10",
-        "titulo": "Triage e Incidentes con Multiples Victimas"
-      },
-      {
-        "id": "evaluacion-neurologica-avdi-glasgow",
-        "numero": "2.11",
-        "titulo": "Evaluacion Neurologica: AVDI, Glasgow y Pupilas"
-      },
-      {
         "id": "fauna-venenosa-mexico",
-        "numero": "2.12",
+        "numero": "2.11",
         "titulo": "Envenenamiento por Fauna de México"
+      },
+      {
+        "id": "triage-mci",
+        "numero": "2.12",
+        "titulo": "Triage e Incidentes con Multiples Victimas"
       }
     ]
   },
@@ -217,7 +217,7 @@ export const fasesNav = [
       {
         "id": "acls-paro-cardiaco",
         "numero": "4.4",
-        "titulo": "ACLS: Paro Cardíaco y Algoritmos"
+        "titulo": "Paro Cardíaco y Algoritmos Avanzados"
       },
       {
         "id": "arritmias-manejo",
@@ -318,16 +318,6 @@ export const fasesNav = [
         "id": "farmacologia-clinica-avanzada",
         "numero": "5.11",
         "titulo": "Farmacologia Clinica Avanzada"
-      },
-      {
-        "id": "obstetricia-neonatal",
-        "numero": "5.12",
-        "titulo": "Obstetricia y Emergencias Neonatales"
-      },
-      {
-        "id": "pediatria-especiales",
-        "numero": "5.13",
-        "titulo": "Pediatria y Consideraciones Especiales"
       }
     ]
   },
@@ -387,8 +377,28 @@ export const fasesNav = [
     ]
   },
   {
-    "id": "fase-7",
+    "id": "fase-poblaciones",
     "numero": 7,
+    "titulo": "Poblaciones Especiales",
+    "subtitulo": "Obstetricia, Neonatal y Pediatría",
+    "descripcion": "Consideraciones especiales para poblaciones con fisiología y manejo distintos: la paciente obstétrica y el recién nacido, y el paciente pediátrico. Complementa la farmacología avanzada con el abordaje propio de cada grupo.",
+    "color": "#14b8a6",
+    "temas": [
+      {
+        "id": "obstetricia-neonatal",
+        "numero": "7.1",
+        "titulo": "Obstetricia y Emergencias Neonatales"
+      },
+      {
+        "id": "pediatria-especiales",
+        "numero": "7.2",
+        "titulo": "Pediatria y Consideraciones Especiales"
+      }
+    ]
+  },
+  {
+    "id": "fase-7",
+    "numero": 8,
     "titulo": "Marco Normativo y Operaciones Especiales",
     "subtitulo": "Legislación Mexicana, Táctica y Bienestar",
     "descripcion": "El paramédico no solo trata pacientes: opera dentro de un marco legal y de sistemas de respuesta. Esta fase cubre la regulación oficial en México (NOM-034, NOM-087, Ley General de Salud, FRAP), el despliegue en incidentes complejos (SCI, TECC, HazMat, aeromedicina) y el cuidado de la salud mental del propio rescatador.",
@@ -396,22 +406,27 @@ export const fasesNav = [
     "temas": [
       {
         "id": "legislacion-marco-normativo-mexico",
-        "numero": "7.1",
+        "numero": "8.1",
         "titulo": "Legislación y Marco Normativo Mexicano"
       },
       {
         "id": "operaciones-especiales-tactica-bienestar",
-        "numero": "7.2",
+        "numero": "8.2",
         "titulo": "Operaciones Especiales, Táctica y Bienestar"
+      },
+      {
+        "id": "llenado-frap",
+        "numero": "8.3",
+        "titulo": "Llenado del FRAP"
       }
     ]
   }
 ]
 
 export const stats = {
-  "fases": 7,
-  "temas": 67,
-  "preguntas": 370,
-  "flashcards": 451,
-  "conceptos": 401
+  "fases": 8,
+  "temas": 68,
+  "preguntas": 374,
+  "flashcards": 457,
+  "conceptos": 407
 }

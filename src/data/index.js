@@ -10,10 +10,11 @@ export const fases = [...REGISTRO]
   .sort((a, b) => a.orden - b.orden)
   .map(({ fase, extra }, i) => {
     const numero = i + 1
-    const temas = [...fase.temas, ...(extra || [])].map((tema, j) => ({
-      ...tema,
-      numero: `${numero}.${j + 1}`,
-    }))
+    // Los temas se ordenan por su campo `orden` opcional (para reordenar sin mover
+    // contenido). Los que no lo tienen conservan su posición (sort estable).
+    const temas = [...fase.temas, ...(extra || [])]
+      .sort((a, b) => (a.orden ?? 1e9) - (b.orden ?? 1e9))
+      .map((tema, j) => ({ ...tema, numero: `${numero}.${j + 1}` }))
     return { ...fase, numero, temas }
   })
 

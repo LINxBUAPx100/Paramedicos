@@ -483,5 +483,250 @@ export const fase7 = {
         },
       ],
     },
+
+    // ===================================================================
+    // Llenado del FRAP
+    // ===================================================================
+    {
+      id: 'llenado-frap',
+      titulo: 'Llenado del FRAP',
+      icono: '📝',
+      duracion: '40 min',
+      resumen:
+        'El FRAP no es papeleo: es el registro médico-legal de todo lo que hiciste y es tu principal defensa. Llenarlo completo, cronológico, legible y sin alteraciones protege al paciente y al paramédico. Se elabora un FRAP por cada paciente atendido.',
+      objetivos: [
+        'Enumerar las secciones del FRAP y qué información va en cada una.',
+        'Registrar la cronología del servicio y los signos vitales seriados con su hora.',
+        'Documentar correctamente una negativa de atención (rechazo informado).',
+        'Corregir un error en el FRAP sin invalidar su valor probatorio.',
+      ],
+      secciones: [
+        {
+          titulo: '¿Qué es el FRAP y cuándo se llena?',
+          bloques: [
+            {
+              tipo: 'p',
+              texto:
+                'El Formato de Registro de Atención Prehospitalaria (FRAP) es el documento que respalda legalmente toda la atención brindada. Registra quién, cuándo, qué se encontró, qué se hizo y cómo evolucionó el paciente hasta la transferencia. La NOM-034 obliga a documentar la atención: el FRAP se llena durante o inmediatamente después del servicio, mientras la información está fresca.',
+            },
+            {
+              tipo: 'callout',
+              variante: 'clave',
+              titulo: 'Un FRAP por cada paciente',
+              texto:
+                'Cada paciente atendido genera su propio formato, aunque provengan del mismo incidente. En incidentes con múltiples víctimas se usan tarjetas de triage y registros condensados, pero cada persona conserva su identidad y su registro.',
+            },
+            {
+              tipo: 'callout',
+              variante: 'alerta',
+              titulo: 'Lo que no se escribió, no se hizo',
+              texto:
+                'El FRAP se llena con letra legible, con tinta, sin espacios en blanco y sin alteraciones. Un procedimiento que se realizó pero no se documentó, ante un juez, no ocurrió. Un FRAP completo protege; uno incompleto o alterado condena.',
+            },
+          ],
+        },
+        {
+          titulo: 'Las secciones del FRAP',
+          bloques: [
+            {
+              tipo: 'tabla',
+              titulo: 'Qué va en cada parte del formato',
+              headers: ['Sección', 'Qué se registra'],
+              filas: [
+                ['Datos del servicio y cronología', 'Folio, fecha, unidad, tripulación y las horas del servicio (llamada, salida, arribos y disponibilidad).'],
+                ['Datos del paciente', 'Nombre, edad, sexo, domicilio y quién lo refiere o acompaña.'],
+                ['Causa / motivo', 'Origen clínico o traumático; agente causal y mecanismo de lesión.'],
+                ['Evaluación primaria', 'XABCDE y estado de conciencia (AVDI y/o Glasgow).'],
+                ['Evaluación secundaria', 'Hallazgos por segmentos y localización de lesiones (esquema corporal).'],
+                ['Signos vitales', 'Tomas seriadas, cada una con su hora.'],
+                ['Antecedentes (SAMPLE)', 'Signos/síntomas, Alergias, Medicamentos, Padecimientos previos, Última ingesta, Eventos.'],
+                ['Tratamiento / manejo', 'Oxígeno, inmovilización, medicamentos (dosis, vía y hora) y procedimientos.'],
+                ['Evolución y traslado', 'Cambios en el estado, hospital destino y condición en la entrega.'],
+                ['Negativa / entrega-recepción', 'Firma de rechazo informado o de recepción por el hospital.'],
+              ],
+            },
+            {
+              tipo: 'imagen',
+              src: '',
+              alt: 'Formato FRAP de atención prehospitalaria',
+              caption: 'Ejemplo de FRAP con sus secciones: cronología, evaluación, signos vitales y manejo.',
+              busqueda: 'formato FRAP registro atencion prehospitalaria Mexico ejemplo',
+            },
+          ],
+        },
+        {
+          titulo: 'Cronología: la línea del tiempo del servicio',
+          bloques: [
+            {
+              tipo: 'pasos',
+              titulo: 'Horas que debes registrar',
+              items: [
+                'Recepción de la llamada (cuándo se activó el servicio).',
+                'Salida de la base o unidad hacia la escena.',
+                'Arribo a la escena.',
+                'Contacto con el paciente (arribo al paciente).',
+                'Salida de la escena hacia el hospital.',
+                'Arribo al hospital.',
+                'Disponibilidad de la unidad (fin del servicio).',
+              ],
+            },
+            {
+              tipo: 'callout',
+              variante: 'clinico',
+              titulo: 'Signos vitales seriados',
+              texto:
+                'Registra al menos dos tomas de signos vitales: la inicial y una previa a la entrega. En el paciente inestable, cada 5 minutos; en el estable, cada 15. Cada toma con su hora: la tendencia (si mejora o empeora) tiene más valor clínico y legal que un dato aislado.',
+            },
+          ],
+        },
+        {
+          titulo: 'SAMPLE y el registro de la evaluación',
+          bloques: [
+            {
+              tipo: 'lista',
+              titulo: 'El interrogatorio SAMPLE',
+              items: [
+                'S — Signos y síntomas que presenta el paciente.',
+                'A — Alergias (medicamentos, alimentos, ambientales).',
+                'M — Medicamentos que toma (y última dosis).',
+                'P — Padecimientos y antecedentes médicos/quirúrgicos.',
+                'L — Última ingesta de alimento o líquido (por sus siglas en inglés, "Last meal").',
+                'E — Eventos previos: qué estaba haciendo cuando inició el problema.',
+              ],
+            },
+            {
+              tipo: 'p',
+              texto:
+                'Documenta los hallazgos de forma objetiva y describible: "herida de 3 cm en región parietal derecha con sangrado activo" comunica más que "golpe en la cabeza". Anota lo que observas y mides, no interpretaciones ni diagnósticos que no te corresponden.',
+            },
+          ],
+        },
+        {
+          titulo: 'Errores, correcciones y valor legal',
+          bloques: [
+            {
+              tipo: 'callout',
+              variante: 'alerta',
+              titulo: 'Cómo se corrige un error',
+              texto:
+                'Nunca borres ni uses corrector. El error se tacha con UNA sola línea que permita seguir leyendo lo escrito, se anota la corrección y se rubrica. Los espacios en blanco se cancelan con una línea para que nadie agregue información después. Cualquier alteración (borrones, tachones ilegibles, hojas rehechas) destruye el valor probatorio del formato.',
+            },
+            {
+              tipo: 'callout',
+              variante: 'clave',
+              titulo: 'Objetivo y sin juicios',
+              texto:
+                'El FRAP es un documento técnico, no un espacio para opiniones sobre el paciente o terceros. Registra hechos, horas y datos medibles. Anotaciones despectivas o subjetivas pueden volverse en tu contra.',
+            },
+          ],
+        },
+        {
+          titulo: 'Negativa de atención (rechazo informado)',
+          bloques: [
+            {
+              tipo: 'p',
+              texto:
+                'Un paciente adulto, consciente y competente tiene derecho a rechazar la atención o el traslado. Para que la negativa sea válida y te proteja, debe quedar documentada correctamente en el FRAP.',
+            },
+            {
+              tipo: 'pasos',
+              titulo: 'Cómo documentar un rechazo',
+              items: [
+                'Verifica la capacidad: paciente orientado, sin alteración por alcohol, drogas, hipoxia o TCE.',
+                'Explica en términos claros los riesgos de no recibir atención, incluida la posibilidad de muerte o daño grave.',
+                'Ofrece alternativas (llamar de nuevo, acudir por medios propios) y respóndele sus dudas.',
+                'Registra que se informó y que el paciente comprendió; obtén su firma y, de ser posible, la de un testigo.',
+              ],
+            },
+            {
+              tipo: 'callout',
+              variante: 'clinico',
+              titulo: 'Si no puede decidir, no hay rechazo válido',
+              texto:
+                'Un paciente con estado de conciencia alterado, un menor sin tutor o una persona incapaz de comprender los riesgos NO puede rechazar válidamente la atención: opera el consentimiento implícito y se procede a atender.',
+            },
+          ],
+        },
+        {
+          titulo: 'Entrega-recepción y cierre',
+          bloques: [
+            {
+              tipo: 'p',
+              texto:
+                'La atención termina con una transferencia formal a personal de igual o mayor nivel. Da un reporte estructurado (motivo, hallazgos, manejo y evolución) y registra en el FRAP el nombre y cargo de quien recibe, el hospital y la hora de entrega, con su firma. Sin esa transferencia documentada, la responsabilidad sigue siendo tuya.',
+            },
+            {
+              tipo: 'fuentes',
+              items: [
+                { nombre: 'NOM-034-SSA3-2013 (texto oficial, PDF)', url: 'https://salud.guanajuato.gob.mx/download/Normatividad/Normas/NOM_034_SSA3_2013.pdf' },
+                { nombre: 'Ley General de Salud (Cámara de Diputados, PDF)', url: 'https://www.diputados.gob.mx/LeyesBiblio/pdf/LGS.pdf' },
+              ],
+            },
+          ],
+        },
+      ],
+      conceptosClave: [
+        { termino: 'FRAP', definicion: 'Formato de Registro de Atención Prehospitalaria; documento médico-legal, uno por paciente.' },
+        { termino: 'Cronología del servicio', definicion: 'Horas de llamada, salida, arribos, salida a hospital y disponibilidad de la unidad.' },
+        { termino: 'Signos vitales seriados', definicion: 'Varias tomas con su hora (5 min en inestable, 15 en estable) para mostrar la tendencia.' },
+        { termino: 'SAMPLE', definicion: 'Signos/síntomas, Alergias, Medicamentos, Padecimientos, Última ingesta, Eventos.' },
+        { termino: 'Rechazo informado', definicion: 'Negativa de un paciente competente, tras explicarle los riesgos, con firma suya y de testigo.' },
+        { termino: 'Corrección válida', definicion: 'Tachar con una línea legible, anotar la corrección y rubricar; nunca borrar ni usar corrector.' },
+      ],
+      flashcards: [
+        { frente: '¿Cuántos FRAP se llenan por incidente?', reverso: 'Uno por cada paciente atendido, aunque provengan del mismo incidente.' },
+        { frente: '¿Cómo se corrige un error en el FRAP?', reverso: 'Se tacha con una sola línea legible, se anota la corrección y se rubrica; nunca se borra ni se usa corrector.' },
+        { frente: '¿Qué significa SAMPLE?', reverso: 'Signos/síntomas, Alergias, Medicamentos, Padecimientos previos, Última ingesta y Eventos.' },
+        { frente: '¿Cada cuánto se toman signos vitales en un paciente inestable?', reverso: 'Cada 5 minutos (cada 15 si está estable), y cada toma con su hora.' },
+        { frente: '¿Qué se requiere para una negativa de atención válida?', reverso: 'Paciente competente, riesgos explicados y comprendidos, y firma del paciente (y testigo si es posible).' },
+        { frente: '¿Qué se registra en la entrega-recepción?', reverso: 'Nombre y cargo de quien recibe, hospital, hora de entrega y su firma.' },
+      ],
+      quiz: [
+        {
+          pregunta: 'Al cometer un error de escritura en el FRAP, lo correcto es:',
+          opciones: [
+            'Borrarlo con corrector y escribir encima',
+            'Tacharlo con una línea legible, corregir y rubricar',
+            'Rehacer toda la hoja',
+            'Dejarlo tal cual para no alterar el documento',
+          ],
+          correcta: 1,
+          explicacion: 'El error se tacha con una sola línea que deje leer lo escrito, se corrige y se rubrica; borrar o usar corrector invalida el valor legal.',
+        },
+        {
+          pregunta: 'Para que la negativa de atención de un paciente sea válida, este debe:',
+          opciones: [
+            'Estar consciente, orientado y competente',
+            'Ser menor de edad',
+            'Estar bajo efecto de alcohol',
+            'Tener el estado de conciencia alterado',
+          ],
+          correcta: 0,
+          explicacion: 'Solo un paciente competente (orientado, sin alteración por sustancias, hipoxia o TCE) puede rechazar válidamente la atención.',
+        },
+        {
+          pregunta: '¿Por qué se registran signos vitales seriados y no una sola toma?',
+          opciones: [
+            'Por norma de llenar espacios',
+            'Para mostrar la tendencia (si mejora o empeora) del paciente',
+            'Porque una sola toma es ilegal',
+            'Para justificar el tiempo en escena',
+          ],
+          correcta: 1,
+          explicacion: 'La tendencia de los signos vitales tiene más valor clínico y legal que un dato aislado.',
+        },
+        {
+          pregunta: 'Los espacios en blanco del FRAP deben:',
+          opciones: [
+            'Dejarse por si se necesita agregar algo',
+            'Cancelarse con una línea para impedir agregados posteriores',
+            'Llenarse con "N/A" a lápiz',
+            'Recortarse de la hoja',
+          ],
+          correcta: 1,
+          explicacion: 'Cancelar los espacios en blanco con una línea evita que se añada información después de firmado el formato.',
+        },
+      ],
+    },
   ],
 }

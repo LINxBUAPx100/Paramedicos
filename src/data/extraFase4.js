@@ -5,7 +5,7 @@ export const extraFase4 = [
   {
     id: 'acls-paro-cardiaco',
     numero: '4.4',
-    titulo: 'ACLS: Paro Cardíaco y Algoritmos',
+    titulo: 'Paro Cardíaco y Algoritmos Avanzados',
     icono: '🫀',
     duracion: '60 min',
     resumen:
