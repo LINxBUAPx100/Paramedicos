@@ -32,9 +32,13 @@ export default function Layout({ children }) {
   const [abierto, setAbierto] = useState(false)
   const [consulta, setConsulta] = useState('')
   const { estado, alternarTema } = useProgress()
-  const { autenticado, perfil, user } = useAuth()
+  const { autenticado, perfil, user, esStaff } = useAuth()
   const location = useLocation()
   const navigate = useNavigate()
+
+  // El personal (instructor/admin/superadmin) ve además el Panel de avance.
+  const topnav = esStaff ? [...TOPNAV, { to: '/panel', label: 'Panel' }] : TOPNAV
+  const navDrawer = esStaff ? [...NAV, { to: '/panel', icon: 'progreso', label: 'Panel de avance' }] : NAV
 
   const esHome = location.pathname === '/'
 
@@ -69,7 +73,7 @@ export default function Layout({ children }) {
         </Link>
 
         <nav className="topnav">
-          {TOPNAV.map((item) => (
+          {topnav.map((item) => (
             <NavLink key={item.to} to={item.to} end={item.end} className="topnav-link">
               {item.label}
             </NavLink>
@@ -115,7 +119,7 @@ export default function Layout({ children }) {
       <div className="cuerpo">
         <aside className={`sidebar ${abierto ? 'abierto' : ''}`} aria-hidden={!abierto}>
           <nav className="nav">
-            {NAV.map((item) => (
+            {navDrawer.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}

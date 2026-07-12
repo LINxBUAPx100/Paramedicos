@@ -19,6 +19,7 @@ const BuscarPage = lazy(() => import('./pages/BuscarPage.jsx'))
 const AtlasPage = lazy(() => import('./pages/AtlasPage.jsx'))
 const TemarioPage = lazy(() => import('./pages/TemarioPage.jsx'))
 const Cuenta = lazy(() => import('./pages/Cuenta.jsx'))
+const PanelPage = lazy(() => import('./pages/PanelPage.jsx'))
 
 function Cargando() {
   return (
@@ -52,6 +53,9 @@ export default function App() {
             <Route path="/temario" element={<RutaProtegida><TemarioPage /></RutaProtegida>} />
             <Route path="/progreso" element={<RutaProtegida><ProgresoPage /></RutaProtegida>} />
             <Route path="/buscar" element={<RutaProtegida><BuscarPage /></RutaProtegida>} />
+
+            {/* Panel de avance: solo staff (la página valida el rol internamente) */}
+            <Route path="/panel" element={<RutaProtegida><PanelPage /></RutaProtegida>} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -8,13 +8,15 @@ const ROLES_STAFF = ['admin_escuela', 'instructor']
 // Calcula si el usuario puede acceder al contenido y, si no, el motivo.
 //   superadmin           → acceso total (bypass).
 //   sin sesión           → 'no-sesion'
+//   perfil inexistente    → 'sin-perfil' (no se queda cargando para siempre)
 //   usuario no activo     → 'usuario-bloqueado'
 //   sin academia          → 'sin-academia'
 //   academia no activa    → 'academia-inactiva' (no ha pagado / suspendida)
-function calcularAcceso({ user, perfil, academia, rol }) {
+function calcularAcceso({ user, perfil, perfilListo, academia, rol }) {
   if (rol === 'superadmin') return { puede: true, motivo: null }
   if (!user) return { puede: false, motivo: 'no-sesion' }
-  if (!perfil) return { puede: false, motivo: 'cargando' }
+  if (!perfilListo) return { puede: false, motivo: 'cargando' }
+  if (!perfil) return { puede: false, motivo: 'sin-perfil' }
   if (perfil.estado && perfil.estado !== 'activo') return { puede: false, motivo: 'usuario-bloqueado' }
   if (!perfil.academiaId) return { puede: false, motivo: 'sin-academia' }
   if (academia === undefined) return { puede: false, motivo: 'cargando' } // academia aún cargando
@@ -28,6 +30,7 @@ function calcularAcceso({ user, perfil, academia, rol }) {
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [perfil, setPerfil] = useState(null)
+  const [perfilListo, setPerfilListo] = useState(false) // true tras el 1er snapshot del perfil
   const [academia, setAcademia] = useState(undefined) // undefined = sin cargar; null = no existe
   const [cargando, setCargando] = useState(true)
   const salirRef = useRef(() => Promise.resolve())
@@ -52,15 +55,22 @@ export function AuthProvider({ children }) {
       }
       unsubAuth = authMod.observarAuth((u) => {
         setUser(u)
+        setPerfilListo(false)
         if (unsubPerfil) { unsubPerfil(); unsubPerfil = null }
         if (u) {
           unsubPerfil = fs.onSnapshot(
             fs.doc(db, 'usuarios', u.uid),
             (snap) => {
               setPerfil(snap.exists() ? { id: snap.id, ...snap.data() } : null)
+              setPerfilListo(true)
               setCargando(false)
             },
-            () => setCargando(false)
+            () => {
+              // Error al leer el perfil (permisos/red): no dejar el spinner infinito.
+              setPerfil(null)
+              setPerfilListo(true)
+              setCargando(false)
+            }
           )
         } else {
           setPerfil(null)
@@ -105,7 +115,7 @@ export function AuthProvider({ children }) {
   }, [perfil?.academiaId])
 
   const rol = perfil?.rol || null
-  const { puede: puedeAcceder, motivo } = calcularAcceso({ user, perfil, academia, rol })
+  const { puede: puedeAcceder, motivo } = calcularAcceso({ user, perfil, perfilListo, academia, rol })
   // Aún resolviendo sesión/perfil/academia: no bloquear todavía.
   const accesoCargando = cargando || motivo === 'cargando'
 

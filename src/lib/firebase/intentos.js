@@ -3,9 +3,11 @@
 // ------------------------------------------------------------
 //  Cada intento queda guardado con uid + academiaId, para que el alumno vea su
 //  historial y su maestro/academia pueda revisar su avance por fase.
+//  Nota: se ordena en el CLIENTE (where + orderBy en campos distintos exigiría
+//  un índice compuesto en Firestore; así evitamos ese paso manual).
 // ============================================================
 import { db } from './init.js'
-import { collection, addDoc, query, where, orderBy, getDocs, serverTimestamp } from 'firebase/firestore'
+import { collection, addDoc, query, where, getDocs, serverTimestamp } from 'firebase/firestore'
 
 // Registra un intento de examen de fase. Devuelve el porcentaje.
 export async function guardarIntentoFase({ uid, nombre, academiaId, fase, aciertos, total }) {
@@ -25,20 +27,21 @@ export async function guardarIntentoFase({ uid, nombre, academiaId, fase, aciert
   return porcentaje
 }
 
-// Intentos de un alumno (para su propio historial). Orden: más reciente primero.
+// Más reciente primero (orden en cliente).
+function ordenar(docs) {
+  return docs.sort((a, b) => (b.fecha?.seconds || 0) - (a.fecha?.seconds || 0))
+}
+
+// Intentos de un alumno (para su propio historial).
 export async function intentosDeAlumno(uid) {
-  const q = query(collection(db, 'intentos'), where('uid', '==', uid), orderBy('fecha', 'desc'))
+  const q = query(collection(db, 'intentos'), where('uid', '==', uid))
   const snap = await getDocs(q)
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() }))
+  return ordenar(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
 }
 
 // Intentos de toda una academia (para el panel del maestro/admin).
 export async function intentosDeAcademia(academiaId) {
-  const q = query(
-    collection(db, 'intentos'),
-    where('academiaId', '==', academiaId),
-    orderBy('fecha', 'desc')
-  )
+  const q = query(collection(db, 'intentos'), where('academiaId', '==', academiaId))
   const snap = await getDocs(q)
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() }))
+  return ordenar(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
 }

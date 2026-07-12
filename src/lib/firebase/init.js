@@ -1,22 +1,31 @@
 // ============================================================
 //  Inicialización de Firebase (cliente)
 // ------------------------------------------------------------
-//  La config se lee de variables de entorno (Vite: VITE_FIREBASE_*).
 //  Estos valores son PÚBLICOS por diseño (config de cliente, no secretos):
-//  la seguridad real la dan las Security Rules de Firestore, no ocultar la apiKey.
-//  Aun así, van en .env (ignorado por git) para no fijarlos en el repo.
+//  la seguridad real la dan las Security Rules de Firestore, no ocultar la
+//  apiKey. Van incrustados para que el build de GitHub Actions (que no tiene
+//  .env) salga funcional; un .env local con VITE_FIREBASE_* los sobrescribe.
 // ============================================================
 import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
 
+const DEFAULTS = {
+  apiKey: 'AIzaSyCSR5D60yOCg9g6vK5_UB8EkOlmXnBUHXI',
+  authDomain: 'ptem-a304f.firebaseapp.com',
+  projectId: 'ptem-a304f',
+  storageBucket: 'ptem-a304f.firebasestorage.app',
+  messagingSenderId: '944566588634',
+  appId: '1:944566588634:web:6add4b5851f3027dd881e3',
+}
+
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || DEFAULTS.apiKey,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || DEFAULTS.authDomain,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || DEFAULTS.projectId,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || DEFAULTS.storageBucket,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || DEFAULTS.messagingSenderId,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || DEFAULTS.appId,
 }
 
 // Aviso claro en desarrollo si falta configurar el .env.

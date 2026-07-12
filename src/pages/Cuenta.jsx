@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import { registrarEmail, entrarEmail, entrarGoogle } from '../lib/firebase/auth.js'
 import { unirseAcademia } from '../lib/firebase/usuarios.js'
@@ -39,6 +40,7 @@ export default function Cuenta() {
 
 // --- No autenticado: login / registro ---
 function Acceso() {
+  const navigate = useNavigate()
   const [modo, setModo] = useState('login') // 'login' | 'registro'
   const [nombre, setNombre] = useState('')
   const [email, setEmail] = useState('')
@@ -53,9 +55,9 @@ function Acceso() {
     try {
       if (modo === 'registro') await registrarEmail({ nombre, email, password })
       else await entrarEmail({ email, password })
+      navigate('/') // al entrar, directo al inicio
     } catch (err) {
       setError(traducirError(err))
-    } finally {
       setOcupado(false)
     }
   }
@@ -65,9 +67,9 @@ function Acceso() {
     setOcupado(true)
     try {
       await entrarGoogle()
+      navigate('/') // al entrar, directo al inicio
     } catch (err) {
       setError(traducirError(err))
-    } finally {
       setOcupado(false)
     }
   }
