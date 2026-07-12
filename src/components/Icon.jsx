@@ -71,6 +71,18 @@ const paths = {
   estrella: <path d="M12 3v18M4.2 7.5l15.6 9M19.8 7.5l-15.6 9" />,
   chevronIzq: <path d="m15 5-7 7 7 7" />,
   chevronDer: <path d="m9 5 7 7-7 7" />,
+  usuario: (
+    <>
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 21a8 8 0 0 1 16 0" />
+    </>
+  ),
+  candado: (
+    <>
+      <rect x="4.5" y="10.5" width="15" height="10" rx="2" />
+      <path d="M8 10.5V7a4 4 0 0 1 8 0v3.5" />
+    </>
+  ),
 }
 
 export default function Icon({ name, size = 22, className = '', strokeWidth = 1.75, style }) {

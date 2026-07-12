@@ -1,0 +1,88 @@
+rules_version = '2';
+
+// ============================================================
+//  Security Rules — PTEM (MVP: auth + roles + progreso)
+// ------------------------------------------------------------
+//  Modelo: academias/{codigo} · usuarios/{uid} · progreso/{uid}
+//  Los roles viven en usuarios/{uid}.rol (sin custom claims todavía).
+//  Bootstrapping: el PRIMER superadmin y la primera academia se crean a mano
+//  en la consola de Firestore (la consola omite estas reglas).
+// ============================================================
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function autenticado() { return request.auth != null; }
+    function esDueno(uid) { return autenticado() && request.auth.uid == uid; }
+    function miDoc() {
+      return get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data;
+    }
+    function esSuper() {
+      return autenticado()
+        && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid))
+        && miDoc().rol == 'superadmin';
+    }
+    function academiaActiva(codigo) {
+      return exists(/databases/$(database)/documents/academias/$(codigo))
+        && get(/databases/$(database)/documents/academias/$(codigo)).data.estado == 'activo';
+    }
+    // ¿El solicitante es staff (instructor/maestro o admin de escuela) de esa academia?
+    function esStaffDe(acaId) {
+      return autenticado()
+        && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid))
+        && (miDoc().rol == 'instructor' || miDoc().rol == 'admin_escuela')
+        && miDoc().academiaId == acaId;
+    }
+
+    // --- ACADEMIAS (el id del doc ES el código, p.ej. "AEP-2026") ---
+    match /academias/{codigo} {
+      // Legible por cualquier autenticado: hace falta para validar el código al unirse.
+      allow read: if autenticado();
+      // Alta/edición/baja: solo super-admin (el admin de escuela llega en fase posterior).
+      allow write: if esSuper();
+    }
+
+    // --- USUARIOS ---
+    match /usuarios/{uid} {
+      // El propio usuario, el super-admin, o el staff de su misma academia (para
+      // que el maestro/admin vea a sus alumnos).
+      allow read: if esDueno(uid) || esSuper() || esStaffDe(resource.data.academiaId);
+
+      // Alta: solo tu propio doc, y siempre como 'alumno' (nadie se autonombra rol alto).
+      allow create: if esDueno(uid)
+        && request.resource.data.rol == 'alumno';
+
+      // Edición propia: NO puedes cambiar tu rol ni tu estado; solo puedes fijar
+      // academiaId a una academia que EXISTA y esté ACTIVA (unirse por código).
+      allow update: if esDueno(uid)
+        && request.resource.data.rol == resource.data.rol
+        && request.resource.data.estado == resource.data.estado
+        && (
+          request.resource.data.academiaId == resource.data.academiaId
+          || academiaActiva(request.resource.data.academiaId)
+        );
+
+      // Super-admin puede gestionar cualquier usuario.
+      allow write: if esSuper();
+    }
+
+    // --- PROGRESO (privado por usuario) ---
+    match /progreso/{uid} {
+      allow read, write: if esDueno(uid);
+    }
+
+    // --- INTENTOS de examen de fase ---
+    match /intentos/{id} {
+      // Crear: el propio alumno, con su uid y su academia (no puede falsear otra).
+      allow create: if autenticado()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.academiaId == miDoc().academiaId;
+      // Leer: el dueño, el super-admin, o el staff de la misma academia.
+      allow read: if esDueno(resource.data.uid)
+        || esSuper()
+        || esStaffDe(resource.data.academiaId);
+      // Los intentos son inmutables; solo el super-admin puede borrarlos.
+      allow update: if false;
+      allow delete: if esSuper();
+    }
+  }
+}

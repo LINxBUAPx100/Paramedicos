@@ -52,6 +52,20 @@ export function getTema(temaId) {
   return todosLosTemas.find((t) => t.id === temaId)
 }
 
+// Todas las preguntas de una fase (de todos sus temas) — para el examen de fase.
+export function preguntasDeFase(faseId) {
+  const fase = getFase(faseId)
+  if (!fase) return []
+  return fase.temas.flatMap((tema) =>
+    (tema.quiz || []).map((q, i) => ({
+      ...q,
+      id: `${tema.id}-${i}`,
+      temaId: tema.id,
+      temaTitulo: tema.titulo,
+    }))
+  )
+}
+
 // Navegación anterior/siguiente entre temas (orden global).
 export function getTemaVecinos(temaId) {
   const idx = todosLosTemas.findIndex((t) => t.id === temaId)

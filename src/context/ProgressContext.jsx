@@ -1,4 +1,5 @@
-import { createContext, useContext, useEffect, useState, useCallback } from 'react'
+import { createContext, useContext, useEffect, useRef, useState, useCallback } from 'react'
+import { useAuth } from './AuthContext.jsx'
 
 const ProgressContext = createContext(null)
 
@@ -20,13 +21,17 @@ function defecto() {
     leidos: {}, // { temaId: true }
     quizzes: {}, // { temaId: { aciertos, total, fecha } }
     examenes: [], // historial de exámenes generales
-    tema: 'claro', // claro | oscuro
+    tema: 'claro', // claro | oscuro (preferencia del dispositivo, no se sincroniza)
   }
 }
 
 export function ProgressProvider({ children }) {
   const [estado, setEstado] = useState(cargarEstado)
+  const { user } = useAuth()
+  const hidratadoRef = useRef(false) // true cuando ya cargamos el progreso remoto
+  const timerRef = useRef(0)
 
+  // Cache local (siempre; también es el modo sin sesión y el respaldo offline).
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(estado))
@@ -39,6 +44,72 @@ export function ProgressProvider({ children }) {
   useEffect(() => {
     document.documentElement.dataset.tema = estado.tema
   }, [estado.tema])
+
+  // Al iniciar sesión: cargar el progreso remoto. Si existe, MANDA (evita mezclar
+  // progreso de otro usuario que quedara en localStorage de un equipo compartido).
+  // Si no existe, se conserva el local y el efecto de escritura lo subirá.
+  useEffect(() => {
+    if (!user) {
+      hidratadoRef.current = false
+      return
+    }
+    let activo = true
+    ;(async () => {
+      const [{ db, firebaseListo }, fs] = await Promise.all([
+        import('../lib/firebase/init.js'),
+        import('firebase/firestore'),
+      ])
+      if (!activo || !firebaseListo) return
+      try {
+        const snap = await fs.getDoc(fs.doc(db, 'progreso', user.uid))
+        if (activo && snap.exists()) {
+          const r = snap.data()
+          setEstado((local) => ({
+            ...local,
+            leidos: r.leidos || {},
+            quizzes: r.quizzes || {},
+            examenes: r.examenes || [],
+          }))
+        }
+      } catch {
+        /* sin conexión: seguimos con el local */
+      }
+      if (activo) hidratadoRef.current = true
+    })()
+    return () => {
+      activo = false
+    }
+  }, [user])
+
+  // Escribe el progreso a Firestore (con debounce) cuando cambia y hay sesión.
+  useEffect(() => {
+    if (!user || !hidratadoRef.current) return
+    if (timerRef.current) clearTimeout(timerRef.current)
+    timerRef.current = setTimeout(async () => {
+      const [{ db, firebaseListo }, fs] = await Promise.all([
+        import('../lib/firebase/init.js'),
+        import('firebase/firestore'),
+      ])
+      if (!firebaseListo) return
+      try {
+        await fs.setDoc(
+          fs.doc(db, 'progreso', user.uid),
+          {
+            leidos: estado.leidos,
+            quizzes: estado.quizzes,
+            examenes: estado.examenes,
+            updatedAt: fs.serverTimestamp(),
+          },
+          { merge: true }
+        )
+      } catch {
+        /* reintenta en el próximo cambio */
+      }
+    }, 800)
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current)
+    }
+  }, [estado.leidos, estado.quizzes, estado.examenes, user])
 
   const marcarLeido = useCallback((temaId, valor = true) => {
     setEstado((s) => ({ ...s, leidos: { ...s.leidos, [temaId]: valor } }))

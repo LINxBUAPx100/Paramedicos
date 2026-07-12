@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import Layout from './components/Layout.jsx'
 import ErrorBoundary from './components/ErrorBoundary.jsx'
+import RutaProtegida from './components/RutaProtegida.jsx'
 import Home from './pages/Home.jsx'
 import NotFound from './pages/NotFound.jsx'
 
@@ -11,11 +12,13 @@ const FasePage = lazy(() => import('./pages/FasePage.jsx'))
 const TemaPage = lazy(() => import('./pages/TemaPage.jsx'))
 const QuizPage = lazy(() => import('./pages/QuizPage.jsx'))
 const ExamenPage = lazy(() => import('./pages/ExamenPage.jsx'))
+const ExamenFasePage = lazy(() => import('./pages/ExamenFasePage.jsx'))
 const FlashcardsPage = lazy(() => import('./pages/FlashcardsPage.jsx'))
 const ProgresoPage = lazy(() => import('./pages/ProgresoPage.jsx'))
 const BuscarPage = lazy(() => import('./pages/BuscarPage.jsx'))
 const AtlasPage = lazy(() => import('./pages/AtlasPage.jsx'))
 const TemarioPage = lazy(() => import('./pages/TemarioPage.jsx'))
+const Cuenta = lazy(() => import('./pages/Cuenta.jsx'))
 
 function Cargando() {
   return (
@@ -33,17 +36,23 @@ export default function App() {
       <ErrorBoundary routeKey={location.pathname}>
         <Suspense fallback={<Cargando />}>
           <Routes>
+            {/* Públicas: landing + cuenta (login/registro/unirse) */}
             <Route path="/" element={<Home />} />
-            <Route path="/fase/:faseId" element={<FasePage />} />
-            <Route path="/tema/:temaId" element={<TemaPage />} />
-            <Route path="/tema/:temaId/quiz" element={<QuizPage />} />
-            <Route path="/examen" element={<ExamenPage />} />
-            <Route path="/flashcards" element={<FlashcardsPage />} />
-            <Route path="/flashcards/:temaId" element={<FlashcardsPage />} />
-            <Route path="/atlas" element={<AtlasPage />} />
-            <Route path="/temario" element={<TemarioPage />} />
-            <Route path="/progreso" element={<ProgresoPage />} />
-            <Route path="/buscar" element={<BuscarPage />} />
+            <Route path="/cuenta" element={<Cuenta />} />
+
+            {/* Contenido: requiere sesión + academia activa (o superadmin) */}
+            <Route path="/fase/:faseId" element={<RutaProtegida><FasePage /></RutaProtegida>} />
+            <Route path="/fase/:faseId/examen" element={<RutaProtegida><ExamenFasePage /></RutaProtegida>} />
+            <Route path="/tema/:temaId" element={<RutaProtegida><TemaPage /></RutaProtegida>} />
+            <Route path="/tema/:temaId/quiz" element={<RutaProtegida><QuizPage /></RutaProtegida>} />
+            <Route path="/examen" element={<RutaProtegida><ExamenPage /></RutaProtegida>} />
+            <Route path="/flashcards" element={<RutaProtegida><FlashcardsPage /></RutaProtegida>} />
+            <Route path="/flashcards/:temaId" element={<RutaProtegida><FlashcardsPage /></RutaProtegida>} />
+            <Route path="/atlas" element={<RutaProtegida><AtlasPage /></RutaProtegida>} />
+            <Route path="/temario" element={<RutaProtegida><TemarioPage /></RutaProtegida>} />
+            <Route path="/progreso" element={<RutaProtegida><ProgresoPage /></RutaProtegida>} />
+            <Route path="/buscar" element={<RutaProtegida><BuscarPage /></RutaProtegida>} />
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

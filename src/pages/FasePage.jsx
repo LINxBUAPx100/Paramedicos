@@ -58,6 +58,16 @@ export default function FasePage() {
           )
         })}
       </div>
+
+      <section className="fase-examen-cta">
+        <div className="fase-examen-txt">
+          <h2><Icon name="examen" size={22} /> Examen de la Fase {fase.numero}</h2>
+          <p>Pon a prueba todo lo visto en esta fase. Tu resultado se guarda como intento para seguir tu avance.</p>
+        </div>
+        <Link to={`/fase/${fase.id}/examen`} className="btn btn-primario btn-grande">
+          Presentar examen de fase
+        </Link>
+      </section>
     </div>
   )
 }

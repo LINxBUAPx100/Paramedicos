@@ -168,6 +168,209 @@ textarea:focus-visible,
 .ruta-error h2 { font-family: var(--fuente-display); }
 .ruta-error p { color: var(--texto-2); max-width: 34ch; }
 
+/* Acceso restringido (contenido gateado por academia/pago) */
+.acceso-restringido {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 62vh;
+  text-align: center;
+  padding: 32px 20px;
+  max-width: 460px;
+  margin: 0 auto;
+}
+.acceso-ico {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  color: var(--primario);
+  background: color-mix(in srgb, var(--primario) 12%, transparent);
+}
+.acceso-restringido h1 { font-family: var(--fuente-display); font-size: 1.6rem; }
+.acceso-restringido p { color: var(--texto-2); max-width: 40ch; }
+.acceso-restringido .btn-pildora { margin-top: 6px; }
+
+/* ===== Examen de fase ===== */
+.fase-examen-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+  padding: 22px 24px;
+  border-radius: var(--radio-lg);
+  border: 1px solid var(--borde);
+  background: linear-gradient(
+    120deg,
+    color-mix(in srgb, var(--fase-color, var(--primario)) 12%, var(--bg-2)),
+    var(--bg-2) 70%
+  );
+  border-left: 5px solid var(--fase-color, var(--primario));
+}
+.fase-examen-txt h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--fuente-display);
+  font-size: 1.15rem;
+  margin-bottom: 4px;
+  color: var(--fase-color, var(--primario));
+}
+.fase-examen-txt p { color: var(--texto-2); font-size: 0.9rem; max-width: 52ch; }
+.fase-examen-cta .btn { flex-shrink: 0; }
+
+.examen-fase-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: clamp(24px, 5vw, 44px) 20px;
+}
+.examen-fase-intro h1 { font-family: var(--fuente-display); }
+.examen-fase-nombre {
+  font-family: var(--fuente-sub);
+  font-weight: 600;
+  color: var(--fase-color, var(--primario));
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.examen-fase-intro p { color: var(--texto-2); }
+.examen-fase-guardado {
+  margin: 12px 0 18px;
+  padding: 11px 16px;
+  border-radius: var(--radio-sm);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+.examen-fase-guardado.ok { color: var(--verde); background: color-mix(in srgb, var(--verde) 12%, transparent); }
+.examen-fase-guardado.error { color: var(--urgencia); background: color-mix(in srgb, var(--urgencia) 10%, transparent); }
+.quiz-page-pie { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
+
+/* ===== Cuenta / autenticación ===== */
+.cuenta-inicial {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primario), var(--primario-claro));
+  color: #fff;
+  font-family: var(--fuente-sub);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.cuenta-wrap {
+  max-width: 440px;
+  margin: 0 auto;
+  padding: clamp(24px, 5vw, 48px) 20px;
+}
+.cuenta-card {
+  background: var(--bg-2);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-lg);
+  box-shadow: var(--sombra-md);
+  padding: clamp(22px, 4vw, 34px);
+}
+.cuenta-titulo { font-family: var(--fuente-display); margin-bottom: 18px; }
+.cuenta-tabs {
+  display: flex;
+  gap: 6px;
+  background: var(--bg-3);
+  border-radius: 999px;
+  padding: 4px;
+  margin-bottom: 22px;
+}
+.cuenta-tabs button {
+  flex: 1;
+  padding: 9px 12px;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--texto-2);
+  font-family: var(--fuente-sub);
+  font-weight: 600;
+  cursor: pointer;
+}
+.cuenta-tabs button.on { background: var(--bg-2); color: var(--texto); box-shadow: var(--sombra); }
+.cuenta-form, .cuenta-unir { display: flex; flex-direction: column; gap: 14px; }
+.cuenta-form label, .cuenta-unir label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: var(--fuente-sub);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--texto-2);
+}
+.cuenta-form input, .cuenta-unir input {
+  padding: 11px 14px;
+  border: 1.5px solid var(--borde-fuerte);
+  border-radius: var(--radio-sm);
+  background: var(--bg);
+  color: var(--texto);
+  font-family: var(--fuente-cuerpo);
+  font-size: 1rem;
+}
+.cuenta-form input:focus, .cuenta-unir input:focus {
+  outline: none;
+  border-color: var(--primario);
+}
+.cuenta-error {
+  color: var(--urgencia);
+  background: color-mix(in srgb, var(--urgencia) 10%, transparent);
+  border-radius: var(--radio-sm);
+  padding: 9px 12px;
+  font-size: 0.88rem;
+}
+.cuenta-ok {
+  color: var(--verde);
+  background: color-mix(in srgb, var(--verde) 12%, transparent);
+  border-radius: var(--radio-sm);
+  padding: 9px 12px;
+  font-size: 0.88rem;
+}
+.cuenta-sep {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0;
+  color: var(--texto-3);
+  font-size: 0.8rem;
+}
+.cuenta-sep::before, .cuenta-sep::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--borde);
+}
+.cuenta-google { width: 100%; justify-content: center; }
+.cuenta-datos { display: flex; flex-direction: column; gap: 12px; margin-bottom: 22px; }
+.cuenta-datos > div { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.cuenta-datos dt { color: var(--texto-3); font-size: 0.82rem; font-family: var(--fuente-sub); font-weight: 600; }
+.cuenta-datos dd { font-weight: 600; text-align: right; }
+.cuenta-badge {
+  text-transform: capitalize;
+  background: color-mix(in srgb, var(--primario) 14%, transparent);
+  color: var(--primario);
+  border-radius: 999px;
+  padding: 3px 12px;
+  font-size: 0.82rem;
+  font-family: var(--fuente-sub);
+}
+.cuenta-badge--ok { background: color-mix(in srgb, var(--verde) 16%, transparent); color: var(--verde); }
+.cuenta-unir { margin-top: 8px; padding-top: 20px; border-top: 1px solid var(--borde); }
+.cuenta-salir { width: 100%; justify-content: center; margin-top: 20px; }
+.cuenta-aviso { color: var(--texto-2); text-align: center; }
+html[data-tema='oscuro'] .cuenta-badge { color: var(--primario-claro); }
+
 /* ============================================================
    Sistema de animación (frescas, transform/opacity, 150-320ms)
    ============================================================ */

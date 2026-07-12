@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom'
 import { fasesNav as fases } from '../data/navIndice.js'
 import { useProgress } from '../context/ProgressContext.jsx'
+import { useAuth } from '../context/AuthContext.jsx'
 import Icon from './Icon.jsx'
 import LogoPTEM from './marca/LogoPTEM.jsx'
 import LogoIcono from './marca/LogoIcono.jsx'
@@ -31,6 +32,7 @@ export default function Layout({ children }) {
   const [abierto, setAbierto] = useState(false)
   const [consulta, setConsulta] = useState('')
   const { estado, alternarTema } = useProgress()
+  const { autenticado, perfil, user } = useAuth()
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -84,6 +86,21 @@ export default function Layout({ children }) {
             aria-label="Buscar en el temario"
           />
         </form>
+
+        <NavLink
+          to="/cuenta"
+          className="icon-link cuenta-link"
+          title={autenticado ? 'Mi cuenta' : 'Entrar'}
+          aria-label="Mi cuenta"
+        >
+          {autenticado ? (
+            <span className="cuenta-inicial">
+              {(perfil?.nombre || user?.email || '?').charAt(0).toUpperCase()}
+            </span>
+          ) : (
+            <Icon name="usuario" size={19} />
+          )}
+        </NavLink>
 
         <button
           className="icon-link tema-btn"
