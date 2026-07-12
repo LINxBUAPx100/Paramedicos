@@ -14,6 +14,8 @@ function traducirError(e) {
   if (c.includes('weak-password')) return 'La contraseña debe tener al menos 6 caracteres.'
   if (c.includes('invalid-email')) return 'El correo no es válido.'
   if (c.includes('popup-closed')) return 'Cerraste la ventana de Google antes de terminar.'
+  if (c.includes('unauthorized-domain'))
+    return 'Este dominio aún no está autorizado para el login con Google. El administrador debe añadirlo en Firebase → Authentication → Authorized domains.'
   if (c.includes('network')) return 'Sin conexión. Revisa tu internet.'
   return e?.message || 'Ocurrió un error. Intenta de nuevo.'
 }
