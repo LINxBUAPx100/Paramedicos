@@ -136,54 +136,59 @@ export default function ExamenFasePage() {
   )
 }
 
-// Mensaje personalizado según la CALIFICACIÓN del módulo (60% examen +
-// 40% actividades de los temas). Cada rango tiene su propia personalidad.
+// Mensaje según la CALIFICACIÓN del módulo (60% examen + 40% actividades de los
+// temas). Reconocimiento + diagnóstico + siguiente acción: corrige sin humillar
+// y motiva sin exagerar (sin emojis ni afirmaciones que la nota no demuestra).
 function mensajeDeNota(n, nombre) {
-  const N = nombre ? `, ${nombre}` : ''
-  if (n >= 100) return {
-    emoji: '💯',
-    titulo: `¡PERFECTO${N}!`,
-    texto: 'Cien de cien: cada tema, cada actividad y cada pregunta del examen. Esto ya es nivel instructor. Que nadie te detenga.',
+  const nota = Math.max(0, Math.min(100, Number(n) || 0))
+  const saludo = nombre ? `${nombre}, ` : ''
+  if (nota >= 95) return {
+    icono: 'medalla',
+    tono: 'sobresaliente',
+    titulo: `${saludo}dominas este módulo`,
+    texto: 'Tu resultado demuestra un dominio sobresaliente de los contenidos. Revisa tus respuestas para consolidar los últimos detalles y continúa con el siguiente módulo.',
   }
-  if (n === 99) return {
-    emoji: '😱',
-    titulo: `¿¡99${N}!?`,
-    texto: 'TAN cerca de la perfección que hasta duele. Te separó UNA respuesta… y esa ya nunca se te va a olvidar. Resultado de élite.',
+  if (nota >= 90) return {
+    icono: 'trofeo',
+    tono: 'excelente',
+    titulo: `${saludo}lograste un excelente resultado`,
+    texto: 'Comprendes los conceptos principales y los aplicaste correctamente. Repasa los pocos puntos pendientes para fortalecer todavía más tu preparación.',
   }
-  if (n >= 90) return {
-    emoji: '🏆',
-    titulo: `¡Impresionante${N}!`,
-    texto: 'Arriba de 90: este módulo ya es tuyo. Este es el nivel que salva vidas en la calle. Vas más que listo para lo que sigue.',
+  if (nota >= 80) return {
+    icono: 'tendencia',
+    tono: 'solido',
+    titulo: `${saludo}tienes un desempeño sólido`,
+    texto: 'La base del módulo está bien comprendida. Identifica los temas con menor puntuación, refuérzalos y continúa avanzando.',
   }
-  if (n >= 80) return {
-    emoji: '🎉',
-    titulo: `¡Excelente trabajo${N}!`,
-    texto: 'Desempeño sólido: los conceptos importantes ya son tuyos. Dale una repasada a lo que fallaste y estás del otro lado.',
+  if (nota >= 76) return {
+    icono: 'verificado',
+    tono: 'aprobado',
+    titulo: `${saludo}completaste el módulo`,
+    texto: 'Alcanzaste los objetivos necesarios para aprobar. Antes de continuar, dedica unos minutos a revisar tus errores y asegurar los conceptos clave.',
   }
-  if (n >= 76) return {
-    emoji: '👏',
-    titulo: `¡Bien hecho${N}!`,
-    texto: 'Aprobaste con margen. Hay detalles por pulir, pero la base está firme. El siguiente módulo te espera.',
+  if (nota >= 70) return {
+    icono: 'alerta',
+    tono: 'aprobado-ajustado',
+    titulo: `${saludo}aprobaste, pero aún puedes reforzarlo`,
+    texto: 'Cumpliste con la calificación mínima. Conviene repasar los temas con menor resultado antes de avanzar, especialmente aquellos que requieren aplicación práctica.',
   }
-  if (n >= 70) return {
-    emoji: '😅',
-    titulo: `Aprobado… por poquito${N}`,
-    texto: 'Cruzaste la línea del 70 raspando. Cuenta — ¡pero en la ambulancia no hay opción múltiple! Dale otra vuelta a tus temas flojos antes de avanzar.',
+  if (nota >= 60) return {
+    icono: 'diana',
+    tono: 'cerca',
+    titulo: `${saludo}estás cerca de aprobar`,
+    texto: 'Ya tienes parte importante del módulo comprendida. Revisa los temas con menor porcentaje, completa las actividades pendientes y vuelve a intentarlo.',
   }
-  if (n >= 60) return {
-    emoji: '🤏',
-    titulo: `Te faltó tantito${N}`,
-    texto: 'Te quedaste a unos puntos del 70. El módulo ya lo entiendes; ahora hay que afinarlo. Revisa los temas con menor porcentaje y repite el examen: el siguiente intento es tuyo.',
-  }
-  if (n >= 50) return {
-    emoji: '💪',
-    titulo: `Vas a medio camino${N}`,
-    texto: 'La mitad ya está. Completa los quizzes de los temas que te faltan, repasa los que salieron bajos y vuelve a presentar el examen.',
+  if (nota >= 50) return {
+    icono: 'herramientas',
+    tono: 'refuerzo',
+    titulo: `${saludo}necesitas reforzar algunos fundamentos`,
+    texto: 'Has avanzado, pero todavía hay conceptos esenciales que requieren práctica. Trabaja primero en los temas con menor desempeño y después repite la evaluación.',
   }
   return {
-    emoji: '📚',
-    titulo: `Aún no${N}…`,
-    texto: 'Este módulo todavía no está dominado, y en paramedicina los cimientos lo son todo. Vuelve a los temas, haz sus actividades y quizzes, y repite el examen. El siguiente intento será otra historia.',
+    icono: 'libro',
+    tono: 'inicio',
+    titulo: `${saludo}vamos a fortalecer este módulo`,
+    texto: 'Este resultado indica que necesitas revisar los contenidos desde la base. Avanza tema por tema, completa las actividades y utiliza los resultados para orientar tu siguiente intento.',
   }
 }
 
@@ -272,7 +277,9 @@ function ModuloCompletado({ fase, pct, onCerrar }) {
     <div className="modulo-fin" role="dialog" aria-modal="true" aria-label="Módulo completado">
       <div className="modulo-fin-card" style={{ '--fase-color': fase.color }}>
         <small className="modulo-fin-fase">Fase {fase.numero} · {fase.titulo}</small>
-        <span className="modulo-fin-emoji" aria-hidden="true">{m.emoji}</span>
+        <span className={`modulo-fin-icono t-${m.tono}`} aria-hidden="true">
+          <Icon name={m.icono} size={26} />
+        </span>
         <h2>{m.titulo}</h2>
 
         <div className={`modulo-fin-nota ${nivelNota}`}>

@@ -104,6 +104,28 @@ const paths = {
       <path d="M8 10.5V7a4 4 0 0 1 8 0v3.5" />
     </>
   ),
+  // Resultados del examen (línea, coherentes con el sistema visual).
+  medalla: (
+    <>
+      <circle cx="12" cy="9" r="6" />
+      <path d="M8.5 13.8 6.5 21l5.5-3 5.5 3-2-7.2" />
+    </>
+  ),
+  trofeo: (
+    <>
+      <path d="M7 4h10v5a5 5 0 0 1-10 0V4Z" />
+      <path d="M7 6H4v1a3 3 0 0 0 3 3M17 6h3v1a3 3 0 0 1-3 3" />
+      <path d="M12 14v3M9 21h6M10 21v-2h4v2" />
+    </>
+  ),
+  tendencia: <path d="M3 17l6-6 4 4 8-8M15 7h6v6" />,
+  verificado: (
+    <>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M8.4 12.4 11 15l4.6-5.4" />
+    </>
+  ),
+  herramientas: <path d="M15 6.5A3.5 3.5 0 0 0 10.5 11l-6.2 6.2a1.6 1.6 0 0 0 2.3 2.3L12.9 13.5A3.5 3.5 0 0 0 17.5 9l-2.3 2.3-1.7-.4-.4-1.7L15 6.5Z" />,
 }
 
 export default function Icon({ name, size = 22, className = '', strokeWidth = 1.75, style }) {

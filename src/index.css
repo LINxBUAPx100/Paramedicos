@@ -4457,7 +4457,33 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   border-top: 6px solid var(--fase-color, var(--primario));
   box-shadow: 0 30px 80px -20px rgb(0 0 0 / 0.55);
 }
-.modulo-fin-emoji { font-size: 2.4rem; line-height: 1; }
+/* Icono de resultado: badge circular con color según el rango de la nota */
+.modulo-fin-icono {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  color: var(--primario);
+  background: color-mix(in srgb, var(--primario) 12%, transparent);
+}
+.modulo-fin-icono.t-sobresaliente,
+.modulo-fin-icono.t-excelente,
+.modulo-fin-icono.t-solido,
+.modulo-fin-icono.t-aprobado {
+  color: var(--verde);
+  background: color-mix(in srgb, var(--verde) 14%, transparent);
+}
+.modulo-fin-icono.t-aprobado-ajustado,
+.modulo-fin-icono.t-cerca {
+  color: var(--alerta, #f59e0b);
+  background: color-mix(in srgb, var(--alerta, #f59e0b) 16%, transparent);
+}
+.modulo-fin-icono.t-refuerzo,
+.modulo-fin-icono.t-inicio {
+  color: var(--urgencia);
+  background: color-mix(in srgb, var(--urgencia) 12%, transparent);
+}
 .modulo-fin-fase {
   font-family: var(--fuente-sub);
   font-size: 0.8rem;

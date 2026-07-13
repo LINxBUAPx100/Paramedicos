@@ -119,11 +119,12 @@ export default function CompartirCodigo({ codigo, nombre, contexto = '', tipo = 
   }
 
   const compartir = async () => {
-    // Hoja nativa (móvil): el enlace va en `url` aparte para que las apps lo
-    // reconozcan mejor. Si el usuario cancela, NO abrimos el panel.
+    // Hoja nativa (móvil): el enlace YA va dentro de `texto`, así que NO lo
+    // pasamos también en `url` (WhatsApp lo anexaría al final y saldría dos
+    // veces). Si el usuario cancela, NO abrimos el panel.
     if (navigator.share) {
       try {
-        await navigator.share({ title: titulo, text: texto, url })
+        await navigator.share({ title: titulo, text: texto })
       } catch { /* cancelado o error: no hacemos nada */ }
       return
     }
