@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { fasesNav } from '../data/navIndice.js'
 import { recursosGenerales } from '../data/recursosDescarga.js'
 import { useAuth } from '../context/AuthContext.jsx'
@@ -21,6 +21,8 @@ const TOTAL_TEMAS = fasesNav.reduce((s, f) => s + f.temas.length, 0)
 
 export default function TemarioPage() {
   const { cargando, esStaff, esSuperadmin, academiaId, grupoId: miGrupoId, puedeVerCodigos } = useAuth()
+  const [params] = useSearchParams()
+  const acaParam = (params.get('aca') || '').toUpperCase()
 
   const [academias, setAcademias] = useState([]) // solo superadmin
   const [acaSel, setAcaSel] = useState('')
@@ -29,6 +31,7 @@ export default function TemarioPage() {
   const [ocultas, setOcultas] = useState({ fases: [], temas: [] })
   const [guardando, setGuardando] = useState(false)
   const [error, setError] = useState('')
+  const [aplicado, setAplicado] = useState(false)
 
   const academiaActiva = esSuperadmin ? acaSel : academiaId
 
@@ -42,7 +45,9 @@ export default function TemarioPage() {
         const lista = await listarAcademias()
         if (!activo) return
         setAcademias(lista)
-        setAcaSel((prev) => prev || lista[0]?.id || '')
+        // Preselecciona la academia del enlace (?aca=CODE) si existe.
+        const preferida = lista.some((a) => a.id === acaParam) ? acaParam : ''
+        setAcaSel((prev) => prev || preferida || lista[0]?.id || '')
       } catch {
         if (activo) setError('No se pudieron cargar las academias.')
       }
@@ -162,6 +167,44 @@ export default function TemarioPage() {
     guardar(todoOculto ? { fases: [], temas: [] } : { fases: [...TODAS_LAS_FASES], temas: [] })
   }
 
+  // Replica la configuración actual a TODOS los grupos de la academia a la vez.
+  const aplicarATodos = async () => {
+    if (!grupos || grupos.length < 2) return
+    const ok = window.confirm(
+      `¿Aplicar esta configuración de acceso a los ${grupos.length} grupos de la academia?\n\n` +
+      'Sobrescribe lo que cada grupo tenga configurado ahora mismo.'
+    )
+    if (!ok) return
+    setGuardando(true)
+    setError('')
+    setAplicado(false)
+    try {
+      const [{ db }, fs] = await Promise.all([
+        import('../lib/firebase/init.js'),
+        import('firebase/firestore'),
+      ])
+      const batch = fs.writeBatch(db)
+      grupos.forEach((g) => {
+        batch.update(fs.doc(db, 'grupos', g.id), {
+          fasesOcultas: ocultas.fases,
+          temasOcultos: ocultas.temas,
+        })
+      })
+      await batch.commit()
+      setGrupos((gs) => gs.map((g) => ({ ...g, fasesOcultas: ocultas.fases, temasOcultos: ocultas.temas })))
+      setAplicado(true)
+      setTimeout(() => setAplicado(false), 3000)
+    } catch (err) {
+      setError(
+        String(err?.code || '').includes('permission-denied')
+          ? 'Sin permisos: publica las reglas actualizadas de firestore.rules en la consola.'
+          : 'No se pudo aplicar a todos los grupos.'
+      )
+    } finally {
+      setGuardando(false)
+    }
+  }
+
   const temasOcultosTotal = fasesNav.reduce((s, f) => {
     if (faseOculta(f.id)) return s + f.temas.length
     return s + f.temas.filter((t) => temaOcultoSolo(t.id)).length
@@ -206,11 +249,18 @@ export default function TemarioPage() {
               {todoOculto ? 'Mostrar todo' : 'Ocultar todo'}
             </button>
           )}
+          {grupo && grupos && grupos.length > 1 && (
+            <button className="btn btn-primario temario-aplicar-todos" onClick={aplicarATodos} disabled={guardando}>
+              <Icon name="capas" size={15} /> Aplicar a los {grupos.length} grupos
+            </button>
+          )}
           {grupo && (
             <span className="temario-resumen-ocultos">
-              {temasOcultosTotal === 0
-                ? 'El grupo ve todo el contenido.'
-                : `${temasOcultosTotal} de ${TOTAL_TEMAS} temas ocultos para este grupo.`}
+              {aplicado
+                ? '✓ Aplicado a todos los grupos.'
+                : temasOcultosTotal === 0
+                  ? 'El grupo ve todo el contenido.'
+                  : `${temasOcultosTotal} de ${TOTAL_TEMAS} temas ocultos para este grupo.`}
               {guardando && ' Guardando…'}
             </span>
           )}

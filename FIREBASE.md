@@ -83,6 +83,13 @@ carrusel del Home y de las listas de fase; si entra por URL directa ve
 borrosas y con candado (como logros por desbloquear). Alumnos sin grupo y el
 staff ven todo.
 
+**Aplicar a todos los grupos:** además del control por grupo, hay un botón
+**"Aplicar a los N grupos"** que replica la configuración actual a TODOS los
+grupos de la academia de una vez (sobrescribe lo de cada uno). Se llega a esta
+gestión desde el botón **"Gestionar qué contenido ve cada grupo"** en la
+sección Grupos del panel (director) o del dashboard de academia (super-admin);
+el super-admin tiene exactamente las mismas capacidades que el director.
+
 ## Privacidad de los códigos (academia y grupos)
 
 Los **códigos** de academia y de grupo solo los ven el **director** y el

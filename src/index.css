@@ -628,37 +628,146 @@ textarea:focus-visible,
 .compartir-pop {
   position: absolute;
   right: 0;
-  top: calc(100% + 6px);
+  top: calc(100% + 8px);
   z-index: 30;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  min-width: 190px;
-  padding: 8px;
+  gap: 12px;
+  width: 340px;
+  max-width: min(340px, calc(100vw - 32px));
+  padding: 16px;
   border: 1px solid var(--borde);
   border-radius: var(--radio);
   background: var(--bg-1);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.32);
+  animation: compartir-aparece 0.16s ease-out;
 }
-.compartir-pop a,
-.compartir-pop button {
+@keyframes compartir-aparece {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+.compartir-encabezado {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.compartir-encabezado strong {
+  display: block;
+  font-family: var(--fuente-display);
+  font-size: 1rem;
+}
+.compartir-encabezado span {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--texto-2);
+  margin-top: 2px;
+}
+.compartir-cerrar {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: var(--radio-sm);
+  background: var(--bg-3);
+  color: var(--texto-2);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.compartir-cerrar:hover { background: var(--bg-2); color: var(--texto); }
+
+/* Vista previa de la invitación */
+.compartir-vista-previa {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border-radius: var(--radio-sm);
+  background: var(--bg-3);
+  border: 1px solid var(--borde);
+}
+.compartir-academia {
+  font-family: var(--fuente-display);
+  font-weight: 800;
+  font-size: 0.98rem;
+  letter-spacing: -0.01em;
+}
+.compartir-dato small,
+.compartir-codigo small {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--texto-3);
+  margin-bottom: 2px;
+}
+.compartir-dato strong { font-size: 0.9rem; font-weight: 600; }
+.compartir-codigo strong {
+  display: block;
+  padding: 8px 12px;
+  border-radius: var(--radio-sm);
+  background: var(--bg-1);
+  border: 1px dashed color-mix(in srgb, var(--primario) 45%, transparent);
+  color: var(--primario);
+  font-family: ui-monospace, SFMono-Regular, 'Cascadia Code', Consolas, monospace;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+/* Acciones, ordenadas por importancia */
+.compartir-acciones { display: flex; flex-direction: column; gap: 8px; }
+.compartir-acciones a,
+.compartir-acciones button {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 7px;
-  padding: 8px 10px;
+  padding: 10px 12px;
   border-radius: var(--radio-sm);
-  border: none;
+  border: 1px solid var(--borde);
   background: var(--bg-3);
   color: var(--texto);
   font: inherit;
-  font-size: 0.82rem;
-  text-align: left;
+  font-size: 0.84rem;
+  font-weight: 600;
   text-decoration: none;
   cursor: pointer;
 }
-.compartir-pop a:hover,
-.compartir-pop button:hover { background: var(--bg-2); }
-.compartir-wa { color: #128c7e !important; font-weight: 600; }
+.compartir-acciones a:hover,
+.compartir-acciones button:hover { background: var(--bg-2); }
+.compartir-wa {
+  color: #fff !important;
+  background: #25d366 !important;
+  border-color: #1eb457 !important;
+  font-weight: 700 !important;
+}
+.compartir-wa:hover { filter: brightness(1.05); }
+.compartir-completa {
+  border-color: color-mix(in srgb, var(--primario) 40%, transparent) !important;
+  color: var(--primario) !important;
+  background: color-mix(in srgb, var(--primario) 8%, transparent) !important;
+}
+.compartir-acciones-secundarias { display: flex; gap: 8px; }
+.compartir-acciones-secundarias button { flex: 1; font-size: 0.8rem; padding: 8px 6px; }
+.compartir-sr { margin: 0; }
+.sr-only,
+.compartir-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 
 /* ===== Banner de invitación (Cuenta) ===== */
 .cuenta-invitacion {
@@ -996,7 +1105,88 @@ textarea:focus-visible,
   margin-top: 16px;
 }
 .temario-toggle-todo { white-space: nowrap; }
+.temario-aplicar-todos { white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
 .temario-resumen-ocultos { color: var(--texto-3); font-size: 0.84rem; padding-bottom: 8px; }
+
+/* Acceso directo a la gestión de visibilidad desde el panel de grupos */
+.panel-cta-visibilidad {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  padding: 9px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--primario);
+  background: color-mix(in srgb, var(--primario) 8%, transparent);
+  color: var(--primario);
+  font-size: 0.86rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.panel-cta-visibilidad:hover { background: color-mix(in srgb, var(--primario) 16%, transparent); }
+
+/* ===== Facturación (super-admin) ===== */
+.admin-facturacion,
+.admin-anuncio { display: flex; flex-direction: column; gap: 12px; margin-top: 6px; }
+.admin-facturacion h2,
+.admin-anuncio h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--fuente-display);
+  font-size: 1.2rem;
+}
+.fact-codigo { display: block; font-family: var(--fuente-cifra); font-size: 0.74rem; color: var(--texto-3); }
+.fact-plan { font-size: 0.86rem; }
+.fact-fecha { display: inline-flex; flex-direction: column; line-height: 1.15; font-size: 0.86rem; }
+.fact-fecha small { color: var(--texto-3); font-size: 0.72rem; }
+.fact-fecha.porvencer { color: var(--ambar); }
+.fact-fecha.porvencer small { color: var(--ambar); }
+.fact-fecha.vencida { color: var(--urgencia); font-weight: 600; }
+.fact-fecha.vencida small { color: var(--urgencia); }
+.fact-input {
+  padding: 6px 9px;
+  border-radius: var(--radio-sm);
+  border: 1px solid var(--borde);
+  background: var(--bg-2);
+  color: var(--texto);
+  font: inherit;
+  font-size: 0.84rem;
+  max-width: 150px;
+}
+.admin-anuncio-activo {
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 8px !important;
+  align-self: flex-end;
+}
+
+/* ===== Banner de anuncio global (todos los usuarios) ===== */
+.anuncio-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #fff;
+}
+.anuncio-banner.info { background: var(--primario); }
+.anuncio-banner.alerta { background: var(--urgencia); }
+.anuncio-banner-txt { flex: 1; min-width: 0; }
+.anuncio-banner-cerrar {
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.anuncio-banner-cerrar:hover { background: rgba(255, 255, 255, 0.35); }
 .cuenta-aviso {
   padding: 10px 14px;
   border-radius: var(--radio-sm);

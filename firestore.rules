@@ -237,5 +237,12 @@ service cloud.firestore {
       // migrar academiaId al cambiar el código de una academia) o borrarlos.
       allow update, delete: if esSuper();
     }
+
+    // --- CONFIGURACIÓN global de la plataforma (solo super-admin) ---
+    //  p. ej. configuracion/anuncio = banner que ven todos los usuarios.
+    match /configuracion/{doc} {
+      allow read: if true;         // el anuncio se muestra a cualquiera
+      allow write: if esSuper();   // solo el super-admin lo edita
+    }
   }
 }

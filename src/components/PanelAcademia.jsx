@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { fasesNav } from '../data/navIndice.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import Icon from './Icon.jsx'
@@ -492,7 +493,7 @@ function AccesoCodigos({ academiaId, academiaNombre = '', grupos }) {
             <code className="pc-codigo">{academiaId}</code>
             <span className="pc-acciones">
               <button className="pc-copiar" onClick={() => copiar(academiaId)}>Copiar</button>
-              <CompartirCodigo codigo={academiaId} nombre={academiaNombre || academiaId} />
+              <CompartirCodigo codigo={academiaId} nombre={academiaNombre || academiaId} tipo="academia" />
             </span>
           </li>
           {grupos.map((g) => (
@@ -501,7 +502,7 @@ function AccesoCodigos({ academiaId, academiaNombre = '', grupos }) {
               <code className="pc-codigo">{g.id}</code>
               <span className="pc-acciones">
                 <button className="pc-copiar" onClick={() => copiar(g.id)}>Copiar</button>
-                <CompartirCodigo codigo={g.id} nombre={academiaNombre || academiaId} contexto={g.nombre} />
+                <CompartirCodigo codigo={g.id} nombre={academiaNombre || academiaId} contexto={g.nombre} tipo="grupo" />
               </span>
             </li>
           ))}
@@ -849,7 +850,7 @@ export function CodigosPrueba({ academiaId = null, academiaNombre = '', miUid, a
         <p className="pc-nuevo" role="status">
           Código creado: <code>{nuevo}</code>
           <button className="pc-copiar" onClick={() => copiar(nuevo)}>Copiar</button>
-          <CompartirCodigo codigo={nuevo} nombre={academiaNombre || academiaEfectiva || 'PTEM'} contexto="acceso de prueba" />
+          <CompartirCodigo codigo={nuevo} nombre={academiaNombre || academiaEfectiva || 'PTEM'} tipo="prueba" />
         </p>
       )}
       {error && <p className="cuenta-error" role="alert">{error}</p>}
@@ -879,7 +880,7 @@ export function CodigosPrueba({ academiaId = null, academiaNombre = '', miUid, a
                 <span className="pc-acciones">
                   <button className="pc-copiar" onClick={() => copiar(c.id)}>Copiar</button>
                   {est === 'activo' && (
-                    <CompartirCodigo codigo={c.id} nombre={academiaNombre || c.academiaId || 'PTEM'} contexto="acceso de prueba" />
+                    <CompartirCodigo codigo={c.id} nombre={academiaNombre || c.academiaId || 'PTEM'} tipo="prueba" />
                   )}
                   {est !== 'expirado' && (
                     <button className="pc-toggle" onClick={() => alternar(c)}>
@@ -996,6 +997,11 @@ function GruposAcademia({ academiaId, academiaNombre = '', grupos, miembros, miU
         <strong> Mi cuenta → Únete con tu código</strong>, y sus avances quedan separados por grupo.
       </p>
 
+      <Link to={`/temario?aca=${academiaId}`} className="panel-cta-visibilidad">
+        <Icon name="ojo" size={16} /> Gestionar qué contenido ve cada grupo
+        <Icon name="chevronDer" size={15} />
+      </Link>
+
       {/* Código de la ACADEMIA: unir sin grupo específico. */}
       <div className="pc-academia-codigo">
         <span className="pca-label">Código de tu academia</span>
@@ -1063,7 +1069,7 @@ function GruposAcademia({ academiaId, academiaNombre = '', grupos, miembros, miU
                 <span className="pc-acciones">
                   <button className="pc-copiar" onClick={() => copiar(g.id)}>Copiar</button>
                   {activo && (
-                    <CompartirCodigo codigo={g.id} nombre={academiaNombre || academiaId} contexto={g.nombre} />
+                    <CompartirCodigo codigo={g.id} nombre={academiaNombre || academiaId} contexto={g.nombre} tipo="grupo" />
                   )}
                   <button
                     className="pc-copiar"

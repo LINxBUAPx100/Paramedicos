@@ -73,6 +73,7 @@ export default function Layout({ children }) {
 
   return (
     <div className="app">
+      <AnuncioBanner />
       <header className="topbar">
         <button
           className="menu-btn"
@@ -224,6 +225,42 @@ export default function Layout({ children }) {
           <span>Desarrollado por Riders.Media · 2026 · Todos los derechos reservados</span>
         </div>
       </footer>
+    </div>
+  )
+}
+
+// Banner del anuncio global (lo publica el super-admin en /admin). Se muestra
+// a todos; cada anuncio se puede descartar y no reaparece hasta que cambie.
+function AnuncioBanner() {
+  const [anuncio, setAnuncio] = useState(null)
+  const [cerrado, setCerrado] = useState(false)
+
+  useEffect(() => {
+    let vivo = true
+    ;(async () => {
+      const { obtenerAnuncio } = await import('../lib/firebase/plataforma.js')
+      const a = await obtenerAnuncio()
+      if (!vivo || !a || !a.activo || !a.mensaje) return
+      const clave = `ptem-anuncio-${a.actualizado?.seconds || 0}`
+      let visto = false
+      try { visto = localStorage.getItem(clave) === '1' } catch { /* nada */ }
+      if (!visto) setAnuncio({ ...a, clave })
+    })()
+    return () => { vivo = false }
+  }, [])
+
+  if (!anuncio || cerrado) return null
+
+  const descartar = () => {
+    try { localStorage.setItem(anuncio.clave, '1') } catch { /* nada */ }
+    setCerrado(true)
+  }
+
+  return (
+    <div className={`anuncio-banner ${anuncio.tipo === 'alerta' ? 'alerta' : 'info'}`} role="status">
+      <Icon name={anuncio.tipo === 'alerta' ? 'alerta' : 'chispa'} size={17} />
+      <span className="anuncio-banner-txt">{anuncio.mensaje}</span>
+      <button className="anuncio-banner-cerrar" onClick={descartar} aria-label="Cerrar anuncio">×</button>
     </div>
   )
 }

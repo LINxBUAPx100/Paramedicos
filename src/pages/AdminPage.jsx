@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import { ETIQUETA_ROL, CodigosPrueba } from '../components/PanelAcademia.jsx'
+import { FacturacionAcademias, AnuncioGlobal } from '../components/AdminPlataforma.jsx'
 import Icon from '../components/Icon.jsx'
 
 // ============================================================
@@ -213,6 +214,10 @@ export default function AdminPage() {
             )}
             <NuevaAcademia onCreada={refrescar} />
           </section>
+
+          <FacturacionAcademias academias={academias} onCambio={refrescar} />
+
+          <AnuncioGlobal />
 
           <section className="admin-usuarios">
             <h2><Icon name="usuario" size={20} /> Usuarios y roles</h2>

@@ -61,6 +61,15 @@ const paths = {
   flecha: <path d="M5 12h14M13 6l6 6-6 6" />,
   flechaIzq: <path d="M19 12H5M11 6l-6 6 6 6" />,
   descarga: <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14" />,
+  // Compartir: tres nodos conectados (símbolo estándar).
+  compartir: (
+    <>
+      <circle cx="18" cy="5" r="2.6" />
+      <circle cx="6" cy="12" r="2.6" />
+      <circle cx="18" cy="19" r="2.6" />
+      <path d="M8.3 10.8 15.7 6.4M8.3 13.2l7.4 4.4" />
+    </>
+  ),
   sol: (
     <>
       <circle cx="12" cy="12" r="4" />
