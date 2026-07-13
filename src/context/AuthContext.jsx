@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { esCorreoSupremo } from '../lib/firebase/supremos.js'
+import { capacidadesDe, planEfectivo } from '../lib/capacidades.js'
 
 const AuthContext = createContext(null)
 
@@ -198,6 +199,11 @@ export function AuthProvider({ children }) {
     esSupremo,
     esSuperadmin,
     esStaff: esSuperadmin || ROLES_STAFF.includes(rol),
+    // Plan comercial y capacidades de LA ACADEMIA DEL USUARIO (fuente única:
+    // src/lib/capacidades.js). El superadmin opera academias ajenas desde
+    // /admin con los datos de cada academia, no con estos.
+    planComercial: planEfectivo(academia || null),
+    capacidades: capacidadesDe(academia || null),
     // Ver los CÓDIGOS de academia/grupo: director y super-admin siempre; un
     // profesor solo si un director le aprobó la solicitud (perfil.puedeVerCodigos).
     puedeVerCodigos:

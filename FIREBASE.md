@@ -41,6 +41,22 @@ rotar las contraseñas de las cuentas de prueba `test-*` (se compartieron en
 texto plano) y tratar el código de academia como una invitación privada — si
 se filtra, cámbialo desde Facturación → Editar.
 
+### Planes comerciales (Fase 1 del plan LMS) — REPUBLICAR
+
+Las academias tienen ahora un **plan comercial** `planComercial`
+(`base | pro | curso`), distinto del campo `plan` (que es la periodicidad de
+facturación, texto libre). Las capacidades de cada plan viven en
+`src/lib/capacidades.js` (ver [PLAN-LMS.md](./PLAN-LMS.md)).
+
+- Academias creadas ANTES de este cambio (sin `planComercial`) se tratan como
+  **Pro** para conservar todo lo que ya tenían; asigna su plan real desde
+  `/admin → Facturación → Editar` (aparecen con `*`).
+- Las academias de tipo **Paramédico avanzado exigen plan Pro** (la UI lo
+  fuerza y `crearAcademia`/`actualizarFacturacion` lo validan).
+- La regla de personalización del director exige plan `pro|curso`
+  (`resource.data.get('planComercial', 'pro')`) — **republica las reglas** para
+  que el candado exista también en el servidor.
+
 ## Admin supremo (por correo)
 
 `mihayolo228@gmail.com` es el **admin supremo**: las reglas

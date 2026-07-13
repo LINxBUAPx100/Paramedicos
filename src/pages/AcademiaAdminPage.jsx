@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import PanelAcademia from '../components/PanelAcademia.jsx'
 import PersonalizacionAcademia from '../components/PersonalizacionAcademia.jsx'
+import { ETIQUETA_PLAN, ETIQUETA_TIPO, planEfectivo } from '../lib/capacidades.js'
 import Icon from '../components/Icon.jsx'
 
 // Dashboard individual de UNA academia, visto por el SUPER-ADMIN
@@ -117,8 +118,9 @@ export default function AcademiaAdminPage() {
           <h1><Icon name="temario" size={24} /> {academia.nombre || academia.id}</h1>
           <p>
             Código <strong>{academia.id}</strong>
-            {academia.tipo ? <> · tipo <strong>{academia.tipo}</strong></> : null}
-            {academia.plan ? <> · plan <strong>{academia.plan}</strong></> : null}
+            {' · '}<strong>{ETIQUETA_TIPO[academia.tipo] || academia.tipo || 'Paramédico básico'}</strong>
+            {' · '}plan <strong>{ETIQUETA_PLAN[planEfectivo(academia)]}</strong>
+            {academia.plan ? <> · facturación <strong>{academia.plan}</strong></> : null}
           </p>
         </div>
         <div className="admin-academia-acciones">

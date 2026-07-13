@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react'
+import {
+  PLANES, TIPOS, ETIQUETA_PLAN, ETIQUETA_TIPO, planEfectivo, validarPlanTipo,
+} from '../lib/capacidades.js'
 import Icon from './Icon.jsx'
 
 // Secciones EXCLUSIVAS del super-administrador (los directores no las ven):
@@ -48,9 +51,11 @@ export function FacturacionAcademias({ academias, onCambio }) {
     })
 
   const guardarEdit = () => {
-    const { id, nombre, codigo, plan, fecha } = edit
+    const { id, nombre, codigo, planComercial, tipo, plan, fecha } = edit
     const nuevoCodigo = String(codigo || '').trim().toUpperCase()
     const cambiaCodigo = nuevoCodigo && nuevoCodigo !== id
+    const errorPlan = validarPlanTipo(planComercial, tipo)
+    if (errorPlan) { setError(errorPlan); return }
     // Cambiar el código migra el doc a un ID nuevo y arrastra todas sus
     // referencias: es pesado y el código anterior deja de funcionar → confirma.
     if (cambiaCodigo && !window.confirm(
@@ -62,7 +67,7 @@ export function FacturacionAcademias({ academias, onCambio }) {
     setEdit(null)
     return correr(id, async () => {
       const { actualizarFacturacion } = await import('../lib/firebase/plataforma.js')
-      await actualizarFacturacion(id, { nombre, plan, fechaRenovacion: fecha || null })
+      await actualizarFacturacion(id, { nombre, planComercial, tipo, plan, fechaRenovacion: fecha || null })
       if (cambiaCodigo) {
         const { cambiarCodigoAcademia } = await import('../lib/firebase/admin.js')
         await cambiarCodigoAcademia(id, nuevoCodigo)
@@ -133,9 +138,49 @@ export function FacturacionAcademias({ academias, onCambio }) {
                     )}
                   </td>
                   <td>
-                    {enEdicion
-                      ? <input className="fact-input" type="text" value={edit.plan} onChange={(e) => setEdit({ ...edit, plan: e.target.value })} placeholder="p. ej. anual" />
-                      : <span className="fact-plan">{a.plan || '—'}</span>}
+                    {enEdicion ? (
+                      <div className="fact-edit-aca">
+                        <select
+                          className="fact-input"
+                          value={edit.planComercial}
+                          aria-label="Plan comercial"
+                          onChange={(e) => setEdit({ ...edit, planComercial: e.target.value })}
+                        >
+                          {PLANES.map((p) => (
+                            <option key={p} value={p} disabled={Boolean(validarPlanTipo(p, edit.tipo))}>
+                              {ETIQUETA_PLAN[p]}
+                            </option>
+                          ))}
+                        </select>
+                        <select
+                          className="fact-input"
+                          value={edit.tipo}
+                          aria-label="Tipo de academia"
+                          onChange={(e) => {
+                            const t = e.target.value
+                            setEdit({ ...edit, tipo: t, planComercial: t === 'avanzado' ? 'pro' : edit.planComercial })
+                          }}
+                        >
+                          {TIPOS.map((t) => <option key={t} value={t}>{ETIQUETA_TIPO[t]}</option>)}
+                        </select>
+                        <input
+                          className="fact-input"
+                          type="text"
+                          value={edit.plan}
+                          aria-label="Periodicidad de facturación"
+                          onChange={(e) => setEdit({ ...edit, plan: e.target.value })}
+                          placeholder="periodicidad, p. ej. anual"
+                        />
+                      </div>
+                    ) : (
+                      <span className="fact-plan">
+                        <b className={`fact-plan-badge fact-plan-badge--${planEfectivo(a)}`}>
+                          {ETIQUETA_PLAN[planEfectivo(a)]}
+                          {!a.planComercial && <small title="Plan sin asignar: se trata como Pro (academia previa a los planes). Edita para fijarlo."> *</small>}
+                        </b>
+                        <small>{ETIQUETA_TIPO[a.tipo] || a.tipo || '—'}{a.plan ? ` · ${a.plan}` : ''}</small>
+                      </span>
+                    )}
                   </td>
                   <td>
                     {enEdicion ? (
@@ -172,7 +217,15 @@ export function FacturacionAcademias({ academias, onCambio }) {
                         </button>
                         <button
                           className="pc-copiar"
-                          onClick={() => setEdit({ id: a.id, nombre: a.nombre || '', codigo: a.id, plan: a.plan || '', fecha: seg(a) ? new Date(seg(a) * 1000).toISOString().slice(0, 10) : '' })}
+                          onClick={() => setEdit({
+                            id: a.id,
+                            nombre: a.nombre || '',
+                            codigo: a.id,
+                            planComercial: planEfectivo(a),
+                            tipo: a.tipo || 'basico',
+                            plan: a.plan || '',
+                            fecha: seg(a) ? new Date(seg(a) * 1000).toISOString().slice(0, 10) : '',
+                          })}
                         >Editar</button>
                       </>
                     )}

@@ -14,6 +14,7 @@
 //    eliminar del todo). Si vuelve a entrar, renace como alumno sin academia.
 // ============================================================
 import { auth, db, firebaseConfig } from './init.js'
+import { validarPlanTipo } from '../capacidades.js'
 import { sendPasswordResetEmail } from 'firebase/auth'
 import {
   doc, getDoc, setDoc, deleteDoc, serverTimestamp,
@@ -24,18 +25,26 @@ import {
 
 // Crea una academia; el ID del doc ES el código de acceso.
 // logo/lema/colorHero alimentan el hero personalizado del Home.
-export async function crearAcademia({ codigo, nombre, tipo = 'basico', plan = '', logo = '', lema = '', colorHero = '' }) {
+// `planComercial` (base|pro|curso) define capacidades; `plan` es solo la
+// periodicidad de facturación (texto libre, p. ej. "anual").
+export async function crearAcademia({
+  codigo, nombre, tipo = 'basico', planComercial = 'base', plan = '',
+  logo = '', lema = '', colorHero = '',
+}) {
   const cod = String(codigo || '').trim().toUpperCase()
   if (!/^[A-Z0-9][A-Z0-9-]{2,19}$/.test(cod)) {
     throw new Error('Código inválido: usa 3–20 letras/números/guiones (p. ej. AEP-2026).')
   }
   if (!nombre?.trim()) throw new Error('Escribe el nombre de la academia.')
+  const errorPlan = validarPlanTipo(planComercial, tipo)
+  if (errorPlan) throw new Error(errorPlan)
   const ref = doc(db, 'academias', cod)
   const ya = await getDoc(ref)
   if (ya.exists()) throw new Error(`Ya existe una academia con el código ${cod}.`)
   await setDoc(ref, {
     nombre: nombre.trim(),
     tipo,
+    planComercial,
     plan: plan || '',
     estado: 'activo',
     logo: logo?.trim() || '',

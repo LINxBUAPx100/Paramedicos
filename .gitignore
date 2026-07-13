@@ -9,3 +9,6 @@ yarn-debug.log*
 yarn-error.log*
 .env
 .env.local
+
+# Artefacto reproducible de la plantilla oficial (se regenera con gen:plantilla)
+scripts/plantilla-oficial.json

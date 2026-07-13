@@ -6,6 +6,7 @@
 //    (los directores no pueden tocar estos campos; lo imponen las reglas).
 // ============================================================
 import { db } from './init.js'
+import { validarPlanTipo } from '../capacidades.js'
 import { doc, getDoc, setDoc, updateDoc, serverTimestamp, Timestamp } from 'firebase/firestore'
 
 // --- Anuncio global (configuracion/anuncio) ---
@@ -27,13 +28,25 @@ export async function guardarAnuncio({ mensaje, tipo = 'info', activo }) {
 }
 
 // --- Facturación / plan de una academia ---
-// Fija nombre, plan (texto), estado (activo|suspendido) y fecha de renovación (Date).
-export async function actualizarFacturacion(academiaId, { nombre, plan, estado, fechaRenovacion }) {
+// Fija nombre, plan comercial (base|pro|curso), tipo, periodicidad (`plan`,
+// texto), estado (activo|suspendido) y fecha de renovación (Date).
+// `tipoActual` sirve para validar planComercial cuando el tipo no cambia.
+export async function actualizarFacturacion(academiaId, {
+  nombre, planComercial, tipo, plan, estado, fechaRenovacion, tipoActual,
+}) {
   const cambios = {}
   if (nombre !== undefined) {
     const limpio = String(nombre || '').trim()
     if (!limpio) throw new Error('El nombre de la academia no puede quedar vacío.')
     cambios.nombre = limpio
+  }
+  if (planComercial !== undefined || tipo !== undefined) {
+    const planFinal = planComercial ?? 'base'
+    const tipoFinal = tipo ?? tipoActual ?? 'basico'
+    const error = validarPlanTipo(planFinal, tipoFinal)
+    if (error) throw new Error(error)
+    if (planComercial !== undefined) cambios.planComercial = planFinal
+    if (tipo !== undefined) cambios.tipo = tipoFinal
   }
   if (plan !== undefined) cambios.plan = String(plan || '').trim()
   if (estado !== undefined) cambios.estado = estado

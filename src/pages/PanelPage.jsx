@@ -9,7 +9,7 @@ import Icon from '../components/Icon.jsx'
 //   - admin_escuela  → avance + gestión de miembros (director).
 //   - instructor     → avance de los alumnos (solo lectura).
 export default function PanelPage() {
-  const { cargando, esStaff, esSuperadmin, academiaId, academia, rol, user, perfil } = useAuth()
+  const { cargando, esStaff, esSuperadmin, academiaId, academia, rol, user, perfil, capacidades } = useAuth()
 
   if (cargando) {
     return (
@@ -67,7 +67,11 @@ export default function PanelPage() {
         soloGrupo={!esDirector ? perfil?.grupoId || null : null}
       />
 
-      {esDirector && <PersonalizacionAcademia academia={academia} />}
+      {/* La personalización visual es una CAPACIDAD del plan (Pro/Curso);
+          las reglas de Firestore la imponen también en el servidor. */}
+      {esDirector && capacidades.personalizacionVisual && (
+        <PersonalizacionAcademia academia={academia} />
+      )}
     </div>
   )
 }

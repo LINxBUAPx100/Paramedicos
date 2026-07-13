@@ -50,6 +50,29 @@ service cloud.firestore {
         && miDoc().rol == 'admin_escuela'
         && miDoc().academiaId == acaId;
     }
+    // ¿El solicitante PERTENECE a esa academia (cualquier rol, alumno incluido)?
+    function perteneceA(acaId) {
+      return autenticado()
+        && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid))
+        && miDoc().academiaId == acaId;
+    }
+    // ¿El plan comercial de la academia permite editar contenido? (pro|curso).
+    // Sin campo planComercial = academia previa a los planes → 'pro'
+    // (mismo default que src/lib/capacidades.js). Solo se evalúa en
+    // ESCRITURAS de contenido, nunca en lecturas de alumnos.
+    function academiaEditaContenido(acaId) {
+      return get(/databases/$(database)/documents/academias/$(acaId))
+        .data.get('planComercial', 'pro') in ['pro', 'curso'];
+    }
+    // Profesor con permisos editoriales sobre UN curso concreto. Los permisos
+    // (usuarios/{uid}.permisosEditor) solo los escribe el director PRO o el
+    // super-admin; un profesor sin permisosEditor no edita nada.
+    function profesorPuedeEditar(acaId, cursoId) {
+      return esStaffDe(acaId)
+        && miDoc().rol == 'instructor'
+        && miDoc().get('permisosEditor', {}).get('editarContenido', false) == true
+        && cursoId in miDoc().get('permisosEditor', {}).get('cursosPermitidos', []);
+    }
     // Canje de un código de prueba sobre el PROPIO perfil: el código debe
     // existir, estar activo y vigente, y pruebaHasta debe COPIAR su expiración
     // (nadie puede inventarse una fecha de prueba arbitraria).
@@ -88,8 +111,12 @@ service cloud.firestore {
       // Alta/edición/baja: solo super-admin.
       allow write: if esSuper();
       // El director puede editar SOLO la personalización de SU academia
-      // (logo, lema y color del hero) — nunca estado/plan/tipo/nombre.
+      // (logo, lema y color del hero) — nunca estado/plan/tipo/nombre — y
+      // SOLO si su plan comercial incluye esa capacidad (pro|curso).
+      // Sin campo planComercial = academia previa a los planes → se trata
+      // como 'pro' (mismo default que src/lib/capacidades.js).
       allow update: if esAdminDe(codigo)
+        && resource.data.get('planComercial', 'pro') in ['pro', 'curso']
         && request.resource.data.diff(resource.data).affectedKeys()
              .hasOnly(['logo', 'lema', 'colorHero']);
     }
@@ -262,6 +289,91 @@ service cloud.firestore {
     match /configuracion/{doc} {
       allow read: if true;         // el anuncio se muestra a cualquiera
       allow write: if esSuper();   // solo el super-admin lo edita
+    }
+
+    // ================= CONTENIDO MULTIACADEMIA (Fase 2) =================
+    //  Plantillas GLOBALES (catálogo) + copia INDEPENDIENTE por academia.
+    //  Nunca dos academias escriben el mismo doc: las plantillas son de solo
+    //  lectura para todos menos el super-admin, y cada academia opera su
+    //  copia (docs con SU academiaId; el academiaId es INMUTABLE, así que
+    //  cambiarlo desde el cliente no permite apropiarse de documentos).
+
+    // --- PLANTILLAS globales (catálogo oficial): SOLO super-admin ---
+    match /plantillas/{plantillaId} {
+      allow read, write: if esSuper();
+    }
+    match /plantillasTemas/{docId} {
+      allow read, write: if esSuper();
+    }
+
+    // --- CURSOS por academia (estructura ligera del temario) ---
+    match /cursos/{cursoId} {
+      // Leer: super-admin; staff de la academia (incluye borradores);
+      // alumnos de la academia SOLO lo publicado.
+      allow get, list: if esSuper()
+        || esStaffDe(resource.data.academiaId)
+        || (perteneceA(resource.data.academiaId) && resource.data.estado == 'publicado');
+      // Crear: super-admin, o el DIRECTOR de su academia si su plan permite
+      // editar contenido (base NO edita). El doc nace con SU academiaId.
+      allow create: if esSuper()
+        || (esAdminDe(request.resource.data.academiaId)
+            && academiaEditaContenido(request.resource.data.academiaId));
+      // Editar: mismo criterio + profesor con permiso sobre ESTE curso.
+      // El academiaId es inmutable (nadie "adopta" cursos de otra academia).
+      allow update: if request.resource.data.academiaId == resource.data.academiaId
+        && (
+          esSuper()
+          || (esAdminDe(resource.data.academiaId)
+              && academiaEditaContenido(resource.data.academiaId))
+          || profesorPuedeEditar(resource.data.academiaId, cursoId)
+        );
+      // Sin eliminación destructiva por academias (archivar = update de estado).
+      allow delete: if esSuper();
+    }
+
+    // --- TEMAS por academia (contenido pesado, 1 doc por tema) ---
+    match /temas/{docId} {
+      // Leer: super-admin; staff de la academia (incluye borradores);
+      // alumnos de la academia SOLO temas publicados (los borradores no
+      // se filtran a los alumnos ni de su propia academia).
+      allow get, list: if esSuper()
+        || esStaffDe(resource.data.academiaId)
+        || (perteneceA(resource.data.academiaId) && resource.data.estado == 'publicado');
+      allow create: if (esSuper()
+          || (esAdminDe(request.resource.data.academiaId)
+              && academiaEditaContenido(request.resource.data.academiaId))
+          || profesorPuedeEditar(request.resource.data.academiaId, request.resource.data.cursoId))
+        && request.resource.data.academiaId is string
+        && request.resource.data.cursoId is string
+        && request.resource.data.temaId is string;
+      // academiaId, cursoId y temaId INMUTABLES: un tema no cambia de dueño
+      // ni de curso desde el cliente (las llaves del progreso se preservan).
+      allow update: if request.resource.data.academiaId == resource.data.academiaId
+        && request.resource.data.cursoId == resource.data.cursoId
+        && request.resource.data.temaId == resource.data.temaId
+        && (
+          esSuper()
+          || (esAdminDe(resource.data.academiaId)
+              && academiaEditaContenido(resource.data.academiaId))
+          || profesorPuedeEditar(resource.data.academiaId, resource.data.cursoId)
+        );
+      allow delete: if esSuper();
+    }
+
+    // --- HISTORIAL de cambios de contenido (auditoría append-only) ---
+    match /historial/{id} {
+      // Crear: staff de la academia o super-admin, firmando con su uid.
+      allow create: if request.resource.data.usuario == request.auth.uid
+        && (esSuper() || esStaffDe(request.resource.data.academiaId));
+      // Leer: super-admin o el director de esa academia.
+      allow read: if esSuper() || esAdminDe(resource.data.academiaId);
+      // Append-only: nadie edita; solo el super-admin puede depurar.
+      allow delete: if esSuper();
+    }
+
+    // --- RESPALDOS previos a sobrescrituras (los usa la replicación, Fase 9) ---
+    match /respaldos/{id} {
+      allow read, write: if esSuper();
     }
   }
 }

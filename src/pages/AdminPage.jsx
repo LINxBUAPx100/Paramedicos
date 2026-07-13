@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import { ETIQUETA_ROL, CodigosPrueba } from '../components/PanelAcademia.jsx'
 import { FacturacionAcademias, AnuncioGlobal } from '../components/AdminPlataforma.jsx'
+import { PLANES, TIPOS, ETIQUETA_PLAN, ETIQUETA_TIPO, DESCRIPCION_PLAN, validarPlanTipo } from '../lib/capacidades.js'
 import Icon from '../components/Icon.jsx'
 
 // ============================================================
@@ -540,6 +541,7 @@ function NuevaAcademia({ onCreada }) {
   const [codigo, setCodigo] = useState('')
   const [nombre, setNombre] = useState('')
   const [tipo, setTipo] = useState('basico')
+  const [planComercial, setPlanComercial] = useState('base')
   const [plan, setPlan] = useState('')
   const [logo, setLogo] = useState('')
   const [lema, setLema] = useState('')
@@ -553,7 +555,7 @@ function NuevaAcademia({ onCreada }) {
     setMsg(''); setError(''); setOcupado(true)
     try {
       const { crearAcademia } = await import('../lib/firebase/admin.js')
-      const cod = await crearAcademia({ codigo, nombre, tipo, plan, logo, lema, colorHero })
+      const cod = await crearAcademia({ codigo, nombre, tipo, planComercial, plan, logo, lema, colorHero })
       setMsg(`Academia ${cod} creada. Comparte ese código con sus alumnos.`)
       setCodigo(''); setNombre(''); setPlan(''); setLogo(''); setLema('')
       onCreada()
@@ -581,15 +583,35 @@ function NuevaAcademia({ onCreada }) {
           </label>
           <label>
             Tipo
-            <select value={tipo} onChange={(e) => setTipo(e.target.value)}>
-              <option value="basico">Básico</option>
-              <option value="avanzado">Avanzado</option>
-              <option value="medicina">Medicina</option>
+            <select
+              value={tipo}
+              onChange={(e) => {
+                const t = e.target.value
+                setTipo(t)
+                // Paramédico avanzado exige plan Pro: se corrige solo.
+                if (t === 'avanzado') setPlanComercial('pro')
+              }}
+            >
+              {TIPOS.map((t) => <option key={t} value={t}>{ETIQUETA_TIPO[t]}</option>)}
             </select>
           </label>
           <label>
-            Plan (opcional)
-            <input type="text" value={plan} onChange={(e) => setPlan(e.target.value)} placeholder="anual" />
+            Plan
+            <select
+              value={planComercial}
+              onChange={(e) => setPlanComercial(e.target.value)}
+              title={DESCRIPCION_PLAN[planComercial]}
+            >
+              {PLANES.map((p) => (
+                <option key={p} value={p} disabled={Boolean(validarPlanTipo(p, tipo))}>
+                  {ETIQUETA_PLAN[p]}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Facturación (opcional)
+            <input type="text" value={plan} onChange={(e) => setPlan(e.target.value)} placeholder="periodicidad, p. ej. anual" />
           </label>
           <label>
             Logo (Drive o URL)
