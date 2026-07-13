@@ -15,7 +15,10 @@
 // ============================================================
 import { auth, db, firebaseConfig } from './init.js'
 import { sendPasswordResetEmail } from 'firebase/auth'
-import { doc, getDoc, setDoc, deleteDoc, serverTimestamp } from 'firebase/firestore'
+import {
+  doc, getDoc, setDoc, deleteDoc, serverTimestamp,
+  collection, query, where, getDocs, writeBatch,
+} from 'firebase/firestore'
 
 // --- Academias ---
 
@@ -41,6 +44,43 @@ export async function crearAcademia({ codigo, nombre, tipo = 'basico', plan = ''
     creado: serverTimestamp(),
   })
   return cod
+}
+
+// Cambia el CÓDIGO de una academia (el código es el ID del doc, así que se
+// copia el doc al ID nuevo y se migra todo lo que lo referencia: usuarios,
+// grupos, códigos de prueba, intentos y solicitudes). Solo super-admin.
+export async function cambiarCodigoAcademia(codigoViejo, codigoNuevo) {
+  const viejo = String(codigoViejo || '').trim().toUpperCase()
+  const nuevo = String(codigoNuevo || '').trim().toUpperCase()
+  if (!/^[A-Z0-9][A-Z0-9-]{2,19}$/.test(nuevo)) {
+    throw new Error('Código inválido: usa 3–20 letras/números/guiones (p. ej. AEP-2027).')
+  }
+  if (nuevo === viejo) throw new Error('El código nuevo es igual al actual.')
+
+  const refViejo = doc(db, 'academias', viejo)
+  const refNuevo = doc(db, 'academias', nuevo)
+  const [snapViejo, snapNuevo] = await Promise.all([getDoc(refViejo), getDoc(refNuevo)])
+  if (!snapViejo.exists()) throw new Error(`No existe la academia ${viejo}.`)
+  if (snapNuevo.exists()) throw new Error(`Ya existe una academia con el código ${nuevo}.`)
+
+  // 1) Copia del doc con el ID nuevo (mismos datos).
+  await setDoc(refNuevo, snapViejo.data())
+
+  // 2) Migra todas las referencias por lotes (límite de 500 por batch).
+  for (const col of ['usuarios', 'grupos', 'codigos', 'intentos', 'solicitudes']) {
+    const snap = await getDocs(query(collection(db, col), where('academiaId', '==', viejo)))
+    let batch = writeBatch(db)
+    let n = 0
+    for (const d of snap.docs) {
+      batch.update(d.ref, { academiaId: nuevo })
+      if (++n === 400) { await batch.commit(); batch = writeBatch(db); n = 0 }
+    }
+    if (n > 0) await batch.commit()
+  }
+
+  // 3) Borra el doc viejo: el código anterior deja de funcionar.
+  await deleteDoc(refViejo)
+  return nuevo
 }
 
 // --- Usuarios ---

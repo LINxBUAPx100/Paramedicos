@@ -811,6 +811,17 @@ export function CodigosPrueba({ academiaId = null, miUid, academias = null, grup
             </select>
           </label>
         )}
+        {academiaEfectiva && gruposDisponibles.length > 0 && (
+          <label>
+            Grupo (se integra al canjear)
+            <select value={grupoSel} onChange={(e) => setGrupoSel(e.target.value)}>
+              <option value="">— Sin grupo —</option>
+              {gruposDisponibles.map((g) => (
+                <option key={g.id} value={g.id}>{g.nombre}</option>
+              ))}
+            </select>
+          </label>
+        )}
         <label>
           Vigencia
           <select value={dias} onChange={(e) => setDias(e.target.value)}>
@@ -848,6 +859,11 @@ export function CodigosPrueba({ academiaId = null, miUid, academias = null, grup
                 <code className="pc-codigo">{c.id}</code>
                 {academias && (
                   <span className="pc-academia">{c.academiaId || 'global'}</span>
+                )}
+                {c.grupoId && (
+                  <span className="pc-academia pc-grupo">
+                    {(gruposDisponibles.find((g) => g.id === c.grupoId)?.nombre) || c.grupoId}
+                  </span>
                 )}
                 <span className="pc-detalle">
                   {c.nota && <strong>{c.nota} · </strong>}

@@ -135,11 +135,24 @@ piden logo, lema y color.
 
 ## Códigos de prueba (acceso temporal)
 
-El super-admin y los directores pueden generar códigos `PRUEBA-XXXX`
-(3/7/14/30 días) desde su dashboard. Quien lo reciba lo activa en
-**Mi cuenta → Únete con tu código**: obtiene acceso al contenido hasta la
-fecha de expiración, sin pertenecer a una academia. Las reglas impiden
-inventarse la fecha (se copia del código) y los códigos pueden desactivarse.
+El super-admin y los directores generan códigos (3/7/14/30 días) desde su
+dashboard, eligiendo opcionalmente **academia y GRUPO**. El código se genera
+solo con formato legible: `AEP-GE-7D4K` = abreviatura de la academia (primer
+segmento de su código) + 2 letras del grupo + vigencia (7D = 7 días) + azar.
+Sin academia: `PT-7D4K`.
+
+Quien lo canjea en **Mi cuenta → Únete con tu código** queda **integrado** a
+esa academia y grupo (aparece en el panel del profesor) pero marcado como
+`esPrueba`: al vencer la fecha pierde el acceso —aunque siga listado— hasta
+meter un código real de academia o grupo, que quita la marca. Las reglas
+impiden inventarse la fecha o quitarse la marca sin una unión real.
+
+## Cambiar el código de una academia (super-admin)
+
+En `/admin/academia/CODIGO` → botón **"Cambiar código"**: crea el doc con el
+ID nuevo y migra en lotes usuarios, grupos, códigos de prueba, intentos y
+solicitudes; el código viejo se borra y deja de funcionar. Requiere las
+reglas actualizadas (el super-admin ahora puede editar `intentos`).
 
 ## Límites sin servidor (plan Spark, importante)
 

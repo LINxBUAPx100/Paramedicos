@@ -590,6 +590,8 @@ textarea:focus-visible,
   background: color-mix(in srgb, var(--primario) 12%, transparent);
   white-space: nowrap;
 }
+.pc-grupo { color: var(--verde); background: color-mix(in srgb, var(--verde) 12%, transparent); }
+.admin-form--codigo { border-left: 4px solid var(--ambar); }
 .pc-detalle { color: var(--texto-2); flex: 1; min-width: 140px; }
 .pc-estado {
   padding: 2px 9px;
