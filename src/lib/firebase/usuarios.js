@@ -33,3 +33,28 @@ export async function listarAcademias() {
     .map((d) => ({ id: d.id, ...d.data() }))
     .sort((a, b) => a.id.localeCompare(b.id))
 }
+
+// Una academia por su código (dashboard individual).
+export async function obtenerAcademia(academiaId) {
+  const snap = await getDoc(doc(db, 'academias', academiaId))
+  return snap.exists() ? { id: snap.id, ...snap.data() } : null
+}
+
+// Actualiza campos de una academia (estado, nombre…). Solo super-admin (reglas).
+export async function actualizarAcademia(academiaId, cambios) {
+  await updateDoc(doc(db, 'academias', academiaId), cambios)
+}
+
+// TODOS los usuarios de la plataforma (dashboard del super-admin).
+export async function listarUsuarios() {
+  const snap = await getDocs(collection(db, 'usuarios'))
+  return snap.docs
+    .map((d) => ({ id: d.id, ...d.data() }))
+    .sort((a, b) => (a.nombre || a.email || '').localeCompare(b.nombre || b.email || ''))
+}
+
+// Cambia rol / estado / academia de un usuario. Las reglas deciden quién puede:
+// super-admin (cualquier cambio) o admin_escuela (alumno<->instructor de su academia).
+export async function actualizarUsuario(uid, cambios) {
+  await updateDoc(doc(db, 'usuarios', uid), cambios)
+}

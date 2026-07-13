@@ -45,3 +45,9 @@ export async function intentosDeAcademia(academiaId) {
   const snap = await getDocs(q)
   return ordenar(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
 }
+
+// TODOS los intentos de la plataforma (dashboard global del super-admin).
+export async function listarIntentos() {
+  const snap = await getDocs(collection(db, 'intentos'))
+  return ordenar(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+}

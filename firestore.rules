@@ -1,12 +1,14 @@
 rules_version = '2';
 
 // ============================================================
-//  Security Rules — PTEM (MVP: auth + roles + progreso)
+//  Security Rules — PTEM (auth + roles + progreso + panel)
 // ------------------------------------------------------------
-//  Modelo: academias/{codigo} · usuarios/{uid} · progreso/{uid}
+//  Modelo: academias/{codigo} · usuarios/{uid} · progreso/{uid} · intentos/{id}
 //  Los roles viven en usuarios/{uid}.rol (sin custom claims todavía).
-//  Bootstrapping: el PRIMER superadmin y la primera academia se crean a mano
-//  en la consola de Firestore (la consola omite estas reglas).
+//  Jerarquía: superadmin (todo) > admin_escuela (su academia) >
+//             instructor (ve su academia) > alumno.
+//  El ADMIN SUPREMO se reconoce por su correo verificado de Auth
+//  (no depende de su doc en Firestore), así nunca puede quedar fuera.
 // ============================================================
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -16,10 +18,16 @@ service cloud.firestore {
     function miDoc() {
       return get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data;
     }
-    function esSuper() {
+    // Admin supremo: reconocido por su correo de Auth (bootstrap sin consola).
+    function esSupremo() {
       return autenticado()
-        && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid))
-        && miDoc().rol == 'superadmin';
+        && request.auth.token.email in ['mihayolo228@gmail.com'];
+    }
+    function esSuper() {
+      return esSupremo()
+        || (autenticado()
+          && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid))
+          && miDoc().rol == 'superadmin');
     }
     function academiaActiva(codigo) {
       return exists(/databases/$(database)/documents/academias/$(codigo))
@@ -30,6 +38,13 @@ service cloud.firestore {
       return autenticado()
         && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid))
         && (miDoc().rol == 'instructor' || miDoc().rol == 'admin_escuela')
+        && miDoc().academiaId == acaId;
+    }
+    // ¿El solicitante es el director (admin de escuela) de esa academia?
+    function esAdminDe(acaId) {
+      return autenticado()
+        && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid))
+        && miDoc().rol == 'admin_escuela'
         && miDoc().academiaId == acaId;
     }
 
@@ -61,7 +76,17 @@ service cloud.firestore {
           || academiaActiva(request.resource.data.academiaId)
         );
 
-      // Super-admin puede gestionar cualquier usuario.
+      // El director (admin_escuela) gestiona a los miembros de SU academia:
+      // puede alternar alumno <-> instructor y activar/suspender. Nunca a sí
+      // mismo, nunca a otro admin/superadmin, y no puede moverlos de academia.
+      allow update: if esAdminDe(resource.data.academiaId)
+        && request.auth.uid != uid
+        && resource.data.rol in ['alumno', 'instructor']
+        && request.resource.data.rol in ['alumno', 'instructor']
+        && request.resource.data.academiaId == resource.data.academiaId;
+
+      // Super-admin puede gestionar cualquier usuario (incluye al supremo
+      // promoviendo su propio doc a rol 'superadmin' en su primer acceso).
       allow write: if esSuper();
     }
 

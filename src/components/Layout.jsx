@@ -32,13 +32,19 @@ export default function Layout({ children }) {
   const [abierto, setAbierto] = useState(false)
   const [consulta, setConsulta] = useState('')
   const { estado, alternarTema } = useProgress()
-  const { autenticado, perfil, user, esStaff } = useAuth()
+  const { autenticado, perfil, user, esStaff, esSuperadmin } = useAuth()
   const location = useLocation()
   const navigate = useNavigate()
 
-  // El personal (instructor/admin/superadmin) ve además el Panel de avance.
-  const topnav = esStaff ? [...TOPNAV, { to: '/panel', label: 'Panel' }] : TOPNAV
-  const navDrawer = esStaff ? [...NAV, { to: '/panel', icon: 'progreso', label: 'Panel de avance' }] : NAV
+  // El personal ve su Panel; el super-admin ve su Dashboard general.
+  const extraTop = esSuperadmin
+    ? [{ to: '/admin', label: 'Dashboard' }]
+    : esStaff ? [{ to: '/panel', label: 'Panel' }] : []
+  const extraDrawer = esSuperadmin
+    ? [{ to: '/admin', icon: 'capas', label: 'Dashboard general' }]
+    : esStaff ? [{ to: '/panel', icon: 'progreso', label: 'Panel de avance' }] : []
+  const topnav = [...TOPNAV, ...extraTop]
+  const navDrawer = [...NAV, ...extraDrawer]
 
   const esHome = location.pathname === '/'
 

@@ -1,0 +1,113 @@
+import { useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext.jsx'
+import PanelAcademia from '../components/PanelAcademia.jsx'
+import Icon from '../components/Icon.jsx'
+
+// Dashboard individual de UNA academia, visto por el SUPER-ADMIN
+// (/admin/academia/:academiaId): datos de la academia + activar/suspender +
+// avance de alumnos + gestión completa de miembros y roles.
+export default function AcademiaAdminPage() {
+  const { academiaId } = useParams()
+  const { cargando, esSuperadmin, user } = useAuth()
+
+  const [academia, setAcademia] = useState(undefined) // undefined = cargando; null = no existe
+  const [ocupado, setOcupado] = useState(false)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    if (!esSuperadmin || !academiaId) return
+    let activo = true
+    setAcademia(undefined)
+    ;(async () => {
+      try {
+        const { obtenerAcademia } = await import('../lib/firebase/usuarios.js')
+        const a = await obtenerAcademia(academiaId)
+        if (activo) setAcademia(a)
+      } catch {
+        if (activo) setAcademia(null)
+      }
+    })()
+    return () => { activo = false }
+  }, [esSuperadmin, academiaId])
+
+  if (cargando || (esSuperadmin && academia === undefined)) {
+    return (
+      <div className="ruta-cargando" role="status">
+        <span className="ruta-spinner" aria-hidden="true" /> <span>Cargando…</span>
+      </div>
+    )
+  }
+
+  if (!esSuperadmin) {
+    return (
+      <div className="acceso-restringido" role="alert">
+        <span className="acceso-ico"><Icon name="candado" size={30} /></span>
+        <h1>Solo super-administradores</h1>
+        <p>Este dashboard es exclusivo del administrador de la plataforma.</p>
+        <Link to="/" className="btn-pildora btn-pildora--solido">Volver al inicio</Link>
+      </div>
+    )
+  }
+
+  if (!academia) {
+    return (
+      <div className="acceso-restringido" role="alert">
+        <span className="acceso-ico"><Icon name="alerta" size={30} /></span>
+        <h1>Academia no encontrada</h1>
+        <p>No existe una academia con el código <strong>{academiaId}</strong>.</p>
+        <Link to="/admin" className="btn-pildora btn-pildora--solido">← Volver al dashboard</Link>
+      </div>
+    )
+  }
+
+  const activa = academia.estado === 'activo'
+
+  const alternarEstado = async () => {
+    setOcupado(true)
+    setError('')
+    try {
+      const { actualizarAcademia } = await import('../lib/firebase/usuarios.js')
+      const estado = activa ? 'suspendida' : 'activo'
+      await actualizarAcademia(academia.id, { estado })
+      setAcademia({ ...academia, estado })
+    } catch {
+      setError('No se pudo cambiar el estado de la academia.')
+    } finally {
+      setOcupado(false)
+    }
+  }
+
+  return (
+    <div className="panel-page admin-page">
+      <nav className="migas">
+        <Link to="/admin">Dashboard general</Link> <span>/</span> {academia.id}
+      </nav>
+
+      <header className="panel-header">
+        <div>
+          <h1><Icon name="temario" size={24} /> {academia.nombre || academia.id}</h1>
+          <p>
+            Código <strong>{academia.id}</strong>
+            {academia.tipo ? <> · tipo <strong>{academia.tipo}</strong></> : null}
+            {academia.plan ? <> · plan <strong>{academia.plan}</strong></> : null}
+          </p>
+        </div>
+        <div className="admin-academia-acciones">
+          <span className={`aa-estado ${activa ? 'ok' : 'mal'}`}>{activa ? 'Activa' : 'Suspendida'}</span>
+          <button
+            className={`panel-estado-btn ${activa ? 'activo' : 'suspendido'}`}
+            onClick={alternarEstado}
+            disabled={ocupado}
+          >
+            {ocupado ? '…' : activa ? 'Suspender academia' : 'Reactivar academia'}
+          </button>
+        </div>
+      </header>
+
+      {error && <p className="cuenta-error" role="alert">{error}</p>}
+
+      <PanelAcademia academiaId={academia.id} gestion="superadmin" miUid={user?.uid} />
+    </div>
+  )
+}

@@ -20,6 +20,8 @@ const AtlasPage = lazy(() => import('./pages/AtlasPage.jsx'))
 const TemarioPage = lazy(() => import('./pages/TemarioPage.jsx'))
 const Cuenta = lazy(() => import('./pages/Cuenta.jsx'))
 const PanelPage = lazy(() => import('./pages/PanelPage.jsx'))
+const AdminPage = lazy(() => import('./pages/AdminPage.jsx'))
+const AcademiaAdminPage = lazy(() => import('./pages/AcademiaAdminPage.jsx'))
 
 function Cargando() {
   return (
@@ -56,6 +58,10 @@ export default function App() {
 
             {/* Panel de avance: solo staff (la página valida el rol internamente) */}
             <Route path="/panel" element={<RutaProtegida><PanelPage /></RutaProtegida>} />
+
+            {/* Dashboard del super-admin: todas las academias + roles */}
+            <Route path="/admin" element={<RutaProtegida><AdminPage /></RutaProtegida>} />
+            <Route path="/admin/academia/:academiaId" element={<RutaProtegida><AcademiaAdminPage /></RutaProtegida>} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>

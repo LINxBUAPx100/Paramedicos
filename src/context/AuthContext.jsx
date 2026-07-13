@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { esCorreoSupremo } from '../lib/firebase/supremos.js'
 
 const AuthContext = createContext(null)
 
@@ -6,14 +7,14 @@ const AuthContext = createContext(null)
 const ROLES_STAFF = ['admin_escuela', 'instructor']
 
 // Calcula si el usuario puede acceder al contenido y, si no, el motivo.
-//   superadmin           → acceso total (bypass).
+//   superadmin/supremo   → acceso total (bypass).
 //   sin sesión           → 'no-sesion'
 //   perfil inexistente    → 'sin-perfil' (no se queda cargando para siempre)
 //   usuario no activo     → 'usuario-bloqueado'
 //   sin academia          → 'sin-academia'
 //   academia no activa    → 'academia-inactiva' (no ha pagado / suspendida)
-function calcularAcceso({ user, perfil, perfilListo, academia, rol }) {
-  if (rol === 'superadmin') return { puede: true, motivo: null }
+function calcularAcceso({ user, perfil, perfilListo, academia, rol, esSupremo }) {
+  if (esSupremo || rol === 'superadmin') return { puede: true, motivo: null }
   if (!user) return { puede: false, motivo: 'no-sesion' }
   if (!perfilListo) return { puede: false, motivo: 'cargando' }
   if (!perfil) return { puede: false, motivo: 'sin-perfil' }
@@ -115,9 +116,32 @@ export function AuthProvider({ children }) {
   }, [perfil?.academiaId])
 
   const rol = perfil?.rol || null
-  const { puede: puedeAcceder, motivo } = calcularAcceso({ user, perfil, perfilListo, academia, rol })
+  // El admin supremo se reconoce por su correo (igual que en firestore.rules):
+  // manda aunque su doc de Firestore aún no diga 'superadmin'.
+  const esSupremo = esCorreoSupremo(user?.email)
+  const esSuperadmin = esSupremo || rol === 'superadmin'
+  const { puede: puedeAcceder, motivo } = calcularAcceso({ user, perfil, perfilListo, academia, rol, esSupremo })
   // Aún resolviendo sesión/perfil/academia: no bloquear todavía.
   const accesoCargando = cargando || motivo === 'cargando'
+
+  // Auto-promoción del supremo: en su primer acceso su perfil nace como
+  // 'alumno'; las reglas le permiten (por su correo) subir su propio doc a
+  // 'superadmin'. Así el resto del sistema (queries por rol) lo ve como tal.
+  useEffect(() => {
+    if (!user || !perfilListo || !esCorreoSupremo(user.email)) return
+    if (!perfil || perfil.rol === 'superadmin') return
+    ;(async () => {
+      try {
+        const [{ db }, fs] = await Promise.all([
+          import('../lib/firebase/init.js'),
+          import('firebase/firestore'),
+        ])
+        await fs.updateDoc(fs.doc(db, 'usuarios', user.uid), { rol: 'superadmin' })
+      } catch {
+        // Sin permisos (reglas aún no publicadas): la UI sigue mandando por correo.
+      }
+    })()
+  }, [user, perfil, perfilListo])
 
   const valor = {
     user,
@@ -128,8 +152,9 @@ export function AuthProvider({ children }) {
     autenticado: Boolean(user),
     rol,
     academiaId: perfil?.academiaId || null,
-    esSuperadmin: rol === 'superadmin',
-    esStaff: rol === 'superadmin' || ROLES_STAFF.includes(rol),
+    esSupremo,
+    esSuperadmin,
+    esStaff: esSuperadmin || ROLES_STAFF.includes(rol),
     puedeAcceder,
     accesoCargando,
     motivoBloqueo: motivo,

@@ -6,9 +6,10 @@ por diseño; la seguridad la dan las Security Rules).
 
 ## ⚠️ Paso pendiente: publicar las reglas actualizadas
 
-Los **exámenes de fase** guardan cada intento en la colección `intentos`, y el
-**panel del maestro** lee alumnos e intentos de su academia. Ambas cosas
-necesitan las reglas de [`firestore.rules`](./firestore.rules) publicadas:
+Los **exámenes de fase** guardan cada intento en la colección `intentos`; el
+**panel del maestro/director** lee alumnos e intentos de su academia; y el
+**dashboard del super-admin** (`/admin`) lee TODO y cambia roles. Todo eso
+necesita las reglas de [`firestore.rules`](./firestore.rules) publicadas:
 
 1. [Consola de Firebase](https://console.firebase.google.com/project/ptem-a304f/firestore/rules)
    → Firestore Database → pestaña **Reglas**.
@@ -16,18 +17,38 @@ necesitan las reglas de [`firestore.rules`](./firestore.rules) publicadas:
 3. **Publicar**.
 
 Mientras no se publiquen: el examen funciona pero muestra
-"⚠ No se pudo guardar el intento", y el panel del maestro no carga datos.
+"⚠ No se pudo guardar el intento", los paneles no cargan datos y los cambios
+de rol fallan.
 
-## Roles
+## Admin supremo (por correo)
+
+`mihayolo228@gmail.com` es el **admin supremo**: las reglas
+(`esSupremo()` en `firestore.rules`) y la app (`src/lib/firebase/supremos.js`)
+lo reconocen por su correo de inicio de sesión, sin tocar la consola. En su
+primer acceso la app promueve sola su perfil a `rol: superadmin`. Para añadir
+otro supremo, agrega el correo en **ambos** archivos y vuelve a publicar las
+reglas. ⚠️ El repo es público: ese correo queda visible en GitHub.
+
+## Roles y jerarquía
 
 | Rol | Cómo se asigna | Qué puede |
 |---|---|---|
 | `alumno` | Automático al registrarse | Estudiar (si su academia está activa) |
-| `instructor` | Consola → `usuarios/{uid}` → `rol` | Ver el Panel de avance de su academia |
-| `admin_escuela` | Consola (por ahora) | Igual que instructor (panel de gestión: próxima fase) |
-| `superadmin` | Consola, una sola vez | Todo: bypass de pagos, panel de cualquier academia |
+| `instructor` (profesor) | El director o un super-admin, desde su dashboard | Ver el Panel de avance de su academia |
+| `admin_escuela` (director) | Un super-admin, desde `/admin` | Panel de su academia + nombrar profesores (alumno↔instructor) + suspender miembros |
+| `superadmin` | El supremo entra solo; otros se nombran desde `/admin` | Todo: `/admin` con todas las academias, cualquier rol, suspender academias, bypass de pagos |
 
 Para que un maestro vea a un alumno, ambos deben tener el mismo `academiaId`.
+
+## Dashboards
+
+- **/admin** (super-admin): todas las academias con sus números, gestión global
+  de usuarios y roles, y entrada al dashboard individual de cada academia
+  (`/admin/academia/CODIGO`), donde además puede suspender/reactivar la academia.
+- **/panel** (director): avance de sus alumnos + gestión de miembros
+  (nombrar/quitar profesores, suspender cuentas).
+- **/panel** (profesor/instructor): avance de sus alumnos, solo lectura.
+- Los alumnos ven su mejor puntuación por fase en la página **Examen**.
 
 ## Crear una academia
 
