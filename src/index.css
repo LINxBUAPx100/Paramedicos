@@ -681,6 +681,18 @@ textarea:focus-visible,
 .admin-buscar:focus { outline: 2px solid color-mix(in srgb, var(--primario) 45%, transparent); }
 .admin-aca-link { color: var(--primario); font-size: 0.84rem; font-weight: 600; text-decoration: none; }
 .admin-aca-link:hover { text-decoration: underline; }
+.admin-aca-cell { display: inline-flex; align-items: center; gap: 6px; }
+.admin-aca-ver {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radio-sm);
+  border: 1px solid var(--borde);
+  color: var(--primario);
+  flex-shrink: 0;
+}
+.admin-aca-ver:hover { border-color: var(--primario); background: color-mix(in srgb, var(--primario) 8%, transparent); }
 .admin-academia-acciones { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .admin-acciones { white-space: nowrap; }
 .admin-accion {

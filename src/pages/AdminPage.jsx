@@ -270,9 +270,31 @@ export default function AdminPage() {
                         </td>
                         <td className="panel-correo">{u.email || '—'}</td>
                         <td>
-                          {u.academiaId
-                            ? <Link to={`/admin/academia/${u.academiaId}`} className="admin-aca-link">{u.academiaId}</Link>
-                            : <span className="panel-celda-vacia">—</span>}
+                          <div className="admin-aca-cell">
+                            <select
+                              className="panel-rol-select"
+                              value={u.academiaId || ''}
+                              disabled={ocupado === u.id}
+                              onChange={(e) =>
+                                cambiar(u.id, { academiaId: e.target.value || null, grupoId: null })
+                              }
+                            >
+                              <option value="">— Sin academia —</option>
+                              {academias.map((a) => (
+                                <option key={a.id} value={a.id}>{a.id}</option>
+                              ))}
+                            </select>
+                            {u.academiaId && (
+                              <Link
+                                to={`/admin/academia/${u.academiaId}`}
+                                className="admin-aca-ver"
+                                title={`Ver dashboard de ${u.academiaId}`}
+                                aria-label={`Ver dashboard de ${u.academiaId}`}
+                              >
+                                <Icon name="chevronDer" size={15} />
+                              </Link>
+                            )}
+                          </div>
                         </td>
                         <td>
                           {soyYo ? (
