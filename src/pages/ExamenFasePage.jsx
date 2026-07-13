@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { getFase, preguntasDeFase } from '../data/index.js'
 import { fasesNav } from '../data/navIndice.js'
 import { useAuth } from '../context/AuthContext.jsx'
+import { useProgress } from '../context/ProgressContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
 import Quiz from '../components/Quiz.jsx'
 import Icon from '../components/Icon.jsx'
@@ -122,15 +123,82 @@ export default function ExamenFasePage() {
   )
 }
 
+// Mensaje personalizado según la CALIFICACIÓN del módulo (60% examen +
+// 40% actividades de los temas). Cada rango tiene su propia personalidad.
+function mensajeDeNota(n, nombre) {
+  const N = nombre ? `, ${nombre}` : ''
+  if (n >= 100) return {
+    emoji: '💯',
+    titulo: `¡PERFECTO${N}!`,
+    texto: 'Cien de cien: cada tema, cada actividad y cada pregunta del examen. Esto ya es nivel instructor. Que nadie te detenga.',
+  }
+  if (n === 99) return {
+    emoji: '😱',
+    titulo: `¿¡99${N}!?`,
+    texto: 'TAN cerca de la perfección que hasta duele. Te separó UNA respuesta… y esa ya nunca se te va a olvidar. Resultado de élite.',
+  }
+  if (n >= 90) return {
+    emoji: '🏆',
+    titulo: `¡Impresionante${N}!`,
+    texto: 'Arriba de 90: este módulo ya es tuyo. Este es el nivel que salva vidas en la calle. Vas más que listo para lo que sigue.',
+  }
+  if (n >= 80) return {
+    emoji: '🎉',
+    titulo: `¡Excelente trabajo${N}!`,
+    texto: 'Desempeño sólido: los conceptos importantes ya son tuyos. Dale una repasada a lo que fallaste y estás del otro lado.',
+  }
+  if (n >= 76) return {
+    emoji: '👏',
+    titulo: `¡Bien hecho${N}!`,
+    texto: 'Aprobaste con margen. Hay detalles por pulir, pero la base está firme. El siguiente módulo te espera.',
+  }
+  if (n >= 70) return {
+    emoji: '😅',
+    titulo: `Aprobado… por poquito${N}`,
+    texto: 'Cruzaste la línea del 70 raspando. Cuenta — ¡pero en la ambulancia no hay opción múltiple! Dale otra vuelta a tus temas flojos antes de avanzar.',
+  }
+  if (n >= 60) return {
+    emoji: '🤏',
+    titulo: `Te faltó tantito${N}`,
+    texto: 'Te quedaste a unos puntos del 70. El módulo ya lo entiendes; ahora hay que afinarlo. Revisa los temas con menor porcentaje y repite el examen: el siguiente intento es tuyo.',
+  }
+  if (n >= 50) return {
+    emoji: '💪',
+    titulo: `Vas a medio camino${N}`,
+    texto: 'La mitad ya está. Completa los quizzes de los temas que te faltan, repasa los que salieron bajos y vuelve a presentar el examen.',
+  }
+  return {
+    emoji: '📚',
+    titulo: `Aún no${N}…`,
+    texto: 'Este módulo todavía no está dominado, y en paramedicina los cimientos lo son todo. Vuelve a los temas, haz sus actividades y quizzes, y repite el examen. El siguiente intento será otra historia.',
+  }
+}
+
 // ------------------------------------------------------------
-//  Pantalla completa de FELICITACIONES al terminar el examen de fase:
-//  resume los aprendizajes del módulo y, si la siguiente fase está
-//  bloqueada para el alumno, deja SOLICITAR el acceso (el staff la
-//  aprueba desde su panel).
+//  Pantalla completa al terminar el examen de fase: CALIFICACIÓN del
+//  módulo (60% examen + 40% actividades de los temas), felicitación
+//  personalizada por rango, resumen de aprendizajes con el desempeño
+//  por tema y, si la siguiente fase está bloqueada para el alumno,
+//  botón para SOLICITAR el acceso (el staff aprueba desde su panel).
+//  Con menos de 50% no se solicita: se invita a repasar.
 // ------------------------------------------------------------
 function ModuloCompletado({ fase, pct, onCerrar }) {
   const { user, perfil, rol, academiaId, grupoId } = useAuth()
+  const { estado } = useProgress()
   const { faseVisible } = useVisibilidad()
+
+  // Desempeño en las ACTIVIDADES de cada tema (mejor quiz guardado del tema;
+  // un tema sin quiz hecho cuenta como 0 — el desglose lo deja claro).
+  const porTema = fase.temas.map((t) => {
+    const q = estado.quizzes[t.id]
+    return { id: t.id, numero: t.numero, titulo: t.titulo, pct: q ? Math.round((q.aciertos / q.total) * 100) : null }
+  })
+  const promTemas = Math.round(porTema.reduce((s, t) => s + (t.pct || 0), 0) / (porTema.length || 1))
+  const conQuiz = porTema.filter((t) => t.pct !== null).length
+  const calificacion = Math.round(0.6 * pct + 0.4 * promTemas)
+  const debeRepasar = calificacion < 50
+  const nivelNota = calificacion >= 70 ? 'ok' : calificacion >= 50 ? 'media' : 'mal'
+  const m = mensajeDeNota(calificacion, (perfil?.nombre || '').split(' ')[0])
 
   const idx = fasesNav.findIndex((f) => f.id === fase.id)
   const siguiente = idx >= 0 ? fasesNav[idx + 1] || null : null
@@ -181,24 +249,41 @@ function ModuloCompletado({ fase, pct, onCerrar }) {
   return (
     <div className="modulo-fin" role="dialog" aria-modal="true" aria-label="Módulo completado">
       <div className="modulo-fin-card" style={{ '--fase-color': fase.color }}>
-        <span className="modulo-fin-emoji" aria-hidden="true">🎉</span>
-        <h2>¡Felicidades{perfil?.nombre ? `, ${perfil.nombre.split(' ')[0]}` : ''}!</h2>
-        <p className="modulo-fin-sub">
-          Completaste el examen de la <strong>Fase {fase.numero} · {fase.titulo}</strong> con
-          un resultado de <b className={pct >= 70 ? 'ok' : 'mal'}>{pct}%</b>.
-        </p>
+        <small className="modulo-fin-fase">Fase {fase.numero} · {fase.titulo}</small>
+        <span className="modulo-fin-emoji" aria-hidden="true">{m.emoji}</span>
+        <h2>{m.titulo}</h2>
+
+        <div className={`modulo-fin-nota ${nivelNota}`}>
+          <b>{calificacion}%</b>
+          <small>Calificación del módulo</small>
+          <span>
+            Examen {pct}% · Actividades de los temas {promTemas}%
+            {conQuiz < porTema.length && ` (${conQuiz}/${porTema.length} temas con quiz hecho)`}
+          </span>
+        </div>
+
+        <p className="modulo-fin-sub">{m.texto}</p>
 
         <div className="modulo-fin-aprendizajes">
           <h3><Icon name="diana" size={18} /> Aprendizajes de este módulo</h3>
           <ul>
-            {fase.temas.map((t) => (
-              <li key={t.id}><span>{t.numero}</span> {t.titulo}</li>
+            {porTema.map((t) => (
+              <li key={t.id}>
+                <span>{t.numero}</span> {t.titulo}
+                <em className={`mf-chip ${t.pct === null ? 'sin' : t.pct >= 70 ? 'ok' : 'mal'}`}>
+                  {t.pct === null ? 'sin quiz' : `${t.pct}%`}
+                </em>
+              </li>
             ))}
           </ul>
         </div>
 
         <div className="modulo-fin-cta">
-          {!siguiente ? (
+          {debeRepasar ? (
+            <Link to={`/fase/${fase.id}`} className="btn btn-primario btn-grande" onClick={onCerrar}>
+              📚 Repasar los temas de la fase
+            </Link>
+          ) : !siguiente ? (
             <p className="modulo-fin-final">
               🏆 Esta era la última fase del temario. ¡Completaste todo el programa!
             </p>

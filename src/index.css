@@ -4154,6 +4154,52 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   box-shadow: 0 30px 80px -20px rgb(0 0 0 / 0.55);
 }
 .modulo-fin-emoji { font-size: 2.7rem; line-height: 1; }
+.modulo-fin-fase {
+  font-family: var(--fuente-sub);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fase-color, var(--primario));
+}
+.modulo-fin-nota {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 12px 26px;
+  border-radius: var(--radio-sm);
+  background: var(--bg-3);
+}
+.modulo-fin-nota b {
+  font-family: var(--fuente-cifra);
+  font-size: 2.4rem;
+  line-height: 1.05;
+}
+.modulo-fin-nota.ok b { color: var(--verde); }
+.modulo-fin-nota.media b { color: var(--alerta, #f59e0b); }
+.modulo-fin-nota.mal b { color: var(--urgencia); }
+.modulo-fin-nota small {
+  font-weight: 700;
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--texto-2);
+}
+.modulo-fin-nota span { font-size: 0.8rem; color: var(--texto-3); }
+.mf-chip {
+  margin-left: auto;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-style: normal;
+  font-family: var(--fuente-cifra);
+  font-weight: 700;
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+.mf-chip.ok { color: var(--verde); background: color-mix(in srgb, var(--verde) 12%, transparent); }
+.mf-chip.mal { color: var(--urgencia); background: color-mix(in srgb, var(--urgencia) 10%, transparent); }
+.mf-chip.sin { color: var(--texto-3); background: var(--bg-2); }
 .modulo-fin-card h2 {
   font-family: var(--fuente-display);
   font-size: 1.7rem;
@@ -4188,6 +4234,7 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   font-size: 0.88rem;
 }
 .modulo-fin-aprendizajes li { display: flex; gap: 8px; align-items: baseline; }
+.modulo-fin-aprendizajes li em { align-self: center; }
 .modulo-fin-aprendizajes li span {
   font-family: var(--fuente-cifra);
   font-weight: 700;
@@ -4208,6 +4255,13 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   padding: 6px;
 }
 .modulo-fin-cerrar:hover { color: var(--texto); }
+
+/* Último tema de la fase: el "Siguiente" lleva al examen del módulo */
+.tema-nav-btn--examen {
+  border-color: color-mix(in srgb, var(--fase-color, var(--primario)) 55%, transparent);
+  background: color-mix(in srgb, var(--fase-color, var(--primario)) 8%, transparent);
+}
+.tema-nav-btn--examen strong { color: var(--fase-color, var(--primario)); }
 
 /* ============================================================
    Solicitudes de acceso (panel del staff) + códigos para profesores
@@ -4282,8 +4336,30 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 .ps-aceptar:disabled, .ps-rechazar:disabled { opacity: 0.55; cursor: default; }
 .ps-todas { align-self: flex-start; }
 
-/* Botón "Habilitar F#" en la tabla de avance */
+/* Botones "Habilitar F#" / "↩ retroceder" en la tabla de avance */
 .panel-celda-habilitar { text-align: center; white-space: nowrap; }
+.panel-modulos-botones {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.panel-retroceder-btn {
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--urgencia) 40%, transparent);
+  color: var(--urgencia);
+  background: transparent;
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.panel-retroceder-btn:hover:not(:disabled) {
+  background: var(--urgencia);
+  color: #fff;
+}
+.panel-retroceder-btn:disabled { opacity: 0.55; cursor: default; }
 .panel-habilitar-btn {
   padding: 4px 10px;
   border-radius: 999px;

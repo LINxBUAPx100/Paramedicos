@@ -13,7 +13,7 @@
 import { db } from './init.js'
 import {
   collection, doc, addDoc, updateDoc, query, where, getDocs,
-  serverTimestamp, arrayUnion,
+  serverTimestamp, arrayUnion, arrayRemove,
 } from 'firebase/firestore'
 
 export async function crearSolicitud({
@@ -57,6 +57,12 @@ export async function misSolicitudes(uid) {
 // Habilita una fase a UN alumno (staff): se suma a sus fases desbloqueadas.
 export async function desbloquearFase(uid, faseId) {
   await updateDoc(doc(db, 'usuarios', uid), { fasesDesbloqueadas: arrayUnion(faseId) })
+}
+
+// Retrocede: le quita al alumno una fase habilitada individualmente (vuelve a
+// regir lo oculto de su grupo). No afecta las fases que el grupo ya muestra.
+export async function bloquearFase(uid, faseId) {
+  await updateDoc(doc(db, 'usuarios', uid), { fasesDesbloqueadas: arrayRemove(faseId) })
 }
 
 export async function rechazarSolicitud(id, resueltoPor) {

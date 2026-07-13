@@ -107,6 +107,18 @@ export default function PanelAcademia({ academiaId, gestion = null, miUid = null
     return fasesNav.find((f) => ocultasDelGrupo.includes(f.id) && !yaDesbloqueadas.includes(f.id)) || null
   }
 
+  // Última fase habilitada INDIVIDUALMENTE (y que el grupo aún oculta): es la
+  // que se puede retroceder. Las fases que el grupo ya muestra no se tocan aquí.
+  const ultimaHabilitada = (al) => {
+    const ocultasDelGrupo = grupos.find((g) => g.id === al.grupoId)?.fasesOcultas || []
+    const yaDesbloqueadas = al.fasesDesbloqueadas || []
+    return (
+      [...fasesNav]
+        .reverse()
+        .find((f) => yaDesbloqueadas.includes(f.id) && ocultasDelGrupo.includes(f.id)) || null
+    )
+  }
+
   const habilitarFase = async (uid, f) => {
     setDesbloqueando(uid)
     setError('')
@@ -116,6 +128,20 @@ export default function PanelAcademia({ academiaId, gestion = null, miUid = null
       setRecarga((n) => n + 1)
     } catch {
       setError('No se pudo habilitar el módulo (revisa permisos o conexión).')
+    } finally {
+      setDesbloqueando(null)
+    }
+  }
+
+  const retrocederFase = async (uid, f) => {
+    setDesbloqueando(uid)
+    setError('')
+    try {
+      const { bloquearFase } = await import('../lib/firebase/solicitudes.js')
+      await bloquearFase(uid, f.id)
+      setRecarga((n) => n + 1)
+    } catch {
+      setError('No se pudo retroceder el módulo (revisa permisos o conexión).')
     } finally {
       setDesbloqueando(null)
     }
@@ -211,21 +237,36 @@ export default function PanelAcademia({ academiaId, gestion = null, miUid = null
                     })}
                     <td className="panel-celda-habilitar" onClick={(e) => e.stopPropagation()}>
                       {(() => {
-                        const f = siguientePorHabilitar(al)
-                        if (!f) {
+                        const sig = siguientePorHabilitar(al)
+                        const ult = ultimaHabilitada(al)
+                        if (!sig && !ult) {
                           return (
                             <span className="panel-celda-vacia" title="Ya ve todos los módulos disponibles">—</span>
                           )
                         }
                         return (
-                          <button
-                            className="panel-habilitar-btn"
-                            disabled={desbloqueando === al.id}
-                            title={`Habilitarle la Fase ${f.numero} · ${f.titulo}`}
-                            onClick={() => habilitarFase(al.id, f)}
-                          >
-                            {desbloqueando === al.id ? '…' : `Habilitar F${f.numero}`}
-                          </button>
+                          <span className="panel-modulos-botones">
+                            {sig && (
+                              <button
+                                className="panel-habilitar-btn"
+                                disabled={desbloqueando === al.id}
+                                title={`Habilitarle la Fase ${sig.numero} · ${sig.titulo}`}
+                                onClick={() => habilitarFase(al.id, sig)}
+                              >
+                                {desbloqueando === al.id ? '…' : `Habilitar F${sig.numero}`}
+                              </button>
+                            )}
+                            {ult && (
+                              <button
+                                className="panel-retroceder-btn"
+                                disabled={desbloqueando === al.id}
+                                title={`Retroceder: volver a ocultarle la Fase ${ult.numero} · ${ult.titulo}`}
+                                onClick={() => retrocederFase(al.id, ult)}
+                              >
+                                {desbloqueando === al.id ? '…' : `↩ F${ult.numero}`}
+                              </button>
+                            )}
+                          </span>
                         )
                       })()}
                     </td>

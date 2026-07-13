@@ -95,17 +95,24 @@ profesor ve una lista de códigos en solo lectura.
 
 ## Fin de módulo y solicitudes de siguiente módulo
 
-Al **terminar el examen de una fase**, el alumno ve una pantalla completa de
-felicitaciones con el resumen de aprendizajes (los temas del módulo) y, si la
-siguiente fase está oculta para su grupo, un botón **"Solicitar acceso al
-siguiente módulo"**. Las solicitudes van a la colección `solicitudes` y el
+El **último tema de cada fase** lleva directo al **examen del módulo** (el
+botón "Siguiente" se convierte en "Presentar el examen de la Fase X"). Al
+terminarlo, el alumno ve una pantalla completa con su **calificación del
+módulo** (60% examen + 40% actividades/quizzes de los temas, con desglose y
+el porcentaje de cada tema), una **felicitación personalizada por rango**
+(<50 lo manda a repasar sin poder solicitar; 50s, 60s, 70-75, 76-79, 80s,
+90s, el 99 "tan cerca" y el 100 perfecto tienen mensajes propios) y el
+resumen de aprendizajes. Si la siguiente fase está oculta para su grupo,
+aparece el botón **"Solicitar acceso al siguiente módulo"**. Las solicitudes van a la colección `solicitudes` y el
 staff (profesor, director o super-admin) las atiende en su panel, sección
 **"Solicitudes pendientes"**: aceptar una por una, **"Aceptar todas"** o
 rechazar. Aceptar añade la fase a `usuarios/{uid}.fasesDesbloqueadas`, que
 **anula lo oculto del grupo solo para ese alumno**. Además, en la tabla de
 avance cada alumno tiene un botón **"Habilitar F#"** para abrirle el
-siguiente módulo sin esperar solicitud. Las solicitudes de códigos de los
-profesores solo puede aprobarlas el director o el super-admin.
+siguiente módulo sin esperar solicitud, y un botón **"↩ F#"** para
+**retroceder** (le quita la última fase habilitada individualmente; las fases
+que el grupo ya muestra se controlan desde **Temas**). Las solicitudes de
+códigos de los profesores solo puede aprobarlas el director o el super-admin.
 
 ⚠️ Ambas funciones requieren **volver a publicar `firestore.rules`**
 (colección `solicitudes` + campo `fasesDesbloqueadas` en `usuarios`).

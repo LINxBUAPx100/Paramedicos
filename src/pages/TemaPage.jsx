@@ -57,6 +57,9 @@ export default function TemaPage() {
   const vecinos = getTemaVecinos(temaId)
   const leido = estado.leidos[temaId]
   const recursos = getRecursos(temaId)
+  // ¿Es el ÚLTIMO tema de su fase? Al terminarlo, el "Siguiente" lleva
+  // directo al EXAMEN del módulo (no al primer tema de la fase que sigue).
+  const ultimoDeFase = !vecinos.siguiente || vecinos.siguiente.faseId !== tema.faseId
 
   return (
     <article className="tema-page" style={{ '--fase-color': tema.faseColor }}>
@@ -166,7 +169,15 @@ export default function TemaPage() {
         ) : (
           <span />
         )}
-        {vecinos.siguiente ? (
+        {ultimoDeFase ? (
+          <button
+            className="tema-nav-btn derecha tema-nav-btn--examen"
+            onClick={() => navigate(`/fase/${tema.faseId}/examen`)}
+          >
+            <span>🎉 Terminaste el módulo</span>
+            <strong>Presentar el examen de la Fase {tema.faseNumero}</strong>
+          </button>
+        ) : (
           <button
             className="tema-nav-btn derecha"
             onClick={() => navigate(`/tema/${vecinos.siguiente.id}`)}
@@ -174,8 +185,6 @@ export default function TemaPage() {
             <span>Siguiente →</span>
             <strong>{vecinos.siguiente.numero} {vecinos.siguiente.titulo}</strong>
           </button>
-        ) : (
-          <span />
         )}
       </nav>
     </article>
