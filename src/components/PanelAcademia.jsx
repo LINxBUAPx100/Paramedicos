@@ -306,10 +306,20 @@ function Estadisticas({ alumnos, staff, intentos, resumen }) {
 }
 
 // ---------- Códigos de acceso temporal (probar el servicio) ----------
-export function CodigosPrueba({ academiaId = null, miUid }) {
+// Traduce el error más común: reglas de Firestore sin publicar/desactualizadas.
+function errorCodigos(err, accion) {
+  return String(err?.code || '').includes('permission-denied')
+    ? 'Sin permisos: publica las reglas actualizadas de firestore.rules en la consola de Firebase (colección "codigos").'
+    : `${accion} (revisa tu conexión).`
+}
+
+// `academias`: solo para el super-admin — lista para elegir a qué academia
+// pertenece el código nuevo (o dejarlo global).
+export function CodigosPrueba({ academiaId = null, miUid, academias = null }) {
   const [codigos, setCodigos] = useState(null)
   const [dias, setDias] = useState(7)
   const [nota, setNota] = useState('')
+  const [acaSel, setAcaSel] = useState('') // '' = código global (solo super-admin)
   const [nuevo, setNuevo] = useState(null) // último código creado (para copiarlo)
   const [ocupado, setOcupado] = useState(false)
   const [error, setError] = useState('')
@@ -318,9 +328,9 @@ export function CodigosPrueba({ academiaId = null, miUid }) {
     try {
       const { listarCodigos } = await import('../lib/firebase/codigos.js')
       setCodigos(await listarCodigos(academiaId))
-    } catch {
+    } catch (err) {
       setCodigos([])
-      setError('No se pudieron cargar los códigos (revisa que las reglas estén publicadas).')
+      setError(errorCodigos(err, 'No se pudieron cargar los códigos'))
     }
   }
   useEffect(() => { cargar() }, [academiaId]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -331,12 +341,13 @@ export function CodigosPrueba({ academiaId = null, miUid }) {
     setError('')
     try {
       const { crearCodigo } = await import('../lib/firebase/codigos.js')
-      const c = await crearCodigo({ creadoPor: miUid, academiaId, dias: Number(dias), nota })
+      const paraAcademia = academias ? (acaSel || null) : academiaId
+      const c = await crearCodigo({ creadoPor: miUid, academiaId: paraAcademia, dias: Number(dias), nota })
       setNuevo(c.id)
       setNota('')
       await cargar()
-    } catch {
-      setError('No se pudo crear el código.')
+    } catch (err) {
+      setError(errorCodigos(err, 'No se pudo crear el código'))
     } finally {
       setOcupado(false)
     }
@@ -347,8 +358,8 @@ export function CodigosPrueba({ academiaId = null, miUid }) {
       const { alternarCodigo } = await import('../lib/firebase/codigos.js')
       await alternarCodigo(c.id, c.estado === 'activo' ? 'inactivo' : 'activo')
       await cargar()
-    } catch {
-      setError('No se pudo cambiar el estado del código.')
+    } catch (err) {
+      setError(errorCodigos(err, 'No se pudo cambiar el estado del código'))
     }
   }
 
@@ -373,6 +384,17 @@ export function CodigosPrueba({ academiaId = null, miUid }) {
       </p>
 
       <form className="pc-form" onSubmit={crear}>
+        {academias && (
+          <label>
+            Academia
+            <select value={acaSel} onChange={(e) => setAcaSel(e.target.value)}>
+              <option value="">— Global (sin academia) —</option>
+              {academias.map((a) => (
+                <option key={a.id} value={a.id}>{a.id} — {a.nombre}</option>
+              ))}
+            </select>
+          </label>
+        )}
         <label>
           Vigencia
           <select value={dias} onChange={(e) => setDias(e.target.value)}>
@@ -408,6 +430,9 @@ export function CodigosPrueba({ academiaId = null, miUid }) {
             return (
               <li key={c.id} className={`pc-item ${est}`}>
                 <code className="pc-codigo">{c.id}</code>
+                {academias && (
+                  <span className="pc-academia">{c.academiaId || 'global'}</span>
+                )}
                 <span className="pc-detalle">
                   {c.nota && <strong>{c.nota} · </strong>}
                   expira {fechaTxt(c.expira)}

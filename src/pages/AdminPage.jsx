@@ -334,7 +334,7 @@ export default function AdminPage() {
             <NuevoUsuario academias={academias} onCreado={refrescar} />
           </section>
 
-          <CodigosPrueba academiaId={null} miUid={user?.uid} />
+          <CodigosPrueba academiaId={null} miUid={user?.uid} academias={academias} />
         </>
       )}
     </div>

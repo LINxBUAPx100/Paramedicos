@@ -581,6 +581,15 @@ textarea:focus-visible,
 }
 .pc-item.inactivo, .pc-item.expirado { opacity: 0.62; }
 .pc-codigo { font-family: var(--fuente-cifra); font-weight: 700; }
+.pc-academia {
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--primario);
+  background: color-mix(in srgb, var(--primario) 12%, transparent);
+  white-space: nowrap;
+}
 .pc-detalle { color: var(--texto-2); flex: 1; min-width: 140px; }
 .pc-estado {
   padding: 2px 9px;
