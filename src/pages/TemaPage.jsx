@@ -2,6 +2,8 @@ import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { getTema, getTemaVecinos } from '../data/index.js'
 import { getRecursos } from '../data/recursosDescarga.js'
+import { imagenesDeTema } from '../data/imagenes.js'
+import Imagen from '../components/Imagen.jsx'
 import { useProgress } from '../context/ProgressContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
@@ -57,6 +59,7 @@ export default function TemaPage() {
   const vecinos = getTemaVecinos(temaId)
   const leido = estado.leidos[temaId]
   const recursos = getRecursos(temaId)
+  const galeria = imagenesDeTema(temaId)
   // ¿Es el ÚLTIMO tema de su fase? Al terminarlo, el "Siguiente" lleva
   // directo al EXAMEN del módulo (no al primer tema de la fase que sigue).
   const ultimoDeFase = !vecinos.siguiente || vecinos.siguiente.faseId !== tema.faseId
@@ -118,6 +121,24 @@ export default function TemaPage() {
       )}
 
       <Contenido secciones={tema.secciones} />
+
+      {galeria.length > 0 && (
+        <section className="tema-galeria">
+          <h2 className="seccion-titulo"><Icon name="atlas" size={20} /> Imágenes de referencia</h2>
+          <div className="tema-galeria-grid">
+            {galeria.map((img) => (
+              <Imagen
+                key={img.clave}
+                src={img.src}
+                ratio="4 / 3"
+                caption={img.titulo}
+                busqueda={`${img.titulo} anatomía`}
+                alt={img.titulo}
+              />
+            ))}
+          </div>
+        </section>
+      )}
 
       <Recursos recursos={tema.recursos} />
 

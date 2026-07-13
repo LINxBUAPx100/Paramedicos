@@ -35,6 +35,12 @@ export const fase1 = {
                 'La célula eucariota está delimitada por la membrana plasmática, una bicapa lipídica con proteínas integrales y periféricas que controla selectivamente el intercambio con el medio. En su interior, el citoplasma alberga organelos especializados suspendidos en el citosol y sostenidos por el citoesqueleto.',
             },
             {
+              tipo: 'diagrama',
+              clave: 'celula',
+              titulo: 'La célula y sus organelos',
+              descripcion: 'Núcleo, mitocondria, retículo, Golgi y lisosomas: cada organelo cumple una función clave en la homeostasis.',
+            },
+            {
               tipo: 'lista',
               titulo: 'Organelos y su relevancia clínica',
               items: [
@@ -78,6 +84,12 @@ export const fase1 = {
               titulo: 'La bomba Na⁺/K⁺ ATPasa',
               texto:
                 'Expulsa 3 Na⁺ e introduce 2 K⁺ por cada ATP, manteniendo el gradiente electroquímico, el potencial de membrana en reposo (≈ −70 mV) y el volumen celular. Cuando falla el ATP (isquemia), entra Na⁺ y agua → tumefacción celular, el primer signo de lesión.',
+            },
+            {
+              tipo: 'diagrama',
+              clave: 'bombanak',
+              titulo: 'Bomba Na⁺/K⁺ ATPasa',
+              descripcion: 'Con cada ATP la bomba expulsa 3 Na⁺ e introduce 2 K⁺: sostiene el potencial de reposo y el volumen de la célula.',
             },
           ],
         },
@@ -350,6 +362,12 @@ export const fase1 = {
                 'La circulación mayor (sistémica) lleva sangre oxigenada del ventrículo izquierdo al cuerpo; la menor (pulmonar) lleva sangre desoxigenada del ventrículo derecho a los pulmones. Las arterias coronarias nacen de la raíz aórtica: la coronaria izquierda se divide en descendente anterior (cara anterior y septo) y circunfleja (cara lateral); la coronaria derecha irriga el ventrículo derecho y, en la mayoría, la cara inferior y el nodo AV.',
             },
             {
+              tipo: 'diagrama',
+              clave: 'corazon',
+              titulo: 'Anatomía del corazón y arterias coronarias',
+              descripcion: 'Descendente anterior, circunfleja y coronaria derecha: saber qué cara irriga cada una predice la arteria ocluida en el IAM.',
+            },
+            {
               tipo: 'callout',
               variante: 'clinico',
               titulo: 'Correlación coronaria-ECG',
@@ -360,6 +378,12 @@ export const fase1 = {
               tipo: 'p',
               texto:
                 'El árbol traqueobronquial parte de la tráquea, que se bifurca en la carina hacia los bronquios principales. El bronquio derecho es más vertical, corto y ancho: por eso los cuerpos extraños y la intubación selectiva tienden a alojarse a la derecha. Los pulmones se dividen en lóbulos (3 derecho, 2 izquierdo) y segmentos. Las pleuras (visceral y parietal) crean un espacio virtual cuya integridad mantiene la presión negativa necesaria para la ventilación.',
+            },
+            {
+              tipo: 'diagrama',
+              clave: 'respiratorio',
+              titulo: 'Árbol traqueobronquial y pulmones',
+              descripcion: 'Tráquea, carina y bronquios principales; el derecho es más vertical, corto y ancho.',
             },
           ],
         },
@@ -492,6 +516,12 @@ export const fase1 = {
               ],
             },
             {
+              tipo: 'diagrama',
+              clave: 'gasto',
+              titulo: 'Determinantes del gasto cardíaco',
+              descripcion: 'Precarga, poscarga e inotropismo: cada tipo de shock ataca uno distinto y el tratamiento se dirige al alterado.',
+            },
+            {
               tipo: 'callout',
               variante: 'clinico',
               titulo: 'Razonamiento del shock',
@@ -515,6 +545,12 @@ export const fase1 = {
               texto:
                 'Su forma sigmoidea explica que la SpO₂ se mantenga alta hasta una pO₂ ~60 mmHg, y luego caiga bruscamente. Se desplaza a la DERECHA (suelta O₂ a los tejidos) con acidosis, hipercapnia, fiebre y aumento de 2,3-DPG (efecto Bohr). Se desplaza a la IZQUIERDA (retiene O₂) con alcalosis, hipotermia e hipocapnia. El efecto Haldane describe cómo la desoxihemoglobina transporta mejor el CO₂.',
             },
+            {
+              tipo: 'diagrama',
+              clave: 'oxihemoglobina',
+              titulo: 'Curva de disociación de la oxihemoglobina',
+              descripcion: 'La forma sigmoidea y sus desplazamientos (efecto Bohr) explican cuándo la hemoglobina cede o retiene O₂.',
+            },
           ],
         },
         {
@@ -524,6 +560,12 @@ export const fase1 = {
               tipo: 'p',
               texto:
                 'El riñón filtra el plasma en el glomérulo (la tasa de filtración glomerular, TFG, es el mejor índice de función renal) y luego reabsorbe selectivamente agua y solutos en los túbulos. Regula la volemia, los electrolitos y el equilibrio ácido-base reabsorbiendo o excretando bicarbonato y H⁺.',
+            },
+            {
+              tipo: 'diagrama',
+              clave: 'nefrona',
+              titulo: 'La nefrona',
+              descripcion: 'Glomérulo y túbulos: filtración, reabsorción y secreción que regulan volemia, electrolitos y pH.',
             },
             {
               tipo: 'pasos',

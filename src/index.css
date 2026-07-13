@@ -3206,6 +3206,14 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
 .atlas-card--link:hover .atlas-card-titulo svg { transform: translateX(3px); }
 
 .conceptos { margin: 40px 0; }
+/* Galería "Imágenes de referencia" de un tema (reutiliza el Atlas) */
+.tema-galeria { margin: 28px 0; }
+.tema-galeria-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
+}
+
 .conceptos-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));

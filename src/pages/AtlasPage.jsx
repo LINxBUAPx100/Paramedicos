@@ -23,8 +23,10 @@ export default function AtlasPage() {
         </p>
       </header>
       <div className="atlas-grid">
-        {ATLAS_TEMAS.map((tema, i) => {
-          const temaId = temaPorClaveImagen[tema.clave]
+        {ATLAS_TEMAS.filter((t) => (t.src || '').trim()).map((tema, i) => {
+          // El tema al que salta la tarjeta: 1º un `tema` explícito de la
+          // entrada, 2º el primer bloque de contenido que use esa `clave`.
+          const temaId = tema.tema || temaPorClaveImagen[tema.clave]
           const bloqueada = Boolean(temaId) && !temaVisible(temaId)
 
           if (bloqueada) {
