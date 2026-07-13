@@ -1264,7 +1264,7 @@ export const extraFase2 = [
     id: 'phtls-trauma',
     orden: 8,
     numero: '2.8',
-    titulo: 'Atencion Prehospitalaria del Trauma (PHTLS)',
+    titulo: 'Atención Prehospitalaria del Trauma',
     icono: '🚨',
     duracion: '55 min',
     resumen:

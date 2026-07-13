@@ -117,7 +117,7 @@ export const fasesNav = [
       {
         "id": "phtls-trauma",
         "numero": "2.8",
-        "titulo": "Atencion Prehospitalaria del Trauma (PHTLS)"
+        "titulo": "Atención Prehospitalaria del Trauma"
       },
       {
         "id": "urgencias-medicas-comunes",

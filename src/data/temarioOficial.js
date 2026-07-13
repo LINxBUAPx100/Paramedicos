@@ -127,8 +127,8 @@ export const temarioOficial = {
           ],
         },
         {
-          titulo: 'B · Protocolos de Trauma (Stop The Bleed / PHTLS)',
-          recursos: 'PHTLS 10.ma edición · Stop The Bleed (ACS)',
+          titulo: 'B · Protocolos de Trauma y Control de Hemorragias',
+          recursos: 'Guías de atención al trauma y control de hemorragias',
           subtemas: [
             { n: 61, t: 'Cinemática del trauma', temaId: 'phtls-trauma' },
             { n: 62, t: 'Control de hemorragia masiva (Stop The Bleed) y agentes hemostáticos', temaId: 'hemorragias-shock-basico' },
