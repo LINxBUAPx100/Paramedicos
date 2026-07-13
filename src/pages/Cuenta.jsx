@@ -368,7 +368,7 @@ function Perfil({ user, perfil, salir, codigoInvitacion = '', onConsumir }) {
       {msg && perfil?.academiaId && <p className="cuenta-ok" role="status">{msg}</p>}
 
       <button className="cuenta-editar-toggle" onClick={() => setEditando((v) => !v)}>
-        {editando ? '▲ Ocultar edición' : '✎ Editar mis datos'}
+        {editando ? 'Cerrar edición' : 'Editar mis datos'}
       </button>
       {editando && <EditarMisDatos user={user} perfil={perfil} />}
 

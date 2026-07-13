@@ -108,8 +108,8 @@ export default function ExamenFasePage() {
           {guardado && (
             <div className={`examen-fase-guardado ${guardado.ok ? 'ok' : 'error'}`} role="status">
               {guardado.ok
-                ? `✓ Intento guardado (${guardado.pct}%). Tu maestro podrá verlo en tu avance.`
-                : '⚠ No se pudo guardar el intento (revisa tu conexión). Tu resultado sigue abajo.'}
+                ? `Intento guardado (${guardado.pct}%). Tu maestro podrá verlo en tu avance.`
+                : 'No se pudo guardar el intento (revisa tu conexión). Tu resultado sigue abajo.'}
             </div>
           )}
 
@@ -121,8 +121,8 @@ export default function ExamenFasePage() {
           />
 
           <div className="quiz-page-pie">
-            <button className="btn btn-secundario" onClick={otroIntento}>
-              ↻ Otro intento
+            <button type="button" className="btn btn-secundario" onClick={otroIntento}>
+              Otro intento
             </button>
             <Link to={`/fase/${fase.id}`} className="btn btn-secundario">
               ← Volver a la fase
@@ -313,24 +313,24 @@ function ModuloCompletado({ fase, pct, onCerrar }) {
         <div className="modulo-fin-cta">
           {debeRepasar ? (
             <Link to={`/fase/${fase.id}`} className="btn btn-primario btn-grande" onClick={onCerrar}>
-              📚 Repasar los temas de la fase
+              Repasar los temas de la fase
             </Link>
           ) : !siguiente ? (
             <p className="modulo-fin-final">
-              🏆 Esta era la última fase del temario. ¡Completaste todo el programa!
+              Esta era la última fase del temario: completaste todo el programa.
             </p>
           ) : bloqueada ? (
             <>
               {envio === 'enviada' || envio === 'pendiente' ? (
                 <p className="modulo-fin-final" role="status">
-                  ✓ {envio === 'enviada' ? 'Solicitud enviada.' : 'Ya tienes una solicitud pendiente.'}{' '}
+                  {envio === 'enviada' ? 'Solicitud enviada.' : 'Ya tienes una solicitud pendiente.'}{' '}
                   Tu profesor la verá en su panel y te habilitará la
                   Fase {siguiente.numero} · {siguiente.titulo}.
                 </p>
               ) : confirmar ? (
                 <div className="modulo-fin-aviso" role="alert">
                   <p>
-                    <b>⚠ Vas a solicitar avanzar a la Fase {siguiente.numero}.</b> Solo hazlo si ya
+                    <b>Vas a solicitar avanzar a la Fase {siguiente.numero}.</b> Solo hazlo si ya
                     dominas este módulo: tu profesor revisará tu desempeño antes de habilitártela y
                     no podrás cancelar la solicitud una vez enviada.
                   </p>
@@ -357,7 +357,7 @@ function ModuloCompletado({ fase, pct, onCerrar }) {
                   onClick={() => setConfirmar(true)}
                   disabled={envio === 'cargando'}
                 >
-                  ⚠ Solicitar avanzar al siguiente módulo
+                  Solicitar avanzar al siguiente módulo
                 </button>
               )}
               {envio === 'error' && (

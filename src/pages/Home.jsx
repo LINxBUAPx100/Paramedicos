@@ -60,7 +60,7 @@ export default function Home() {
                       index.html (React 18 no reconoce fetchpriority en el <img>). */}
                   <img
                     src={`${import.meta.env.BASE_URL}hero/paramedico-800.webp`}
-                    alt="Paramédico"
+                    alt="Paramédico de PTEM con uniforme y estetoscopio"
                     width="2000"
                     height="2000"
                     decoding="async"
@@ -293,7 +293,7 @@ function SelectorGrupoProfesor() {
         <div className="prof-panel-cab">
           <span className="prof-panel-ico"><Icon name="usuario" size={22} /></span>
           <div>
-            <h2>Hola{nombre ? `, ${nombre}` : ''} 👋</h2>
+            <h2>Hola{nombre ? `, ${nombre}` : ''}</h2>
             <p>
               Elige el grupo con el que vas a trabajar. Tu elección se guarda y
               se mantiene hasta que la cambies: enfoca tu panel de avance, tus

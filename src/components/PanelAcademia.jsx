@@ -202,11 +202,17 @@ export default function PanelAcademia({ academiaId, academiaNombre = '', gestion
           <table className="panel-tabla">
             <thead>
               <tr>
-                <th>Alumno</th>
+                <th scope="col">Alumno</th>
                 {fasesNav.map((f) => (
-                  <th key={f.id} title={f.titulo}>F{f.numero}</th>
+                  <th key={f.id} scope="col">
+                    <abbr title={f.titulo}>F{f.numero}</abbr>
+                    <span className="sr-only">: {f.titulo}</span>
+                  </th>
                 ))}
-                <th title="Habilitar el siguiente módulo que su grupo tiene oculto">Módulos</th>
+                <th scope="col">
+                  Módulos
+                  <span className="sr-only"> (habilitar el siguiente módulo que su grupo tiene oculto)</span>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -214,18 +220,25 @@ export default function PanelAcademia({ academiaId, academiaNombre = '', gestion
                 const porFase = resumen[al.id] || {}
                 const abierto = alumnoAbierto === al.id
                 return (
-                  <tr
-                    key={al.id}
-                    className={abierto ? 'abierto' : ''}
-                    onClick={() => setAlumnoAbierto(abierto ? null : al.id)}
-                  >
-                    <td className="panel-alumno">
-                      <strong>{al.nombre || al.email || al.id}</strong>
+                  <tr key={al.id} className={abierto ? 'abierto' : ''}>
+                    <th scope="row" className="panel-alumno">
+                      <button
+                        type="button"
+                        className="panel-alumno-abrir"
+                        aria-expanded={abierto}
+                        aria-controls="panel-detalle-alumno"
+                        onClick={() => setAlumnoAbierto(abierto ? null : al.id)}
+                      >
+                        {al.nombre || al.email || al.id}
+                        <span className="sr-only">
+                          {abierto ? ' — cerrar su historial' : ' — abrir su historial de intentos'}
+                        </span>
+                      </button>
                       {al.grupoId && !grupoFiltro && (
                         <span className="panel-tag-grupo">{nombreGrupo(al.grupoId)}</span>
                       )}
                       {al.estado !== 'activo' && <span className="panel-tag-suspendido">suspendido</span>}
-                    </td>
+                    </th>
                     {fasesNav.map((f) => {
                       const c = porFase[f.id]
                       if (!c) return <td key={f.id} className="panel-celda-vacia">—</td>
@@ -237,7 +250,7 @@ export default function PanelAcademia({ academiaId, academiaNombre = '', gestion
                         </td>
                       )
                     })}
-                    <td className="panel-celda-habilitar" onClick={(e) => e.stopPropagation()}>
+                    <td className="panel-celda-habilitar">
                       {(() => {
                         const sig = siguientePorHabilitar(al)
                         const ult = ultimaHabilitada(al)
@@ -250,9 +263,11 @@ export default function PanelAcademia({ academiaId, academiaNombre = '', gestion
                           <span className="panel-modulos-botones">
                             {sig && (
                               <button
+                                type="button"
                                 className="panel-habilitar-btn"
                                 disabled={desbloqueando === al.id}
                                 title={`Habilitarle la Fase ${sig.numero} · ${sig.titulo}`}
+                                aria-label={`Habilitar la Fase ${sig.numero} (${sig.titulo}) a ${al.nombre || al.email}`}
                                 onClick={() => habilitarFase(al.id, sig)}
                               >
                                 {desbloqueando === al.id ? '…' : `Habilitar F${sig.numero}`}
@@ -260,12 +275,14 @@ export default function PanelAcademia({ academiaId, academiaNombre = '', gestion
                             )}
                             {ult && (
                               <button
+                                type="button"
                                 className="panel-retroceder-btn"
                                 disabled={desbloqueando === al.id}
                                 title={`Retroceder: volver a ocultarle la Fase ${ult.numero} · ${ult.titulo}`}
+                                aria-label={`Volver a ocultar la Fase ${ult.numero} (${ult.titulo}) a ${al.nombre || al.email}`}
                                 onClick={() => retrocederFase(al.id, ult)}
                               >
-                                {desbloqueando === al.id ? '…' : `↩ F${ult.numero}`}
+                                {desbloqueando === al.id ? '…' : `Ocultar F${ult.numero}`}
                               </button>
                             )}
                           </span>
@@ -405,7 +422,7 @@ function SolicitudesAcademia({ academiaId, gestion, miUid, soloGrupo, nombreGrup
       {error && <p className="cuenta-error" role="alert">{error}</p>}
 
       {visibles.length === 0 ? (
-        <p className="panel-vacio">No hay solicitudes pendientes. 🎉</p>
+        <p className="panel-vacio">No hay solicitudes pendientes.</p>
       ) : (
         <>
           <ul className="ps-lista">
@@ -429,7 +446,7 @@ function SolicitudesAcademia({ academiaId, gestion, miUid, soloGrupo, nombreGrup
                     disabled={Boolean(ocupado)}
                     onClick={() => resolver(s, true)}
                   >
-                    {ocupado === s.id ? '…' : '✓ Aceptar'}
+                    {ocupado === s.id ? '…' : 'Aceptar'}
                   </button>
                   <button
                     className="ps-rechazar"
@@ -444,7 +461,7 @@ function SolicitudesAcademia({ academiaId, gestion, miUid, soloGrupo, nombreGrup
           </ul>
           {visibles.length > 1 && (
             <button className="btn btn-primario ps-todas" disabled={Boolean(ocupado)} onClick={aceptarTodas}>
-              {ocupado === 'todas' ? 'Aceptando…' : `✓ Aceptar todas (${visibles.length})`}
+              {ocupado === 'todas' ? 'Aceptando…' : `Aceptar todas (${visibles.length})`}
             </button>
           )}
         </>
@@ -537,7 +554,7 @@ function AccesoCodigos({ academiaId, academiaNombre = '', grupos }) {
       </p>
       {estado === 'pendiente' || estado === 'enviada' ? (
         <p className="cuenta-ok" role="status">
-          ✓ Solicitud {estado === 'enviada' ? 'enviada' : 'pendiente'}: espera la aprobación de tu director.
+          Solicitud {estado === 'enviada' ? 'enviada' : 'pendiente'}: espera la aprobación de tu director.
         </p>
       ) : (
         <button
@@ -545,7 +562,7 @@ function AccesoCodigos({ academiaId, academiaNombre = '', grupos }) {
           onClick={solicitar}
           disabled={estado === 'enviando' || estado === 'cargando'}
         >
-          {estado === 'enviando' ? 'Enviando…' : '🔑 Solicitar ver los códigos'}
+          {estado === 'enviando' ? 'Enviando…' : 'Solicitar ver los códigos'}
         </button>
       )}
       {estado === 'error' && (
@@ -677,7 +694,7 @@ function Estadisticas({ alumnos, staff, intentos, resumen }) {
           <div className="pe-card pe-card--riesgo">
             <h3>Alumnos en riesgo</h3>
             {stats.enRiesgo.length === 0 ? (
-              <p className="panel-vacio">Nadie por debajo del 70% de promedio. 🎉</p>
+              <p className="panel-vacio">Nadie por debajo del 70% de promedio.</p>
             ) : (
               <ul className="pe-riesgo">
                 {stats.enRiesgo.map((al) => (
@@ -903,7 +920,7 @@ export function DetalleAlumno({ alumno, intentos, onCerrar }) {
   const fechaTxt = (f) =>
     f?.seconds ? new Date(f.seconds * 1000).toLocaleString('es-MX', { dateStyle: 'medium', timeStyle: 'short' }) : '—'
   return (
-    <section className="panel-detalle" aria-label={`Historial de ${alumno.nombre}`}>
+    <section id="panel-detalle-alumno" className="panel-detalle" aria-label={`Historial de ${alumno.nombre || alumno.email}`}>
       <header>
         <h2>{alumno.nombre || alumno.email}</h2>
         <button className="btn btn-secundario" onClick={onCerrar}>Cerrar</button>
@@ -1130,31 +1147,50 @@ function GestionMiembros({ miembros, grupos = [], gestion, miUid, onCambio }) {
         <table className="panel-tabla panel-tabla--gestion">
           <thead>
             <tr>
-              <th>Miembro</th>
-              <th>Correo</th>
-              <th>Rol</th>
-              <th>Grupo</th>
-              <th>Estado</th>
+              <th scope="col">Miembro</th>
+              <th scope="col">Correo</th>
+              <th scope="col">Rol</th>
+              <th scope="col">Grupo</th>
+              <th scope="col">Estado</th>
             </tr>
           </thead>
           <tbody>
             {miembros.map((m) => {
               const puede = editable(m)
               const suspendido = m.estado && m.estado !== 'activo'
+              const quien = m.nombre || m.email || m.id
+              const sinNombre = !m.nombre
+                || m.nombre.trim().toLowerCase() === (m.email || '').trim().toLowerCase()
               return (
                 <tr key={m.id} className="panel-fila-gestion">
-                  <td className="panel-alumno">
-                    <strong>{m.nombre || '—'}</strong>
+                  <td className="panel-alumno" data-label="Miembro">
+                    {sinNombre
+                      ? <span className="panel-sin-nombre">Sin nombre registrado</span>
+                      : <strong>{m.nombre}</strong>}
                     {m.id === miUid && <span className="panel-tag-yo">tú</span>}
                   </td>
-                  <td className="panel-correo">{m.email || '—'}</td>
-                  <td>
+                  <td className="panel-correo" data-label="Correo">{m.email || '—'}</td>
+                  <td data-label="Rol">
                     {puede ? (
                       <select
                         className="panel-rol-select"
                         value={m.rol}
                         disabled={ocupado === m.id}
-                        onChange={(e) => aplicar(m.id, { rol: e.target.value })}
+                        aria-label={`Rol de ${quien}`}
+                        onChange={(e) => {
+                          const rol = e.target.value
+                          if (
+                            rol === 'superadmin'
+                            && !window.confirm(
+                              `¿Convertir a ${quien} en SUPER-ADMINISTRADOR?\n\n` +
+                              'Tendrá control total de la plataforma, no solo de esta academia.'
+                            )
+                          ) {
+                            e.target.value = m.rol
+                            return
+                          }
+                          aplicar(m.id, { rol })
+                        }}
                       >
                         {rolesDisponibles.map((r) => (
                           <option key={r} value={r}>{ETIQUETA_ROL[r]}</option>
@@ -1164,12 +1200,13 @@ function GestionMiembros({ miembros, grupos = [], gestion, miUid, onCambio }) {
                       <span className={`panel-rol-tag rol-${m.rol}`}>{ETIQUETA_ROL[m.rol] || m.rol}</span>
                     )}
                   </td>
-                  <td>
+                  <td data-label="Grupo">
                     {puede && grupos.length > 0 ? (
                       <select
                         className="panel-rol-select"
                         value={m.grupoId || ''}
                         disabled={ocupado === m.id}
+                        aria-label={`Grupo de ${quien}`}
                         onChange={(e) => aplicar(m.id, { grupoId: e.target.value || null })}
                       >
                         <option value="">Sin grupo</option>
@@ -1183,12 +1220,22 @@ function GestionMiembros({ miembros, grupos = [], gestion, miUid, onCambio }) {
                       </span>
                     )}
                   </td>
-                  <td>
+                  <td data-label="Estado">
                     {puede ? (
                       <button
+                        type="button"
                         className={`panel-estado-btn ${suspendido ? 'suspendido' : 'activo'}`}
                         disabled={ocupado === m.id}
-                        onClick={() => aplicar(m.id, { estado: suspendido ? 'activo' : 'suspendido' })}
+                        onClick={() => {
+                          if (
+                            !suspendido
+                            && !window.confirm(
+                              `¿Suspender el acceso de ${quien}?\n\n` +
+                              'Ya no podrá ingresar, pero conservará sus datos y su avance.'
+                            )
+                          ) return
+                          aplicar(m.id, { estado: suspendido ? 'activo' : 'suspendido' })
+                        }}
                       >
                         {ocupado === m.id ? '…' : suspendido ? 'Reactivar' : 'Suspender'}
                       </button>

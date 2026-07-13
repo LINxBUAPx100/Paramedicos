@@ -92,6 +92,8 @@ const paths = {
   estrella: <path d="M12 3v18M4.2 7.5l15.6 9M19.8 7.5l-15.6 9" />,
   chevronIzq: <path d="m15 5-7 7 7 7" />,
   chevronDer: <path d="m9 5 7 7-7 7" />,
+  chevronArriba: <path d="m5 15 7-7 7 7" />,
+  chevronAbajo: <path d="m5 9 7 7 7-7" />,
   usuario: (
     <>
       <circle cx="12" cy="8" r="4" />
@@ -126,6 +128,15 @@ const paths = {
     </>
   ),
   herramientas: <path d="M15 6.5A3.5 3.5 0 0 0 10.5 11l-6.2 6.2a1.6 1.6 0 0 0 2.3 2.3L12.9 13.5A3.5 3.5 0 0 0 17.5 9l-2.3 2.3-1.7-.4-.4-1.7L15 6.5Z" />,
+  // Acciones administrativas (reemplazan a los emojis ✎ 🔑 🗑).
+  editar: <path d="M4 20h4L19.5 8.5a2.1 2.1 0 0 0-3-3L5 17v3ZM13.5 6.5l3 3" />,
+  llave: (
+    <>
+      <circle cx="8" cy="15" r="4.5" />
+      <path d="M11.2 11.8 20 3M15.5 7.5l3 3M12.8 10.2l2.4 2.4" />
+    </>
+  ),
+  basura: <path d="M4 7h16M9.5 7V5a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 5v2M6.5 7l1 13a1.5 1.5 0 0 0 1.5 1.3h6a1.5 1.5 0 0 0 1.5-1.3l1-13M10 11v6M14 11v6" />,
 }
 
 export default function Icon({ name, size = 22, className = '', strokeWidth = 1.75, style }) {

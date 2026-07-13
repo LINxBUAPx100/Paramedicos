@@ -120,11 +120,11 @@ export default function AdminPage() {
     }
   }
 
-  const cambiar = (uid, cambios) =>
+  const cambiar = (uid, cambios, exito = 'Cambios guardados.') =>
     correr(uid, async () => {
       const { actualizarUsuario } = await import('../lib/firebase/usuarios.js')
       await actualizarUsuario(uid, cambios)
-    })
+    }, exito)
 
   const guardarNombre = () => {
     const { uid, nombre } = editando
@@ -238,12 +238,12 @@ export default function AdminPage() {
               <table className="panel-tabla panel-tabla--gestion">
                 <thead>
                   <tr>
-                    <th>Usuario</th>
-                    <th>Correo</th>
-                    <th>Academia</th>
-                    <th>Rol</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
+                    <th scope="col">Usuario</th>
+                    <th scope="col">Correo</th>
+                    <th scope="col">Academia</th>
+                    <th scope="col">Rol</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -251,9 +251,12 @@ export default function AdminPage() {
                     const soyYo = u.id === user?.uid
                     const suspendido = u.estado && u.estado !== 'activo'
                     const enEdicion = editando?.uid === u.id
+                    const quien = u.nombre || u.email || u.id
+                    const sinNombre = !u.nombre
+                      || u.nombre.trim().toLowerCase() === (u.email || '').trim().toLowerCase()
                     return (
                       <tr key={u.id} className="panel-fila-gestion">
-                        <td className="panel-alumno">
+                        <td className="panel-alumno" data-label="Usuario">
                           {enEdicion ? (
                             <span className="admin-editar-nombre">
                               <input
@@ -261,28 +264,44 @@ export default function AdminPage() {
                                 value={editando.nombre}
                                 onChange={(e) => setEditando({ uid: u.id, nombre: e.target.value })}
                                 onKeyDown={(e) => { if (e.key === 'Enter') guardarNombre() }}
+                                aria-label={`Nuevo nombre para ${u.email || u.id}`}
                                 autoFocus
                               />
-                              <button className="pc-copiar" onClick={guardarNombre}>Guardar</button>
-                              <button className="pc-copiar" onClick={() => setEditando(null)}>×</button>
+                              <button type="button" className="pc-copiar" onClick={guardarNombre}>Guardar</button>
+                              <button type="button" className="pc-copiar" aria-label="Cancelar edición" onClick={() => setEditando(null)}>×</button>
                             </span>
                           ) : (
                             <>
-                              <strong>{u.nombre || '—'}</strong>
+                              {sinNombre
+                                ? <span className="panel-sin-nombre">Sin nombre registrado</span>
+                                : <strong>{u.nombre}</strong>}
                               {soyYo && <span className="panel-tag-yo">tú</span>}
                             </>
                           )}
                         </td>
-                        <td className="panel-correo">{u.email || '—'}</td>
-                        <td>
+                        <td className="panel-correo" data-label="Correo">{u.email || '—'}</td>
+                        <td data-label="Academia">
                           <div className="admin-aca-cell">
                             <select
                               className="panel-rol-select"
                               value={u.academiaId || ''}
                               disabled={ocupado === u.id}
-                              onChange={(e) =>
-                                cambiar(u.id, { academiaId: e.target.value || null, grupoId: null })
-                              }
+                              aria-label={`Academia de ${quien}`}
+                              onChange={(e) => {
+                                const destino = e.target.value
+                                const pregunta = destino
+                                  ? `¿Mover a ${quien} a la academia ${destino}?\n\nSaldrá de su grupo actual.`
+                                  : `¿Quitar a ${quien} de su academia?\n\nPerderá el acceso al contenido hasta unirse a otra.`
+                                if (!window.confirm(pregunta)) {
+                                  e.target.value = u.academiaId || ''
+                                  return
+                                }
+                                cambiar(
+                                  u.id,
+                                  { academiaId: destino || null, grupoId: null },
+                                  destino ? `${quien} ahora pertenece a ${destino}.` : `${quien} quedó sin academia.`
+                                )
+                              }}
                             >
                               <option value="">— Sin academia —</option>
                               {academias.map((a) => (
@@ -296,12 +315,12 @@ export default function AdminPage() {
                                 title={`Ver dashboard de ${u.academiaId}`}
                                 aria-label={`Ver dashboard de ${u.academiaId}`}
                               >
-                                <Icon name="chevronDer" size={15} />
+                                <Icon name="chevronDer" size={16} />
                               </Link>
                             )}
                           </div>
                         </td>
-                        <td>
+                        <td data-label="Rol">
                           {soyYo ? (
                             <span className="panel-rol-tag rol-superadmin">{ETIQUETA_ROL[u.rol] || u.rol}</span>
                           ) : (
@@ -309,7 +328,21 @@ export default function AdminPage() {
                               className="panel-rol-select"
                               value={u.rol}
                               disabled={ocupado === u.id}
-                              onChange={(e) => cambiar(u.id, { rol: e.target.value })}
+                              aria-label={`Rol de ${quien}`}
+                              onChange={(e) => {
+                                const rol = e.target.value
+                                if (
+                                  rol === 'superadmin'
+                                  && !window.confirm(
+                                    `¿Convertir a ${quien} en SUPER-ADMINISTRADOR?\n\n` +
+                                    'Tendrá control total de la plataforma: todas las academias, usuarios, pagos y anuncios.'
+                                  )
+                                ) {
+                                  e.target.value = u.rol
+                                  return
+                                }
+                                cambiar(u.id, { rol }, `${quien} ahora es ${ETIQUETA_ROL[rol]}.`)
+                              }}
                             >
                               {ROLES.map((r) => (
                                 <option key={r} value={r}>{ETIQUETA_ROL[r]}</option>
@@ -317,39 +350,68 @@ export default function AdminPage() {
                             </select>
                           )}
                         </td>
-                        <td>
+                        <td data-label="Estado">
                           {soyYo ? (
                             <span className="panel-rol-tag rol-activo">Activo</span>
                           ) : (
                             <button
+                              type="button"
                               className={`panel-estado-btn ${suspendido ? 'suspendido' : 'activo'}`}
                               disabled={ocupado === u.id}
-                              onClick={() => cambiar(u.id, { estado: suspendido ? 'activo' : 'suspendido' })}
+                              onClick={() => {
+                                if (
+                                  !suspendido
+                                  && !window.confirm(
+                                    `¿Suspender el acceso de ${quien}?\n\n` +
+                                    'Ya no podrá ingresar a la plataforma, pero conservará sus datos y su avance. Puedes reactivarle cuando quieras.'
+                                  )
+                                ) return
+                                cambiar(
+                                  u.id,
+                                  { estado: suspendido ? 'activo' : 'suspendido' },
+                                  suspendido ? `Acceso de ${quien} reactivado.` : `${quien} quedó suspendido.`
+                                )
+                              }}
                             >
                               {ocupado === u.id ? '…' : suspendido ? 'Reactivar' : 'Suspender'}
                             </button>
                           )}
                         </td>
-                        <td className="admin-acciones">
+                        <td className="admin-acciones" data-label="Acciones">
                           <button
+                            type="button"
                             className="admin-accion"
                             title="Cambiar nombre"
+                            aria-label={`Cambiar nombre de ${quien}`}
                             disabled={ocupado === u.id}
                             onClick={() => setEditando({ uid: u.id, nombre: u.nombre || '' })}
-                          >✎</button>
+                          >
+                            <Icon name="editar" size={17} />
+                            <span className="admin-accion-txt">Editar</span>
+                          </button>
                           <button
+                            type="button"
                             className="admin-accion"
                             title="Enviarle correo para restablecer su contraseña"
+                            aria-label={`Enviar restablecimiento de contraseña a ${u.email || quien}`}
                             disabled={ocupado === u.id || !u.email}
                             onClick={() => resetPassword(u)}
-                          >🔑</button>
+                          >
+                            <Icon name="llave" size={17} />
+                            <span className="admin-accion-txt">Restablecer</span>
+                          </button>
                           {!soyYo && (
                             <button
+                              type="button"
                               className="admin-accion admin-accion--rojo"
                               title="Eliminar usuario"
+                              aria-label={`Eliminar a ${quien}`}
                               disabled={ocupado === u.id}
                               onClick={() => eliminar(u)}
-                            >🗑</button>
+                            >
+                              <Icon name="basura" size={17} />
+                              <span className="admin-accion-txt">Eliminar</span>
+                            </button>
                           )}
                         </td>
                       </tr>
@@ -437,7 +499,7 @@ function ProblemasReportados() {
 
       {reportes === null ? null : visibles.length === 0 ? (
         <p className="panel-vacio">
-          {soloAbiertos ? 'No hay problemas abiertos. 🎉' : 'No hay reportes.'}
+          {soloAbiertos ? 'No hay problemas abiertos.' : 'No hay reportes.'}
         </p>
       ) : (
         <ul className="admin-reportes">
@@ -504,8 +566,8 @@ function NuevaAcademia({ onCreada }) {
 
   return (
     <div className="admin-form-bloque">
-      <button className="admin-form-toggle" onClick={() => setAbierto((v) => !v)}>
-        {abierto ? '▲ Ocultar' : '+ Nueva academia'}
+      <button type="button" className="admin-form-toggle" aria-expanded={abierto} onClick={() => setAbierto((v) => !v)}>
+        {abierto ? 'Cerrar' : '+ Nueva academia'}
       </button>
       {abierto && (
         <form className="admin-form" onSubmit={crear}>
@@ -558,6 +620,7 @@ function NuevoUsuario({ academias, onCreado }) {
   const [nombre, setNombre] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [verPassword, setVerPassword] = useState(false)
   const [rol, setRol] = useState('alumno')
   const [academiaId, setAcademiaId] = useState('')
   const [msg, setMsg] = useState('')
@@ -587,8 +650,8 @@ function NuevoUsuario({ academias, onCreado }) {
 
   return (
     <div className="admin-form-bloque">
-      <button className="admin-form-toggle" onClick={() => setAbierto((v) => !v)}>
-        {abierto ? '▲ Ocultar' : '+ Nuevo usuario'}
+      <button type="button" className="admin-form-toggle" aria-expanded={abierto} onClick={() => setAbierto((v) => !v)}>
+        {abierto ? 'Cerrar' : '+ Nuevo usuario'}
       </button>
       {abierto && (
         <form className="admin-form" onSubmit={crear}>
@@ -602,7 +665,26 @@ function NuevoUsuario({ academias, onCreado }) {
           </label>
           <label>
             Contraseña temporal
-            <input type="text" value={password} onChange={(e) => setPassword(e.target.value)} minLength={6} required placeholder="mínimo 6 caracteres" />
+            <span className="admin-password">
+              <input
+                type={verPassword ? 'text' : 'password'}
+                autoComplete="new-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                minLength={10}
+                required
+                placeholder="mínimo 10 caracteres"
+              />
+              <button
+                type="button"
+                className="admin-password-ver"
+                aria-label={verPassword ? 'Ocultar la contraseña' : 'Mostrar la contraseña'}
+                aria-pressed={verPassword}
+                onClick={() => setVerPassword((v) => !v)}
+              >
+                <Icon name={verPassword ? 'ojoCerrado' : 'ojo'} size={17} />
+              </button>
+            </span>
           </label>
           <label>
             Rol

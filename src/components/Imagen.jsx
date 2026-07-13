@@ -33,7 +33,7 @@ export default function Imagen({
       <figure className={`${clases} imagen--ph`} style={{ aspectRatio: ratio }}>
         <div className="imagen-ph-in">
           <span className="imagen-ph-ico"><Icon name="estrella" size={26} /></span>
-          <strong>enlace de la imagen aquí</strong>
+          <strong>Imagen no disponible por el momento</strong>
           {caption && <p className="imagen-ph-cap">{caption}</p>}
           {busqueda && (
             <a

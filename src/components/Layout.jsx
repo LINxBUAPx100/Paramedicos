@@ -73,6 +73,22 @@ export default function Layout({ children }) {
 
   return (
     <div className="app">
+      {/* La app usa HashRouter: un href="#…" cambiaría la RUTA, así que el
+          salto se hace enfocando el <main> directamente. */}
+      <a
+        href="#contenido-principal"
+        className="skip-link"
+        onClick={(e) => {
+          e.preventDefault()
+          const main = document.getElementById('contenido-principal')
+          if (main) {
+            main.focus()
+            main.scrollIntoView()
+          }
+        }}
+      >
+        Saltar al contenido principal
+      </a>
       <AnuncioBanner />
       <header className="topbar">
         <button
@@ -187,7 +203,12 @@ export default function Layout({ children }) {
 
         {abierto && <div className="overlay" onClick={cerrar} />}
 
-        <main className={`contenido ${esHome ? 'contenido--full' : ''}`} key={location.pathname}>
+        <main
+          id="contenido-principal"
+          tabIndex={-1}
+          className={`contenido ${esHome ? 'contenido--full' : ''}`}
+          key={location.pathname}
+        >
           {children}
         </main>
       </div>
@@ -203,7 +224,8 @@ export default function Layout({ children }) {
           </div>
           <div className="footer-col">
             <h4>Estudio</h4>
-            <Link to="/temario">Temario</Link>
+            {/* /temario es el panel de visibilidad, exclusivo del staff. */}
+            {esStaff && <Link to="/temario">Temario (staff)</Link>}
             <Link to="/examen">Examen</Link>
             <Link to="/flashcards">Flashcards</Link>
             <Link to="/atlas">Atlas</Link>
@@ -212,12 +234,14 @@ export default function Layout({ children }) {
             <h4>Avanza</h4>
             <Link to="/progreso">Mi progreso</Link>
             <Link to="/buscar">Buscar</Link>
-            <Link to="/fase/fase-1">Empezar</Link>
+            {/* Sin sesión, "Empezar" lleva a crear la cuenta (no a un candado). */}
+            <Link to={autenticado ? '/fase/fase-1' : '/cuenta'}>Empezar</Link>
           </div>
           <div className="footer-col">
             <h4>Materiales</h4>
-            <Link to="/temario">Guías descargables</Link>
+            {esStaff && <Link to="/temario">Guías descargables</Link>}
             <Link to="/atlas">Atlas de imágenes</Link>
+            <Link to="/cuenta">Mi cuenta</Link>
           </div>
         </div>
         <div className="footer-pie">

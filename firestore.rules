@@ -19,8 +19,11 @@ service cloud.firestore {
       return get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data;
     }
     // Admin supremo: reconocido por su correo de Auth (bootstrap sin consola).
+    // El correo debe estar VERIFICADO: sin esto, cualquiera que registre una
+    // cuenta con ese correo en otro proveedor podría suplantarlo.
     function esSupremo() {
       return autenticado()
+        && request.auth.token.email_verified == true
         && request.auth.token.email in ['mihayolo228@gmail.com'];
     }
     function esSuper() {
@@ -77,8 +80,11 @@ service cloud.firestore {
 
     // --- ACADEMIAS (el id del doc ES el código, p.ej. "AEP-2026") ---
     match /academias/{codigo} {
-      // Legible por cualquier autenticado: hace falta para validar el código al unirse.
-      allow read: if autenticado();
+      // Consultar UN código concreto: cualquier autenticado (validar el código
+      // al unirse). NUNCA listar: si un usuario pudiera enumerar las academias
+      // podría autoasignarse a cualquiera sin conocer su código de invitación.
+      allow get: if autenticado();
+      allow list: if esSuper();
       // Alta/edición/baja: solo super-admin.
       allow write: if esSuper();
       // El director puede editar SOLO la personalización de SU academia
@@ -155,13 +161,26 @@ service cloud.firestore {
         );
 
       // El director (admin_escuela) gestiona a los miembros de SU academia:
-      // puede alternar alumno <-> instructor y activar/suspender. Nunca a sí
-      // mismo, nunca a otro admin/superadmin, y no puede moverlos de academia.
+      // puede alternar alumno <-> instructor, activar/suspender, moverlos de
+      // grupo y aprobar el acceso a códigos. Nunca a sí mismo, nunca a otro
+      // admin/superadmin, no puede moverlos de academia, y NO puede tocar
+      // ningún otro campo del perfil (affectedKeys lo acota técnicamente).
       allow update: if esAdminDe(resource.data.academiaId)
         && request.auth.uid != uid
         && resource.data.rol in ['alumno', 'instructor']
         && request.resource.data.rol in ['alumno', 'instructor']
-        && request.resource.data.academiaId == resource.data.academiaId;
+        && request.resource.data.academiaId == resource.data.academiaId
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['rol', 'estado', 'grupoId', 'puedeVerCodigos'])
+        // Si asigna grupo, debe ser un grupo de SU academia (o quitarlo).
+        && (
+          request.resource.data.get('grupoId', null) == resource.data.get('grupoId', null)
+          || request.resource.data.get('grupoId', null) == null
+          || (
+            exists(/databases/$(database)/documents/grupos/$(request.resource.data.grupoId))
+            && grupoDoc(request.resource.data.grupoId).academiaId == resource.data.academiaId
+          )
+        );
 
       // El STAFF (profesor o director) puede HABILITAR módulos a los alumnos
       // de su academia: SOLO el campo fasesDesbloqueadas (anula lo oculto del

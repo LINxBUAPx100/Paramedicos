@@ -17,8 +17,29 @@ necesita las reglas de [`firestore.rules`](./firestore.rules) publicadas:
 3. **Publicar**.
 
 Mientras no se publiquen: el examen funciona pero muestra
-"⚠ No se pudo guardar el intento", los paneles no cargan datos y los cambios
+"No se pudo guardar el intento", los paneles no cargan datos y los cambios
 de rol fallan.
+
+### Endurecimiento de seguridad (auditoría 2026-07-13) — REPUBLICAR
+
+Las reglas incorporan tres cierres de seguridad que **solo surten efecto al
+republicarlas**:
+
+- **Nadie puede listar las academias** (`allow list` solo super-admin). Unirse
+  sigue funcionando: el alumno valida SU código exacto con un `get`. Esto
+  impide que un usuario enumere academias y se autoasigne a cualquiera.
+- **El director solo puede tocar** `rol`, `estado`, `grupoId` y
+  `puedeVerCodigos` de sus miembros (`affectedKeys().hasOnly`), y si asigna
+  grupo debe ser de su propia academia. Antes una petición manipulada podía
+  modificar otros campos del perfil.
+- **El admin supremo exige correo verificado** (`email_verified == true`).
+  Verifica el correo de esa cuenta ANTES de publicar o quedará fuera del rol
+  supremo (su doc con `rol: superadmin` sigue funcionando).
+
+Recomendaciones pendientes (no son código): activar MFA en la cuenta suprema,
+rotar las contraseñas de las cuentas de prueba `test-*` (se compartieron en
+texto plano) y tratar el código de academia como una invitación privada — si
+se filtra, cámbialo desde Facturación → Editar.
 
 ## Admin supremo (por correo)
 

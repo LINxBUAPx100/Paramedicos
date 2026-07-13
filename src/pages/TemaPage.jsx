@@ -168,7 +168,7 @@ export default function TemaPage() {
           className={`btn ${leido ? 'btn-ok' : 'btn-secundario'}`}
           onClick={() => marcarLeido(temaId, !leido)}
         >
-          {leido ? '✓ Marcado como leído' : 'Marcar como leído'}
+          {leido ? 'Marcado como leído' : 'Marcar como leído'}
         </button>
         <Link to={`/tema/${temaId}/quiz`} className="btn btn-primario">
           <Icon name="matraz" size={17} /> Hacer el quiz de este tema
@@ -195,7 +195,7 @@ export default function TemaPage() {
             className="tema-nav-btn derecha tema-nav-btn--examen"
             onClick={() => navigate(`/fase/${tema.faseId}/examen`)}
           >
-            <span>🎉 Terminaste el módulo</span>
+            <span>Terminaste el módulo</span>
             <strong>Presentar el examen de la Fase {tema.faseNumero}</strong>
           </button>
         ) : (
@@ -272,7 +272,7 @@ function ReportarProblema({ tema }) {
               Cancelar
             </button>
           </div>
-          {estado === 'ok' && <p className="cuenta-ok" role="status">✓ Reporte enviado. Gracias por avisar.</p>}
+          {estado === 'ok' && <p className="cuenta-ok" role="status">Reporte enviado. Gracias por avisar.</p>}
           {estado === 'error' && <p className="cuenta-error" role="alert">No se pudo enviar (revisa tu conexión).</p>}
         </form>
       )}

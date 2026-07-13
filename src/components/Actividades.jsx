@@ -108,8 +108,12 @@ function Ordenar({ titulo, pasos }) {
               <span className="ordenar-num">{pos + 1}</span>
               <span className="ordenar-txt">{pasos[idx]}</span>
               <span className="ordenar-flechas">
-                <button onClick={() => mover(pos, -1)} disabled={pos === 0} aria-label="Subir">▲</button>
-                <button onClick={() => mover(pos, 1)} disabled={pos === orden.length - 1} aria-label="Bajar">▼</button>
+                <button type="button" onClick={() => mover(pos, -1)} disabled={pos === 0} aria-label="Subir">
+                  <Icon name="chevronArriba" size={16} />
+                </button>
+                <button type="button" onClick={() => mover(pos, 1)} disabled={pos === orden.length - 1} aria-label="Bajar">
+                  <Icon name="chevronAbajo" size={16} />
+                </button>
               </span>
             </li>
           )
