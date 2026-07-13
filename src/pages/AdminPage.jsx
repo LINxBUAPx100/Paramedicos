@@ -1,15 +1,16 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
-import { ETIQUETA_ROL } from '../components/PanelAcademia.jsx'
+import { ETIQUETA_ROL, CodigosPrueba } from '../components/PanelAcademia.jsx'
 import Icon from '../components/Icon.jsx'
 
 // ============================================================
 //  Dashboard general del SUPER-ADMIN (/admin)
 // ------------------------------------------------------------
-//  - Vista de todas las academias (miembros, intentos, estado) con
-//    entrada al dashboard individual de cada una.
-//  - Gestión global de usuarios: cambiar rol, academia y estado.
+//  - Todas las academias (con alta de nuevas) y entrada a su dashboard.
+//  - Gestión global de usuarios: crear, cambiar rol/estado, renombrar,
+//    enviar restablecimiento de contraseña y eliminar.
+//  - Códigos de prueba globales.
 // ============================================================
 
 const ROLES = ['alumno', 'instructor', 'admin_escuela', 'superadmin']
@@ -20,8 +21,10 @@ export default function AdminPage() {
   const [datos, setDatos] = useState(null) // { academias, usuarios, intentos }
   const [cargandoDatos, setCargandoDatos] = useState(true)
   const [error, setError] = useState('')
+  const [aviso, setAviso] = useState('')
   const [filtro, setFiltro] = useState('')
   const [ocupado, setOcupado] = useState(null) // uid en proceso
+  const [editando, setEditando] = useState(null) // { uid, nombre } en edición
   const [recarga, setRecarga] = useState(0)
 
   useEffect(() => {
@@ -99,18 +102,54 @@ export default function AdminPage() {
     )
   }
 
-  const cambiar = async (uid, cambios) => {
+  const refrescar = () => setRecarga((n) => n + 1)
+
+  const correr = async (uid, fn, exito = '') => {
     setOcupado(uid)
     setError('')
+    setAviso('')
     try {
-      const { actualizarUsuario } = await import('../lib/firebase/usuarios.js')
-      await actualizarUsuario(uid, cambios)
-      setRecarga((n) => n + 1)
-    } catch {
-      setError('No se pudo aplicar el cambio.')
+      await fn()
+      if (exito) setAviso(exito)
+      refrescar()
+    } catch (err) {
+      setError(err?.message || 'No se pudo aplicar el cambio.')
     } finally {
       setOcupado(null)
     }
+  }
+
+  const cambiar = (uid, cambios) =>
+    correr(uid, async () => {
+      const { actualizarUsuario } = await import('../lib/firebase/usuarios.js')
+      await actualizarUsuario(uid, cambios)
+    })
+
+  const guardarNombre = () => {
+    const { uid, nombre } = editando
+    setEditando(null)
+    return correr(uid, async () => {
+      const { actualizarUsuario } = await import('../lib/firebase/usuarios.js')
+      await actualizarUsuario(uid, { nombre: nombre.trim() })
+    })
+  }
+
+  const resetPassword = (u) =>
+    correr(u.id, async () => {
+      const { enviarResetPassword } = await import('../lib/firebase/admin.js')
+      await enviarResetPassword(u.email)
+    }, `Correo de restablecimiento enviado a ${u.email}.`)
+
+  const eliminar = (u) => {
+    const seguro = window.confirm(
+      `¿Eliminar a ${u.nombre || u.email}?\n\nSe borran su perfil y su progreso. Sus intentos de examen se conservan. ` +
+      'Su acceso (correo/contraseña) se elimina del todo desde la consola de Firebase → Authentication.'
+    )
+    if (!seguro) return
+    correr(u.id, async () => {
+      const { eliminarUsuario } = await import('../lib/firebase/admin.js')
+      await eliminarUsuario(u.id)
+    }, 'Usuario eliminado (perfil y progreso).')
   }
 
   const academias = datos?.academias || []
@@ -127,6 +166,7 @@ export default function AdminPage() {
       </header>
 
       {error && <p className="cuenta-error" role="alert">{error}</p>}
+      {aviso && <p className="cuenta-ok" role="status">{aviso}</p>}
       {cargandoDatos && (
         <div className="ruta-cargando" role="status">
           <span className="ruta-spinner" aria-hidden="true" /> <span>Cargando plataforma…</span>
@@ -145,10 +185,7 @@ export default function AdminPage() {
           <section className="admin-academias">
             <h2><Icon name="temario" size={20} /> Academias</h2>
             {academias.length === 0 ? (
-              <p className="panel-vacio">
-                Aún no hay academias. Crea la primera en la consola de Firestore
-                (colección <code>academias</code>, el id del doc es el código).
-              </p>
+              <p className="panel-vacio">Aún no hay academias: crea la primera aquí abajo.</p>
             ) : (
               <div className="admin-academias-grid">
                 {academias.map((a) => {
@@ -174,12 +211,15 @@ export default function AdminPage() {
                 })}
               </div>
             )}
+            <NuevaAcademia onCreada={refrescar} />
           </section>
 
           <section className="admin-usuarios">
             <h2><Icon name="usuario" size={20} /> Usuarios y roles</h2>
             <p className="panel-gestion-sub">
-              Cambia el rol de cualquier usuario de la plataforma. Los cambios aplican de inmediato.
+              Cambia rol, nombre y estado de cualquier usuario; envíale el correo para crear una
+              contraseña nueva, o elimínalo. El correo de inicio de sesión solo puede cambiarlo cada
+              usuario desde <strong>Mi cuenta</strong>.
             </p>
             <input
               type="search"
@@ -198,17 +238,35 @@ export default function AdminPage() {
                     <th>Academia</th>
                     <th>Rol</th>
                     <th>Estado</th>
+                    <th>Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
                   {usuariosFiltrados.map((u) => {
                     const soyYo = u.id === user?.uid
                     const suspendido = u.estado && u.estado !== 'activo'
+                    const enEdicion = editando?.uid === u.id
                     return (
                       <tr key={u.id} className="panel-fila-gestion">
                         <td className="panel-alumno">
-                          <strong>{u.nombre || '—'}</strong>
-                          {soyYo && <span className="panel-tag-yo">tú</span>}
+                          {enEdicion ? (
+                            <span className="admin-editar-nombre">
+                              <input
+                                type="text"
+                                value={editando.nombre}
+                                onChange={(e) => setEditando({ uid: u.id, nombre: e.target.value })}
+                                onKeyDown={(e) => { if (e.key === 'Enter') guardarNombre() }}
+                                autoFocus
+                              />
+                              <button className="pc-copiar" onClick={guardarNombre}>Guardar</button>
+                              <button className="pc-copiar" onClick={() => setEditando(null)}>×</button>
+                            </span>
+                          ) : (
+                            <>
+                              <strong>{u.nombre || '—'}</strong>
+                              {soyYo && <span className="panel-tag-yo">tú</span>}
+                            </>
+                          )}
                         </td>
                         <td className="panel-correo">{u.email || '—'}</td>
                         <td>
@@ -245,14 +303,180 @@ export default function AdminPage() {
                             </button>
                           )}
                         </td>
+                        <td className="admin-acciones">
+                          <button
+                            className="admin-accion"
+                            title="Cambiar nombre"
+                            disabled={ocupado === u.id}
+                            onClick={() => setEditando({ uid: u.id, nombre: u.nombre || '' })}
+                          >✎</button>
+                          <button
+                            className="admin-accion"
+                            title="Enviarle correo para restablecer su contraseña"
+                            disabled={ocupado === u.id || !u.email}
+                            onClick={() => resetPassword(u)}
+                          >🔑</button>
+                          {!soyYo && (
+                            <button
+                              className="admin-accion admin-accion--rojo"
+                              title="Eliminar usuario"
+                              disabled={ocupado === u.id}
+                              onClick={() => eliminar(u)}
+                            >🗑</button>
+                          )}
+                        </td>
                       </tr>
                     )
                   })}
                 </tbody>
               </table>
             </div>
+            <NuevoUsuario academias={academias} onCreado={refrescar} />
           </section>
+
+          <CodigosPrueba academiaId={null} miUid={user?.uid} />
         </>
+      )}
+    </div>
+  )
+}
+
+// ---------- Alta de academia ----------
+function NuevaAcademia({ onCreada }) {
+  const [abierto, setAbierto] = useState(false)
+  const [codigo, setCodigo] = useState('')
+  const [nombre, setNombre] = useState('')
+  const [tipo, setTipo] = useState('basico')
+  const [plan, setPlan] = useState('')
+  const [msg, setMsg] = useState('')
+  const [error, setError] = useState('')
+  const [ocupado, setOcupado] = useState(false)
+
+  const crear = async (e) => {
+    e.preventDefault()
+    setMsg(''); setError(''); setOcupado(true)
+    try {
+      const { crearAcademia } = await import('../lib/firebase/admin.js')
+      const cod = await crearAcademia({ codigo, nombre, tipo, plan })
+      setMsg(`Academia ${cod} creada. Comparte ese código con sus alumnos.`)
+      setCodigo(''); setNombre(''); setPlan('')
+      onCreada()
+    } catch (err) {
+      setError(err?.message || 'No se pudo crear la academia.')
+    } finally {
+      setOcupado(false)
+    }
+  }
+
+  return (
+    <div className="admin-form-bloque">
+      <button className="admin-form-toggle" onClick={() => setAbierto((v) => !v)}>
+        {abierto ? '▲ Ocultar' : '+ Nueva academia'}
+      </button>
+      {abierto && (
+        <form className="admin-form" onSubmit={crear}>
+          <label>
+            Código (será el ID)
+            <input type="text" value={codigo} onChange={(e) => setCodigo(e.target.value.toUpperCase())} placeholder="AEP-2027" required />
+          </label>
+          <label>
+            Nombre
+            <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Academia Estatal de Paramédicos" required />
+          </label>
+          <label>
+            Tipo
+            <select value={tipo} onChange={(e) => setTipo(e.target.value)}>
+              <option value="basico">Básico</option>
+              <option value="avanzado">Avanzado</option>
+              <option value="medicina">Medicina</option>
+            </select>
+          </label>
+          <label>
+            Plan (opcional)
+            <input type="text" value={plan} onChange={(e) => setPlan(e.target.value)} placeholder="anual" />
+          </label>
+          <button className="btn btn-primario" type="submit" disabled={ocupado}>
+            {ocupado ? 'Creando…' : 'Crear academia'}
+          </button>
+          {error && <p className="cuenta-error" role="alert">{error}</p>}
+          {msg && <p className="cuenta-ok" role="status">{msg}</p>}
+        </form>
+      )}
+    </div>
+  )
+}
+
+// ---------- Alta de usuario (app secundaria: no toca tu sesión) ----------
+function NuevoUsuario({ academias, onCreado }) {
+  const [abierto, setAbierto] = useState(false)
+  const [nombre, setNombre] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [rol, setRol] = useState('alumno')
+  const [academiaId, setAcademiaId] = useState('')
+  const [msg, setMsg] = useState('')
+  const [error, setError] = useState('')
+  const [ocupado, setOcupado] = useState(false)
+
+  const crear = async (e) => {
+    e.preventDefault()
+    setMsg(''); setError(''); setOcupado(true)
+    try {
+      const { crearUsuarioNuevo } = await import('../lib/firebase/admin.js')
+      await crearUsuarioNuevo({ nombre, email, password, rol, academiaId: academiaId || null })
+      setMsg(`Usuario ${email} creado. Compártele su contraseña; puede cambiarla con "¿Olvidaste tu contraseña?".`)
+      setNombre(''); setEmail(''); setPassword('')
+      onCreado()
+    } catch (err) {
+      const c = err?.code || ''
+      setError(
+        c.includes('email-already-in-use') ? 'Ese correo ya tiene cuenta.'
+        : c.includes('invalid-email') ? 'El correo no es válido.'
+        : err?.message || 'No se pudo crear el usuario.'
+      )
+    } finally {
+      setOcupado(false)
+    }
+  }
+
+  return (
+    <div className="admin-form-bloque">
+      <button className="admin-form-toggle" onClick={() => setAbierto((v) => !v)}>
+        {abierto ? '▲ Ocultar' : '+ Nuevo usuario'}
+      </button>
+      {abierto && (
+        <form className="admin-form" onSubmit={crear}>
+          <label>
+            Nombre
+            <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
+          </label>
+          <label>
+            Correo
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          </label>
+          <label>
+            Contraseña temporal
+            <input type="text" value={password} onChange={(e) => setPassword(e.target.value)} minLength={6} required placeholder="mínimo 6 caracteres" />
+          </label>
+          <label>
+            Rol
+            <select value={rol} onChange={(e) => setRol(e.target.value)}>
+              {ROLES.map((r) => <option key={r} value={r}>{ETIQUETA_ROL[r]}</option>)}
+            </select>
+          </label>
+          <label>
+            Academia
+            <select value={academiaId} onChange={(e) => setAcademiaId(e.target.value)}>
+              <option value="">— Sin academia —</option>
+              {academias.map((a) => <option key={a.id} value={a.id}>{a.id} — {a.nombre}</option>)}
+            </select>
+          </label>
+          <button className="btn btn-primario" type="submit" disabled={ocupado}>
+            {ocupado ? 'Creando…' : 'Crear usuario'}
+          </button>
+          {error && <p className="cuenta-error" role="alert">{error}</p>}
+          {msg && <p className="cuenta-ok" role="status">{msg}</p>}
+        </form>
       )}
     </div>
   )

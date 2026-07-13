@@ -39,3 +39,6 @@ if (!firebaseListo && import.meta.env.DEV) {
 export const app = initializeApp(firebaseConfig)
 export const auth = getAuth(app)
 export const db = getFirestore(app)
+// La config se re-exporta para poder crear una app SECUNDARIA (crear usuarios
+// desde el dashboard sin cerrar la sesión del administrador).
+export { firebaseConfig }

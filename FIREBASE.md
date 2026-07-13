@@ -42,13 +42,43 @@ Para que un maestro vea a un alumno, ambos deben tener el mismo `academiaId`.
 
 ## Dashboards
 
-- **/admin** (super-admin): todas las academias con sus números, gestión global
-  de usuarios y roles, y entrada al dashboard individual de cada academia
-  (`/admin/academia/CODIGO`), donde además puede suspender/reactivar la academia.
-- **/panel** (director): avance de sus alumnos + gestión de miembros
-  (nombrar/quitar profesores, suspender cuentas).
-- **/panel** (profesor/instructor): avance de sus alumnos, solo lectura.
+- **/admin** (super-admin): todas las academias con sus números, **crear
+  academias**, **crear usuarios** (con contraseña temporal, rol y academia),
+  gestión global de usuarios (rol, nombre, suspender, **eliminar**, enviarles
+  el correo de restablecimiento de contraseña), códigos de prueba globales, y
+  entrada al dashboard individual de cada academia (`/admin/academia/CODIGO`),
+  donde además puede suspender/reactivar la academia.
+- **/panel** (director): estadísticas + avance de sus alumnos, gestión de
+  miembros (nombrar/quitar profesores, suspender cuentas) y códigos de prueba
+  de su academia.
+- **/panel** (profesor/instructor): estadísticas y avance, solo lectura.
+- Todos los paneles incluyen: promedio general, % de aprobación, alumnos
+  activos, intentos de la semana, dominio por fase (barras), actividad
+  reciente y alumnos en riesgo (<70% de promedio).
 - Los alumnos ven su mejor puntuación por fase en la página **Examen**.
+
+## Códigos de prueba (acceso temporal)
+
+El super-admin y los directores pueden generar códigos `PRUEBA-XXXX`
+(3/7/14/30 días) desde su dashboard. Quien lo reciba lo activa en
+**Mi cuenta → Únete con tu código**: obtiene acceso al contenido hasta la
+fecha de expiración, sin pertenecer a una academia. Las reglas impiden
+inventarse la fecha (se copia del código) y los códigos pueden desactivarse.
+
+## Límites sin servidor (plan Spark, importante)
+
+- **Crear usuarios desde /admin** funciona con una sesión secundaria: la
+  cuenta se crea con contraseña temporal y NO cierra tu sesión.
+- **La contraseña de otro usuario no se puede cambiar directamente**: se le
+  envía el correo oficial de restablecimiento (botón 🔑 en /admin, o
+  "¿Olvidaste tu contraseña?" en el login).
+- **El correo de inicio de sesión de otro usuario no se puede cambiar**: cada
+  quien lo cambia en Mi cuenta → Editar mis datos (llega un enlace de
+  verificación al correo nuevo).
+- **Eliminar usuario** borra su perfil y su progreso (los intentos se
+  conservan). Su registro de Auth se elimina del todo en la consola →
+  Authentication → Users. Si vuelve a entrar sin eso, renace como alumno sin
+  academia.
 
 ## Crear una academia
 

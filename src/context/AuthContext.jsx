@@ -19,9 +19,15 @@ function calcularAcceso({ user, perfil, perfilListo, academia, rol, esSupremo })
   if (!perfilListo) return { puede: false, motivo: 'cargando' }
   if (!perfil) return { puede: false, motivo: 'sin-perfil' }
   if (perfil.estado && perfil.estado !== 'activo') return { puede: false, motivo: 'usuario-bloqueado' }
-  if (!perfil.academiaId) return { puede: false, motivo: 'sin-academia' }
+  // Acceso de prueba vigente (código temporal): entra sin academia.
+  const enPrueba = Boolean(perfil.pruebaHasta?.seconds && perfil.pruebaHasta.seconds * 1000 > Date.now())
+  if (!perfil.academiaId) {
+    return enPrueba ? { puede: true, motivo: null } : { puede: false, motivo: 'sin-academia' }
+  }
   if (academia === undefined) return { puede: false, motivo: 'cargando' } // academia aún cargando
-  if (!academia || academia.estado !== 'activo') return { puede: false, motivo: 'academia-inactiva' }
+  if (!academia || academia.estado !== 'activo') {
+    return enPrueba ? { puede: true, motivo: null } : { puede: false, motivo: 'academia-inactiva' }
+  }
   return { puede: true, motivo: null }
 }
 
@@ -152,6 +158,8 @@ export function AuthProvider({ children }) {
     autenticado: Boolean(user),
     rol,
     academiaId: perfil?.academiaId || null,
+    enPrueba: Boolean(perfil?.pruebaHasta?.seconds && perfil.pruebaHasta.seconds * 1000 > Date.now()),
+    pruebaHasta: perfil?.pruebaHasta || null,
     esSupremo,
     esSuperadmin,
     esStaff: esSuperadmin || ROLES_STAFF.includes(rol),

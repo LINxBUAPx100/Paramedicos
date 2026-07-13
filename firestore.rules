@@ -47,6 +47,20 @@ service cloud.firestore {
         && miDoc().rol == 'admin_escuela'
         && miDoc().academiaId == acaId;
     }
+    // Canje de un código de prueba sobre el PROPIO perfil: el código debe
+    // existir, estar activo y vigente, y pruebaHasta debe COPIAR su expiración
+    // (nadie puede inventarse una fecha de prueba arbitraria).
+    function codigoDoc(cod) {
+      return get(/databases/$(database)/documents/codigos/$(cod)).data;
+    }
+    function canjeValido() {
+      return ('codigoPrueba' in request.resource.data)
+        && request.resource.data.codigoPrueba is string
+        && exists(/databases/$(database)/documents/codigos/$(request.resource.data.codigoPrueba))
+        && codigoDoc(request.resource.data.codigoPrueba).estado == 'activo'
+        && codigoDoc(request.resource.data.codigoPrueba).expira > request.time
+        && request.resource.data.pruebaHasta == codigoDoc(request.resource.data.codigoPrueba).expira;
+    }
 
     // --- ACADEMIAS (el id del doc ES el código, p.ej. "AEP-2026") ---
     match /academias/{codigo} {
@@ -67,13 +81,18 @@ service cloud.firestore {
         && request.resource.data.rol == 'alumno';
 
       // Edición propia: NO puedes cambiar tu rol ni tu estado; solo puedes fijar
-      // academiaId a una academia que EXISTA y esté ACTIVA (unirse por código).
+      // academiaId a una academia que EXISTA y esté ACTIVA (unirse por código),
+      // y tu acceso de prueba solo puede venir de un código VÁLIDO (canje).
       allow update: if esDueno(uid)
         && request.resource.data.rol == resource.data.rol
         && request.resource.data.estado == resource.data.estado
         && (
           request.resource.data.academiaId == resource.data.academiaId
           || academiaActiva(request.resource.data.academiaId)
+        )
+        && (
+          request.resource.data.get('pruebaHasta', null) == resource.data.get('pruebaHasta', null)
+          || canjeValido()
         );
 
       // El director (admin_escuela) gestiona a los miembros de SU academia:
@@ -90,9 +109,27 @@ service cloud.firestore {
       allow write: if esSuper();
     }
 
-    // --- PROGRESO (privado por usuario) ---
+    // --- PROGRESO (privado por usuario; el super-admin puede limpiarlo al
+    //     eliminar una cuenta) ---
     match /progreso/{uid} {
       allow read, write: if esDueno(uid);
+      allow read, delete: if esSuper();
+    }
+
+    // --- CÓDIGOS de acceso temporal (prueba del servicio) ---
+    match /codigos/{codigo} {
+      // Canjear: cualquier autenticado puede CONSULTAR un código concreto.
+      allow get: if autenticado();
+      // Listarlos: el super-admin (todos) o el director (los de su academia).
+      allow list: if esSuper() || esAdminDe(resource.data.academiaId);
+      // Crear: super-admin, o director para SU academia. Siempre a futuro,
+      // activo y firmado por quien lo crea.
+      allow create: if (esSuper() || esAdminDe(request.resource.data.academiaId))
+        && request.resource.data.creadoPor == request.auth.uid
+        && request.resource.data.estado == 'activo'
+        && request.resource.data.expira > request.time;
+      // Desactivar/reactivar/borrar: super-admin o el director de su academia.
+      allow update, delete: if esSuper() || esAdminDe(resource.data.academiaId);
     }
 
     // --- INTENTOS de examen de fase ---

@@ -10,8 +10,10 @@ import {
   signOut,
   onAuthStateChanged,
   updateProfile,
+  sendPasswordResetEmail,
+  verifyBeforeUpdateEmail,
 } from 'firebase/auth'
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore'
+import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore'
 
 const googleProvider = new GoogleAuthProvider()
 
@@ -28,6 +30,10 @@ export async function asegurarPerfil(user, nombre) {
       estado: 'activo',
       creado: serverTimestamp(),
     })
+  } else if (user.email && snap.data().email !== user.email) {
+    // El correo de Auth cambió (p. ej. lo actualizó desde Mi cuenta):
+    // sincroniza el campo informativo del perfil.
+    await updateDoc(ref, { email: user.email })
   }
 }
 
@@ -56,4 +62,31 @@ export function salir() {
 
 export function observarAuth(cb) {
   return onAuthStateChanged(auth, cb)
+}
+
+// --- Mis datos (el propio usuario autenticado) ---
+
+// Cambia mi nombre (en Auth y en mi perfil de Firestore).
+export async function cambiarMiNombre(nombre) {
+  const limpio = String(nombre || '').trim()
+  if (!limpio) throw new Error('Escribe tu nombre.')
+  if (auth.currentUser) await updateProfile(auth.currentUser, { displayName: limpio })
+  await updateDoc(doc(db, 'usuarios', auth.currentUser.uid), { nombre: limpio })
+}
+
+// Cambia mi correo de inicio de sesión: Firebase manda un enlace de
+// verificación al correo NUEVO; al confirmarlo, el cambio se aplica.
+// Puede exigir sesión reciente (error auth/requires-recent-login).
+export async function cambiarMiCorreo(nuevoEmail) {
+  const limpio = String(nuevoEmail || '').trim()
+  if (!limpio) throw new Error('Escribe el nuevo correo.')
+  await verifyBeforeUpdateEmail(auth.currentUser, limpio)
+  // El campo email del perfil se actualiza cuando el usuario vuelva a entrar
+  // con el correo ya verificado (asegurarPerfil no lo pisa; lo hace la app).
+}
+
+// Me envío a mí mismo el correo para restablecer mi contraseña.
+export async function restablecerMiPassword() {
+  if (!auth.currentUser?.email) throw new Error('Tu cuenta no tiene correo.')
+  await sendPasswordResetEmail(auth, auth.currentUser.email)
 }

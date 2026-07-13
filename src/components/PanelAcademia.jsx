@@ -88,11 +88,7 @@ export default function PanelAcademia({ academiaId, gestion = null, miUid = null
 
   return (
     <>
-      <div className="panel-stats">
-        <span><strong>{alumnos.length}</strong> alumnos</span>
-        <span><strong>{staff.length}</strong> staff</span>
-        <span><strong>{datos.intentos.length}</strong> intentos de examen</span>
-      </div>
+      <Estadisticas alumnos={alumnos} staff={staff} intentos={datos.intentos} resumen={resumen} />
 
       {alumnos.length === 0 ? (
         <p className="panel-vacio">
@@ -165,7 +161,272 @@ export default function PanelAcademia({ academiaId, gestion = null, miUid = null
           onCambio={() => setRecarga((n) => n + 1)}
         />
       )}
+
+      {gestion && <CodigosPrueba academiaId={academiaId} miUid={miUid} />}
     </>
+  )
+}
+
+// ---------- Estadísticas de la academia ----------
+function Estadisticas({ alumnos, staff, intentos, resumen }) {
+  const stats = useMemo(() => {
+    const uidsAlumnos = new Set(alumnos.map((a) => a.id))
+    // Mejores calificaciones (una por alumno-fase) solo de alumnos actuales.
+    const mejores = []
+    let activos = 0
+    const enRiesgo = []
+    for (const al of alumnos) {
+      const porFase = resumen[al.id]
+      if (!porFase) continue
+      const valores = Object.values(porFase).map((c) => c.mejor)
+      if (valores.length === 0) continue
+      activos += 1
+      mejores.push(...valores)
+      const prom = Math.round(valores.reduce((s, v) => s + v, 0) / valores.length)
+      if (prom < 70) enRiesgo.push({ ...al, prom, fases: valores.length })
+    }
+    const promedio = mejores.length
+      ? Math.round(mejores.reduce((s, v) => s + v, 0) / mejores.length)
+      : null
+    const aprobacion = mejores.length
+      ? Math.round((mejores.filter((v) => v >= 70).length / mejores.length) * 100)
+      : null
+    const hace7d = Date.now() / 1000 - 7 * 24 * 3600
+    const semana = intentos.filter((i) => (i.fecha?.seconds || 0) >= hace7d).length
+
+    // Promedio de la mejor calificación por fase (entre quienes la presentaron).
+    const porFase = fasesNav.map((f) => {
+      const valores = alumnos
+        .map((al) => resumen[al.id]?.[f.id]?.mejor)
+        .filter((v) => v !== undefined)
+      const prom = valores.length
+        ? Math.round(valores.reduce((s, v) => s + v, 0) / valores.length)
+        : null
+      return { fase: f, prom, presentaron: valores.length }
+    })
+
+    const recientes = intentos.filter((i) => uidsAlumnos.has(i.uid)).slice(0, 6)
+    return { promedio, aprobacion, activos, semana, porFase, recientes, enRiesgo }
+  }, [alumnos, intentos, resumen])
+
+  const fechaTxt = (f) =>
+    f?.seconds ? new Date(f.seconds * 1000).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' }) : '—'
+
+  return (
+    <section className="panel-estadisticas">
+      <div className="pe-kpis">
+        <div className="pe-kpi">
+          <b>{stats.promedio === null ? '—' : `${stats.promedio}%`}</b>
+          <span>Promedio general</span>
+          <small>de las mejores calificaciones</small>
+        </div>
+        <div className="pe-kpi">
+          <b>{stats.aprobacion === null ? '—' : `${stats.aprobacion}%`}</b>
+          <span>Aprobación</span>
+          <small>fases presentadas con ≥70%</small>
+        </div>
+        <div className="pe-kpi">
+          <b>{stats.activos}<small className="pe-kpi-de">/{alumnos.length}</small></b>
+          <span>Alumnos activos</span>
+          <small>con al menos un examen</small>
+        </div>
+        <div className="pe-kpi">
+          <b>{stats.semana}</b>
+          <span>Intentos esta semana</span>
+          <small>últimos 7 días</small>
+        </div>
+        <div className="pe-kpi">
+          <b>{staff.length}</b>
+          <span>Staff</span>
+          <small>directores y profesores</small>
+        </div>
+      </div>
+
+      <div className="pe-columnas">
+        <div className="pe-card">
+          <h3>Dominio por fase</h3>
+          <p className="pe-card-sub">Promedio de la mejor calificación entre quienes presentaron.</p>
+          <div className="pe-barras">
+            {stats.porFase.map(({ fase, prom, presentaron }) => (
+              <div className="pe-barra-fila" key={fase.id} style={{ '--fase-color': fase.color }}>
+                <span className="pe-barra-label" title={fase.titulo}>F{fase.numero}</span>
+                <div className="pe-barra-pista">
+                  <div
+                    className={`pe-barra ${prom !== null && prom < 70 ? 'baja' : ''}`}
+                    style={{ width: prom === null ? 0 : `${Math.max(prom, 4)}%` }}
+                  />
+                </div>
+                <span className="pe-barra-valor">
+                  {prom === null ? <em>sin datos</em> : <>{prom}% <small>· {presentaron} alumno{presentaron !== 1 ? 's' : ''}</small></>}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="pe-lado">
+          <div className="pe-card">
+            <h3>Actividad reciente</h3>
+            {stats.recientes.length === 0 ? (
+              <p className="panel-vacio">Todavía no hay exámenes presentados.</p>
+            ) : (
+              <ul className="pe-actividad">
+                {stats.recientes.map((it) => (
+                  <li key={it.id}>
+                    <span className="pe-act-nombre">{it.nombre || '—'}</span>
+                    <span className="pe-act-fase">F{it.faseNumero}</span>
+                    <b className={it.porcentaje >= 70 ? 'ok' : 'mal'}>{it.porcentaje}%</b>
+                    <small>{fechaTxt(it.fecha)}</small>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="pe-card pe-card--riesgo">
+            <h3>Alumnos en riesgo</h3>
+            {stats.enRiesgo.length === 0 ? (
+              <p className="panel-vacio">Nadie por debajo del 70% de promedio. 🎉</p>
+            ) : (
+              <ul className="pe-riesgo">
+                {stats.enRiesgo.map((al) => (
+                  <li key={al.id}>
+                    <span>{al.nombre || al.email}</span>
+                    <b>{al.prom}%</b>
+                    <small>{al.fases} fase{al.fases !== 1 ? 's' : ''}</small>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ---------- Códigos de acceso temporal (probar el servicio) ----------
+export function CodigosPrueba({ academiaId = null, miUid }) {
+  const [codigos, setCodigos] = useState(null)
+  const [dias, setDias] = useState(7)
+  const [nota, setNota] = useState('')
+  const [nuevo, setNuevo] = useState(null) // último código creado (para copiarlo)
+  const [ocupado, setOcupado] = useState(false)
+  const [error, setError] = useState('')
+
+  const cargar = async () => {
+    try {
+      const { listarCodigos } = await import('../lib/firebase/codigos.js')
+      setCodigos(await listarCodigos(academiaId))
+    } catch {
+      setCodigos([])
+      setError('No se pudieron cargar los códigos (revisa que las reglas estén publicadas).')
+    }
+  }
+  useEffect(() => { cargar() }, [academiaId]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const crear = async (e) => {
+    e.preventDefault()
+    setOcupado(true)
+    setError('')
+    try {
+      const { crearCodigo } = await import('../lib/firebase/codigos.js')
+      const c = await crearCodigo({ creadoPor: miUid, academiaId, dias: Number(dias), nota })
+      setNuevo(c.id)
+      setNota('')
+      await cargar()
+    } catch {
+      setError('No se pudo crear el código.')
+    } finally {
+      setOcupado(false)
+    }
+  }
+
+  const alternar = async (c) => {
+    try {
+      const { alternarCodigo } = await import('../lib/firebase/codigos.js')
+      await alternarCodigo(c.id, c.estado === 'activo' ? 'inactivo' : 'activo')
+      await cargar()
+    } catch {
+      setError('No se pudo cambiar el estado del código.')
+    }
+  }
+
+  const copiar = (id) => {
+    try { navigator.clipboard.writeText(id) } catch { /* sin permisos */ }
+  }
+
+  const ahora = Date.now()
+  const estadoDe = (c) => {
+    if ((c.expira?.seconds || 0) * 1000 <= ahora) return 'expirado'
+    return c.estado === 'activo' ? 'activo' : 'inactivo'
+  }
+  const fechaTxt = (f) =>
+    f?.seconds ? new Date(f.seconds * 1000).toLocaleDateString('es-MX', { dateStyle: 'medium' }) : '—'
+
+  return (
+    <section className="panel-codigos">
+      <h2><Icon name="pildora" size={20} /> Códigos de prueba</h2>
+      <p className="panel-gestion-sub">
+        Genera códigos de acceso temporal para que alguien pruebe la plataforma sin inscribirse.
+        La persona lo activa en <strong>Mi cuenta → Únete con tu código</strong>.
+      </p>
+
+      <form className="pc-form" onSubmit={crear}>
+        <label>
+          Vigencia
+          <select value={dias} onChange={(e) => setDias(e.target.value)}>
+            <option value={3}>3 días</option>
+            <option value={7}>7 días</option>
+            <option value={14}>14 días</option>
+            <option value={30}>30 días</option>
+          </select>
+        </label>
+        <label className="pc-nota">
+          Nota (opcional)
+          <input type="text" value={nota} onChange={(e) => setNota(e.target.value)} placeholder="Para quién es" maxLength={60} />
+        </label>
+        <button className="btn btn-primario" type="submit" disabled={ocupado}>
+          {ocupado ? 'Creando…' : '+ Crear código'}
+        </button>
+      </form>
+
+      {nuevo && (
+        <p className="pc-nuevo" role="status">
+          Código creado: <code>{nuevo}</code>
+          <button className="pc-copiar" onClick={() => copiar(nuevo)}>Copiar</button>
+        </p>
+      )}
+      {error && <p className="cuenta-error" role="alert">{error}</p>}
+
+      {codigos === null ? null : codigos.length === 0 ? (
+        <p className="panel-vacio">Aún no has creado códigos de prueba.</p>
+      ) : (
+        <ul className="pc-lista">
+          {codigos.map((c) => {
+            const est = estadoDe(c)
+            return (
+              <li key={c.id} className={`pc-item ${est}`}>
+                <code className="pc-codigo">{c.id}</code>
+                <span className="pc-detalle">
+                  {c.nota && <strong>{c.nota} · </strong>}
+                  expira {fechaTxt(c.expira)}
+                </span>
+                <span className={`pc-estado ${est}`}>{est}</span>
+                <span className="pc-acciones">
+                  <button className="pc-copiar" onClick={() => copiar(c.id)}>Copiar</button>
+                  {est !== 'expirado' && (
+                    <button className="pc-toggle" onClick={() => alternar(c)}>
+                      {est === 'activo' ? 'Desactivar' : 'Reactivar'}
+                    </button>
+                  )}
+                </span>
+              </li>
+            )
+          })}
+        </ul>
+      )}
+    </section>
   )
 }
 
