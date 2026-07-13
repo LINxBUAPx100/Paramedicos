@@ -22,19 +22,32 @@ export default function ExamenFasePage() {
   const { faseId } = useParams()
   const fase = getFase(faseId)
   const { user, perfil, academiaId } = useAuth()
+  const { faseVisible, temaVisible } = useVisibilidad()
 
   const [iniciado, setIniciado] = useState(false)
   const [intentoKey, setIntentoKey] = useState(0)
   const [guardado, setGuardado] = useState(null) // { ok, pct } | { ok: false }
   const [fin, setFin] = useState(null) // { pct } → pantalla de felicitaciones
 
-  // Baraja las preguntas de la fase una vez por intento.
+  // Baraja las preguntas de la fase (excluyendo temas ocultos) una vez por intento.
   const preguntas = useMemo(
-    () => mezclar(preguntasDeFase(faseId)),
-    [faseId, intentoKey]
+    () => mezclar(preguntasDeFase(faseId).filter((q) => temaVisible(q.temaId))),
+    [faseId, intentoKey, temaVisible]
   )
 
   if (!fase) return <NotFound />
+
+  // Fase (módulo) oculta para el grupo del alumno: examen no disponible.
+  if (!faseVisible(fase.id)) {
+    return (
+      <div className="acceso-restringido" role="alert">
+        <span className="acceso-ico"><Icon name="candado" size={30} /></span>
+        <h1>Examen no disponible</h1>
+        <p>Tu profesor todavía no libera este módulo para tu grupo. Vuelve más adelante.</p>
+        <Link to="/examen" className="btn-pildora btn-pildora--solido">Volver a exámenes</Link>
+      </div>
+    )
+  }
 
   const onComplete = async (aciertos, total) => {
     const pctLocal = total ? Math.round((aciertos / total) * 100) : 0

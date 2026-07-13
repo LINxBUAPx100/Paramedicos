@@ -61,6 +61,7 @@ export default function PanelPage() {
       </header>
       <PanelAcademia
         academiaId={academiaId}
+        academiaNombre={academia?.nombre || ''}
         gestion={esDirector ? 'director' : null}
         miUid={user?.uid}
         soloGrupo={!esDirector ? perfil?.grupoId || null : null}

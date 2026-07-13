@@ -4,6 +4,7 @@ import { todasLasPreguntas } from '../data/index.js'
 import { fasesNav } from '../data/navIndice.js'
 import { useProgress } from '../context/ProgressContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
+import { useVisibilidad } from '../lib/useVisibilidad.js'
 import Quiz from '../components/Quiz.jsx'
 import Icon from '../components/Icon.jsx'
 
@@ -19,9 +20,21 @@ function mezclar(arr) {
 export default function ExamenPage() {
   const { registrarExamen } = useProgress()
   const { user } = useAuth()
+  const { faseVisible, temaVisible } = useVisibilidad()
   const [config, setConfig] = useState(null) // { preguntas }
   const [cantidad, setCantidad] = useState(10)
   const [intentos, setIntentos] = useState(null) // null = cargando; [] = sin intentos / no disponible
+
+  // Examen general: solo preguntas de temas visibles para el grupo del alumno.
+  const preguntasDisponibles = useMemo(
+    () => todasLasPreguntas.filter((q) => temaVisible(q.temaId)),
+    [temaVisible]
+  )
+  // Fases visibles para la lista de "examen por fase".
+  const fasesDisponibles = useMemo(
+    () => fasesNav.filter((f) => faseVisible(f.id)),
+    [faseVisible]
+  )
 
   // Intentos del alumno (para mostrar su mejor puntuación por fase).
   useEffect(() => {
@@ -53,7 +66,7 @@ export default function ExamenPage() {
   }, [intentos])
 
   function iniciar(n) {
-    const seleccion = mezclar(todasLasPreguntas).slice(0, n)
+    const seleccion = mezclar(preguntasDisponibles).slice(0, n)
     setConfig({ preguntas: seleccion, key: Date.now() })
   }
 
@@ -107,10 +120,10 @@ export default function ExamenPage() {
             </button>
           ))}
           <button
-            className={`examen-cantidad ${cantidad === todasLasPreguntas.length ? 'activa' : ''}`}
-            onClick={() => setCantidad(todasLasPreguntas.length)}
+            className={`examen-cantidad ${cantidad === preguntasDisponibles.length ? 'activa' : ''}`}
+            onClick={() => setCantidad(preguntasDisponibles.length)}
           >
-            Todas ({todasLasPreguntas.length})
+            Todas ({preguntasDisponibles.length})
           </button>
         </div>
         <button className="btn btn-primario btn-grande" onClick={() => iniciar(cantidad)}>
@@ -124,7 +137,7 @@ export default function ExamenPage() {
           Cada examen reúne todas las preguntas de su fase. Se muestra tu mejor puntuación.
         </p>
         <div className="examen-fases-lista">
-          {fasesNav.map((f) => {
+          {fasesDisponibles.map((f) => {
             const m = porFase[f.id]
             return (
               <Link

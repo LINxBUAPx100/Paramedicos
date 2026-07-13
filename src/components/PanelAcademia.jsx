@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { fasesNav } from '../data/navIndice.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import Icon from './Icon.jsx'
+import CompartirCodigo from './CompartirCodigo.jsx'
 
 // ============================================================
 //  Dashboard de UNA academia (compartido por toda la jerarquía)
@@ -28,7 +29,7 @@ export const ETIQUETA_ROL = {
 
 // `soloGrupo`: si viene (profesor con grupo asignado), el panel queda fijado
 // a ese grupo y no se puede cambiar el filtro.
-export default function PanelAcademia({ academiaId, gestion = null, miUid = null, soloGrupo = null }) {
+export default function PanelAcademia({ academiaId, academiaNombre = '', gestion = null, miUid = null, soloGrupo = null }) {
   const { puedeVerCodigos } = useAuth()
   const [datos, setDatos] = useState(null) // { miembros, intentos, grupos }
   const [cargando, setCargando] = useState(true)
@@ -294,6 +295,7 @@ export default function PanelAcademia({ academiaId, gestion = null, miUid = null
       {gestion && (
         <GruposAcademia
           academiaId={academiaId}
+          academiaNombre={academiaNombre}
           grupos={grupos}
           miembros={datos.miembros}
           miUid={miUid}
@@ -311,10 +313,10 @@ export default function PanelAcademia({ academiaId, gestion = null, miUid = null
         />
       )}
 
-      {gestion && <CodigosPrueba academiaId={academiaId} miUid={miUid} grupos={grupos} />}
+      {gestion && <CodigosPrueba academiaId={academiaId} academiaNombre={academiaNombre} miUid={miUid} grupos={grupos} />}
 
       {/* Profesores (sin gestión): los códigos requieren aprobación del director. */}
-      {!gestion && <AccesoCodigos academiaId={academiaId} grupos={grupos} />}
+      {!gestion && <AccesoCodigos academiaId={academiaId} academiaNombre={academiaNombre} grupos={grupos} />}
     </>
   )
 }
@@ -451,7 +453,7 @@ function SolicitudesAcademia({ academiaId, gestion, miUid, soloGrupo, nombreGrup
 }
 
 // ---------- Acceso de un PROFESOR a los códigos (previa aprobación) ----------
-function AccesoCodigos({ academiaId, grupos }) {
+function AccesoCodigos({ academiaId, academiaNombre = '', grupos }) {
   const { user, perfil, puedeVerCodigos } = useAuth()
   const [estado, setEstado] = useState('cargando') // cargando | puede | pendiente | enviando | enviada | error
 
@@ -481,7 +483,8 @@ function AccesoCodigos({ academiaId, grupos }) {
       <section className="panel-codigos-acceso">
         <h2><Icon name="candado" size={20} /> Códigos de tu academia</h2>
         <p className="panel-gestion-sub">
-          Tu director te aprobó el acceso. Compártelos solo con quien deba unirse.
+          Tu director te aprobó el acceso. Comparte el enlace de tu grupo (tu alumno se une con el
+          código ya pre-llenado). Compártelo solo con quien deba unirse.
         </p>
         <ul className="pc-lista">
           <li className="pc-item activo">
@@ -489,6 +492,7 @@ function AccesoCodigos({ academiaId, grupos }) {
             <code className="pc-codigo">{academiaId}</code>
             <span className="pc-acciones">
               <button className="pc-copiar" onClick={() => copiar(academiaId)}>Copiar</button>
+              <CompartirCodigo codigo={academiaId} nombre={academiaNombre || academiaId} />
             </span>
           </li>
           {grupos.map((g) => (
@@ -497,6 +501,7 @@ function AccesoCodigos({ academiaId, grupos }) {
               <code className="pc-codigo">{g.id}</code>
               <span className="pc-acciones">
                 <button className="pc-copiar" onClick={() => copiar(g.id)}>Copiar</button>
+                <CompartirCodigo codigo={g.id} nombre={academiaNombre || academiaId} contexto={g.nombre} />
               </span>
             </li>
           ))}
@@ -701,7 +706,7 @@ function errorCodigos(err, accion) {
 // `academias`: solo para el super-admin — lista para elegir a qué academia
 // pertenece el código nuevo (o dejarlo global). `grupos`: grupos ya cargados
 // de la academia fija (panel del director / dashboard de academia).
-export function CodigosPrueba({ academiaId = null, miUid, academias = null, grupos = null }) {
+export function CodigosPrueba({ academiaId = null, academiaNombre = '', miUid, academias = null, grupos = null }) {
   const [codigos, setCodigos] = useState(null)
   const [dias, setDias] = useState(7)
   const [nota, setNota] = useState('')
@@ -844,6 +849,7 @@ export function CodigosPrueba({ academiaId = null, miUid, academias = null, grup
         <p className="pc-nuevo" role="status">
           Código creado: <code>{nuevo}</code>
           <button className="pc-copiar" onClick={() => copiar(nuevo)}>Copiar</button>
+          <CompartirCodigo codigo={nuevo} nombre={academiaNombre || academiaEfectiva || 'PTEM'} contexto="acceso de prueba" />
         </p>
       )}
       {error && <p className="cuenta-error" role="alert">{error}</p>}
@@ -872,6 +878,9 @@ export function CodigosPrueba({ academiaId = null, miUid, academias = null, grup
                 <span className={`pc-estado ${est}`}>{est}</span>
                 <span className="pc-acciones">
                   <button className="pc-copiar" onClick={() => copiar(c.id)}>Copiar</button>
+                  {est === 'activo' && (
+                    <CompartirCodigo codigo={c.id} nombre={academiaNombre || c.academiaId || 'PTEM'} contexto="acceso de prueba" />
+                  )}
                   {est !== 'expirado' && (
                     <button className="pc-toggle" onClick={() => alternar(c)}>
                       {est === 'activo' ? 'Desactivar' : 'Reactivar'}
@@ -917,7 +926,7 @@ export function DetalleAlumno({ alumno, intentos, onCerrar }) {
 }
 
 // ---------- Grupos internos de la academia ----------
-function GruposAcademia({ academiaId, grupos, miembros, miUid, onCambio }) {
+function GruposAcademia({ academiaId, academiaNombre = '', grupos, miembros, miUid, onCambio }) {
   const [nombre, setNombre] = useState('')
   const [nuevo, setNuevo] = useState(null) // último código creado
   const [editandoId, setEditandoId] = useState(null)
@@ -987,6 +996,16 @@ function GruposAcademia({ academiaId, grupos, miembros, miUid, onCambio }) {
         <strong> Mi cuenta → Únete con tu código</strong>, y sus avances quedan separados por grupo.
       </p>
 
+      {/* Código de la ACADEMIA: unir sin grupo específico. */}
+      <div className="pc-academia-codigo">
+        <span className="pca-label">Código de tu academia</span>
+        <code className="pc-codigo">{academiaId}</code>
+        <span className="pc-acciones">
+          <button className="pc-copiar" onClick={() => copiar(academiaId)}>Copiar</button>
+          <CompartirCodigo codigo={academiaId} nombre={academiaNombre || academiaId} />
+        </span>
+      </div>
+
       <form className="pc-form" onSubmit={crear}>
         <label className="pc-nota">
           Nombre del grupo
@@ -1043,6 +1062,9 @@ function GruposAcademia({ academiaId, grupos, miembros, miUid, onCambio }) {
                 <span className={`pc-estado ${activo ? 'activo' : 'inactivo'}`}>{activo ? 'activo' : 'inactivo'}</span>
                 <span className="pc-acciones">
                   <button className="pc-copiar" onClick={() => copiar(g.id)}>Copiar</button>
+                  {activo && (
+                    <CompartirCodigo codigo={g.id} nombre={academiaNombre || academiaId} contexto={g.nombre} />
+                  )}
                   <button
                     className="pc-copiar"
                     onClick={() => { setEditandoId(g.id); setNombreEdit(g.nombre) }}

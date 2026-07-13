@@ -147,6 +147,25 @@ esa academia y grupo (aparece en el panel del profesor) pero marcado como
 meter un código real de academia o grupo, que quita la marca. Las reglas
 impiden inventarse la fecha o quitarse la marca sin una unión real.
 
+## Enlaces de invitación (compartir por WhatsApp)
+
+Directores, super-admins y profesores autorizados tienen un botón **Compartir**
+junto a cada código (academia, grupo o prueba) en su dashboard. Genera un
+enlace `…/#/cuenta?c=CODIGO` que, al abrirse, lleva al login/registro con el
+código **pre-llenado**: el invitado crea su cuenta o entra y con un toque en
+«Activar código» queda unido (a la academia, al grupo, o con acceso de prueba).
+El botón ofrece "Enviar por WhatsApp", "Copiar enlace" y "Copiar solo el
+código" (en móvil usa la hoja de compartir nativa). El director comparte el
+código de academia (sin grupo) o el de cada grupo; el profesor autorizado
+comparte el de su grupo.
+
+## Visibilidad: flashcards y exámenes
+
+El bloqueo por grupo (temas/fases ocultos) ahora también cubre: **flashcards**
+de un tema oculto y el repaso global (excluye sus tarjetas), **quiz** de un
+tema oculto, **examen de fase** de un módulo oculto, y el **examen general**
+(su bolsa de preguntas y la lista "por fase" solo incluyen lo visible).
+
 ## Cambiar el código de una academia (super-admin)
 
 En `/admin/academia/CODIGO` → botón **"Cambiar código"**: crea el doc con el

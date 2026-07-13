@@ -164,7 +164,7 @@ export default function AcademiaAdminPage() {
 
       {error && <p className="cuenta-error" role="alert">{error}</p>}
 
-      <PanelAcademia academiaId={academia.id} gestion="superadmin" miUid={user?.uid} />
+      <PanelAcademia academiaId={academia.id} academiaNombre={academia.nombre || ''} gestion="superadmin" miUid={user?.uid} />
 
       <PersonalizacionAcademia
         academia={academia}

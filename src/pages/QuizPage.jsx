@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom'
 import { getTema } from '../data/index.js'
 import { useProgress } from '../context/ProgressContext.jsx'
+import { useVisibilidad } from '../lib/useVisibilidad.js'
 import Quiz from '../components/Quiz.jsx'
 import NotFound from './NotFound.jsx'
 import Icon from '../components/Icon.jsx'
@@ -9,8 +10,21 @@ export default function QuizPage() {
   const { temaId } = useParams()
   const tema = getTema(temaId)
   const { registrarQuiz } = useProgress()
+  const { temaVisible } = useVisibilidad()
 
   if (!tema) return <NotFound />
+
+  // Quiz de un tema oculto para el grupo del alumno: no disponible.
+  if (!temaVisible(tema.id)) {
+    return (
+      <div className="acceso-restringido" role="alert">
+        <span className="acceso-ico"><Icon name="candado" size={30} /></span>
+        <h1>Quiz no disponible</h1>
+        <p>Tu profesor todavía no libera este tema para tu grupo. Vuelve más adelante.</p>
+        <Link to={`/fase/${tema.faseId}`} className="btn-pildora btn-pildora--solido">Volver a la fase</Link>
+      </div>
+    )
+  }
 
   return (
     <div className="quiz-page" style={{ '--fase-color': tema.faseColor }}>

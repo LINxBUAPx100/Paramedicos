@@ -1,6 +1,8 @@
 import { useParams, Link } from 'react-router-dom'
 import { useState, useMemo } from 'react'
 import { getTema, todasLasFlashcards } from '../data/index.js'
+import { useVisibilidad } from '../lib/useVisibilidad.js'
+import Icon from '../components/Icon.jsx'
 
 function mezclar(arr) {
   const a = [...arr]
@@ -14,13 +16,18 @@ function mezclar(arr) {
 export default function FlashcardsPage() {
   const { temaId } = useParams()
   const tema = temaId ? getTema(temaId) : null
+  const { temaVisible } = useVisibilidad()
+
+  // Flashcards de un tema oculto para el grupo del alumno: no disponibles.
+  const bloqueado = tema && !temaVisible(tema.id)
 
   const baseCartas = useMemo(() => {
     if (tema) {
       return tema.flashcards.map((f, i) => ({ ...f, id: `${tema.id}-${i}` }))
     }
-    return todasLasFlashcards
-  }, [tema])
+    // Repaso global: excluye las flashcards de temas ocultos.
+    return todasLasFlashcards.filter((f) => temaVisible(f.temaId))
+  }, [tema, temaVisible])
 
   const [orden, setOrden] = useState(() => baseCartas.map((_, i) => i))
   const [indice, setIndice] = useState(0)
@@ -43,6 +50,17 @@ export default function FlashcardsPage() {
     setOrden(mezclar(baseCartas.map((_, i) => i)))
     setIndice(0)
     setVolteada(false)
+  }
+
+  if (bloqueado) {
+    return (
+      <div className="acceso-restringido" role="alert">
+        <span className="acceso-ico"><Icon name="candado" size={30} /></span>
+        <h1>Flashcards no disponibles</h1>
+        <p>Tu profesor todavía no libera este tema para tu grupo. Vuelve más adelante.</p>
+        <Link to={`/tema/${tema.id}`} className="btn-pildora btn-pildora--solido">Volver al tema</Link>
+      </div>
+    )
   }
 
   if (!baseCartas.length) {

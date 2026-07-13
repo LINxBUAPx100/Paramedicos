@@ -1,9 +1,21 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import { registrarEmail, entrarEmail, entrarGoogle } from '../lib/firebase/auth.js'
 import { firebaseListo } from '../lib/firebase/init.js'
 import Icon from '../components/Icon.jsx'
+
+// --- Código de invitación (deep-link ?c=XXX): sobrevive al login vía sessionStorage ---
+const SS_CODIGO = 'ptem-codigo-invitacion'
+function leerCodigoInvitacion() {
+  try { return (sessionStorage.getItem(SS_CODIGO) || '').toUpperCase() } catch { return '' }
+}
+function guardarCodigoInvitacion(c) {
+  try {
+    if (c) sessionStorage.setItem(SS_CODIGO, c.toUpperCase())
+    else sessionStorage.removeItem(SS_CODIGO)
+  } catch { /* almacenamiento no disponible */ }
+}
 
 // Traduce los códigos de error de Firebase a mensajes claros en español.
 function traducirError(e) {
@@ -41,11 +53,27 @@ function olvidarPerfil(email) {
 
 export default function Cuenta() {
   const { autenticado, cargando, user, perfil, salir } = useAuth()
+  const [params, setParams] = useSearchParams()
+  const [codigoInvitacion, setCodigoInvitacion] = useState(leerCodigoInvitacion)
+
+  // Captura el código del enlace (?c=XXX), lo persiste y lo limpia de la URL
+  // para que un refresh no lo re-dispare.
+  useEffect(() => {
+    const c = params.get('c')
+    if (c) {
+      guardarCodigoInvitacion(c)
+      setCodigoInvitacion(c.toUpperCase())
+      params.delete('c')
+      setParams(params, { replace: true })
+    }
+  }, [params, setParams])
 
   // Cada vez que hay sesión con perfil cargado, recuerda ese perfil.
   useEffect(() => {
     if (user?.email) recordarPerfil({ email: user.email, nombre: perfil?.nombre || user.displayName || '' })
   }, [user?.email, perfil?.nombre])
+
+  const limpiarInvitacion = () => { guardarCodigoInvitacion(''); setCodigoInvitacion('') }
 
   if (!firebaseListo) {
     return (
@@ -59,15 +87,17 @@ export default function Cuenta() {
   }
   return (
     <div className="cuenta-wrap">
-      {autenticado ? <Perfil user={user} perfil={perfil} salir={salir} /> : <Acceso />}
+      {autenticado
+        ? <Perfil user={user} perfil={perfil} salir={salir} codigoInvitacion={codigoInvitacion} onConsumir={limpiarInvitacion} />
+        : <Acceso codigoInvitacion={codigoInvitacion} />}
     </div>
   )
 }
 
 // --- No autenticado: login / registro + perfiles recordados ---
-function Acceso() {
+function Acceso({ codigoInvitacion = '' }) {
   const navigate = useNavigate()
-  const [modo, setModo] = useState('login') // 'login' | 'registro'
+  const [modo, setModo] = useState(codigoInvitacion ? 'registro' : 'login')
   const [nombre, setNombre] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -75,6 +105,10 @@ function Acceso() {
   const [aviso, setAviso] = useState('')
   const [ocupado, setOcupado] = useState(false)
   const [perfiles, setPerfiles] = useState(leerPerfiles)
+
+  // Con invitación NO navegamos fuera: al autenticarse, Cuenta re-renderiza y
+  // muestra el perfil con el código ya pre-llenado para activarlo.
+  const trasEntrar = () => { if (!codigoInvitacion) navigate('/') }
 
   const enviar = async (e) => {
     e.preventDefault()
@@ -85,7 +119,7 @@ function Acceso() {
       if (modo === 'registro') u = await registrarEmail({ nombre, email, password })
       else u = await entrarEmail({ email, password })
       recordarPerfil({ email: u.email, nombre: u.displayName || nombre })
-      navigate('/') // al entrar, directo al inicio
+      trasEntrar()
     } catch (err) {
       setError(traducirError(err))
       setOcupado(false)
@@ -98,7 +132,7 @@ function Acceso() {
     try {
       const u = await entrarGoogle()
       recordarPerfil({ email: u.email, nombre: u.displayName || '' })
-      navigate('/') // al entrar, directo al inicio
+      trasEntrar()
     } catch (err) {
       setError(traducirError(err))
       setOcupado(false)
@@ -124,6 +158,15 @@ function Acceso() {
 
   return (
     <div className="cuenta-card">
+      {codigoInvitacion && (
+        <div className="cuenta-invitacion" role="status">
+          <span className="cuenta-invitacion-ico"><Icon name="pildora" size={18} /></span>
+          <div>
+            <strong>Tienes una invitación</strong>
+            <p>Crea tu cuenta o inicia sesión y activaremos tu código <code>{codigoInvitacion}</code> automáticamente.</p>
+          </div>
+        </div>
+      )}
       <div className="cuenta-tabs" role="tablist">
         <button role="tab" aria-selected={modo === 'login'} className={modo === 'login' ? 'on' : ''} onClick={() => setModo('login')}>
           Iniciar sesión
@@ -195,15 +238,18 @@ function Acceso() {
 }
 
 // --- Autenticado: perfil + unirse por código (academia o prueba) + mis datos ---
-function Perfil({ user, perfil, salir }) {
+function Perfil({ user, perfil, salir, codigoInvitacion = '', onConsumir }) {
   // Los CÓDIGOS de academia/grupo no se muestran a alumnos ni profesores
   // (solo director/super-admin): en su lugar va el NOMBRE.
   const { academia, grupo, puedeVerCodigos } = useAuth()
-  const [codigo, setCodigo] = useState('')
+  const [codigo, setCodigo] = useState(codigoInvitacion || '')
   const [msg, setMsg] = useState('')
   const [error, setError] = useState('')
   const [ocupado, setOcupado] = useState(false)
   const [editando, setEditando] = useState(false)
+
+  // Si llega una invitación después de montar (login recién hecho), pre-llénala.
+  useEffect(() => { if (codigoInvitacion) setCodigo(codigoInvitacion) }, [codigoInvitacion])
 
   const pruebaSeg = perfil?.pruebaHasta?.seconds || 0
   const pruebaVigente = pruebaSeg * 1000 > Date.now()
@@ -221,6 +267,7 @@ function Perfil({ user, perfil, salir }) {
       const aca = await unirseAcademia(user.uid, codigo)
       setMsg(`Te uniste a: ${aca.nombre}`)
       setCodigo('')
+      onConsumir?.()
     } catch (err) {
       if (!String(err?.message || '').includes('No existe una academia')) {
         setError(traducirError(err))
@@ -232,6 +279,7 @@ function Perfil({ user, perfil, salir }) {
         const g = await unirseGrupo(user.uid, codigo)
         setMsg(`Te uniste al grupo "${g.nombre}" de ${g.academia?.nombre || g.academiaId}.`)
         setCodigo('')
+        onConsumir?.()
       } catch (err2) {
         if (!String(err2?.message || '').includes('No existe un grupo')) {
           setError(traducirError(err2))
@@ -241,6 +289,7 @@ function Perfil({ user, perfil, salir }) {
             const expira = await canjearCodigo(user.uid, codigo)
             setMsg(`Código de prueba activado: tienes acceso hasta el ${new Date(expira.toMillis()).toLocaleDateString('es-MX', { dateStyle: 'long' })}.`)
             setCodigo('')
+            onConsumir?.()
           } catch (err3) {
             setError(traducirError(err3))
           }
@@ -292,8 +341,13 @@ function Perfil({ user, perfil, salir }) {
         )}
       </dl>
 
-      {(!perfil?.academiaId || perfil?.esPrueba) && (
+      {(!perfil?.academiaId || perfil?.esPrueba || codigoInvitacion) && (
         <form className="cuenta-unir" onSubmit={unir}>
+          {codigoInvitacion && (
+            <p className="cuenta-invitacion-nota" role="status">
+              Te invitaron con el código <code>{codigoInvitacion}</code>. Toca «Activar código» para unirte.
+            </p>
+          )}
           <label>
             Únete con tu código (academia, grupo o prueba)
             <input
