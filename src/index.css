@@ -1076,6 +1076,70 @@ textarea:focus-visible,
   .aca-hero-grupo { display: none; }
 }
 
+/* ===== Panel de selección de grupo (profesores) ===== */
+.prof-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 24px;
+  margin-top: 14px;
+  border-radius: var(--radio-lg);
+  border: 1px solid var(--borde);
+  border-left: 6px solid var(--primario);
+  background: linear-gradient(115deg, color-mix(in srgb, var(--primario) 8%, var(--bg-2)), var(--bg-2) 72%);
+}
+.prof-panel-cab { display: flex; align-items: flex-start; gap: 14px; }
+.prof-panel-ico {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  color: var(--primario);
+  background: color-mix(in srgb, var(--primario) 14%, transparent);
+}
+.prof-panel-cab h2 { font-family: var(--fuente-display); font-size: 1.25rem; line-height: 1.1; }
+.prof-panel-cab p { color: var(--texto-2); font-size: 0.88rem; line-height: 1.5; margin-top: 3px; max-width: 62ch; }
+.prof-panel-vacio { color: var(--texto-2); font-size: 0.9rem; }
+.prof-grupos { display: flex; flex-wrap: wrap; gap: 8px; }
+.prof-grupo-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 15px;
+  border-radius: 999px;
+  border: 1px solid var(--borde);
+  background: var(--bg-1);
+  color: var(--texto);
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+.prof-grupo-chip:hover:not(:disabled) { border-color: color-mix(in srgb, var(--primario) 50%, var(--borde)); }
+.prof-grupo-chip.activo {
+  color: #fff;
+  background: var(--primario);
+  border-color: var(--primario);
+}
+.prof-grupo-chip:disabled { opacity: 0.6; cursor: default; }
+.prof-grupo-check { font-size: 0.9rem; }
+.prof-panel-pie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.prof-panel-actual { font-size: 0.88rem; color: var(--texto-2); }
+.prof-panel-actual strong { color: var(--texto); }
+@media (max-width: 560px) {
+  .prof-panel { padding: 16px; }
+  .prof-panel-pie { flex-direction: column; align-items: stretch; }
+}
+
 /* ===== Personalización de la academia ===== */
 .panel-personalizacion { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
 .panel-personalizacion h2 {
@@ -1153,6 +1217,14 @@ textarea:focus-visible,
   font: inherit;
   font-size: 0.84rem;
   max-width: 150px;
+}
+.fact-edit-aca { display: flex; flex-direction: column; gap: 6px; }
+.fact-edit-aca .fact-input { max-width: 210px; }
+.fact-input--codigo {
+  font-family: var(--fuente-cifra);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  max-width: 150px !important;
 }
 .admin-anuncio-activo {
   flex-direction: row !important;

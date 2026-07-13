@@ -27,9 +27,14 @@ export async function guardarAnuncio({ mensaje, tipo = 'info', activo }) {
 }
 
 // --- Facturación / plan de una academia ---
-// Fija plan (texto), estado (activo|suspendido) y fecha de renovación (Date).
-export async function actualizarFacturacion(academiaId, { plan, estado, fechaRenovacion }) {
+// Fija nombre, plan (texto), estado (activo|suspendido) y fecha de renovación (Date).
+export async function actualizarFacturacion(academiaId, { nombre, plan, estado, fechaRenovacion }) {
   const cambios = {}
+  if (nombre !== undefined) {
+    const limpio = String(nombre || '').trim()
+    if (!limpio) throw new Error('El nombre de la academia no puede quedar vacío.')
+    cambios.nombre = limpio
+  }
   if (plan !== undefined) cambios.plan = String(plan || '').trim()
   if (estado !== undefined) cambios.estado = estado
   if (fechaRenovacion !== undefined) {

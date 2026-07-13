@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { fasesNav as fases, stats } from '../data/navIndice.js'
 import { useProgress } from '../context/ProgressContext.jsx'
@@ -106,6 +107,9 @@ export default function Home() {
 
       {/* ===== Hero de la ACADEMIA del usuario (personalizable) ===== */}
       <HeroAcademia />
+
+      {/* ===== Selector de grupo (solo profesores) ===== */}
+      <SelectorGrupoProfesor />
 
       {/* ===== Progreso (si ya hay temas leídos) ===== */}
       {temasLeidos > 0 && (
@@ -232,6 +236,116 @@ function HeroAcademia() {
         </div>
         {/* Se muestra el NOMBRE del grupo, nunca su código. */}
         {grupo?.nombre && <span className="aca-hero-grupo">Grupo {grupo.nombre}</span>}
+      </section>
+    </div>
+  )
+}
+
+// Panel de bienvenida SOLO para profesores (instructores): un profesor puede
+// atender varios grupos, así que aquí elige con cuál trabaja. La selección se
+// guarda en su perfil (perfil.grupoId) y se mantiene hasta que la cambie; ese
+// grupo enfoca su panel de avance, sus reportes y su vista de "Temas".
+function SelectorGrupoProfesor() {
+  const { rol, user, perfil, academiaId, grupo } = useAuth()
+  const [grupos, setGrupos] = useState(null) // null = cargando
+  const [guardando, setGuardando] = useState(false)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    if (rol !== 'instructor' || !academiaId) { setGrupos([]); return }
+    let activo = true
+    ;(async () => {
+      try {
+        const { listarGrupos } = await import('../lib/firebase/grupos.js')
+        const lista = await listarGrupos(academiaId)
+        if (activo) setGrupos(lista.filter((g) => g.estado === 'activo'))
+      } catch {
+        if (activo) setGrupos([])
+      }
+    })()
+    return () => { activo = false }
+  }, [rol, academiaId])
+
+  // Esta sección es exclusiva de los profesores.
+  if (rol !== 'instructor') return null
+
+  const nombre = (perfil?.nombre || '').split(' ')[0]
+  const activo = perfil?.grupoId || ''
+
+  const elegir = async (grupoId) => {
+    if ((grupoId || '') === activo || guardando) return
+    setGuardando(true)
+    setError('')
+    try {
+      const { actualizarUsuario } = await import('../lib/firebase/usuarios.js')
+      // El AuthContext escucha el perfil en vivo: la UI se refresca sola.
+      await actualizarUsuario(user.uid, { grupoId: grupoId || null })
+    } catch {
+      setError('No se pudo cambiar de grupo. Revisa tu conexión e inténtalo de nuevo.')
+    } finally {
+      setGuardando(false)
+    }
+  }
+
+  return (
+    <div className="ph-wrap">
+      <section className="prof-panel" aria-label="Selección de grupo">
+        <div className="prof-panel-cab">
+          <span className="prof-panel-ico"><Icon name="usuario" size={22} /></span>
+          <div>
+            <h2>Hola{nombre ? `, ${nombre}` : ''} 👋</h2>
+            <p>
+              Elige el grupo con el que vas a trabajar. Tu elección se guarda y
+              se mantiene hasta que la cambies: enfoca tu panel de avance, tus
+              reportes y la visibilidad de contenido.
+            </p>
+          </div>
+        </div>
+
+        {grupos === null ? (
+          <p className="prof-panel-vacio">Cargando tus grupos…</p>
+        ) : grupos.length === 0 ? (
+          <p className="prof-panel-vacio">
+            Tu academia aún no tiene grupos activos. Pide a tu director que cree
+            uno para poder organizar a tus alumnos.
+          </p>
+        ) : (
+          <>
+            <div className="prof-grupos" role="group" aria-label="Grupos disponibles">
+              <button
+                type="button"
+                className={`prof-grupo-chip ${!activo ? 'activo' : ''}`}
+                onClick={() => elegir(null)}
+                disabled={guardando}
+              >
+                Todos los grupos
+              </button>
+              {grupos.map((g) => (
+                <button
+                  key={g.id}
+                  type="button"
+                  className={`prof-grupo-chip ${activo === g.id ? 'activo' : ''}`}
+                  onClick={() => elegir(g.id)}
+                  disabled={guardando}
+                >
+                  {g.nombre}
+                  {activo === g.id && <span className="prof-grupo-check">✓</span>}
+                </button>
+              ))}
+            </div>
+
+            <div className="prof-panel-pie">
+              <span className="prof-panel-actual">
+                Trabajando con:{' '}
+                <strong>{grupo?.nombre || (activo ? activo : 'Todos los grupos')}</strong>
+              </span>
+              <Link to="/panel" className="btn-pildora btn-pildora--solido">
+                <Icon name="progreso" size={16} /> Ir a mi panel
+              </Link>
+            </div>
+          </>
+        )}
+        {error && <p className="cuenta-error" role="alert">{error}</p>}
       </section>
     </div>
   )

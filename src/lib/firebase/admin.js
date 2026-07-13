@@ -67,7 +67,7 @@ export async function cambiarCodigoAcademia(codigoViejo, codigoNuevo) {
   await setDoc(refNuevo, snapViejo.data())
 
   // 2) Migra todas las referencias por lotes (límite de 500 por batch).
-  for (const col of ['usuarios', 'grupos', 'codigos', 'intentos', 'solicitudes']) {
+  for (const col of ['usuarios', 'grupos', 'codigos', 'intentos', 'solicitudes', 'reportes']) {
     const snap = await getDocs(query(collection(db, col), where('academiaId', '==', viejo)))
     let batch = writeBatch(db)
     let n = 0

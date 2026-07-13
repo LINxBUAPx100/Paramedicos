@@ -66,6 +66,12 @@ panel filtra el avance por grupo; un profesor con grupo asignado ve SOLO su
 grupo. Renombrar/desactivar grupos: solo director y super-admin. En la tabla
 de miembros se puede mover a cualquier miembro de grupo con un selector.
 
+Un **profesor** puede trabajar con **varios grupos**. En la pantalla de inicio
+tiene un panel de bienvenida (visible SOLO para profesores) donde elige el
+grupo activo entre los grupos de su academia, o "Todos los grupos". La elección
+se guarda en su perfil (`grupoId`) y se mantiene hasta que la cambie; ese grupo
+enfoca su panel de avance, sus reportes y su vista de "Temas".
+
 ## Visibilidad de contenido por grupo (sección "Temas")
 
 **/temario ahora es SOLO para staff** (profesor, director, super-admin): es el

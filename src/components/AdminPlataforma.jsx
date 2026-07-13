@@ -48,11 +48,25 @@ export function FacturacionAcademias({ academias, onCambio }) {
     })
 
   const guardarEdit = () => {
-    const { id, plan, fecha } = edit
+    const { id, nombre, codigo, plan, fecha } = edit
+    const nuevoCodigo = String(codigo || '').trim().toUpperCase()
+    const cambiaCodigo = nuevoCodigo && nuevoCodigo !== id
+    // Cambiar el código migra el doc a un ID nuevo y arrastra todas sus
+    // referencias: es pesado y el código anterior deja de funcionar → confirma.
+    if (cambiaCodigo && !window.confirm(
+      `Vas a cambiar el código de la academia de «${id}» a «${nuevoCodigo}».\n\n` +
+      'El código anterior dejará de funcionar y se migrarán todos sus datos ' +
+      '(alumnos, grupos, códigos de prueba, intentos, solicitudes y reportes).\n\n' +
+      '¿Continuar?'
+    )) return
     setEdit(null)
     return correr(id, async () => {
       const { actualizarFacturacion } = await import('../lib/firebase/plataforma.js')
-      await actualizarFacturacion(id, { plan, fechaRenovacion: fecha || null })
+      await actualizarFacturacion(id, { nombre, plan, fechaRenovacion: fecha || null })
+      if (cambiaCodigo) {
+        const { cambiarCodigoAcademia } = await import('../lib/firebase/admin.js')
+        await cambiarCodigoAcademia(id, nuevoCodigo)
+      }
     })
   }
 
@@ -92,8 +106,31 @@ export function FacturacionAcademias({ academias, onCambio }) {
               return (
                 <tr key={a.id} className="panel-fila-gestion">
                   <td className="panel-alumno">
-                    <strong>{a.nombre || a.id}</strong>
-                    <span className="fact-codigo">{a.id}</span>
+                    {enEdicion ? (
+                      <div className="fact-edit-aca">
+                        <input
+                          className="fact-input"
+                          type="text"
+                          value={edit.nombre}
+                          onChange={(e) => setEdit({ ...edit, nombre: e.target.value })}
+                          placeholder="Nombre de la academia"
+                          aria-label="Nombre de la academia"
+                        />
+                        <input
+                          className="fact-input fact-input--codigo"
+                          type="text"
+                          value={edit.codigo}
+                          onChange={(e) => setEdit({ ...edit, codigo: e.target.value.toUpperCase() })}
+                          placeholder="CÓDIGO"
+                          aria-label="Código de la academia"
+                        />
+                      </div>
+                    ) : (
+                      <>
+                        <strong>{a.nombre || a.id}</strong>
+                        <span className="fact-codigo">{a.id}</span>
+                      </>
+                    )}
                   </td>
                   <td>
                     {enEdicion
@@ -135,7 +172,7 @@ export function FacturacionAcademias({ academias, onCambio }) {
                         </button>
                         <button
                           className="pc-copiar"
-                          onClick={() => setEdit({ id: a.id, plan: a.plan || '', fecha: seg(a) ? new Date(seg(a) * 1000).toISOString().slice(0, 10) : '' })}
+                          onClick={() => setEdit({ id: a.id, nombre: a.nombre || '', codigo: a.id, plan: a.plan || '', fecha: seg(a) ? new Date(seg(a) * 1000).toISOString().slice(0, 10) : '' })}
                         >Editar</button>
                       </>
                     )}
@@ -147,8 +184,10 @@ export function FacturacionAcademias({ academias, onCambio }) {
         </table>
       </div>
       <p className="panel-nota">
-        «Renovar +30d» extiende la renovación y reactiva la academia (registra un pago). La tabla
-        se ordena por urgencia: primero las vencidas y por vencer.
+        «Renovar +30d» extiende la renovación y reactiva la academia (registra un pago). Con
+        «Editar» cambias nombre, código, plan y fecha; al cambiar el <strong>código</strong> se
+        migran todos los datos de la academia y el código anterior deja de servir. La tabla se
+        ordena por urgencia: primero las vencidas y por vencer.
       </p>
     </section>
   )
