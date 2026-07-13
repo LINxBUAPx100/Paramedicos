@@ -206,7 +206,16 @@ function ModuloCompletado({ fase, pct, onCerrar }) {
   // si ya la ve (o es staff), se le invita a continuar directamente.
   const bloqueada = Boolean(siguiente) && rol === 'alumno' && !faseVisible(siguiente.id)
 
+  // Mientras el mensaje está en pantalla, congela el scroll del fondo para que
+  // la pantalla quede optimizada y el mensaje siempre centrado hasta cerrarlo.
+  useEffect(() => {
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = prev }
+  }, [])
+
   const [envio, setEnvio] = useState(bloqueada ? 'cargando' : 'puede')
+  const [confirmar, setConfirmar] = useState(false) // muestra la advertencia antes de solicitar
   // ¿Ya tiene una solicitud pendiente de esa fase? (no duplicar)
   useEffect(() => {
     if (!bloqueada) return
@@ -264,19 +273,22 @@ function ModuloCompletado({ fase, pct, onCerrar }) {
 
         <p className="modulo-fin-sub">{m.texto}</p>
 
-        <div className="modulo-fin-aprendizajes">
-          <h3><Icon name="diana" size={18} /> Aprendizajes de este módulo</h3>
+        <details className="modulo-fin-aprendizajes">
+          <summary>
+            <Icon name="diana" size={16} /> Aprendizajes de este módulo
+            <em>{fase.temas.length} temas</em>
+          </summary>
           <ul>
             {porTema.map((t) => (
               <li key={t.id}>
                 <span>{t.numero}</span> {t.titulo}
                 <em className={`mf-chip ${t.pct === null ? 'sin' : t.pct >= 70 ? 'ok' : 'mal'}`}>
-                  {t.pct === null ? 'sin quiz' : `${t.pct}%`}
+                  {t.pct === null ? '—' : `${t.pct}%`}
                 </em>
               </li>
             ))}
           </ul>
-        </div>
+        </details>
 
         <div className="modulo-fin-cta">
           {debeRepasar ? (
@@ -295,13 +307,37 @@ function ModuloCompletado({ fase, pct, onCerrar }) {
                   Tu profesor la verá en su panel y te habilitará la
                   Fase {siguiente.numero} · {siguiente.titulo}.
                 </p>
+              ) : confirmar ? (
+                <div className="modulo-fin-aviso" role="alert">
+                  <p>
+                    <b>⚠ Vas a solicitar avanzar a la Fase {siguiente.numero}.</b> Solo hazlo si ya
+                    dominas este módulo: tu profesor revisará tu desempeño antes de habilitártela y
+                    no podrás cancelar la solicitud una vez enviada.
+                  </p>
+                  <div className="modulo-fin-aviso-btns">
+                    <button
+                      className="btn btn-primario"
+                      onClick={solicitar}
+                      disabled={envio === 'enviando'}
+                    >
+                      {envio === 'enviando' ? 'Enviando…' : 'Sí, solicitar avanzar'}
+                    </button>
+                    <button
+                      className="btn btn-secundario"
+                      onClick={() => setConfirmar(false)}
+                      disabled={envio === 'enviando'}
+                    >
+                      Mejor no
+                    </button>
+                  </div>
+                </div>
               ) : (
                 <button
-                  className="btn btn-primario btn-grande"
-                  onClick={solicitar}
-                  disabled={envio === 'enviando' || envio === 'cargando'}
+                  className="btn btn-primario btn-grande modulo-fin-solicitar"
+                  onClick={() => setConfirmar(true)}
+                  disabled={envio === 'cargando'}
                 >
-                  {envio === 'enviando' ? 'Enviando…' : 'Solicitar acceso al siguiente módulo'}
+                  ⚠ Solicitar avanzar al siguiente módulo
                 </button>
               )}
               {envio === 'error' && (
