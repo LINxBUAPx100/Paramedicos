@@ -57,6 +57,24 @@ Para que un maestro vea a un alumno, ambos deben tener el mismo `academiaId`.
   reciente y alumnos en riesgo (<70% de promedio).
 - Los alumnos ven su mejor puntuación por fase en la página **Examen**.
 
+## Grupos internos de una academia
+
+El **director** (o un super-admin) crea grupos desde su dashboard: cada grupo
+recibe un código `GRP-XXXX`. Profesores y alumnos entran con ese código en
+**Mi cuenta → Únete con tu código** (los une al grupo Y a la academia). El
+panel filtra el avance por grupo; un profesor con grupo asignado ve SOLO su
+grupo. Renombrar/desactivar grupos: solo director y super-admin. En la tabla
+de miembros se puede mover a cualquier miembro de grupo con un selector.
+
+## Hero personalizado por academia
+
+Cada academia tiene `logo` (enlace de Drive o URL), `lema` y `colorHero`. Sus
+miembros ven un hero propio en el **Home** (logo + nombre + lema + color +
+su grupo). Lo editan SOLO el director (sección "Personalización" en /panel)
+y el super-admin (en /admin/academia/CODIGO); las reglas impiden al director
+tocar otros campos (estado, plan…). Al crear una academia en /admin ya se
+piden logo, lema y color.
+
 ## Códigos de prueba (acceso temporal)
 
 El super-admin y los directores pueden generar códigos `PRUEBA-XXXX`

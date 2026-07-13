@@ -750,6 +750,129 @@ textarea:focus-visible,
 }
 .admin-form .cuenta-error, .admin-form .cuenta-ok { flex-basis: 100%; }
 
+/* ===== Grupos internos de la academia ===== */
+.panel-grupos { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.panel-grupos h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--fuente-display);
+  font-size: 1.2rem;
+}
+.pg-nombre { font-family: var(--fuente-sub); font-weight: 600; }
+.panel-tag-grupo {
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--primario);
+  background: color-mix(in srgb, var(--primario) 10%, transparent);
+  white-space: nowrap;
+}
+.panel-grupo-aviso {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: var(--radio-sm);
+  background: color-mix(in srgb, var(--primario) 8%, transparent);
+  color: var(--texto-2);
+  font-size: 0.9rem;
+  flex-wrap: wrap;
+}
+.panel-grupo-aviso code { font-family: var(--fuente-cifra); font-weight: 700; color: var(--primario); }
+.panel-selector--grupo { align-self: flex-start; }
+
+/* ===== Hero de la academia (Home + vista previa del panel) ===== */
+.aca-hero {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 20px 24px;
+  margin-top: 18px;
+  border-radius: var(--radio-lg);
+  border: 1px solid color-mix(in srgb, var(--aca-color, var(--primario)) 35%, var(--borde));
+  border-left: 6px solid var(--aca-color, var(--primario));
+  background: linear-gradient(
+    115deg,
+    color-mix(in srgb, var(--aca-color, var(--primario)) 14%, var(--bg-2)),
+    var(--bg-2) 72%
+  );
+}
+.aca-hero--preview { margin-top: 4px; }
+.aca-hero-logo {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--aca-color, var(--primario)) 16%, var(--bg-3));
+  border: 1px solid color-mix(in srgb, var(--aca-color, var(--primario)) 30%, transparent);
+}
+.aca-hero-logo img { width: 100%; height: 100%; object-fit: contain; }
+.aca-hero-logo b {
+  font-family: var(--fuente-display);
+  font-size: 2rem;
+  color: var(--aca-color, var(--primario));
+}
+.aca-hero-texto { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.aca-hero-texto small {
+  font-family: var(--fuente-sub);
+  font-weight: 600;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--texto-3);
+}
+.aca-hero-texto strong {
+  font-family: var(--fuente-display);
+  font-size: clamp(1.15rem, 2.6vw, 1.5rem);
+  color: var(--texto);
+  line-height: 1.15;
+}
+.aca-hero-texto em {
+  color: color-mix(in srgb, var(--aca-color, var(--primario)) 75%, var(--texto));
+  font-size: 0.92rem;
+}
+.aca-hero-grupo {
+  align-self: flex-start;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--aca-color, var(--primario));
+  background: color-mix(in srgb, var(--aca-color, var(--primario)) 12%, transparent);
+}
+@media (max-width: 560px) {
+  .aca-hero { gap: 12px; padding: 16px; }
+  .aca-hero-logo { width: 54px; height: 54px; border-radius: 14px; }
+  .aca-hero-grupo { display: none; }
+}
+
+/* ===== Personalización de la academia ===== */
+.panel-personalizacion { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.panel-personalizacion h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--fuente-display);
+  font-size: 1.2rem;
+}
+.pa-color { flex: 0 0 auto !important; min-width: 70px !important; }
+.pa-color input[type='color'] {
+  width: 56px;
+  height: 38px;
+  padding: 2px;
+  border-radius: var(--radio-sm);
+  border: 1px solid var(--borde);
+  background: var(--bg-3);
+  cursor: pointer;
+}
+
 /* ===== Perfiles recordados + edición de mis datos (Cuenta) ===== */
 .cuenta-perfiles { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
 .cuenta-perfil-chip {

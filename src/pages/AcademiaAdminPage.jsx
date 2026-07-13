@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import PanelAcademia from '../components/PanelAcademia.jsx'
+import PersonalizacionAcademia from '../components/PersonalizacionAcademia.jsx'
 import Icon from '../components/Icon.jsx'
 
 // Dashboard individual de UNA academia, visto por el SUPER-ADMIN
@@ -108,6 +109,14 @@ export default function AcademiaAdminPage() {
       {error && <p className="cuenta-error" role="alert">{error}</p>}
 
       <PanelAcademia academiaId={academia.id} gestion="superadmin" miUid={user?.uid} />
+
+      <PersonalizacionAcademia
+        academia={academia}
+        onGuardado={async () => {
+          const { obtenerAcademia } = await import('../lib/firebase/usuarios.js')
+          setAcademia(await obtenerAcademia(academia.id))
+        }}
+      />
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import { Link, Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import PanelAcademia from '../components/PanelAcademia.jsx'
+import PersonalizacionAcademia from '../components/PersonalizacionAcademia.jsx'
 import Icon from '../components/Icon.jsx'
 
 // Panel de la academia propia, según jerarquía:
@@ -8,7 +9,7 @@ import Icon from '../components/Icon.jsx'
 //   - admin_escuela  → avance + gestión de miembros (director).
 //   - instructor     → avance de los alumnos (solo lectura).
 export default function PanelPage() {
-  const { cargando, esStaff, esSuperadmin, academiaId, rol, user } = useAuth()
+  const { cargando, esStaff, esSuperadmin, academiaId, academia, rol, user, perfil } = useAuth()
 
   if (cargando) {
     return (
@@ -62,7 +63,10 @@ export default function PanelPage() {
         academiaId={academiaId}
         gestion={esDirector ? 'director' : null}
         miUid={user?.uid}
+        soloGrupo={!esDirector ? perfil?.grupoId || null : null}
       />
+
+      {esDirector && <PersonalizacionAcademia academia={academia} />}
     </div>
   )
 }

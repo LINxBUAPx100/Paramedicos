@@ -208,8 +208,8 @@ function Perfil({ user, perfil, salir }) {
     ? new Date(pruebaSeg * 1000).toLocaleDateString('es-MX', { dateStyle: 'long' })
     : ''
 
-  // Un solo campo: primero intenta unirse a una ACADEMIA; si el código no es
-  // de academia, intenta canjearlo como código de PRUEBA temporal.
+  // Un solo campo para tres tipos de código: ACADEMIA, GRUPO (te une al grupo
+  // y a su academia) o PRUEBA temporal. Se intentan en ese orden.
   const unir = async (e) => {
     e.preventDefault()
     setMsg(''); setError(''); setOcupado(true)
@@ -219,17 +219,29 @@ function Perfil({ user, perfil, salir }) {
       setMsg(`Te uniste a: ${aca.nombre}`)
       setCodigo('')
     } catch (err) {
-      if (String(err?.message || '').includes('No existe una academia')) {
-        try {
-          const { canjearCodigo } = await import('../lib/firebase/codigos.js')
-          const expira = await canjearCodigo(user.uid, codigo)
-          setMsg(`Código de prueba activado: tienes acceso hasta el ${new Date(expira.toMillis()).toLocaleDateString('es-MX', { dateStyle: 'long' })}.`)
-          setCodigo('')
-        } catch (err2) {
-          setError(traducirError(err2))
-        }
-      } else {
+      if (!String(err?.message || '').includes('No existe una academia')) {
         setError(traducirError(err))
+        setOcupado(false)
+        return
+      }
+      try {
+        const { unirseGrupo } = await import('../lib/firebase/grupos.js')
+        const g = await unirseGrupo(user.uid, codigo)
+        setMsg(`Te uniste al grupo "${g.nombre}" de ${g.academia?.nombre || g.academiaId}.`)
+        setCodigo('')
+      } catch (err2) {
+        if (!String(err2?.message || '').includes('No existe un grupo')) {
+          setError(traducirError(err2))
+        } else {
+          try {
+            const { canjearCodigo } = await import('../lib/firebase/codigos.js')
+            const expira = await canjearCodigo(user.uid, codigo)
+            setMsg(`Código de prueba activado: tienes acceso hasta el ${new Date(expira.toMillis()).toLocaleDateString('es-MX', { dateStyle: 'long' })}.`)
+            setCodigo('')
+          } catch (err3) {
+            setError(traducirError(err3))
+          }
+        }
       }
     } finally {
       setOcupado(false)
@@ -247,6 +259,9 @@ function Perfil({ user, perfil, salir }) {
           <dt>Academia</dt>
           <dd>{perfil?.academiaId ? <span className="cuenta-badge cuenta-badge--ok">{perfil.academiaId}</span> : <em>Sin academia</em>}</dd>
         </div>
+        {perfil?.grupoId && (
+          <div><dt>Grupo</dt><dd><span className="cuenta-badge">{perfil.grupoId}</span></dd></div>
+        )}
         {pruebaSeg > 0 && (
           <div>
             <dt>Prueba</dt>
@@ -262,13 +277,13 @@ function Perfil({ user, perfil, salir }) {
       {!perfil?.academiaId && (
         <form className="cuenta-unir" onSubmit={unir}>
           <label>
-            Únete con tu código (academia o prueba)
+            Únete con tu código (academia, grupo o prueba)
             <input
               type="text"
               value={codigo}
               onChange={(e) => setCodigo(e.target.value)}
-              placeholder="Código (p. ej. AEP-2026 o PRUEBA-XXXX)"
-              aria-label="Código de academia o de prueba"
+              placeholder="AEP-2026, GRP-XXXX o PRUEBA-XXXX"
+              aria-label="Código de academia, grupo o prueba"
             />
           </label>
           {error && <p className="cuenta-error" role="alert">{error}</p>}

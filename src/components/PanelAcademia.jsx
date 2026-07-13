@@ -25,11 +25,14 @@ export const ETIQUETA_ROL = {
   superadmin: 'Super-admin',
 }
 
-export default function PanelAcademia({ academiaId, gestion = null, miUid = null }) {
-  const [datos, setDatos] = useState(null) // { miembros, intentos }
+// `soloGrupo`: si viene (profesor con grupo asignado), el panel queda fijado
+// a ese grupo y no se puede cambiar el filtro.
+export default function PanelAcademia({ academiaId, gestion = null, miUid = null, soloGrupo = null }) {
+  const [datos, setDatos] = useState(null) // { miembros, intentos, grupos }
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState('')
   const [alumnoAbierto, setAlumnoAbierto] = useState(null)
+  const [grupoFiltro, setGrupoFiltro] = useState(soloGrupo || '') // '' = todos; 'sin' = sin grupo
   const [recarga, setRecarga] = useState(0)
 
   useEffect(() => {
@@ -39,16 +42,18 @@ export default function PanelAcademia({ academiaId, gestion = null, miUid = null
     setError('')
     ;(async () => {
       try {
-        const [{ miembrosDeAcademia }, { intentosDeAcademia }] = await Promise.all([
+        const [{ miembrosDeAcademia }, { intentosDeAcademia }, { listarGrupos }] = await Promise.all([
           import('../lib/firebase/usuarios.js'),
           import('../lib/firebase/intentos.js'),
+          import('../lib/firebase/grupos.js'),
         ])
-        const [miembros, intentos] = await Promise.all([
+        const [miembros, intentos, grupos] = await Promise.all([
           miembrosDeAcademia(academiaId),
           intentosDeAcademia(academiaId),
+          listarGrupos(academiaId).catch(() => []), // reglas viejas: sin grupos
         ])
         if (!activo) return
-        setDatos({ miembros, intentos })
+        setDatos({ miembros, intentos, grupos })
       } catch {
         if (activo) setError('No se pudo cargar la información. Revisa tu conexión o tus permisos.')
       } finally {
@@ -82,12 +87,37 @@ export default function PanelAcademia({ academiaId, gestion = null, miUid = null
   if (error) return <p className="cuenta-error" role="alert">{error}</p>
   if (!datos) return null
 
-  const alumnos = datos.miembros.filter((m) => m.rol === 'alumno')
+  const grupos = datos.grupos || []
+  const nombreGrupo = (id) => grupos.find((g) => g.id === id)?.nombre || id
+  const pasaFiltro = (m) =>
+    !grupoFiltro ? true : grupoFiltro === 'sin' ? !m.grupoId : m.grupoId === grupoFiltro
+
+  const alumnos = datos.miembros.filter((m) => m.rol === 'alumno' && pasaFiltro(m))
   const staff = datos.miembros.filter((m) => m.rol !== 'alumno')
   const fechaTxt = (seg) => (seg ? new Date(seg * 1000).toLocaleDateString('es-MX') : '')
 
   return (
     <>
+      {soloGrupo ? (
+        <p className="panel-grupo-aviso">
+          <Icon name="usuario" size={16} /> Estás viendo tu grupo:{' '}
+          <strong>{nombreGrupo(soloGrupo)}</strong> <code>{soloGrupo}</code>
+        </p>
+      ) : (
+        grupos.length > 0 && (
+          <label className="panel-selector panel-selector--grupo">
+            Grupo
+            <select value={grupoFiltro} onChange={(e) => { setGrupoFiltro(e.target.value); setAlumnoAbierto(null) }}>
+              <option value="">Todos los grupos</option>
+              {grupos.map((g) => (
+                <option key={g.id} value={g.id}>{g.nombre} ({g.id})</option>
+              ))}
+              <option value="sin">Sin grupo</option>
+            </select>
+          </label>
+        )
+      )}
+
       <Estadisticas alumnos={alumnos} staff={staff} intentos={datos.intentos} resumen={resumen} />
 
       {alumnos.length === 0 ? (
@@ -119,6 +149,9 @@ export default function PanelAcademia({ academiaId, gestion = null, miUid = null
                   >
                     <td className="panel-alumno">
                       <strong>{al.nombre || al.email || al.id}</strong>
+                      {al.grupoId && !grupoFiltro && (
+                        <span className="panel-tag-grupo">{nombreGrupo(al.grupoId)}</span>
+                      )}
                       {al.estado !== 'activo' && <span className="panel-tag-suspendido">suspendido</span>}
                     </td>
                     {fasesNav.map((f) => {
@@ -154,8 +187,19 @@ export default function PanelAcademia({ academiaId, gestion = null, miUid = null
       </p>
 
       {gestion && (
+        <GruposAcademia
+          academiaId={academiaId}
+          grupos={grupos}
+          miembros={datos.miembros}
+          miUid={miUid}
+          onCambio={() => setRecarga((n) => n + 1)}
+        />
+      )}
+
+      {gestion && (
         <GestionMiembros
           miembros={datos.miembros}
+          grupos={grupos}
           gestion={gestion}
           miUid={miUid}
           onCambio={() => setRecarga((n) => n + 1)}
@@ -192,7 +236,10 @@ function Estadisticas({ alumnos, staff, intentos, resumen }) {
       ? Math.round((mejores.filter((v) => v >= 70).length / mejores.length) * 100)
       : null
     const hace7d = Date.now() / 1000 - 7 * 24 * 3600
-    const semana = intentos.filter((i) => (i.fecha?.seconds || 0) >= hace7d).length
+    // Solo intentos de los alumnos visibles (respeta el filtro de grupo).
+    const semana = intentos.filter(
+      (i) => uidsAlumnos.has(i.uid) && (i.fecha?.seconds || 0) >= hace7d
+    ).length
 
     // Promedio de la mejor calificación por fase (entre quienes la presentaron).
     const porFase = fasesNav.map((f) => {
@@ -484,8 +531,152 @@ export function DetalleAlumno({ alumno, intentos, onCerrar }) {
   )
 }
 
-// Tabla de miembros con cambio de rol y de estado, según jerarquía.
-function GestionMiembros({ miembros, gestion, miUid, onCambio }) {
+// ---------- Grupos internos de la academia ----------
+function GruposAcademia({ academiaId, grupos, miembros, miUid, onCambio }) {
+  const [nombre, setNombre] = useState('')
+  const [nuevo, setNuevo] = useState(null) // último código creado
+  const [editandoId, setEditandoId] = useState(null)
+  const [nombreEdit, setNombreEdit] = useState('')
+  const [ocupado, setOcupado] = useState(false)
+  const [error, setError] = useState('')
+
+  const cuentaDe = (gid) => {
+    const del = miembros.filter((m) => m.grupoId === gid)
+    return {
+      alumnos: del.filter((m) => m.rol === 'alumno').length,
+      profes: del.filter((m) => m.rol !== 'alumno').length,
+    }
+  }
+
+  const correr = async (fn) => {
+    setOcupado(true)
+    setError('')
+    try {
+      await fn()
+      onCambio()
+    } catch (err) {
+      setError(
+        String(err?.code || '').includes('permission-denied')
+          ? 'Sin permisos: publica las reglas actualizadas de firestore.rules (colección "grupos").'
+          : err?.message || 'No se pudo completar la operación.'
+      )
+    } finally {
+      setOcupado(false)
+    }
+  }
+
+  const crear = (e) => {
+    e.preventDefault()
+    correr(async () => {
+      const { crearGrupo } = await import('../lib/firebase/grupos.js')
+      const g = await crearGrupo({ academiaId, nombre, creadoPor: miUid })
+      setNuevo(g.id)
+      setNombre('')
+    })
+  }
+
+  const renombrar = (id) => {
+    const nom = nombreEdit
+    setEditandoId(null)
+    correr(async () => {
+      const { renombrarGrupo } = await import('../lib/firebase/grupos.js')
+      await renombrarGrupo(id, nom)
+    })
+  }
+
+  const alternar = (g) =>
+    correr(async () => {
+      const { alternarGrupo } = await import('../lib/firebase/grupos.js')
+      await alternarGrupo(g.id, g.estado === 'activo' ? 'inactivo' : 'activo')
+    })
+
+  const copiar = (id) => {
+    try { navigator.clipboard.writeText(id) } catch { /* sin permisos */ }
+  }
+
+  return (
+    <section className="panel-grupos">
+      <h2><Icon name="capas" size={20} /> Grupos de la academia</h2>
+      <p className="panel-gestion-sub">
+        Crea un grupo y comparte su código: profesores y alumnos se unen con él desde
+        <strong> Mi cuenta → Únete con tu código</strong>, y sus avances quedan separados por grupo.
+      </p>
+
+      <form className="pc-form" onSubmit={crear}>
+        <label className="pc-nota">
+          Nombre del grupo
+          <input
+            type="text"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+            placeholder="p. ej. Generación 2026-A"
+            maxLength={50}
+            required
+          />
+        </label>
+        <button className="btn btn-primario" type="submit" disabled={ocupado}>
+          {ocupado ? 'Creando…' : '+ Crear grupo'}
+        </button>
+      </form>
+
+      {nuevo && (
+        <p className="pc-nuevo" role="status">
+          Grupo creado, código: <code>{nuevo}</code>
+          <button className="pc-copiar" onClick={() => copiar(nuevo)}>Copiar</button>
+        </p>
+      )}
+      {error && <p className="cuenta-error" role="alert">{error}</p>}
+
+      {grupos.length === 0 ? (
+        <p className="panel-vacio">Aún no hay grupos en esta academia.</p>
+      ) : (
+        <ul className="pc-lista">
+          {grupos.map((g) => {
+            const c = cuentaDe(g.id)
+            const activo = g.estado === 'activo'
+            return (
+              <li key={g.id} className={`pc-item ${activo ? 'activo' : 'inactivo'}`}>
+                {editandoId === g.id ? (
+                  <span className="admin-editar-nombre">
+                    <input
+                      type="text"
+                      value={nombreEdit}
+                      onChange={(e) => setNombreEdit(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); renombrar(g.id) } }}
+                      autoFocus
+                    />
+                    <button className="pc-copiar" onClick={() => renombrar(g.id)}>Guardar</button>
+                    <button className="pc-copiar" onClick={() => setEditandoId(null)}>×</button>
+                  </span>
+                ) : (
+                  <strong className="pg-nombre">{g.nombre}</strong>
+                )}
+                <code className="pc-codigo">{g.id}</code>
+                <span className="pc-detalle">
+                  {c.alumnos} alumno{c.alumnos !== 1 ? 's' : ''} · {c.profes} profe{c.profes !== 1 ? 's' : ''}
+                </span>
+                <span className={`pc-estado ${activo ? 'activo' : 'inactivo'}`}>{activo ? 'activo' : 'inactivo'}</span>
+                <span className="pc-acciones">
+                  <button className="pc-copiar" onClick={() => copiar(g.id)}>Copiar</button>
+                  <button
+                    className="pc-copiar"
+                    onClick={() => { setEditandoId(g.id); setNombreEdit(g.nombre) }}
+                  >Renombrar</button>
+                  <button className="pc-toggle" onClick={() => alternar(g)}>
+                    {activo ? 'Desactivar' : 'Reactivar'}
+                  </button>
+                </span>
+              </li>
+            )
+          })}
+        </ul>
+      )}
+    </section>
+  )
+}
+
+// Tabla de miembros con cambio de rol, grupo y estado, según jerarquía.
+function GestionMiembros({ miembros, grupos = [], gestion, miUid, onCambio }) {
   const [ocupado, setOcupado] = useState(null) // uid en proceso
   const [error, setError] = useState('')
 
@@ -529,6 +720,7 @@ function GestionMiembros({ miembros, gestion, miUid, onCambio }) {
               <th>Miembro</th>
               <th>Correo</th>
               <th>Rol</th>
+              <th>Grupo</th>
               <th>Estado</th>
             </tr>
           </thead>
@@ -557,6 +749,25 @@ function GestionMiembros({ miembros, gestion, miUid, onCambio }) {
                       </select>
                     ) : (
                       <span className={`panel-rol-tag rol-${m.rol}`}>{ETIQUETA_ROL[m.rol] || m.rol}</span>
+                    )}
+                  </td>
+                  <td>
+                    {puede && grupos.length > 0 ? (
+                      <select
+                        className="panel-rol-select"
+                        value={m.grupoId || ''}
+                        disabled={ocupado === m.id}
+                        onChange={(e) => aplicar(m.id, { grupoId: e.target.value || null })}
+                      >
+                        <option value="">Sin grupo</option>
+                        {grupos.map((g) => (
+                          <option key={g.id} value={g.id}>{g.nombre}</option>
+                        ))}
+                      </select>
+                    ) : (
+                      <span className={m.grupoId ? 'panel-rol-tag' : 'panel-celda-vacia'}>
+                        {m.grupoId ? (grupos.find((g) => g.id === m.grupoId)?.nombre || m.grupoId) : '—'}
+                      </span>
                     )}
                   </td>
                   <td>

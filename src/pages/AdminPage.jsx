@@ -348,6 +348,9 @@ function NuevaAcademia({ onCreada }) {
   const [nombre, setNombre] = useState('')
   const [tipo, setTipo] = useState('basico')
   const [plan, setPlan] = useState('')
+  const [logo, setLogo] = useState('')
+  const [lema, setLema] = useState('')
+  const [colorHero, setColorHero] = useState('#0c5fc4')
   const [msg, setMsg] = useState('')
   const [error, setError] = useState('')
   const [ocupado, setOcupado] = useState(false)
@@ -357,9 +360,9 @@ function NuevaAcademia({ onCreada }) {
     setMsg(''); setError(''); setOcupado(true)
     try {
       const { crearAcademia } = await import('../lib/firebase/admin.js')
-      const cod = await crearAcademia({ codigo, nombre, tipo, plan })
+      const cod = await crearAcademia({ codigo, nombre, tipo, plan, logo, lema, colorHero })
       setMsg(`Academia ${cod} creada. Comparte ese código con sus alumnos.`)
-      setCodigo(''); setNombre(''); setPlan('')
+      setCodigo(''); setNombre(''); setPlan(''); setLogo(''); setLema('')
       onCreada()
     } catch (err) {
       setError(err?.message || 'No se pudo crear la academia.')
@@ -394,6 +397,18 @@ function NuevaAcademia({ onCreada }) {
           <label>
             Plan (opcional)
             <input type="text" value={plan} onChange={(e) => setPlan(e.target.value)} placeholder="anual" />
+          </label>
+          <label>
+            Logo (Drive o URL)
+            <input type="text" value={logo} onChange={(e) => setLogo(e.target.value)} placeholder="Enlace del logo de la academia" />
+          </label>
+          <label>
+            Lema (para su hero)
+            <input type="text" value={lema} onChange={(e) => setLema(e.target.value)} placeholder="Formando a los mejores" maxLength={90} />
+          </label>
+          <label className="pa-color">
+            Color
+            <input type="color" value={colorHero} onChange={(e) => setColorHero(e.target.value)} />
           </label>
           <button className="btn btn-primario" type="submit" disabled={ocupado}>
             {ocupado ? 'Creando…' : 'Crear academia'}

@@ -20,7 +20,8 @@ import { doc, getDoc, setDoc, deleteDoc, serverTimestamp } from 'firebase/firest
 // --- Academias ---
 
 // Crea una academia; el ID del doc ES el código de acceso.
-export async function crearAcademia({ codigo, nombre, tipo = 'basico', plan = '' }) {
+// logo/lema/colorHero alimentan el hero personalizado del Home.
+export async function crearAcademia({ codigo, nombre, tipo = 'basico', plan = '', logo = '', lema = '', colorHero = '' }) {
   const cod = String(codigo || '').trim().toUpperCase()
   if (!/^[A-Z0-9][A-Z0-9-]{2,19}$/.test(cod)) {
     throw new Error('Código inválido: usa 3–20 letras/números/guiones (p. ej. AEP-2026).')
@@ -34,6 +35,9 @@ export async function crearAcademia({ codigo, nombre, tipo = 'basico', plan = ''
     tipo,
     plan: plan || '',
     estado: 'activo',
+    logo: logo?.trim() || '',
+    lema: lema?.trim() || '',
+    colorHero: colorHero || '',
     creado: serverTimestamp(),
   })
   return cod

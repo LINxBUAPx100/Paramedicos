@@ -61,13 +61,45 @@ service cloud.firestore {
         && codigoDoc(request.resource.data.codigoPrueba).expira > request.time
         && request.resource.data.pruebaHasta == codigoDoc(request.resource.data.codigoPrueba).expira;
     }
+    // Unirse a un GRUPO por código (sobre el propio perfil): el grupo debe
+    // existir, estar activo, y el academiaId nuevo debe ser LA academia del
+    // grupo (unirse al grupo te une a su academia, que debe estar activa).
+    function grupoDoc(cod) {
+      return get(/databases/$(database)/documents/grupos/$(cod)).data;
+    }
+    function grupoValido() {
+      return request.resource.data.grupoId is string
+        && exists(/databases/$(database)/documents/grupos/$(request.resource.data.grupoId))
+        && grupoDoc(request.resource.data.grupoId).estado == 'activo'
+        && grupoDoc(request.resource.data.grupoId).academiaId == request.resource.data.academiaId
+        && academiaActiva(request.resource.data.academiaId);
+    }
 
     // --- ACADEMIAS (el id del doc ES el código, p.ej. "AEP-2026") ---
     match /academias/{codigo} {
       // Legible por cualquier autenticado: hace falta para validar el código al unirse.
       allow read: if autenticado();
-      // Alta/edición/baja: solo super-admin (el admin de escuela llega en fase posterior).
+      // Alta/edición/baja: solo super-admin.
       allow write: if esSuper();
+      // El director puede editar SOLO la personalización de SU academia
+      // (logo, lema y color del hero) — nunca estado/plan/tipo/nombre.
+      allow update: if esAdminDe(codigo)
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['logo', 'lema', 'colorHero']);
+    }
+
+    // --- GRUPOS internos de una academia (el id del doc ES el código) ---
+    match /grupos/{codigo} {
+      // Consultar un código concreto: cualquier autenticado (para unirse).
+      allow get: if autenticado();
+      // Listar: super-admin o staff de esa academia.
+      allow list: if esSuper() || esStaffDe(resource.data.academiaId);
+      // Crear/renombrar/activar/borrar: super-admin o el DIRECTOR de esa
+      // academia (los profesores no crean ni renombran grupos).
+      allow create: if (esSuper() || esAdminDe(request.resource.data.academiaId))
+        && request.resource.data.nombre is string
+        && request.resource.data.estado == 'activo';
+      allow update, delete: if esSuper() || esAdminDe(resource.data.academiaId);
     }
 
     // --- USUARIOS ---
@@ -93,6 +125,11 @@ service cloud.firestore {
         && (
           request.resource.data.get('pruebaHasta', null) == resource.data.get('pruebaHasta', null)
           || canjeValido()
+        )
+        && (
+          request.resource.data.get('grupoId', null) == resource.data.get('grupoId', null)
+          || request.resource.data.get('grupoId', null) == null
+          || grupoValido()
         );
 
       // El director (admin_escuela) gestiona a los miembros de SU academia:

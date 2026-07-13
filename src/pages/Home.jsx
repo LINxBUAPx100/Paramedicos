@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
 import { fasesNav as fases, stats } from '../data/navIndice.js'
 import { useProgress } from '../context/ProgressContext.jsx'
+import { useAuth } from '../context/AuthContext.jsx'
+import { driveSrc } from '../lib/img.js'
 import Icon from '../components/Icon.jsx'
 import Reveal from '../components/Reveal.jsx'
 import Imagen from '../components/Imagen.jsx'
@@ -98,6 +100,9 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ===== Hero de la ACADEMIA del usuario (personalizable) ===== */}
+      <HeroAcademia />
+
       {/* ===== Progreso (si ya hay temas leídos) ===== */}
       {temasLeidos > 0 && (
         <div className="ph-wrap">
@@ -194,6 +199,35 @@ export default function Home() {
           </div>
         </div>
       </Reveal>
+    </div>
+  )
+}
+
+// Banda de bienvenida de la ACADEMIA del usuario: logo, nombre y lema, con el
+// color elegido por su director (personalización guardada en academias/{id}).
+// Solo aparece si hay sesión con academia; para visitantes no cambia nada.
+function HeroAcademia() {
+  const { perfil, academia } = useAuth()
+  if (!perfil?.academiaId || !academia) return null
+
+  const color = academia.colorHero || 'var(--primario)'
+  const nombreUsuario = (perfil.nombre || '').split(' ')[0]
+
+  return (
+    <div className="ph-wrap">
+      <section className="aca-hero" style={{ '--aca-color': color }} aria-label={`Tu academia: ${academia.nombre}`}>
+        <span className="aca-hero-logo">
+          {academia.logo
+            ? <img src={driveSrc(academia.logo, 200)} alt={`Logo de ${academia.nombre}`} loading="lazy" />
+            : <b>{(academia.nombre || academia.id).charAt(0).toUpperCase()}</b>}
+        </span>
+        <div className="aca-hero-texto">
+          <small>{nombreUsuario ? `Bienvenido, ${nombreUsuario} · ` : ''}Tu academia</small>
+          <strong>{academia.nombre || academia.id}</strong>
+          {academia.lema && <em>{academia.lema}</em>}
+        </div>
+        {perfil.grupoId && <span className="aca-hero-grupo">Grupo {perfil.grupoId}</span>}
+      </section>
     </div>
   )
 }
