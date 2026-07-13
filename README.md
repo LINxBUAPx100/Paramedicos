@@ -6,14 +6,27 @@ No es un cuestionario más: es una plataforma para **estudiar a profundidad** y 
 
 ## ✨ Características
 
+### Estudio
 - **8 fases** y **68 temas** desarrollados a fondo, de la biología celular al marco normativo mexicano.
 - **Contenido didáctico**: párrafos, listas, pasos, tablas, fórmulas, *callouts* (clave, clínico, alerta, dosis), conceptos clave y actividades.
-- **Quizzes por tema**, **examen general** y **examen por fase** (aprobación al 70%), con pantalla de fin de módulo que da una **calificación combinada** (examen + actividades) y felicitación personalizada.
-- **Flashcards** de repaso, **Atlas** de imágenes y **buscador** de temas y conceptos.
-- **Cuentas y roles** (Firebase Auth + Firestore): `alumno`, `instructor`, `admin_escuela` (director), `superadmin`.
-- **Academias y grupos**: alta por código, personalización de marca por academia, visibilidad de contenido por grupo, códigos de prueba temporales.
-- **Paneles**: avance por alumno y fase, estadísticas, gestión de miembros, solicitudes de acceso al siguiente módulo y dashboard global del super-admin.
+- **Quizzes por tema**, **examen general** y **examen por fase** (aprobación al 70%).
+- **Pantalla de fin de módulo**: al terminar el examen de fase, una vista de felicitación con **calificación combinada** (60% examen + 40% actividades), mensaje profesional según el rango, resumen de aprendizajes y botón para solicitar el siguiente módulo.
+- **Atlas** anatómico/fisiológico (galería de imágenes que enlaza a su tema) y **galería de "Imágenes de referencia"** dentro de cada tema.
+- **Flashcards** de repaso y **buscador** de temas y conceptos.
 - **Seguimiento de progreso** sincronizado a Firestore, **modo claro/oscuro** y **diseño responsivo**.
+
+### Plataforma multi-tenant
+- **Cuentas y roles** (Firebase Auth + Firestore): `alumno`, `instructor` (profesor), `admin_escuela` (director), `superadmin`.
+- **Academias y grupos**: alta por código, **personalización de marca** por academia (logo, lema, color en el Home) y **visibilidad de contenido por grupo** (el staff decide qué fases/temas ve cada grupo).
+- **Códigos privados**: los códigos de academia/grupo solo los ven el director y el super-admin; alumnos y profesores ven el *nombre*. Un profesor puede *solicitar* verlos y el director aprueba.
+- **Un profesor, varios grupos**: en el inicio elige el grupo activo con el que trabaja; la selección persiste hasta cambiarla.
+- **Invitaciones**: comparte el acceso por WhatsApp o enlace con una tarjeta profesional (academia, grupo y código), con el enlace pre-llenado.
+- **Solicitudes de acceso**: los alumnos piden el siguiente módulo; el staff acepta/rechaza (una por una o todas) o habilita/retrocede módulos por alumno.
+- **Códigos de prueba** temporales para conocer la plataforma sin inscribirse.
+
+### Paneles
+- **Director / profesor**: avance por alumno y fase, estadísticas (promedio, aprobación, dominio por fase, alumnos en riesgo), gestión de miembros, grupos y solicitudes.
+- **Super-admin**: dashboard global de todas las academias, gestión de usuarios, **facturación** (plan, renovación, estado, y edición de nombre y código de academia), anuncio global y reportes de problemas.
 
 ## 🛠️ Tecnologías
 
@@ -31,6 +44,8 @@ npm run preview  # previsualizar el build
 ```
 
 > El contenido de las fases vive en `src/data/`; `npm run gen:nav` (y el `prebuild`) regenera el índice de navegación.
+>
+> Las imágenes (Atlas y galerías de los temas) se cargan desde Google Drive: pega el enlace en `src/data/imagenes.js` (`ATLAS_TEMAS` para el Atlas; `IMAGENES_POR_TEMA` para reutilizarlas como referencia en cada tema). Comparte cada archivo en Drive como "Cualquier persona con el enlace".
 
 ## 🔥 Firebase
 
