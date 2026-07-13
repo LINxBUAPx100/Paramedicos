@@ -66,6 +66,30 @@ panel filtra el avance por grupo; un profesor con grupo asignado ve SOLO su
 grupo. Renombrar/desactivar grupos: solo director y super-admin. En la tabla
 de miembros se puede mover a cualquier miembro de grupo con un selector.
 
+## Visibilidad de contenido por grupo (sección "Temas")
+
+**/temario ahora es SOLO para staff** (profesor, director, super-admin): es el
+panel donde se controla qué contenido ve cada grupo. Muestra el 100% del
+temario real (8 fases · 68 temas) con: botón **"Ocultar todo / Mostrar
+todo"**, un **ojo por módulo** (oculta la fase completa) y un **ojo por
+tema**. El staff elige el grupo (el super-admin también la academia); el
+profesor con grupo propio lo ve preseleccionado. Se guarda en
+`grupos/{cod}.fasesOcultas / .temasOcultos` (los profesores solo pueden tocar
+esos dos campos; renombrar/desactivar el grupo sigue siendo del director).
+
+Para el **alumno con grupo**: lo oculto desaparece del menú lateral, del
+carrusel del Home y de las listas de fase; si entra por URL directa ve
+"Aún no disponible"; y en el **Atlas** las tarjetas bloqueadas salen en gris,
+borrosas y con candado (como logros por desbloquear). Alumnos sin grupo y el
+staff ven todo.
+
+## Reportes de problemas
+
+Cada tema tiene un botón **"Reportar un problema"** (arriba a la izquierda).
+Los reportes van a la colección `reportes` y el super-admin los gestiona en
+**/admin → Problemas reportados** (contador de abiertos, marcar resuelto,
+reabrir, eliminar). Solo el super-admin puede leerlos.
+
 ## Hero personalizado por academia
 
 Cada academia tiene `logo` (enlace de Drive o URL), `lema` y `colorHero`. Sus

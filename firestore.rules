@@ -100,6 +100,20 @@ service cloud.firestore {
         && request.resource.data.nombre is string
         && request.resource.data.estado == 'activo';
       allow update, delete: if esSuper() || esAdminDe(resource.data.academiaId);
+      // Los PROFESORES de la academia pueden ajustar SOLO la visibilidad del
+      // contenido para el grupo (qué fases/temas ven los alumnos).
+      allow update: if esStaffDe(resource.data.academiaId)
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['fasesOcultas', 'temasOcultos']);
+    }
+
+    // --- REPORTES de problemas en temas (los revisa el super-admin) ---
+    match /reportes/{id} {
+      // Cualquier usuario autenticado reporta, firmando con su uid.
+      allow create: if autenticado()
+        && request.resource.data.uid == request.auth.uid;
+      // Solo el super-admin los lee, resuelve o borra.
+      allow read, update, delete: if esSuper();
     }
 
     // --- USUARIOS ---

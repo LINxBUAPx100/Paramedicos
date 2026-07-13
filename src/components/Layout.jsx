@@ -3,15 +3,17 @@ import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom'
 import { fasesNav as fases } from '../data/navIndice.js'
 import { useProgress } from '../context/ProgressContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
+import { useVisibilidad } from '../lib/useVisibilidad.js'
 import Icon from './Icon.jsx'
 import LogoPTEM from './marca/LogoPTEM.jsx'
 import LogoIcono from './marca/LogoIcono.jsx'
 import IconoEstrella from './marca/IconoEstrella.jsx'
 
 // Navegación primaria del header (patrón del diseño PTEM).
+// "Temas" (/temario) es el panel de visibilidad: SOLO staff (soloStaff).
 const TOPNAV = [
   { to: '/', label: 'Inicio', end: true },
-  { to: '/temario', label: 'Temas' },
+  { to: '/temario', label: 'Temas', soloStaff: true },
   { to: '/examen', label: 'Examen' },
   { to: '/progreso', label: 'Progreso' },
   { to: '/atlas', label: 'Atlas' },
@@ -20,7 +22,7 @@ const TOPNAV = [
 // Navegación completa del drawer (incluye accesos que no caben en el header).
 const NAV = [
   { to: '/', icon: 'home', label: 'Inicio', end: true },
-  { to: '/temario', icon: 'temario', label: 'Temario oficial' },
+  { to: '/temario', icon: 'temario', label: 'Temario (staff)', soloStaff: true },
   { to: '/examen', icon: 'examen', label: 'Examen general' },
   { to: '/flashcards', icon: 'flashcards', label: 'Flashcards' },
   { to: '/atlas', icon: 'atlas', label: 'Atlas' },
@@ -33,6 +35,7 @@ export default function Layout({ children }) {
   const [consulta, setConsulta] = useState('')
   const { estado, alternarTema } = useProgress()
   const { autenticado, perfil, user, esStaff, esSuperadmin } = useAuth()
+  const { faseVisible, temaVisible } = useVisibilidad()
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -43,8 +46,14 @@ export default function Layout({ children }) {
   const extraDrawer = esSuperadmin
     ? [{ to: '/admin', icon: 'capas', label: 'Dashboard general' }]
     : esStaff ? [{ to: '/panel', icon: 'progreso', label: 'Panel de avance' }] : []
-  const topnav = [...TOPNAV, ...extraTop]
-  const navDrawer = [...NAV, ...extraDrawer]
+  const soloStaff = (item) => !item.soloStaff || esStaff
+  const topnav = [...TOPNAV.filter(soloStaff), ...extraTop]
+  const navDrawer = [...NAV.filter(soloStaff), ...extraDrawer]
+
+  // Recorrido de estudio filtrado por la visibilidad del grupo del alumno.
+  const fasesVisibles = fases
+    .filter((f) => faseVisible(f.id))
+    .map((f) => ({ ...f, temas: f.temas.filter((t) => temaVisible(t.id)) }))
 
   const esHome = location.pathname === '/'
 
@@ -139,7 +148,7 @@ export default function Layout({ children }) {
             ))}
 
             <div className="nav-titulo">Recorrido de estudio</div>
-            {fases.map((fase) => (
+            {fasesVisibles.map((fase) => (
               <div key={fase.id} className="nav-grupo">
                 <NavLink
                   to={`/fase/${fase.id}`}

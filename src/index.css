@@ -873,6 +873,206 @@ textarea:focus-visible,
   cursor: pointer;
 }
 
+/* ===== Temario staff: visibilidad por grupo ===== */
+.temario-controles {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+.temario-toggle-todo { white-space: nowrap; }
+.temario-resumen-ocultos { color: var(--texto-3); font-size: 0.84rem; padding-bottom: 8px; }
+.cuenta-aviso {
+  padding: 10px 14px;
+  border-radius: var(--radio-sm);
+  background: color-mix(in srgb, var(--ambar) 12%, transparent);
+  color: var(--texto-2);
+  font-size: 0.9rem;
+}
+.tv-modulo { transition: opacity 0.2s ease; }
+.tv-modulo.tv-oculto { opacity: 0.55; }
+.tv-modulo-cab {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--borde);
+  border-left: 5px solid var(--fase-color, var(--primario));
+  border-radius: var(--radio);
+  background: var(--bg-2);
+  margin-bottom: 10px;
+}
+.tv-modulo-num {
+  font-family: var(--fuente-cifra);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--fase-color, var(--primario));
+}
+.tv-modulo-info { flex: 1; min-width: 0; }
+.tv-modulo-info h2 { font-family: var(--fuente-display); font-size: 1.15rem; }
+.tv-modulo-info p { color: var(--texto-3); font-size: 0.8rem; }
+.tv-ojo {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--borde);
+  background: var(--bg-3);
+  color: var(--verde);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.tv-ojo:hover:not(:disabled) { border-color: currentColor; }
+.tv-ojo.cerrado { color: var(--texto-3); }
+.tv-ojo:disabled { opacity: 0.55; cursor: wait; }
+.tv-ojo--modulo { width: 44px; height: 44px; }
+.tv-temas { list-style: none; display: flex; flex-direction: column; gap: 6px; margin-bottom: 26px; }
+.tv-tema {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px 8px 16px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+  background: var(--bg-2);
+}
+.tv-tema.tv-oculto { opacity: 0.5; }
+.tv-tema.tv-oculto .tv-tema-titulo { text-decoration: line-through; text-decoration-thickness: 1px; }
+.tv-tema-num {
+  font-family: var(--fuente-cifra);
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: var(--fase-color, var(--primario));
+  min-width: 34px;
+}
+.tv-tema-titulo { flex: 1; min-width: 0; color: var(--texto); text-decoration: none; font-size: 0.92rem; }
+.tv-tema-titulo:hover { color: var(--primario); }
+.tv-tema-pormodulo { color: var(--texto-3); font-size: 0.74rem; font-style: italic; white-space: nowrap; }
+
+/* ===== Atlas: contenido bloqueado (gris + censurado) ===== */
+.atlas-card--bloqueada { pointer-events: none; }
+.atlas-card-censura { position: relative; overflow: hidden; border-radius: var(--radio); }
+.atlas-card-censura img {
+  filter: grayscale(1) blur(14px) brightness(0.72) contrast(0.85);
+  transform: scale(1.08); /* evita bordes claros del blur */
+}
+.atlas-card-censura::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent 0 14px,
+    color-mix(in srgb, var(--carbon, #22272f) 20%, transparent) 14px 28px
+  );
+}
+.atlas-card-candado {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  z-index: 1;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5));
+}
+.atlas-card--bloqueada .atlas-card-titulo { color: var(--texto-3); }
+.atlas-card-bloqueo-txt { color: var(--texto-3); font-size: 0.78rem; margin-top: 2px; }
+
+/* ===== Reportar un problema (TemaPage) ===== */
+.tema-reporte { margin: 8px 0 4px; }
+.tema-reporte-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 13px;
+  border-radius: 999px;
+  border: 1px dashed var(--borde);
+  background: transparent;
+  color: var(--texto-3);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.tema-reporte-btn:hover { color: var(--urgencia); border-color: var(--urgencia); }
+.tema-reporte-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 14px 16px;
+  border: 1px solid var(--borde);
+  border-left: 4px solid var(--urgencia);
+  border-radius: var(--radio);
+  background: var(--bg-2);
+  max-width: 560px;
+}
+.tema-reporte-form textarea {
+  padding: 10px 12px;
+  border-radius: var(--radio-sm);
+  border: 1px solid var(--borde);
+  background: var(--bg-3);
+  color: var(--texto);
+  font: inherit;
+  font-size: 0.9rem;
+  resize: vertical;
+}
+.tema-reporte-acciones { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ===== Problemas reportados (dashboard super-admin) ===== */
+.admin-problemas { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
+.admin-problemas h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--fuente-display);
+  font-size: 1.2rem;
+}
+.admin-problemas-badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: var(--urgencia);
+  color: #fff;
+  font-family: var(--fuente-cifra);
+  font-size: 0.8rem;
+}
+.admin-problemas-filtro {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--texto-2);
+  font-size: 0.84rem;
+  cursor: pointer;
+}
+.admin-reportes { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.admin-reporte {
+  padding: 12px 16px;
+  border: 1px solid var(--borde);
+  border-left: 4px solid var(--urgencia);
+  border-radius: var(--radio);
+  background: var(--bg-2);
+}
+.admin-reporte.resuelto { border-left-color: var(--verde); opacity: 0.75; }
+.ar-cab { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.ar-tema { font-weight: 600; color: var(--primario); text-decoration: none; }
+.ar-tema:hover { text-decoration: underline; }
+.ar-mensaje { margin: 8px 0; color: var(--texto-2); font-size: 0.92rem; white-space: pre-wrap; }
+.ar-pie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: var(--texto-3);
+  font-size: 0.78rem;
+}
+
 /* ===== Perfiles recordados + edición de mis datos (Cuenta) ===== */
 .cuenta-perfiles { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
 .cuenta-perfil-chip {

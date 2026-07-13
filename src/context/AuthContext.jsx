@@ -92,6 +92,34 @@ export function AuthProvider({ children }) {
     }
   }, [])
 
+  // Grupo del usuario en vivo (visibilidad de contenido para alumnos).
+  const [grupo, setGrupo] = useState(null)
+  useEffect(() => {
+    const gid = perfil?.grupoId
+    if (!gid) {
+      setGrupo(null)
+      return
+    }
+    let activo = true
+    let unsub = null
+    ;(async () => {
+      const [{ db }, fs] = await Promise.all([
+        import('../lib/firebase/init.js'),
+        import('firebase/firestore'),
+      ])
+      if (!activo) return
+      unsub = fs.onSnapshot(
+        fs.doc(db, 'grupos', gid),
+        (snap) => setGrupo(snap.exists() ? { id: snap.id, ...snap.data() } : null),
+        () => setGrupo(null)
+      )
+    })()
+    return () => {
+      activo = false
+      if (unsub) unsub()
+    }
+  }, [perfil?.grupoId])
+
   // Academia del usuario en vivo (para saber si está activa / ha pagado).
   useEffect(() => {
     const acaId = perfil?.academiaId
@@ -158,6 +186,8 @@ export function AuthProvider({ children }) {
     autenticado: Boolean(user),
     rol,
     academiaId: perfil?.academiaId || null,
+    grupo,
+    grupoId: perfil?.grupoId || null,
     enPrueba: Boolean(perfil?.pruebaHasta?.seconds && perfil.pruebaHasta.seconds * 1000 > Date.now()),
     pruebaHasta: perfil?.pruebaHasta || null,
     esSupremo,

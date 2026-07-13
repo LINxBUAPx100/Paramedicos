@@ -334,10 +334,114 @@ export default function AdminPage() {
             <NuevoUsuario academias={academias} onCreado={refrescar} />
           </section>
 
+          <ProblemasReportados />
+
           <CodigosPrueba academiaId={null} miUid={user?.uid} academias={academias} />
         </>
       )}
     </div>
+  )
+}
+
+// ---------- Problemas reportados en los temas ----------
+function ProblemasReportados() {
+  const [reportes, setReportes] = useState(null)
+  const [soloAbiertos, setSoloAbiertos] = useState(true)
+  const [ocupado, setOcupado] = useState(null) // id en proceso
+  const [error, setError] = useState('')
+
+  const cargar = async () => {
+    try {
+      const { listarReportes } = await import('../lib/firebase/reportes.js')
+      setReportes(await listarReportes())
+    } catch {
+      setReportes([])
+      setError('No se pudieron cargar los reportes (¿reglas publicadas?).')
+    }
+  }
+  useEffect(() => { cargar() }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const accion = async (id, fn) => {
+    setOcupado(id)
+    setError('')
+    try {
+      await fn()
+      await cargar()
+    } catch {
+      setError('No se pudo aplicar el cambio.')
+    } finally {
+      setOcupado(null)
+    }
+  }
+
+  const resolver = (r) =>
+    accion(r.id, async () => {
+      const { actualizarReporte } = await import('../lib/firebase/reportes.js')
+      await actualizarReporte(r.id, { estado: r.estado === 'abierto' ? 'resuelto' : 'abierto' })
+    })
+
+  const borrar = (r) => {
+    if (!window.confirm('¿Eliminar este reporte definitivamente?')) return
+    accion(r.id, async () => {
+      const { borrarReporte } = await import('../lib/firebase/reportes.js')
+      await borrarReporte(r.id)
+    })
+  }
+
+  const abiertos = (reportes || []).filter((r) => r.estado === 'abierto').length
+  const visibles = (reportes || []).filter((r) => (soloAbiertos ? r.estado === 'abierto' : true))
+  const fechaTxt = (f) =>
+    f?.seconds ? new Date(f.seconds * 1000).toLocaleString('es-MX', { dateStyle: 'medium', timeStyle: 'short' }) : '—'
+
+  return (
+    <section className="admin-problemas">
+      <h2>
+        <Icon name="alerta" size={20} /> Problemas reportados
+        {abiertos > 0 && <span className="admin-problemas-badge">{abiertos}</span>}
+      </h2>
+      <p className="panel-gestion-sub">
+        Reportes enviados desde el botón "Reportar un problema" de cada tema.
+      </p>
+      <label className="admin-problemas-filtro">
+        <input type="checkbox" checked={soloAbiertos} onChange={(e) => setSoloAbiertos(e.target.checked)} />
+        Solo abiertos
+      </label>
+      {error && <p className="cuenta-error" role="alert">{error}</p>}
+
+      {reportes === null ? null : visibles.length === 0 ? (
+        <p className="panel-vacio">
+          {soloAbiertos ? 'No hay problemas abiertos. 🎉' : 'No hay reportes.'}
+        </p>
+      ) : (
+        <ul className="admin-reportes">
+          {visibles.map((r) => (
+            <li key={r.id} className={`admin-reporte ${r.estado}`}>
+              <div className="ar-cab">
+                <Link to={`/tema/${r.temaId}`} className="ar-tema">{r.temaTitulo || r.temaId}</Link>
+                <span className={`pc-estado ${r.estado === 'abierto' ? 'expirado' : 'activo'}`}>{r.estado}</span>
+              </div>
+              <p className="ar-mensaje">{r.mensaje}</p>
+              <div className="ar-pie">
+                <span>
+                  {r.nombre || r.email || 'Anónimo'}
+                  {r.academiaId ? ` · ${r.academiaId}` : ''}
+                  {r.grupoId ? ` · ${r.grupoId}` : ''}
+                  {' · '}{fechaTxt(r.fecha)}
+                </span>
+                <span className="pc-acciones">
+                  <button className="pc-toggle" disabled={ocupado === r.id} onClick={() => resolver(r)}>
+                    {r.estado === 'abierto' ? 'Marcar resuelto' : 'Reabrir'}
+                  </button>
+                  <button className="pc-copiar" disabled={ocupado === r.id} onClick={() => borrar(r)}>
+                    Eliminar
+                  </button>
+                </span>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
   )
 }
 

@@ -1,6 +1,7 @@
 import { useParams, Link } from 'react-router-dom'
 import { getFase } from '../data/index.js'
 import { useProgress } from '../context/ProgressContext.jsx'
+import { useVisibilidad } from '../lib/useVisibilidad.js'
 import NotFound from './NotFound.jsx'
 import Icon from '../components/Icon.jsx'
 
@@ -8,8 +9,23 @@ export default function FasePage() {
   const { faseId } = useParams()
   const fase = getFase(faseId)
   const { estado } = useProgress()
+  const { faseVisible, temaVisible } = useVisibilidad()
 
   if (!fase) return <NotFound />
+
+  // Fase oculta para el grupo del alumno: aún no disponible.
+  if (!faseVisible(fase.id)) {
+    return (
+      <div className="acceso-restringido" role="alert">
+        <span className="acceso-ico"><Icon name="candado" size={30} /></span>
+        <h1>Módulo aún no disponible</h1>
+        <p>Tu profesor todavía no libera esta fase para tu grupo. Vuelve más adelante.</p>
+        <Link to="/" className="btn-pildora btn-pildora--solido">Volver al inicio</Link>
+      </div>
+    )
+  }
+
+  const temas = fase.temas.filter((t) => temaVisible(t.id))
 
   return (
     <div className="fase-page" style={{ '--fase-color': fase.color }}>
@@ -29,7 +45,7 @@ export default function FasePage() {
       <p className="fase-desc">{fase.descripcion}</p>
 
       <div className="temas-lista">
-        {fase.temas.map((tema) => {
+        {temas.map((tema) => {
           const leido = estado.leidos[tema.id]
           const quiz = estado.quizzes[tema.id]
           return (

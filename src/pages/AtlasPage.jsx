@@ -4,10 +4,15 @@ import Imagen from '../components/Imagen.jsx'
 import Reveal from '../components/Reveal.jsx'
 import { ATLAS_TEMAS } from '../data/imagenes.js'
 import { temaPorClaveImagen } from '../data/index.js'
+import { useVisibilidad } from '../lib/useVisibilidad.js'
 
 // Galería de imágenes reales (anatomía / fisiología). Cada tarjeta carga su
 // imagen desde Google Drive (pega el enlace en src/data/imagenes.js → ATLAS_TEMAS).
+// Lo que el grupo del alumno aún no puede explorar sale en GRIS y censurado,
+// como los logros bloqueados de un videojuego.
 export default function AtlasPage() {
+  const { temaVisible } = useVisibilidad()
+
   return (
     <div className="atlas-page">
       <header className="atlas-header">
@@ -20,6 +25,34 @@ export default function AtlasPage() {
       <div className="atlas-grid">
         {ATLAS_TEMAS.map((tema, i) => {
           const temaId = temaPorClaveImagen[tema.clave]
+          const bloqueada = Boolean(temaId) && !temaVisible(temaId)
+
+          if (bloqueada) {
+            return (
+              <Reveal
+                key={tema.clave}
+                delay={(i % 3) * 70}
+                className="atlas-card atlas-card--bloqueada"
+              >
+                <div className="atlas-card-censura">
+                  <Imagen
+                    src={tema.src}
+                    ratio="4 / 3"
+                    busqueda={`${tema.titulo} anatomía`}
+                    alt=""
+                  />
+                  <span className="atlas-card-candado" aria-hidden="true">
+                    <Icon name="candado" size={28} />
+                  </span>
+                </div>
+                <h3 className="atlas-card-titulo">
+                  Por desbloquear
+                </h3>
+                <p className="atlas-card-bloqueo-txt">Tu profesor aún no libera este contenido.</p>
+              </Reveal>
+            )
+          }
+
           return (
             <Reveal
               key={tema.clave}

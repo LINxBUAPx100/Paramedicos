@@ -1,8 +1,10 @@
 import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { getTema, getTemaVecinos } from '../data/index.js'
 import { getRecursos } from '../data/recursosDescarga.js'
 import { useProgress } from '../context/ProgressContext.jsx'
+import { useAuth } from '../context/AuthContext.jsx'
+import { useVisibilidad } from '../lib/useVisibilidad.js'
 import Contenido from '../components/Contenido.jsx'
 import Icon from '../components/Icon.jsx'
 import Recursos from '../components/Recursos.jsx'
@@ -16,6 +18,7 @@ export default function TemaPage() {
   const navigate = useNavigate()
   const tema = getTema(temaId)
   const { estado, marcarLeido } = useProgress()
+  const { temaVisible } = useVisibilidad()
 
   // Al cambiar de tema: si venimos del Atlas (?ref=clave), salta a ese diagrama
   // y lo resalta; si no, sube al inicio.
@@ -39,6 +42,18 @@ export default function TemaPage() {
 
   if (!tema) return <NotFound />
 
+  // Tema oculto para el grupo del alumno: aún no disponible.
+  if (!temaVisible(tema.id)) {
+    return (
+      <div className="acceso-restringido" role="alert">
+        <span className="acceso-ico"><Icon name="candado" size={30} /></span>
+        <h1>Tema aún no disponible</h1>
+        <p>Tu profesor todavía no libera este tema para tu grupo. Vuelve más adelante.</p>
+        <Link to={`/fase/${tema.faseId}`} className="btn-pildora btn-pildora--solido">Volver a la fase</Link>
+      </div>
+    )
+  }
+
   const vecinos = getTemaVecinos(temaId)
   const leido = estado.leidos[temaId]
   const recursos = getRecursos(temaId)
@@ -50,6 +65,8 @@ export default function TemaPage() {
         <Link to={`/fase/${tema.faseId}`}>Fase {tema.faseNumero}</Link> <span>/</span>{' '}
         {tema.numero}
       </nav>
+
+      <ReportarProblema tema={tema} />
 
       <header className="tema-header">
         <span className="tema-header-ico">{tema.icono}</span>
@@ -162,5 +179,73 @@ export default function TemaPage() {
         )}
       </nav>
     </article>
+  )
+}
+
+// Botón "Reportar un problema" del tema: guarda el reporte en Firestore para
+// que el super-administrador lo revise en su dashboard (/admin → Problemas).
+function ReportarProblema({ tema }) {
+  const { user, perfil, academiaId } = useAuth()
+  const [abierto, setAbierto] = useState(false)
+  const [mensaje, setMensaje] = useState('')
+  const [estado, setEstado] = useState('') // '' | 'enviando' | 'ok' | 'error'
+
+  if (!user) return null // sin sesión no se puede firmar el reporte
+
+  const enviar = async (e) => {
+    e.preventDefault()
+    setEstado('enviando')
+    try {
+      const { crearReporte } = await import('../lib/firebase/reportes.js')
+      await crearReporte({
+        uid: user.uid,
+        nombre: perfil?.nombre || user.displayName || '',
+        email: user.email || '',
+        academiaId,
+        grupoId: perfil?.grupoId || null,
+        temaId: tema.id,
+        temaTitulo: `${tema.numero} · ${tema.titulo}`,
+        mensaje,
+      })
+      setEstado('ok')
+      setMensaje('')
+      setTimeout(() => { setAbierto(false); setEstado('') }, 2600)
+    } catch {
+      setEstado('error')
+    }
+  }
+
+  return (
+    <div className="tema-reporte">
+      <button
+        className="tema-reporte-btn"
+        onClick={() => { setAbierto((v) => !v); setEstado('') }}
+        aria-expanded={abierto}
+      >
+        <Icon name="alerta" size={15} /> Reportar un problema
+      </button>
+      {abierto && (
+        <form className="tema-reporte-form" onSubmit={enviar}>
+          <textarea
+            value={mensaje}
+            onChange={(e) => setMensaje(e.target.value)}
+            placeholder="¿Qué está mal en este tema? (error de contenido, imagen rota, falta algo…)"
+            rows={3}
+            maxLength={1000}
+            required
+          />
+          <div className="tema-reporte-acciones">
+            <button type="submit" className="btn btn-primario" disabled={estado === 'enviando'}>
+              {estado === 'enviando' ? 'Enviando…' : 'Enviar reporte'}
+            </button>
+            <button type="button" className="btn btn-secundario" onClick={() => setAbierto(false)}>
+              Cancelar
+            </button>
+          </div>
+          {estado === 'ok' && <p className="cuenta-ok" role="status">✓ Reporte enviado. Gracias por avisar.</p>}
+          {estado === 'error' && <p className="cuenta-error" role="alert">No se pudo enviar (revisa tu conexión).</p>}
+        </form>
+      )}
+    </div>
   )
 }

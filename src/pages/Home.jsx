@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { fasesNav as fases, stats } from '../data/navIndice.js'
 import { useProgress } from '../context/ProgressContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
+import { useVisibilidad } from '../lib/useVisibilidad.js'
 import { driveSrc } from '../lib/img.js'
 import Icon from '../components/Icon.jsx'
 import Reveal from '../components/Reveal.jsx'
@@ -32,9 +33,12 @@ const HERO_SIZES = '(max-width: 880px) 90vw, 850px'
 
 export default function Home() {
   const { estado } = useProgress()
+  const { faseVisible } = useVisibilidad()
   const leidos = estado.leidos
   const temasLeidos = Object.values(leidos).filter(Boolean).length
   const progresoGlobal = Math.round((temasLeidos / stats.temas) * 100)
+  // El carrusel solo muestra las fases liberadas para el grupo del alumno.
+  const fasesVisibles = fases.filter((f) => faseVisible(f.id))
 
   return (
     <div className="ph">
@@ -134,7 +138,7 @@ export default function Home() {
             especiales y el marco normativo.
           </Reveal>
         </div>
-        <FasesCarrusel fases={fases} leidos={leidos} />
+        <FasesCarrusel fases={fasesVisibles} leidos={leidos} />
       </section>
 
       {/* ===== PONTE A PRUEBA ===== */}
