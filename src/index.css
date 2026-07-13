@@ -4124,6 +4124,183 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   -webkit-box-orient: vertical;
 }
 .deck-pie { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; }
+
+/* ============================================================
+   Fin de módulo (pantalla de felicitaciones al terminar el examen)
+   ============================================================ */
+.modulo-fin {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: color-mix(in srgb, var(--carbon) 70%, transparent);
+  backdrop-filter: blur(5px);
+}
+.modulo-fin-card {
+  width: min(580px, 100%);
+  max-height: calc(100dvh - 36px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  padding: 28px 26px 20px;
+  border-radius: var(--radio);
+  background: var(--bg-2);
+  border-top: 6px solid var(--fase-color, var(--primario));
+  box-shadow: 0 30px 80px -20px rgb(0 0 0 / 0.55);
+}
+.modulo-fin-emoji { font-size: 2.7rem; line-height: 1; }
+.modulo-fin-card h2 {
+  font-family: var(--fuente-display);
+  font-size: 1.7rem;
+  line-height: 1.1;
+}
+.modulo-fin-sub { color: var(--texto-2); max-width: 46ch; }
+.modulo-fin-sub b.ok { color: var(--verde); }
+.modulo-fin-sub b.mal { color: var(--urgencia); }
+.modulo-fin-aprendizajes {
+  width: 100%;
+  text-align: left;
+  padding: 14px 16px;
+  border-radius: var(--radio-sm);
+  background: var(--bg-3);
+}
+.modulo-fin-aprendizajes h3 {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--fuente-display);
+  font-size: 0.98rem;
+  margin-bottom: 8px;
+  color: var(--fase-color, var(--primario));
+}
+.modulo-fin-aprendizajes ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  max-height: 210px;
+  overflow-y: auto;
+  font-size: 0.88rem;
+}
+.modulo-fin-aprendizajes li { display: flex; gap: 8px; align-items: baseline; }
+.modulo-fin-aprendizajes li span {
+  font-family: var(--fuente-cifra);
+  font-weight: 700;
+  font-size: 0.78rem;
+  color: var(--fase-color, var(--primario));
+  min-width: 30px;
+}
+.modulo-fin-cta { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.modulo-fin-final { color: var(--verde); font-weight: 600; max-width: 48ch; }
+.modulo-fin-cerrar {
+  border: none;
+  background: none;
+  color: var(--texto-2);
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.86rem;
+  padding: 6px;
+}
+.modulo-fin-cerrar:hover { color: var(--texto); }
+
+/* ============================================================
+   Solicitudes de acceso (panel del staff) + códigos para profesores
+   ============================================================ */
+.panel-solicitudes,
+.panel-codigos-acceso {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+.panel-solicitudes h2,
+.panel-codigos-acceso h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--fuente-display);
+  font-size: 1.2rem;
+}
+.ps-badge {
+  padding: 1px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #fff;
+  background: var(--urgencia);
+}
+.ps-lista { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.ps-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 12px;
+  border-radius: var(--radio-sm);
+  background: var(--bg-3);
+  font-size: 0.87rem;
+}
+.ps-info {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+  flex: 1;
+  min-width: 200px;
+}
+.ps-detalle { color: var(--texto-2); }
+.ps-fecha { color: var(--texto-3); }
+.ps-acciones { display: flex; gap: 8px; }
+.ps-aceptar,
+.ps-rechazar {
+  padding: 5px 12px;
+  border-radius: var(--radio-sm);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.ps-aceptar {
+  border: 1px solid transparent;
+  color: #fff;
+  background: var(--verde);
+}
+.ps-aceptar:hover:not(:disabled) { filter: brightness(1.08); }
+.ps-rechazar {
+  border: 1px solid color-mix(in srgb, var(--urgencia) 45%, transparent);
+  color: var(--urgencia);
+  background: transparent;
+}
+.ps-rechazar:hover:not(:disabled) { background: color-mix(in srgb, var(--urgencia) 10%, transparent); }
+.ps-aceptar:disabled, .ps-rechazar:disabled { opacity: 0.55; cursor: default; }
+.ps-todas { align-self: flex-start; }
+
+/* Botón "Habilitar F#" en la tabla de avance */
+.panel-celda-habilitar { text-align: center; white-space: nowrap; }
+.panel-habilitar-btn {
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--primario) 45%, transparent);
+  color: var(--primario);
+  background: color-mix(in srgb, var(--primario) 8%, transparent);
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.panel-habilitar-btn:hover:not(:disabled) {
+  background: var(--primario);
+  color: #fff;
+}
+.panel-habilitar-btn:disabled { opacity: 0.55; cursor: default; }
 .deck-temas, .deck-prog { font-family: var(--fuente-cifra); font-size: 0.98rem; color: var(--texto-3); font-weight: 500; }
 .deck-prog { color: var(--fase-color); font-weight: 600; font-variant-numeric: tabular-nums; }
 .deck-boton {

@@ -196,6 +196,9 @@ function Acceso() {
 
 // --- Autenticado: perfil + unirse por código (academia o prueba) + mis datos ---
 function Perfil({ user, perfil, salir }) {
+  // Los CÓDIGOS de academia/grupo no se muestran a alumnos ni profesores
+  // (solo director/super-admin): en su lugar va el NOMBRE.
+  const { academia, grupo, puedeVerCodigos } = useAuth()
   const [codigo, setCodigo] = useState('')
   const [msg, setMsg] = useState('')
   const [error, setError] = useState('')
@@ -257,10 +260,25 @@ function Perfil({ user, perfil, salir }) {
         <div><dt>Rol</dt><dd><span className="cuenta-badge">{perfil?.rol || '—'}</span></dd></div>
         <div>
           <dt>Academia</dt>
-          <dd>{perfil?.academiaId ? <span className="cuenta-badge cuenta-badge--ok">{perfil.academiaId}</span> : <em>Sin academia</em>}</dd>
+          <dd>
+            {perfil?.academiaId ? (
+              <span className="cuenta-badge cuenta-badge--ok">
+                {academia?.nombre || (puedeVerCodigos ? perfil.academiaId : 'Tu academia')}
+              </span>
+            ) : (
+              <em>Sin academia</em>
+            )}
+          </dd>
         </div>
         {perfil?.grupoId && (
-          <div><dt>Grupo</dt><dd><span className="cuenta-badge">{perfil.grupoId}</span></dd></div>
+          <div>
+            <dt>Grupo</dt>
+            <dd>
+              <span className="cuenta-badge">
+                {grupo?.nombre || (puedeVerCodigos ? perfil.grupoId : 'Tu grupo')}
+              </span>
+            </dd>
+          </div>
         )}
         {pruebaSeg > 0 && (
           <div>
@@ -274,7 +292,7 @@ function Perfil({ user, perfil, salir }) {
         )}
       </dl>
 
-      {!perfil?.academiaId && (
+      {(!perfil?.academiaId || perfil?.esPrueba) && (
         <form className="cuenta-unir" onSubmit={unir}>
           <label>
             Únete con tu código (academia, grupo o prueba)

@@ -13,8 +13,8 @@ export async function unirseAcademia(uid, codigo) {
   if (!aca.exists()) throw new Error('No existe una academia con ese código.')
   if (aca.data().estado !== 'activo') throw new Error('Esa academia no está activa.')
 
-  // Al cambiar de academia por código directo, el grupo anterior deja de aplicar.
-  await updateDoc(doc(db, 'usuarios', uid), { academiaId: cod, grupoId: null })
+  // Unión REAL: el grupo anterior deja de aplicar y la marca de prueba se quita.
+  await updateDoc(doc(db, 'usuarios', uid), { academiaId: cod, grupoId: null, esPrueba: false })
   return { id: cod, ...aca.data() }
 }
 

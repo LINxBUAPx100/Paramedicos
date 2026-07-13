@@ -77,6 +77,7 @@ export async function unirseGrupo(uid, codigo) {
   if (!aca.exists() || aca.data().estado !== 'activo') {
     throw new Error('La academia de ese grupo no está activa.')
   }
-  await updateDoc(doc(db, 'usuarios', uid), { grupoId: cod, academiaId: g.academiaId })
+  // Unión REAL: quita la marca de prueba si venía de un código temporal.
+  await updateDoc(doc(db, 'usuarios', uid), { grupoId: cod, academiaId: g.academiaId, esPrueba: false })
   return { id: cod, ...g, academia: { id: g.academiaId, ...aca.data() } }
 }

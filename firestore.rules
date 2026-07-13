@@ -144,6 +144,14 @@ service cloud.firestore {
           request.resource.data.get('grupoId', null) == resource.data.get('grupoId', null)
           || request.resource.data.get('grupoId', null) == null
           || grupoValido()
+        )
+        // La marca de PRUEBA solo cambia con un canje válido o al unirse de
+        // verdad (cambio de academia/grupo validado por las cláusulas de arriba).
+        && (
+          request.resource.data.get('esPrueba', false) == resource.data.get('esPrueba', false)
+          || canjeValido()
+          || request.resource.data.academiaId != resource.data.academiaId
+          || request.resource.data.get('grupoId', null) != resource.data.get('grupoId', null)
         );
 
       // El director (admin_escuela) gestiona a los miembros de SU academia:
@@ -154,6 +162,14 @@ service cloud.firestore {
         && resource.data.rol in ['alumno', 'instructor']
         && request.resource.data.rol in ['alumno', 'instructor']
         && request.resource.data.academiaId == resource.data.academiaId;
+
+      // El STAFF (profesor o director) puede HABILITAR módulos a los alumnos
+      // de su academia: SOLO el campo fasesDesbloqueadas (anula lo oculto del
+      // grupo para ese alumno, nada más).
+      allow update: if esStaffDe(resource.data.academiaId)
+        && resource.data.rol == 'alumno'
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['fasesDesbloqueadas']);
 
       // Super-admin puede gestionar cualquier usuario (incluye al supremo
       // promoviendo su propio doc a rol 'superadmin' en su primer acceso).
@@ -183,6 +199,30 @@ service cloud.firestore {
       allow update, delete: if esSuper() || esAdminDe(resource.data.academiaId);
     }
 
+    // --- SOLICITUDES de acceso ---
+    //  tipo 'modulo'  → alumno terminó una fase y pide la siguiente.
+    //  tipo 'codigos' → profesor pide ver los códigos de academia/grupos.
+    match /solicitudes/{id} {
+      // Crear: el propio usuario, firmando con su uid, siempre 'pendiente'
+      // y sobre SU academia (no puede sembrar solicitudes en otra).
+      allow create: if autenticado()
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.estado == 'pendiente'
+        && request.resource.data.academiaId == miDoc().academiaId;
+      // Leer: el dueño (consulta el estado de las suyas), el super-admin o
+      // el staff de esa academia (las atiende en su panel).
+      allow read: if esDueno(resource.data.uid)
+        || esSuper()
+        || esStaffDe(resource.data.academiaId);
+      // Resolver: módulo → cualquier staff de la academia; códigos → solo el
+      // director o el super-admin (un profesor no se auto-aprueba: además,
+      // puedeVerCodigos solo lo escribe el director/super en usuarios).
+      allow update: if esSuper()
+        || esAdminDe(resource.data.academiaId)
+        || (esStaffDe(resource.data.academiaId) && resource.data.tipo == 'modulo');
+      allow delete: if esSuper() || esAdminDe(resource.data.academiaId);
+    }
+
     // --- INTENTOS de examen de fase ---
     match /intentos/{id} {
       // Crear: el propio alumno, con su uid y su academia (no puede falsear otra).
@@ -193,9 +233,9 @@ service cloud.firestore {
       allow read: if esDueno(resource.data.uid)
         || esSuper()
         || esStaffDe(resource.data.academiaId);
-      // Los intentos son inmutables; solo el super-admin puede borrarlos.
-      allow update: if false;
-      allow delete: if esSuper();
+      // Inmutables para los usuarios; el super-admin puede editarlos (p. ej.
+      // migrar academiaId al cambiar el código de una academia) o borrarlos.
+      allow update, delete: if esSuper();
     }
   }
 }

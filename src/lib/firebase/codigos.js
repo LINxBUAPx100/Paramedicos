@@ -13,25 +13,35 @@ import {
   getDocs, serverTimestamp, Timestamp,
 } from 'firebase/firestore'
 
-// Genera un código legible tipo PRUEBA-7K3M (sin caracteres confusos).
-function generarCodigo() {
-  const abc = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'
-  let sufijo = ''
-  for (let i = 0; i < 4; i++) sufijo += abc[Math.floor(Math.random() * abc.length)]
-  return `PRUEBA-${sufijo}`
+const ABC = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789' // sin caracteres confusos (0/O, 1/I/L)
+const rand = (n) =>
+  Array.from({ length: n }, () => ABC[Math.floor(Math.random() * ABC.length)]).join('')
+const abreviar = (txt, n) =>
+  String(txt || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, n)
+
+// Código legible y con significado: ABREVIATURA de la academia (el primer
+// segmento de su código, p. ej. AEP-2026 → AEP) + 2 letras del GRUPO +
+// vigencia y azar (7D4K = 7 días + sufijo). Ej: AEP-GE-7D4K. Sin academia → PT.
+function generarCodigo({ academiaId = null, grupoNombre = '', dias = 7 } = {}) {
+  const aca = academiaId ? abreviar(academiaId.split('-')[0], 4) || 'PT' : 'PT'
+  const grp = abreviar(grupoNombre, 2)
+  const cola = `${dias}D${rand(2)}`
+  return [aca, grp, cola].filter(Boolean).join('-')
 }
 
-// Crea un código vigente por `dias`. Devuelve { id, expira }.
-export async function crearCodigo({ creadoPor, academiaId = null, dias = 7, nota = '' }) {
+// Crea un código vigente por `dias`, opcionalmente ligado a una academia y a
+// un GRUPO (al canjearlo, la persona queda integrada en ellos). Devuelve { id, expira }.
+export async function crearCodigo({ creadoPor, academiaId = null, grupoId = null, grupoNombre = '', dias = 7, nota = '' }) {
   const expira = Timestamp.fromDate(new Date(Date.now() + dias * 24 * 60 * 60 * 1000))
   // Reintenta si el código generado ya existe (colisión improbable).
   for (let intento = 0; intento < 5; intento++) {
-    const id = generarCodigo()
+    const id = generarCodigo({ academiaId, grupoNombre, dias })
     const ref = doc(db, 'codigos', id)
     const ya = await getDoc(ref)
     if (ya.exists()) continue
     await setDoc(ref, {
       academiaId: academiaId || null,
+      grupoId: grupoId || null,
       creadoPor,
       nota: nota || '',
       estado: 'activo',
@@ -62,7 +72,10 @@ export async function borrarCodigo(id) {
   await deleteDoc(doc(db, 'codigos', id))
 }
 
-// Canjea un código sobre el perfil del usuario. Devuelve la fecha de fin.
+// Canjea un código sobre el perfil del usuario: acceso hasta `expira` y, si el
+// código trae academia/grupo, lo INTEGRA en ellos (marcado como esPrueba: al
+// vencer pierde el acceso aunque siga listado, hasta meter un código real).
+// Devuelve la fecha de fin.
 export async function canjearCodigo(uid, codigo) {
   const cod = String(codigo || '').trim().toUpperCase()
   const snap = await getDoc(doc(db, 'codigos', cod))
@@ -70,10 +83,22 @@ export async function canjearCodigo(uid, codigo) {
   const data = snap.data()
   if (data.estado !== 'activo') throw new Error('Ese código fue desactivado.')
   if (data.expira.toMillis() <= Date.now()) throw new Error('Ese código ya expiró.')
-  await updateDoc(doc(db, 'usuarios', uid), {
-    codigoPrueba: cod,
-    pruebaHasta: data.expira,
-  })
+
+  const cambios = { codigoPrueba: cod, pruebaHasta: data.expira, esPrueba: true }
+  // Integración a academia (solo si sigue activa) y a grupo (solo si sigue activo).
+  if (data.academiaId) {
+    const aca = await getDoc(doc(db, 'academias', data.academiaId))
+    if (aca.exists() && aca.data().estado === 'activo') {
+      cambios.academiaId = data.academiaId
+      if (data.grupoId) {
+        const grupo = await getDoc(doc(db, 'grupos', data.grupoId))
+        if (grupo.exists() && grupo.data().estado === 'activo' && grupo.data().academiaId === data.academiaId) {
+          cambios.grupoId = data.grupoId
+        }
+      }
+    }
+  }
+  await updateDoc(doc(db, 'usuarios', uid), cambios)
   return data.expira
 }
 

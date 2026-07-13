@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { fasesNav } from '../data/navIndice.js'
+import { useAuth } from '../context/AuthContext.jsx'
 import Icon from './Icon.jsx'
 
 // ============================================================
@@ -28,12 +29,14 @@ export const ETIQUETA_ROL = {
 // `soloGrupo`: si viene (profesor con grupo asignado), el panel queda fijado
 // a ese grupo y no se puede cambiar el filtro.
 export default function PanelAcademia({ academiaId, gestion = null, miUid = null, soloGrupo = null }) {
+  const { puedeVerCodigos } = useAuth()
   const [datos, setDatos] = useState(null) // { miembros, intentos, grupos }
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState('')
   const [alumnoAbierto, setAlumnoAbierto] = useState(null)
   const [grupoFiltro, setGrupoFiltro] = useState(soloGrupo || '') // '' = todos; 'sin' = sin grupo
   const [recarga, setRecarga] = useState(0)
+  const [desbloqueando, setDesbloqueando] = useState(null) // uid en proceso
 
   useEffect(() => {
     if (!academiaId) return
@@ -96,12 +99,35 @@ export default function PanelAcademia({ academiaId, gestion = null, miUid = null
   const staff = datos.miembros.filter((m) => m.rol !== 'alumno')
   const fechaTxt = (seg) => (seg ? new Date(seg * 1000).toLocaleDateString('es-MX') : '')
 
+  // Siguiente módulo POR HABILITAR a un alumno: la primera fase que su grupo
+  // tiene oculta y que aún no se le ha desbloqueado individualmente.
+  const siguientePorHabilitar = (al) => {
+    const ocultasDelGrupo = grupos.find((g) => g.id === al.grupoId)?.fasesOcultas || []
+    const yaDesbloqueadas = al.fasesDesbloqueadas || []
+    return fasesNav.find((f) => ocultasDelGrupo.includes(f.id) && !yaDesbloqueadas.includes(f.id)) || null
+  }
+
+  const habilitarFase = async (uid, f) => {
+    setDesbloqueando(uid)
+    setError('')
+    try {
+      const { desbloquearFase } = await import('../lib/firebase/solicitudes.js')
+      await desbloquearFase(uid, f.id)
+      setRecarga((n) => n + 1)
+    } catch {
+      setError('No se pudo habilitar el módulo (revisa permisos o conexión).')
+    } finally {
+      setDesbloqueando(null)
+    }
+  }
+
   return (
     <>
       {soloGrupo ? (
         <p className="panel-grupo-aviso">
           <Icon name="usuario" size={16} /> Estás viendo tu grupo:{' '}
-          <strong>{nombreGrupo(soloGrupo)}</strong> <code>{soloGrupo}</code>
+          <strong>{nombreGrupo(soloGrupo)}</strong>
+          {puedeVerCodigos && <> <code>{soloGrupo}</code></>}
         </p>
       ) : (
         grupos.length > 0 && (
@@ -110,7 +136,9 @@ export default function PanelAcademia({ academiaId, gestion = null, miUid = null
             <select value={grupoFiltro} onChange={(e) => { setGrupoFiltro(e.target.value); setAlumnoAbierto(null) }}>
               <option value="">Todos los grupos</option>
               {grupos.map((g) => (
-                <option key={g.id} value={g.id}>{g.nombre} ({g.id})</option>
+                <option key={g.id} value={g.id}>
+                  {g.nombre}{puedeVerCodigos ? ` (${g.id})` : ''}
+                </option>
               ))}
               <option value="sin">Sin grupo</option>
             </select>
@@ -120,11 +148,26 @@ export default function PanelAcademia({ academiaId, gestion = null, miUid = null
 
       <Estadisticas alumnos={alumnos} staff={staff} intentos={datos.intentos} resumen={resumen} />
 
+      <SolicitudesAcademia
+        academiaId={academiaId}
+        gestion={gestion}
+        miUid={miUid}
+        soloGrupo={soloGrupo}
+        nombreGrupo={nombreGrupo}
+        onCambio={() => setRecarga((n) => n + 1)}
+      />
+
       {alumnos.length === 0 ? (
         <p className="panel-vacio">
-          Aún no hay alumnos en esta academia. Compárteles el código
-          <strong> {academiaId} </strong>
-          para que se unan desde su cuenta.
+          {puedeVerCodigos ? (
+            <>
+              Aún no hay alumnos en esta academia. Compárteles el código
+              <strong> {academiaId} </strong>
+              para que se unan desde su cuenta.
+            </>
+          ) : (
+            'Aún no hay alumnos en esta academia. Pide a tu director el código para compartirlo.'
+          )}
         </p>
       ) : (
         <div className="panel-tabla-wrap">
@@ -135,6 +178,7 @@ export default function PanelAcademia({ academiaId, gestion = null, miUid = null
                 {fasesNav.map((f) => (
                   <th key={f.id} title={f.titulo}>F{f.numero}</th>
                 ))}
+                <th title="Habilitar el siguiente módulo que su grupo tiene oculto">Módulos</th>
               </tr>
             </thead>
             <tbody>
@@ -165,6 +209,26 @@ export default function PanelAcademia({ academiaId, gestion = null, miUid = null
                         </td>
                       )
                     })}
+                    <td className="panel-celda-habilitar" onClick={(e) => e.stopPropagation()}>
+                      {(() => {
+                        const f = siguientePorHabilitar(al)
+                        if (!f) {
+                          return (
+                            <span className="panel-celda-vacia" title="Ya ve todos los módulos disponibles">—</span>
+                          )
+                        }
+                        return (
+                          <button
+                            className="panel-habilitar-btn"
+                            disabled={desbloqueando === al.id}
+                            title={`Habilitarle la Fase ${f.numero} · ${f.titulo}`}
+                            onClick={() => habilitarFase(al.id, f)}
+                          >
+                            {desbloqueando === al.id ? '…' : `Habilitar F${f.numero}`}
+                          </button>
+                        )
+                      })()}
+                    </td>
                   </tr>
                 )
               })}
@@ -206,8 +270,241 @@ export default function PanelAcademia({ academiaId, gestion = null, miUid = null
         />
       )}
 
-      {gestion && <CodigosPrueba academiaId={academiaId} miUid={miUid} />}
+      {gestion && <CodigosPrueba academiaId={academiaId} miUid={miUid} grupos={grupos} />}
+
+      {/* Profesores (sin gestión): los códigos requieren aprobación del director. */}
+      {!gestion && <AccesoCodigos academiaId={academiaId} grupos={grupos} />}
     </>
+  )
+}
+
+// ---------- Solicitudes pendientes (siguiente módulo / ver códigos) ----------
+function SolicitudesAcademia({ academiaId, gestion, miUid, soloGrupo, nombreGrupo, onCambio }) {
+  const [lista, setLista] = useState(null)
+  const [ocupado, setOcupado] = useState(null) // id en proceso | 'todas'
+  const [error, setError] = useState('')
+
+  const cargar = async () => {
+    try {
+      const { solicitudesDeAcademia } = await import('../lib/firebase/solicitudes.js')
+      setLista(await solicitudesDeAcademia(academiaId))
+    } catch (err) {
+      setLista([])
+      setError(
+        String(err?.code || '').includes('permission-denied')
+          ? 'Sin permisos: publica las reglas actualizadas de firestore.rules (colección "solicitudes").'
+          : 'No se pudieron cargar las solicitudes.'
+      )
+    }
+  }
+  useEffect(() => { cargar() }, [academiaId]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const pendientes = (lista || []).filter((s) => s.estado === 'pendiente')
+  // Un profesor fijado a su grupo atiende solo las de su grupo; las de
+  // CÓDIGOS solo las ve quien puede aprobarlas (director / super-admin).
+  const visibles = pendientes.filter((s) =>
+    s.tipo === 'codigos' ? Boolean(gestion) : soloGrupo ? s.grupoId === soloGrupo : true
+  )
+
+  const resolver = async (s, aprobar) => {
+    setOcupado(s.id)
+    setError('')
+    try {
+      const mod = await import('../lib/firebase/solicitudes.js')
+      if (!aprobar) await mod.rechazarSolicitud(s.id, miUid)
+      else if (s.tipo === 'codigos') await mod.aprobarSolicitudCodigos(s, miUid)
+      else await mod.aprobarSolicitudModulo(s, miUid)
+      await cargar()
+      onCambio()
+    } catch {
+      setError('No se pudo resolver la solicitud (revisa permisos o conexión).')
+    } finally {
+      setOcupado(null)
+    }
+  }
+
+  const aceptarTodas = async () => {
+    setOcupado('todas')
+    setError('')
+    try {
+      const mod = await import('../lib/firebase/solicitudes.js')
+      for (const s of visibles) {
+        if (s.tipo === 'codigos') await mod.aprobarSolicitudCodigos(s, miUid)
+        else await mod.aprobarSolicitudModulo(s, miUid)
+      }
+    } catch {
+      setError('No se pudieron aceptar todas (revisa permisos o conexión).')
+    } finally {
+      await cargar()
+      onCambio()
+      setOcupado(null)
+    }
+  }
+
+  const fechaTxt = (f) =>
+    f?.seconds
+      ? new Date(f.seconds * 1000).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' })
+      : ''
+
+  if (lista === null) return null
+
+  return (
+    <section className="panel-solicitudes">
+      <h2>
+        <Icon name="check" size={20} /> Solicitudes pendientes
+        {visibles.length > 0 && <span className="ps-badge">{visibles.length}</span>}
+      </h2>
+      <p className="panel-gestion-sub">
+        Cuando un alumno termina un módulo puede pedir acceso al siguiente. Acéptalas una por
+        una o todas juntas.{gestion ? ' Aquí también verás a los profesores que piden ver los códigos.' : ''}
+      </p>
+      {error && <p className="cuenta-error" role="alert">{error}</p>}
+
+      {visibles.length === 0 ? (
+        <p className="panel-vacio">No hay solicitudes pendientes. 🎉</p>
+      ) : (
+        <>
+          <ul className="ps-lista">
+            {visibles.map((s) => (
+              <li key={s.id} className="ps-item">
+                <div className="ps-info">
+                  <strong>{s.nombre || '—'}</strong>
+                  {s.tipo === 'codigos' ? (
+                    <span className="ps-detalle">pide <b>ver los códigos</b> de academia y grupos</span>
+                  ) : (
+                    <span className="ps-detalle">pide la <b>Fase {s.faseNumero} · {s.faseTitulo}</b></span>
+                  )}
+                  {s.grupoId && !soloGrupo && (
+                    <span className="panel-tag-grupo">{nombreGrupo(s.grupoId)}</span>
+                  )}
+                  <small className="ps-fecha">{fechaTxt(s.fecha)}</small>
+                </div>
+                <span className="ps-acciones">
+                  <button
+                    className="ps-aceptar"
+                    disabled={Boolean(ocupado)}
+                    onClick={() => resolver(s, true)}
+                  >
+                    {ocupado === s.id ? '…' : '✓ Aceptar'}
+                  </button>
+                  <button
+                    className="ps-rechazar"
+                    disabled={Boolean(ocupado)}
+                    onClick={() => resolver(s, false)}
+                  >
+                    Rechazar
+                  </button>
+                </span>
+              </li>
+            ))}
+          </ul>
+          {visibles.length > 1 && (
+            <button className="btn btn-primario ps-todas" disabled={Boolean(ocupado)} onClick={aceptarTodas}>
+              {ocupado === 'todas' ? 'Aceptando…' : `✓ Aceptar todas (${visibles.length})`}
+            </button>
+          )}
+        </>
+      )}
+    </section>
+  )
+}
+
+// ---------- Acceso de un PROFESOR a los códigos (previa aprobación) ----------
+function AccesoCodigos({ academiaId, grupos }) {
+  const { user, perfil, puedeVerCodigos } = useAuth()
+  const [estado, setEstado] = useState('cargando') // cargando | puede | pendiente | enviando | enviada | error
+
+  useEffect(() => {
+    if (puedeVerCodigos || !user) return
+    let activo = true
+    ;(async () => {
+      try {
+        const { misSolicitudes } = await import('../lib/firebase/solicitudes.js')
+        const lista = await misSolicitudes(user.uid)
+        const ya = lista.some((s) => s.tipo === 'codigos' && s.estado === 'pendiente')
+        if (activo) setEstado(ya ? 'pendiente' : 'puede')
+      } catch {
+        if (activo) setEstado('puede')
+      }
+    })()
+    return () => { activo = false }
+  }, [puedeVerCodigos, user?.uid]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const copiar = (id) => {
+    try { navigator.clipboard.writeText(id) } catch { /* sin permisos */ }
+  }
+
+  // Acceso aprobado: lista de códigos en solo lectura.
+  if (puedeVerCodigos) {
+    return (
+      <section className="panel-codigos-acceso">
+        <h2><Icon name="candado" size={20} /> Códigos de tu academia</h2>
+        <p className="panel-gestion-sub">
+          Tu director te aprobó el acceso. Compártelos solo con quien deba unirse.
+        </p>
+        <ul className="pc-lista">
+          <li className="pc-item activo">
+            <strong className="pg-nombre">Academia</strong>
+            <code className="pc-codigo">{academiaId}</code>
+            <span className="pc-acciones">
+              <button className="pc-copiar" onClick={() => copiar(academiaId)}>Copiar</button>
+            </span>
+          </li>
+          {grupos.map((g) => (
+            <li key={g.id} className={`pc-item ${g.estado === 'activo' ? 'activo' : 'inactivo'}`}>
+              <strong className="pg-nombre">{g.nombre}</strong>
+              <code className="pc-codigo">{g.id}</code>
+              <span className="pc-acciones">
+                <button className="pc-copiar" onClick={() => copiar(g.id)}>Copiar</button>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  const solicitar = async () => {
+    setEstado('enviando')
+    try {
+      const { crearSolicitud } = await import('../lib/firebase/solicitudes.js')
+      await crearSolicitud({
+        tipo: 'codigos',
+        uid: user.uid,
+        nombre: perfil?.nombre || user.displayName || '',
+        academiaId,
+        grupoId: perfil?.grupoId || null,
+      })
+      setEstado('enviada')
+    } catch {
+      setEstado('error')
+    }
+  }
+
+  return (
+    <section className="panel-codigos-acceso">
+      <h2><Icon name="candado" size={20} /> Códigos de academia y grupos</h2>
+      <p className="panel-gestion-sub">
+        Los códigos solo los ve el director. Si necesitas compartirlos (p. ej. para inscribir
+        alumnos), solicita el acceso y un director deberá aprobarlo.
+      </p>
+      {estado === 'pendiente' || estado === 'enviada' ? (
+        <p className="cuenta-ok" role="status">
+          ✓ Solicitud {estado === 'enviada' ? 'enviada' : 'pendiente'}: espera la aprobación de tu director.
+        </p>
+      ) : (
+        <button
+          className="btn btn-secundario"
+          onClick={solicitar}
+          disabled={estado === 'enviando' || estado === 'cargando'}
+        >
+          {estado === 'enviando' ? 'Enviando…' : '🔑 Solicitar ver los códigos'}
+        </button>
+      )}
+      {estado === 'error' && (
+        <p className="cuenta-error" role="alert">No se pudo enviar la solicitud (revisa tu conexión).</p>
+      )}
+    </section>
   )
 }
 
@@ -361,15 +658,21 @@ function errorCodigos(err, accion) {
 }
 
 // `academias`: solo para el super-admin — lista para elegir a qué academia
-// pertenece el código nuevo (o dejarlo global).
-export function CodigosPrueba({ academiaId = null, miUid, academias = null }) {
+// pertenece el código nuevo (o dejarlo global). `grupos`: grupos ya cargados
+// de la academia fija (panel del director / dashboard de academia).
+export function CodigosPrueba({ academiaId = null, miUid, academias = null, grupos = null }) {
   const [codigos, setCodigos] = useState(null)
   const [dias, setDias] = useState(7)
   const [nota, setNota] = useState('')
   const [acaSel, setAcaSel] = useState('') // '' = código global (solo super-admin)
+  const [grupoSel, setGrupoSel] = useState('') // '' = sin grupo
+  const [gruposDeAca, setGruposDeAca] = useState([]) // superadmin: grupos de acaSel
   const [nuevo, setNuevo] = useState(null) // último código creado (para copiarlo)
   const [ocupado, setOcupado] = useState(false)
   const [error, setError] = useState('')
+
+  const academiaEfectiva = academias ? (acaSel || null) : academiaId
+  const gruposDisponibles = academias ? gruposDeAca : grupos || []
 
   const cargar = async () => {
     try {
@@ -382,14 +685,39 @@ export function CodigosPrueba({ academiaId = null, miUid, academias = null }) {
   }
   useEffect(() => { cargar() }, [academiaId]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Super-admin: al elegir academia, carga sus grupos para poder asignar uno.
+  useEffect(() => {
+    if (!academias) return
+    setGrupoSel('')
+    if (!acaSel) { setGruposDeAca([]); return }
+    let activo = true
+    ;(async () => {
+      try {
+        const { listarGrupos } = await import('../lib/firebase/grupos.js')
+        const lista = await listarGrupos(acaSel)
+        if (activo) setGruposDeAca(lista)
+      } catch {
+        if (activo) setGruposDeAca([])
+      }
+    })()
+    return () => { activo = false }
+  }, [academias, acaSel])
+
   const crear = async (e) => {
     e.preventDefault()
     setOcupado(true)
     setError('')
     try {
       const { crearCodigo } = await import('../lib/firebase/codigos.js')
-      const paraAcademia = academias ? (acaSel || null) : academiaId
-      const c = await crearCodigo({ creadoPor: miUid, academiaId: paraAcademia, dias: Number(dias), nota })
+      const grupo = gruposDisponibles.find((g) => g.id === grupoSel) || null
+      const c = await crearCodigo({
+        creadoPor: miUid,
+        academiaId: academiaEfectiva,
+        grupoId: grupo?.id || null,
+        grupoNombre: grupo?.nombre || '',
+        dias: Number(dias),
+        nota,
+      })
       setNuevo(c.id)
       setNota('')
       await cargar()

@@ -19,8 +19,13 @@ function calcularAcceso({ user, perfil, perfilListo, academia, rol, esSupremo })
   if (!perfilListo) return { puede: false, motivo: 'cargando' }
   if (!perfil) return { puede: false, motivo: 'sin-perfil' }
   if (perfil.estado && perfil.estado !== 'activo') return { puede: false, motivo: 'usuario-bloqueado' }
-  // Acceso de prueba vigente (código temporal): entra sin academia.
+  // Acceso de prueba (código temporal): entra mientras esté vigente.
   const enPrueba = Boolean(perfil.pruebaHasta?.seconds && perfil.pruebaHasta.seconds * 1000 > Date.now())
+  // Cuenta MARCADA como prueba (aunque el código la haya integrado a una
+  // academia/grupo): al vencer pierde el acceso hasta meter un código real.
+  if (perfil.esPrueba) {
+    return enPrueba ? { puede: true, motivo: null } : { puede: false, motivo: 'prueba-expirada' }
+  }
   if (!perfil.academiaId) {
     return enPrueba ? { puede: true, motivo: null } : { puede: false, motivo: 'sin-academia' }
   }
@@ -193,6 +198,10 @@ export function AuthProvider({ children }) {
     esSupremo,
     esSuperadmin,
     esStaff: esSuperadmin || ROLES_STAFF.includes(rol),
+    // Ver los CÓDIGOS de academia/grupo: director y super-admin siempre; un
+    // profesor solo si un director le aprobó la solicitud (perfil.puedeVerCodigos).
+    puedeVerCodigos:
+      esSuperadmin || rol === 'admin_escuela' || Boolean(perfil?.puedeVerCodigos),
     puedeAcceder,
     accesoCargando,
     motivoBloqueo: motivo,

@@ -32,6 +32,13 @@ const MENSAJES = {
       'Para acceder al contenido necesitas unirte a tu academia con el código que te dieron al inscribirte.',
     cta: { to: '/cuenta', label: 'Ingresar mi código' },
   },
+  'prueba-expirada': {
+    icono: 'reloj',
+    titulo: 'Tu periodo de prueba terminó',
+    texto:
+      'El código temporal que usaste ya venció. Pide un código nuevo, o únete a tu academia con su código oficial para seguir estudiando.',
+    cta: { to: '/cuenta', label: 'Ingresar otro código' },
+  },
   'academia-inactiva': {
     icono: 'candado',
     titulo: 'Tu academia no está al corriente',

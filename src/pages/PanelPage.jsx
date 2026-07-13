@@ -55,7 +55,7 @@ export default function PanelPage() {
           <p>
             {esDirector
               ? `Avance y miembros de tu academia (${academiaId}).`
-              : `Avance de los alumnos de tu academia (${academiaId}).`}
+              : `Avance de los alumnos de ${academia?.nombre || 'tu academia'}.`}
           </p>
         </div>
       </header>

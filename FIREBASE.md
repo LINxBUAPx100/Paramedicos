@@ -83,6 +83,33 @@ carrusel del Home y de las listas de fase; si entra por URL directa ve
 borrosas y con candado (como logros por desbloquear). Alumnos sin grupo y el
 staff ven todo.
 
+## Privacidad de los códigos (academia y grupos)
+
+Los **códigos** de academia y de grupo solo los ven el **director** y el
+**super-admin**. Alumnos y profesores ven el *nombre* de su academia/grupo
+(Mi cuenta, hero del Home, panel), nunca el código. Un **profesor** que
+necesite compartirlos tiene en su /panel el botón **"Solicitar ver los
+códigos"**: crea una solicitud que el director aprueba desde su dashboard
+(pone `puedeVerCodigos: true` en el perfil del profesor) y entonces el
+profesor ve una lista de códigos en solo lectura.
+
+## Fin de módulo y solicitudes de siguiente módulo
+
+Al **terminar el examen de una fase**, el alumno ve una pantalla completa de
+felicitaciones con el resumen de aprendizajes (los temas del módulo) y, si la
+siguiente fase está oculta para su grupo, un botón **"Solicitar acceso al
+siguiente módulo"**. Las solicitudes van a la colección `solicitudes` y el
+staff (profesor, director o super-admin) las atiende en su panel, sección
+**"Solicitudes pendientes"**: aceptar una por una, **"Aceptar todas"** o
+rechazar. Aceptar añade la fase a `usuarios/{uid}.fasesDesbloqueadas`, que
+**anula lo oculto del grupo solo para ese alumno**. Además, en la tabla de
+avance cada alumno tiene un botón **"Habilitar F#"** para abrirle el
+siguiente módulo sin esperar solicitud. Las solicitudes de códigos de los
+profesores solo puede aprobarlas el director o el super-admin.
+
+⚠️ Ambas funciones requieren **volver a publicar `firestore.rules`**
+(colección `solicitudes` + campo `fasesDesbloqueadas` en `usuarios`).
+
 ## Reportes de problemas
 
 Cada tema tiene un botón **"Reportar un problema"** (arriba a la izquierda).

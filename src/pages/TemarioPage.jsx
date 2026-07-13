@@ -20,7 +20,7 @@ const TODAS_LAS_FASES = fasesNav.map((f) => f.id)
 const TOTAL_TEMAS = fasesNav.reduce((s, f) => s + f.temas.length, 0)
 
 export default function TemarioPage() {
-  const { cargando, esStaff, esSuperadmin, academiaId, grupoId: miGrupoId } = useAuth()
+  const { cargando, esStaff, esSuperadmin, academiaId, grupoId: miGrupoId, puedeVerCodigos } = useAuth()
 
   const [academias, setAcademias] = useState([]) // solo superadmin
   const [acaSel, setAcaSel] = useState('')
@@ -194,7 +194,9 @@ export default function TemarioPage() {
               Grupo
               <select value={grupoSel} onChange={(e) => setGrupoSel(e.target.value)}>
                 {grupos.map((g) => (
-                  <option key={g.id} value={g.id}>{g.nombre} ({g.id})</option>
+                  <option key={g.id} value={g.id}>
+                    {g.nombre}{puedeVerCodigos ? ` (${g.id})` : ''}
+                  </option>
                 ))}
               </select>
             </label>

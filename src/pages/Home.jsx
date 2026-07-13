@@ -211,7 +211,7 @@ export default function Home() {
 // color elegido por su director (personalización guardada en academias/{id}).
 // Solo aparece si hay sesión con academia; para visitantes no cambia nada.
 function HeroAcademia() {
-  const { perfil, academia } = useAuth()
+  const { perfil, academia, grupo } = useAuth()
   if (!perfil?.academiaId || !academia) return null
 
   const color = academia.colorHero || 'var(--primario)'
@@ -230,7 +230,8 @@ function HeroAcademia() {
           <strong>{academia.nombre || academia.id}</strong>
           {academia.lema && <em>{academia.lema}</em>}
         </div>
-        {perfil.grupoId && <span className="aca-hero-grupo">Grupo {perfil.grupoId}</span>}
+        {/* Se muestra el NOMBRE del grupo, nunca su código. */}
+        {grupo?.nombre && <span className="aca-hero-grupo">Grupo {grupo.nombre}</span>}
       </section>
     </div>
   )
