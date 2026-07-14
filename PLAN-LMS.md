@@ -596,3 +596,90 @@ Modificados:
 - A no toca a B; plantilla intacta salvo modo plantilla explícito — ✔.
 - Legacy funciona; progreso/intentos/calificaciones sin tocar; src/data
   intacto — ✔. `npm test` (56) y `npm run build` — ✔.
+
+---
+
+# FASE 4 — Contenido enriquecido, actividades, recursos y exámenes (implementada)
+
+Alcance: edición del CONTENIDO interno del tema (bloques de texto, imágenes,
+videos, enlaces, archivos descargables, actividades, quiz/exámenes con
+ponderaciones), Storage aislado por academia y endurecimiento de intentos.
+Mismos esquemas que renderizan los componentes del alumno ⇒ compatibilidad
+total (probada contra los 68 temas reales).
+
+## Archivos
+
+Nuevos:
+- `src/lib/temaContenidoModelo.js` — PURO: catálogo de bloques (p, h3, lista,
+  pasos, tabla, callout, formula, imagen, diagrama, fuentes), validaciones de
+  quiz (correcta índice|arreglo, `peso` NUEVO aditivo), recursos (`archivos`
+  NUEVO aditivo), actividades (ordenar/completar/preguntas), URLs solo
+  http(s), `calcularCalificacion` PONDERADA (sin pesos ≡ cálculo actual),
+  `normalizarContenido`, duplicación independiente, tope de doc < 900 KB.
+- `src/lib/archivosModelo.js` — PURO: allowlist de extensiones/MIME (pdf,
+  png, jpg, webp, gif, mp3, mp4, webm — NUNCA ejecutables), tamaños por
+  categoría (8-50 MB), `nombreSeguro`, `rutaArchivoAcademia`
+  (academias/{id}/{archivos|imagenes}/…), `rutaEsDeAcademia` (sin '..'),
+  `rutaDesdeUrlStorage` y `validarReferenciasStorage` (el contenido no puede
+  referenciar Storage de otra academia).
+- `storage.rules` — NUEVO: todo bajo `academias/{acaId}/**`; leer = miembros
+  de esa academia o super; subir/borrar = editores (consulta Firestore para
+  rol/plan/permisosEditor); allowlist de contentType y ≤ 50 MB; el resto del
+  bucket cerrado. NO desplegadas.
+- `src/lib/firebase/almacen.js` — subida validada (ruta canónica, nunca la
+  del cliente) con progreso; borrado acotado al prefijo propio.
+- `src/components/editor/PanelContenidoTema.jsx` — editor por grupos
+  plegables: secciones/bloques (crear, editar, reordenar, duplicar, quitar),
+  objetivos, conceptos, flashcards, quiz con ponderaciones, recursos con
+  subida de archivos/imágenes, actividades. Borrador local + Guardar único.
+- `src/components/editor/VistaPreviaTema.jsx` — vista previa del tema con los
+  componentes REALES del alumno (Contenido/Recursos/Actividades/Quiz sin
+  onComplete y sin módulos de progreso ⇒ imposible registrar nada).
+- `tests/temaContenido.test.mjs` — 20 pruebas puras (incluye compatibilidad
+  del corpus completo y equivalencia de calificación sin pesos).
+- `tests/rules/storage.rules.test.mjs` — 6 pruebas de emulador (aislamiento
+  A/B, roles, allowlist, carpetas, borrado).
+
+Modificados:
+- `firestore.rules` — `intentos.create` valida total>0(≤500), 0≤aciertos≤total,
+  0≤porcentaje≤100 y consistencia con redondeo ±1 ⇒ el resultado de un examen
+  no se falsea desde el cliente (update/delete ya eran solo super).
+- `src/lib/firebase/editor.js` — `guardarContenidoTema()` transaccional
+  (versión +1, valida contenido y referencias de Storage, historial).
+- `src/pages/EditorPage.jsx` — monta el panel de contenido al seleccionar un
+  tema; dirty-tracking por panel; guardado con conflicto→recarga del doc.
+- `src/components/Recursos.jsx` — render ADITIVO de `recursos.archivos`
+  ("Material descargable"); los temas sin ese campo no cambian.
+- `firebase.json` (storage + emulador :9199), `package.json`
+  (`test:rules` = firestore,storage), `src/index.css` (estilos ct-*),
+  `tests/rules/contenido.rules.test.mjs` (caso intentos).
+
+## Decisiones
+
+- El EXAMEN de fase sigue derivándose del quiz de sus temas (modelo actual):
+  editar preguntas/ponderaciones del quiz ES editar el examen. La relación
+  tema→actividades→examen se conserva (conceptosClave alimenta "unir";
+  quiz alimenta examen). `calcularCalificacion` queda lista para las páginas
+  del alumno cuando se conecten al resolutor (fase de conexión).
+- `peso` y `archivos` son ADITIVOS: ningún dato existente cambia; sin peso ⇒
+  1; el cálculo sin pesos reproduce exactamente aciertos/total actual.
+- Sin subida de archivos en modo plantilla (los archivos pertenecen a una
+  academia); las plantillas usan URLs.
+- Storage NO confía en rutas del cliente: la ruta se reconstruye
+  (`rutaArchivoAcademia`) y las reglas exigen el prefijo de la academia.
+
+## Riesgos y pendientes
+
+- Reglas (Firestore + Storage) escritas y probadas en suite, NO ejecutadas
+  aquí (sin Java): correr `npm run test:rules` antes de desplegar.
+- El límite fino por categoría (8/15/20/50 MB) es del cliente; la regla
+  impone 50 MB duro para todo (documentado).
+- Doc de tema publicado bajo padre archivado: limitación conocida de F3.
+
+## Criterios de aceptación (verificados)
+
+- 76 pruebas puras pasan (20 nuevas), build pasa, el editor de contenido
+  monta y opera (verificado en navegador: grupos, dirty, ponderaciones,
+  vista previa con quiz/descargables/actividades, Escape).
+- Los 68 temas reales validan sin cambios; intentos legítimos pasan la regla
+  nueva y los inflados no (suite de emulador lista).

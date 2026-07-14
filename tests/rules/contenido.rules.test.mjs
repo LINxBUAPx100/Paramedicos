@@ -254,3 +254,27 @@ test('respaldos: exclusivos del super-admin', { skip }, async () => {
   await assertSucceeds(setDoc(doc(como('super1'), 'respaldos/r1'), { academiaId: 'ACA-A', datos: {} }))
   await assertFails(getDoc(doc(como('dirA'), 'respaldos/r1')))
 })
+
+// ---------- Fase 4: el resultado de un examen no se falsea desde el cliente ----------
+
+test('intentos: resultado consistente obligatorio (aciertos/total/porcentaje)', { skip }, async () => {
+  await preparar()
+  const { collection, addDoc } = fsmod
+  const { assertSucceeds, assertFails } = rut
+  const db = como('alumA')
+  const base = { uid: 'alumA', academiaId: 'ACA-A', faseId: 'f1', numero: 1, titulo: 'F1', fecha: new Date() }
+  // Resultados reales (porcentaje = round(aciertos/total*100)) → aceptados.
+  await assertSucceeds(addDoc(collection(db, 'intentos'), { ...base, aciertos: 7, total: 10, porcentaje: 70 }))
+  await assertSucceeds(addDoc(collection(db, 'intentos'), { ...base, aciertos: 1, total: 3, porcentaje: 33 }))
+  await assertSucceeds(addDoc(collection(db, 'intentos'), { ...base, aciertos: 0, total: 10, porcentaje: 0 }))
+  // Porcentaje inflado, aciertos imposibles o totales absurdos → rechazados.
+  await assertFails(addDoc(collection(db, 'intentos'), { ...base, aciertos: 1, total: 10, porcentaje: 100 }))
+  await assertFails(addDoc(collection(db, 'intentos'), { ...base, aciertos: 11, total: 10, porcentaje: 100 }))
+  await assertFails(addDoc(collection(db, 'intentos'), { ...base, aciertos: 0, total: 0, porcentaje: 0 }))
+  await assertFails(addDoc(collection(db, 'intentos'), { ...base, aciertos: 10, total: 10, porcentaje: 101 }))
+  await assertFails(addDoc(collection(db, 'intentos'), { ...base, aciertos: -1, total: 10, porcentaje: 0 }))
+  await assertFails(addDoc(collection(db, 'intentos'), { ...base, aciertos: 5, total: 501, porcentaje: 1 }))
+  // Y sigue siendo imposible firmar como otro o en otra academia.
+  await assertFails(addDoc(collection(db, 'intentos'), { ...base, uid: 'alumB', aciertos: 5, total: 10, porcentaje: 50 }))
+  await assertFails(addDoc(collection(db, 'intentos'), { ...base, academiaId: 'ACA-B', aciertos: 5, total: 10, porcentaje: 50 }))
+})

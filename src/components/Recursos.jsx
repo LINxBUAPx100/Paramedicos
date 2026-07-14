@@ -1,12 +1,14 @@
 import Icon from './Icon.jsx'
 import Imagen from './Imagen.jsx'
 
-// Sección de recursos de un tema: videos, fuentes y espacios de imagen extra.
-// `recursos = { videos: [{titulo,url,canal}], fuentes: [{titulo,url,tipo}], imagenes: [{src?,busqueda,caption}] }`
+// Sección de recursos de un tema: videos, fuentes, imágenes y descargables.
+// `recursos = { videos: [{titulo,url,canal}], fuentes: [{titulo,url,tipo}],
+//               imagenes: [{src?,busqueda,caption}],
+//               archivos: [{titulo,url,tipo,tamano}] }`  ← Fase 4 (aditivo)
 export default function Recursos({ recursos }) {
   if (!recursos) return null
-  const { videos = [], fuentes = [], imagenes = [] } = recursos
-  if (videos.length === 0 && fuentes.length === 0 && imagenes.length === 0) return null
+  const { videos = [], fuentes = [], imagenes = [], archivos = [] } = recursos
+  if (videos.length === 0 && fuentes.length === 0 && imagenes.length === 0 && archivos.length === 0) return null
 
   return (
     <section className="recursos-tema">
@@ -42,6 +44,24 @@ export default function Recursos({ recursos }) {
               />
             ))}
           </div>
+        </div>
+      )}
+
+      {archivos.length > 0 && (
+        <div className="rec-bloque">
+          <h3 className="rec-titulo"><Icon name="descarga" size={16} /> Material descargable</h3>
+          <ul className="rec-fuentes">
+            {archivos.map((a, i) => (
+              <li key={i}>
+                <a href={a.url} target="_blank" rel="noopener noreferrer" download>
+                  <Icon name="descarga" size={15} /> {a.titulo}
+                  {a.tamano > 0 && (
+                    <span className="rec-fuente-tipo">{(a.tamano / 1024 / 1024).toFixed(1)} MB</span>
+                  )}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 

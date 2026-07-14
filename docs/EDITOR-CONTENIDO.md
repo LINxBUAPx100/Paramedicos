@@ -103,3 +103,38 @@ futura (fase de permisos/auditoría): cascada opcional de estado al archivar.
 - Reglas (emulador): `tests/rules/contenido.rules.test.mjs` incluye los casos
   de la Fase 3 (versión estricta, autoría, metadatos protegidos, estados
   inválidos) — `npm run test:rules` (requiere Java + `npm i -D firebase-tools`).
+
+---
+
+# Fase 4 — Contenido enriquecido del tema
+
+- **Panel de contenido** (`PanelContenidoTema.jsx`): al seleccionar un tema,
+  debajo del panel estructural aparece el editor de su contenido interno por
+  grupos plegables: secciones/bloques, objetivos, conceptos clave,
+  flashcards, quiz (con **ponderación** por pregunta), recursos (videos,
+  enlaces, imágenes y **archivos descargables**) y actividades
+  (ordenar/completar/preguntas). Borrador LOCAL + un único "Guardar
+  contenido" → `guardarContenidoTema()` (transacción, versión +1,
+  `normalizarContenido` + `validarContenidoTema` + referencias de Storage).
+- **Esquemas 1:1 con el alumno**: los mismos que renderizan
+  Contenido/Recursos/Actividades/Quiz. Prueba de compatibilidad: el corpus
+  completo de src/data valida sin cambios. `peso` y `recursos.archivos` son
+  aditivos (sin peso ⇒ 1; el cálculo sin pesos ≡ aciertos/total actual).
+- **Exámenes**: el examen de fase se deriva del quiz de sus temas (modelo
+  vigente); editar el quiz ES editar el examen. `calcularCalificacion`
+  (ponderada) queda en `temaContenidoModelo.js` para conectarla a las
+  páginas del alumno junto con el resolutor. La regla de `intentos` ahora
+  IMPIDE falsear resultados (consistencia aciertos/total/porcentaje).
+- **Storage aislado**: `academias/{acaId}/{archivos|imagenes}/…` con
+  `storage.rules` (lectura = miembros; escritura = editores; allowlist de
+  MIME, ≤50 MB; resto del bucket cerrado). El cliente valida
+  extensión/MIME/tamaño (`archivosModelo.js`), reconstruye la ruta canónica
+  (jamás acepta rutas del cliente) y el contenido no puede referenciar
+  Storage de otra academia (`validarReferenciasStorage`).
+- **Vista previa del tema** (`VistaPreviaTema.jsx`): componentes REALES del
+  alumno sin `onComplete` ni módulos de progreso ⇒ no registra progreso,
+  intentos ni calificaciones; incluye los cambios sin guardar y se marca
+  claramente como vista previa.
+- **Pruebas**: 20 puras nuevas (`tests/temaContenido.test.mjs`) + suite de
+  Storage (`tests/rules/storage.rules.test.mjs`, 6) + caso de intentos en la
+  suite de Firestore. `npm run test:rules` ahora levanta firestore,storage.

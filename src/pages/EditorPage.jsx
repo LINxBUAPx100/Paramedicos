@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext.jsx'
 import Icon from '../components/Icon.jsx'
 import ArbolCurso, { ChipEstado } from '../components/editor/ArbolCurso.jsx'
 import PanelNodo from '../components/editor/PanelNodo.jsx'
+import PanelContenidoTema from '../components/editor/PanelContenidoTema.jsx'
 import DialogoConfirmar from '../components/editor/DialogoConfirmar.jsx'
 import VistaPrevia from '../components/editor/VistaPrevia.jsx'
 import { academiaMigrada } from '../lib/contenidoApi.js'
@@ -64,7 +65,12 @@ export default function EditorPage() {
   const [dialogo, setDialogo] = useState(null)                   // confirmaciones
   const [crear, setCrear] = useState(null)                       // alta con título
   const [previa, setPrevia] = useState(null)                     // { temasDocs }
-  const sucio = useRef(false)                                    // cambios sin guardar en el panel
+  const sucio = useRef(false)                                    // cambios sin guardar (cualquier panel)
+  const sucios = useRef({})                                      // por panel: { nodo, contenido }
+  const marcarSucio = (clave) => (v) => {
+    sucios.current[clave] = v
+    sucio.current = Object.values(sucios.current).some(Boolean)
+  }
   const ocupado = guardado.estado === 'guardando'
 
   const curso = useMemo(
@@ -156,7 +162,7 @@ export default function EditorPage() {
       cuerpo: 'Tienes cambios sin guardar en el panel. Si continúas, se perderán.',
       confirmar: 'Descartar cambios',
       tono: 'peligro',
-      accion: () => { sucio.current = false; continuar() },
+      accion: () => { sucio.current = false; sucios.current = {}; continuar() },
     })
   }
 
@@ -288,7 +294,7 @@ export default function EditorPage() {
     } else {
       r = await ejecutar('editar-' + tipo, (e) => actualizarNodo(e, ref, cambios))
     }
-    if (r) { sucio.current = false; alTerminar?.() }
+    if (r) { marcarSucio('nodo')(false); alTerminar?.() }
   }
 
   // ---------- acciones sobre el curso ----------
@@ -403,6 +409,38 @@ export default function EditorPage() {
         : {}
     )
     if (r?.ref) setSeleccion(r.ref)
+  }
+
+  // ---------- contenido enriquecido del tema (Fase 4) ----------
+  const guardarContenidoDelTema = async (contenido) => {
+    if (!curso || !seleccion?.temaId || !temaSel || ocupado) return false
+    setGuardado({ estado: 'guardando', mensaje: 'Guardando contenido…' })
+    try {
+      const ed = await editorLib()
+      const { version } = await ed.guardarContenidoTema(
+        contexto, destino, curso.id, seleccion.temaId, temaSel.version ?? 0, contenido
+      )
+      setTemasCache((prev) => ({
+        ...prev,
+        [seleccion.temaId]: { ...prev[seleccion.temaId], ...contenido, version },
+      }))
+      setGuardado({ estado: 'ok', mensaje: 'Contenido guardado' })
+      return true
+    } catch (err) {
+      if (err?.name === 'ConflictoVersion') {
+        // Recarga el doc del tema para mostrar la versión más reciente.
+        setTemasCache((prev) => {
+          const n = { ...prev }
+          delete n[seleccion.temaId]
+          return n
+        })
+      }
+      setGuardado({
+        estado: 'error',
+        mensaje: err?.message || 'No se pudo guardar el contenido. Revisa tu conexión e inténtalo de nuevo.',
+      })
+      return false
+    }
   }
 
   // ---------- vista previa ----------
@@ -586,7 +624,7 @@ export default function EditorPage() {
                       contexto, destino, curso.id, curso.version ?? 0, cambios
                     )
                     actualizarCursoLocal(curso.id, { ...cambios, version })
-                    sucio.current = false
+                    marcarSucio('nodo')(false)
                     alTerminar?.()
                     setGuardado({ estado: 'ok', mensaje: 'Cambios guardados' })
                   } catch (err) {
@@ -595,24 +633,42 @@ export default function EditorPage() {
                   }
                 }}
                 onAccion={accionCurso}
-                onDirty={(v) => { sucio.current = v }}
+                onDirty={marcarSucio('nodo')}
               />
             )}
             {curso && seleccion && !seleccion.curso && nodoSel && (
-              <PanelNodo
-                tipo={tipoDeRef(seleccion)}
-                nodo={nodoSel}
-                meta={tipoDeRef(seleccion) === 'tema' ? (temaSel || curso) : curso}
-                temaDoc={temaSel}
-                cargandoTema={cargandoTema}
-                posicion={posicionDe(curso.estructura, seleccion)}
-                padre={padreDe(curso.estructura, seleccion, curso.titulo)}
-                destinosMover={destinosMoverDe(curso.estructura, seleccion)}
-                ocupado={ocupado}
-                onGuardarCampos={guardarCamposNodo}
-                onAccion={accionNodo}
-                onDirty={(v) => { sucio.current = v }}
-              />
+              <>
+                <PanelNodo
+                  tipo={tipoDeRef(seleccion)}
+                  nodo={nodoSel}
+                  meta={tipoDeRef(seleccion) === 'tema' ? (temaSel || curso) : curso}
+                  temaDoc={temaSel}
+                  cargandoTema={cargandoTema}
+                  posicion={posicionDe(curso.estructura, seleccion)}
+                  padre={padreDe(curso.estructura, seleccion, curso.titulo)}
+                  destinosMover={destinosMoverDe(curso.estructura, seleccion)}
+                  ocupado={ocupado}
+                  onGuardarCampos={guardarCamposNodo}
+                  onAccion={accionNodo}
+                  onDirty={marcarSucio('nodo')}
+                />
+                {/* Contenido enriquecido del tema (Fase 4): bloques, quiz con
+                    ponderaciones, recursos con archivos y actividades. */}
+                {seleccion.temaId && (
+                  temaSel ? (
+                    <PanelContenidoTema
+                      temaDoc={temaSel}
+                      academiaId={destino.modo === 'academia' ? destino.academiaId : null}
+                      modoPlantilla={destino.modo === 'plantilla'}
+                      ocupado={ocupado}
+                      onGuardar={guardarContenidoDelTema}
+                      onDirty={marcarSucio('contenido')}
+                    />
+                  ) : cargandoTema ? (
+                    <p className="editor-nota" role="status">Cargando el contenido del tema…</p>
+                  ) : null
+                )}
+              </>
             )}
             {curso && !seleccion && (
               <p className="editor-vacio">

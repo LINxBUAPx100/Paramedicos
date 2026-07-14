@@ -24,6 +24,8 @@ import {
   validarEstructura, esEstadoValido, validarTitulo, validarDescripcion,
   nuevoCurso, duplicadoDeCurso, permisoEdicion,
 } from '../editorModelo.js'
+import { validarContenidoTema } from '../temaContenidoModelo.js'
+import { validarReferenciasStorage } from '../archivosModelo.js'
 import { lotes } from '../contenidoModelo.js'
 import { registrarHistorial, limpiarCacheContenido } from './contenido.js'
 
@@ -278,6 +280,51 @@ export async function guardarEstructura(contexto, destino, cursoId, versionEsper
   await historialSeguro({
     academiaId: idAcademiaDe(destino), accion,
     coleccion: col.cursos, docId: cursoId,
+    despues: { version },
+  })
+  return { version }
+}
+
+// ---------- contenido enriquecido del tema (Fase 4) ----------
+
+// Guarda el CONTENIDO interno de un tema (secciones/bloques, objetivos,
+// conceptos, flashcards, quiz con ponderaciones, recursos, actividades) en
+// una transacción con control de versión sobre el DOC del tema.
+//  - Solo campos de contenido (CAMPOS_CONTENIDO_TEMA): el estado, los ids y
+//    los metadatos administrativos se manejan por sus propias operaciones.
+//  - Valida el contenido completo Y que ninguna referencia de Storage apunte
+//    al almacenamiento de otra academia.
+export async function guardarContenidoTema(contexto, destino, cursoId, temaId, versionEsperada, contenido, accion = 'editar-contenido-tema') {
+  exigirPermiso(contexto, destino, cursoId)
+  const errorContenido = validarContenidoTema(contenido)
+  if (errorContenido) throw new Error(errorContenido)
+  if (destino.modo === 'academia') {
+    const errorRefs = validarReferenciasStorage(contenido, destino.academiaId)
+    if (errorRefs) throw new Error(errorRefs)
+  }
+  const col = coleccionesDe(destino)
+  const temaRef = doc(db, col.temas, `${cursoId}__${temaId}`)
+  const uid = auth.currentUser?.uid || null
+
+  const version = await runTransaction(db, async (tx) => {
+    const snap = await tx.get(temaRef)
+    if (!snap.exists()) throw new Error('El tema ya no existe.')
+    const actual = snap.data().version ?? 0
+    if (actual !== versionEsperada) throw new ConflictoVersion()
+    tx.update(temaRef, {
+      ...contenido,
+      version: actual + 1,
+      actualizado: serverTimestamp(),
+      actualizadoPor: uid,
+      ultimaAccion: accion,
+    })
+    return actual + 1
+  })
+
+  if (destino.modo === 'academia') limpiarCacheContenido(destino.academiaId)
+  await historialSeguro({
+    academiaId: idAcademiaDe(destino), accion,
+    coleccion: col.temas, docId: `${cursoId}__${temaId}`,
     despues: { version },
   })
   return { version }

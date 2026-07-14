@@ -1,6 +1,6 @@
 # AI-STATE — estado del proyecto para sesiones de IA
 
-> Actualizado: 2026-07-13 · Rama: main (Fases 1-2 commiteadas; Fase 3 sin commit)
+> Actualizado: 2026-07-13 · Rama: main (Fases 1-3 commiteadas; Fase 4 sin commit)
 > Proyecto Firebase: ptem-a304f
 
 ## Qué es
@@ -20,12 +20,31 @@ plan Spark + GitHub Pages). Contenido académico hoy hardcodeado en `src/data`
   `contenidoDeAcademia()` con fallback a `src/data`, CLI
   `scripts/migrar-contenido.mjs` (dry-run por defecto). Ver
   `docs/MIGRACION-CONTENIDO.md`.
-- **Fase 3 (editor estructural): HECHA** (esta sesión, sin commit). Ver
-  `docs/EDITOR-CONTENIDO.md` → decisiones de arquitectura.
-- **Pendiente transversal:** correr `npm run test:rules` con Java +
-  `npm i -D firebase-tools` ANTES de desplegar `firestore.rules`; desplegar
-  reglas + índices; conectar las páginas de estudio del alumno al resolutor
-  (siguen leyendo `src/data` directo — el resolutor existe y está probado).
+- **Fase 3 (editor estructural): HECHA.** Ver `docs/EDITOR-CONTENIDO.md`.
+- **Fase 4 (contenido enriquecido): HECHA** (esta sesión, sin commit):
+  - `src/lib/temaContenidoModelo.js` (PURO): bloques, quiz con `peso`
+    (aditivo), recursos con `archivos` (aditivo), actividades,
+    `calcularCalificacion` ponderada (sin pesos ≡ aciertos/total actual),
+    `normalizarContenido`; compat probada contra los 68 temas reales.
+  - `src/lib/archivosModelo.js` (PURO): allowlist ext/MIME (sin ejecutables),
+    tamaños, `rutaArchivoAcademia`, `validarReferenciasStorage` (nada apunta
+    a Storage de otra academia; rutas del cliente jamás se aceptan).
+  - `storage.rules` (NUEVO, sin desplegar): `academias/{acaId}/**` — leer =
+    miembros; subir/borrar = editores (consulta Firestore); MIME allowlist,
+    ≤50 MB; resto cerrado. `firebase.json` con emulador storage :9199.
+  - `firestore.rules`: `intentos.create` valida consistencia
+    aciertos/total/porcentaje (±1 por redondeo) → resultado no falsificable.
+  - `editor.js#guardarContenidoTema` (transacción, versión +1);
+    `almacen.js` (subidas validadas); `PanelContenidoTema.jsx` +
+    `VistaPreviaTema.jsx` (componentes reales del alumno, sin progreso);
+    `Recursos.jsx` render aditivo de descargables.
+  - El examen de fase sigue derivado del quiz de los temas: editar quiz =
+    editar examen; ponderación lista para el resolutor.
+- **Pendiente transversal:** correr `npm run test:rules` (Java +
+  `npm i -D firebase-tools`; ahora levanta firestore,storage) ANTES de
+  desplegar reglas; desplegar firestore.rules + storage.rules + índices;
+  conectar las páginas de estudio del alumno al resolutor (siguen leyendo
+  `src/data` directo — resolutor y calificación ponderada ya existen).
 
 ## Fase 3 — editor estructural (Curso → Fase → Módulo → Tema)
 
@@ -63,12 +82,15 @@ plan Spark + GitHub Pages). Contenido académico hoy hardcodeado en `src/data`
 
 ## Pruebas
 
-- `npm test`: **56 puras OK** (capacidades 12 · contenido 12 · contenidoApi 10
-  · editorModelo 22). Sin dependencias nuevas de runtime.
-- `npm run test:rules`: suite ampliada con casos Fase 3 (versión +1 estricta,
-  autoría, metadatos protegidos, estados inválidos) — **NO ejecutada** aquí
-  (sin Java/emulador); se omite con motivo, nunca da falso verde.
-- `npm run build`: pasa; el editor es chunk lazy (no engorda la entrada).
+- `npm test`: **76 puras OK** (capacidades 12 · contenido 12 · contenidoApi 10
+  · editorModelo 22 · temaContenido 20). Sin dependencias nuevas de runtime.
+- `npm run test:rules`: Firestore (12, incl. intentos falsificados) +
+  Storage (6, aislamiento A/B, roles, allowlist) — **NO ejecutadas** aquí
+  (sin Java/emulador); se omiten con motivo, nunca dan falso verde.
+- `npm run build`: pasa; el editor es chunk lazy (~23 kB gzip, entrada intacta).
+- Verificación en navegador (Fase 4): PanelContenidoTema monta, marca cambios,
+  habilita Guardar, muestra ponderaciones y la vista previa renderiza
+  quiz/descargables/actividades con Escape para cerrar.
 
 ## Invariantes que NO se deben romper
 

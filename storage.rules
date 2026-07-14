@@ -1,0 +1,86 @@
+rules_version = '2';
+
+// ============================================================
+//  Storage Rules — PTEM (Fase 4)
+// ------------------------------------------------------------
+//  Todo archivo vive bajo el prefijo de SU academia:
+//     academias/{academiaId}/archivos/…   (descargables: pdf, audio, video)
+//     academias/{academiaId}/imagenes/…   (imágenes del contenido)
+//  Aislamiento: leer requiere PERTENECER a esa academia (o super-admin);
+//  escribir requiere poder EDITAR su contenido (director con plan pro|curso
+//  o profesor con permisos editoriales) — espejo de firestore.rules.
+//  Nada fuera de academias/** es accesible para clientes.
+// ============================================================
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function autenticado() { return request.auth != null; }
+    // Perfil del solicitante en Firestore (mismo modelo que firestore.rules).
+    function miDoc() {
+      return firestore.get(/databases/(default)/documents/usuarios/$(request.auth.uid)).data;
+    }
+    function esSupremo() {
+      return autenticado()
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in ['mihayolo228@gmail.com'];
+    }
+    function esSuper() {
+      return esSupremo()
+        || (autenticado()
+          && firestore.exists(/databases/(default)/documents/usuarios/$(request.auth.uid))
+          && miDoc().rol == 'superadmin');
+    }
+    function perteneceA(acaId) {
+      return autenticado()
+        && firestore.exists(/databases/(default)/documents/usuarios/$(request.auth.uid))
+        && miDoc().academiaId == acaId;
+    }
+    function academiaEditaContenido(acaId) {
+      return firestore.get(/databases/(default)/documents/academias/$(acaId))
+        .data.get('planComercial', 'pro') in ['pro', 'curso'];
+    }
+    // Director de la academia (con plan que edita) o profesor con permisos
+    // editoriales. La granularidad por curso vive en Firestore; en Storage
+    // basta el permiso editorial general de la academia.
+    function puedeEditar(acaId) {
+      return esSuper()
+        || (perteneceA(acaId)
+          && (
+            (miDoc().rol == 'admin_escuela' && academiaEditaContenido(acaId))
+            || (miDoc().rol == 'instructor'
+              && miDoc().get('permisosEditor', {}).get('editarContenido', false) == true)
+          ));
+    }
+    // Allowlist de contenido (espejo de src/lib/archivosModelo.js). Nunca
+    // ejecutables ni tipos fuera de lista; límite duro de 50 MB (los límites
+    // finos por categoría los aplica el cliente antes de subir).
+    function archivoPermitido() {
+      return request.resource.size > 0
+        && request.resource.size <= 50 * 1024 * 1024
+        && request.resource.contentType.matches(
+          'application/pdf|image/png|image/jpeg|image/webp|image/gif|audio/mpeg|video/mp4|video/webm'
+        );
+    }
+
+    // --- Archivos de contenido por academia (aislados por prefijo) ---
+    match /academias/{academiaId}/{carpeta}/{archivo=**} {
+      // Leer/descargar: miembros de ESA academia (cualquier rol) o super.
+      // Un alumno de A nunca descarga archivos de B, aunque tenga la URL
+      // del objeto (las URL de descarga con token siguen siendo secretas
+      // por archivo; el acceso directo por ruta queda cerrado aquí).
+      allow read: if esSuper() || perteneceA(academiaId);
+      // Subir/reemplazar: solo editores de esa academia, solo en las
+      // carpetas conocidas y solo tipos de la allowlist.
+      allow create, update: if puedeEditar(academiaId)
+        && carpeta in ['archivos', 'imagenes']
+        && archivoPermitido();
+      // Borrar: solo editores de esa academia (limpieza de adjuntos).
+      allow delete: if puedeEditar(academiaId);
+    }
+
+    // Todo lo demás: cerrado para clientes.
+    match /{cualquiera=**} {
+      allow read, write: if false;
+    }
+  }
+}

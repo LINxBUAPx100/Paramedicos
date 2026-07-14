@@ -5483,3 +5483,166 @@ html[data-tema='oscuro'] .editor-error { color: #f87171; }
   .editor-page *,
   .dialogo { transition: none !important; animation: none !important; }
 }
+
+/* ===== Fase 4: editor de contenido enriquecido del tema (ct-*) ===== */
+.ct-panel {
+  margin-top: 18px;
+  padding: 16px 18px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--bg-2);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.ct-panel-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.ct-panel-cabecera .editor-subtitulo { margin: 0; }
+.ct-panel-acciones { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ct-grupo {
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+  background: var(--bg-1);
+}
+.ct-grupo > summary {
+  padding: 10px 14px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--texto-2);
+  list-style-position: inside;
+}
+.ct-grupo > summary:hover { color: var(--primario); }
+.ct-grupo[open] > summary { border-bottom: 1px solid var(--borde); color: var(--texto); }
+.ct-grupo-cuerpo { padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+.ct-etiqueta {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--texto-2);
+  margin: 6px 0 2px;
+}
+.ct-seccion, .ct-pregunta {
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.ct-seccion > legend, .ct-pregunta > legend {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--texto-3);
+  padding: 0 6px;
+}
+.ct-pregunta-cabecera {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.ct-pregunta-cabecera .editor-campo { flex: 1; min-width: 180px; }
+.ct-peso { max-width: 130px; }
+.ct-bloque {
+  border: 1px dashed var(--borde);
+  border-radius: var(--radio-sm);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ct-bloque-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.ct-bloque-tipo {
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--primario);
+}
+.ct-fila-orden { display: inline-flex; gap: 4px; }
+.ct-quitar:hover { color: var(--rojo, #d64545); }
+.ct-boton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px dashed var(--borde);
+  background: transparent;
+  color: var(--primario);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: flex-start;
+}
+.ct-boton:hover:not(:disabled) { border-color: var(--primario); }
+.ct-boton:disabled { opacity: 0.55; cursor: default; }
+.ct-boton--peligro { color: var(--rojo, #d64545); }
+.ct-lista-objetos { display: flex; flex-direction: column; gap: 8px; }
+.ct-objeto {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ct-objeto input[type='text'] {
+  flex: 1;
+  min-width: 120px;
+  padding: 7px 9px;
+  border-radius: var(--radio-sm);
+  border: 1px solid var(--borde);
+  background: var(--bg-3);
+  color: var(--texto);
+  font: inherit;
+  font-size: 0.85rem;
+}
+.ct-opcion { display: flex; align-items: center; gap: 8px; margin: 3px 0; }
+.ct-opcion input[type='checkbox'] { width: 17px; height: 17px; flex: none; }
+.ct-opcion input[type='text'] {
+  flex: 1;
+  min-width: 0;
+  padding: 7px 9px;
+  border-radius: var(--radio-sm);
+  border: 1px solid var(--borde);
+  background: var(--bg-3);
+  color: var(--texto);
+  font: inherit;
+  font-size: 0.85rem;
+}
+.ct-agregar-bloque { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ct-agregar-bloque select {
+  padding: 7px 9px;
+  border-radius: var(--radio-sm);
+  border: 1px solid var(--borde);
+  background: var(--bg-3);
+  color: var(--texto);
+  font: inherit;
+  font-size: 0.85rem;
+}
+.ct-subir { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 2px 0; }
+.ct-archivo-nombre {
+  font-size: 0.8rem;
+  color: var(--texto-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 220px;
+}
+@media (max-width: 720px) {
+  .ct-pregunta-cabecera { align-items: stretch; flex-direction: column; }
+  .ct-archivo-nombre { max-width: 140px; }
+}
