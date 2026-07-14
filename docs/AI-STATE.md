@@ -1,76 +1,90 @@
 # AI-STATE — estado del proyecto para sesiones de IA
 
-> Actualizado: 2026-07-13 · Rama: main (cambios sin commit) · Proyecto Firebase: ptem-a304f
+> Actualizado: 2026-07-13 · Rama: main (Fases 1-2 commiteadas; Fase 3 sin commit)
+> Proyecto Firebase: ptem-a304f
 
 ## Qué es
 
 PTEM: LMS multiacademia (Vite + React 18 + HashRouter + Firebase Auth/Firestore
 plan Spark + GitHub Pages). Contenido académico hoy hardcodeado en `src/data`
-(8 fases · 68 temas · 374 preguntas · 457 flashcards). Roadmap de 12 fases en
-`PLAN-LMS.md` (regla: UNA fase por entrega).
+(8 fases · 68 temas). Roadmap en `PLAN-LMS.md` (regla: UNA fase por entrega).
 
 ## Estado por fase
 
-- **Fase 1 (planes/capacidades): HECHA.** `src/lib/capacidades.js` (fuente única,
-  planComercial base|pro|curso; legacy sin campo ⇒ 'pro'), gates en AuthContext /
-  AdminPage / AdminPlataforma / AcademiaAdminPage / PanelPage, regla de
-  personalización por plan, `tests/capacidades.test.mjs`.
-- **Fase 2 (aislamiento de contenido): HECHA** (esta sesión), salvo la
-  verificación de reglas con emulador (sin Java en el entorno). Ver
+- **Fase 1 (planes/capacidades): HECHA.** `src/lib/capacidades.js` = fuente
+  única (planComercial base|pro|curso; legacy sin campo ⇒ 'pro').
+- **Fase 2 (aislamiento de contenido): HECHA.** Plantillas globales +
+  copia por academia (`cursos`/`temas`, ids deterministas con prefijo
+  `academiaId__`), clonación idempotente, estados en
+  `academias/{id}.contenido.estado` (legacy|migrando|migrado|error), resolutor
+  `contenidoDeAcademia()` con fallback a `src/data`, CLI
+  `scripts/migrar-contenido.mjs` (dry-run por defecto). Ver
   `docs/MIGRACION-CONTENIDO.md`.
-- **Fase 3 siguiente:** conectar el resolutor a las páginas de estudio
-  (los componentes aún importan `src/data` directo; el resolutor ya existe).
+- **Fase 3 (editor estructural): HECHA** (esta sesión, sin commit). Ver
+  `docs/EDITOR-CONTENIDO.md` → decisiones de arquitectura.
+- **Pendiente transversal:** correr `npm run test:rules` con Java +
+  `npm i -D firebase-tools` ANTES de desplegar `firestore.rules`; desplegar
+  reglas + índices; conectar las páginas de estudio del alumno al resolutor
+  (siguen leyendo `src/data` directo — el resolutor existe y está probado).
 
-## Fase 2 — qué se construyó
+## Fase 3 — editor estructural (Curso → Fase → Módulo → Tema)
 
-- **Modelo puro** `src/lib/contenidoModelo.js`: ids deterministas
-  (`{academiaId}__{plantillaId}[__{temaId}]` ⇒ clonación idempotente y
-  namespaces disjuntos), `clonProfundo` (copias sin referencias compartidas),
-  `plantillaDesdeData`, `cursoDesdePlantilla` (registra `plantillaOrigenId` +
-  `versionOrigen`), `docsClonadosParaAcademia`, `lotes`.
-- **Capa de acceso pura** `src/lib/contenidoApi.js`: estados de migración
-  (`academias/{id}.contenido.estado`: legacy|migrando|migrado|error; basura ⇒
-  legacy), `ensamblarFases` (estructura + docs → fases; excluye borradores;
-  reporta faltantes), `construirApi` (misma interfaz que `src/data/index.js`).
-- **Cliente Firebase** `src/lib/firebase/plantillas.js` (seed del catálogo
-  global) y `src/lib/firebase/contenido.js`: `clonarPlantillaAAcademia`
-  (batched, idempotente, migrando→migrado|error), `verificarClonacion`,
-  lecturas por academia y el **resolutor** `contenidoDeAcademia()` — única
-  puerta al contenido: Firestore si 'migrado', fallback a `src/data` en
-  cualquier otro caso o error; caché por academiaId sin mezcla entre academias.
-  Nada de esto lo importa aún la UI (Fase 3) ⇒ no engorda el bundle.
-- **Scripts**: `npm run gen:plantilla` (inspección JSON), `npm run migrar` =
-  `scripts/migrar-contenido.mjs` (CLI con firebase-admin: dry-run por defecto,
-  `--apply`, `--seed`, `--academia=ID`, `--verificar`, `--produccion`; muestra
-  proyecto objetivo, detecta parciales, reanuda, resumen final).
-- **Reglas** (`firestore.rules`, NO desplegadas): `plantillas`/`plantillasTemas`
-  solo super; `cursos`/`temas` por academia (lectura alumno = publicado + su
-  academia; edición = director con plan pro|curso, o instructor con
-  `permisosEditor.editarContenido` y el curso en `cursosPermitidos`;
-  `academiaId`/`cursoId`/`temaId` inmutables ⇒ no hay apropiación);
-  `historial` append-only firmado; `respaldos` solo super.
-- **Índices** `firestore.indexes.json`: cursos(academiaId,estado),
-  temas(cursoId,estado). `firebase.json` con emulador Firestore :8080.
-- **Pruebas**: `npm test` = 34 puras OK (integridad 8/68, ids, tamaños <900 KB,
-  equivalencia API reconstruida vs src/data, independencia real de copias,
-  estados). `npm run test:rules` = 10 pruebas de aislamiento cruzado A/B
-  **listas pero NO ejecutadas** (requieren Java + firebase-tools; sin emulador
-  se omiten con motivo).
+- **Ruta** `/editor` (staff propio), `/editor/:academiaId` y
+  `/editor/plantilla/:plantillaId` (superadmin, modo plantilla con banda
+  visual). Entradas: PanelPage (gate por `capacidades.editorContenido` o
+  `permisosEditor.editarContenido`) y AcademiaAdminPage (superadmin).
+- **3 capas:** `src/lib/editorModelo.js` (operaciones PURAS e inmutables:
+  crear/actualizar/reordenar/mover/duplicar/archivar/restaurar/publicar/
+  despublicar + `permisoEdicion` + validaciones) →
+  `src/lib/firebase/editor.js` (única puerta de escritura; transacción con
+  verificación de `version`, sincroniza estructura ⇄ docs de tema, registra
+  `historial`; doble backend academia|plantilla) → `firestore.rules`
+  (versión estricta +1 para editores no-super, metadatos inmutables
+  `academiaId/cursoId/temaId/creadoPor/creadoEn/clonacion/plantillaOrigenId/
+  versionOrigen`, catálogo de estados, BASE bloqueado, profesor solo con
+  permisos y sus cursos).
+- **UI** `src/pages/EditorPage.jsx` + `src/components/editor/`
+  (ArbolCurso, PanelNodo, DialogoConfirmar, VistaPrevia). Reordenamiento por
+  botones (Subir/Bajar/Inicio/Final/Mover a…) accesible por teclado; guardado
+  explícito con indicador `aria-live`; confirmaciones para archivar/
+  despublicar/mover/duplicar curso/abandonar cambios; vista previa con la
+  misma capa del alumno (`ensamblarFases` solo publicado, sin tocar progreso).
+- **Política de archivado:** archivar un padre OCULTA toda su rama al alumno
+  (los hijos conservan su estado propio ⇒ restaurar recupera tal cual). Nada
+  se elimina permanentemente. Publicar con ancestro archivado: bloqueado.
+- **Academias legacy** (no 'migrado'): editor bloqueado con explicación; nunca
+  escribe sobre `src/data`.
+- **Plan CURSO:** `maxCursos` validado al crear/duplicar (cuenta no archivados).
+- **Cambio en Fase 2 requerido:** `contenidoApi.ensamblarFases` ahora filtra
+  también módulos no publicados (antes solo fases y temas).
+- **Limitación documentada:** doc de tema `publicado` con padre archivado
+  sigue siendo legible por id directo por alumnos de la misma academia
+  (mitigación futura: cascada de estado).
+
+## Pruebas
+
+- `npm test`: **56 puras OK** (capacidades 12 · contenido 12 · contenidoApi 10
+  · editorModelo 22). Sin dependencias nuevas de runtime.
+- `npm run test:rules`: suite ampliada con casos Fase 3 (versión +1 estricta,
+  autoría, metadatos protegidos, estados inválidos) — **NO ejecutada** aquí
+  (sin Java/emulador); se omite con motivo, nunca da falso verde.
+- `npm run build`: pasa; el editor es chunk lazy (no engorda la entrada).
 
 ## Invariantes que NO se deben romper
 
-- `src/data` sigue siendo el fallback; no se borra hasta terminar la migración.
-- ids de fases/temas = llaves de progreso/intentos: se conservan tal cual.
-- Nunca dos academias escriben el mismo doc; plantillas de solo lectura.
-- Los cambios de plantilla NO se propagan solos (replicación = Fase 9).
-- `plan` (periodicidad de facturación) ≠ `planComercial` (base|pro|curso).
-- Import dinámico de Firebase (entrada ~76 KB gzip): no importar Firebase ni
-  `src/data` de forma estática en el shell.
+- `src/data` sigue siendo fallback; ids de fases/temas = llaves de progreso.
+- Nunca dos academias escriben el mismo doc; plantillas solo-lectura salvo
+  superadmin en modo plantilla explícito.
+- Cambios de plantilla NO se propagan solos (replicación = Fase 9).
+- `plan` (periodicidad) ≠ `planComercial`. Capacidades solo vía
+  `capacidadesDe()`/`useAuth().capacidades`.
+- Entrada ligera: Firebase y `src/data` solo por import dinámico/lazy.
 
 ## Pendiente / manual
 
-1. Correr `npm run test:rules` con Java + `npm i -D firebase-tools` ANTES de
-   desplegar `firestore.rules`.
-2. Desplegar reglas + índices (`firebase deploy --only firestore`) — no hecho.
-3. Seed y clonaciones en producción: decisión del dueño (dry-run primero).
-4. No se hizo commit (pedido explícito).
+1. `npm i -D firebase-tools` + Java → `npm run test:rules` → desplegar reglas.
+2. Decidir cuándo sembrar plantilla y clonar academias (CLI con dry-run).
+3. Fase 4 sugerida: editor de CONTENIDO del tema (bloques/quiz/flashcards)
+   o conexión del resolutor a las páginas del alumno (originalmente F3 del
+   roadmap; el editor estructural la adelantó).
+4. Sin commit de Fase 3 (pedido explícito).

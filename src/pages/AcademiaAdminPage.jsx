@@ -125,6 +125,9 @@ export default function AcademiaAdminPage() {
         </div>
         <div className="admin-academia-acciones">
           <span className={`aa-estado ${activa ? 'ok' : 'mal'}`}>{activa ? 'Activa' : 'Suspendida'}</span>
+          <Link to={`/editor/${academia.id}`} className="panel-estado-btn">
+            Editor de contenido
+          </Link>
           <button
             className={`panel-estado-btn ${activa ? 'activo' : 'suspendido'}`}
             onClick={alternarEstado}

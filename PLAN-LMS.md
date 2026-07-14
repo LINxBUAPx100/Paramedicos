@@ -1,8 +1,10 @@
 # PLAN-LMS — Auditoría y planeación: PTEM como LMS multiacademia
 
-> Fecha: 2026-07-13 · Estado: auditoría completa · Fases 1 y 2 implementadas
-> (pendiente de la Fase 2: correr la suite de reglas con el emulador — ver
-> docs/MIGRACION-CONTENIDO.md).
+> Fecha: 2026-07-13 · Estado: auditoría completa · Fases 1, 2 y 3 implementadas
+> (pendiente: correr la suite de reglas con el emulador — ver
+> docs/MIGRACION-CONTENIDO.md). La Fase 3 entregada es el EDITOR ESTRUCTURAL
+> (se adelantó respecto del roadmap original; el cableado del resolutor a las
+> páginas de estudio pasa a la siguiente fase).
 > Regla de trabajo: **una fase por entrega**; nada se implementa fuera de la fase activa.
 
 ---
@@ -306,8 +308,8 @@ aislamiento no negociable, documentada aquí). No se duplica nada más.
 |---|---|---|
 | **1 (esta)** | `planComercial` + tipos + capacidades centralizadas + gates iniciales | capacidades.js, AuthContext, AdminPage, AdminPlataforma, AcademiaAdminPage, PanelPage, admin.js, plataforma.js, firestore.rules, tests |
 | **2** | Aislamiento de contenido: colecciones `plantillas/cursos/temas`, script gen-plantilla desde src/data, clonación batched, reglas + pruebas cruzadas A/B con emulador | modelo de datos, scripts, firestore.rules |
-| **3** | Resolutor de contenido (Firestore por academia con fallback al bundle) + caché; conserva URLs `/fase/:id`, `/tema/:id` | index.js "virtual", páginas de estudio |
-| **4** | Editor de ESTRUCTURA (curso/fase/módulo/tema: crear, mover, ordenar, duplicar, archivar, publicar; sin eliminación destructiva) | UI editor + reglas |
+| **3 (hecha)** | Editor de ESTRUCTURA (curso/fase/módulo/tema: crear, mover, ordenar, duplicar, archivar, publicar; sin eliminación destructiva) — adelantada | UI editor + reglas |
+| **4** | Cableado del resolutor a las páginas de estudio (Firestore por academia con fallback al bundle, ya construido en F2) + caché; conserva URLs `/fase/:id`, `/tema/:id` | index.js "virtual", páginas de estudio |
 | **5** | Editor de TEMAS (bloques, quiz, flashcards, actividades) + borradores/vista previa | UI editor |
 | **6** | Permisos editoriales granulares del profesor | usuarios, reglas |
 | **7** | Página de inicio por SECCIONES configurables (hero, cursos, progreso, stats, anuncios, convocatorias, capacitadores) | Home + config por academia |
@@ -535,3 +537,62 @@ Modificados:
 - Nombre e id de la plantilla oficial (`paramedico-tum`): ajustable en una constante.
 - ¿Una academia podrá tener **varios** cursos de la misma plantilla? Hoy el id
   determinista asume uno por (academia, plantilla); multi-curso libre llega en Fase 4.
+
+---
+
+# FASE 3 — Editor estructural de contenido (implementada)
+
+Alcance entregado: administración de la jerarquía Curso→Fase→Módulo→Tema sobre
+la COPIA de la academia (modelo Fase 2), con permisos, estados, versiones,
+duplicación, archivado lógico, vista previa y reglas. SIN editor enriquecido
+del contenido interno de temas (Fase 5), sin permisos granulares completos
+(fase de permisos editoriales) y sin replicación.
+
+Arquitectura y decisiones: **docs/EDITOR-CONTENIDO.md** (fuente de verdad).
+
+## Archivos
+
+Nuevos:
+- `src/lib/editorModelo.js` — operaciones PURAS de estructura + permisos + cursos.
+- `src/lib/firebase/editor.js` — capa de datos transaccional (versión optimista,
+  `ConflictoVersion`, historial, doble destino academia/plantilla).
+- `src/pages/EditorPage.jsx` — rutas `/editor`, `/editor/:academiaId` (super),
+  `/editor/plantilla/:plantillaId` (super, banda de advertencia).
+- `src/components/editor/` — `ArbolCurso`, `PanelNodo`, `DialogoConfirmar`,
+  `VistaPrevia`.
+- `tests/editorModelo.test.mjs` (22 pruebas puras).
+- `docs/EDITOR-CONTENIDO.md`.
+
+Modificados:
+- `src/lib/contenidoApi.js` — `ensamblarFases` ahora filtra también MÓDULOS no
+  publicados (la rama archivada no llega al alumno).
+- `firestore.rules` — `edicionContenidoValida()` (versión estrictamente +1,
+  metadatos `academiaId/cursoId/temaId/plantilla*/clonacion/creadoPor/creadoEn`
+  intocables, estados del catálogo) y `creacionContenidoValida()` (firma
+  `creadoPor == uid`, versión 1) para editores no-super en `cursos` y `temas`.
+- `tests/rules/contenido.rules.test.mjs` — casos de versión/autoría/metadatos.
+- `src/App.jsx`, `src/pages/PanelPage.jsx`, `src/pages/AcademiaAdminPage.jsx`,
+  `src/components/Icon.jsx`, `src/index.css` — rutas, accesos e iconos/estilos.
+
+## Riesgos y reversión
+
+- Reglas de Fase 3 NO desplegadas ni verificadas en emulador (sin Java aquí);
+  la suite está lista (`npm run test:rules`). Desplegar reglas ANTES de usar el
+  editor en producción (sin ellas, las escrituras del editor fallarían para
+  directores por las reglas actuales… que es el comportamiento seguro).
+- Reversión: el editor es aditivo. Quitar las 3 rutas de App.jsx y los dos
+  accesos (PanelPage/AcademiaAdminPage) lo desactiva por completo; los datos
+  escritos son compatibles con el modelo Fase 2 (campos extra inertes).
+- La academia legacy sigue intacta: el editor se bloquea si
+  `academias/{id}.contenido.estado != 'migrado'`.
+
+## Criterios de aceptación (estado)
+
+- Director PRO: crear/editar/ordenar/mover/duplicar/archivar/restaurar/
+  publicar/despublicar cursos, fases, módulos y temas, con teclado — ✔ (UI +
+  datos + reglas; reglas pendientes de emulador).
+- Director BASE / alumno / profesor sin permisos: bloqueados en UI, capa de
+  datos y reglas — ✔ (pruebas puras + suite de reglas lista).
+- A no toca a B; plantilla intacta salvo modo plantilla explícito — ✔.
+- Legacy funciona; progreso/intentos/calificaciones sin tocar; src/data
+  intacto — ✔. `npm test` (56) y `npm run build` — ✔.

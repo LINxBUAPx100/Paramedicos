@@ -22,6 +22,7 @@ const Cuenta = lazy(() => import('./pages/Cuenta.jsx'))
 const PanelPage = lazy(() => import('./pages/PanelPage.jsx'))
 const AdminPage = lazy(() => import('./pages/AdminPage.jsx'))
 const AcademiaAdminPage = lazy(() => import('./pages/AcademiaAdminPage.jsx'))
+const EditorPage = lazy(() => import('./pages/EditorPage.jsx'))
 
 function Cargando() {
   return (
@@ -58,6 +59,14 @@ export default function App() {
 
             {/* Panel de avance: solo staff (la página valida el rol internamente) */}
             <Route path="/panel" element={<RutaProtegida><PanelPage /></RutaProtegida>} />
+
+            {/* Editor estructural de contenido: director PRO / profesor
+                autorizado (su academia); superadmin en cualquiera o en modo
+                plantilla. La página valida permisos, la capa de datos también
+                y las reglas de Firestore son la barrera final. */}
+            <Route path="/editor" element={<RutaProtegida><EditorPage /></RutaProtegida>} />
+            <Route path="/editor/plantilla/:plantillaId" element={<RutaProtegida><EditorPage /></RutaProtegida>} />
+            <Route path="/editor/:academiaId" element={<RutaProtegida><EditorPage /></RutaProtegida>} />
 
             {/* Dashboard del super-admin: todas las academias + roles */}
             <Route path="/admin" element={<RutaProtegida><AdminPage /></RutaProtegida>} />

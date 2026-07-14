@@ -69,6 +69,7 @@ export function ensamblarFases(estructura, temasPorId, { incluirBorradores = fal
     color: f.color || '',
     icono: f.icono || '',
     temas: (f.modulos || [])
+      .filter(visible) // un módulo en borrador/archivado oculta TODA su rama
       .flatMap((m) => m.temas || [])
       .filter(visible)
       .map((t) => {

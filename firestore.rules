@@ -73,6 +73,27 @@ service cloud.firestore {
         && miDoc().get('permisosEditor', {}).get('editarContenido', false) == true
         && cursoId in miDoc().get('permisosEditor', {}).get('cursosPermitidos', []);
     }
+    // Escritura de contenido por editores de academia (director/profesor):
+    // - la versión sube EXACTAMENTE +1 (control de conflictos; nadie la
+    //   reduce ni la manipula),
+    // - los metadatos administrativos y de origen son intocables,
+    // - el estado queda dentro del catálogo (borrador|publicado|archivado).
+    // El super-admin no pasa por aquí (scripts de migración/clonación).
+    function edicionContenidoValida() {
+      return request.resource.data.get('version', 0) == resource.data.get('version', 0) + 1
+        && !request.resource.data.diff(resource.data).affectedKeys()
+             .hasAny(['academiaId', 'cursoId', 'temaId', 'plantillaId',
+                      'plantillaOrigenId', 'versionOrigen', 'clonacion',
+                      'creadoPor', 'creadoEn'])
+        && request.resource.data.get('estado', 'borrador') in ['borrador', 'publicado', 'archivado'];
+    }
+    // Creación de contenido por editores de academia: firmada por su autor,
+    // versión inicial 1 y estado del catálogo.
+    function creacionContenidoValida() {
+      return request.resource.data.get('creadoPor', null) == request.auth.uid
+        && request.resource.data.get('version', 0) == 1
+        && request.resource.data.get('estado', 'borrador') in ['borrador', 'publicado', 'archivado'];
+    }
     // Canje de un código de prueba sobre el PROPIO perfil: el código debe
     // existir, estar activo y vigente, y pruebaHasta debe COPIAR su expiración
     // (nadie puede inventarse una fecha de prueba arbitraria).
@@ -314,18 +335,27 @@ service cloud.firestore {
         || esStaffDe(resource.data.academiaId)
         || (perteneceA(resource.data.academiaId) && resource.data.estado == 'publicado');
       // Crear: super-admin, o el DIRECTOR de su academia si su plan permite
-      // editar contenido (base NO edita). El doc nace con SU academiaId.
+      // editar contenido (base NO edita). El doc nace con SU academiaId,
+      // firmado por su autor y con versión 1 (Fase 3).
       allow create: if esSuper()
         || (esAdminDe(request.resource.data.academiaId)
-            && academiaEditaContenido(request.resource.data.academiaId));
+            && academiaEditaContenido(request.resource.data.academiaId)
+            && creacionContenidoValida());
       // Editar: mismo criterio + profesor con permiso sobre ESTE curso.
-      // El academiaId es inmutable (nadie "adopta" cursos de otra academia).
+      // El academiaId es inmutable (nadie "adopta" cursos de otra academia)
+      // y los editores no-super cumplen edicionContenidoValida (versión +1,
+      // metadatos intocables, estado del catálogo).
       allow update: if request.resource.data.academiaId == resource.data.academiaId
         && (
           esSuper()
-          || (esAdminDe(resource.data.academiaId)
-              && academiaEditaContenido(resource.data.academiaId))
-          || profesorPuedeEditar(resource.data.academiaId, cursoId)
+          || (
+            (
+              (esAdminDe(resource.data.academiaId)
+                && academiaEditaContenido(resource.data.academiaId))
+              || profesorPuedeEditar(resource.data.academiaId, cursoId)
+            )
+            && edicionContenidoValida()
+          )
         );
       // Sin eliminación destructiva por academias (archivar = update de estado).
       allow delete: if esSuper();
@@ -340,22 +370,29 @@ service cloud.firestore {
         || esStaffDe(resource.data.academiaId)
         || (perteneceA(resource.data.academiaId) && resource.data.estado == 'publicado');
       allow create: if (esSuper()
-          || (esAdminDe(request.resource.data.academiaId)
-              && academiaEditaContenido(request.resource.data.academiaId))
-          || profesorPuedeEditar(request.resource.data.academiaId, request.resource.data.cursoId))
+          || (
+            ((esAdminDe(request.resource.data.academiaId)
+                && academiaEditaContenido(request.resource.data.academiaId))
+              || profesorPuedeEditar(request.resource.data.academiaId, request.resource.data.cursoId))
+            && creacionContenidoValida()
+          ))
         && request.resource.data.academiaId is string
         && request.resource.data.cursoId is string
         && request.resource.data.temaId is string;
       // academiaId, cursoId y temaId INMUTABLES: un tema no cambia de dueño
       // ni de curso desde el cliente (las llaves del progreso se preservan).
+      // Los editores no-super cumplen además edicionContenidoValida.
       allow update: if request.resource.data.academiaId == resource.data.academiaId
         && request.resource.data.cursoId == resource.data.cursoId
         && request.resource.data.temaId == resource.data.temaId
         && (
           esSuper()
-          || (esAdminDe(resource.data.academiaId)
-              && academiaEditaContenido(resource.data.academiaId))
-          || profesorPuedeEditar(resource.data.academiaId, resource.data.cursoId)
+          || (
+            ((esAdminDe(resource.data.academiaId)
+                && academiaEditaContenido(resource.data.academiaId))
+              || profesorPuedeEditar(resource.data.academiaId, resource.data.cursoId))
+            && edicionContenidoValida()
+          )
         );
       allow delete: if esSuper();
     }

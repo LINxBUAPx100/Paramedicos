@@ -58,6 +58,13 @@ export default function PanelPage() {
               : `Avance de los alumnos de ${academia?.nombre || 'tu academia'}.`}
           </p>
         </div>
+        {/* Editor de contenido: capacidad del plan (Pro/Curso) para el director;
+            un profesor entra solo con permisos editoriales explícitos. */}
+        {((esDirector && capacidades.editorContenido) || perfil?.permisosEditor?.editarContenido) && (
+          <Link to="/editor" className="btn-pildora">
+            <Icon name="herramientas" size={16} /> Editor de contenido
+          </Link>
+        )}
       </header>
       <PanelAcademia
         academiaId={academiaId}

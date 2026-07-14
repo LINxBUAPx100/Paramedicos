@@ -137,6 +137,25 @@ const paths = {
     </>
   ),
   basura: <path d="M4 7h16M9.5 7V5a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 5v2M6.5 7l1 13a1.5 1.5 0 0 0 1.5 1.3h6a1.5 1.5 0 0 0 1.5-1.3l1-13M10 11v6M14 11v6" />,
+  // Editor estructural (Fase 3).
+  mas: <path d="M12 5v14M5 12h14" />,
+  copiar: (
+    <>
+      <rect x="9" y="9" width="11" height="11" rx="2" />
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+    </>
+  ),
+  archivo: (
+    <>
+      <rect x="3" y="4" width="18" height="4.5" rx="1" />
+      <path d="M5 8.5V19a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19V8.5M10 12.5h4" />
+    </>
+  ),
+  restaurar: <path d="M3 12a9 9 0 1 0 3-6.7M3 4v4.5h4.5" />,
+  carpeta: <path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" />,
+  subir: <path d="M12 19V5M6 11l6-6 6 6" />,
+  bajar: <path d="M12 5v14M6 13l6 6 6-6" />,
+  moverA: <path d="M4 6h9M4 12h5M4 18h9M15 9l4 3-4 3M19 12h-6" />,
 }
 
 export default function Icon({ name, size = 22, className = '', strokeWidth = 1.75, style }) {
