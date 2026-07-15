@@ -96,6 +96,31 @@ async function preparar() {
       academiaId: 'ACA-A', usuario: 'dirA', accion: 'x', coleccion: 'temas',
       docId: 'ACA-A__tum__t1', antes: null, despues: null, origen: 'test',
     })
+    // --- Fase 7: plantilla publicada, snapshot de versión, operación y sello ---
+    await pon('plantillas/pub', {
+      nombre: 'Publicada', version: 1, estado: 'publicada',
+      estructura: [{ id: 'f1', titulo: 'F1' }],
+    })
+    await pon('plantillasVersiones/pub__v1', {
+      plantillaId: 'pub', version: 1, estructura: [], hash: 'h1', conteos: { temas: 1 },
+    })
+    await pon('plantillasVersionesTemas/pub__v1__t1', {
+      versionId: 'pub__v1', plantillaId: 'pub', version: 1, temaId: 't1', titulo: 'T1',
+    })
+    await pon('replicaciones/rep1', {
+      plantillaId: 'pub', version: 1, destinos: ['ACA-A'],
+      estrategia: 'conservar_local', estado: 'completada', creadoPor: 'super1',
+    })
+    await pon('respaldos/bk-rep1__temas__ACA-A__tum__t1', {
+      backupId: 'bk-rep1', replicacionId: 'rep1', academiaId: 'ACA-A',
+      coleccion: 'temas', docId: 'ACA-A__tum__t1', datos: { titulo: 'T1' },
+    })
+    // t7: tema con SELLO de origen (para probar que un editor no lo toca).
+    await pon('temas/ACA-A__tum__t7', {
+      academiaId: 'ACA-A', cursoId: 'ACA-A__tum', temaId: 't7', version: 1, creadoPor: 'seed',
+      titulo: 'T7', estado: 'publicado', quiz: [], flashcards: [], secciones: [],
+      origen: { plantillaId: 'tum', version: 1, hash: 'sello', replicacionId: 'clonacion' },
+    })
   })
   return env
 }
@@ -366,4 +391,77 @@ test('intentos: resultado consistente obligatorio (aciertos/total/porcentaje)', 
   // Y sigue siendo imposible firmar como otro o en otra academia.
   await assertFails(addDoc(collection(db, 'intentos'), { ...base, uid: 'alumB', aciertos: 5, total: 10, porcentaje: 50 }))
   await assertFails(addDoc(collection(db, 'intentos'), { ...base, academiaId: 'ACA-B', aciertos: 5, total: 10, porcentaje: 50 }))
+})
+
+// ---------- Fase 7: plantillas versionadas, replicaciones y sello de origen ----------
+
+test('F7 versiones: snapshots INMUTABLES (ni el super-admin los actualiza)', { skip }, async () => {
+  await preparar()
+  const { doc, getDoc, setDoc, updateDoc } = fsmod
+  const { assertSucceeds, assertFails } = rut
+  await assertSucceeds(getDoc(doc(como('super1'), 'plantillasVersiones/pub__v1')))
+  await assertSucceeds(setDoc(doc(como('super1'), 'plantillasVersiones/pub__v2'),
+    { plantillaId: 'pub', version: 2, estructura: [] }))
+  // Actualizar un snapshot publicado: prohibido para TODOS.
+  await assertFails(updateDoc(doc(como('super1'), 'plantillasVersiones/pub__v1'), { hash: 'otro' }))
+  await assertFails(updateDoc(doc(como('super1'), 'plantillasVersionesTemas/pub__v1__t1'), { titulo: 'x' }))
+  // Director/alumno: ni leerlos (catálogo privado).
+  await assertFails(getDoc(doc(como('dirA'), 'plantillasVersiones/pub__v1')))
+  await assertFails(getDoc(doc(como('alumA'), 'plantillasVersionesTemas/pub__v1__t1')))
+})
+
+test('F7 plantilla publicada: estructura inmutable; metadatos y estado sí cambian', { skip }, async () => {
+  await preparar()
+  const { doc, updateDoc } = fsmod
+  const { assertSucceeds, assertFails } = rut
+  await assertFails(updateDoc(doc(como('super1'), 'plantillas/pub'),
+    { estructura: [{ id: 'hackeada' }] }))
+  await assertSucceeds(updateDoc(doc(como('super1'), 'plantillas/pub'),
+    { descripcion: 'metadatos ok' }))
+  // Abrir la versión siguiente (estado+version) sí se permite.
+  await assertSucceeds(updateDoc(doc(como('super1'), 'plantillas/pub'),
+    { estado: 'borrador', version: 2 }))
+})
+
+test('F7 replicaciones y respaldos: solo super-admin; las academias ni los leen', { skip }, async () => {
+  await preparar()
+  const { doc, getDoc, setDoc, updateDoc } = fsmod
+  const { assertSucceeds, assertFails } = rut
+  await assertSucceeds(getDoc(doc(como('super1'), 'replicaciones/rep1')))
+  await assertSucceeds(updateDoc(doc(como('super1'), 'replicaciones/rep1'), { estado: 'revirtiendo' }))
+  await assertFails(getDoc(doc(como('dirA'), 'replicaciones/rep1')))
+  await assertFails(updateDoc(doc(como('dirA'), 'replicaciones/rep1'), { estado: 'cancelada' }))
+  await assertFails(setDoc(doc(como('profA'), 'replicaciones/rep2'), { estado: 'borrador' }))
+  await assertFails(getDoc(doc(como('dirA'), 'respaldos/bk-rep1__temas__ACA-A__tum__t1')))
+  await assertFails(getDoc(doc(como('alumA'), 'respaldos/bk-rep1__temas__ACA-A__tum__t1')))
+})
+
+test('home por secciones: director PRO configura la SUYA; BASE y campos ajenos no', { skip }, async () => {
+  await preparar()
+  const { doc, updateDoc } = fsmod
+  const { assertSucceeds, assertFails } = rut
+  const config = [{ id: 'hero', visible: false }, { id: 'fases', visible: true }]
+  // Director PRO: puede guardar la configuración (y volver al default con null).
+  await assertSucceeds(updateDoc(doc(como('dirA'), 'academias/ACA-A'), { homeSecciones: config }))
+  await assertSucceeds(updateDoc(doc(como('dirA'), 'academias/ACA-A'), { homeSecciones: null }))
+  // La forma debe ser lista (o null): un mapa/valor suelto se rechaza.
+  await assertFails(updateDoc(doc(como('dirA'), 'academias/ACA-A'), { homeSecciones: 'hero' }))
+  // Director BASE: su plan no personaliza; academia ajena: jamás.
+  await assertFails(updateDoc(doc(como('dirC'), 'academias/ACA-C'), { homeSecciones: config }))
+  await assertFails(updateDoc(doc(como('dirA'), 'academias/ACA-B'), { homeSecciones: config }))
+  // No abre la puerta a otros campos del doc de academia.
+  await assertFails(updateDoc(doc(como('dirA'), 'academias/ACA-A'), { homeSecciones: config, estado: 'activo', nombre: 'pwn' }))
+})
+
+test('F7 sello de origen: ningún editor de academia puede tocarlo', { skip }, async () => {
+  await preparar()
+  const { doc, updateDoc } = fsmod
+  const { assertSucceeds, assertFails } = rut
+  const t7 = 'temas/ACA-A__tum__t7'
+  // El director NO puede modificar ni borrar el sello origen (ocultaría sus
+  // cambios locales a la replicación).
+  await assertFails(updateDoc(doc(como('dirA'), t7),
+    { titulo: 'X', version: 2, origen: { plantillaId: 'tum', version: 1, hash: 'falso' } }))
+  // Editar contenido SIN tocar el sello: flujo normal del editor.
+  await assertSucceeds(updateDoc(doc(como('dirA'), t7), { titulo: 'T7 editado', version: 2 }))
 })

@@ -23,6 +23,7 @@ const PanelPage = lazy(() => import('./pages/PanelPage.jsx'))
 const AdminPage = lazy(() => import('./pages/AdminPage.jsx'))
 const AcademiaAdminPage = lazy(() => import('./pages/AcademiaAdminPage.jsx'))
 const EditorPage = lazy(() => import('./pages/EditorPage.jsx'))
+const ReplicacionPage = lazy(() => import('./pages/ReplicacionPage.jsx'))
 
 function Cargando() {
   return (
@@ -71,6 +72,9 @@ export default function App() {
             {/* Dashboard del super-admin: todas las academias + roles */}
             <Route path="/admin" element={<RutaProtegida><AdminPage /></RutaProtegida>} />
             <Route path="/admin/academia/:academiaId" element={<RutaProtegida><AcademiaAdminPage /></RutaProtegida>} />
+            {/* Plantillas globales y replicación (Fase 7): solo superadmin
+                (la página valida el rol; las reglas son la barrera final). */}
+            <Route path="/admin/replicacion" element={<RutaProtegida><ReplicacionPage /></RutaProtegida>} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>

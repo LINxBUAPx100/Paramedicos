@@ -165,6 +165,9 @@ export default function AdminPage() {
           <h1><Icon name="capas" size={24} /> Dashboard general</h1>
           <p>Vista de super-administrador: todas las academias y todos los usuarios de la plataforma.</p>
         </div>
+        <Link to="/admin/replicacion" className="btn btn-secundario">
+          <Icon name="copiar" size={16} /> Plantillas y replicación
+        </Link>
       </header>
 
       {error && <p className="cuenta-error" role="alert">{error}</p>}

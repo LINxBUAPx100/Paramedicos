@@ -190,6 +190,11 @@ export async function guardarEstructura(contexto, destino, cursoId, versionEsper
   const version = await runTransaction(db, async (tx) => {
     const cursoSnap = await tx.get(cursoRef)
     if (!cursoSnap.exists()) throw new Error('El curso ya no existe.')
+    // Una plantilla PUBLICADA es inmutable (Fase 7): editarla exige abrir la
+    // versión siguiente desde la administración de plantillas.
+    if (destino?.modo === 'plantilla' && cursoSnap.data().estado === 'publicada') {
+      throw new Error('Esta plantilla está publicada y su versión es inmutable: abre la siguiente versión para editarla.')
+    }
     const actual = cursoSnap.data().version ?? 0
     if (actual !== versionEsperada) throw new ConflictoVersion()
 
@@ -327,6 +332,12 @@ export async function guardarContenidoTema(contexto, destino, cursoId, temaId, v
   const esInstructor = !contexto?.esSuperadmin && contexto?.rol === 'instructor'
 
   const version = await runTransaction(db, async (tx) => {
+    if (destino.modo === 'plantilla') {
+      const plantillaSnap = await tx.get(doc(db, col.cursos, cursoId))
+      if (plantillaSnap.exists() && plantillaSnap.data().estado === 'publicada') {
+        throw new Error('Esta plantilla está publicada y su versión es inmutable: abre la siguiente versión para editarla.')
+      }
+    }
     const snap = await tx.get(temaRef)
     if (!snap.exists()) throw new Error('El tema ya no existe.')
     const actual = snap.data().version ?? 0

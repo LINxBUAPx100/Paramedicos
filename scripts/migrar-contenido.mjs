@@ -24,6 +24,7 @@ import { fases, todosLosTemas, stats } from '../src/data/index.js'
 import {
   plantillaDesdeData, docsClonadosParaAcademia, cursoDesdePlantilla, lotes,
 } from '../src/lib/contenidoModelo.js'
+import { huellaTema } from '../src/lib/replicacionModelo.js'
 
 const PLANTILLA_OFICIAL_ID = 'paramedico-tum'
 const PLANTILLA_OFICIAL_NOMBRE = 'Programa Paramédico (TUM)'
@@ -216,7 +217,16 @@ async function clonar(academiaId) {
       for (const t of grupo) {
         const { docId: temaDocId, ...datos } = t
         batch.set(dba.collection('temas').doc(temaDocId), {
-          ...datos, version: plantilla.version ?? 1, actualizado: FieldValue.serverTimestamp(),
+          ...datos,
+          version: plantilla.version ?? 1,
+          // Sello de origen (Fase 7): huella para detectar cambios locales.
+          origen: {
+            plantillaId: plantilla.id,
+            version: plantilla.version ?? 1,
+            hash: huellaTema(datos),
+            replicacionId: 'clonacion',
+          },
+          actualizado: FieldValue.serverTimestamp(),
         })
       }
       await batch.commit()

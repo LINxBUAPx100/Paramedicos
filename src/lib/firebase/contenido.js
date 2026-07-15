@@ -23,6 +23,7 @@ import {
   academiaMigrada, ensamblarFases, construirApi,
   indiceDesdeEstructura, indiceDesdeFases,
 } from '../contenidoApi.js'
+import { huellaTema } from '../replicacionModelo.js'
 import { obtenerPlantilla, temasDePlantilla } from './plantillas.js'
 
 // --- Estado de migración de la academia (academias/{id}.contenido) ---------
@@ -91,6 +92,10 @@ export async function clonarPlantillaAAcademia({ academiaId, plantillaId, onProg
         batch.set(doc(db, 'temas', temaDocId), {
           ...datos,
           version,
+          // SELLO de origen (Fase 7): huella del contenido tal como se recibió.
+          // Permite a la replicación distinguir "modificado por la academia"
+          // de "cambiado en la plantilla" sin depender de updatedAt.
+          origen: { plantillaId, version, hash: huellaTema(datos), replicacionId: 'clonacion' },
           actualizado: serverTimestamp(),
         })
       }

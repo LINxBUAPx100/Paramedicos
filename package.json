@@ -14,6 +14,7 @@
     "test:rules": "firebase emulators:exec --only firestore,storage --project ptem-rules-test \"node --test tests/rules/*.test.mjs\"",
     "gen:plantilla": "node scripts/gen-plantilla.mjs",
     "migrar": "node scripts/migrar-contenido.mjs",
+    "replicar": "node scripts/replicar-contenido.mjs",
     "deploy": "npm run build"
   },
   "dependencies": {

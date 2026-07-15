@@ -120,6 +120,10 @@ service cloud.firestore {
         && !request.resource.data.diff(resource.data).affectedKeys()
              .hasAny(['academiaId', 'cursoId', 'temaId', 'plantillaId',
                       'plantillaOrigenId', 'versionOrigen', 'clonacion',
+                      // 'origen' (sello de clonación/replicación, Fase 7) y
+                      // 'replicacion' son huellas administrativas: si un editor
+                      // pudiera tocarlas, ocultaría sus cambios a la replicación.
+                      'origen', 'replicacion',
                       'creadoPor', 'creadoEn'])
         && request.resource.data.get('estado', 'borrador') in ['borrador', 'publicado', 'archivado'];
     }
@@ -168,14 +172,21 @@ service cloud.firestore {
       // Alta/edición/baja: solo super-admin.
       allow write: if esSuper();
       // El director puede editar SOLO la personalización de SU academia
-      // (logo, lema y color del hero) — nunca estado/plan/tipo/nombre — y
-      // SOLO si su plan comercial incluye esa capacidad (pro|curso).
-      // Sin campo planComercial = academia previa a los planes → se trata
-      // como 'pro' (mismo default que src/lib/capacidades.js).
+      // (logo, lema, color del hero y — roadmap F7 — las SECCIONES del Home)
+      // — nunca estado/plan/tipo/nombre — y SOLO si su plan comercial incluye
+      // esa capacidad (pro|curso). Sin campo planComercial = academia previa
+      // a los planes → se trata como 'pro' (mismo default que capacidades.js).
+      // homeSecciones debe ser lista (o null = default); su contenido lo
+      // normaliza homeModelo.js al leer (basura ⇒ default, nunca rompe).
       allow update: if esAdminDe(codigo)
         && resource.data.get('planComercial', 'pro') in ['pro', 'curso']
         && request.resource.data.diff(resource.data).affectedKeys()
-             .hasOnly(['logo', 'lema', 'colorHero']);
+             .hasOnly(['logo', 'lema', 'colorHero', 'homeSecciones'])
+        && (
+          !request.resource.data.diff(resource.data).affectedKeys().hasAny(['homeSecciones'])
+          || request.resource.data.homeSecciones == null
+          || request.resource.data.homeSecciones is list
+        );
     }
 
     // --- GRUPOS internos de una academia (el id del doc ES el código) ---
@@ -388,10 +399,39 @@ service cloud.firestore {
     //  cambiarlo desde el cliente no permite apropiarse de documentos).
 
     // --- PLANTILLAS globales (catálogo oficial): SOLO super-admin ---
+    // Nadie más las LEE siquiera (un alumno/director no enumera el catálogo
+    // privado). El CONTENIDO (estructura) de una plantilla PUBLICADA es
+    // inmutable incluso para el super-admin: se abre la versión siguiente
+    // (el update de metadatos/estado/version sí se permite).
     match /plantillas/{plantillaId} {
-      allow read, write: if esSuper();
+      allow read, create, delete: if esSuper();
+      allow update: if esSuper()
+        && (
+          resource.data.get('estado', 'borrador') != 'publicada'
+          || !request.resource.data.diff(resource.data).affectedKeys().hasAny(['estructura'])
+        );
     }
     match /plantillasTemas/{docId} {
+      allow read, write: if esSuper();
+    }
+
+    // --- VERSIONES publicadas de plantillas (snapshots INMUTABLES, Fase 7) ---
+    // Se crean al publicar y JAMÁS se actualizan (ni el super-admin): son el
+    // origen exacto de clonaciones/replicaciones y la base del rollback.
+    // Borrar versiones usadas por academias se bloquea en la capa de datos
+    // (versionEstaEnUso); las reglas permiten depurar solo al super-admin.
+    match /plantillasVersiones/{docId} {
+      allow read, create, delete: if esSuper();
+      allow update: if false;
+    }
+    match /plantillasVersionesTemas/{docId} {
+      allow read, create, delete: if esSuper();
+      allow update: if false;
+    }
+
+    // --- OPERACIONES de replicación (auditoría de dry-run/aplicación/rollback) ---
+    // Solo el super-admin: las academias no leen ni modifican reportes.
+    match /replicaciones/{id} {
       allow read, write: if esSuper();
     }
 

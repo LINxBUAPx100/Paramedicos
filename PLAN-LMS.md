@@ -1,8 +1,9 @@
 # PLAN-LMS — Auditoría y planeación: PTEM como LMS multiacademia
 
-> Fecha: 2026-07-14 · Estado: auditoría completa · Fases 1-4 + permisos
-> editoriales (roadmap Fase 6) + CABLEADO DEL RESOLUTOR (roadmap Fase 4)
-> implementadas (pendiente: correr la suite de reglas con el emulador — ver
+> Fecha: 2026-07-15 · Estado: auditoría completa · Fases 1-4 + permisos
+> editoriales (roadmap Fase 6) + CABLEADO DEL RESOLUTOR (roadmap Fase 4) +
+> REPLICACIÓN (roadmap Fase 9, pedida como "Fase 7") implementadas
+> (pendiente: correr la suite de reglas con el emulador — ver
 > docs/MIGRACION-CONTENIDO.md). La Fase 3 entregada es el EDITOR ESTRUCTURAL
 > (se adelantó respecto del roadmap original).
 > Regla de trabajo: **una fase por entrega**; nada se implementa fuera de la fase activa.
@@ -312,9 +313,9 @@ aislamiento no negociable, documentada aquí). No se duplica nada más.
 | **4 (hecha)** | Cableado del resolutor a las páginas de estudio (Firestore por academia con fallback al bundle, ya construido en F2) + caché; conserva URLs `/fase/:id`, `/tema/:id` | index.js "virtual", páginas de estudio |
 | **5** | Editor de TEMAS (bloques, quiz, flashcards, actividades) + borradores/vista previa | UI editor |
 | **6** | Permisos editoriales granulares del profesor | usuarios, reglas |
-| **7** | Página de inicio por SECCIONES configurables (hero, cursos, progreso, stats, anuncios, convocatorias, capacitadores) | Home + config por academia |
+| **7 (hecha)** | Página de inicio por SECCIONES configurables (hero, cursos, progreso, stats, anuncios, convocatorias, capacitadores) | Home + config por academia |
 | **8** | Certificados digitales | plantilla + verificación |
-| **9** | Replicación con vista previa/conflictos/respaldo/historial | scripts + UI superadmin |
+| **9 (hecha, pedida como "Fase 7")** | Replicación con vista previa/conflictos/respaldo/historial + plantillas versionadas | scripts + UI superadmin |
 | **10** | Plan CURSO (modo mono-curso) + directorio de capacitadores | capacidades + Home |
 | **11** | Auditoría (`historial` append-only) + paginación y contadores de `/admin` + validar campos numéricos de `intentos` | reglas + admin |
 | **12** | Tipo MEDICINA: convocatorias e importación de versiones oficiales | modelo por convocatoria |
@@ -874,3 +875,148 @@ asignación/revocación queda en `historial` (append-only).
   (UI + datos + reglas; reglas pendientes de emulador).
 - Profesor limitado no crea/publica/edita exámenes/recursos que no tiene, ni
   edita sus propios permisos, ni toca otra academia — ✔ (puro + suite de reglas).
+
+---
+
+# FASE 7 (pedida) = ROADMAP FASE 9 — Plantillas versionadas, clonación y replicación (implementada)
+
+> Nota de numeración: el dueño del producto la pidió como "Fase 7"; en el
+> roadmap original (sección 20) es la Fase 9. Documentación operativa completa:
+> **docs/REPLICACION-CONTENIDO.md** y **docs/ROLLBACK-REPLICACION.md**.
+
+Alcance: sistema EXCLUSIVO del super-admin para administrar plantillas
+globales versionadas e inmutables, clonarlas y replicarlas a varias academias
+con dry-run obligatorio, detección de cambios locales, estrategias de
+conflicto (default conservar_local), respaldo previo verificado, aplicación
+idempotente/reanudable acotada, rollback y auditoría. SIN propagación
+automática; copias siempre independientes; progreso/intentos/calificaciones
+estructuralmente intocables.
+
+## Archivos
+
+Nuevos:
+- `src/lib/plantillasModelo.js` (PURO) — estados borrador|publicada|archivada,
+  publicada INMUTABLE (`prepararNuevaVersion`), `snapshotDeVersion` (hash +
+  conteos + `versionId` de un solo campo — sin índices compuestos),
+  `cambiosEntreVersiones`, `plantillaDesdeCurso` (limpia rastros de la academia
+  y BLOQUEA referencias privadas de Storage).
+- `src/lib/replicacionModelo.js` (PURO) — huella determinista (FNV-1a doble
+  sobre JSON estable), clasificación de cambios (7 clases), 4 estrategias,
+  `planParaAcademia` (lotes ≤20, respaldos, sello de origen, clonación si el
+  curso no existe), `verificarRespaldo`, `planDeRollback` (conserva lo editado
+  después salvo `forzar`), máquina de estados (aplicando NO re-entra),
+  `fraseConfirmacion`, `COLECCIONES_PERMITIDAS`.
+- `src/lib/firebase/replicacion.js` — capa de datos del super-admin (plantillas
+  + versiones + operaciones; MAX_DESTINOS_CLIENTE=5 desde el navegador).
+- `scripts/replicar-contenido.mjs` (`npm run replicar`) — backend seguro con
+  firebase-admin para replicaciones masivas y rollback (dry-run por defecto,
+  `--apply`, `--confirmar="FRASE"`, `--reanudar`, `--rollback`).
+- `src/pages/ReplicacionPage.jsx` — `/admin/replicacion` (lazy): pestañas
+  Plantillas · Clonar y replicar (wizard con dry-run) · Historial y rollback;
+  accesible (teclado, aria-live, diálogos con Escape, confirmación por frase).
+- `tests/replicacion.test.mjs` (25) y `tests/plantillas.test.mjs` (10).
+- `docs/REPLICACION-CONTENIDO.md`, `docs/ROLLBACK-REPLICACION.md`.
+
+Modificados:
+- `firestore.rules` — `plantillasVersiones(+Temas)` solo super e INMUTABLES
+  (`update: false`); `replicaciones` solo super; la `estructura` de una
+  plantilla publicada no se toca ni siendo super; `origen`/`replicacion`
+  añadidos a los metadatos intocables de cursos/temas. SIN desplegar.
+- `src/lib/firebase/contenido.js` y `scripts/migrar-contenido.mjs` — la
+  clonación sella cada tema con `origen{plantillaId, version, hash}`.
+- `src/lib/firebase/editor.js` — el editor rechaza plantillas publicadas.
+- `src/App.jsx`, `src/pages/AdminPage.jsx`, `src/index.css` (estilos rp-*),
+  `package.json` (script `replicar`),
+  `tests/rules/contenido.rules.test.mjs` (4 casos F7).
+
+## Colecciones nuevas
+
+`plantillasVersiones/{plantillaId__vN}`, `plantillasVersionesTemas/{…__temaId}`
+(snapshots inmutables), `replicaciones/{id}` (operación/auditoría),
+`respaldos/{bk-<rep>__<col>__<doc>}` (id determinista: reanudar no pisa el
+snapshot original; ya existía la colección con reglas solo-super).
+
+## Detección de cambios locales (sin depender de updatedAt)
+
+Sello `origen.hash` = huella del contenido tal como la academia lo recibió,
+inmutable para editores. hashLocal≠sello ⇒ modificado local; hashOrigen≠sello
+⇒ cambió la plantilla; ambos ⇒ conflicto. Clones previos al sello: cualquier
+divergencia = conflicto (conservador). `solo_local` (creado por la academia) y
+`archivado_local` no se tocan con ninguna estrategia automática.
+
+## Riesgos y decisiones
+
+- Sin Cloud Functions (Spark): lo masivo va por script privado con service
+  account (patrón ya existente); la UI aplica ≤5 destinos. Variante Functions
+  (Blaze) documentada sin desplegar.
+- Reglas escritas y con suite lista; NO ejecutadas aquí (sin Java) ni
+  desplegadas. Desplegar ANTES de usar la fase en producción.
+- Respaldos sin depuración automática (retención manual documentada).
+- Reversión de la fase: aditiva — quitar la ruta/acceso y las colecciones
+  nuevas quedan inertes; el sello `origen` en temas es inofensivo.
+
+## Criterios de aceptación (estado)
+
+- Plantillas versionadas e inmutables; clonación/replicación multi-academia
+  con dry-run OBLIGATORIO, conservar_local por defecto, respaldo verificado,
+  idempotencia/reanudación, rollback con detección de cambios posteriores,
+  bloqueo de no autorizados y auditoría — ✔ (modelo puro probado + reglas +
+  UI; reglas y flujo E2E pendientes de emulador/producción).
+- `npm test` (130) y `npm run build` — ✔. Nada se ejecutó sobre producción.
+
+---
+
+# FASE 7 DEL ROADMAP — Página de inicio por secciones configurables (implementada)
+
+Alcance: el director con plan que incluye `paginaInicioConfigurable`
+(PRO/CURSO — fuente única `capacidades.js`, primer consumidor real de esa
+capacidad) decide qué secciones del Home ven los miembros de SU academia y en
+qué orden. Sin configuración (visitantes, academias legacy o BASE) el Home es
+EXACTAMENTE el de siempre — verificado en navegador. No incluye anuncios,
+convocatorias ni capacitadores: esas secciones llegan con sus fases (F10/F12)
+y se suman al catálogo con una entrada + un render.
+
+## Modelo
+
+`academias/{id}.homeSecciones = [{ id, visible }]` (orden = orden de render;
+`null`/ausente = default). Catálogo en **`src/lib/homeModelo.js`** (PURO):
+`hero` (portada PTEM), `progreso`, `fases` (carrusel), `prueba`, `atlas`,
+`flashcards`. Normalización *fail-open*: ids desconocidos/duplicados se
+descartan, `visible` solo oculta con `false` explícito, y las secciones que
+falten se AÑADEN visibles al final (una sección nueva del catálogo aparece
+sola en configuraciones viejas; un dato corrupto jamás deja el Home vacío).
+La banda de la academia (logo/lema) y el selector de grupo del profesor NO son
+configurables (identidad y función): van tras la portada o, si el director la
+ocultó, encabezan la página.
+
+## Archivos
+
+- Nuevo `src/lib/homeModelo.js` + `tests/homeModelo.test.mjs` (8 pruebas).
+- `src/pages/Home.jsx` — secciones extraídas a componentes y renderizadas en
+  el orden configurado (`idsVisiblesDeHome(academia)`); markup idéntico.
+- `src/components/PersonalizacionAcademia.jsx` — editor de secciones
+  (checkbox + subir/bajar accesibles) gateado por
+  `capacidadesDe(academia).paginaInicioConfigurable`; el default se guarda
+  como `null` (el doc no arrastra campo redundante).
+- `firestore.rules` — la allowlist del director suma `homeSecciones`
+  (lista o null; mismo gate de plan pro|curso ya existente). SIN desplegar.
+- `tests/rules/contenido.rules.test.mjs` — caso: director PRO configura la
+  suya, BASE no, ajena no, y no abre la puerta a otros campos del doc.
+- `src/index.css` — estilos `hs-*`.
+
+## Riesgos y reversión
+
+- Regla sin verificar en emulador (sin Java aquí; caso listo en la suite).
+- Fail-open deliberado: la corrupción del campo restaura el default en lugar
+  de romper la página pública.
+- Reversión: aditiva — restaurar Home.jsx/PersonalizacionAcademia y quitar el
+  campo de la allowlist; `homeSecciones` guardado queda inerte.
+
+## Criterios de aceptación (estado)
+
+- Sin configuración, el Home renderiza IGUAL (verificado en navegador:
+  hero → fases → prueba → atlas → flashcards, consola limpia) — ✔.
+- Director PRO/CURSO oculta y reordena secciones; BASE no ve el editor y la
+  regla lo rechaza; el alumno de la academia ve el orden configurado — ✔
+  (modelo puro + UI + regla; regla pendiente de emulador).
+- `npm test` (138, +8) y `npm run build` (entrada 82.9 KB gzip) — ✔.
