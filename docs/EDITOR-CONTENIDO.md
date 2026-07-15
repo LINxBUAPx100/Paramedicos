@@ -67,9 +67,9 @@ UI (React)                    src/pages/EditorPage.jsx + src/components/editor/*
 - **Permisos** (`permisoEdicion`, espejo de reglas): superadmin siempre;
   director solo su academia y solo con `capacidades.editorContenido`
   (BASE bloqueado también en reglas); profesor solo con
-  `permisosEditor.editarContenido` y sus `cursosPermitidos` (la gestión
-  granular de esos permisos llega en la fase de permisos editoriales; hoy no
-  hay acceso amplio por defecto). Alumno: nunca.
+  `permisosEditor.editarContenido` y sus `cursosPermitidos`. La granularidad
+  POR ACCIÓN (crear/publicar/exámenes/actividades/recursos) es la **Fase 6**
+  (`src/lib/permisosEditor.js`, ver abajo). Alumno: nunca.
 - **Academias legacy** (sin `contenido.estado == 'migrado'`): el editor se
   bloquea con una explicación (no existen herramientas que escriban sobre
   `src/data`); el superadmin ve el recordatorio de clonar la plantilla.
@@ -138,3 +138,58 @@ futura (fase de permisos/auditoría): cascada opcional de estado al archivar.
 - **Pruebas**: 20 puras nuevas (`tests/temaContenido.test.mjs`) + suite de
   Storage (`tests/rules/storage.rules.test.mjs`, 6) + caso de intentos en la
   suite de Firestore. `npm run test:rules` ahora levanta firestore,storage.
+
+---
+
+# Fase 6 — Permisos editoriales granulares del profesor
+
+Matriz CENTRALIZADA de permisos del INSTRUCTOR, única fuente en
+`src/lib/permisosEditor.js`, reflejada sin dispersarse en las **cuatro capas**:
+interfaz React, capa de acceso a datos, `firestore.rules` y `storage.rules`.
+NO agrega funciones académicas: solo gobierna quién puede hacer qué.
+
+- **Matriz** (`usuarios/{uid}.permisosEditor`): 6 booleanos +
+  `cursosPermitidos[]` — `editarContenido`, `crearTemas`, `editarActividades`,
+  `editarExamenes`, `publicarContenido`, `administrarRecursos`. Sin
+  `editarContenido` no hay acceso; sin curso en `cursosPermitidos`, no edita
+  ese curso. `normalizarPermisos`/`validarPermisos` descartan claves basura y
+  exigen que los cursos existan.
+- **Quién concede/retira**: SOLO el director PRO (capacidad
+  `permisosEditoriales`) o el super-admin, y solo a **profesores de SU
+  academia** — nunca a sí mismo, a otro director o a otra academia.
+  UI: `PermisosEditoriales.jsx` (sección del panel del director);
+  datos: `asignarPermisosEditor()` (valida forma + cursos y **audita** en
+  `historial` con `asignar-permisos`/`revocar-permisos`).
+- **Granularidad por ACCIÓN** (`permisoAccionEditor`, capa de datos, espejo de
+  reglas): crear/duplicar ⇒ `crearTemas`; publicar/despublicar/archivar/
+  restaurar ⇒ `publicarContenido`; editar campos/mover/reordenar ⇒ base.
+- **Granularidad por CAMPO del tema** (`permisosRequeridosPorContenido` +
+  `camposTemaSegunPermisos` en reglas): cambiar `quiz` ⇒ `editarExamenes`;
+  `actividades` ⇒ `editarActividades`; `recursos` ⇒ `administrarRecursos`;
+  `estado` ⇒ `publicarContenido`. La comparación es tolerante al vacío para no
+  exigir un permiso cuando el profesor no tocó ese campo.
+- **UI**: `capacidadesEditor` colapsa el rol (super/director = todo; profesor =
+  sus permisos) y oculta lo que no puede: botones "Nuevo…" (ArbolCurso),
+  Publicar/Archivar/Duplicar (PanelNodo) y los grupos quiz/recursos/actividades
+  (PanelContenidoTema). Ocultar ⇒ el borrador no cambia ese campo ⇒ el guardado
+  no lo toca; las reglas lo protegen igual.
+- **Storage** (`storage.rules`): un profesor solo sube/reemplaza/borra archivos
+  con `editarContenido` **y** `administrarRecursos` (el director con plan y el
+  super mantienen su acceso).
+- **Anti-escalación** (reglas): un profesor NO puede editar sus propios
+  `permisosEditor` (la regla del dueño lo prohíbe con `affectedKeys`); un
+  director BASE no concede permisos (plan); nadie escribe cursos/temas de otra
+  academia (`esStaffDe` fija la academia, así que un `cursosPermitidos`
+  manipulado con cursos ajenos no da acceso).
+- **Pruebas**: 12 puras (`tests/permisosEditor.test.mjs`) + casos de emulador
+  añadidos a `tests/rules/contenido.rules.test.mjs` (conceder/retirar,
+  auto-escalación, campos finos, `crearTemas`) y a
+  `tests/rules/storage.rules.test.mjs` (`administrarRecursos`).
+
+## Limitación conocida (Fase 6)
+
+La rejilla por campo del tema (rules) compara el doc guardado con el enviado.
+En el **primer** guardado de un tema recién clonado (aún no normalizado) por un
+profesor de permisos limitados, un campo podría verse "cambiado" por el mero
+re-normalizado y exigir el permiso correspondiente: es *fail-closed* (seguro) y
+se resuelve concediendo el permiso o guardando ese tema una vez como director.

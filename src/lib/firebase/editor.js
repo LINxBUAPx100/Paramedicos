@@ -24,7 +24,11 @@ import {
   validarEstructura, esEstadoValido, validarTitulo, validarDescripcion,
   nuevoCurso, duplicadoDeCurso, permisoEdicion,
 } from '../editorModelo.js'
-import { validarContenidoTema } from '../temaContenidoModelo.js'
+import {
+  permisoAccionEditor, permisosRequeridosPorContenido, tienePermisoEditor,
+  ETIQUETA_PERMISO,
+} from '../permisosEditor.js'
+import { validarContenidoTema, normalizarContenido } from '../temaContenidoModelo.js'
 import { validarReferenciasStorage } from '../archivosModelo.js'
 import { lotes } from '../contenidoModelo.js'
 import { registrarHistorial, limpiarCacheContenido } from './contenido.js'
@@ -50,7 +54,9 @@ function idAcademiaDe(destino) {
 }
 
 // Valida permiso ANTES de tocar la red (las reglas son la barrera real).
-function exigirPermiso(contexto, destino, cursoId = null) {
+// `accion` (opcional): exige además el permiso FINO del profesor para esa
+// acción (crear/publicar/…); espejo de firestore.rules.
+function exigirPermiso(contexto, destino, cursoId = null, accion = null) {
   if (destino?.modo === 'plantilla') {
     if (!contexto?.esSuperadmin) {
       throw new Error('Solo el administrador de la plataforma edita plantillas globales.')
@@ -67,6 +73,15 @@ function exigirPermiso(contexto, destino, cursoId = null) {
     cursoId,
   })
   if (!permitido) throw new Error(motivo)
+  if (accion) {
+    const fino = permisoAccionEditor({
+      esSuperadmin: contexto?.esSuperadmin,
+      rol: contexto?.rol,
+      perfil: contexto?.perfil,
+      accion,
+    })
+    if (!fino.permitido) throw new Error(fino.motivo)
+  }
 }
 
 function historialSeguro(datos) {
@@ -161,7 +176,7 @@ export async function temaDelEditor(destino, cursoId, temaId) {
 //     temaCampos:      { temaId, campos: { titulo?, resumen? } }  (panel de tema)
 //   }
 export async function guardarEstructura(contexto, destino, cursoId, versionEsperada, estructura, accion, extras = {}) {
-  exigirPermiso(contexto, destino, cursoId)
+  exigirPermiso(contexto, destino, cursoId, accion)
   const errorEstructura = validarEstructura(estructura)
   if (errorEstructura) throw new Error(errorEstructura)
   const { camposCurso = null, temasNuevos = [], temasDuplicados = [], temaCampos = null } = extras
@@ -305,12 +320,25 @@ export async function guardarContenidoTema(contexto, destino, cursoId, temaId, v
   const col = coleccionesDe(destino)
   const temaRef = doc(db, col.temas, `${cursoId}__${temaId}`)
   const uid = auth.currentUser?.uid || null
+  // El profesor solo cambia quiz/actividades/recursos si tiene el permiso fino
+  // (espejo de camposTemaSegunPermisos en firestore.rules). Se compara el
+  // contenido ANTES/DESPUÉS ya normalizado, tolerante al vacío (no falso
+  // positivo cuando no lo tocó). Director/super no pasan por esta rejilla.
+  const esInstructor = !contexto?.esSuperadmin && contexto?.rol === 'instructor'
 
   const version = await runTransaction(db, async (tx) => {
     const snap = await tx.get(temaRef)
     if (!snap.exists()) throw new Error('El tema ya no existe.')
     const actual = snap.data().version ?? 0
     if (actual !== versionEsperada) throw new ConflictoVersion()
+    if (esInstructor) {
+      const antes = normalizarContenido(snap.data())
+      const requeridos = permisosRequeridosPorContenido(antes, contenido)
+      const faltante = requeridos.find((p) => !tienePermisoEditor(contexto?.perfil, p))
+      if (faltante) {
+        throw new Error(`No tienes el permiso "${ETIQUETA_PERMISO[faltante]}" para ese cambio. Pídelo al director de tu academia.`)
+      }
+    }
     tx.update(temaRef, {
       ...contenido,
       version: actual + 1,
@@ -363,7 +391,7 @@ export async function crearCursoEditor(contexto, destino, { titulo, descripcion 
 
 // Título/descripción/estado del curso (sin tocar estructura).
 export async function actualizarCursoEditor(contexto, destino, cursoId, versionEsperada, campos, accion = 'editar-curso') {
-  exigirPermiso(contexto, destino, cursoId)
+  exigirPermiso(contexto, destino, cursoId, accion)
   if ('titulo' in campos) {
     const e = validarTitulo(campos.titulo)
     if (e) throw new Error(e)
@@ -433,13 +461,15 @@ export async function reordenarCursosEditor(contexto, destino, cursosEnOrden) {
     academiaId: destino.academiaId, accion: 'reordenar-cursos', coleccion: 'cursos',
     docId: destino.academiaId, despues: { cambiados },
   })
+  // El resolutor sirve el primer curso publicado: el orden le cambia la fuente.
+  if (cambiados) limpiarCacheContenido(destino.academiaId)
   return { cambiados }
 }
 
 // Duplica un curso COMPLETO dentro de la misma academia (estructura + temas;
 // nunca progreso/intentos/calificaciones).
 export async function duplicarCursoEditor(contexto, destino, curso) {
-  exigirPermiso(contexto, destino, curso?.id)
+  exigirPermiso(contexto, destino, curso?.id, 'duplicar-curso')
   if (destino.modo === 'plantilla') {
     throw new Error('Duplicar plantillas completas llega con la replicación (fase posterior).')
   }

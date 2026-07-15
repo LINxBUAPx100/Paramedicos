@@ -8,14 +8,19 @@
 // ============================================================
 import { useMemo } from 'react'
 import { useAuth } from '../context/AuthContext.jsx'
-import { fasesNav } from '../data/navIndice.js'
-
-// Mapa temaId → faseId (un tema oculta también si su fase está oculta).
-const FASE_DE_TEMA = {}
-for (const f of fasesNav) for (const t of f.temas) FASE_DE_TEMA[t.id] = f.id
+import { useIndiceContenido } from '../context/ContenidoContext.jsx'
 
 export function useVisibilidad() {
   const { rol, grupo, perfil } = useAuth()
+  const { fases } = useIndiceContenido()
+
+  // Mapa temaId → faseId (un tema oculta también si su fase está oculta),
+  // derivado del índice de LA ACADEMIA del usuario (bundle si es legacy).
+  const FASE_DE_TEMA = useMemo(() => {
+    const map = {}
+    for (const f of fases) for (const t of f.temas) map[t.id] = f.id
+    return map
+  }, [fases])
 
   return useMemo(() => {
     const aplica = rol === 'alumno' && Boolean(grupo)
@@ -36,5 +41,5 @@ export function useVisibilidad() {
       faseVisible,
       temaVisible,
     }
-  }, [rol, grupo, perfil])
+  }, [rol, grupo, perfil, FASE_DE_TEMA])
 }

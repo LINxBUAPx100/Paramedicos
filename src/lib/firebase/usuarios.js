@@ -3,6 +3,7 @@
 // ============================================================
 import { db } from './init.js'
 import { doc, getDoc, updateDoc, collection, query, where, getDocs } from 'firebase/firestore'
+import { normalizarPermisos, validarPermisos, PERMISOS_EDITOR } from '../permisosEditor.js'
 
 // Une al alumno a una academia validando su código (el código ES el id del doc).
 export async function unirseAcademia(uid, codigo) {
@@ -58,4 +59,56 @@ export async function listarUsuarios() {
 // super-admin (cualquier cambio) o admin_escuela (alumno<->instructor de su academia).
 export async function actualizarUsuario(uid, cambios) {
   await updateDoc(doc(db, 'usuarios', uid), cambios)
+}
+
+// Concede/retira los PERMISOS EDITORIALES de un PROFESOR (Fase 6). La barrera
+// REAL es firestore.rules (solo director PRO/super, mismo profesor de SU
+// academia, solo el campo permisosEditor); aquí se validan la forma y los
+// cursos, se escribe el mapa NORMALIZADO y se registra la auditoría en
+// `historial` (append-only). `cursosDisponibles`: cursoId reales de la academia
+// (para rechazar cursos que no existen). Devuelve los permisos normalizados.
+export async function asignarPermisosEditor(instructorUid, permisos, { cursosDisponibles = null } = {}) {
+  const norm = normalizarPermisos(permisos)
+  const error = validarPermisos(norm, cursosDisponibles)
+  if (error) throw new Error(error)
+
+  const ref = doc(db, 'usuarios', instructorUid)
+  const snap = await getDoc(ref)
+  if (!snap.exists()) throw new Error('Ese profesor ya no existe.')
+  const datos = snap.data()
+  if (datos.rol !== 'instructor') {
+    throw new Error('Los permisos editoriales solo se asignan a profesores.')
+  }
+  const antes = normalizarPermisos(datos.permisosEditor)
+
+  await updateDoc(ref, { permisosEditor: norm })
+
+  // Auditoría (best-effort: no debe tumbar la asignación si el historial falla).
+  const otorgaAlgo = PERMISOS_EDITOR.some((k) => norm[k])
+  try {
+    const { registrarHistorial } = await import('./contenido.js')
+    await registrarHistorial({
+      academiaId: datos.academiaId || null,
+      accion: otorgaAlgo ? 'asignar-permisos' : 'revocar-permisos',
+      coleccion: 'usuarios',
+      docId: instructorUid,
+      antes,
+      despues: norm,
+      origen: 'panel',
+    })
+  } catch { /* la auditoría no bloquea la operación principal */ }
+
+  return norm
+}
+
+// Entradas de auditoría de permisos de una academia (las lee el director/super
+// por reglas). Filtra el historial a las acciones de permisos, más recientes
+// primero. Devuelve [] si la academia no tiene historial legible.
+export async function historialPermisos(academiaId) {
+  const q = query(collection(db, 'historial'), where('academiaId', '==', academiaId))
+  const snap = await getDocs(q)
+  return snap.docs
+    .map((d) => ({ id: d.id, ...d.data() }))
+    .filter((h) => h.accion === 'asignar-permisos' || h.accion === 'revocar-permisos')
+    .sort((a, b) => (b.fecha?.seconds || 0) - (a.fecha?.seconds || 0))
 }

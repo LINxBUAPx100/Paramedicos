@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { fasesNav as fases, stats } from '../data/navIndice.js'
 import { useProgress } from '../context/ProgressContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
+import { useIndiceContenido } from '../context/ContenidoContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
 import { driveSrc } from '../lib/img.js'
 import Icon from '../components/Icon.jsx'
@@ -34,6 +34,8 @@ const HERO_SIZES = '(max-width: 880px) 90vw, 850px'
 
 export default function Home() {
   const { estado } = useProgress()
+  // Índice de LA academia del usuario (bundle para visitantes/legacy).
+  const { fases, stats } = useIndiceContenido()
   const { faseVisible } = useVisibilidad()
   const leidos = estado.leidos
   const temasLeidos = Object.values(leidos).filter(Boolean).length

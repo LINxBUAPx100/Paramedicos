@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom'
-import { fasesNav as fases } from '../data/navIndice.js'
 import { useProgress } from '../context/ProgressContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
+import { useIndiceContenido } from '../context/ContenidoContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
 import Icon from './Icon.jsx'
 import LogoPTEM from './marca/LogoPTEM.jsx'
@@ -35,6 +35,7 @@ export default function Layout({ children }) {
   const [consulta, setConsulta] = useState('')
   const { estado, alternarTema } = useProgress()
   const { autenticado, perfil, user, esStaff, esSuperadmin } = useAuth()
+  const { fases } = useIndiceContenido() // índice de LA academia (bundle si legacy)
   const { faseVisible, temaVisible } = useVisibilidad()
   const location = useLocation()
   const navigate = useNavigate()

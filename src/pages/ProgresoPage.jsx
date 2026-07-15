@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { fases, stats, todosLosTemas } from '../data/index.js'
+import { useContenido, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
 import { useProgress } from '../context/ProgressContext.jsx'
 
 function formatoFecha(ts) {
@@ -12,7 +12,12 @@ function formatoFecha(ts) {
 }
 
 export default function ProgresoPage() {
+  const { contenido, error, reintentar } = useContenido()
   const { estado, reiniciar } = useProgress()
+
+  if (error) return <ErrorContenido onReintentar={reintentar} />
+  if (!contenido) return <CargandoContenido />
+  const { fases, stats, todosLosTemas } = contenido
 
   const temasLeidos = Object.values(estado.leidos).filter(Boolean).length
   const progresoGlobal = Math.round((temasLeidos / stats.temas) * 100)

@@ -1,10 +1,10 @@
 # PLAN-LMS — Auditoría y planeación: PTEM como LMS multiacademia
 
-> Fecha: 2026-07-13 · Estado: auditoría completa · Fases 1, 2 y 3 implementadas
-> (pendiente: correr la suite de reglas con el emulador — ver
+> Fecha: 2026-07-14 · Estado: auditoría completa · Fases 1-4 + permisos
+> editoriales (roadmap Fase 6) + CABLEADO DEL RESOLUTOR (roadmap Fase 4)
+> implementadas (pendiente: correr la suite de reglas con el emulador — ver
 > docs/MIGRACION-CONTENIDO.md). La Fase 3 entregada es el EDITOR ESTRUCTURAL
-> (se adelantó respecto del roadmap original; el cableado del resolutor a las
-> páginas de estudio pasa a la siguiente fase).
+> (se adelantó respecto del roadmap original).
 > Regla de trabajo: **una fase por entrega**; nada se implementa fuera de la fase activa.
 
 ---
@@ -309,7 +309,7 @@ aislamiento no negociable, documentada aquí). No se duplica nada más.
 | **1 (esta)** | `planComercial` + tipos + capacidades centralizadas + gates iniciales | capacidades.js, AuthContext, AdminPage, AdminPlataforma, AcademiaAdminPage, PanelPage, admin.js, plataforma.js, firestore.rules, tests |
 | **2** | Aislamiento de contenido: colecciones `plantillas/cursos/temas`, script gen-plantilla desde src/data, clonación batched, reglas + pruebas cruzadas A/B con emulador | modelo de datos, scripts, firestore.rules |
 | **3 (hecha)** | Editor de ESTRUCTURA (curso/fase/módulo/tema: crear, mover, ordenar, duplicar, archivar, publicar; sin eliminación destructiva) — adelantada | UI editor + reglas |
-| **4** | Cableado del resolutor a las páginas de estudio (Firestore por academia con fallback al bundle, ya construido en F2) + caché; conserva URLs `/fase/:id`, `/tema/:id` | index.js "virtual", páginas de estudio |
+| **4 (hecha)** | Cableado del resolutor a las páginas de estudio (Firestore por academia con fallback al bundle, ya construido en F2) + caché; conserva URLs `/fase/:id`, `/tema/:id` | index.js "virtual", páginas de estudio |
 | **5** | Editor de TEMAS (bloques, quiz, flashcards, actividades) + borradores/vista previa | UI editor |
 | **6** | Permisos editoriales granulares del profesor | usuarios, reglas |
 | **7** | Página de inicio por SECCIONES configurables (hero, cursos, progreso, stats, anuncios, convocatorias, capacitadores) | Home + config por academia |
@@ -683,3 +683,194 @@ Modificados:
   vista previa con quiz/descargables/actividades, Escape).
 - Los 68 temas reales validan sin cambios; intentos legítimos pasan la regla
   nueva y los inflados no (suite de emulador lista).
+
+---
+
+# FASE 4 DEL ROADMAP — Conexión del resolutor a las páginas de estudio (implementada)
+
+> Nota de numeración: es la **Fase 4 del roadmap** (sección 20), entregada
+> después de la Fase 6 porque el editor y los permisos se adelantaron. Con
+> esta entrega la app COMPLETA sirve el contenido por academia.
+
+Alcance: los componentes dejan de importar `src/data` directamente; TODO el
+contenido académico de la UI pasa por el resolutor de la Fase 2
+(`contenidoDeAcademia`: Firestore si la academia está `migrado`, bundle legacy
+si no, con fallback automático). Las URLs `/fase/:id` y `/tema/:id` no cambian.
+NO agrega funciones nuevas de producto ni toca reglas de seguridad (no hay
+lecturas nuevas que no estuvieran ya permitidas).
+
+## Arquitectura
+
+Dos niveles de consumo, ambos por `src/context/ContenidoContext.jsx` (nuevo):
+
+1. **Índice ligero** (`useIndiceContenido` / `useIndiceAcademia(id)`): misma
+   forma que `src/data/navIndice.js`. Arranca con el bundle (0 lecturas) y, si
+   la academia del usuario está `migrado`, se sustituye por SU estructura
+   (**1 lectura**: el doc del curso, vía `indiceDeAcademia`). Lo consume el
+   shell: Layout, Home, useVisibilidad, TemarioPage y PanelAcademia (estos dos
+   con `useIndiceAcademia`, porque el superadmin gestiona academias ajenas).
+2. **Contenido completo** (`useContenido`): la API entera de
+   `src/data/index.js` reconstruida por el resolutor. Se carga **bajo demanda**
+   (solo al entrar a una página de estudio): el visitante anónimo y el alumno
+   legacy no pagan lecturas de Firestore; el alumno migrado descarga los temas
+   de su curso UNA vez por sesión (caché en memoria del resolutor). Páginas
+   cableadas: TemaPage, QuizPage, FasePage, ExamenPage, ExamenFasePage,
+   FlashcardsPage, ProgresoPage, BuscarPage, AtlasPage.
+
+La numeración y el filtrado de publicados son idénticos en ambos niveles
+(`indiceDesdeEstructura` ≡ `ensamblarFases`+`construirApi`, probado): nav y
+contenido no pueden desalinearse. Si el contenido completo de una academia
+migrada termina cayendo a legacy (clonación parcial, permisos), el índice del
+shell vuelve al bundle en el mismo acto (consistencia de fuente).
+
+## Archivos
+
+Nuevos:
+- `src/context/ContenidoContext.jsx` — provider + `useContenido`,
+  `useIndiceContenido`, `useIndiceAcademia`, `CargandoContenido`,
+  `ErrorContenido` (reintento). Reset automático al cambiar la fuente
+  (login/logout, cambio de academia, fin de clonación en vivo).
+- `tests/indiceContenido.test.mjs` — 5 pruebas puras (equivalencia con
+  navIndice.js generado, filtrado/renumeración, consistencia API↔estructura,
+  entradas vacías).
+
+Modificados:
+- `src/lib/contenidoApi.js` — `indiceDesdeEstructura`, `indiceDesdeFases`
+  (puros).
+- `src/lib/firebase/contenido.js` — `indiceDeAcademia` (+ caché propia),
+  `indicePorAcademiaId` (superadmin), el API de Firestore adjunta su `indice`,
+  `limpiarCacheContenido` limpia ambas cachés.
+- `src/lib/firebase/editor.js` — reordenar cursos también invalida la caché
+  (el resolutor sirve el primer curso publicado).
+- `src/main.jsx` — monta `ContenidoProvider` (dentro de Auth, fuera de
+  Progress).
+- Shell: `src/components/Layout.jsx`, `src/pages/Home.jsx`,
+  `src/lib/useVisibilidad.js` (mapa tema→fase derivado del índice),
+  `src/pages/TemarioPage.jsx`, `src/components/PanelAcademia.jsx`
+  (fases de la academia GESTIONADA — su avance/visibilidad se alinean con el
+  contenido que ven sus alumnos).
+- Páginas de estudio (9): sustituyen `import ... from '../data/index.js'` por
+  `useContenido()` + estado de carga; FlashcardsPage con puerta de montaje
+  (su mazo se baraja al montar).
+
+## Costos y rendimiento
+
+- Entrada del bundle: 80.2 → 82.0 KB gzip (+1.8: contexto + helpers puros).
+  El chunk de datos (641 KB) sigue fuera y solo lo descargan legacy/anónimos
+  al entrar a una página de estudio (igual que antes).
+- Alumno de academia migrada: 1 lectura (índice) al abrir la app + descarga
+  del curso completo (~70 lecturas) UNA vez por sesión al entrar a estudiar.
+  Documentado en §19; el doc índice pregenerado sigue como optimización futura.
+- Home/landing para anónimos: 0 lecturas (bundle), sin cambios.
+
+## Riesgos y reversión
+
+- La caché es EN MEMORIA: un refresh vuelve a leer (~70 lecturas por sesión
+  de alumno migrado). Aceptado en §19; optimizable con persistencia después.
+- Stats del hero (preguntas/flashcards) para academia migrada salen del bundle
+  hasta que se carga el contenido completo (la estructura sola no las conoce);
+  se corrigen solas al cargar. Cosmético.
+- Los materiales legacy (`recursosDescarga.js`, atlas `imagenes.js`) siguen
+  keyed por temaId global: temas clonados los conservan; temas nuevos de una
+  academia no los tienen (sus recursos van por `recursos.archivos`, Fase 4-doc).
+- Reversión: quitar `ContenidoProvider` de main.jsx y restaurar los imports
+  directos de `src/data` en las páginas (los módulos de datos no cambiaron).
+  Ninguna academia legacy cambia de comportamiento mientras no se marque
+  `migrado`.
+
+## Criterios de aceptación (estado)
+
+- `npm test`: 93 pruebas (+5) — ✔. `npm run build` — ✔ (+1.8 KB gzip entrada).
+- Home anónima renderiza con el índice del bundle y consola limpia; ruta de
+  tema sin sesión redirige a /cuenta — ✔ (verificado en navegador).
+- Academia legacy: mismas lecturas y mismo contenido que antes (resolutor →
+  bundle) — ✔ (equivalencia probada en pruebas puras de F2 + F4).
+- Academia migrada: nav, temario, panel y páginas de estudio sirven SU copia,
+  incluida la verificación manual con una academia clonada — pendiente de
+  verificación del usuario en producción/emulador (requiere datos clonados).
+
+---
+
+# FASE 6 — Permisos editoriales granulares del profesor (implementada)
+
+> Nota de numeración: es la **Fase 6 del roadmap** (sección 20). Las entregas
+> previas se rotularon FASE 1-4 en este documento porque el editor estructural
+> se adelantó; el contenido enriquecido (roadmap Fase 5) se entregó como FASE 4.
+
+Alcance: matriz CENTRALIZADA de permisos del profesor, validada en las cuatro
+capas, con auditoría. NO agrega funciones académicas: solo gobierna quién puede
+qué. No toca personalización, certificados ni replicación.
+
+## Modelo
+
+`usuarios/{uid}.permisosEditor = { editarContenido, crearTemas,
+editarActividades, editarExamenes, publicarContenido, administrarRecursos,
+cursosPermitidos:[cursoId] }`. Fuente única: **`src/lib/capacidades.js`** para
+la capacidad de PLAN (`permisosEditoriales`, solo PRO) y
+**`src/lib/permisosEditor.js`** para la matriz por profesor (normalización,
+validación, capacidades por rol, permiso por acción y por campo). Sin
+`editarContenido` no hay acceso; los cursos ajenos quedan fuera por `esStaffDe`.
+
+## Cambios (archivos)
+
+Nuevos:
+- `src/lib/permisosEditor.js` — módulo PURO: matriz, `normalizarPermisos`,
+  `validarPermisos`, `capacidadesEditor`, `permisoDeAccion`/`permisoAccionEditor`,
+  `permisosRequeridosPorContenido` (tolerante al vacío).
+- `src/components/PermisosEditoriales.jsx` — panel del director (por profesor:
+  6 permisos + cursos; conceder/retirar).
+- `tests/permisosEditor.test.mjs` — 12 pruebas puras.
+
+Modificados:
+- `src/lib/editorModelo.js` — `permisoEdicion` usa `normalizarPermisos`.
+- `src/lib/firebase/usuarios.js` — `asignarPermisosEditor` (valida + audita en
+  `historial`) e `historialPermisos`.
+- `src/lib/firebase/editor.js` — `exigirPermiso(…, accion)` (permiso fino por
+  acción) + rejilla por campo en `guardarContenidoTema` (transacción).
+- `src/pages/EditorPage.jsx`, `PanelNodo.jsx`, `ArbolCurso.jsx`,
+  `PanelContenidoTema.jsx` — ocultan/deshabilitan lo que el profesor no puede
+  (crear, publicar/archivar, duplicar, grupos quiz/recursos/actividades).
+- `src/components/PanelAcademia.jsx`, `src/index.css` — monta la sección de
+  permisos (director PRO / super) + estilos.
+- `firestore.rules` — `academiaPlanEfectivo`/`academiaOtorgaPermisos`,
+  `profesorPuedeEditar` con permisos finos, `camposTemaSegunPermisos`,
+  `cursoSegunPermisos`, regla del director para `permisosEditor`, y el DUEÑO ya
+  no puede tocar su propio `permisosEditor` (anti-escalación).
+- `storage.rules` — subir/borrar exige `administrarRecursos` al profesor.
+- `tests/rules/contenido.rules.test.mjs`, `tests/rules/storage.rules.test.mjs`
+  — casos de escalación y de permisos finos.
+
+## Validación en 4 capas
+
+1. **React**: `capacidadesEditor` oculta controles sin permiso.
+2. **Datos**: `permisoEdicion` + `permisoAccionEditor` + diff por campo.
+3. **Firestore Rules**: `profesorPuedeEditar` + `camposTemaSegunPermisos` +
+   regla del director + dueño protegido.
+4. **Storage Rules**: `administrarRecursos` para archivos.
+
+## Escalaciones probadas (todas se niegan)
+
+Profesor editando sus propios permisos; profesor en otro curso; profesor en
+otra academia; director BASE concediendo permisos; alumno escribiendo
+contenido; petición manual (las reglas son la barrera). Auditoría: cada
+asignación/revocación queda en `historial` (append-only).
+
+## Riesgos y reversión
+
+- Reglas (Firestore + Storage) escritas y con suite lista; NO ejecutadas aquí
+  (sin Java/emulador). Desplegarlas ANTES de usar la gestión de permisos.
+- *Fail-closed* documentado: el primer guardado de un tema clonado no
+  normalizado por un profesor limitado puede exigir un permiso por el
+  re-normalizado (seguro; se resuelve concediendo el permiso o guardando una
+  vez como director).
+- Reversión: aditiva. Quitar la sección de PanelAcademia y la regla del
+  director desactiva la gestión; `permisosEditor` ausente ⇒ profesor sin acceso
+  (comportamiento previo).
+
+## Criterios de aceptación (estado)
+
+- `npm test` (88, +12) y `npm run build` — ✔.
+- Director PRO concede/retira por profesor y curso; BASE no ve la sección — ✔
+  (UI + datos + reglas; reglas pendientes de emulador).
+- Profesor limitado no crea/publica/edita exámenes/recursos que no tiene, ni
+  edita sus propios permisos, ni toca otra academia — ✔ (puro + suite de reglas).

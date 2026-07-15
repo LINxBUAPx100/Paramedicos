@@ -1,18 +1,22 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { buscar } from '../data/index.js'
+import { useContenido, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
 import Icon from '../components/Icon.jsx'
 
 export default function BuscarPage() {
+  const { contenido, error, reintentar } = useContenido()
   const [params] = useSearchParams()
   const [query, setQuery] = useState(params.get('q') || '')
-  const resultados = buscar(query)
+  const resultados = contenido ? contenido.buscar(query) : []
 
   // Sincroniza con el buscador del header (?q=…) sin remontar la página.
   useEffect(() => {
     const q = params.get('q')
     if (q != null) setQuery(q)
   }, [params])
+
+  if (error) return <ErrorContenido onReintentar={reintentar} />
+  if (!contenido) return <CargandoContenido />
 
   return (
     <div className="buscar-page">

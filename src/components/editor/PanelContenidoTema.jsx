@@ -336,10 +336,24 @@ function EditorFilas({ filas, campos, etiquetaFila, uid, disabled, onCambio, ext
 // ============================================================
 //  Panel principal
 // ============================================================
+// Permiso fino que gobierna cada grupo del editor de contenido (Fase 6). Los
+// grupos sin permiso NO se muestran al profesor, así su borrador nunca cambia
+// esos campos y el guardado no los toca (las reglas los protegen igual).
+const PERMISO_POR_GRUPO = {
+  quiz: 'editarExamenes',
+  actividades: 'editarActividades',
+  recursos: 'administrarRecursos',
+}
+
 export default function PanelContenidoTema({
   temaDoc, academiaId, modoPlantilla = false, ocupado = false,
-  onGuardar, onDirty,
+  permisos = {}, onGuardar, onDirty,
 }) {
+  // Por defecto (super/director) todo está permitido.
+  const puede = {
+    editarExamenes: true, editarActividades: true, administrarRecursos: true,
+    ...permisos,
+  }
   const uid = useId()
   const [borrador, setBorrador] = useState(null)
   const [sucio, setSucio] = useState(false)
@@ -636,12 +650,14 @@ export default function PanelContenidoTema({
       )}
       {error && <p className="editor-error" role="alert">{error}</p>}
 
-      {grupos.map((g) => (
-        <details className="ct-grupo" key={g.clave}>
-          <summary>{g.titulo}</summary>
-          <div className="ct-grupo-cuerpo">{g.cuerpo}</div>
-        </details>
-      ))}
+      {grupos
+        .filter((g) => !PERMISO_POR_GRUPO[g.clave] || puede[PERMISO_POR_GRUPO[g.clave]])
+        .map((g) => (
+          <details className="ct-grupo" key={g.clave}>
+            <summary>{g.titulo}</summary>
+            <div className="ct-grupo-cuerpo">{g.cuerpo}</div>
+          </details>
+        ))}
 
       <VistaPreviaTema
         abierto={previa}

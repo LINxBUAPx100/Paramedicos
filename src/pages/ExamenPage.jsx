@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { todasLasPreguntas } from '../data/index.js'
-import { fasesNav } from '../data/navIndice.js'
+import { useContenido, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
 import { useProgress } from '../context/ProgressContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
@@ -20,6 +19,7 @@ function mezclar(arr) {
 export default function ExamenPage() {
   const { registrarExamen } = useProgress()
   const { user } = useAuth()
+  const { contenido, error, reintentar } = useContenido()
   const { faseVisible, temaVisible } = useVisibilidad()
   const [config, setConfig] = useState(null) // { preguntas }
   const [cantidad, setCantidad] = useState(10)
@@ -27,13 +27,13 @@ export default function ExamenPage() {
 
   // Examen general: solo preguntas de temas visibles para el grupo del alumno.
   const preguntasDisponibles = useMemo(
-    () => todasLasPreguntas.filter((q) => temaVisible(q.temaId)),
-    [temaVisible]
+    () => (contenido?.todasLasPreguntas || []).filter((q) => temaVisible(q.temaId)),
+    [contenido, temaVisible]
   )
   // Fases visibles para la lista de "examen por fase".
   const fasesDisponibles = useMemo(
-    () => fasesNav.filter((f) => faseVisible(f.id)),
-    [faseVisible]
+    () => (contenido?.fases || []).filter((f) => faseVisible(f.id)),
+    [contenido, faseVisible]
   )
 
   // Intentos del alumno (para mostrar su mejor puntuación por fase).
@@ -69,6 +69,9 @@ export default function ExamenPage() {
     const seleccion = mezclar(preguntasDisponibles).slice(0, n)
     setConfig({ preguntas: seleccion, key: Date.now() })
   }
+
+  if (error) return <ErrorContenido onReintentar={reintentar} />
+  if (!contenido) return <CargandoContenido />
 
   if (config) {
     return (

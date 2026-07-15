@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom'
 import { useState, useMemo } from 'react'
-import { getTema, todasLasFlashcards } from '../data/index.js'
+import { useContenido, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
 import Icon from '../components/Icon.jsx'
 
@@ -13,9 +13,18 @@ function mezclar(arr) {
   return a
 }
 
+// Puerta de carga: el estado inicial del mazo (orden barajable) se calcula al
+// montar, así que el componente interno solo se monta con el contenido listo.
 export default function FlashcardsPage() {
+  const { contenido, error, reintentar } = useContenido()
+  if (error) return <ErrorContenido onReintentar={reintentar} />
+  if (!contenido) return <CargandoContenido />
+  return <Flashcards contenido={contenido} />
+}
+
+function Flashcards({ contenido }) {
   const { temaId } = useParams()
-  const tema = temaId ? getTema(temaId) : null
+  const tema = temaId ? contenido.getTema(temaId) : null
   const { temaVisible } = useVisibilidad()
 
   // Flashcards de un tema oculto para el grupo del alumno: no disponibles.
@@ -26,8 +35,8 @@ export default function FlashcardsPage() {
       return tema.flashcards.map((f, i) => ({ ...f, id: `${tema.id}-${i}` }))
     }
     // Repaso global: excluye las flashcards de temas ocultos.
-    return todasLasFlashcards.filter((f) => temaVisible(f.temaId))
-  }, [tema, temaVisible])
+    return contenido.todasLasFlashcards.filter((f) => temaVisible(f.temaId))
+  }, [tema, temaVisible, contenido])
 
   const [orden, setOrden] = useState(() => baseCartas.map((_, i) => i))
   const [indice, setIndice] = useState(0)

@@ -40,15 +40,17 @@ service firebase.storage {
         .data.get('planComercial', 'pro') in ['pro', 'curso'];
     }
     // Director de la academia (con plan que edita) o profesor con permisos
-    // editoriales. La granularidad por curso vive en Firestore; en Storage
-    // basta el permiso editorial general de la academia.
+    // editoriales. Los ARCHIVOS los gobierna `administrarRecursos` (Fase 6):
+    // un profesor debe tener editarContenido + administrarRecursos para subir,
+    // reemplazar o borrar. La granularidad por curso vive en Firestore.
     function puedeEditar(acaId) {
       return esSuper()
         || (perteneceA(acaId)
           && (
             (miDoc().rol == 'admin_escuela' && academiaEditaContenido(acaId))
             || (miDoc().rol == 'instructor'
-              && miDoc().get('permisosEditor', {}).get('editarContenido', false) == true)
+              && miDoc().get('permisosEditor', {}).get('editarContenido', false) == true
+              && miDoc().get('permisosEditor', {}).get('administrarRecursos', false) == true)
           ));
     }
     // Allowlist de contenido (espejo de src/lib/archivosModelo.js). Nunca

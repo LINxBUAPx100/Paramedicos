@@ -55,6 +55,13 @@ async function preparar() {
       permisosEditor: { editarContenido: true, cursosPermitidos: ['ACA-A__tum'] },
     })
     await pon('usuarios/profA2', { rol: 'instructor', academiaId: 'ACA-A', estado: 'activo' })
+    // profAcrea: profesor con permiso de crear temas (Fase 6).
+    await pon('usuarios/profAcrea', {
+      rol: 'instructor', academiaId: 'ACA-A', estado: 'activo',
+      permisosEditor: { editarContenido: true, crearTemas: true, cursosPermitidos: ['ACA-A__tum'] },
+    })
+    // profC: profesor de la academia BASE (para "director BASE concede").
+    await pon('usuarios/profC', { rol: 'instructor', academiaId: 'ACA-C', estado: 'activo' })
     await pon('usuarios/alumA', { rol: 'alumno', academiaId: 'ACA-A', estado: 'activo' })
     await pon('usuarios/alumB', { rol: 'alumno', academiaId: 'ACA-B', estado: 'activo' })
     await pon('plantillas/tum', { nombre: 'TUM', version: 1, estado: 'publicada', estructura: [] })
@@ -79,6 +86,11 @@ async function preparar() {
     await pon('temas/ACA-A__tum__t3', {
       academiaId: 'ACA-A', cursoId: 'ACA-A__tum', temaId: 't3', version: 1, creadoPor: 'seed',
       titulo: 'T3', estado: 'publicado', quiz: [], flashcards: [], secciones: [],
+    })
+    // t4: reservado para las pruebas de permisos FINOS por campo (Fase 6).
+    await pon('temas/ACA-A__tum__t4', {
+      academiaId: 'ACA-A', cursoId: 'ACA-A__tum', temaId: 't4', version: 1, creadoPor: 'seed',
+      titulo: 'T4', estado: 'publicado', quiz: [], flashcards: [], secciones: [], recursos: null, actividades: null,
     })
     await pon('historial/h1', {
       academiaId: 'ACA-A', usuario: 'dirA', accion: 'x', coleccion: 'temas',
@@ -253,6 +265,83 @@ test('respaldos: exclusivos del super-admin', { skip }, async () => {
   const { assertSucceeds, assertFails } = rut
   await assertSucceeds(setDoc(doc(como('super1'), 'respaldos/r1'), { academiaId: 'ACA-A', datos: {} }))
   await assertFails(getDoc(doc(como('dirA'), 'respaldos/r1')))
+})
+
+// ---------- Fase 6: permisos editoriales granulares del profesor ----------
+
+test('permisos: el director PRO concede/retira permisos a profesores de SU academia', { skip }, async () => {
+  await preparar()
+  const { doc, updateDoc } = fsmod
+  const { assertSucceeds, assertFails } = rut
+  const perms = { editarContenido: true, editarExamenes: true, cursosPermitidos: ['ACA-A__tum'] }
+  // Director PRO concede a un profesor de su academia.
+  await assertSucceeds(updateDoc(doc(como('dirA'), 'usuarios/profA2'), { permisosEditor: perms }))
+  // Y puede retirarlos (todo en falso, sin cursos).
+  await assertSucceeds(updateDoc(doc(como('dirA'), 'usuarios/profA2'), {
+    permisosEditor: { editarContenido: false, cursosPermitidos: [] },
+  }))
+  // Forma inválida (clave desconocida en el mapa): rechazada.
+  await assertFails(updateDoc(doc(como('dirA'), 'usuarios/profA2'), {
+    permisosEditor: { editarContenido: true, inventado: true, cursosPermitidos: [] },
+  }))
+  // No a sí mismo, no a un director, no a otra academia.
+  await assertFails(updateDoc(doc(como('dirA'), 'usuarios/dirA'), { permisosEditor: perms }))
+  await assertFails(updateDoc(doc(como('dirA'), 'usuarios/dirB'), { permisosEditor: perms }))
+  await assertFails(updateDoc(doc(como('dirB'), 'usuarios/profA'), { permisosEditor: perms }))
+  // Cambiar OTRO campo junto a permisosEditor (colarse un rol) se niega.
+  await assertFails(updateDoc(doc(como('dirA'), 'usuarios/profA2'), { permisosEditor: perms, rol: 'admin_escuela' }))
+})
+
+test('permisos: un director BASE no puede conceder permisos (plan)', { skip }, async () => {
+  await preparar()
+  const { doc, updateDoc } = fsmod
+  const { assertFails } = rut
+  await assertFails(updateDoc(doc(como('dirC'), 'usuarios/profC'), {
+    permisosEditor: { editarContenido: true, cursosPermitidos: ['ACA-C__tum'] },
+  }))
+})
+
+test('permisos: el profesor NO puede modificar sus propios permisos (escalación)', { skip }, async () => {
+  await preparar()
+  const { doc, updateDoc } = fsmod
+  const { assertFails } = rut
+  await assertFails(updateDoc(doc(como('profA'), 'usuarios/profA'), {
+    permisosEditor: { editarContenido: true, editarExamenes: true, publicarContenido: true, cursosPermitidos: ['ACA-A__tum'] },
+  }))
+  // Tampoco puede concedérselos a otro profesor (no es director).
+  await assertFails(updateDoc(doc(como('profA'), 'usuarios/profA2'), {
+    permisosEditor: { editarContenido: true, cursosPermitidos: ['ACA-A__tum'] },
+  }))
+})
+
+test('permisos finos: el profesor sin editarExamenes/publicar no cambia quiz ni estado', { skip }, async () => {
+  await preparar()
+  const { doc, updateDoc } = fsmod
+  const { assertSucceeds, assertFails } = rut
+  // profA tiene editarContenido pero NO editarExamenes ni publicarContenido.
+  const t4 = 'temas/ACA-A__tum__t4' // versión 1
+  await assertFails(updateDoc(doc(como('profA'), t4), {
+    quiz: [{ pregunta: 'nueva', opciones: ['a', 'b'], correcta: 0 }], version: 2,
+  }))
+  await assertFails(updateDoc(doc(como('profA'), t4), { estado: 'archivado', version: 2 }))
+  // Editar solo el título (campo base) sí pasa (deja t4 en versión 2).
+  await assertSucceeds(updateDoc(doc(como('profA'), t4), { titulo: 'T4 editado', version: 2 }))
+})
+
+test('permisos finos: crear un tema exige el permiso crearTemas', { skip }, async () => {
+  await preparar()
+  const { doc, setDoc } = fsmod
+  const { assertSucceeds, assertFails } = rut
+  const base = (temaId) => ({
+    academiaId: 'ACA-A', cursoId: 'ACA-A__tum', temaId, titulo: 'Nuevo',
+    estado: 'borrador', version: 1, creadoPor: null,
+  })
+  // profAcrea tiene crearTemas → puede crear (firma con su uid).
+  await assertSucceeds(setDoc(doc(como('profAcrea'), 'temas/ACA-A__tum__np1'),
+    { ...base('np1'), creadoPor: 'profAcrea' }))
+  // profA NO tiene crearTemas → no puede crear aunque conozca el curso.
+  await assertFails(setDoc(doc(como('profA'), 'temas/ACA-A__tum__np2'),
+    { ...base('np2'), creadoPor: 'profA' }))
 })
 
 // ---------- Fase 4: el resultado de un examen no se falsea desde el cliente ----------

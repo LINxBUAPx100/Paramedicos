@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { fasesNav } from '../data/navIndice.js'
 import { recursosGenerales } from '../data/recursosDescarga.js'
 import { useAuth } from '../context/AuthContext.jsx'
+import { useIndiceAcademia } from '../context/ContenidoContext.jsx'
 import Icon from '../components/Icon.jsx'
 
 // ============================================================
@@ -15,9 +15,6 @@ import Icon from '../components/Icon.jsx'
 //    · Ojo por TEMA: oculta/muestra ese tema individual
 //  Lo oculto desaparece de las listas del alumno y sale censurado en el Atlas.
 // ============================================================
-
-const TODAS_LAS_FASES = fasesNav.map((f) => f.id)
-const TOTAL_TEMAS = fasesNav.reduce((s, f) => s + f.temas.length, 0)
 
 export default function TemarioPage() {
   const { cargando, esStaff, esSuperadmin, academiaId, grupoId: miGrupoId, puedeVerCodigos } = useAuth()
@@ -34,6 +31,13 @@ export default function TemarioPage() {
   const [aplicado, setAplicado] = useState(false)
 
   const academiaActiva = esSuperadmin ? acaSel : academiaId
+  // Temario de LA ACADEMIA gestionada: su copia si está migrada, bundle si no.
+  const { fases: fasesTemario } = useIndiceAcademia(academiaActiva)
+  const TODAS_LAS_FASES = useMemo(() => fasesTemario.map((f) => f.id), [fasesTemario])
+  const TOTAL_TEMAS = useMemo(
+    () => fasesTemario.reduce((s, f) => s + f.temas.length, 0),
+    [fasesTemario]
+  )
 
   // Super-admin: lista de academias para elegir.
   useEffect(() => {
@@ -205,7 +209,7 @@ export default function TemarioPage() {
     }
   }
 
-  const temasOcultosTotal = fasesNav.reduce((s, f) => {
+  const temasOcultosTotal = fasesTemario.reduce((s, f) => {
     if (faseOculta(f.id)) return s + f.temas.length
     return s + f.temas.filter((t) => temaOcultoSolo(t.id)).length
   }, 0)
@@ -213,7 +217,7 @@ export default function TemarioPage() {
   return (
     <div className="temario temario--staff">
       <header className="temario-hero">
-        <span className="temario-badge">Temario completo · {fasesNav.length} fases · {TOTAL_TEMAS} temas</span>
+        <span className="temario-badge">Temario completo · {fasesTemario.length} fases · {TOTAL_TEMAS} temas</span>
         <h1>Temario y visibilidad para alumnos</h1>
         <p className="temario-desc">
           Este es el 100% del contenido de la plataforma. Elige un grupo y usa los ojos para
@@ -275,7 +279,7 @@ export default function TemarioPage() {
         )}
       </header>
 
-      {fasesNav.map((fase) => {
+      {fasesTemario.map((fase) => {
         const fOculta = faseOculta(fase.id)
         const visiblesDeFase = fOculta
           ? 0

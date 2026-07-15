@@ -13,6 +13,7 @@ import {
   crearFase, crearModulo, crearTema, actualizarNodo, reordenarNodo, moverNodo,
   duplicarNodo, archivarNodo, restaurarNodo, despublicarNodo, publicarNodo,
 } from '../lib/editorModelo.js'
+import { capacidadesEditor } from '../lib/permisosEditor.js'
 
 // La capa de datos se importa DIFERIDA (mismo patrón del resto de la app:
 // Firebase nunca entra al bundle inicial).
@@ -52,6 +53,27 @@ export default function EditorPage() {
   const contexto = useMemo(() => ({
     uid: user?.uid, esSuperadmin, rol, academiaId, capacidades, perfil,
   }), [user?.uid, esSuperadmin, rol, academiaId, capacidades, perfil])
+
+  // Capacidades de edición EFECTIVAS (super/director: todo; profesor: sus
+  // permisosEditor). Gobiernan qué controles se ofrecen; la barrera real son
+  // las reglas + la capa de datos. En modo plantilla solo entra el super.
+  const capsEditor = useMemo(
+    () => capacidadesEditor({ esSuperadmin, rol, perfil }),
+    [esSuperadmin, rol, perfil]
+  )
+  const esInstructor = !esSuperadmin && rol === 'instructor'
+  const permisosNodo = useMemo(() => ({
+    editar: capsEditor.editarContenido,
+    publicar: capsEditor.publicarContenido,
+    crear: capsEditor.crearTemas,
+    duplicarCurso: !esInstructor, // crear un curso completo es del director/super
+  }), [capsEditor, esInstructor])
+  const permisosContenido = useMemo(() => ({
+    editar: capsEditor.editarContenido,
+    editarExamenes: capsEditor.editarExamenes,
+    editarActividades: capsEditor.editarActividades,
+    administrarRecursos: capsEditor.administrarRecursos,
+  }), [capsEditor])
 
   // ---------- estado principal ----------
   const [academiaObjetivo, setAcademiaObjetivo] = useState(null) // doc de la academia editada
@@ -595,6 +617,7 @@ export default function EditorPage() {
                 estructura={curso.estructura || []}
                 seleccion={seleccion?.curso ? null : seleccion}
                 onSeleccionar={seleccionar}
+                puedeCrear={capsEditor.crearTemas}
                 onCrearHijo={(datos) => setCrear({ ...datos, titulo: '' })}
               />
             )}
@@ -616,6 +639,7 @@ export default function EditorPage() {
                 padre={nombreDestino}
                 ocupado={ocupado}
                 puedeReordenar={false}
+                permisos={permisosNodo}
                 onGuardarCampos={async (cambios, alTerminar) => {
                   setGuardado({ estado: 'guardando', mensaje: 'Guardando…' })
                   try {
@@ -648,6 +672,7 @@ export default function EditorPage() {
                   padre={padreDe(curso.estructura, seleccion, curso.titulo)}
                   destinosMover={destinosMoverDe(curso.estructura, seleccion)}
                   ocupado={ocupado}
+                  permisos={permisosNodo}
                   onGuardarCampos={guardarCamposNodo}
                   onAccion={accionNodo}
                   onDirty={marcarSucio('nodo')}
@@ -661,6 +686,7 @@ export default function EditorPage() {
                       academiaId={destino.modo === 'academia' ? destino.academiaId : null}
                       modoPlantilla={destino.modo === 'plantilla'}
                       ocupado={ocupado}
+                      permisos={permisosContenido}
                       onGuardar={guardarContenidoDelTema}
                       onDirty={marcarSucio('contenido')}
                     />

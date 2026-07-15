@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom'
-import { getFase } from '../data/index.js'
+import { useContenido, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
 import { useProgress } from '../context/ProgressContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
 import NotFound from './NotFound.jsx'
@@ -7,10 +7,13 @@ import Icon from '../components/Icon.jsx'
 
 export default function FasePage() {
   const { faseId } = useParams()
-  const fase = getFase(faseId)
+  const { contenido, error, reintentar } = useContenido()
+  const fase = contenido?.getFase(faseId)
   const { estado } = useProgress()
   const { faseVisible, temaVisible } = useVisibilidad()
 
+  if (error) return <ErrorContenido onReintentar={reintentar} />
+  if (!contenido) return <CargandoContenido />
   if (!fase) return <NotFound />
 
   // Fase oculta para el grupo del alumno: aún no disponible.

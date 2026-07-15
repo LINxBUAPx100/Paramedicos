@@ -52,11 +52,17 @@ async function preparar() {
     await setDoc(doc(db, 'usuarios/super1'), { rol: 'superadmin', academiaId: '', estado: 'activo' })
     await setDoc(doc(db, 'usuarios/dirA'), { rol: 'admin_escuela', academiaId: 'ACA-A', estado: 'activo' })
     await setDoc(doc(db, 'usuarios/dirC'), { rol: 'admin_escuela', academiaId: 'ACA-C', estado: 'activo' })
+    // profA: editar contenido + administrar recursos → puede subir archivos.
     await setDoc(doc(db, 'usuarios/profA'), {
+      rol: 'instructor', academiaId: 'ACA-A', estado: 'activo',
+      permisosEditor: { editarContenido: true, administrarRecursos: true, cursosPermitidos: ['ACA-A__tum'] },
+    })
+    await setDoc(doc(db, 'usuarios/profA2'), { rol: 'instructor', academiaId: 'ACA-A', estado: 'activo' })
+    // profSinRec: edita contenido pero SIN administrarRecursos → no sube archivos.
+    await setDoc(doc(db, 'usuarios/profSinRec'), {
       rol: 'instructor', academiaId: 'ACA-A', estado: 'activo',
       permisosEditor: { editarContenido: true, cursosPermitidos: ['ACA-A__tum'] },
     })
-    await setDoc(doc(db, 'usuarios/profA2'), { rol: 'instructor', academiaId: 'ACA-A', estado: 'activo' })
     await setDoc(doc(db, 'usuarios/alumA'), { rol: 'alumno', academiaId: 'ACA-A', estado: 'activo' })
     await setDoc(doc(db, 'usuarios/alumB'), { rol: 'alumno', academiaId: 'ACA-B', estado: 'activo' })
   })
@@ -96,6 +102,17 @@ test('storage: director BASE, profesor sin permisos y alumnos no suben', { skip 
   await assertFails(uploadBytes(ref(almacenDe('dirC'), 'academias/ACA-C/archivos/base.pdf'), PDF, meta))
   await assertFails(uploadBytes(ref(almacenDe('profA2'), 'academias/ACA-A/archivos/sinpermiso.pdf'), PDF, meta))
   await assertFails(uploadBytes(ref(almacenDe('alumA'), 'academias/ACA-A/archivos/alumno.pdf'), PDF, meta))
+})
+
+test('storage: el profesor SIN administrarRecursos no sube ni borra (Fase 6)', { skip }, async () => {
+  await preparar()
+  const { ref, uploadBytes, deleteObject } = st
+  const { assertFails } = rut
+  // Edita contenido pero le falta administrarRecursos: Storage lo rechaza.
+  await assertFails(uploadBytes(ref(almacenDe('profSinRec'), 'academias/ACA-A/archivos/no.pdf'), PDF, {
+    contentType: 'application/pdf',
+  }))
+  await assertFails(deleteObject(ref(almacenDe('profSinRec'), 'academias/ACA-A/archivos/existente.pdf')))
 })
 
 test('storage: tipos fuera de la allowlist (ejecutables) se rechazan', { skip }, async () => {

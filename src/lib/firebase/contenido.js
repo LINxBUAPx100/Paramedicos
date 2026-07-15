@@ -19,7 +19,10 @@ import {
 import {
   cursoIdDe, lotes, cursoDesdePlantilla, docsClonadosParaAcademia,
 } from '../contenidoModelo.js'
-import { academiaMigrada, ensamblarFases, construirApi } from '../contenidoApi.js'
+import {
+  academiaMigrada, ensamblarFases, construirApi,
+  indiceDesdeEstructura, indiceDesdeFases,
+} from '../contenidoApi.js'
 import { obtenerPlantilla, temasDePlantilla } from './plantillas.js'
 
 // --- Estado de migración de la academia (academias/{id}.contenido) ---------
@@ -194,7 +197,15 @@ async function cargarDeFirestore(academiaId) {
   if (faltantes.length) {
     throw new Error(`Faltan ${faltantes.length} temas del curso ${curso.id}: ${faltantes.slice(0, 5).join(', ')}…`)
   }
-  return { ...construirApi(fases), fuente: 'firestore', academiaId, cursoId: curso.id }
+  const api = construirApi(fases)
+  return {
+    ...api,
+    // Índice ligero EXACTO del contenido cargado (para el shell/nav).
+    indice: { ...indiceDesdeFases(api.fases), stats: api.stats, fuente: 'firestore' },
+    fuente: 'firestore',
+    academiaId,
+    cursoId: curso.id,
+  }
 }
 
 // ÚNICA puerta de la app al contenido académico. Recibe la academia del
@@ -220,8 +231,55 @@ export async function contenidoDeAcademia(academia) {
   return cacheContenido.get(academiaId)
 }
 
+// --- Índice ligero por academia (para el shell: nav, home, temario, panel) --
+// Solo baja el DOC DEL CURSO (1 lectura) y deriva la misma forma que
+// src/data/navIndice.js. Caché por academiaId, separada del contenido pesado.
+const cacheIndices = new Map()
+
+export async function indiceDeAcademia(academia) {
+  const academiaId = academia?.id
+  // Sin academia o sin migrar: el shell sigue usando el índice del bundle.
+  if (!academiaId || !academiaMigrada(academia)) return null
+  if (!cacheIndices.has(academiaId)) {
+    cacheIndices.set(
+      academiaId,
+      (async () => {
+        const cursos = await cursosDeAcademia(academiaId)
+        if (!cursos.length) throw new Error(`La academia ${academiaId} no tiene cursos publicados.`)
+        const curso = cursos[0] // mismo criterio que el resolutor de contenido
+        if (!curso.clonacion?.completa) throw new Error(`El curso ${curso.id} tiene una clonación incompleta.`)
+        return {
+          ...indiceDesdeEstructura(curso.estructura),
+          fuente: 'firestore',
+          academiaId,
+          cursoId: curso.id,
+        }
+      })().catch((err) => {
+        console.warn(`[contenido] Índice legacy para ${academiaId}:`, err?.message || err)
+        cacheIndices.delete(academiaId)
+        return null
+      })
+    )
+  }
+  return cacheIndices.get(academiaId)
+}
+
+// Variante por ID (superadmin gestionando OTRA academia): baja su doc para
+// conocer el estado de migración y reutiliza indiceDeAcademia.
+export async function indicePorAcademiaId(academiaId) {
+  if (!academiaId) return null
+  const snap = await getDoc(doc(db, 'academias', academiaId))
+  if (!snap.exists()) return null
+  return indiceDeAcademia({ id: snap.id, ...snap.data() })
+}
+
 // Limpia la caché (logout, cambio de academia, después de clonar/editar).
 export function limpiarCacheContenido(academiaId) {
-  if (academiaId) cacheContenido.delete(academiaId)
-  else cacheContenido.clear()
+  if (academiaId) {
+    cacheContenido.delete(academiaId)
+    cacheIndices.delete(academiaId)
+  } else {
+    cacheContenido.clear()
+    cacheIndices.clear()
+  }
 }

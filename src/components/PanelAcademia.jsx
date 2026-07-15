@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { fasesNav } from '../data/navIndice.js'
 import { useAuth } from '../context/AuthContext.jsx'
+import { useIndiceAcademia } from '../context/ContenidoContext.jsx'
 import Icon from './Icon.jsx'
 import CompartirCodigo from './CompartirCodigo.jsx'
+import PermisosEditoriales from './PermisosEditoriales.jsx'
 
 // ============================================================
 //  Dashboard de UNA academia (compartido por toda la jerarquía)
@@ -31,7 +32,10 @@ export const ETIQUETA_ROL = {
 // `soloGrupo`: si viene (profesor con grupo asignado), el panel queda fijado
 // a ese grupo y no se puede cambiar el filtro.
 export default function PanelAcademia({ academiaId, academiaNombre = '', gestion = null, miUid = null, soloGrupo = null }) {
-  const { puedeVerCodigos } = useAuth()
+  const { puedeVerCodigos, capacidades } = useAuth()
+  // Fases de LA ACADEMIA gestionada (su copia si está migrada; bundle si no):
+  // el avance por fase debe alinearse con el contenido que ven SUS alumnos.
+  const { fases: fasesNav } = useIndiceAcademia(academiaId)
   const [datos, setDatos] = useState(null) // { miembros, intentos, grupos }
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState('')
@@ -174,7 +178,7 @@ export default function PanelAcademia({ academiaId, academiaNombre = '', gestion
         )
       )}
 
-      <Estadisticas alumnos={alumnos} staff={staff} intentos={datos.intentos} resumen={resumen} />
+      <Estadisticas alumnos={alumnos} staff={staff} intentos={datos.intentos} resumen={resumen} fases={fasesNav} />
 
       <SolicitudesAcademia
         academiaId={academiaId}
@@ -327,6 +331,17 @@ export default function PanelAcademia({ academiaId, academiaNombre = '', gestion
           grupos={grupos}
           gestion={gestion}
           miUid={miUid}
+          onCambio={() => setRecarga((n) => n + 1)}
+        />
+      )}
+
+      {/* Permisos editoriales (Fase 6): el director PRO (o el super-admin desde
+          el dashboard de la academia) concede/retira permisos a sus profesores.
+          Un director BASE no ve esta sección (capacidad del plan). */}
+      {((gestion === 'director' && capacidades?.permisosEditoriales) || gestion === 'superadmin') && (
+        <PermisosEditoriales
+          academiaId={academiaId}
+          instructores={datos.miembros.filter((m) => m.rol === 'instructor')}
           onCambio={() => setRecarga((n) => n + 1)}
         />
       )}
@@ -573,7 +588,7 @@ function AccesoCodigos({ academiaId, academiaNombre = '', grupos }) {
 }
 
 // ---------- Estadísticas de la academia ----------
-function Estadisticas({ alumnos, staff, intentos, resumen }) {
+function Estadisticas({ alumnos, staff, intentos, resumen, fases }) {
   const stats = useMemo(() => {
     const uidsAlumnos = new Set(alumnos.map((a) => a.id))
     // Mejores calificaciones (una por alumno-fase) solo de alumnos actuales.
@@ -603,7 +618,7 @@ function Estadisticas({ alumnos, staff, intentos, resumen }) {
     ).length
 
     // Promedio de la mejor calificación por fase (entre quienes la presentaron).
-    const porFase = fasesNav.map((f) => {
+    const porFase = fases.map((f) => {
       const valores = alumnos
         .map((al) => resumen[al.id]?.[f.id]?.mejor)
         .filter((v) => v !== undefined)
@@ -615,7 +630,7 @@ function Estadisticas({ alumnos, staff, intentos, resumen }) {
 
     const recientes = intentos.filter((i) => uidsAlumnos.has(i.uid)).slice(0, 6)
     return { promedio, aprobacion, activos, semana, porFase, recientes, enRiesgo }
-  }, [alumnos, intentos, resumen])
+  }, [alumnos, intentos, resumen, fases])
 
   const fechaTxt = (f) =>
     f?.seconds ? new Date(f.seconds * 1000).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' }) : '—'

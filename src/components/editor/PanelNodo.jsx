@@ -17,11 +17,19 @@ function fecha(ts) {
 //    + botón Guardar; el padre recibe onDirty para proteger cambios sin guardar.
 //  - Validación inline vinculada por aria-describedby.
 //  - Acciones según tipo y estado; las destructivas las confirma el padre.
+const PERMISOS_TODOS = { editar: true, publicar: true, crear: true, duplicarCurso: true }
+
 export default function PanelNodo({
   tipo, nodo, meta, posicion, padre, temaDoc, cargandoTema,
   destinosMover = [], ocupado = false, puedeReordenar = true,
+  permisos = PERMISOS_TODOS,
   onGuardarCampos, onAccion, onDirty,
 }) {
+  // Capacidades del usuario sobre ESTE editor (super/director: todo; profesor:
+  // según sus permisosEditor). Gobiernan qué botones se muestran; la barrera
+  // real son las reglas + la capa de datos.
+  const puede = { ...PERMISOS_TODOS, ...permisos }
+  const puedeDuplicar = tipo === 'curso' ? puede.duplicarCurso : puede.crear
   const uid = useId()
   const [borrador, setBorrador] = useState({})
   const [destinoMover, setDestinoMover] = useState('')
@@ -127,7 +135,7 @@ export default function PanelNodo({
           <button
             type="button"
             className="btn-pildora btn-pildora--solido"
-            disabled={!hayCambios || hayErrores || ocupado || estado === 'archivado'}
+            disabled={!hayCambios || hayErrores || ocupado || estado === 'archivado' || !puede.editar}
             onClick={guardar}
           >
             <Icon name="check" size={16} /> Guardar cambios
@@ -136,33 +144,39 @@ export default function PanelNodo({
         </div>
       </div>
 
-      <h3 className="editor-subtitulo">Acciones</h3>
-      <div className="editor-acciones">
-        {estado !== 'publicado' && estado !== 'archivado' && (
-          <button type="button" className="btn-pildora" disabled={ocupado} onClick={() => onAccion('publicar')}>
-            <Icon name="verificado" size={16} /> Publicar
-          </button>
-        )}
-        {estado === 'publicado' && (
-          <button type="button" className="btn-pildora" disabled={ocupado} onClick={() => onAccion('despublicar')}>
-            <Icon name="ojoCerrado" size={16} /> Despublicar
-          </button>
-        )}
-        {estado !== 'archivado' ? (
-          <button type="button" className="btn-pildora" disabled={ocupado} onClick={() => onAccion('archivar')}>
-            <Icon name="archivo" size={16} /> Archivar
-          </button>
-        ) : (
-          <button type="button" className="btn-pildora" disabled={ocupado} onClick={() => onAccion('restaurar')}>
-            <Icon name="restaurar" size={16} /> Restaurar
-          </button>
-        )}
-        <button type="button" className="btn-pildora" disabled={ocupado} onClick={() => onAccion('duplicar')}>
-          <Icon name="copiar" size={16} /> Duplicar
-        </button>
-      </div>
+      {(puede.publicar || puedeDuplicar) && (
+        <>
+          <h3 className="editor-subtitulo">Acciones</h3>
+          <div className="editor-acciones">
+            {puede.publicar && estado !== 'publicado' && estado !== 'archivado' && (
+              <button type="button" className="btn-pildora" disabled={ocupado} onClick={() => onAccion('publicar')}>
+                <Icon name="verificado" size={16} /> Publicar
+              </button>
+            )}
+            {puede.publicar && estado === 'publicado' && (
+              <button type="button" className="btn-pildora" disabled={ocupado} onClick={() => onAccion('despublicar')}>
+                <Icon name="ojoCerrado" size={16} /> Despublicar
+              </button>
+            )}
+            {puede.publicar && (estado !== 'archivado' ? (
+              <button type="button" className="btn-pildora" disabled={ocupado} onClick={() => onAccion('archivar')}>
+                <Icon name="archivo" size={16} /> Archivar
+              </button>
+            ) : (
+              <button type="button" className="btn-pildora" disabled={ocupado} onClick={() => onAccion('restaurar')}>
+                <Icon name="restaurar" size={16} /> Restaurar
+              </button>
+            ))}
+            {puedeDuplicar && (
+              <button type="button" className="btn-pildora" disabled={ocupado} onClick={() => onAccion('duplicar')}>
+                <Icon name="copiar" size={16} /> Duplicar
+              </button>
+            )}
+          </div>
+        </>
+      )}
 
-      {puedeReordenar && tipo !== 'curso' && (
+      {puedeReordenar && puede.editar && tipo !== 'curso' && (
         <>
           <h3 className="editor-subtitulo" id={`${uid}-orden`}>Orden</h3>
           <div className="editor-acciones" role="group" aria-labelledby={`${uid}-orden`}>
@@ -182,7 +196,7 @@ export default function PanelNodo({
         </>
       )}
 
-      {destinosMover.length > 0 && (
+      {puede.editar && destinosMover.length > 0 && (
         <>
           <h3 className="editor-subtitulo">
             {tipo === 'modulo' ? 'Mover a otra fase' : 'Mover a otro módulo'}

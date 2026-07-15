@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { getFase, preguntasDeFase } from '../data/index.js'
-import { fasesNav } from '../data/navIndice.js'
+import { useContenido, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useProgress } from '../context/ProgressContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
@@ -20,7 +19,8 @@ function mezclar(arr) {
 
 export default function ExamenFasePage() {
   const { faseId } = useParams()
-  const fase = getFase(faseId)
+  const { contenido, error, reintentar } = useContenido()
+  const fase = contenido?.getFase(faseId)
   const { user, perfil, academiaId } = useAuth()
   const { faseVisible, temaVisible } = useVisibilidad()
 
@@ -31,10 +31,12 @@ export default function ExamenFasePage() {
 
   // Baraja las preguntas de la fase (excluyendo temas ocultos) una vez por intento.
   const preguntas = useMemo(
-    () => mezclar(preguntasDeFase(faseId).filter((q) => temaVisible(q.temaId))),
-    [faseId, intentoKey, temaVisible]
+    () => mezclar((contenido?.preguntasDeFase(faseId) || []).filter((q) => temaVisible(q.temaId))),
+    [contenido, faseId, intentoKey, temaVisible]
   )
 
+  if (error) return <ErrorContenido onReintentar={reintentar} />
+  if (!contenido) return <CargandoContenido />
   if (!fase) return <NotFound />
 
   // Fase (módulo) oculta para el grupo del alumno: examen no disponible.
@@ -129,7 +131,7 @@ export default function ExamenFasePage() {
             </Link>
           </div>
 
-          {fin && <ModuloCompletado fase={fase} pct={fin.pct} onCerrar={() => setFin(null)} />}
+          {fin && <ModuloCompletado fase={fase} fases={contenido.fases} pct={fin.pct} onCerrar={() => setFin(null)} />}
         </>
       )}
     </div>
@@ -200,7 +202,7 @@ function mensajeDeNota(n, nombre) {
 //  botón para SOLICITAR el acceso (el staff aprueba desde su panel).
 //  Con menos de 50% no se solicita: se invita a repasar.
 // ------------------------------------------------------------
-function ModuloCompletado({ fase, pct, onCerrar }) {
+function ModuloCompletado({ fase, fases, pct, onCerrar }) {
   const { user, perfil, rol, academiaId, grupoId } = useAuth()
   const { estado } = useProgress()
   const { faseVisible } = useVisibilidad()
@@ -218,8 +220,8 @@ function ModuloCompletado({ fase, pct, onCerrar }) {
   const nivelNota = calificacion >= 70 ? 'ok' : calificacion >= 50 ? 'media' : 'mal'
   const m = mensajeDeNota(calificacion, (perfil?.nombre || '').split(' ')[0])
 
-  const idx = fasesNav.findIndex((f) => f.id === fase.id)
-  const siguiente = idx >= 0 ? fasesNav[idx + 1] || null : null
+  const idx = fases.findIndex((f) => f.id === fase.id)
+  const siguiente = idx >= 0 ? fases[idx + 1] || null : null
   // El alumno solo SOLICITA cuando la siguiente fase está oculta para él;
   // si ya la ve (o es staff), se le invita a continuar directamente.
   const bloqueada = Boolean(siguiente) && rol === 'alumno' && !faseVisible(siguiente.id)

@@ -3,7 +3,7 @@ import Icon from '../components/Icon.jsx'
 import Imagen from '../components/Imagen.jsx'
 import Reveal from '../components/Reveal.jsx'
 import { ATLAS_TEMAS } from '../data/imagenes.js'
-import { temaPorClaveImagen } from '../data/index.js'
+import { useContenido, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
 
 // Galería de imágenes reales (anatomía / fisiología). Cada tarjeta carga su
@@ -11,7 +11,12 @@ import { useVisibilidad } from '../lib/useVisibilidad.js'
 // Lo que el grupo del alumno aún no puede explorar sale en GRIS y censurado,
 // como los logros bloqueados de un videojuego.
 export default function AtlasPage() {
+  const { contenido, error, reintentar } = useContenido()
   const { temaVisible } = useVisibilidad()
+
+  if (error) return <ErrorContenido onReintentar={reintentar} />
+  if (!contenido) return <CargandoContenido />
+  const { temaPorClaveImagen } = contenido
 
   return (
     <div className="atlas-page">

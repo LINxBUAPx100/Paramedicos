@@ -85,6 +85,52 @@ export function ensamblarFases(estructura, temasPorId, { incluirBorradores = fal
   return { fases, faltantes }
 }
 
+// Índice LIGERO de navegación (la MISMA forma que src/data/navIndice.js:
+// fase {id, numero, titulo, subtitulo, descripcion, color, temas:[{id, numero,
+// titulo}]}) a partir de SOLO la estructura del curso (1 doc, sin bajar los
+// temas). Filtra publicados con las mismas reglas que ensamblarFases y numera
+// con las mismas que construirApi, para que nav y contenido no se desalineen.
+export function indiceDesdeEstructura(estructura, { incluirBorradores = false } = {}) {
+  const visible = (x) => incluirBorradores || (x.estado || 'publicado') === 'publicado'
+  const fases = (estructura || []).filter(visible).map((f, i) => ({
+    id: f.id,
+    numero: i + 1,
+    titulo: f.titulo,
+    subtitulo: f.subtitulo || '',
+    descripcion: f.descripcion || '',
+    color: f.color || '',
+    temas: (f.modulos || [])
+      .filter(visible)
+      .flatMap((m) => m.temas || [])
+      .filter(visible)
+      .map((t, j) => ({ id: t.id, numero: `${i + 1}.${j + 1}`, titulo: t.titulo })),
+  }))
+  return {
+    fases,
+    stats: {
+      fases: fases.length,
+      temas: fases.reduce((s, f) => s + f.temas.length, 0),
+    },
+  }
+}
+
+// El mismo índice ligero, desde las fases YA ensambladas y numeradas por
+// construirApi: cuando el contenido completo está cargado, el shell puede
+// reflejarlo exactamente (misma numeración, mismos filtros).
+export function indiceDesdeFases(fases) {
+  return {
+    fases: (fases || []).map((f) => ({
+      id: f.id,
+      numero: f.numero,
+      titulo: f.titulo,
+      subtitulo: f.subtitulo || '',
+      descripcion: f.descripcion || '',
+      color: f.color || '',
+      temas: (f.temas || []).map((t) => ({ id: t.id, numero: t.numero, titulo: t.titulo })),
+    })),
+  }
+}
+
 // Construye la MISMA API derivada que src/data/index.js a partir de fases ya
 // ensambladas y ordenadas. Los componentes no distinguen la fuente.
 export function construirApi(fasesBase) {

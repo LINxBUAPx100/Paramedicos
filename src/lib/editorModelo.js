@@ -23,6 +23,7 @@
 //  Nada se elimina: el archivado es 100 % lógico y reversible.
 // ============================================================
 import { clonProfundo } from './contenidoModelo.js'
+import { normalizarPermisos } from './permisosEditor.js'
 
 export const ESTADOS_NODO = ['borrador', 'publicado', 'archivado']
 
@@ -510,8 +511,10 @@ export function duplicadoDeCurso({ curso, temasDocs = [], cursosExistentes = [],
 //  - director (admin_escuela): solo SU academia y solo si su plan otorga
 //    `editorContenido` (BASE queda fuera; fuente: capacidades.js).
 //  - instructor: solo con permisos editoriales explícitos y, si se indica
-//    cursoId, solo sobre sus cursos permitidos (granularidad fina en Fase 6;
-//    sin permisos concedidos NO hay acceso por defecto).
+//    cursoId, solo sobre sus cursos permitidos. La granularidad POR ACCIÓN
+//    (crear/publicar/exámenes/actividades/recursos) la resuelve
+//    permisoAccionEditor/permisosRequeridosPorContenido en permisosEditor.js;
+//    sin permisos concedidos NO hay acceso por defecto.
 //  - alumno / sin sesión: nunca.
 export function permisoEdicion({ esSuperadmin, rol, academiaIdUsuario, academiaIdObjetivo, capacidades, perfil, cursoId = null }) {
   if (esSuperadmin) return { permitido: true, motivo: null }
@@ -531,11 +534,14 @@ export function permisoEdicion({ esSuperadmin, rol, academiaIdUsuario, academiaI
     return { permitido: true, motivo: null }
   }
   if (rol === 'instructor') {
-    const permisos = perfil?.permisosEditor
-    if (!permisos?.editarContenido) {
+    // Fuente única de la granularidad: src/lib/permisosEditor.js (espejo de
+    // las reglas). Sin `editarContenido` no hay acceso; con curso indicado,
+    // debe estar en cursosPermitidos.
+    const permisos = normalizarPermisos(perfil?.permisosEditor)
+    if (!permisos.editarContenido) {
       return { permitido: false, motivo: 'No tienes permisos editoriales. Pídelos al director de tu academia.' }
     }
-    if (cursoId && !(permisos.cursosPermitidos || []).includes(cursoId)) {
+    if (cursoId && !permisos.cursosPermitidos.includes(cursoId)) {
       return { permitido: false, motivo: 'No tienes permiso para editar este curso.' }
     }
     return { permitido: true, motivo: null }

@@ -23,7 +23,7 @@ function mismaRef(a, b) {
 //  - Expandir/contraer con aria-expanded; nodo activo con aria-current.
 //  - Los estados se muestran con texto (chip), no solo con color.
 //  - Solo re-renderiza con cambios de estructura/selección (sin listeners).
-export default function ArbolCurso({ estructura, seleccion, onSeleccionar, onCrearHijo, mostrarArchivados = true }) {
+export default function ArbolCurso({ estructura, seleccion, onSeleccionar, onCrearHijo, puedeCrear = true, mostrarArchivados = true }) {
   // Fases/módulos expandidos (por id). Por defecto: primera fase abierta.
   const [abiertos, setAbiertos] = useState(() => new Set(estructura[0] ? [estructura[0].id] : []))
   const alternar = (id) => {
@@ -121,39 +121,45 @@ export default function ArbolCurso({ estructura, seleccion, onSeleccionar, onCre
                                 </li>
                               )
                             })}
-                            <li>
-                              <button
-                                type="button"
-                                className="editor-crear-hijo"
-                                onClick={() => onCrearHijo({ tipo: 'tema', faseId: fase.id, moduloId: modulo.id })}
-                              >
-                                <Icon name="mas" size={14} /> Nuevo tema en “{modulo.titulo}”
-                              </button>
-                            </li>
+                            {puedeCrear && (
+                              <li>
+                                <button
+                                  type="button"
+                                  className="editor-crear-hijo"
+                                  onClick={() => onCrearHijo({ tipo: 'tema', faseId: fase.id, moduloId: modulo.id })}
+                                >
+                                  <Icon name="mas" size={14} /> Nuevo tema en “{modulo.titulo}”
+                                </button>
+                              </li>
+                            )}
                           </ul>
                         )}
                       </li>
                     )
                   })}
-                  <li>
-                    <button
-                      type="button"
-                      className="editor-crear-hijo"
-                      onClick={() => onCrearHijo({ tipo: 'modulo', faseId: fase.id })}
-                    >
-                      <Icon name="mas" size={14} /> Nuevo módulo en “{fase.titulo}”
-                    </button>
-                  </li>
+                  {puedeCrear && (
+                    <li>
+                      <button
+                        type="button"
+                        className="editor-crear-hijo"
+                        onClick={() => onCrearHijo({ tipo: 'modulo', faseId: fase.id })}
+                      >
+                        <Icon name="mas" size={14} /> Nuevo módulo en “{fase.titulo}”
+                      </button>
+                    </li>
+                  )}
                 </ul>
               )}
             </li>
           )
         })}
-        <li>
-          <button type="button" className="editor-crear-hijo" onClick={() => onCrearHijo({ tipo: 'fase' })}>
-            <Icon name="mas" size={14} /> Nueva fase
-          </button>
-        </li>
+        {puedeCrear && (
+          <li>
+            <button type="button" className="editor-crear-hijo" onClick={() => onCrearHijo({ tipo: 'fase' })}>
+              <Icon name="mas" size={14} /> Nueva fase
+            </button>
+          </li>
+        )}
       </ul>
     </nav>
   )

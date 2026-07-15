@@ -56,22 +56,58 @@ service cloud.firestore {
         && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid))
         && miDoc().academiaId == acaId;
     }
-    // ¿El plan comercial de la academia permite editar contenido? (pro|curso).
-    // Sin campo planComercial = academia previa a los planes → 'pro'
-    // (mismo default que src/lib/capacidades.js). Solo se evalúa en
-    // ESCRITURAS de contenido, nunca en lecturas de alumnos.
-    function academiaEditaContenido(acaId) {
-      return get(/databases/$(database)/documents/academias/$(acaId))
-        .data.get('planComercial', 'pro') in ['pro', 'curso'];
+    // Plan EFECTIVO de una academia (espejo de src/lib/capacidades.js):
+    // tipo 'avanzado' fuerza 'pro'; sin campo planComercial = 'pro' (academia
+    // previa a los planes). Solo se evalúa en ESCRITURAS, nunca en lecturas.
+    function academiaDoc(acaId) {
+      return get(/databases/$(database)/documents/academias/$(acaId)).data;
     }
-    // Profesor con permisos editoriales sobre UN curso concreto. Los permisos
-    // (usuarios/{uid}.permisosEditor) solo los escribe el director PRO o el
-    // super-admin; un profesor sin permisosEditor no edita nada.
+    function academiaPlanEfectivo(acaId) {
+      return academiaDoc(acaId).get('tipo', 'basico') == 'avanzado'
+        ? 'pro'
+        : academiaDoc(acaId).get('planComercial', 'pro');
+    }
+    // ¿El plan permite editar contenido? (pro|curso). ¿Otorgar permisos
+    // editoriales a profesores? (solo pro).
+    function academiaEditaContenido(acaId) {
+      return academiaPlanEfectivo(acaId) in ['pro', 'curso'];
+    }
+    function academiaOtorgaPermisos(acaId) {
+      return academiaPlanEfectivo(acaId) == 'pro';
+    }
+    // Permisos editoriales del solicitante (usuarios/{uid}.permisosEditor); un
+    // mapa que SOLO escribe el director PRO o el super-admin.
+    function permEditor() { return miDoc().get('permisosEditor', {}); }
+    function instructorPermite(clave) { return permEditor().get(clave, false) == true; }
+    // Profesor con permisos editoriales sobre UN curso concreto. Sin
+    // `editarContenido` + curso en `cursosPermitidos` no edita nada.
     function profesorPuedeEditar(acaId, cursoId) {
       return esStaffDe(acaId)
         && miDoc().rol == 'instructor'
-        && miDoc().get('permisosEditor', {}).get('editarContenido', false) == true
-        && cursoId in miDoc().get('permisosEditor', {}).get('cursosPermitidos', []);
+        && instructorPermite('editarContenido')
+        && cursoId in permEditor().get('cursosPermitidos', []);
+    }
+    // Rejilla FINA por campo para la escritura de un profesor: cada campo
+    // sensible exige su permiso. `campo(clave)` = ese campo cambió en el diff.
+    function cambia(clave) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasAny([clave]);
+    }
+    function camposTemaSegunPermisos() {
+      return (!cambia('quiz')        || instructorPermite('editarExamenes'))
+        && (!cambia('actividades')   || instructorPermite('editarActividades'))
+        && (!cambia('recursos')      || instructorPermite('administrarRecursos'))
+        && (!cambia('estado')        || instructorPermite('publicarContenido'));
+    }
+    function cursoSegunPermisos() {
+      return (!cambia('estado') || instructorPermite('publicarContenido'));
+    }
+    // Forma válida del mapa permisosEditor escrito por el director: solo las
+    // 7 claves conocidas (6 booleanos + cursosPermitidos). Evita inyectar basura.
+    function permisosEditorFormaValida() {
+      return request.resource.data.permisosEditor is map
+        && request.resource.data.permisosEditor.keys().hasOnly([
+          'editarContenido', 'crearTemas', 'editarActividades', 'editarExamenes',
+          'publicarContenido', 'administrarRecursos', 'cursosPermitidos']);
     }
     // Escritura de contenido por editores de academia (director/profesor):
     // - la versión sube EXACTAMENTE +1 (control de conflictos; nadie la
@@ -184,6 +220,9 @@ service cloud.firestore {
       // academiaId a una academia que EXISTA y esté ACTIVA (unirse por código),
       // y tu acceso de prueba solo puede venir de un código VÁLIDO (canje).
       allow update: if esDueno(uid)
+        // Los permisos editoriales NUNCA los edita el propio usuario (un
+        // profesor no se auto-concede acceso): solo el director PRO / super.
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['permisosEditor'])
         && request.resource.data.rol == resource.data.rol
         && request.resource.data.estado == resource.data.estado
         && (
@@ -229,6 +268,19 @@ service cloud.firestore {
             && grupoDoc(request.resource.data.grupoId).academiaId == resource.data.academiaId
           )
         );
+
+      // El DIRECTOR PRO concede/retira los PERMISOS EDITORIALES a los
+      // PROFESORES de SU academia (Fase 6): SOLO el campo permisosEditor, con
+      // forma válida, y solo si su plan otorga permisos editoriales (pro).
+      // Nunca a sí mismo, nunca a un director/superadmin, nunca de otra
+      // academia (esAdminDe fija la academia; rol == instructor fija el destino).
+      allow update: if esAdminDe(resource.data.academiaId)
+        && request.auth.uid != uid
+        && resource.data.rol == 'instructor'
+        && request.resource.data.rol == 'instructor'
+        && academiaOtorgaPermisos(resource.data.academiaId)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['permisosEditor'])
+        && permisosEditorFormaValida();
 
       // El STAFF (profesor o director) puede HABILITAR módulos a los alumnos
       // de su academia: SOLO el campo fasesDesbloqueadas (anula lo oculto del
@@ -360,17 +412,20 @@ service cloud.firestore {
       // Editar: mismo criterio + profesor con permiso sobre ESTE curso.
       // El academiaId es inmutable (nadie "adopta" cursos de otra academia)
       // y los editores no-super cumplen edicionContenidoValida (versión +1,
-      // metadatos intocables, estado del catálogo).
+      // metadatos intocables, estado del catálogo). El profesor, además, solo
+      // cambia el estado (publicar/archivar) con el permiso publicarContenido.
       allow update: if request.resource.data.academiaId == resource.data.academiaId
         && (
           esSuper()
           || (
-            (
-              (esAdminDe(resource.data.academiaId)
-                && academiaEditaContenido(resource.data.academiaId))
-              || profesorPuedeEditar(resource.data.academiaId, cursoId)
-            )
+            esAdminDe(resource.data.academiaId)
+            && academiaEditaContenido(resource.data.academiaId)
             && edicionContenidoValida()
+          )
+          || (
+            profesorPuedeEditar(resource.data.academiaId, cursoId)
+            && edicionContenidoValida()
+            && cursoSegunPermisos()
           )
         );
       // Sin eliminación destructiva por academias (archivar = update de estado).
@@ -385,29 +440,40 @@ service cloud.firestore {
       allow get, list: if esSuper()
         || esStaffDe(resource.data.academiaId)
         || (perteneceA(resource.data.academiaId) && resource.data.estado == 'publicado');
+      // Crear: super; director PRO; o profesor con permiso de edición sobre el
+      // curso Y el permiso crearTemas (crear un tema nuevo es "crear").
       allow create: if (esSuper()
           || (
-            ((esAdminDe(request.resource.data.academiaId)
-                && academiaEditaContenido(request.resource.data.academiaId))
-              || profesorPuedeEditar(request.resource.data.academiaId, request.resource.data.cursoId))
-            && creacionContenidoValida()
+            esAdminDe(request.resource.data.academiaId)
+              && academiaEditaContenido(request.resource.data.academiaId)
+              && creacionContenidoValida()
+          )
+          || (
+            profesorPuedeEditar(request.resource.data.academiaId, request.resource.data.cursoId)
+              && instructorPermite('crearTemas')
+              && creacionContenidoValida()
           ))
         && request.resource.data.academiaId is string
         && request.resource.data.cursoId is string
         && request.resource.data.temaId is string;
       // academiaId, cursoId y temaId INMUTABLES: un tema no cambia de dueño
       // ni de curso desde el cliente (las llaves del progreso se preservan).
-      // Los editores no-super cumplen además edicionContenidoValida.
+      // Los editores no-super cumplen además edicionContenidoValida; el
+      // profesor, la rejilla FINA por campo (quiz/actividades/recursos/estado).
       allow update: if request.resource.data.academiaId == resource.data.academiaId
         && request.resource.data.cursoId == resource.data.cursoId
         && request.resource.data.temaId == resource.data.temaId
         && (
           esSuper()
           || (
-            ((esAdminDe(resource.data.academiaId)
-                && academiaEditaContenido(resource.data.academiaId))
-              || profesorPuedeEditar(resource.data.academiaId, resource.data.cursoId))
-            && edicionContenidoValida()
+            esAdminDe(resource.data.academiaId)
+              && academiaEditaContenido(resource.data.academiaId)
+              && edicionContenidoValida()
+          )
+          || (
+            profesorPuedeEditar(resource.data.academiaId, resource.data.cursoId)
+              && edicionContenidoValida()
+              && camposTemaSegunPermisos()
           )
         );
       allow delete: if esSuper();

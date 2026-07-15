@@ -1,6 +1,6 @@
 import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { getTema, getTemaVecinos } from '../data/index.js'
+import { useContenido, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
 import { getRecursos } from '../data/recursosDescarga.js'
 import { imagenesDeTema } from '../data/imagenes.js'
 import Imagen from '../components/Imagen.jsx'
@@ -18,7 +18,9 @@ export default function TemaPage() {
   const [searchParams] = useSearchParams()
   const ref = searchParams.get('ref') // clave de imagen del Atlas a la que saltar
   const navigate = useNavigate()
-  const tema = getTema(temaId)
+  // Contenido de LA ACADEMIA del usuario (resolutor: Firestore o bundle).
+  const { contenido, error, reintentar } = useContenido()
+  const tema = contenido?.getTema(temaId)
   const { estado, marcarLeido } = useProgress()
   const { temaVisible } = useVisibilidad()
 
@@ -40,8 +42,11 @@ export default function TemaPage() {
       }
     }
     window.scrollTo(0, 0)
-  }, [temaId, ref])
+    // `contenido` en deps: el salto al diagrama requiere el DOM del tema ya montado.
+  }, [temaId, ref, contenido])
 
+  if (error) return <ErrorContenido onReintentar={reintentar} />
+  if (!contenido) return <CargandoContenido />
   if (!tema) return <NotFound />
 
   // Tema oculto para el grupo del alumno: aún no disponible.
@@ -56,7 +61,7 @@ export default function TemaPage() {
     )
   }
 
-  const vecinos = getTemaVecinos(temaId)
+  const vecinos = contenido.getTemaVecinos(temaId)
   const leido = estado.leidos[temaId]
   const recursos = getRecursos(temaId)
   const galeria = imagenesDeTema(temaId)
