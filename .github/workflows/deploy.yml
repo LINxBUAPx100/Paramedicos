@@ -41,11 +41,20 @@ jobs:
       - name: Tests unitarios
         run: npm test
 
+      # El emulador corre sobre Java. El JDK que trae ubuntu-latest por defecto
+      # es MÁS ANTIGUO del que exige firebase-tools 15 ("no longer supports Java
+      # version before 21"), así que se instala explícitamente en vez de confiar
+      # en lo que venga preinstalado en la imagen del runner.
+      - name: Configurar Java 21 (emulador de Firebase)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
       # Las suites de tests/rules/ se OMITEN solas si no ven el emulador (no dan
       # falso verde, pero un skip SÍ pasaría el job). Por eso se ejecutan dentro
       # de `emulators:exec` y se comprueba que las variables llegaron: sin ellas
       # el comando falla en vez de saltarse la verificación en silencio.
-      # El emulador necesita Java; los runners de ubuntu-latest ya lo traen.
       - name: Tests de reglas (Firestore + Storage)
         run: >
           npx --yes firebase-tools@15 emulators:exec
