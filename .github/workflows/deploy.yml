@@ -1,10 +1,13 @@
-name: Deploy a GitHub Pages
+name: CI y despliegue a GitHub Pages
 
+# Los TESTS corren en cualquier rama y en cualquier PR; el build y el
+# despliegue solo desde las ramas de publicación. Así una regla de Firestore
+# rota nunca llega a producción (job `build` con `needs: test`).
 on:
   push:
     branches:
-      - claude/paramedic-study-guide-4wf9cd
-      - main
+      - '**'
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -13,11 +16,50 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Node 22: `node --test` necesita soporte de GLOB (v21+) para el patrón
+      # entrecomillado de `npm test` ("tests/*.test.mjs").
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      # Módulos puros (modelos, permisos, capacidades…): no necesitan emulador.
+      - name: Tests unitarios
+        run: npm test
+
+      # Las suites de tests/rules/ se OMITEN solas si no ven el emulador (no dan
+      # falso verde, pero un skip SÍ pasaría el job). Por eso se ejecutan dentro
+      # de `emulators:exec` y se comprueba que las variables llegaron: sin ellas
+      # el comando falla en vez de saltarse la verificación en silencio.
+      # El emulador necesita Java; los runners de ubuntu-latest ya lo traen.
+      - name: Tests de reglas (Firestore + Storage)
+        run: >
+          npx --yes firebase-tools@15 emulators:exec
+          --only firestore,storage
+          --project ptem-rules-test
+          '[ -n "$FIRESTORE_EMULATOR_HOST" ] && [ -n "$FIREBASE_STORAGE_EMULATOR_HOST" ] && node --test tests/rules/*.test.mjs'
+
   build:
+    needs: test
+    # Solo las ramas de publicación construyen y despliegan.
+    if: >
+      github.event_name == 'workflow_dispatch'
+      || github.ref == 'refs/heads/main'
+      || github.ref == 'refs/heads/claude/paramedic-study-guide-4wf9cd'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -26,7 +68,7 @@ jobs:
       - name: Configurar Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Instalar dependencias
