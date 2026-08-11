@@ -51,7 +51,7 @@ export default function AcademiaAdminPage() {
         <span className="acceso-ico"><Icon name="candado" size={30} /></span>
         <h1>Solo super-administradores</h1>
         <p>Este dashboard es exclusivo del administrador de la plataforma.</p>
-        <Link to="/" className="btn-pildora btn-pildora--solido">Volver al inicio</Link>
+        <Link to="/" className="btn btn--pildora btn--carbon">Volver al inicio</Link>
       </div>
     )
   }
@@ -62,7 +62,7 @@ export default function AcademiaAdminPage() {
         <span className="acceso-ico"><Icon name="alerta" size={30} /></span>
         <h1>Academia no encontrada</h1>
         <p>No existe una academia con el código <strong>{academiaId}</strong>.</p>
-        <Link to="/admin" className="btn-pildora btn-pildora--solido">← Volver al dashboard</Link>
+        <Link to="/admin" className="btn btn--pildora btn--carbon">← Volver al dashboard</Link>
       </div>
     )
   }
@@ -157,7 +157,7 @@ export default function AcademiaAdminPage() {
               required
             />
           </label>
-          <button className="btn btn-primario" type="submit" disabled={migrando}>
+          <button className="btn btn--primario" type="submit" disabled={migrando}>
             {migrando ? 'Migrando todo…' : 'Cambiar y migrar'}
           </button>
           <p className="panel-gestion-sub" style={{ flexBasis: '100%' }}>

@@ -29,7 +29,7 @@ export default function PanelPage() {
         <span className="acceso-ico"><Icon name="candado" size={30} /></span>
         <h1>Panel exclusivo del personal</h1>
         <p>Esta sección es solo para instructores y administradores de academia.</p>
-        <Link to="/" className="btn-pildora btn-pildora--solido">Volver al inicio</Link>
+        <Link to="/" className="btn btn--pildora btn--carbon">Volver al inicio</Link>
       </div>
     )
   }
@@ -40,7 +40,7 @@ export default function PanelPage() {
         <span className="acceso-ico"><Icon name="alerta" size={30} /></span>
         <h1>Sin academia asignada</h1>
         <p>Tu cuenta es de personal pero no está ligada a ninguna academia. Pide al administrador que te asigne una.</p>
-        <Link to="/" className="btn-pildora btn-pildora--solido">Volver al inicio</Link>
+        <Link to="/" className="btn btn--pildora btn--carbon">Volver al inicio</Link>
       </div>
     )
   }
@@ -61,7 +61,7 @@ export default function PanelPage() {
         {/* Editor de contenido: capacidad del plan (Pro/Curso) para el director;
             un profesor entra solo con permisos editoriales explícitos. */}
         {((esDirector && capacidades.editorContenido) || perfil?.permisosEditor?.editarContenido) && (
-          <Link to="/editor" className="btn-pildora">
+          <Link to="/editor" className="btn btn--pildora">
             <Icon name="herramientas" size={16} /> Editor de contenido
           </Link>
         )}

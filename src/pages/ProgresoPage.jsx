@@ -131,7 +131,7 @@ export default function ProgresoPage() {
       )}
 
       <div className="progreso-reinicio">
-        <button className="btn btn-peligro" onClick={confirmarReinicio}>
+        <button className="btn btn--peligro" onClick={confirmarReinicio}>
           Reiniciar mi progreso
         </button>
       </div>

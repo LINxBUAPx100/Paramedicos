@@ -24,7 +24,7 @@ export default function QuizPage() {
         <span className="acceso-ico"><Icon name="candado" size={30} /></span>
         <h1>Quiz no disponible</h1>
         <p>Tu profesor todavía no libera este tema para tu grupo. Vuelve más adelante.</p>
-        <Link to={`/fase/${tema.faseId}`} className="btn-pildora btn-pildora--solido">Volver a la fase</Link>
+        <Link to={`/fase/${tema.faseId}`} className="btn btn--pildora btn--carbon">Volver a la fase</Link>
       </div>
     )
   }
@@ -51,7 +51,7 @@ export default function QuizPage() {
       />
 
       <div className="quiz-page-pie">
-        <Link to={`/tema/${temaId}`} className="btn btn-secundario">
+        <Link to={`/tema/${temaId}`} className="btn btn--suave">
           ← Volver al tema
         </Link>
       </div>

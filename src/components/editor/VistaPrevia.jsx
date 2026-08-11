@@ -40,7 +40,7 @@ export default function VistaPrevia({ abierto, curso, temasDocs = [], onCerrar }
           </p>
           <div className="previa-fila">
             <h2 id="previa-titulo">{curso?.titulo || 'Curso'}</h2>
-            <button type="button" ref={refCerrar} className="btn-pildora" onClick={onCerrar}>
+            <button type="button" ref={refCerrar} className="btn btn--pildora" onClick={onCerrar}>
               <Icon name="flechaIzq" size={16} /> Volver al editor
             </button>
           </div>

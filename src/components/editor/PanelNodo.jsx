@@ -134,7 +134,7 @@ export default function PanelNodo({
         <div className="editor-guardar-fila">
           <button
             type="button"
-            className="btn-pildora btn-pildora--solido"
+            className="btn btn--pildora btn--carbon"
             disabled={!hayCambios || hayErrores || ocupado || estado === 'archivado' || !puede.editar}
             onClick={guardar}
           >
@@ -149,26 +149,26 @@ export default function PanelNodo({
           <h3 className="editor-subtitulo">Acciones</h3>
           <div className="editor-acciones">
             {puede.publicar && estado !== 'publicado' && estado !== 'archivado' && (
-              <button type="button" className="btn-pildora" disabled={ocupado} onClick={() => onAccion('publicar')}>
+              <button type="button" className="btn btn--pildora" disabled={ocupado} onClick={() => onAccion('publicar')}>
                 <Icon name="verificado" size={16} /> Publicar
               </button>
             )}
             {puede.publicar && estado === 'publicado' && (
-              <button type="button" className="btn-pildora" disabled={ocupado} onClick={() => onAccion('despublicar')}>
+              <button type="button" className="btn btn--pildora" disabled={ocupado} onClick={() => onAccion('despublicar')}>
                 <Icon name="ojoCerrado" size={16} /> Despublicar
               </button>
             )}
             {puede.publicar && (estado !== 'archivado' ? (
-              <button type="button" className="btn-pildora" disabled={ocupado} onClick={() => onAccion('archivar')}>
+              <button type="button" className="btn btn--pildora" disabled={ocupado} onClick={() => onAccion('archivar')}>
                 <Icon name="archivo" size={16} /> Archivar
               </button>
             ) : (
-              <button type="button" className="btn-pildora" disabled={ocupado} onClick={() => onAccion('restaurar')}>
+              <button type="button" className="btn btn--pildora" disabled={ocupado} onClick={() => onAccion('restaurar')}>
                 <Icon name="restaurar" size={16} /> Restaurar
               </button>
             ))}
             {puedeDuplicar && (
-              <button type="button" className="btn-pildora" disabled={ocupado} onClick={() => onAccion('duplicar')}>
+              <button type="button" className="btn btn--pildora" disabled={ocupado} onClick={() => onAccion('duplicar')}>
                 <Icon name="copiar" size={16} /> Duplicar
               </button>
             )}
@@ -180,16 +180,16 @@ export default function PanelNodo({
         <>
           <h3 className="editor-subtitulo" id={`${uid}-orden`}>Orden</h3>
           <div className="editor-acciones" role="group" aria-labelledby={`${uid}-orden`}>
-            <button type="button" className="btn-pildora" disabled={ocupado} onClick={() => onAccion('reordenar', 'inicio')}>
+            <button type="button" className="btn btn--pildora" disabled={ocupado} onClick={() => onAccion('reordenar', 'inicio')}>
               <Icon name="subir" size={16} /> Al inicio
             </button>
-            <button type="button" className="btn-pildora" disabled={ocupado} onClick={() => onAccion('reordenar', 'arriba')}>
+            <button type="button" className="btn btn--pildora" disabled={ocupado} onClick={() => onAccion('reordenar', 'arriba')}>
               <Icon name="chevronArriba" size={16} /> Subir
             </button>
-            <button type="button" className="btn-pildora" disabled={ocupado} onClick={() => onAccion('reordenar', 'abajo')}>
+            <button type="button" className="btn btn--pildora" disabled={ocupado} onClick={() => onAccion('reordenar', 'abajo')}>
               <Icon name="chevronAbajo" size={16} /> Bajar
             </button>
-            <button type="button" className="btn-pildora" disabled={ocupado} onClick={() => onAccion('reordenar', 'fin')}>
+            <button type="button" className="btn btn--pildora" disabled={ocupado} onClick={() => onAccion('reordenar', 'fin')}>
               <Icon name="bajar" size={16} /> Al final
             </button>
           </div>
@@ -216,7 +216,7 @@ export default function PanelNodo({
             </select>
             <button
               type="button"
-              className="btn-pildora"
+              className="btn btn--pildora"
               disabled={!destinoMover || ocupado}
               onClick={() => onAccion('mover', destinoMover)}
             >

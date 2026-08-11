@@ -67,7 +67,7 @@ function Flashcards({ contenido }) {
         <span className="acceso-ico"><Icon name="candado" size={30} /></span>
         <h1>Flashcards no disponibles</h1>
         <p>Tu profesor todavía no libera este tema para tu grupo. Vuelve más adelante.</p>
-        <Link to={`/tema/${tema.id}`} className="btn-pildora btn-pildora--solido">Volver al tema</Link>
+        <Link to={`/tema/${tema.id}`} className="btn btn--pildora btn--carbon">Volver al tema</Link>
       </div>
     )
   }
@@ -105,7 +105,7 @@ function Flashcards({ contenido }) {
         <span className="flashcards-contador">
           {indice + 1} / {cartas.length}
         </span>
-        <button className="btn btn-secundario btn-mini" onClick={barajar}>
+        <button className="btn btn--suave btn--sm" onClick={barajar}>
           Barajar
         </button>
       </div>
@@ -136,13 +136,13 @@ function Flashcards({ contenido }) {
       </div>
 
       <div className="flashcards-nav">
-        <button className="btn btn-secundario" onClick={() => avanzar(-1)}>
+        <button className="btn btn--suave" onClick={() => avanzar(-1)}>
           ← Anterior
         </button>
-        <button className="btn btn-primario" onClick={() => setVolteada((v) => !v)}>
+        <button className="btn btn--primario" onClick={() => setVolteada((v) => !v)}>
           {volteada ? 'Ocultar' : 'Voltear'}
         </button>
-        <button className="btn btn-secundario" onClick={() => avanzar(1)}>
+        <button className="btn btn--suave" onClick={() => avanzar(1)}>
           Siguiente →
         </button>
       </div>

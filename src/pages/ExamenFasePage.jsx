@@ -46,7 +46,7 @@ export default function ExamenFasePage() {
         <span className="acceso-ico"><Icon name="candado" size={30} /></span>
         <h1>Examen no disponible</h1>
         <p>Tu profesor todavía no libera este módulo para tu grupo. Vuelve más adelante.</p>
-        <Link to="/examen" className="btn-pildora btn-pildora--solido">Volver a exámenes</Link>
+        <Link to="/examen" className="btn btn--pildora btn--carbon">Volver a exámenes</Link>
       </div>
     )
   }
@@ -92,7 +92,7 @@ export default function ExamenFasePage() {
             tu resultado se guarda como intento (fecha, puntaje y % de acierto) para que tú y tu
             maestro puedan seguir tu avance.
           </p>
-          <button className="btn btn-primario btn-grande" onClick={() => setIniciado(true)}>
+          <button className="btn btn--primario btn--lg" onClick={() => setIniciado(true)}>
             Comenzar examen ({preguntas.length} preguntas)
           </button>
           <Link to={`/fase/${fase.id}`} className="link-discreto">← Volver a la fase</Link>
@@ -123,10 +123,10 @@ export default function ExamenFasePage() {
           />
 
           <div className="quiz-page-pie">
-            <button type="button" className="btn btn-secundario" onClick={otroIntento}>
+            <button type="button" className="btn btn--suave" onClick={otroIntento}>
               Otro intento
             </button>
-            <Link to={`/fase/${fase.id}`} className="btn btn-secundario">
+            <Link to={`/fase/${fase.id}`} className="btn btn--suave">
               ← Volver a la fase
             </Link>
           </div>
@@ -314,7 +314,7 @@ function ModuloCompletado({ fase, fases, pct, onCerrar }) {
 
         <div className="modulo-fin-cta">
           {debeRepasar ? (
-            <Link to={`/fase/${fase.id}`} className="btn btn-primario btn-grande" onClick={onCerrar}>
+            <Link to={`/fase/${fase.id}`} className="btn btn--primario btn--lg" onClick={onCerrar}>
               Repasar los temas de la fase
             </Link>
           ) : !siguiente ? (
@@ -338,14 +338,14 @@ function ModuloCompletado({ fase, fases, pct, onCerrar }) {
                   </p>
                   <div className="modulo-fin-aviso-btns">
                     <button
-                      className="btn btn-primario"
+                      className="btn btn--primario"
                       onClick={solicitar}
                       disabled={envio === 'enviando'}
                     >
                       {envio === 'enviando' ? 'Enviando…' : 'Sí, solicitar avanzar'}
                     </button>
                     <button
-                      className="btn btn-secundario"
+                      className="btn btn--suave"
                       onClick={() => setConfirmar(false)}
                       disabled={envio === 'enviando'}
                     >
@@ -355,7 +355,7 @@ function ModuloCompletado({ fase, fases, pct, onCerrar }) {
                 </div>
               ) : (
                 <button
-                  className="btn btn-primario btn-grande modulo-fin-solicitar"
+                  className="btn btn--primario btn--lg modulo-fin-solicitar"
                   onClick={() => setConfirmar(true)}
                   disabled={envio === 'cargando'}
                 >
@@ -369,7 +369,7 @@ function ModuloCompletado({ fase, fases, pct, onCerrar }) {
               )}
             </>
           ) : (
-            <Link to={`/fase/${siguiente.id}`} className="btn btn-primario btn-grande">
+            <Link to={`/fase/${siguiente.id}`} className="btn btn--primario btn--lg">
               Continuar con la Fase {siguiente.numero} →
             </Link>
           )}

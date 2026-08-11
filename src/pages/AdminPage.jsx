@@ -99,7 +99,7 @@ export default function AdminPage() {
         <span className="acceso-ico"><Icon name="candado" size={30} /></span>
         <h1>Solo super-administradores</h1>
         <p>Este dashboard es exclusivo del administrador de la plataforma.</p>
-        <Link to="/" className="btn-pildora btn-pildora--solido">Volver al inicio</Link>
+        <Link to="/" className="btn btn--pildora btn--carbon">Volver al inicio</Link>
       </div>
     )
   }
@@ -168,7 +168,7 @@ export default function AdminPage() {
           <h1><Icon name="capas" size={24} /> Dashboard general</h1>
           <p>Vista de super-administrador: todas las academias y todos los usuarios de la plataforma.</p>
         </div>
-        <Link to="/admin/replicacion" className="btn btn-secundario">
+        <Link to="/admin/replicacion" className="btn btn--suave">
           <Icon name="copiar" size={16} /> Plantillas y replicación
         </Link>
       </header>
@@ -639,7 +639,7 @@ function NuevaAcademia({ onCreada }) {
             Color
             <input type="color" value={colorHero} onChange={(e) => setColorHero(e.target.value)} />
           </label>
-          <button className="btn btn-primario" type="submit" disabled={ocupado}>
+          <button className="btn btn--primario" type="submit" disabled={ocupado}>
             {ocupado ? 'Creando…' : 'Crear academia'}
           </button>
           {error && <p className="cuenta-error" role="alert">{error}</p>}
@@ -735,7 +735,7 @@ function NuevoUsuario({ academias, onCreado }) {
               {academias.map((a) => <option key={a.id} value={a.id}>{a.id} — {a.nombre}</option>)}
             </select>
           </label>
-          <button className="btn btn-primario" type="submit" disabled={ocupado}>
+          <button className="btn btn--primario" type="submit" disabled={ocupado}>
             {ocupado ? 'Creando…' : 'Crear usuario'}
           </button>
           {error && <p className="cuenta-error" role="alert">{error}</p>}

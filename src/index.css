@@ -122,6 +122,13 @@
   --peligro-suave: #fee2e2;
   --aviso: #b45309;
   --aviso-suave: #fef3c7;
+
+  /* Versión SÓLIDA para rellenos con texto blanco encima. No se invierte por
+     tema a propósito: los tonos claros de arriba (#4ade80, #f87171) son para
+     TEXTO sobre fondo oscuro; usarlos como fondo de un botón con letra blanca
+     daría un contraste pésimo. Estos dos aguantan blanco en ambos temas. */
+  --exito-solido: #15803d;
+  --peligro-solido: #b91c1c;
 }
 
 html[data-tema='oscuro'] {
@@ -290,7 +297,7 @@ textarea:focus-visible,
 }
 .acceso-restringido h1 { font-family: var(--fuente-display); font-size: var(--t-xl); }
 .acceso-restringido p { color: var(--texto-2); max-width: 40ch; }
-.acceso-restringido .btn-pildora { margin-top: var(--e-6); }
+.acceso-restringido .btn btn--pildora { margin-top: var(--e-6); }
 
 /* ===== Examen de fase ===== */
 .fase-examen-cta {
@@ -2191,6 +2198,29 @@ html[data-tema='oscuro'] .cuenta-badge { color: var(--primario-claro); }
 /* ============================================================
    Botones
    ============================================================ */
+/* ============================================================
+   BOTONES — un solo primitivo
+   ------------------------------------------------------------
+   Convivían DOS sistemas completos, definidos con 2000 líneas de distancia y
+   nacidos en fases distintas del proyecto:
+       .btn + .btn--primario/.btn--suave/…   (71 usos)
+       .btn btn--pildora + --solido/--oscuro/…       (47 usos)
+   más 12 clases de botón ad-hoc con su propio color y su propio padding.
+   Se veían los dos lenguajes en pantallas CONSECUTIVAS: NotFound usaba uno y
+   ErrorBoundary el otro. Eso es lo que se percibe como "hecho a medias"
+   aunque nadie sepa nombrarlo.
+
+   Ahora hay UN primitivo y tres ejes que se combinan libremente:
+       jerarquía → --primario --suave --fantasma --carbon --urgencia
+                   --fase --peligro --exito
+       forma     → --pildora  (identidad de portada: radio completo,
+                               tipografía display y la flecha que avanza)
+       tamaño    → --sm --lg
+
+   Ninguna variante cambia de aspecto respecto a antes: esto ordena, no
+   rediseña. Regla: un botón nuevo se compone con estas piezas; si hace falta
+   una pieza que no existe, se añade AQUÍ, nunca una clase suelta.
+   ============================================================ */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -2199,33 +2229,72 @@ html[data-tema='oscuro'] .cuenta-badge { color: var(--primario-claro); }
   padding: var(--e-12) var(--e-20);
   border-radius: var(--radio-sm);
   border: 1px solid transparent;
+  font-family: inherit;
   font-size: var(--t-base);
   font-weight: 600;
   cursor: pointer;
-  font-family: inherit;
-  transition: transform var(--dur-rapida) var(--ease-out), box-shadow var(--dur-rapida) var(--ease-out), background var(--dur-rapida) var(--ease-out);
   text-decoration: none;
+  transition: transform var(--dur-rapida) var(--ease-out),
+    box-shadow var(--dur-rapida) var(--ease-out),
+    background var(--dur-rapida) var(--ease-out),
+    color var(--dur-rapida) var(--ease-out);
 }
 .btn:hover { text-decoration: none; transform: translateY(-2px); }
 .btn:active { transform: scale(0.97); }
-.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-.btn-grande { padding: var(--e-12) var(--e-24); font-size: var(--t-base); border-radius: var(--radio); }
-.btn-mini { padding: var(--e-6) var(--e-12); font-size: var(--t-sm); }
-.btn-primario {
+.btn:disabled,
+.btn[aria-disabled='true'] { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* --- Tamaño --- */
+.btn--sm { padding: var(--e-6) var(--e-12); font-size: var(--t-sm); }
+.btn--lg { padding: var(--e-16) var(--e-24); border-radius: var(--radio); }
+
+/* --- Forma: píldora. Va DESPUÉS de --lg para que su radio gane al
+       combinarse (`btn btn--pildora btn--lg`, el CTA de la portada). --- */
+.btn--pildora {
+  border-radius: 999px;
+  border-width: 1.5px;
+  font-family: var(--fuente-display);
+  font-weight: 700;
+  line-height: 1;
+}
+.btn--pildora svg { transition: transform var(--dur-rapida) var(--ease-out); }
+.btn--pildora:hover svg { transform: translateX(3px); }
+
+/* --- Jerarquía --- */
+.btn--primario {
   background: linear-gradient(135deg, var(--primario), var(--primario-claro));
   color: #fff;
   box-shadow: var(--sombra-md);
 }
-.btn-primario:hover { box-shadow: var(--sombra-lg); }
-.btn-secundario {
+.btn--primario:hover { box-shadow: var(--sombra-lg); }
+.btn--suave {
   background: var(--bg-2);
   color: var(--texto);
-  border-color: transparent;
   box-shadow: var(--sombra);
 }
-.btn-secundario:hover { background: var(--bg-2); box-shadow: var(--sombra-md); }
-.btn-ok { background: var(--verde); color: #fff; }
-.btn-peligro { background: var(--rojo); color: #fff; }
+.btn--suave:hover { box-shadow: var(--sombra-md); }
+.btn--fantasma { background: transparent; color: var(--texto); border-color: var(--borde-fuerte); }
+.btn--fantasma:hover { background: var(--carbon); color: #fff; border-color: var(--carbon); }
+.btn--carbon { background: var(--carbon); color: #fff; box-shadow: 0 10px 22px -10px rgba(0, 0, 0, 0.6); }
+.btn--carbon:hover { background: #000; box-shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.7); }
+.btn--urgencia {
+  background: linear-gradient(135deg, var(--urgencia-claro), var(--urgencia));
+  color: #fff;
+  box-shadow: 0 10px 24px -8px color-mix(in srgb, var(--urgencia) 60%, transparent);
+}
+.btn--urgencia:hover { box-shadow: 0 16px 34px -8px color-mix(in srgb, var(--urgencia) 70%, transparent); }
+.btn--fase {
+  background: var(--fase-color);
+  color: #fff;
+  box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--fase-color) 70%, transparent);
+}
+/* Rellenos semánticos: fondo SÓLIDO (no el token que se invierte por tema),
+   porque encima va texto blanco. Antes .btn--peligro usaba --rojo (#ef4444),
+   que con letra blanca daba 3.3:1 — por debajo de AA. */
+.btn--peligro { background: var(--peligro-solido); color: #fff; }
+.btn--peligro:hover { background: color-mix(in srgb, var(--peligro-solido) 82%, black); }
+.btn--exito { background: var(--exito-solido); color: #fff; }
+.btn--exito:hover { background: color-mix(in srgb, var(--exito-solido) 82%, black); }
 
 .link-discreto {
   display: inline-block;
@@ -4286,42 +4355,9 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
 }
 
 /* ---- Píldoras (botones del diseño) ---- */
-.btn-pildora {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--e-8);
-  padding: var(--e-12) var(--e-20);
-  border-radius: 999px;
-  font-family: var(--fuente-display);
-  font-weight: 700;
-  font-size: var(--t-base);
-  line-height: 1;
-  border: 1.5px solid transparent;
-  cursor: pointer;
-  transition: transform var(--dur-rapida) var(--ease-out), box-shadow var(--dur-rapida) var(--ease-out),
-    background var(--dur-rapida) var(--ease-out), color var(--dur-rapida) var(--ease-out);
-}
-.btn-pildora:hover { text-decoration: none; transform: translateY(-2px); }
-.btn-pildora:active { transform: scale(0.97); }
-.btn-pildora svg { transition: transform var(--dur-rapida) var(--ease-out); }
-.btn-pildora:hover svg { transform: translateX(3px); }
-.btn-grande-p { padding: var(--e-16) var(--e-24); font-size: var(--t-base); }
-
-.btn-pildora--solido { background: var(--carbon); color: #fff; box-shadow: 0 10px 22px -10px rgba(0, 0, 0, 0.6); }
-.btn-pildora--solido:hover { background: #000; box-shadow: 0 16px 30px -12px rgba(0, 0, 0, 0.7); }
-.btn-pildora--urgencia {
-  background: linear-gradient(135deg, var(--urgencia-claro), var(--urgencia));
-  color: #fff;
-  box-shadow: 0 10px 24px -8px color-mix(in srgb, var(--urgencia) 60%, transparent);
-}
-.btn-pildora--urgencia:hover { box-shadow: 0 16px 34px -8px color-mix(in srgb, var(--urgencia) 70%, transparent); }
-.btn-pildora--oscuro { background: transparent; color: var(--texto); border-color: var(--borde-fuerte); }
-.btn-pildora--oscuro:hover { background: var(--carbon); color: #fff; border-color: var(--carbon); }
-.btn-pildora--color {
-  background: var(--fase-color);
-  color: #fff;
-  box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--fase-color) 70%, transparent);
-}
+/* (Aquí vivía el segundo sistema de botones: .btn btn--pildora y sus 6 variantes.
+   Todo eso está ahora en el primitivo único de arriba, como los modificadores
+   --pildora / --carbon / --urgencia / --fantasma / --fase.) */
 
 /* ---- Imagen responsiva (Drive) + placeholder ---- */
 .imagen {
@@ -5462,7 +5498,7 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 .editor-error { margin: var(--e-4) 0 0; color: var(--peligro); font-size: var(--t-sm); }
 .editor-nota { margin: var(--e-4) 0 0; color: var(--texto-3); font-size: var(--t-sm); }
 .editor-guardar-fila { display: flex; align-items: center; gap: var(--e-12); flex-wrap: wrap; }
-.editor-guardar-fila .btn-pildora { display: inline-flex; align-items: center; gap: var(--e-6); }
+.editor-guardar-fila .btn btn--pildora { display: inline-flex; align-items: center; gap: var(--e-6); }
 .editor-pendiente { color: var(--texto-2); font-size: var(--t-sm); font-style: italic; }
 .editor-aviso {
   margin: 0;
@@ -5481,8 +5517,8 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   color: var(--texto-3);
 }
 .editor-acciones { display: flex; flex-wrap: wrap; gap: var(--e-8); }
-.editor-acciones .btn-pildora,
-.editor-mover .btn-pildora { display: inline-flex; align-items: center; gap: var(--e-6); min-height: 40px; }
+.editor-acciones .btn btn--pildora,
+.editor-mover .btn btn--pildora { display: inline-flex; align-items: center; gap: var(--e-6); min-height: 40px; }
 .editor-mover { display: flex; gap: var(--e-8); flex-wrap: wrap; }
 .editor-mover select { flex: 1; min-width: 220px; }
 .editor-detalles {
@@ -5530,8 +5566,8 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 .dialogo-cuerpo { color: var(--texto-2); font-size: var(--t-base); }
 .dialogo-cuerpo p { margin: 0 0 var(--e-8); }
 .dialogo-acciones { display: flex; justify-content: flex-end; gap: var(--e-8); margin-top: var(--e-16); }
-.btn-pildora--peligro { background: var(--peligro); }
-.btn-pildora--peligro:hover { background: color-mix(in srgb, var(--peligro) 80%, black); }
+.btn--peligro { background: var(--peligro); }
+.btn--peligro:hover { background: color-mix(in srgb, var(--peligro) 80%, black); }
 
 /* Vista previa (modo alumno) */
 .dialogo--previa { width: min(760px, 100%); }
@@ -5549,7 +5585,7 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 }
 .previa-fila { display: flex; align-items: center; justify-content: space-between; gap: var(--e-12); flex-wrap: wrap; }
 .previa-fila h2 { margin: 0; }
-.previa-fila .btn-pildora { display: inline-flex; align-items: center; gap: var(--e-6); }
+.previa-fila .btn btn--pildora { display: inline-flex; align-items: center; gap: var(--e-6); }
 .previa-cuerpo { margin-top: var(--e-12); }
 .previa-fases { margin: 0; padding: 0 0 0 2px; list-style: none; display: flex; flex-direction: column; gap: var(--e-16); }
 .previa-fases h3 { margin: 0 0 var(--e-4); font-size: var(--t-base); }

@@ -57,7 +57,7 @@ export default function TemaPage() {
         <span className="acceso-ico"><Icon name="candado" size={30} /></span>
         <h1>Tema aún no disponible</h1>
         <p>Tu profesor todavía no libera este tema para tu grupo. Vuelve más adelante.</p>
-        <Link to={`/fase/${tema.faseId}`} className="btn-pildora btn-pildora--solido">Volver a la fase</Link>
+        <Link to={`/fase/${tema.faseId}`} className="btn btn--pildora btn--carbon">Volver a la fase</Link>
       </div>
     )
   }
@@ -177,15 +177,15 @@ export default function TemaPage() {
 
       <div className="tema-acciones">
         <button
-          className={`btn ${leido ? 'btn-ok' : 'btn-secundario'}`}
+          className={`btn ${leido ? 'btn--exito' : 'btn--suave'}`}
           onClick={() => marcarLeido(temaId, !leido)}
         >
           {leido ? 'Marcado como leído' : 'Marcar como leído'}
         </button>
-        <Link to={`/tema/${temaId}/quiz`} className="btn btn-primario">
+        <Link to={`/tema/${temaId}/quiz`} className="btn btn--primario">
           <Icon name="matraz" size={17} /> Hacer el quiz de este tema
         </Link>
-        <Link to={`/flashcards/${temaId}`} className="btn btn-secundario">
+        <Link to={`/flashcards/${temaId}`} className="btn btn--suave">
           <Icon name="flashcards" size={17} /> Repasar flashcards
         </Link>
       </div>
@@ -277,10 +277,10 @@ function ReportarProblema({ tema }) {
             required
           />
           <div className="tema-reporte-acciones">
-            <button type="submit" className="btn btn-primario" disabled={estado === 'enviando'}>
+            <button type="submit" className="btn btn--primario" disabled={estado === 'enviando'}>
               {estado === 'enviando' ? 'Enviando…' : 'Enviar reporte'}
             </button>
-            <button type="button" className="btn btn-secundario" onClick={() => setAbierto(false)}>
+            <button type="button" className="btn btn--suave" onClick={() => setAbierto(false)}>
               Cancelar
             </button>
           </div>

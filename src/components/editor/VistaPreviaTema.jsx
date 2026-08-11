@@ -37,7 +37,7 @@ export default function VistaPreviaTema({ abierto, tema, onCerrar }) {
           </p>
           <div className="previa-fila">
             <h2 id="previa-tema-titulo">{tema.titulo || 'Tema'}</h2>
-            <button type="button" ref={refCerrar} className="btn-pildora" onClick={onCerrar}>
+            <button type="button" ref={refCerrar} className="btn btn--pildora" onClick={onCerrar}>
               <Icon name="flechaIzq" size={16} /> Volver al editor
             </button>
           </div>

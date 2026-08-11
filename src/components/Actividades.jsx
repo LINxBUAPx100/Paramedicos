@@ -119,7 +119,7 @@ function Ordenar({ titulo, pasos }) {
           )
         })}
       </ol>
-      <button className="btn btn-primario act-comprobar" onClick={() => setComprobado(true)}>
+      <button className="btn btn--primario act-comprobar" onClick={() => setComprobado(true)}>
         Comprobar orden
       </button>
       {comprobado && correctos === pasos.length && <p className="act-exito">¡Secuencia correcta!</p>}

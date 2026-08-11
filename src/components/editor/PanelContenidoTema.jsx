@@ -636,10 +636,10 @@ export default function PanelContenidoTema({
           <BotonChico icono="ojo" etiqueta="Vista previa del tema" disabled={!!subiendo}
             onClick={() => setPrevia(true)} />
           {sucio && <span className="editor-pendiente">Cambios sin guardar</span>}
-          <button type="button" className="btn-pildora" disabled={!sucio || deshabilitado} onClick={descartar}>
+          <button type="button" className="btn btn--pildora" disabled={!sucio || deshabilitado} onClick={descartar}>
             Descartar
           </button>
-          <button type="button" className="btn-pildora btn-pildora--solido"
+          <button type="button" className="btn btn--pildora btn--carbon"
             disabled={!sucio || deshabilitado || !!subiendo} onClick={guardar}>
             <Icon name="check" size={16} /> Guardar contenido
           </button>

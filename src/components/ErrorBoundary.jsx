@@ -30,7 +30,7 @@ export default class ErrorBoundary extends Component {
               ? 'No se pudo cargar esta sección (revisa tu conexión).'
               : 'Ocurrió un error al mostrar esta página.'}
           </p>
-          <button className="btn-pildora btn-pildora--solido" onClick={() => window.location.reload()}>
+          <button className="btn btn--pildora btn--carbon" onClick={() => window.location.reload()}>
             Reintentar
           </button>
         </div>

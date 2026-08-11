@@ -220,7 +220,7 @@ function Acceso({ codigoInvitacion = '' }) {
         {error && <p className="cuenta-error" role="alert">{error}</p>}
         {aviso && <p className="cuenta-ok" role="status">{aviso}</p>}
 
-        <button type="submit" className="btn-pildora btn-pildora--solido" disabled={ocupado}>
+        <button type="submit" className="btn btn--pildora btn--carbon" disabled={ocupado}>
           {ocupado ? 'Un momento…' : modo === 'registro' ? 'Crear cuenta' : 'Entrar'}
         </button>
         {modo === 'login' && (
@@ -231,7 +231,7 @@ function Acceso({ codigoInvitacion = '' }) {
       </form>
 
       <div className="cuenta-sep"><span>o</span></div>
-      <button className="btn-pildora btn-pildora--oscuro cuenta-google" onClick={conGoogle} disabled={ocupado}>
+      <button className="btn btn--pildora btn--fantasma cuenta-google" onClick={conGoogle} disabled={ocupado}>
         <Icon name="buscar" size={16} /> Continuar con Google
       </button>
     </div>
@@ -361,7 +361,7 @@ function Perfil({ user, perfil, salir, codigoInvitacion = '', onConsumir }) {
           </label>
           {error && <p className="cuenta-error" role="alert">{error}</p>}
           {msg && <p className="cuenta-ok" role="status">{msg}</p>}
-          <button type="submit" className="btn-pildora btn-pildora--solido" disabled={ocupado}>
+          <button type="submit" className="btn btn--pildora btn--carbon" disabled={ocupado}>
             {ocupado ? 'Validando…' : 'Activar código'}
           </button>
         </form>
@@ -377,7 +377,7 @@ function Perfil({ user, perfil, salir, codigoInvitacion = '', onConsumir }) {
           verlo sin ir a buscarlo. Solo aparece cuando hay algo que enviar. */}
       <EnviarDiagnostico user={user} perfil={perfil} />
 
-      <button className="btn-pildora btn-pildora--oscuro cuenta-salir" onClick={salir}>
+      <button className="btn btn--pildora btn--fantasma cuenta-salir" onClick={salir}>
         Cerrar sesión
       </button>
     </div>
@@ -429,17 +429,17 @@ function EditarMisDatos({ user, perfil }) {
         Nombre
         <div className="cuenta-editar-fila">
           <input type="text" value={nombre} onChange={(e) => setNombre(e.target.value)} />
-          <button className="btn btn-secundario" onClick={guardarNombre} disabled={ocupado}>Guardar</button>
+          <button className="btn btn--suave" onClick={guardarNombre} disabled={ocupado}>Guardar</button>
         </div>
       </label>
       <label>
         Nuevo correo de acceso
         <div className="cuenta-editar-fila">
           <input type="email" value={nuevoCorreo} onChange={(e) => setNuevoCorreo(e.target.value)} placeholder="nuevo@correo.com" />
-          <button className="btn btn-secundario" onClick={cambiarCorreo} disabled={ocupado || !nuevoCorreo}>Cambiar</button>
+          <button className="btn btn--suave" onClick={cambiarCorreo} disabled={ocupado || !nuevoCorreo}>Cambiar</button>
         </div>
       </label>
-      <button className="btn btn-secundario" onClick={resetPassword} disabled={ocupado}>
+      <button className="btn btn--suave" onClick={resetPassword} disabled={ocupado}>
         Enviarme correo para cambiar mi contraseña
       </button>
       {error && <p className="cuenta-error" role="alert">{error}</p>}
@@ -496,7 +496,7 @@ function EnviarDiagnostico({ user, perfil }) {
         placeholder="¿Qué estabas haciendo? (opcional)"
         aria-label="Qué estabas haciendo cuando falló"
       />
-      <button className="btn btn-secundario" onClick={enviar} disabled={estado === 'enviando'}>
+      <button className="btn btn--suave" onClick={enviar} disabled={estado === 'enviando'}>
         {estado === 'enviando' ? 'Enviando…' : 'Enviar diagnóstico'}
       </button>
       {estado && estado !== 'enviando' && estado !== 'ok' && (

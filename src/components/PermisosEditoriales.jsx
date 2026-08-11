@@ -175,14 +175,14 @@ function FilaProfesor({ profesor, cursos, onCambio }) {
           <div className="pe-acciones">
             <button
               type="button"
-              className="btn btn-primario"
+              className="btn btn--primario"
               disabled={!cambiado || estado === 'guardando'}
               onClick={guardar}
             >
               {estado === 'guardando' ? 'Guardando…' : 'Guardar permisos'}
             </button>
             {concedidos > 0 && (
-              <button type="button" className="btn btn-secundario" disabled={estado === 'guardando'} onClick={revocarTodo}>
+              <button type="button" className="btn btn--suave" disabled={estado === 'guardando'} onClick={revocarTodo}>
                 Revocar todo
               </button>
             )}

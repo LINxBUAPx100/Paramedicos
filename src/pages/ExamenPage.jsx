@@ -89,7 +89,7 @@ export default function ExamenPage() {
           onComplete={(aciertos, total) => registrarExamen(aciertos, total)}
         />
         <div className="quiz-page-pie">
-          <button className="btn btn-secundario" onClick={() => setConfig(null)}>
+          <button className="btn btn--suave" onClick={() => setConfig(null)}>
             ← Configurar otro examen
           </button>
         </div>
@@ -129,7 +129,7 @@ export default function ExamenPage() {
             Todas ({preguntasDisponibles.length})
           </button>
         </div>
-        <button className="btn btn-primario btn-grande" onClick={() => iniciar(cantidad)}>
+        <button className="btn btn--primario btn--lg" onClick={() => iniciar(cantidad)}>
           Comenzar examen de {cantidad} preguntas
         </button>
       </div>

@@ -48,11 +48,11 @@ export default function DialogoConfirmar({ abierto, titulo, children, confirmar 
         <h2 id="dialogo-titulo">{titulo}</h2>
         <div className="dialogo-cuerpo">{children}</div>
         <div className="dialogo-acciones">
-          <button type="button" className="btn-pildora" onClick={onCancelar}>Cancelar</button>
+          <button type="button" className="btn btn--pildora" onClick={onCancelar}>Cancelar</button>
           <button
             type="button"
             ref={refConfirmar}
-            className={`btn-pildora btn-pildora--solido ${tono === 'peligro' ? 'btn-pildora--peligro' : ''}`}
+            className={`btn btn--pildora btn--carbon ${tono === 'peligro' ? 'btn--peligro' : ''}`}
             onClick={onConfirmar}
           >
             {confirmar}

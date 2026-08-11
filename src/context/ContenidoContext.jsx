@@ -170,7 +170,8 @@ export function ErrorContenido({ onReintentar }) {
     <div className="acceso-restringido" role="alert">
       <h1>No se pudo cargar el contenido</h1>
       <p>Revisa tu conexión e inténtalo de nuevo.</p>
-      <button className="btn btn-primario" onClick={onReintentar}>Reintentar</button>
+      {/* Misma pantalla de escape, mismo botón que NotFound / ErrorBoundary. */}
+      <button className="btn btn--pildora btn--carbon" onClick={onReintentar}>Reintentar</button>
     </div>
   )
 }

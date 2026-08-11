@@ -131,10 +131,10 @@ function SeccionHero({ stats }) {
             memorizar: teoría, fisiología, farmacología y correlación clínica de verdad.
           </p>
           <div className="ph-hero-cta reveal" style={{ '--d': '420ms' }}>
-            <Link to="/fase/fase-1" className="btn-pildora btn-pildora--solido">
+            <Link to="/fase/fase-1" className="btn btn--pildora btn--carbon">
               <Icon name="libro" size={18} /> Empezar a estudiar
             </Link>
-            <Link to="/examen" className="btn-pildora btn-pildora--urgencia">
+            <Link to="/examen" className="btn btn--pildora btn--urgencia">
               <Icon name="examen" size={18} /> Ponerme a prueba
             </Link>
           </div>
@@ -210,7 +210,7 @@ function SeccionPrueba() {
             Quiz al final de cada tema y un examen general aleatorio que mezcla las 7 fases, con
             explicación de cada respuesta para que aprendas del error.
           </p>
-          <Link to="/examen" className="btn-pildora btn-pildora--urgencia btn-grande-p">
+          <Link to="/examen" className="btn btn--pildora btn--urgencia btn--lg">
             Iniciar Test <Icon name="chevronDer" size={18} />
           </Link>
         </div>
@@ -232,7 +232,7 @@ function SeccionAtlas() {
             Mapas anatómicos y fisiológicos con imágenes reales: corazón, circulación, vía aérea,
             nefrona, sistema nervioso y más, como referencia rápida mientras estudias.
           </p>
-          <Link to="/atlas" className="btn-pildora btn-pildora--oscuro btn-grande-p">
+          <Link to="/atlas" className="btn btn--pildora btn--fantasma btn--lg">
             Consultar <Icon name="chevronDer" size={18} />
           </Link>
         </div>
@@ -260,7 +260,7 @@ function SeccionFlashcards({ flashcards }) {
             Flash<span className="ac">Cards</span>
           </h2>
           <p>Repasa con nuestras flashcards por tema o globales para fijar los conceptos de alto rendimiento.</p>
-          <Link to="/flashcards" className="btn-pildora btn-pildora--solido btn-grande-p">
+          <Link to="/flashcards" className="btn btn--pildora btn--carbon btn--lg">
             Repasar <Icon name="chevronDer" size={18} />
           </Link>
         </div>
@@ -397,7 +397,7 @@ function SelectorGrupoProfesor() {
                 Trabajando con:{' '}
                 <strong>{grupo?.nombre || (activo ? activo : 'Todos los grupos')}</strong>
               </span>
-              <Link to="/panel" className="btn-pildora btn-pildora--solido">
+              <Link to="/panel" className="btn btn--pildora btn--carbon">
                 <Icon name="progreso" size={16} /> Ir a mi panel
               </Link>
             </div>

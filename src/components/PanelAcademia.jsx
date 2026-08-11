@@ -475,7 +475,7 @@ function SolicitudesAcademia({ academiaId, gestion, miUid, soloGrupo, nombreGrup
             ))}
           </ul>
           {visibles.length > 1 && (
-            <button className="btn btn-primario ps-todas" disabled={Boolean(ocupado)} onClick={aceptarTodas}>
+            <button className="btn btn--primario ps-todas" disabled={Boolean(ocupado)} onClick={aceptarTodas}>
               {ocupado === 'todas' ? 'Aceptando…' : `Aceptar todas (${visibles.length})`}
             </button>
           )}
@@ -573,7 +573,7 @@ function AccesoCodigos({ academiaId, academiaNombre = '', grupos }) {
         </p>
       ) : (
         <button
-          className="btn btn-secundario"
+          className="btn btn--suave"
           onClick={solicitar}
           disabled={estado === 'enviando' || estado === 'cargando'}
         >
@@ -873,7 +873,7 @@ export function CodigosPrueba({ academiaId = null, academiaNombre = '', miUid, a
           Nota (opcional)
           <input type="text" value={nota} onChange={(e) => setNota(e.target.value)} placeholder="Para quién es" maxLength={60} />
         </label>
-        <button className="btn btn-primario" type="submit" disabled={ocupado}>
+        <button className="btn btn--primario" type="submit" disabled={ocupado}>
           {ocupado ? 'Creando…' : '+ Crear código'}
         </button>
       </form>
@@ -938,7 +938,7 @@ export function DetalleAlumno({ alumno, intentos, onCerrar }) {
     <section id="panel-detalle-alumno" className="panel-detalle" aria-label={`Historial de ${alumno.nombre || alumno.email}`}>
       <header>
         <h2>{alumno.nombre || alumno.email}</h2>
-        <button className="btn btn-secundario" onClick={onCerrar}>Cerrar</button>
+        <button className="btn btn--suave" onClick={onCerrar}>Cerrar</button>
       </header>
       {intentos.length === 0 ? (
         <p className="panel-vacio">Este alumno aún no presenta ningún examen de fase.</p>
@@ -1056,7 +1056,7 @@ function GruposAcademia({ academiaId, academiaNombre = '', grupos, miembros, miU
             required
           />
         </label>
-        <button className="btn btn-primario" type="submit" disabled={ocupado}>
+        <button className="btn btn--primario" type="submit" disabled={ocupado}>
           {ocupado ? 'Creando…' : '+ Crear grupo'}
         </button>
       </form>

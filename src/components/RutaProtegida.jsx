@@ -69,7 +69,7 @@ export default function RutaProtegida({ children }) {
       <h1>{info.titulo}</h1>
       <p>{info.texto}</p>
       {info.cta && (
-        <Link to={info.cta.to} className="btn-pildora btn-pildora--solido">
+        <Link to={info.cta.to} className="btn btn--pildora btn--carbon">
           {info.cta.label}
         </Link>
       )}

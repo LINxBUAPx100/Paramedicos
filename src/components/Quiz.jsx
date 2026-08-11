@@ -81,7 +81,7 @@ export default function Quiz({ preguntas, onComplete, titulo }) {
             </div>
           ))}
         </div>
-        <button className="btn btn-primario" onClick={reiniciar}>
+        <button className="btn btn--primario" onClick={reiniciar}>
           Intentar de nuevo
         </button>
       </div>
@@ -142,14 +142,14 @@ export default function Quiz({ preguntas, onComplete, titulo }) {
       <div className="quiz-acciones">
         {!confirmado ? (
           <button
-            className="btn btn-primario"
+            className="btn btn--primario"
             onClick={confirmar}
             disabled={seleccion === null}
           >
             Confirmar
           </button>
         ) : (
-          <button className="btn btn-primario" onClick={siguiente}>
+          <button className="btn btn--primario" onClick={siguiente}>
             {indice + 1 >= total ? 'Ver resultados' : 'Siguiente →'}
           </button>
         )}

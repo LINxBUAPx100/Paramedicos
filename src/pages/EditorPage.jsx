@@ -29,7 +29,7 @@ function Bloqueo({ icono = 'candado', titulo, children }) {
       <span className="acceso-ico"><Icon name={icono} size={30} /></span>
       <h1>{titulo}</h1>
       {children}
-      <Link to="/" className="btn-pildora btn-pildora--solido">Volver al inicio</Link>
+      <Link to="/" className="btn btn--pildora btn--carbon">Volver al inicio</Link>
     </div>
   )
 }
@@ -489,7 +489,7 @@ export default function EditorPage() {
     return (
       <Bloqueo icono="temario" titulo="Elige una academia">
         <p>Como administrador de la plataforma, abre el editor desde la ficha de una academia en el dashboard.</p>
-        <Link to="/admin" className="btn-pildora">Ir al dashboard</Link>
+        <Link to="/admin" className="btn btn--pildora">Ir al dashboard</Link>
       </Bloqueo>
     )
   }
@@ -539,7 +539,7 @@ export default function EditorPage() {
             {guardado.estado === 'error' && <><Icon name="alerta" size={14} /> {guardado.mensaje}</>}
           </p>
           {curso && (
-            <button type="button" className="btn-pildora" onClick={abrirPrevia} disabled={ocupado}>
+            <button type="button" className="btn btn--pildora" onClick={abrirPrevia} disabled={ocupado}>
               <Icon name="ojo" size={16} /> Vista previa
             </button>
           )}
@@ -562,7 +562,7 @@ export default function EditorPage() {
                 {destino.modo === 'academia' && (esSuperadmin || rol === 'admin_escuela') && (
                   <button
                     type="button"
-                    className="btn-pildora"
+                    className="btn btn--pildora"
                     disabled={ocupado}
                     onClick={() => setCrear({ tipo: 'curso', titulo: '' })}
                   >
@@ -746,8 +746,8 @@ export default function EditorPage() {
                 {crear.error && <p className="editor-error" id="crear-error">{crear.error}</p>}
               </div>
               <div className="dialogo-acciones">
-                <button type="button" className="btn-pildora" onClick={() => setCrear(null)}>Cancelar</button>
-                <button type="submit" className="btn-pildora btn-pildora--solido">Crear</button>
+                <button type="button" className="btn btn--pildora" onClick={() => setCrear(null)}>Cancelar</button>
+                <button type="submit" className="btn btn--pildora btn--carbon">Crear</button>
               </div>
             </form>
           </div>

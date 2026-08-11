@@ -124,7 +124,7 @@ export default function PersonalizacionAcademia({ academia, onGuardado }) {
                   <span className="hs-orden">
                     <button
                       type="button"
-                      className="btn btn-mini btn-secundario"
+                      className="btn btn--sm btn--suave"
                       onClick={() => setSecciones((c) => moverSeccion(c, s.id, 'arriba'))}
                       disabled={i === 0}
                       aria-label={`Subir la sección ${etiquetaDe[s.id] || s.id}`}
@@ -133,7 +133,7 @@ export default function PersonalizacionAcademia({ academia, onGuardado }) {
                     </button>
                     <button
                       type="button"
-                      className="btn btn-mini btn-secundario"
+                      className="btn btn--sm btn--suave"
                       onClick={() => setSecciones((c) => moverSeccion(c, s.id, 'abajo'))}
                       disabled={i === secciones.length - 1}
                       aria-label={`Bajar la sección ${etiquetaDe[s.id] || s.id}`}
@@ -152,7 +152,7 @@ export default function PersonalizacionAcademia({ academia, onGuardado }) {
           </fieldset>
         )}
 
-        <button className="btn btn-primario" type="submit" disabled={ocupado}>
+        <button className="btn btn--primario" type="submit" disabled={ocupado}>
           {ocupado ? 'Guardando…' : 'Guardar personalización'}
         </button>
         {error && <p className="cuenta-error" role="alert">{error}</p>}

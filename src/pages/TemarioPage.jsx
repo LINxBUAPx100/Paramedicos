@@ -105,7 +105,7 @@ export default function TemarioPage() {
         <span className="acceso-ico"><Icon name="candado" size={30} /></span>
         <h1>Sección del personal</h1>
         <p>El temario y el control de visibilidad son exclusivos de profesores, directores y administradores.</p>
-        <Link to="/" className="btn-pildora btn-pildora--solido">Volver al inicio</Link>
+        <Link to="/" className="btn btn--pildora btn--carbon">Volver al inicio</Link>
       </div>
     )
   }
@@ -250,12 +250,12 @@ export default function TemarioPage() {
             </label>
           )}
           {grupo && (
-            <button className="btn btn-secundario temario-toggle-todo" onClick={toggleTodo} disabled={guardando}>
+            <button className="btn btn--suave temario-toggle-todo" onClick={toggleTodo} disabled={guardando}>
               {todoOculto ? 'Mostrar todo' : 'Ocultar todo'}
             </button>
           )}
           {grupo && grupos && grupos.length > 1 && (
-            <button className="btn btn-primario temario-aplicar-todos" onClick={aplicarATodos} disabled={guardando}>
+            <button className="btn btn--primario temario-aplicar-todos" onClick={aplicarATodos} disabled={guardando}>
               <Icon name="capas" size={15} /> Aplicar a los {grupos.length} grupos
             </button>
           )}

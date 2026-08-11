@@ -310,7 +310,7 @@ export function AnuncioGlobal() {
           <label className="admin-anuncio-activo">
             <input type="checkbox" checked={activo} onChange={(e) => setActivo(e.target.checked)} /> Mostrar a todos
           </label>
-          <button className="btn btn-primario" type="submit" disabled={ocupado}>
+          <button className="btn btn--primario" type="submit" disabled={ocupado}>
             {ocupado ? 'Guardando…' : 'Guardar anuncio'}
           </button>
           {error && <p className="cuenta-error" role="alert">{error}</p>}

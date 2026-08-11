@@ -60,7 +60,7 @@ export default function ReplicacionPage() {
         <span className="acceso-ico"><Icon name="candado" size={30} /></span>
         <h1>Solo super-administradores</h1>
         <p>Las plantillas globales y la replicación de contenido son exclusivas del administrador de la plataforma.</p>
-        <Link to="/" className="btn-pildora btn-pildora--solido">Volver al inicio</Link>
+        <Link to="/" className="btn btn--pildora btn--carbon">Volver al inicio</Link>
       </div>
     )
   }
@@ -161,10 +161,10 @@ function ConfirmacionReforzada({ titulo, resumen, frase, onConfirmar, onCerrar, 
           />
         </label>
         <div className="rp-dialogo-botones">
-          <button className="btn btn-peligro" disabled={!coincide || ocupado} onClick={() => onConfirmar(texto.trim().toUpperCase())}>
+          <button className="btn btn--peligro" disabled={!coincide || ocupado} onClick={() => onConfirmar(texto.trim().toUpperCase())}>
             {ocupado ? 'Ejecutando…' : 'Confirmar y ejecutar'}
           </button>
-          <button className="btn btn-secundario" onClick={onCerrar} disabled={ocupado}>Cancelar</button>
+          <button className="btn btn--suave" onClick={onCerrar} disabled={ocupado}>Cancelar</button>
         </div>
       </div>
     </Dialogo>
@@ -227,10 +227,10 @@ function SeccionPlantillas({ api }) {
   return (
     <section aria-label="Plantillas globales">
       <div className="rp-acciones-cab">
-        <button className="btn btn-primario" onClick={() => setDialogo({ tipo: 'nueva' })}>
+        <button className="btn btn--primario" onClick={() => setDialogo({ tipo: 'nueva' })}>
           <Icon name="mas" size={15} /> Nueva plantilla
         </button>
-        <button className="btn btn-secundario" onClick={() => setDialogo({ tipo: 'desde-curso' })}>
+        <button className="btn btn--suave" onClick={() => setDialogo({ tipo: 'desde-curso' })}>
           <Icon name="copiar" size={15} /> Desde un curso de academia
         </button>
       </div>
@@ -266,32 +266,32 @@ function SeccionPlantillas({ api }) {
                   <td className="rp-celda-acciones">
                     {p.estado === 'borrador' && (
                       <>
-                        <Link className="btn btn-mini btn-secundario" to={`/editor/plantilla/${p.id}`}>
+                        <Link className="btn btn--sm btn--suave" to={`/editor/plantilla/${p.id}`}>
                           <Icon name="editar" size={13} /> Editar contenido
                         </Link>
-                        <button className="btn btn-mini btn-primario" disabled={ocupado} onClick={() => setDialogo({ tipo: 'publicar', plantilla: p })}>
+                        <button className="btn btn--sm btn--primario" disabled={ocupado} onClick={() => setDialogo({ tipo: 'publicar', plantilla: p })}>
                           <Icon name="verificado" size={13} /> Publicar v{p.version ?? 1}
                         </button>
                       </>
                     )}
                     {p.estado === 'publicada' && (
                       <button
-                        className="btn btn-mini btn-secundario"
+                        className="btn btn--sm btn--suave"
                         disabled={ocupado}
                         onClick={() => ejecutar(() => api.abrirSiguienteVersion(p.id), `Se abrió el borrador v${(p.version ?? 1) + 1} de "${p.nombre}".`)}
                       >
                         <Icon name="mas" size={13} /> Abrir v{(p.version ?? 1) + 1}
                       </button>
                     )}
-                    <button className="btn btn-mini btn-secundario" onClick={() => verVersiones(p)}>
+                    <button className="btn btn--sm btn--suave" onClick={() => verVersiones(p)}>
                       <Icon name="reloj" size={13} /> Versiones
                     </button>
-                    <button className="btn btn-mini btn-secundario" disabled={ocupado} onClick={() => setDialogo({ tipo: 'duplicar', plantilla: p })}>
+                    <button className="btn btn--sm btn--suave" disabled={ocupado} onClick={() => setDialogo({ tipo: 'duplicar', plantilla: p })}>
                       <Icon name="copiar" size={13} /> Duplicar
                     </button>
                     {p.estado !== 'archivada' ? (
                       <button
-                        className="btn btn-mini btn-secundario"
+                        className="btn btn--sm btn--suave"
                         disabled={ocupado}
                         onClick={() => setDialogo({ tipo: 'archivar', plantilla: p })}
                       >
@@ -299,7 +299,7 @@ function SeccionPlantillas({ api }) {
                       </button>
                     ) : (
                       <button
-                        className="btn btn-mini btn-secundario"
+                        className="btn btn--sm btn--suave"
                         disabled={ocupado}
                         onClick={() => ejecutar(
                           () => api.cambiarEstadoPlantilla(p.id, p.publicadaEn ? 'publicada' : 'borrador'),
@@ -444,8 +444,8 @@ function FormPlantilla({ titulo, conCursoId = false, ocupado, onCerrar, onGuarda
           </select>
         </label>
         <div className="rp-dialogo-botones">
-          <button type="submit" className="btn btn-primario" disabled={ocupado}>{ocupado ? 'Guardando…' : 'Crear borrador'}</button>
-          <button type="button" className="btn btn-secundario" onClick={onCerrar} disabled={ocupado}>Cancelar</button>
+          <button type="submit" className="btn btn--primario" disabled={ocupado}>{ocupado ? 'Guardando…' : 'Crear borrador'}</button>
+          <button type="button" className="btn btn--suave" onClick={onCerrar} disabled={ocupado}>Cancelar</button>
         </div>
       </form>
     </Dialogo>
@@ -467,8 +467,8 @@ function FormPublicar({ plantilla, ocupado, onCerrar, onPublicar }) {
           <textarea value={notas} onChange={(e) => setNotas(e.target.value)} rows={3} maxLength={1000} />
         </label>
         <div className="rp-dialogo-botones">
-          <button type="submit" className="btn btn-primario" disabled={ocupado}>{ocupado ? 'Publicando…' : 'Publicar versión'}</button>
-          <button type="button" className="btn btn-secundario" onClick={onCerrar} disabled={ocupado}>Cancelar</button>
+          <button type="submit" className="btn btn--primario" disabled={ocupado}>{ocupado ? 'Publicando…' : 'Publicar versión'}</button>
+          <button type="button" className="btn btn--suave" onClick={onCerrar} disabled={ocupado}>Cancelar</button>
         </div>
       </form>
     </Dialogo>
@@ -485,8 +485,8 @@ function FormNombre({ titulo, etiqueta, valorInicial = '', ocupado, onCerrar, on
           <input type="text" value={valor} onChange={(e) => setValor(e.target.value)} required maxLength={120} />
         </label>
         <div className="rp-dialogo-botones">
-          <button type="submit" className="btn btn-primario" disabled={ocupado}>{ocupado ? 'Guardando…' : 'Aceptar'}</button>
-          <button type="button" className="btn btn-secundario" onClick={onCerrar} disabled={ocupado}>Cancelar</button>
+          <button type="submit" className="btn btn--primario" disabled={ocupado}>{ocupado ? 'Guardando…' : 'Aceptar'}</button>
+          <button type="button" className="btn btn--suave" onClick={onCerrar} disabled={ocupado}>Cancelar</button>
         </div>
       </form>
     </Dialogo>
@@ -695,7 +695,7 @@ function SeccionReplicar({ api }) {
             ))}
           </ul>
           {cursorAca && (
-            <button className="btn btn-secundario btn-mini" onClick={() => cargarAcademias(cursorAca)}>
+            <button className="btn btn--suave btn--sm" onClick={() => cargarAcademias(cursorAca)}>
               Cargar más academias
             </button>
           )}
@@ -724,7 +724,7 @@ function SeccionReplicar({ api }) {
 
         <li>
           <h2>4 · Análisis (dry-run obligatorio)</h2>
-          <button className="btn btn-primario" onClick={analizar} disabled={!listaParaAnalizar || ocupado}>
+          <button className="btn btn--primario" onClick={analizar} disabled={!listaParaAnalizar || ocupado}>
             {ocupado && !confirmando ? 'Trabajando…' : 'Analizar sin escribir nada'}
           </button>
           <p aria-live="polite" className="rp-progreso">{progreso}</p>
@@ -797,7 +797,7 @@ function SeccionReplicar({ api }) {
             <p className="cuenta-aviso">Faltan {pendientesDecision.length} conflicto(s) por decidir (selección manual).</p>
           )}
           <button
-            className="btn btn-peligro"
+            className="btn btn--peligro"
             disabled={!analisis || analisis.bloqueada || ocupado || pendientesDecision.length > 0 || Boolean(resultado)}
             onClick={() => setConfirmando(true)}
           >
@@ -953,17 +953,17 @@ function SeccionHistorial({ api }) {
                   <td><span className={`rp-chip rp-chip--op-${op.estado}`}>{ETIQUETA_ESTADO_OP[op.estado] || op.estado}</span></td>
                   <td className="rp-celda-acciones">
                     {op.estado === 'fallida' && (
-                      <button className="btn btn-mini btn-secundario" disabled={ocupado} onClick={() => reanudar(op)}>
+                      <button className="btn btn--sm btn--suave" disabled={ocupado} onClick={() => reanudar(op)}>
                         <Icon name="restaurar" size={13} /> Reanudar
                       </button>
                     )}
                     {['completada', 'completada_con_advertencias', 'fallida'].includes(op.estado) && (
-                      <button className="btn btn-mini btn-secundario" disabled={ocupado} onClick={() => prepararRollback(op)}>
+                      <button className="btn btn--sm btn--suave" disabled={ocupado} onClick={() => prepararRollback(op)}>
                         <Icon name="flechaIzq" size={13} /> Rollback…
                       </button>
                     )}
                     {['borrador', 'lista', 'esperando_confirmacion'].includes(op.estado) && (
-                      <button className="btn btn-mini btn-secundario" disabled={ocupado} onClick={async () => { await api.cancelarReplicacion(op.id).catch((e) => setError(String(e?.message || e))); recargar() }}>
+                      <button className="btn btn--sm btn--suave" disabled={ocupado} onClick={async () => { await api.cancelarReplicacion(op.id).catch((e) => setError(String(e?.message || e))); recargar() }}>
                         Cancelar
                       </button>
                     )}
@@ -975,7 +975,7 @@ function SeccionHistorial({ api }) {
         </div>
       )}
       {cursor && (
-        <button className="btn btn-secundario btn-mini" onClick={() => recargar(cursor)}>Cargar más</button>
+        <button className="btn btn--suave btn--sm" onClick={() => recargar(cursor)}>Cargar más</button>
       )}
 
       {rollback && (

@@ -23,7 +23,7 @@ export default function FasePage() {
         <span className="acceso-ico"><Icon name="candado" size={30} /></span>
         <h1>Módulo aún no disponible</h1>
         <p>Tu profesor todavía no libera esta fase para tu grupo. Vuelve más adelante.</p>
-        <Link to="/" className="btn-pildora btn-pildora--solido">Volver al inicio</Link>
+        <Link to="/" className="btn btn--pildora btn--carbon">Volver al inicio</Link>
       </div>
     )
   }
@@ -83,7 +83,7 @@ export default function FasePage() {
           <h2><Icon name="examen" size={22} /> Examen de la Fase {fase.numero}</h2>
           <p>Pon a prueba todo lo visto en esta fase. Tu resultado se guarda como intento para seguir tu avance.</p>
         </div>
-        <Link to={`/fase/${fase.id}/examen`} className="btn btn-primario btn-grande">
+        <Link to={`/fase/${fase.id}/examen`} className="btn btn--primario btn--lg">
           Presentar examen de fase
         </Link>
       </section>
