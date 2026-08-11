@@ -67,13 +67,27 @@ service cloud.firestore {
         ? 'pro'
         : academiaDoc(acaId).get('planComercial', 'pro');
     }
+    // EXCEPCIONES por academia (academias/{id}.capacidades). Solo las escribe
+    // el super-admin: la regla de update del director está acotada con hasOnly
+    // a logo/lema/colorHero/homeSecciones.
+    function capsDe(acaId) { return academiaDoc(acaId).get('capacidades', {}); }
     // ¿El plan permite editar contenido? (pro|curso). ¿Otorgar permisos
     // editoriales a profesores? (solo pro).
+    //
+    // Espejo EXACTO de capacidadesDe() en src/lib/capacidades.js: la excepción
+    // manda y, si no la hay, se deriva del plan. Antes las reglas ignoraban el
+    // mapa de excepciones, así que la UI podía conceder una capacidad que el
+    // backend negaba (y al revés). Y el mismo par de funciones vive ahora en
+    // storage.rules con el MISMO cuerpo: la divergencia entre ambos ficheros
+    // (Firestore aplicaba la promoción de 'avanzado' a pro y Storage no) dejaba
+    // a las academias de tipo avanzado con plan base editando contenido pero
+    // sin poder subir un solo archivo.
+    // Si cambias esto, cámbialo en los tres sitios.
     function academiaEditaContenido(acaId) {
-      return academiaPlanEfectivo(acaId) in ['pro', 'curso'];
+      return capsDe(acaId).get('editorContenido', academiaPlanEfectivo(acaId) in ['pro', 'curso']);
     }
     function academiaOtorgaPermisos(acaId) {
-      return academiaPlanEfectivo(acaId) == 'pro';
+      return capsDe(acaId).get('permisosEditoriales', academiaPlanEfectivo(acaId) == 'pro');
     }
     // Permisos editoriales del solicitante (usuarios/{uid}.permisosEditor); un
     // mapa que SOLO escribe el director PRO o el super-admin.

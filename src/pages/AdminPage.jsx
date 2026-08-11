@@ -144,14 +144,17 @@ export default function AdminPage() {
 
   const eliminar = (u) => {
     const seguro = window.confirm(
-      `¿Eliminar a ${u.nombre || u.email}?\n\nSe borran su perfil y su progreso. Sus intentos de examen se conservan. ` +
-      'Su acceso (correo/contraseña) se elimina del todo desde la consola de Firebase → Authentication.'
+      `¿Dar de baja a ${u.nombre || u.email}?\n\n` +
+      '· Pierde el acceso de inmediato y sale de su academia y de su grupo.\n' +
+      '· Se borra su progreso. Sus intentos de examen se conservan.\n' +
+      '· La ficha se queda marcada como "Eliminado" para que puedas auditarla.\n\n' +
+      'Su correo y contraseña se borran del todo desde la consola de Firebase → Authentication.'
     )
     if (!seguro) return
     correr(u.id, async () => {
       const { eliminarUsuario } = await import('../lib/firebase/admin.js')
       await eliminarUsuario(u.id)
-    }, 'Usuario eliminado (perfil y progreso).')
+    }, 'Usuario dado de baja: sin acceso, fuera de su academia y sin progreso.')
   }
 
   const academias = datos?.academias || []
@@ -253,6 +256,7 @@ export default function AdminPage() {
                 <tbody>
                   {usuariosFiltrados.map((u) => {
                     const soyYo = u.id === user?.uid
+                    const dadoDeBaja = u.estado === 'eliminado'
                     const suspendido = u.estado && u.estado !== 'activo'
                     const enEdicion = editando?.uid === u.id
                     const quien = u.nombre || u.email || u.id
@@ -357,6 +361,13 @@ export default function AdminPage() {
                         <td data-label="Estado">
                           {soyYo ? (
                             <span className="panel-rol-tag rol-activo">Activo</span>
+                          ) : dadoDeBaja ? (
+                            // Baja lógica: se conserva la fila para poder auditarla.
+                            // "Reactivar" desde aquí lo devolvería sin academia, así
+                            // que se reincorpora con el código, como cualquiera.
+                            <span className="panel-rol-tag rol-eliminado" title="Cuenta dada de baja">
+                              Eliminado
+                            </span>
                           ) : (
                             <button
                               type="button"

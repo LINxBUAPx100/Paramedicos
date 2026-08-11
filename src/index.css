@@ -471,6 +471,8 @@ textarea:focus-visible,
 .panel-rol-tag.rol-admin_escuela { color: var(--primario); background: color-mix(in srgb, var(--primario) 12%, transparent); }
 .panel-rol-tag.rol-instructor { color: var(--verde); background: color-mix(in srgb, var(--verde) 12%, transparent); }
 .panel-rol-tag.rol-activo { color: var(--verde); background: color-mix(in srgb, var(--verde) 10%, transparent); }
+/* Baja lógica: la ficha se conserva para auditoría, pero se lee como inactiva. */
+.panel-rol-tag.rol-eliminado { color: var(--texto-3); background: color-mix(in srgb, var(--texto-3) 12%, transparent); }
 .panel-rol-tag.rol-suspendido { color: var(--urgencia); background: color-mix(in srgb, var(--urgencia) 10%, transparent); }
 .panel-estado-btn {
   padding: 6px 12px;

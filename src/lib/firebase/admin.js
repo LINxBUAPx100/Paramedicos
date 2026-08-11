@@ -17,7 +17,7 @@ import { auth, db, firebaseConfig } from './init.js'
 import { validarPlanTipo } from '../capacidades.js'
 import { sendPasswordResetEmail } from 'firebase/auth'
 import {
-  doc, getDoc, setDoc, deleteDoc, serverTimestamp,
+  doc, getDoc, setDoc, updateDoc, deleteDoc, serverTimestamp,
   collection, query, where, getDocs, writeBatch,
 } from 'firebase/firestore'
 
@@ -110,25 +110,76 @@ export async function crearUsuarioNuevo({ nombre, email, password, rol = 'alumno
     const cred = await authMod.createUserWithEmailAndPassword(authSec, email.trim(), password)
     if (nombre) await authMod.updateProfile(cred.user, { displayName: nombre })
     const uid = cred.user.uid
+
+    // Alta en DOS sistemas (Auth + Firestore) sin transacción posible desde el
+    // cliente. Si el perfil falla, la cuenta de Auth se queda huérfana y ese
+    // usuario cae PARA SIEMPRE en motivo 'sin-perfil' (AuthContext), con una
+    // pantalla que le dice que vuelva a entrar y nunca se arregla. Peor aún:
+    // asegurarPerfil() se lo recrearía como 'alumno' sin academia, no con el
+    // rol que el director pidió. Así que se COMPENSA: se borra la cuenta recién
+    // creada y el alta falla entera, que es un estado consistente.
+    //
+    // El orden importa: el borrado se hace ANTES del signOut, mientras la
+    // sesión secundaria sigue siendo reciente (deleteUser exige credencial
+    // fresca).
+    try {
+      // El perfil lo escribe la sesión PRINCIPAL (super-admin) con el rol pedido.
+      await setDoc(doc(db, 'usuarios', uid), {
+        nombre: nombre || '',
+        email: email.trim(),
+        rol,
+        academiaId: academiaId || null,
+        estado: 'activo',
+        creado: serverTimestamp(),
+      })
+    } catch (err) {
+      let compensado = true
+      try {
+        await authMod.deleteUser(cred.user)
+      } catch {
+        compensado = false
+      }
+      throw new Error(
+        compensado
+          ? `No se pudo crear el perfil de ${email.trim()} y el alta se deshizo entera. Inténtalo de nuevo. (${err.message})`
+          : `No se pudo crear el perfil de ${email.trim()} y TAMPOCO se pudo deshacer su cuenta de acceso. ` +
+            `Bórrala a mano en la consola de Firebase → Authentication antes de reintentar. (${err.message})`
+      )
+    }
+
     await authMod.signOut(authSec)
-    // El perfil lo escribe la sesión PRINCIPAL (super-admin) con el rol pedido.
-    await setDoc(doc(db, 'usuarios', uid), {
-      nombre: nombre || '',
-      email: email.trim(),
-      rol,
-      academiaId: academiaId || null,
-      estado: 'activo',
-      creado: serverTimestamp(),
-    })
     return uid
   } finally {
     try { await deleteApp(segunda) } catch { /* ya cerrada */ }
   }
 }
 
-// Borra el perfil y el progreso del usuario en Firestore (ver límites arriba).
+// Da de baja a un usuario. Es un BORRADO LÓGICO, y no por comodidad:
+//
+//   Borrar el doc de usuarios/{uid} NO expulsaba a nadie. Su registro de Auth
+//   seguía vivo, así que al volver a entrar asegurarPerfil() le recreaba el
+//   perfil como 'alumno', y con el código de su academia — que se sabe de
+//   memoria — se reincorporaba. Expulsar a alguien no lo expulsaba.
+//
+// Con estado 'eliminado' el acceso queda cerrado de verdad: calcularAcceso()
+// bloquea cualquier estado != 'activo' (AuthContext) y asegurarPerfil() no
+// pisa un doc que ya existe. Además se le quita academia y grupo, así que
+// desaparece de los paneles y de miembrosDeAcademia(); el super-admin sigue
+// viéndolo en su listado global, que es lo que permite auditar la baja.
+//
+// El registro de Auth (correo/contraseña) solo se borra con el Admin SDK:
+// consola de Firebase → Authentication, o un script con firebase-admin.
 export async function eliminarUsuario(uid) {
-  await deleteDoc(doc(db, 'usuarios', uid))
+  await updateDoc(doc(db, 'usuarios', uid), {
+    estado: 'eliminado',
+    academiaId: null,
+    grupoId: null,
+    // Se le retiran también los permisos editoriales: si algún día se
+    // reactivara la cuenta, no debe volver con lo que tenía concedido.
+    permisosEditor: {},
+    puedeVerCodigos: false,
+    eliminadoEn: serverTimestamp(),
+  })
   try { await deleteDoc(doc(db, 'progreso', uid)) } catch { /* sin progreso */ }
 }
 

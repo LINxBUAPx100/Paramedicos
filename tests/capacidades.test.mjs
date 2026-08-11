@@ -92,3 +92,34 @@ test('validarPlanTipo: valores fuera de catálogo', () => {
   assert.equal(validarPlanTipo('base', 'basico'), null)
   assert.equal(validarPlanTipo('curso', 'medicina'), null)
 })
+
+// ============================================================
+//  CONTRATO que firestore.rules y storage.rules replican a mano
+// ------------------------------------------------------------
+//  Las reglas no pueden importar este módulo, así que la fórmula vive en tres
+//  sitios. Estas pruebas fijan lo que las tres deben decir; si cambias la
+//  derivación aquí, cámbiala también en:
+//    · firestore.rules → academiaEditaContenido / academiaOtorgaPermisos
+//    · storage.rules   → academiaEditaContenido
+//  Los mismos escenarios están en tests/rules/capacidades.rules.test.mjs,
+//  que los comprueba contra los emuladores.
+// ============================================================
+
+test('contrato con las reglas: avanzado + base SÍ edita contenido', () => {
+  // El caso que estaba roto: storage.rules miraba planComercial a secas y le
+  // negaba la subida de archivos a una academia que sí podía editar.
+  const c = capacidadesDe({ tipo: 'avanzado', planComercial: 'base' })
+  assert.equal(c.editorContenido, true)
+  assert.equal(c.permisosEditoriales, true)
+})
+
+test('contrato con las reglas: la excepción manda sobre el plan', () => {
+  assert.equal(capacidadesDe({ planComercial: 'pro', capacidades: { editorContenido: false } }).editorContenido, false)
+  assert.equal(capacidadesDe({ planComercial: 'base', capacidades: { editorContenido: true } }).editorContenido, true)
+})
+
+test('contrato con las reglas: permisos editoriales solo en pro', () => {
+  assert.equal(capacidadesDe({ planComercial: 'pro' }).permisosEditoriales, true)
+  assert.equal(capacidadesDe({ planComercial: 'curso' }).permisosEditoriales, false)
+  assert.equal(capacidadesDe({ planComercial: 'base' }).permisosEditoriales, false)
+})

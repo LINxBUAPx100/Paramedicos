@@ -35,9 +35,25 @@ service firebase.storage {
         && firestore.exists(/databases/(default)/documents/usuarios/$(request.auth.uid))
         && miDoc().academiaId == acaId;
     }
+    // --- Capacidades de la academia: MISMO cuerpo que en firestore.rules ---
+    // Esta función derivaba el plan por su cuenta y le faltaban DOS cosas que
+    // firestore.rules sí tenía: la promoción de tipo 'avanzado' a plan 'pro' y
+    // el mapa de excepciones. Efecto real: una academia 'avanzado' con plan
+    // 'base' podía editar su contenido y NO podía subir ni un archivo — el
+    // director veía el editor completo, arrastraba un PDF y recibía un error de
+    // permisos sin explicación. Si cambias esto, cámbialo también allí y en
+    // src/lib/capacidades.js.
+    function academiaDoc(acaId) {
+      return firestore.get(/databases/(default)/documents/academias/$(acaId)).data;
+    }
+    function academiaPlanEfectivo(acaId) {
+      return academiaDoc(acaId).get('tipo', 'basico') == 'avanzado'
+        ? 'pro'
+        : academiaDoc(acaId).get('planComercial', 'pro');
+    }
+    function capsDe(acaId) { return academiaDoc(acaId).get('capacidades', {}); }
     function academiaEditaContenido(acaId) {
-      return firestore.get(/databases/(default)/documents/academias/$(acaId))
-        .data.get('planComercial', 'pro') in ['pro', 'curso'];
+      return capsDe(acaId).get('editorContenido', academiaPlanEfectivo(acaId) in ['pro', 'curso']);
     }
     // Director de la academia (con plan que edita) o profesor con permisos
     // editoriales. Los ARCHIVOS los gobierna `administrarRecursos` (Fase 6):
