@@ -1,8 +1,55 @@
 # Firebase — guía rápida de PTEM
 
 Proyecto: **ptem-a304f** · La app usa Firebase Auth (email/Google) + Firestore.
-La config del cliente está incrustada en `src/lib/firebase/init.js` (es pública
-por diseño; la seguridad la dan las Security Rules).
+La config del cliente llega por variables `VITE_FIREBASE_*` (`.env` en local,
+secrets del repositorio en CI). Es pública por diseño —acaba en el bundle— y la
+seguridad la dan las Security Rules, pero ya **no está incrustada en el código**:
+si falta, el build se detiene en vez de publicar una app sin conexión.
+
+## ⚠️ Acciones en consola pendientes (endurecimiento 2026-08)
+
+Nada de esto se puede hacer desde el repositorio. Sin estos pasos, el código ya
+está listo pero la protección no existe.
+
+### 1. Restringir la clave de API (evita el abuso de tu cuota)
+
+Hoy cualquiera puede coger la `apiKey` del bundle y llamar a Identity Toolkit
+desde su propio script: crear cuentas en masa contra tu proyecto, por ejemplo.
+
+[Google Cloud → Credenciales](https://console.cloud.google.com/apis/credentials?project=ptem-a304f)
+→ la clave de navegador →
+
+- **Restricción de aplicación**: *Referentes HTTP*, con
+  `https://linxbuapx100.github.io/*` y `http://localhost:*`.
+- **Restricción de API**: solo *Identity Toolkit API*, *Cloud Firestore API*,
+  *Cloud Storage for Firebase API* y *Token Service API*.
+
+### 2. Guardar la config como secrets del repositorio
+
+GitHub → *Settings* → *Secrets and variables* → *Actions* → **New repository secret**,
+uno por variable (los valores salen de tu `.env` local):
+
+`VITE_FIREBASE_API_KEY` · `VITE_FIREBASE_AUTH_DOMAIN` · `VITE_FIREBASE_PROJECT_ID` ·
+`VITE_FIREBASE_STORAGE_BUCKET` · `VITE_FIREBASE_MESSAGING_SENDER_ID` · `VITE_FIREBASE_APP_ID`
+
+> **Hazlo ANTES del siguiente despliegue a `main`.** Sin estos secrets el job de
+> build falla con el mensaje "Build detenido: falta la configuración de
+> Firebase". Es a propósito: preferible un CI en rojo a publicar una app que no
+> puede hablar con su backend.
+
+### 3. App Check (opcional, recomendado — hazlo después del paso 1)
+
+[Firebase → App Check](https://console.firebase.google.com/project/ptem-a304f/appcheck)
+→ registra la app web con **reCAPTCHA v3** → copia la *clave de sitio* y
+guárdala como secret `VITE_APPCHECK_SITE_KEY` (y en tu `.env` local).
+
+Al existir esa variable, la app inicializa App Check sola y la CSP abre por su
+cuenta los orígenes de reCAPTCHA (ver `vite.config.js`). Mientras esté vacía,
+no se inicializa nada y todo funciona igual.
+
+Pon el modo en **enforce** para Firestore y Storage solo cuando hayas
+comprobado que la app funciona con App Check activo: si lo fuerzas antes,
+todas las lecturas empiezan a fallar con `permission-denied`.
 
 ## ⚠️ Paso pendiente: publicar las reglas actualizadas
 
@@ -19,6 +66,18 @@ necesita las reglas de [`firestore.rules`](./firestore.rules) publicadas:
 Mientras no se publiquen: el examen funciona pero muestra
 "No se pudo guardar el intento", los paneles no cargan datos y los cambios
 de rol fallan.
+
+### Endurecimiento de seguridad (auditoría 2026-08) — REPUBLICAR
+
+Dos cierres nuevos en `firestore.rules`, que **solo surten efecto al publicar**:
+
+- **`usuarios/{uid}`, edición propia**: ahora hay lista blanca de campos. Antes,
+  todo campo no enumerado en la regla quedaba escribible por su dueño, así que
+  un alumno se escribía `fasesDesbloqueadas` (y veía los módulos que su grupo
+  tiene ocultos) y un profesor se escribía `puedeVerCodigos` (y se saltaba la
+  aprobación del director).
+- **`progreso/{uid}`**: era un `write` sin validar. Ahora solo admite
+  `leidos`/`quizzes`/`examenes`/`updatedAt`, con topes de tamaño.
 
 ### Endurecimiento de seguridad (auditoría 2026-07-13) — REPUBLICAR
 

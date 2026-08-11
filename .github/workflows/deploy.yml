@@ -74,8 +74,23 @@ jobs:
       - name: Instalar dependencias
         run: npm ci
 
+      # La config de cliente de Firebase ya no vive en el codigo (init.js): sin
+      # estas variables el build se DETIENE a proposito (ver vite.config.js) en
+      # vez de publicar una app que no puede conectarse. No son secretos —
+      # acaban en el bundle— pero se guardan como secrets para poder rotarlas
+      # sin tocar el repositorio.
       - name: Build
         run: npm run build
+        env:
+          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
+          # Opcional: mientras este vacio, App Check no se inicializa y la CSP
+          # no abre los origenes de reCAPTCHA.
+          VITE_APPCHECK_SITE_KEY: ${{ secrets.VITE_APPCHECK_SITE_KEY }}
 
       - name: Configurar Pages
         uses: actions/configure-pages@v5
