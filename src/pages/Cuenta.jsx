@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import { registrarEmail, entrarEmail, entrarGoogle } from '../lib/firebase/auth.js'
 import { firebaseListo } from '../lib/firebase/init.js'
+import { errores as leerErrores, diagnostico, limpiar as limpiarRegistro } from '../lib/registro.js'
 import Icon from '../components/Icon.jsx'
 
 // --- Código de invitación (deep-link ?c=XXX): sobrevive al login vía sessionStorage ---
@@ -372,6 +373,10 @@ function Perfil({ user, perfil, salir, codigoInvitacion = '', onConsumir }) {
       </button>
       {editando && <EditarMisDatos user={user} perfil={perfil} />}
 
+      {/* Fuera del desplegable a propósito: si algo falló, la persona tiene que
+          verlo sin ir a buscarlo. Solo aparece cuando hay algo que enviar. */}
+      <EnviarDiagnostico user={user} perfil={perfil} />
+
       <button className="btn-pildora btn-pildora--oscuro cuenta-salir" onClick={salir}>
         Cerrar sesión
       </button>
@@ -439,6 +444,64 @@ function EditarMisDatos({ user, perfil }) {
       </button>
       {error && <p className="cuenta-error" role="alert">{error}</p>}
       {msg && <p className="cuenta-ok" role="status">{msg}</p>}
+    </div>
+  )
+}
+
+// Botón para mandar al super-admin los errores que la app se tragó en esta
+// sesión (lib/registro.js). Solo aparece si hay algo que contar: si la sesión
+// fue limpia, este bloque no existe y nadie se preocupa sin motivo.
+function EnviarDiagnostico({ user, perfil }) {
+  const [errores, setErrores] = useState(() => leerErrores())
+  const [nota, setNota] = useState('')
+  const [estado, setEstado] = useState('') // '' | 'enviando' | 'ok' | mensaje de error
+
+  if (errores.length === 0) return null
+
+  const enviar = async () => {
+    setEstado('enviando')
+    try {
+      const { enviarDiagnostico } = await import('../lib/firebase/reportes.js')
+      await enviarDiagnostico({
+        uid: user.uid,
+        nombre: perfil?.nombre || user.displayName || '',
+        email: user.email || '',
+        academiaId: perfil?.academiaId || null,
+        grupoId: perfil?.grupoId || null,
+        diagnostico: diagnostico(),
+        nota,
+      })
+      limpiarRegistro()
+      setErrores([])
+      setEstado('ok')
+    } catch (err) {
+      setEstado(err.message || 'No se pudo enviar el diagnóstico.')
+    }
+  }
+
+  if (estado === 'ok') {
+    return <p className="cuenta-ok" role="status">Diagnóstico enviado. Gracias: con esto podemos ver qué falló.</p>
+  }
+
+  return (
+    <div className="cuenta-diagnostico">
+      <p>
+        <strong>Detectamos {errores.length} problema(s) técnico(s)</strong> durante esta sesión.
+        La app siguió funcionando, pero puedes enviarnos el detalle para que lo revisemos.
+      </p>
+      <input
+        type="text"
+        value={nota}
+        onChange={(e) => setNota(e.target.value)}
+        placeholder="¿Qué estabas haciendo? (opcional)"
+        aria-label="Qué estabas haciendo cuando falló"
+      />
+      <button className="btn btn-secundario" onClick={enviar} disabled={estado === 'enviando'}>
+        {estado === 'enviando' ? 'Enviando…' : 'Enviar diagnóstico'}
+      </button>
+      {estado && estado !== 'enviando' && estado !== 'ok' && (
+        <p className="cuenta-error" role="alert">{estado}</p>
+      )}
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { esCorreoSupremo } from '../lib/firebase/supremos.js'
 import { capacidadesDe, planEfectivo } from '../lib/capacidades.js'
+import { registrar } from '../lib/registro.js'
 
 const AuthContext = createContext(null)
 
@@ -78,8 +79,11 @@ export function AuthProvider({ children }) {
               setPerfilListo(true)
               setCargando(false)
             },
-            () => {
+            (err) => {
               // Error al leer el perfil (permisos/red): no dejar el spinner infinito.
+              // Es el origen del motivo 'sin-perfil', que al usuario se le
+              // muestra como "no encontramos tu perfil" sin más pista.
+              registrar('perfil:snapshot', err, { uid: u.uid })
               setPerfil(null)
               setPerfilListo(true)
               setCargando(false)
@@ -177,8 +181,9 @@ export function AuthProvider({ children }) {
           import('firebase/firestore'),
         ])
         await fs.updateDoc(fs.doc(db, 'usuarios', user.uid), { rol: 'superadmin' })
-      } catch {
+      } catch (err) {
         // Sin permisos (reglas aún no publicadas): la UI sigue mandando por correo.
+        registrar('supremo:autopromocion', err)
       }
     })()
   }, [user, perfil, perfilListo])

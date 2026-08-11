@@ -473,6 +473,22 @@ textarea:focus-visible,
 .panel-rol-tag.rol-activo { color: var(--verde); background: color-mix(in srgb, var(--verde) 10%, transparent); }
 /* Baja lógica: la ficha se conserva para auditoría, pero se lee como inactiva. */
 .panel-rol-tag.rol-eliminado { color: var(--texto-3); background: color-mix(in srgb, var(--texto-3) 12%, transparent); }
+
+/* Aviso de diagnóstico en Mi cuenta: solo existe si la sesión registró fallos.
+   Tono informativo, no de alarma — la app siguió funcionando. */
+.cuenta-diagnostico {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 14px 16px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+  background: var(--bg-3);
+  font-size: 0.88rem;
+  color: var(--texto-2);
+}
+.cuenta-diagnostico input { font-family: inherit; }
 .panel-rol-tag.rol-suspendido { color: var(--urgencia); background: color-mix(in srgb, var(--urgencia) 10%, transparent); }
 .panel-estado-btn {
   padding: 6px 12px;

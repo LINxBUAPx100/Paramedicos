@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState, useCallback } from 'react'
 import { useAuth } from './AuthContext.jsx'
+import { registrar } from '../lib/registro.js'
 
 const ProgressContext = createContext(null)
 
@@ -71,8 +72,9 @@ export function ProgressProvider({ children }) {
             examenes: r.examenes || [],
           }))
         }
-      } catch {
+      } catch (err) {
         /* sin conexión: seguimos con el local */
+        registrar('progreso:cargar', err, { uid: user.uid })
       }
       if (activo) hidratadoRef.current = true
     })()
@@ -102,8 +104,12 @@ export function ProgressProvider({ children }) {
           },
           { merge: true }
         )
-      } catch {
+      } catch (err) {
         /* reintenta en el próximo cambio */
+        // El caso que importa: si las reglas rechazan la forma del documento,
+        // el progreso deja de sincronizarse SIN que el alumno note nada (el
+        // local sigue funcionando). Sin esto era invisible.
+        registrar('progreso:guardar', err, { uid: user.uid })
       }
     }, 800)
     return () => {

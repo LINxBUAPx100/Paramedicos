@@ -56,12 +56,17 @@ export function FacturacionAcademias({ academias, onCambio }) {
     const cambiaCodigo = nuevoCodigo && nuevoCodigo !== id
     const errorPlan = validarPlanTipo(planComercial, tipo)
     if (errorPlan) { setError(errorPlan); return }
-    // Cambiar el código migra el doc a un ID nuevo y arrastra todas sus
-    // referencias: es pesado y el código anterior deja de funcionar → confirma.
+    // Cambiar el código copia el doc a un ID nuevo y reescribe cada referencia:
+    // es pesado, el código anterior deja de funcionar, y la operación se niega
+    // sola si la academia tiene contenido propio (ver admin.js) → confirma.
     if (cambiaCodigo && !window.confirm(
       `Vas a cambiar el código de la academia de «${id}» a «${nuevoCodigo}».\n\n` +
-      'El código anterior dejará de funcionar y se migrarán todos sus datos ' +
-      '(alumnos, grupos, códigos de prueba, intentos, solicitudes y reportes).\n\n' +
+      '· El código anterior deja de funcionar: quien lo tenga apuntado no podrá unirse.\n' +
+      '· Se migran alumnos, grupos, códigos de prueba, intentos, solicitudes y reportes.\n' +
+      '· El historial de auditoría se queda apuntando al código viejo (es append-only).\n' +
+      '· Si la academia ya tiene contenido propio, la operación se cancelará sola: ' +
+      'renombrarla dejaría sus cursos y temas huérfanos.\n\n' +
+      'Puedes cerrar la pestaña sin miedo: si se interrumpe, al reintentarlo continúa donde iba.\n\n' +
       '¿Continuar?'
     )) return
     setEdit(null)

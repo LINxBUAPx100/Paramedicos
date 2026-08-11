@@ -21,6 +21,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useAuth } from './AuthContext.jsx'
 import { academiaMigrada } from '../lib/contenidoApi.js'
+import { registrar } from '../lib/registro.js'
 import { fasesNav, stats as statsBundle } from '../data/navIndice.js'
 
 const INDICE_BUNDLE = { fases: fasesNav, stats: statsBundle, fuente: 'legacy' }
@@ -57,8 +58,12 @@ export function ContenidoProvider({ children }) {
           // completo (la estructura sola no las conoce): solo afinan contadores.
           setIndice({ ...ind, stats: { ...INDICE_BUNDLE.stats, ...ind.stats } })
         }
-      } catch {
+      } catch (err) {
         /* sin red/permisos: el shell se queda con el índice del bundle */
+        // Silencioso PARA EL ALUMNO a propósito, pero no para nosotros: aquí
+        // es donde una academia migrada empieza a mostrar el temario genérico
+        // como si fuera el suyo.
+        registrar('contenido:indice', err, { academiaId })
       }
     })()
     return () => { activo = false }
@@ -81,6 +86,7 @@ export function ContenidoProvider({ children }) {
         setIndice(api.fuente === 'firestore' && api.indice ? api.indice : INDICE_BUNDLE)
       } catch (err) {
         // Falla hasta el fallback (p. ej. sin red para bajar el chunk de datos).
+        registrar('contenido:completo', err, { academiaId })
         if (activo) setError(err)
       }
     })()
