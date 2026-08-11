@@ -7,6 +7,7 @@ import Imagen from '../components/Imagen.jsx'
 import { useProgress } from '../context/ProgressContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
+import { hrefSeguro } from '../lib/enlaceSeguro.js'
 import Contenido from '../components/Contenido.jsx'
 import Icon from '../components/Icon.jsx'
 import Recursos from '../components/Recursos.jsx'
@@ -109,18 +110,24 @@ export default function TemaPage() {
         <div className="descargas">
           <h3><Icon name="libro" size={17} /> Material descargable de este tema</h3>
           <div className="descargas-grid">
-            {recursos.map((r, i) => (
-              <a
-                key={i}
-                className="descarga-btn"
-                href={r.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span className="descarga-ico"><Icon name="descarga" size={19} /></span>
-                <span className="descarga-txt">Descarga: {r.titulo}</span>
-              </a>
-            ))}
+            {recursos.map((r, i) => {
+              const href = hrefSeguro(r.url)
+              const dentro = (
+                <>
+                  <span className="descarga-ico"><Icon name="descarga" size={19} /></span>
+                  <span className="descarga-txt">Descarga: {r.titulo}</span>
+                </>
+              )
+              return href ? (
+                <a key={i} className="descarga-btn" href={href} target="_blank" rel="noopener noreferrer">
+                  {dentro}
+                </a>
+              ) : (
+                <span key={i} className="descarga-btn enlace-roto" title="Enlace no válido">
+                  {dentro}
+                </span>
+              )
+            })}
           </div>
         </div>
       )}

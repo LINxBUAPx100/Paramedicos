@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Icon from './Icon.jsx'
 import { driveSrc, driveSrcSet } from '../lib/img.js'
+import { hrefSeguro } from '../lib/enlaceSeguro.js'
 
 function googleImagesUrl(termino) {
   return `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(termino || '')}`
@@ -27,6 +28,8 @@ export default function Imagen({
 
   const forma = figura ? 'imagen--figura' : rounded ? 'imagen--round' : ''
   const clases = `imagen ${forma} ${className}`.trim()
+  // `fuenteUrl` la escribe un editor en el contenido: nunca va directa a un href.
+  const urlFuente = hrefSeguro(fuenteUrl)
 
   if (!tieneSrc || error) {
     return (
@@ -67,10 +70,10 @@ export default function Imagen({
         <figcaption>
           {caption}
           {fuente &&
-            (fuenteUrl ? (
+            (urlFuente ? (
               <>
                 {' '}
-                <a href={fuenteUrl} target="_blank" rel="noopener noreferrer">
+                <a href={urlFuente} target="_blank" rel="noopener noreferrer">
                   Fuente: {fuente}
                 </a>
               </>

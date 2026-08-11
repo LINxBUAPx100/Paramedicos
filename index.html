@@ -51,9 +51,14 @@
       imagesizes="(max-width: 880px) 90vw, 850px"
       fetchpriority="high"
     />
-    <!-- Fuentes: carga NO bloqueante (rel=preload + swap a stylesheet al cargar).
-         display=swap muestra el texto de inmediato con la fuente de respaldo y
-         luego intercambia, sin bloquear el primer pintado. -->
+    <!-- Fuentes. El truco de `media="print" onload="this.media='all'"` era un
+         MANEJADOR INLINE, y la CSP del build (script-src 'self', sin
+         'unsafe-inline') lo bloquea: la hoja se quedaría en media="print" y las
+         fuentes no se aplicarían nunca. Se usa un <link> normal precedido de su
+         preload: la petición ya está en vuelo, así que el coste de bloqueo es
+         mínimo, y `display=swap` sigue pintando el texto de inmediato.
+         PROVISIONAL: el Bloque I auto-aloja Heebo/Oswald/Fira Sans junto a la
+         Cascadia que ya vive en src/fonts, y este bloque entero desaparece. -->
     <link
       rel="preload"
       as="style"
@@ -62,15 +67,7 @@
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Oswald:wght@400;500;600;700&family=Fira+Sans:wght@400;500;600;700&display=swap"
-      media="print"
-      onload="this.media='all'"
     />
-    <noscript>
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800;900&family=Oswald:wght@400;500;600;700&family=Fira+Sans:wght@400;500;600;700&display=swap"
-      />
-    </noscript>
     <title>PTEM</title>
   </head>
   <body>

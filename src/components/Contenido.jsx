@@ -2,6 +2,7 @@
 import Imagen from './Imagen.jsx'
 import Icon from './Icon.jsx'
 import { ATLAS_TEMAS } from '../data/imagenes.js'
+import { hrefSeguro } from '../lib/enlaceSeguro.js'
 
 // Mapa clave → enlace de imagen del Atlas. Los bloques `diagrama` (antes SVG
 // dibujados) reutilizan las mismas imágenes reales del Atlas vía su `clave`.
@@ -123,11 +124,12 @@ function Bloque({ bloque }) {
           <ul className="c-fuentes-lista">
             {bloque.items.map((f, i) => (
               <li key={i}>
-                {f.url ? (
-                  <a href={f.url} target="_blank" rel="noopener noreferrer">
+                {hrefSeguro(f.url) ? (
+                  <a href={hrefSeguro(f.url)} target="_blank" rel="noopener noreferrer">
                     {f.nombre}
                   </a>
                 ) : (
+                  // Sin url, o con una que no es http(s): texto, nunca un href.
                   <span>{f.nombre}</span>
                 )}
                 {f.nota && <span className="c-fuentes-nota"> — {f.nota}</span>}

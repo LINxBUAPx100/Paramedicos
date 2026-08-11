@@ -116,6 +116,15 @@ a {
 }
 a:hover { text-decoration: underline; }
 
+/* Enlace del contenido que NO pasó el filtro de hrefSeguro (lib/enlaceSeguro.js):
+   se muestra el título, nunca un href ejecutable. Se marca en gris tachado para
+   que el editor vea de un vistazo que ese recurso está mal escrito. */
+.enlace-roto {
+  color: var(--texto-3);
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
 /* Foco visible para navegación con teclado (WCAG 2.4.7). Solo :focus-visible,
    así el ratón no ve el anillo pero el teclado sí. */
 a:focus-visible,

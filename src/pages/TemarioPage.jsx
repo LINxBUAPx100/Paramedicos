@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { recursosGenerales } from '../data/recursosDescarga.js'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useIndiceAcademia } from '../context/ContenidoContext.jsx'
+import { hrefSeguro } from '../lib/enlaceSeguro.js'
 import Icon from '../components/Icon.jsx'
 
 // ============================================================
@@ -343,12 +344,24 @@ export default function TemarioPage() {
         <div className="descargas descargas--general">
           <h3><Icon name="libro" size={17} /> Recursos generales de estudio</h3>
           <div className="descargas-grid">
-            {recursosGenerales.map((r, i) => (
-              <a key={i} className="descarga-btn" href={r.url} target="_blank" rel="noopener noreferrer">
-                <span className="descarga-ico"><Icon name="descarga" size={19} /></span>
-                <span className="descarga-txt">Descarga: {r.titulo}</span>
-              </a>
-            ))}
+            {recursosGenerales.map((r, i) => {
+              const href = hrefSeguro(r.url)
+              const dentro = (
+                <>
+                  <span className="descarga-ico"><Icon name="descarga" size={19} /></span>
+                  <span className="descarga-txt">Descarga: {r.titulo}</span>
+                </>
+              )
+              return href ? (
+                <a key={i} className="descarga-btn" href={href} target="_blank" rel="noopener noreferrer">
+                  {dentro}
+                </a>
+              ) : (
+                <span key={i} className="descarga-btn enlace-roto" title="Enlace no válido">
+                  {dentro}
+                </span>
+              )
+            })}
           </div>
         </div>
       )}
