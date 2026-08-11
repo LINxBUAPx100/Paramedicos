@@ -231,8 +231,27 @@ service cloud.firestore {
       // academiaId a una academia que EXISTA y esté ACTIVA (unirse por código),
       // y tu acceso de prueba solo puede venir de un código VÁLIDO (canje).
       allow update: if esDueno(uid)
+        // LISTA BLANCA: el propio usuario solo toca sus datos personales y los
+        // campos de auto-servicio (unirse por código / canjear prueba). Sin
+        // esto, todo campo NO enumerado más abajo quedaba escribible por su
+        // dueño — incluidos `fasesDesbloqueadas` (un alumno se desbloqueaba los
+        // módulos que su grupo tiene ocultos) y `puedeVerCodigos` (un profesor
+        // se auto-aprobaba el acceso a los códigos, saltándose la aprobación
+        // del director). Ambos campos tienen sus propias reglas más abajo:
+        // solo staff / solo director. Escribirlos aquí queda cerrado.
+        //   nombre, email  → cambiarMiNombre / asegurarPerfil (lib/firebase/auth.js)
+        //   academiaId, grupoId, esPrueba
+        //                  → unirseAcademia (lib/firebase/usuarios.js),
+        //                    unirseAGrupo   (lib/firebase/grupos.js)
+        //   codigoPrueba, pruebaHasta, (+academiaId, grupoId)
+        //                  → canjearCodigo (lib/firebase/codigos.js)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+             'nombre', 'email', 'academiaId', 'grupoId',
+             'esPrueba', 'pruebaHasta', 'codigoPrueba'])
         // Los permisos editoriales NUNCA los edita el propio usuario (un
         // profesor no se auto-concede acceso): solo el director PRO / super.
+        // Redundante con la lista blanca de arriba, y a propósito: si algún día
+        // se amplía esa lista, esta barrera sigue en pie.
         && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['permisosEditor'])
         && request.resource.data.rol == resource.data.rol
         && request.resource.data.estado == resource.data.estado
@@ -309,8 +328,25 @@ service cloud.firestore {
     // --- PROGRESO (privado por usuario; el super-admin puede limpiarlo al
     //     eliminar una cuenta) ---
     match /progreso/{uid} {
-      allow read, write: if esDueno(uid);
-      allow read, delete: if esSuper();
+      allow read: if esDueno(uid) || esSuper();
+      // El progreso solo lo escribe su dueño, y SOLO con la forma que produce
+      // ProgressContext (leidos/quizzes/examenes/updatedAt). Antes esto era un
+      // `write` sin validar: un doc de Firestore admite 1 MB y aquí escribe el
+      // cliente con debounce, así que cualquier autenticado podía usar su
+      // propio progreso como almacenamiento arbitrario. Los topes espejan la
+      // app: `examenes` se recorta a 20 en ProgressContext.registrarExamen, y
+      // `leidos`/`quizzes` van indexados por temaId (el temario no llega a 500).
+      //   OJO: `tema` (claro/oscuro) es preferencia del DISPOSITIVO y nunca se
+      //   sincroniza, por eso no está en la lista.
+      allow create, update: if esDueno(uid)
+        && request.resource.data.keys().hasOnly(['leidos', 'quizzes', 'examenes', 'updatedAt'])
+        && request.resource.data.get('leidos', {}).keys().size() <= 500
+        && request.resource.data.get('quizzes', {}).keys().size() <= 500
+        && request.resource.data.get('examenes', []).size() <= 20;
+      // Borrado: su dueño, o el super-admin al eliminar la cuenta
+      // (admin.js:eliminarUsuario). En un `delete` no hay request.resource, por
+      // eso va aparte de la validación de forma de arriba.
+      allow delete: if esDueno(uid) || esSuper();
     }
 
     // --- CÓDIGOS de acceso temporal (prueba del servicio) ---
