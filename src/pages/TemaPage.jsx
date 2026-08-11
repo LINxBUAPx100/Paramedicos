@@ -47,7 +47,7 @@ export default function TemaPage() {
   }, [temaId, ref, contenido])
 
   if (error) return <ErrorContenido onReintentar={reintentar} />
-  if (!contenido) return <CargandoContenido />
+  if (!contenido) return <CargandoContenido variante="tema" />
   if (!tema) return <NotFound />
 
   // Tema oculto para el grupo del alumno: aún no disponible.

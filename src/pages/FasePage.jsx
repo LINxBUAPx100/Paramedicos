@@ -13,7 +13,7 @@ export default function FasePage() {
   const { faseVisible, temaVisible } = useVisibilidad()
 
   if (error) return <ErrorContenido onReintentar={reintentar} />
-  if (!contenido) return <CargandoContenido />
+  if (!contenido) return <CargandoContenido variante="fase" />
   if (!fase) return <NotFound />
 
   // Fase oculta para el grupo del alumno: aún no disponible.

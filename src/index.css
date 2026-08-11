@@ -166,8 +166,10 @@ html[data-tema='oscuro'] {
   padding: 0;
 }
 
-html {
-  scroll-behavior: smooth;
+/* El desplazamiento suave provoca mareo a quien tiene trastorno vestibular, así
+   que se ofrece solo a quien no ha pedido lo contrario. Estaba global. */
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
 }
 
 body {
@@ -259,6 +261,59 @@ textarea:focus-visible,
 @keyframes ruta-giro { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) {
   .ruta-spinner { animation-duration: 2s; }
+}
+
+/* ============================================================
+   Esqueletos de carga (páginas de estudio)
+   ------------------------------------------------------------
+   Sustituyen al spinner en TemaPage y FasePage: dibujan la silueta de lo que
+   va a llegar. Se percibe más rápido y, sobre todo, el contenido real aterriza
+   donde ya había hueco — sin el salto de layout del spinner centrado.
+   El brillo que recorre las barras respeta prefers-reduced-motion por el
+   bloque global de más abajo, que anula toda animación.
+   ============================================================ */
+.esqueleto {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-12);
+  max-width: 820px;
+  padding: var(--e-8) 0;
+}
+.esq-linea,
+.esq-bloque,
+.esq-tarjeta,
+.esq-ico {
+  display: block;
+  border-radius: var(--radio-sm);
+  background: linear-gradient(
+    90deg,
+    var(--bg-3) 25%,
+    color-mix(in srgb, var(--borde) 60%, var(--bg-3)) 37%,
+    var(--bg-3) 63%
+  );
+  background-size: 400% 100%;
+  animation: esq-brillo 1.4s ease-in-out infinite;
+}
+.esq-linea { height: 14px; width: 100%; }
+.esq-linea--titulo { height: 30px; width: 62%; border-radius: var(--radio); }
+.esq-linea--media { width: 70%; }
+.esq-linea--corta { height: 11px; width: 120px; }
+.esq-linea--migas { height: 11px; width: 180px; margin-bottom: var(--e-8); }
+.esq-cabecera { display: flex; align-items: center; gap: var(--e-16); margin-bottom: var(--e-8); }
+.esq-ico { width: 54px; height: 54px; border-radius: var(--radio); flex-shrink: 0; }
+.esq-cabecera-txt { display: flex; flex-direction: column; gap: var(--e-8); flex: 1; }
+.esq-bloque { height: 200px; border-radius: var(--radio); margin: var(--e-8) 0; }
+.esq-rejilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--e-16);
+  margin-top: var(--e-8);
+}
+.esq-tarjeta { height: 104px; border-radius: var(--radio); }
+
+@keyframes esq-brillo {
+  from { background-position: 100% 50%; }
+  to { background-position: 0 50%; }
 }
 .ruta-error {
   display: flex;
@@ -2188,7 +2243,9 @@ html[data-tema='oscuro'] .cuenta-badge { color: var(--primario-claro); }
   padding: var(--e-32) clamp(var(--e-16), 4vw, 56px) 80px;
   max-width: 1100px;
   margin: 0 auto;
-  animation: aparecer 0.42s var(--ease-out) both;
+  /* Transición de entrada al cambiar de ruta: <main> lleva key={pathname}, así
+     que se remonta y la animación se reproduce en cada navegación. */
+  animation: aparecer var(--dur-lenta) var(--ease-out) both;
 }
 @keyframes aparecer {
   from { opacity: 0; transform: translateY(12px); }
@@ -3134,6 +3191,14 @@ html[data-tema='oscuro'] .home-bg { opacity: 0.85; }
 @media (prefers-reduced-motion: reduce) {
   .reveal-os { opacity: 1; transform: none; transition: none; }
   .home-bg .blob { animation: none; }
+}
+
+/* Al imprimir no hay scroll ni viewport que observar, así que IntersectionObserver
+   nunca revelaría estos bloques y saldrían en blanco. La versión anterior lo
+   tapaba de casualidad con un temporizador de respaldo; esto lo resuelve donde
+   corresponde. */
+@media print {
+  .reveal-os { opacity: 1 !important; transform: none !important; }
 }
 
 /* Celdas de reveal: la tarjeta llena su celda dentro de la rejilla */

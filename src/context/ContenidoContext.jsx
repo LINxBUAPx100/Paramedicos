@@ -153,13 +153,61 @@ export function useIndiceAcademia(academiaIdObjetivo) {
   return remoto || INDICE_BUNDLE
 }
 
-// Estado de carga estándar para las páginas de estudio (mismos estilos que el
-// fallback de rutas de App.jsx).
-export function CargandoContenido() {
+// Estado de carga de las páginas de estudio. Es un ESQUELETO, no un spinner:
+// la página ya sabe qué forma va a tener, así que se dibuja esa forma en gris.
+// Gana dos cosas sobre el spinner que había —
+//   · la percepción de velocidad (se ve estructura, no una rueda girando),
+//   · el CLS: el contenido real aterriza donde ya había hueco, sin saltos.
+// `variante` elige la silueta; el respaldo es un bloque de texto genérico.
+//
+// Accesibilidad: role="status" + aria-busy y un texto solo para lectores, que
+// no ven la silueta. Las barras van con aria-hidden.
+export function CargandoContenido({ variante = 'generico' }) {
   return (
-    <div className="ruta-cargando" role="status" aria-live="polite">
-      <span className="ruta-spinner" aria-hidden="true" />
-      <span>Cargando contenido…</span>
+    <div className="esqueleto" role="status" aria-busy="true" aria-live="polite">
+      <span className="sr-only">Cargando contenido…</span>
+      {variante === 'tema' && (
+        <>
+          <span className="esq-linea esq-linea--migas" aria-hidden="true" />
+          <div className="esq-cabecera" aria-hidden="true">
+            <span className="esq-ico" />
+            <span className="esq-cabecera-txt">
+              <span className="esq-linea esq-linea--corta" />
+              <span className="esq-linea esq-linea--titulo" />
+            </span>
+          </div>
+          <span className="esq-linea" aria-hidden="true" />
+          <span className="esq-linea" aria-hidden="true" />
+          <span className="esq-linea esq-linea--media" aria-hidden="true" />
+          <span className="esq-bloque" aria-hidden="true" />
+          <span className="esq-linea" aria-hidden="true" />
+          <span className="esq-linea esq-linea--media" aria-hidden="true" />
+        </>
+      )}
+      {variante === 'fase' && (
+        <>
+          <span className="esq-linea esq-linea--migas" aria-hidden="true" />
+          <div className="esq-cabecera" aria-hidden="true">
+            <span className="esq-ico" />
+            <span className="esq-cabecera-txt">
+              <span className="esq-linea esq-linea--corta" />
+              <span className="esq-linea esq-linea--titulo" />
+            </span>
+          </div>
+          <span className="esq-linea esq-linea--media" aria-hidden="true" />
+          <div className="esq-rejilla" aria-hidden="true">
+            {Array.from({ length: 6 }, (_, i) => <span key={i} className="esq-tarjeta" />)}
+          </div>
+        </>
+      )}
+      {variante === 'generico' && (
+        <>
+          <span className="esq-linea esq-linea--titulo" aria-hidden="true" />
+          <span className="esq-linea" aria-hidden="true" />
+          <span className="esq-linea" aria-hidden="true" />
+          <span className="esq-linea esq-linea--media" aria-hidden="true" />
+        </>
+      )}
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom'
 import { useProgress } from '../context/ProgressContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
@@ -33,6 +33,8 @@ const NAV = [
 export default function Layout({ children }) {
   const [abierto, setAbierto] = useState(false)
   const [consulta, setConsulta] = useState('')
+  const menuRef = useRef(null)
+  const drawerRef = useRef(null)
   const { estado, alternarTema } = useProgress()
   const { autenticado, perfil, user, esStaff, esSuperadmin } = useAuth()
   const { fases } = useIndiceContenido() // índice de LA academia (bundle si legacy)
@@ -64,7 +66,30 @@ export default function Layout({ children }) {
     window.scrollTo({ top: 0, behavior: 'instant' })
   }, [location.pathname])
 
-  const cerrar = () => setAbierto(false)
+  // Cerrar el drawer devuelve SIEMPRE el foco al botón que lo abrió: sin esto,
+  // quien navega con teclado se queda con el foco en un elemento que acaba de
+  // salir de pantalla y tiene que tabular desde el principio del documento.
+  const cerrar = ({ devolverFoco = false } = {}) => {
+    setAbierto(false)
+    if (devolverFoco) menuRef.current?.focus()
+  }
+
+  // Escape cierra, como cualquier capa superpuesta. No existía.
+  useEffect(() => {
+    if (!abierto) return undefined
+    const alPulsar = (e) => {
+      if (e.key === 'Escape') cerrar({ devolverFoco: true })
+    }
+    document.addEventListener('keydown', alPulsar)
+    return () => document.removeEventListener('keydown', alPulsar)
+  }, [abierto])
+
+  // Al abrir, el foco entra en el drawer para que el teclado y el lector de
+  // pantalla continúen ahí y no en el fondo, que ahora es inerte.
+  useEffect(() => {
+    if (!abierto) return
+    drawerRef.current?.querySelector('a, button')?.focus()
+  }, [abierto])
   const buscar = (e) => {
     e.preventDefault()
     const q = consulta.trim()
@@ -93,9 +118,11 @@ export default function Layout({ children }) {
       <AnuncioBanner />
       <header className="topbar">
         <button
+          ref={menuRef}
           className="menu-btn"
-          aria-label="Abrir menú"
+          aria-label={abierto ? 'Cerrar menú' : 'Abrir menú'}
           aria-expanded={abierto}
+          aria-controls="menu-lateral"
           onClick={() => setAbierto((v) => !v)}
         >
           <span /><span /><span />
@@ -150,7 +177,21 @@ export default function Layout({ children }) {
       </header>
 
       <div className="cuerpo">
-        <aside className={`sidebar ${abierto ? 'abierto' : ''}`} aria-hidden={!abierto}>
+        {/* `inert` en lugar de aria-hidden. La barra es un DRAWER en todos los
+            anchos (index.css: "Sidebar como drawer en TODOS los anchos"), así
+            que cerrada está fuera de pantalla. Con aria-hidden el lector no la
+            anunciaba pero sus enlaces SEGUÍAN siendo tabulables: el teclado
+            entraba en enlaces invisibles y sin voz (WCAG 2.4.3). `inert` quita
+            foco y semántica de una vez.
+            Ojo con React 18: no conoce `inert`, así que un booleano se
+            serializaría como inert="false" — y en HTML un atributo booleano
+            cuenta por estar PRESENTE. De ahí '' / undefined. */}
+        <aside
+          id="menu-lateral"
+          ref={drawerRef}
+          className={`sidebar ${abierto ? 'abierto' : ''}`}
+          inert={abierto ? undefined : ''}
+        >
           <nav className="nav">
             {navDrawer.map((item) => (
               <NavLink
