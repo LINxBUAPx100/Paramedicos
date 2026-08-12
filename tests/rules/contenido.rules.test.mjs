@@ -180,9 +180,15 @@ test('temas: consultas del alumno acotadas a su curso y a lo publicado', { skip 
   const { collection, query, where, getDocs } = fsmod
   const { assertSucceeds, assertFails } = rut
   const db = como('alumA')
+  // La consulta debe filtrar TAMBIÉN por academiaId: en un `list` las reglas se
+  // evalúan contra los campos de la CONSULTA, así que sin ese filtro
+  // `resource.data.academiaId` es undefined y la regla revienta en vez de
+  // permitir. Es exactamente lo que hace temasDeCurso() en la app.
   await assertSucceeds(getDocs(query(
     collection(db, 'temas'),
-    where('cursoId', '==', 'ACA-A__tum'), where('estado', '==', 'publicado')
+    where('cursoId', '==', 'ACA-A__tum'),
+    where('academiaId', '==', 'ACA-A'),
+    where('estado', '==', 'publicado')
   )))
   // Sin el filtro de publicado, la consulta podría devolver borradores → se niega.
   await assertFails(getDocs(query(collection(db, 'temas'), where('cursoId', '==', 'ACA-A__tum'))))

@@ -161,8 +161,18 @@ export async function estructuraDeCurso(cursoId) {
   return curso?.estructura || null
 }
 
-export async function temasDeCurso(cursoId, { soloPublicados = true } = {}) {
+// OJO con el filtro de academiaId: NO es redundante aunque cursoId ya empiece
+// por el código de la academia. En una consulta `list`, las reglas de Firestore
+// se evalúan contra los campos que FILTRA la consulta, no contra el documento;
+// sin este filtro, `resource.data.academiaId` es undefined en la regla, la
+// evaluación revienta y el alumno recibe permission-denied.
+//
+// El fallo era invisible: ContenidoContext traga ese error y cae al temario del
+// bundle, así que una academia migrada mostraba el contenido genérico como si
+// fuera el suyo. Lo destapó el CI (tests/rules/contenido.rules.test.mjs).
+export async function temasDeCurso(cursoId, { academiaId = null, soloPublicados = true } = {}) {
   const filtros = [where('cursoId', '==', cursoId)]
+  if (academiaId) filtros.push(where('academiaId', '==', academiaId))
   if (soloPublicados) filtros.push(where('estado', '==', 'publicado'))
   const snap = await getDocs(query(collection(db, 'temas'), ...filtros))
   return snap.docs.map((d) => ({ docId: d.id, ...d.data() }))
@@ -196,7 +206,9 @@ async function cargarDeFirestore(academiaId) {
   if (!curso.clonacion?.completa) {
     throw new Error(`El curso ${curso.id} tiene una clonación incompleta.`)
   }
-  const temas = await temasDeCurso(curso.id)
+  // academiaId es OBLIGATORIO aquí: es el camino del ALUMNO y su regla de
+  // lectura se apoya en ese campo (ver el comentario de temasDeCurso).
+  const temas = await temasDeCurso(curso.id, { academiaId })
   const temasPorId = new Map(temas.map((t) => [t.temaId, t]))
   const { fases, faltantes } = ensamblarFases(curso.estructura, temasPorId)
   if (faltantes.length) {
