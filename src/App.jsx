@@ -4,7 +4,9 @@ import Layout from './components/Layout.jsx'
 import ErrorBoundary from './components/ErrorBoundary.jsx'
 import RutaProtegida from './components/RutaProtegida.jsx'
 import Home from './pages/Home.jsx'
+import Landing from './pages/Landing.jsx'
 import NotFound from './pages/NotFound.jsx'
+import { useAuth } from './context/AuthContext.jsx'
 
 // Rutas de contenido: carga diferida. Su código y los datos pesados del temario
 // (data/index.js) salen del bundle inicial y se descargan solo al visitarlas.
@@ -34,6 +36,20 @@ function Cargando() {
   )
 }
 
+// La raíz sirve a dos personas distintas:
+//   sin sesión → Landing (qué es PTEM, muestra de contenido, cómo entrar)
+//   con sesión → Home (el recorrido de estudio)
+//
+// Mientras se resuelve la sesión NO se pinta ninguna de las dos: enseñar la
+// portada comercial a un alumno que ya tiene cuenta, y quitársela medio segundo
+// después, es peor que un instante de esqueleto. Los rastreadores ejecutan JS y
+// esperan a que la app se asiente, así que la landing sigue siendo indexable.
+function Inicio() {
+  const { autenticado, cargando } = useAuth()
+  if (cargando) return <Cargando />
+  return autenticado ? <Home /> : <Landing />
+}
+
 export default function App() {
   const location = useLocation()
   return (
@@ -41,8 +57,8 @@ export default function App() {
       <ErrorBoundary routeKey={location.pathname}>
         <Suspense fallback={<Cargando />}>
           <Routes>
-            {/* Públicas: landing + cuenta (login/registro/unirse) */}
-            <Route path="/" element={<Home />} />
+            {/* Públicas: inicio (landing o home según sesión) + cuenta */}
+            <Route path="/" element={<Inicio />} />
             <Route path="/cuenta" element={<Cuenta />} />
 
             {/* Contenido: requiere sesión + academia activa (o superadmin) */}
