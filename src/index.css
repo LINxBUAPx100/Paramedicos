@@ -1346,73 +1346,7 @@ textarea:focus-visible,
 .panel-selector--grupo { align-self: flex-start; }
 
 /* ===== Hero de la academia (Home + vista previa del panel) ===== */
-.aca-hero {
-  display: flex;
-  align-items: center;
-  gap: var(--e-16);
-  padding: var(--e-20) var(--e-24);
-  margin-top: var(--e-16);
-  border-radius: var(--radio-lg);
-  border: 1px solid color-mix(in srgb, var(--aca-color, var(--primario)) 35%, var(--borde));
-  border-left: 6px solid var(--aca-color, var(--primario));
-  background: linear-gradient(
-    115deg,
-    color-mix(in srgb, var(--aca-color, var(--primario)) 14%, var(--bg-2)),
-    var(--bg-2) 72%
-  );
-}
-.aca-hero--preview { margin-top: var(--e-4); }
-.aca-hero-logo {
-  display: grid;
-  place-items: center;
-  width: 72px;
-  height: 72px;
-  border-radius: 18px;
-  flex-shrink: 0;
-  overflow: hidden;
-  background: color-mix(in srgb, var(--aca-color, var(--primario)) 16%, var(--bg-3));
-  border: 1px solid color-mix(in srgb, var(--aca-color, var(--primario)) 30%, transparent);
-}
-.aca-hero-logo img { width: 100%; height: 100%; object-fit: contain; }
-.aca-hero-logo b {
-  font-family: var(--fuente-display);
-  font-size: var(--t-2xl);
-  color: var(--aca-color, var(--primario));
-}
-.aca-hero-texto { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
-.aca-hero-texto small {
-  font-family: var(--fuente-sub);
-  font-weight: 600;
-  font-size: var(--t-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--texto-3);
-}
-.aca-hero-texto strong {
-  font-family: var(--fuente-display);
-  font-size: clamp(1.15rem, 2.6vw, 1.5rem);
-  color: var(--texto);
-  line-height: 1.15;
-}
-.aca-hero-texto em {
-  color: color-mix(in srgb, var(--aca-color, var(--primario)) 75%, var(--texto));
-  font-size: var(--t-sm);
-}
-.aca-hero-grupo {
-  align-self: flex-start;
-  padding: var(--e-4) var(--e-12);
-  border-radius: 999px;
-  font-size: var(--t-xs);
-  font-weight: 700;
-  white-space: nowrap;
-  color: var(--aca-color, var(--primario));
-  background: color-mix(in srgb, var(--aca-color, var(--primario)) 12%, transparent);
-}
-@media (max-width: 560px) {
-  .aca-hero { gap: var(--e-12); padding: var(--e-16); }
-  .aca-hero-logo { width: 54px; height: 54px; border-radius: 14px; }
-  .aca-hero-grupo { display: none; }
-}
+/* (La banda .aca-hero vivia aqui. La sustituye .aca-bloque, mas abajo.) */
 
 /* ===== Panel de selección de grupo (profesores) ===== */
 .prof-panel {
@@ -6485,3 +6419,120 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 .psa-item small { display: block; color: var(--texto-3); font-size: var(--t-xs); }
 .psa-mensaje { color: var(--texto-2); font-size: var(--t-sm); font-style: italic; margin-top: var(--e-6); }
 .psa-acciones { display: flex; gap: var(--e-8); }
+
+/* ============================================================
+   Bloque de la academia en el Home (Bloque L)
+   ------------------------------------------------------------
+   Sustituye a la antigua .aca-hero. Tres variantes que comparten cabecera:
+   banda (la de siempre), hero (con imagen de fondo) y tarjetas (con accesos).
+   ============================================================ */
+.aca-bloque {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radio);
+  border: 1px solid var(--borde);
+  background: var(--bg-2);
+  border-left: 4px solid var(--aca-color, var(--primario));
+  padding: var(--e-16) var(--e-20);
+  margin-bottom: var(--e-24);
+}
+.aca-cabecera { display: flex; align-items: center; gap: var(--e-16); }
+.aca-logo {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 48px; height: 48px; flex-shrink: 0;
+  border-radius: var(--radio-sm);
+  background: color-mix(in srgb, var(--aca-color, var(--primario)) 14%, transparent);
+  color: var(--aca-color, var(--primario));
+  overflow: hidden;
+}
+.aca-logo img { width: 100%; height: 100%; object-fit: cover; }
+.aca-logo b { font-family: var(--fuente-display); font-size: var(--t-lg); }
+.aca-texto { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.aca-texto small {
+  font-family: var(--fuente-sub); font-size: var(--t-xs);
+  text-transform: uppercase; letter-spacing: 0.08em; color: var(--texto-3);
+}
+.aca-texto strong { font-family: var(--fuente-display); font-size: var(--t-md); }
+.aca-texto em { color: var(--texto-2); font-size: var(--t-sm); font-style: normal; }
+.aca-grupo {
+  flex-shrink: 0;
+  padding: var(--e-4) var(--e-12);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--aca-color, var(--primario)) 14%, transparent);
+  color: var(--aca-color, var(--primario));
+  font-size: var(--t-xs); font-weight: 600;
+}
+
+/* Variante HERO: imagen de fondo y texto encima */
+.aca-bloque--hero { padding: var(--e-40) var(--e-24); border-left-width: 1px; isolation: isolate; }
+.aca-fondo {
+  position: absolute; inset: 0; z-index: -1;
+  width: 100%; height: 100%; object-fit: cover;
+}
+.aca-bloque--hero::after {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(90deg,
+    color-mix(in srgb, var(--carbon) 88%, transparent),
+    color-mix(in srgb, var(--carbon) 55%, transparent));
+}
+.aca-bloque--hero .aca-texto small { color: color-mix(in srgb, var(--carbon-texto) 75%, transparent); }
+.aca-bloque--hero .aca-texto strong { color: var(--carbon-texto); font-size: var(--t-xl); }
+.aca-bloque--hero .aca-texto em { color: var(--carbon-texto-2); font-size: var(--t-md); }
+
+/* Avisos */
+.aca-avisos { list-style: none; display: flex; flex-direction: column; gap: var(--e-8); margin-top: var(--e-16); }
+.aca-aviso a, .aca-aviso div {
+  display: flex; align-items: baseline; gap: var(--e-8); flex-wrap: wrap;
+  padding: var(--e-8) var(--e-12);
+  border-radius: var(--radio-sm);
+  background: var(--bg-3);
+  color: inherit; text-decoration: none;
+  font-size: var(--t-sm);
+}
+.aca-aviso a:hover { background: color-mix(in srgb, var(--aca-color, var(--primario)) 10%, var(--bg-3)); text-decoration: none; }
+.aca-aviso strong { color: var(--aca-color, var(--primario)); }
+.aca-aviso span { color: var(--texto-2); }
+.aca-bloque--hero .aca-aviso a, .aca-bloque--hero .aca-aviso div {
+  background: color-mix(in srgb, var(--carbon) 60%, transparent); color: var(--carbon-texto);
+}
+.aca-bloque--hero .aca-aviso span { color: var(--carbon-texto-2); }
+
+/* Accesos rápidos (variante tarjetas) */
+.aca-accesos { display: flex; flex-wrap: wrap; gap: var(--e-8); margin-top: var(--e-16); }
+.aca-acceso {
+  display: inline-flex; align-items: center; gap: var(--e-8);
+  padding: var(--e-8) var(--e-12);
+  border: 1px solid var(--borde);
+  border-radius: 999px;
+  background: var(--bg-3);
+  color: var(--texto);
+  font-size: var(--t-sm); font-weight: 600;
+  transition: transform var(--dur-rapida) var(--ease-out), background var(--dur-rapida) var(--ease-out);
+}
+.aca-acceso:hover {
+  text-decoration: none; transform: translateY(-2px);
+  background: color-mix(in srgb, var(--aca-color, var(--primario)) 12%, var(--bg-3));
+}
+
+/* --- Editor del bloque (PersonalizacionAcademia) --- */
+.pa-previa { margin: var(--e-16) 0 var(--e-24); }
+.pa-previa-etiqueta {
+  display: block; margin-bottom: var(--e-8);
+  font-family: var(--fuente-sub); font-size: var(--t-xs);
+  text-transform: uppercase; letter-spacing: 0.08em; color: var(--texto-3);
+}
+.ba-variantes { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--e-8); margin-bottom: var(--e-16); }
+.ba-variante {
+  display: flex; align-items: flex-start; gap: var(--e-8);
+  padding: var(--e-12);
+  border: 1px solid var(--borde); border-radius: var(--radio-sm);
+  background: var(--bg-2); cursor: pointer;
+}
+.ba-variante.on { border-color: var(--primario); background: color-mix(in srgb, var(--primario) 8%, var(--bg-2)); }
+.ba-variante span { display: flex; flex-direction: column; gap: var(--e-2); }
+.ba-variante small { color: var(--texto-3); font-size: var(--t-xs); }
+.ba-check { display: flex; align-items: center; gap: var(--e-8); }
+.ba-destinos, .ba-avisos { display: flex; flex-wrap: wrap; gap: var(--e-8); }
+.ba-avisos { flex-direction: column; align-items: flex-start; margin-top: var(--e-16); }
+.ba-aviso { display: flex; gap: var(--e-8); flex-wrap: wrap; width: 100%; }
+.ba-aviso input { flex: 1; min-width: 140px; }

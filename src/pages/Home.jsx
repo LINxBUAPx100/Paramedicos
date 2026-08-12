@@ -5,12 +5,12 @@ import { useAuth } from '../context/AuthContext.jsx'
 import { useIndiceContenido } from '../context/ContenidoContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
 import { idsVisiblesDeHome } from '../lib/homeModelo.js'
-import { driveSrc } from '../lib/img.js'
 import Icon from '../components/Icon.jsx'
 import Reveal from '../components/Reveal.jsx'
 import Imagen from '../components/Imagen.jsx'
 import Contador from '../components/Contador.jsx'
 import FasesCarrusel from '../components/FasesCarrusel.jsx'
+import BloqueAcademia from '../components/BloqueAcademia.jsx'
 import IconoEstrella from '../components/marca/IconoEstrella.jsx'
 import { IMG } from '../data/imagenes.js'
 import marcoUrl from '../assets/marco-paramedico.svg'
@@ -70,7 +70,7 @@ export default function Home() {
   // encabezan la página.
   const fijas = (
     <>
-      <HeroAcademia />
+      <BloqueAcademia />
       <SelectorGrupoProfesor />
     </>
   )
@@ -269,35 +269,9 @@ function SeccionFlashcards({ flashcards }) {
   )
 }
 
-// Banda de bienvenida de la ACADEMIA del usuario: logo, nombre y lema, con el
-// color elegido por su director (personalización guardada en academias/{id}).
-// Solo aparece si hay sesión con academia; para visitantes no cambia nada.
-function HeroAcademia() {
-  const { perfil, academia, grupo } = useAuth()
-  if (!perfil?.academiaId || !academia) return null
-
-  const color = academia.colorHero || 'var(--primario)'
-  const nombreUsuario = (perfil.nombre || '').split(' ')[0]
-
-  return (
-    <div className="ph-wrap">
-      <section className="aca-hero" style={{ '--aca-color': color }} aria-label={`Tu academia: ${academia.nombre}`}>
-        <span className="aca-hero-logo">
-          {academia.logo
-            ? <img src={driveSrc(academia.logo, 200)} alt={`Logo de ${academia.nombre}`} loading="lazy" />
-            : <b>{(academia.nombre || academia.id).charAt(0).toUpperCase()}</b>}
-        </span>
-        <div className="aca-hero-texto">
-          <small>{nombreUsuario ? `Bienvenido, ${nombreUsuario} · ` : ''}Tu academia</small>
-          <strong>{academia.nombre || academia.id}</strong>
-          {academia.lema && <em>{academia.lema}</em>}
-        </div>
-        {/* Se muestra el NOMBRE del grupo, nunca su código. */}
-        {grupo?.nombre && <span className="aca-hero-grupo">Grupo {grupo.nombre}</span>}
-      </section>
-    </div>
-  )
-}
+// La banda de la academia vive ahora en components/BloqueAcademia.jsx, que el
+// director configura (variante, mensaje, avisos y accesos). Sin configurar se
+// ve EXACTAMENTE igual que la banda de antes.
 
 // Panel de bienvenida SOLO para profesores (instructores): un profesor puede
 // atender varios grupos, así que aquí elige con cuál trabaja. La selección se

@@ -219,10 +219,15 @@ service cloud.firestore {
       // a los planes → se trata como 'pro' (mismo default que capacidades.js).
       // homeSecciones debe ser lista (o null = default); su contenido lo
       // normaliza homeModelo.js al leer (basura ⇒ default, nunca rompe).
+      // homeAcademia (Bloque L) sigue el mismo criterio: mapa o null, y su
+      // forma la normaliza homeAcademiaModelo.js al leer. Validar aquí campo a
+      // campo un objeto anidado sería una regla enorme y frágil; lo que sí
+      // importa —que la ruta de un acceso salga de un catálogo cerrado y no de
+      // texto libre— se resuelve en la normalización, que está probada.
       allow update: if esAdminDe(codigo)
         && resource.data.get('planComercial', 'pro') in ['pro', 'curso']
         && request.resource.data.diff(resource.data).affectedKeys()
-             .hasOnly(['logo', 'lema', 'colorHero', 'homeSecciones'])
+             .hasOnly(['logo', 'lema', 'colorHero', 'homeSecciones', 'homeAcademia'])
         && (
           !request.resource.data.diff(resource.data).affectedKeys().hasAny(['homeSecciones'])
           || request.resource.data.homeSecciones == null

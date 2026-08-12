@@ -1,9 +1,14 @@
 import { useState } from 'react'
-import { driveSrc } from '../lib/img.js'
 import { capacidadesDe } from '../lib/capacidades.js'
 import {
   SECCIONES_HOME, seccionesDeHome, alternarSeccion, moverSeccion, esHomeDefault,
 } from '../lib/homeModelo.js'
+import {
+  VARIANTES, ETIQUETA_VARIANTE, DESCRIPCION_VARIANTE, DESTINOS,
+  MAX_AVISOS, MAX_ACCESOS, homeAcademiaDe, normalizarHomeAcademia,
+  esHomeAcademiaDefault, alternarAcceso, agregarAviso, editarAviso, quitarAviso,
+} from '../lib/homeAcademiaModelo.js'
+import BloqueAcademia from './BloqueAcademia.jsx'
 import Icon from './Icon.jsx'
 
 // Personalización del hero de la academia (se muestra en el Home de sus
@@ -16,6 +21,7 @@ export default function PersonalizacionAcademia({ academia, onGuardado }) {
   const [lema, setLema] = useState(academia?.lema || '')
   const [colorHero, setColorHero] = useState(academia?.colorHero || '#0c5fc4')
   const [secciones, setSecciones] = useState(() => seccionesDeHome(academia))
+  const [bloque, setBloque] = useState(() => homeAcademiaDe(academia))
   const [msg, setMsg] = useState('')
   const [error, setError] = useState('')
   const [ocupado, setOcupado] = useState(false)
@@ -34,6 +40,9 @@ export default function PersonalizacionAcademia({ academia, onGuardado }) {
         logo: logo.trim(),
         lema: lema.trim(),
         colorHero,
+        // Igual que homeSecciones: si equivale al default se guarda null y el
+        // doc no arrastra un campo redundante.
+        homeAcademia: esHomeAcademiaDefault(bloque) ? null : normalizarHomeAcademia(bloque),
         // Solo si el plan lo permite (la regla lo exige igualmente). El
         // default se guarda como null: el doc no arrastra un campo redundante.
         ...(puedeSecciones ? { homeSecciones: esHomeDefault(secciones) ? null : secciones } : {}),
@@ -54,6 +63,17 @@ export default function PersonalizacionAcademia({ academia, onGuardado }) {
   const descripcionDe = Object.fromEntries(SECCIONES_HOME.map((s) => [s.id, s.descripcion]))
   const etiquetaDe = Object.fromEntries(SECCIONES_HOME.map((s) => [s.id, s.etiqueta]))
 
+  // Academia "de mentira" que alimenta la vista previa: los datos guardados con
+  // lo que se está editando encima.
+  const academiaPrevia = {
+    ...academia,
+    logo: logo.trim(),
+    lema: lema.trim(),
+    colorHero,
+    homeAcademia: bloque,
+  }
+  const cambiar = (campos) => setBloque((b) => ({ ...b, ...campos }))
+
   return (
     <section className="panel-personalizacion">
       <h2><Icon name="chispa" size={20} /> Personalización de la academia</h2>
@@ -61,18 +81,12 @@ export default function PersonalizacionAcademia({ academia, onGuardado }) {
         Logo, lema y color que tus alumnos y profesores ven en su pantalla de inicio.
       </p>
 
-      {/* Vista previa del hero tal como sale en el Home */}
-      <div className="aca-hero aca-hero--preview" style={{ '--aca-color': colorHero }}>
-        <span className="aca-hero-logo">
-          {logo.trim()
-            ? <img src={driveSrc(logo, 200)} alt={`Logo de ${academia.nombre}`} />
-            : <b>{(academia.nombre || academia.id || '?').charAt(0).toUpperCase()}</b>}
-        </span>
-        <div className="aca-hero-texto">
-          <small>Tu academia</small>
-          <strong>{academia.nombre || academia.id}</strong>
-          {lema.trim() && <em>{lema.trim()}</em>}
-        </div>
+      {/* Vista previa EN VIVO: el mismo componente que pinta el Home, con los
+          valores que se están editando. Si cambia el bloque, cambia la previa
+          sola — no hay una copia que mantener sincronizada a mano. */}
+      <div className="pa-previa">
+        <span className="pa-previa-etiqueta">Así lo verán tus miembros</span>
+        <BloqueAcademia previa academia={academiaPrevia} />
       </div>
 
       <form className="admin-form" onSubmit={guardar}>
@@ -99,6 +113,148 @@ export default function PersonalizacionAcademia({ academia, onGuardado }) {
           Color
           <input type="color" value={colorHero || '#0c5fc4'} onChange={(e) => setColorHero(e.target.value)} />
         </label>
+
+        {/* --- Bloque de la academia en el Home (Bloque L) --- */}
+        <fieldset className="hs-editor">
+          <legend><Icon name="capas" size={16} /> Tu bloque en la pantalla de inicio</legend>
+
+          <div className="ba-variantes">
+            {VARIANTES.map((v) => (
+              <label key={v} className={`ba-variante ${bloque.variante === v ? 'on' : ''}`}>
+                <input
+                  type="radio"
+                  name="variante-bloque"
+                  value={v}
+                  checked={bloque.variante === v}
+                  onChange={() => cambiar({ variante: v })}
+                />
+                <span>
+                  <strong>{ETIQUETA_VARIANTE[v]}</strong>
+                  <small>{DESCRIPCION_VARIANTE[v]}</small>
+                </span>
+              </label>
+            ))}
+          </div>
+
+          <label>
+            Título (vacío = el nombre de tu academia)
+            <input
+              type="text"
+              value={bloque.titulo}
+              onChange={(e) => cambiar({ titulo: e.target.value })}
+              placeholder={academia.nombre || academia.id}
+              maxLength={80}
+            />
+          </label>
+          <label>
+            Mensaje (vacío = tu lema)
+            <input
+              type="text"
+              value={bloque.mensaje}
+              onChange={(e) => cambiar({ mensaje: e.target.value })}
+              placeholder={lema || 'Formando a los mejores paramédicos'}
+              maxLength={200}
+            />
+          </label>
+
+          {bloque.variante === 'hero' && (
+            <label>
+              Imagen de fondo (enlace de Drive o URL)
+              <input
+                type="text"
+                value={bloque.imagenFondo}
+                onChange={(e) => cambiar({ imagenFondo: e.target.value })}
+                placeholder="Pega el enlace de compartir de Drive o una URL"
+              />
+            </label>
+          )}
+
+          <label className="ba-check">
+            <input
+              type="checkbox"
+              checked={bloque.mostrarGrupo}
+              onChange={(e) => cambiar({ mostrarGrupo: e.target.checked })}
+            />
+            <span>Mostrar el grupo del alumno junto al nombre de la academia</span>
+          </label>
+
+          {bloque.variante === 'tarjetas' && (
+            <div className="ba-accesos">
+              <p className="panel-gestion-sub">
+                Accesos rápidos ({bloque.accesos.length}/{MAX_ACCESOS}). Elige las secciones que
+                quieras destacar para tus alumnos.
+              </p>
+              <div className="ba-destinos">
+                {DESTINOS.map((d) => {
+                  const puesto = bloque.accesos.some((a) => a.ruta === d.ruta)
+                  const lleno = !puesto && bloque.accesos.length >= MAX_ACCESOS
+                  return (
+                    <button
+                      key={d.ruta}
+                      type="button"
+                      className={`btn btn--sm ${puesto ? 'btn--primario' : 'btn--suave'}`}
+                      disabled={lleno}
+                      onClick={() => setBloque((b) => alternarAcceso(b, d.ruta))}
+                    >
+                      <Icon name={d.icono} size={14} /> {d.etiqueta}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          <div className="ba-avisos">
+            <p className="panel-gestion-sub">
+              Avisos ({bloque.avisos.length}/{MAX_AVISOS}). Aparecen dentro de tu bloque; útiles
+              para fechas de examen, cambios de horario o material nuevo.
+            </p>
+            {bloque.avisos.map((a, i) => (
+              <div key={i} className="ba-aviso">
+                <input
+                  type="text"
+                  value={a.titulo || ''}
+                  onChange={(e) => setBloque((b) => editarAviso(b, i, { titulo: e.target.value }))}
+                  placeholder="Título"
+                  maxLength={80}
+                  aria-label={`Título del aviso ${i + 1}`}
+                />
+                <input
+                  type="text"
+                  value={a.texto || ''}
+                  onChange={(e) => setBloque((b) => editarAviso(b, i, { texto: e.target.value }))}
+                  placeholder="Detalle"
+                  maxLength={240}
+                  aria-label={`Texto del aviso ${i + 1}`}
+                />
+                <input
+                  type="text"
+                  value={a.url || ''}
+                  onChange={(e) => setBloque((b) => editarAviso(b, i, { url: e.target.value }))}
+                  placeholder="Enlace (opcional, https://…)"
+                  aria-label={`Enlace del aviso ${i + 1}`}
+                />
+                <button
+                  type="button"
+                  className="btn btn--sm btn--fantasma"
+                  onClick={() => setBloque((b) => quitarAviso(b, i))}
+                  aria-label={`Quitar el aviso ${i + 1}`}
+                >
+                  <Icon name="basura" size={14} />
+                </button>
+              </div>
+            ))}
+            {bloque.avisos.length < MAX_AVISOS && (
+              <button
+                type="button"
+                className="btn btn--sm btn--suave"
+                onClick={() => setBloque((b) => agregarAviso(b))}
+              >
+                <Icon name="mas" size={14} /> Añadir aviso
+              </button>
+            )}
+          </div>
+        </fieldset>
 
         {puedeSecciones && (
           <fieldset className="hs-editor">
