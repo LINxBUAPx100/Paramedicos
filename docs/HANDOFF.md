@@ -2,7 +2,7 @@
 
 > **Escrito para retomar el trabajo en una sesión nueva sin contexto previo.**
 > Última actualización: 2026-08-12 · Rama: `claude/auditoria-endurecimiento`
-> · CI: verde (181 unitarios + 54 de reglas)
+> · CI: verde (184 unitarios + 54 de reglas)
 
 ---
 
@@ -11,7 +11,7 @@
 ```bash
 git checkout claude/auditoria-endurecimiento
 npm ci
-npm test        # deben salir 181 pass, 0 fail
+npm test        # deben salir 184 pass, 0 fail
 npm run build
 ```
 
@@ -24,8 +24,8 @@ que queda está en la sección 6.
 
 Partió de una auditoría completa (UI/UX, arquitectura, seguridad, rendimiento)
 del LMS PTEM. De ahí salió un plan por **bloques**, uno por entrega, cada uno
-con su commit y su verificación. Van hechos los bloques **A–O**. Queda **P** y
-tres bloques nuevos **Q, R, S** pedidos después.
+con su commit y su verificación. Van hechos los bloques **A–O** y **Q**. Quedan
+**R**, **S** y **P**.
 
 **Regla de trabajo que el usuario espera:** un bloque por respuesta, con
 `npm test` y `npm run build` en verde, commit descriptivo y push. Y **decirle
@@ -73,7 +73,7 @@ npx firebase-tools@15 deploy --only firestore:rules --project ptem-a304f
 
 ---
 
-## 5. Bloques ya hechos (A–O)
+## 5. Bloques ya hechos (A–O, Q)
 
 Resumen de qué cambió y qué NO hay que volver a tocar.
 
@@ -128,6 +128,25 @@ Resumen de qué cambió y qué NO hay que volver a tocar.
   `/panel/grupos`, y `/temario` la reutiliza tal cual. Nuevo lector
   `historialDeAcademia` (misma consulta filtrada por `academiaId` que
   `historialPermisos`: no hizo falta tocar reglas).
+- **Q — Temario en baraja.** `components/panel/VisibilidadGrupos.jsx`: panel
+  «Espacios» (tarjeta propia con academia, grupo, «Ocultar todo» y el estado) y
+  baraja de fases con una abierta a la vez; cabeceras `<button aria-expanded>`
+  navegables con flechas (`focoBaraja`, puro y probado) y ojos que dicen en
+  texto qué hacen. El estado de cada fase lo resuelve `estadoFase` (puro).
+  Guardado intacto. Se cayeron `.temario-controles`, `.temario-modulo*`,
+  `.panel-cta-visibilidad` y `.tv-modulo*`, ya huérfanos.
+
+  **Cómo se verificó sin sesión** (útil para R y S): `npm run build`, y una
+  vista previa estática que carga el CSS ya compilado
+  (`dist/assets/index-*.css`) con el marcado a mano, servida por
+  `npm run preview` en el 4173. `screenshot` no funciona (el panel no compone
+  frames), así que se mide con `javascript_tool`: desbordes
+  (`scrollWidth - clientWidth`), alturas, colores computados y contraste. Así
+  salieron tres fallos que el build no ve: `border-color` en la carta abierta
+  borraba su franja de fase, el `select` de academia desbordaba 42px en móvil,
+  y el verde del ojo lo comía la cascada de `.btn--fantasma`. **Ojo: el tema
+  oscuro es `html[data-tema='oscuro']`, NO `prefers-color-scheme`** — cambiar el
+  esquema del navegador no prueba nada.
 
 ### Correcciones a la auditoría original (importante)
 
@@ -161,27 +180,16 @@ Merecen recordarse porque marcan el patrón de error de este proyecto:
 
 ## 6. Lo que queda por hacer
 
-Orden recomendado y acordado: **Q → R → S → P** (O ya está hecho).
+Orden recomendado y acordado: **R → S → P** (O y Q ya están hechos).
 S añade una pestaña al panel del director; ahora que O lo troceó, eso es una
 página nueva en `src/pages/panel/` y una entrada en `SECCIONES_PANEL`.
 
-### Bloque Q — Temario con tarjetas expandibles
-
-Rediseño visual **de `src/components/panel/VisibilidadGrupos.jsx`** (antes vivía
-en `TemarioPage.jsx`; el bloque O lo extrajo tal cual, sin tocar su lógica),
-según un boceto que dio el usuario. **Misma funcionalidad y misma lógica de
-guardado**: solo la disposición. Al ser un componente compartido, el rediseño
-llega de golpe a `/panel/grupos` y a `/temario`.
-
-- Panel **«Espacios»**: hoy es el `<div className="temario-controles">` del
-  componente, que ya recibe por la prop `cabecera` el selector de academia del
-  super-admin. Ahí van también el selector de grupo y «Ocultar todo».
-- **Baraja de fases en acordeón**: una fase expandida a la vez con sus temas y su
-  ojo por tema; las demás colapsadas a los lados. Hoy son 68 filas seguidas.
-- No tocar `guardar()`, `toggleFase()`, `toggleTema()`, `toggleTodo()` ni
-  `aplicarATodos()`.
-- Tarjetas como `<button aria-expanded>`, navegables con flechas; el ojo debe
-  decir en texto qué hace (hoy solo tiene icono).
+Pendiente del bloque Q: **el usuario no ha visto la baraja todavía**. Se
+verificó por medición, no de vista (ver el bloque Q en la sección 5). El boceto
+decía «las demás colapsadas a los lados» y se resolvió como acordeón vertical,
+que es el patrón accesible y el que no dependía de interpretar el dibujo. Si
+quería una baraja horizontal, eso es un ajuste de la disposición, no de la
+lógica.
 
 ### Bloque R — Exportar el temario a PNG
 
@@ -193,7 +201,7 @@ nombre de la academia.
   lo que ese módulo decide. Así la lógica se prueba sin navegador.
 - Dibujar en `<canvas>` y descargar PNG. **Sin librerías** (no tocar la CSP).
 - Dos variantes: **completa** y **la del grupo** (respetando lo oculto).
-- Botón en el panel «Espacios» del bloque Q (el `temario-controles` de
+- Botón en el panel «Espacios» (el `.tv-espacios-acciones` de
   `VisibilidadGrupos.jsx`, así aparece en `/panel/grupos` y en `/temario`).
 
 ### Bloque S — Libro de calificaciones
@@ -267,7 +275,13 @@ código todavía se puede rotar. Ahí encaja generar códigos con entropía.
 - `EditorPage.jsx` (811) sigue siendo un monolito. `PanelAcademia.jsx` ya no:
   el bloque O lo dejó en ~140 líneas de composición.
 - Quedan ~12 clases de botón ad-hoc. Varias **no deben** convertirse: son
-  tarjetas pulsables o controles de icono, no botones.
+  tarjetas pulsables o controles de icono, no botones. (El bloque Q convirtió
+  `.tv-ojo`: al ponerle texto pasó a ser un botón de verdad, `.btn --sm
+  --fantasma`.)
+- Quedan reglas CSS de un temario anterior sin usar por nadie
+  (`.temario-categoria`, `.temario-subtema*`, `.temario-cobertura*`,
+  `.temario-leyenda`, `.sub-tag*`). Verificado que ningún JSX las nombra, ni
+  compuestas. Se dejaron para no mezclar limpieza con el rediseño.
 - Breakpoints: 12 → 7. Bajar a 4 exige mover reglas hasta 80px y revisar
   pantalla por pantalla.
 - Los datos del temario son un solo chunk de ~190 kB gz. Dividirlo por fase

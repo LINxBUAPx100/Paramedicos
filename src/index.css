@@ -1441,34 +1441,53 @@ textarea:focus-visible,
   cursor: pointer;
 }
 
-/* ===== Temario staff: visibilidad por grupo ===== */
-.temario-controles {
+/* ============================================================
+   Espacios: a quién se le cambia la visibilidad (Bloque Q)
+   ------------------------------------------------------------
+   Los controles (academia, grupo, ocultar todo) iban sueltos en una fila entre
+   el título y el contenido, así que no se leía que TODO lo de abajo se aplica
+   al grupo elegido arriba. Ahora son una tarjeta propia.
+   ============================================================ */
+.tv-espacios {
   display: flex;
   align-items: flex-end;
+  flex-wrap: wrap;
+  gap: var(--e-12) var(--e-16);
+  padding: var(--e-16);
+  margin-bottom: var(--e-24);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--bg-2);
+}
+/* Título y estado comparten fila: son las dos etiquetas del panel, y una
+   línea para cada una hacía de la barra un bloque de 200px. */
+.tv-espacios-cab {
+  flex-basis: 100%;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
   gap: var(--e-12);
   flex-wrap: wrap;
-  margin-top: var(--e-16);
 }
-.temario-toggle-todo { white-space: nowrap; }
-.temario-aplicar-todos { white-space: nowrap; display: inline-flex; align-items: center; gap: var(--e-6); }
-.temario-resumen-ocultos { color: var(--texto-3); font-size: var(--t-sm); padding-bottom: var(--e-8); }
-
-/* Acceso directo a la gestión de visibilidad desde el panel de grupos */
-.panel-cta-visibilidad {
-  display: inline-flex;
+.tv-espacios-titulo {
+  display: flex;
   align-items: center;
-  gap: var(--e-8);
-  align-self: flex-start;
-  padding: var(--e-8) var(--e-12);
-  border-radius: 999px;
-  border: 1px solid var(--primario);
-  background: color-mix(in srgb, var(--primario) 8%, transparent);
-  color: var(--primario);
-  font-size: var(--t-sm);
-  font-weight: 600;
-  text-decoration: none;
+  gap: var(--e-6);
+  font-family: var(--fuente-sub);
+  font-size: var(--t-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--texto-3);
 }
-.panel-cta-visibilidad:hover { background: color-mix(in srgb, var(--primario) 16%, transparent); }
+.tv-espacios-campos { display: flex; align-items: flex-end; flex-wrap: wrap; gap: var(--e-12); max-width: 100%; }
+/* Un `select` se estira con el texto de su opción, y «AEP-2026 — Academia
+   Estatal de Paramédicos» desbordaba la tarjeta en móvil (42px medidos). Aquí
+   manda el contenedor: el nombre largo se recorta con la elipsis del select. */
+.tv-espacios .panel-selector { min-width: 0; flex: 1 1 200px; }
+.tv-espacios .panel-selector select { min-width: 0; width: 100%; }
+.tv-espacios-acciones { display: flex; flex-wrap: wrap; gap: var(--e-8); margin-left: auto; }
+.tv-espacios-acciones .btn { white-space: nowrap; }
+.tv-espacios-estado { color: var(--texto-3); font-size: var(--t-sm); }
 
 /* ===== Facturación (super-admin) ===== */
 .admin-facturacion,
@@ -1562,57 +1581,99 @@ textarea:focus-visible,
   color: var(--texto-2);
   font-size: var(--t-sm);
 }
-.tv-modulo { transition: opacity var(--dur-media) ease; }
-.tv-modulo.tv-oculto { opacity: 0.55; }
-.tv-modulo-cab {
-  display: flex;
-  align-items: center;
-  gap: var(--e-12);
-  padding: var(--e-12) var(--e-16);
+/* ============================================================
+   Baraja de fases: una abierta a la vez (Bloque Q)
+   ------------------------------------------------------------
+   Eran 68 filas seguidas: para llegar a la fase 8 había que pasar por delante
+   de los 60 temas anteriores. Ahora cada fase es una carta que dice cuántos
+   temas ve el grupo, y solo la abierta despliega sus temas.
+   ============================================================ */
+.tv-baraja { display: flex; flex-direction: column; gap: var(--e-8); }
+.tv-carta {
   border: 1px solid var(--borde);
   border-left: 5px solid var(--fase-color, var(--primario));
   border-radius: var(--radio);
   background: var(--bg-2);
-  margin-bottom: var(--e-8);
+  overflow: hidden;
+  transition: border-color var(--dur-rapida) var(--ease-out);
 }
-.tv-modulo-num {
+/* La abierta se señala tiñendo su cabecera con el color de la fase. Antes esto
+   era `border-color`, que pisaba TAMBIÉN el borde izquierdo y le borraba la
+   franja de color justo a la carta que estabas mirando. */
+.tv-carta.abierta .tv-carta-cab { background: color-mix(in srgb, var(--fase-color, var(--primario)) 8%, transparent); }
+/* Una fase oculta apaga su franja de color y tacha el título. El fondo NO
+   cambia: en oscuro, --bg es exactamente el fondo de la página, así que
+   pintarla así dejaba la tarjeta como un agujero en vez de como una fase
+   apagada (contraste 1.1 contra el fondo, medido). */
+.tv-carta--oculta { border-left-color: var(--borde-fuerte); }
+.tv-carta--oculta .tv-carta-num { color: var(--texto-3); }
+.tv-carta--oculta .tv-carta-info strong { color: var(--texto-2); text-decoration: line-through; text-decoration-thickness: 1px; }
+.tv-carta--parcial .tv-carta-num::after {
+  content: '';
+  display: block;
+  height: 3px;
+  margin-top: var(--e-4);
+  border-radius: 999px;
+  background: var(--ambar);
+}
+.tv-carta-cab { display: flex; align-items: center; gap: var(--e-8); padding-right: var(--e-12); flex-wrap: wrap; }
+.tv-carta-abrir {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  gap: var(--e-12);
+  padding: var(--e-12) var(--e-16);
+  background: none;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+}
+.tv-carta-abrir:hover .tv-carta-info strong { color: var(--fase-color, var(--primario)); }
+.tv-carta-num {
   font-family: var(--fuente-cifra);
   font-size: var(--t-xl);
   font-weight: 700;
+  line-height: 1;
   color: var(--fase-color, var(--primario));
-}
-.tv-modulo-info { flex: 1; min-width: 0; }
-.tv-modulo-info h2 { font-family: var(--fuente-display); font-size: var(--t-md); }
-.tv-modulo-info p { color: var(--texto-3); font-size: var(--t-xs); }
-.tv-ojo {
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 1px solid var(--borde);
-  background: var(--bg-3);
-  color: var(--verde);
-  cursor: pointer;
   flex-shrink: 0;
-  transition: color var(--dur-rapida) ease, border-color var(--dur-rapida) ease;
 }
-.tv-ojo:hover:not(:disabled) { border-color: currentColor; }
-.tv-ojo.cerrado { color: var(--texto-3); }
-.tv-ojo:disabled { opacity: 0.55; cursor: wait; }
-.tv-ojo--modulo { width: 44px; height: 44px; }
-.tv-temas { list-style: none; display: flex; flex-direction: column; gap: var(--e-6); margin-bottom: var(--e-24); }
+.tv-carta-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.tv-carta-info strong { font-family: var(--fuente-display); font-size: var(--t-md); transition: color var(--dur-rapida) var(--ease-out); }
+.tv-carta-info small { color: var(--texto-3); font-size: var(--t-xs); }
+.tv-carta-chevron { color: var(--texto-3); display: grid; place-items: center; flex-shrink: 0; }
+
+/* El ojo ya no es un icono a secas: dice en texto qué va a hacer. Y no lleva
+   color propio a propósito: quien distingue el estado es la etiqueta
+   («Ocultar» / «Mostrar») y el tachado de la fila, no un verde que además
+   perdía contra la cascada de `.btn--fantasma`. */
+.tv-ojo-txt { white-space: nowrap; }
+
+.tv-temas {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-6);
+  padding: 0 var(--e-16) var(--e-16);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .tv-temas { animation: tv-desplegar var(--dur-media) var(--ease-out); }
+}
+@keyframes tv-desplegar {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
 .tv-tema {
   display: flex;
   align-items: center;
   gap: var(--e-12);
-  padding: var(--e-8) var(--e-12) var(--e-8) var(--e-16);
+  padding: var(--e-6) var(--e-8) var(--e-6) var(--e-12);
   border: 1px solid var(--borde);
   border-radius: var(--radio-sm);
-  background: var(--bg-2);
+  background: var(--bg);
 }
-.tv-tema.tv-oculto { opacity: 0.5; }
-.tv-tema.tv-oculto .tv-tema-titulo { text-decoration: line-through; text-decoration-thickness: 1px; }
+.tv-tema.tv-oculto .tv-tema-titulo { color: var(--texto-3); text-decoration: line-through; text-decoration-thickness: 1px; }
 .tv-tema-num {
   font-family: var(--fuente-cifra);
   font-weight: 700;
@@ -1623,6 +1684,14 @@ textarea:focus-visible,
 .tv-tema-titulo { flex: 1; min-width: 0; color: var(--texto); text-decoration: none; font-size: var(--t-sm); }
 .tv-tema-titulo:hover { color: var(--primario); }
 .tv-tema-pormodulo { color: var(--texto-3); font-size: var(--t-xs); font-style: italic; white-space: nowrap; }
+
+@media (max-width: 620px) {
+  /* En móvil el botón del ojo baja a su propia línea en vez de encogerse. */
+  .tv-carta-cab { padding: 0 var(--e-12) var(--e-12); }
+  .tv-carta-abrir { min-width: 100%; padding-left: var(--e-12); }
+  .tv-ojo-txt { margin-left: calc(34px + var(--e-12)); }
+  .tv-espacios-acciones { margin-left: 0; }
+}
 
 /* ===== Atlas: contenido bloqueado (gris + censurado) ===== */
 .atlas-card--bloqueada { pointer-events: none; }
@@ -2983,26 +3052,6 @@ html[data-tema='oscuro'] .hero-aurora { opacity: 0.4; }
 }
 .sub-tag--ok { color: var(--verde); background: color-mix(in srgb, var(--verde) 14%, transparent); }
 .sub-tag--pend { color: var(--texto-3); background: var(--bg-3); border: 1px solid var(--borde); }
-
-.temario-modulo { margin-bottom: var(--e-32); }
-.temario-modulo-cab {
-  display: flex;
-  gap: var(--e-12);
-  align-items: flex-start;
-  padding-bottom: var(--e-12);
-  border-bottom: 2px solid var(--borde);
-  margin-bottom: var(--e-16);
-}
-.temario-modulo-ico { font-size: var(--t-2xl); flex-shrink: 0; }
-.temario-modulo-num {
-  font-size: var(--t-xs);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--primario-claro);
-}
-.temario-modulo-cab h2 { font-size: var(--t-lg); margin: 2px 0 var(--e-4); }
-.temario-modulo-cab p { color: var(--texto-2); font-size: var(--t-sm); }
 
 .temario-categoria { margin-bottom: var(--e-16); }
 .temario-categoria-titulo {

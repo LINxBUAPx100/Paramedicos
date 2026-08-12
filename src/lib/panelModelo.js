@@ -126,6 +126,45 @@ export function totalTemas(fases) {
   return (fases || []).reduce((s, f) => s + f.temas.length, 0)
 }
 
+// Estado de UNA fase para el grupo elegido, que es lo que la tarjeta tiene que
+// poder decir de un vistazo (Bloque Q). `porModulo` distingue «la ocultó el ojo
+// del módulo» de «resultó oculta porque están tachados todos sus temas»: son la
+// misma pantalla pero se deshacen de forma distinta.
+export function estadoFase(fase, ocultas) {
+  const temas = fase?.temas || []
+  const total = temas.length
+  if ((ocultas?.fases || []).includes(fase?.id)) {
+    return { estado: 'oculta', porModulo: true, visibles: 0, total }
+  }
+  const temasOcultos = new Set(ocultas?.temas || [])
+  const visibles = temas.filter((t) => !temasOcultos.has(t.id)).length
+  const estado = total > 0 && visibles === 0 ? 'oculta' : visibles === total ? 'visible' : 'parcial'
+  return { estado, porModulo: false, visibles, total }
+}
+
+// Navegación por teclado de la baraja de fases (patrón de acordeón de
+// WAI-ARIA): las flechas mueven el foco entre cabeceras y da la vuelta al
+// llegar al extremo; Inicio/Fin van a la primera y a la última. Devuelve el
+// índice al que hay que llevar el foco, o null si esa tecla no es de las suyas
+// (y entonces NO hay que tragarse el evento).
+export function focoBaraja(indice, tecla, total) {
+  if (!Number.isInteger(total) || total <= 0) return null
+  switch (tecla) {
+    case 'ArrowDown':
+    case 'ArrowRight':
+      return (indice + 1) % total
+    case 'ArrowUp':
+    case 'ArrowLeft':
+      return (indice - 1 + total) % total
+    case 'Home':
+      return 0
+    case 'End':
+      return total - 1
+    default:
+      return null
+  }
+}
+
 // Cuántos temas quedan ocultos para el grupo: los de una fase oculta cuentan
 // todos, aunque no estén marcados uno por uno.
 export function contarTemasOcultos(fases, ocultas) {

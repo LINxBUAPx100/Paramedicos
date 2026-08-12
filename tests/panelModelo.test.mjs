@@ -10,7 +10,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import {
   APROBADO, SECCIONES_PANEL, seccionesPanel, agregarIntentos, pasaFiltroGrupo,
-  resumenAcademia, totalTemas, contarTemasOcultos, mensajeError,
+  resumenAcademia, totalTemas, contarTemasOcultos, estadoFase, focoBaraja, mensajeError,
 } from '../src/lib/panelModelo.js'
 
 const ids = (secciones) => secciones.map((s) => s.id)
@@ -161,6 +161,50 @@ test('contarTemasOcultos: una fase oculta arrastra todos sus temas', () => {
   assert.equal(contarTemasOcultos(fases, { fases: ['f1'], temas: ['t1', 't4'] }), 4)
   assert.equal(contarTemasOcultos(fases, null), 0)
   assert.equal(totalTemas(null), 0)
+})
+
+test('estadoFase resume la fase de un vistazo', () => {
+  const fase = { id: 'f1', temas: [{ id: 't1' }, { id: 't2' }, { id: 't3' }] }
+
+  assert.deepEqual(estadoFase(fase, { fases: [], temas: [] }),
+    { estado: 'visible', porModulo: false, visibles: 3, total: 3 })
+
+  assert.deepEqual(estadoFase(fase, { fases: [], temas: ['t2'] }),
+    { estado: 'parcial', porModulo: false, visibles: 2, total: 3 })
+
+  // Oculta con el ojo del MÓDULO: se deshace de una vez.
+  assert.deepEqual(estadoFase(fase, { fases: ['f1'], temas: [] }),
+    { estado: 'oculta', porModulo: true, visibles: 0, total: 3 })
+
+  // Oculta porque están tachados todos sus temas: se deshace tema a tema.
+  assert.deepEqual(estadoFase(fase, { fases: [], temas: ['t1', 't2', 't3'] }),
+    { estado: 'oculta', porModulo: false, visibles: 0, total: 3 })
+})
+
+test('estadoFase no llama "oculta" a una fase sin temas', () => {
+  // Una fase vacía tiene 0 visibles de 0, que NO es lo mismo que estar oculta:
+  // pintarla tachada sería mentirle al director.
+  assert.deepEqual(estadoFase({ id: 'f9', temas: [] }, { fases: [], temas: [] }),
+    { estado: 'visible', porModulo: false, visibles: 0, total: 0 })
+  assert.equal(estadoFase(null, null).estado, 'visible')
+})
+
+test('focoBaraja: las flechas dan la vuelta y solo responde a sus teclas', () => {
+  assert.equal(focoBaraja(0, 'ArrowDown', 8), 1)
+  assert.equal(focoBaraja(7, 'ArrowDown', 8), 0) // vuelve al principio
+  assert.equal(focoBaraja(0, 'ArrowUp', 8), 7) // y al final
+  assert.equal(focoBaraja(3, 'ArrowRight', 8), 4)
+  assert.equal(focoBaraja(3, 'ArrowLeft', 8), 2)
+  assert.equal(focoBaraja(3, 'Home', 8), 0)
+  assert.equal(focoBaraja(3, 'End', 8), 7)
+
+  // Teclas ajenas: null, para NO tragarse el evento (Tab tiene que seguir
+  // saliendo del acordeón, y Enter/Espacio los gestiona el propio botón).
+  for (const tecla of ['Tab', 'Enter', ' ', 'a', 'Escape', 'PageDown']) {
+    assert.equal(focoBaraja(3, tecla, 8), null, tecla)
+  }
+  // Sin fases no hay dónde poner el foco.
+  assert.equal(focoBaraja(0, 'ArrowDown', 0), null)
 })
 
 test('mensajeError nombra la colección cuando faltan reglas', () => {
