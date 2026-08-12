@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { useAdmin } from '../../components/admin/AdminShell.jsx'
 import { planEfectivo, ETIQUETA_PLAN } from '../../lib/capacidades.js'
-import { ETIQUETA_ROL } from '../../components/PanelAcademia.jsx'
+import { ETIQUETA_ROL } from '../../lib/roles.js'
 import Icon from '../../components/Icon.jsx'
 
 // ============================================================

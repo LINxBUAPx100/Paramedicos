@@ -50,6 +50,19 @@ export async function registrarHistorial({
   return ref.id
 }
 
+// Rastro de cambios de una academia, recientes primero. El filtro por
+// academiaId es el que la regla `list` necesita para evaluarse (misma lección
+// que `temasDeCurso`): sin él, la consulta entera se deniega.
+// Solo lo lee el director de esa academia o el super-admin.
+export async function historialDeAcademia(academiaId, { limite = 25 } = {}) {
+  const q = query(collection(db, 'historial'), where('academiaId', '==', academiaId))
+  const snap = await getDocs(q)
+  return snap.docs
+    .map((d) => ({ id: d.id, ...d.data() }))
+    .sort((a, b) => (b.fecha?.seconds || 0) - (a.fecha?.seconds || 0))
+    .slice(0, limite)
+}
+
 // --- Clonación plantilla → academia -----------------------------------------
 // Idempotente: los doc-id son deterministas, así que reejecutar REESCRIBE los
 // mismos documentos (nunca duplica) y sirve para reanudar una clonación

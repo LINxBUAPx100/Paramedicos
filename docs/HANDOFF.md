@@ -2,7 +2,7 @@
 
 > **Escrito para retomar el trabajo en una sesión nueva sin contexto previo.**
 > Última actualización: 2026-08-12 · Rama: `claude/auditoria-endurecimiento`
-> · Último commit: `1840ab7` · CI: verde (168 unitarios + 54 de reglas)
+> · CI: verde (181 unitarios + 54 de reglas)
 
 ---
 
@@ -11,7 +11,7 @@
 ```bash
 git checkout claude/auditoria-endurecimiento
 npm ci
-npm test        # deben salir 168 pass, 0 fail
+npm test        # deben salir 181 pass, 0 fail
 npm run build
 ```
 
@@ -24,8 +24,8 @@ que queda está en la sección 6.
 
 Partió de una auditoría completa (UI/UX, arquitectura, seguridad, rendimiento)
 del LMS PTEM. De ahí salió un plan por **bloques**, uno por entrega, cada uno
-con su commit y su verificación. Van hechos los bloques **A–N**. Quedan **O, P**
-y tres bloques nuevos **Q, R, S** pedidos después.
+con su commit y su verificación. Van hechos los bloques **A–O**. Queda **P** y
+tres bloques nuevos **Q, R, S** pedidos después.
 
 **Regla de trabajo que el usuario espera:** un bloque por respuesta, con
 `npm test` y `npm run build` en verde, commit descriptivo y push. Y **decirle
@@ -73,7 +73,7 @@ npx firebase-tools@15 deploy --only firestore:rules --project ptem-a304f
 
 ---
 
-## 5. Bloques ya hechos (A–N)
+## 5. Bloques ya hechos (A–O)
 
 Resumen de qué cambió y qué NO hay que volver a tocar.
 
@@ -116,6 +116,18 @@ Resumen de qué cambió y qué NO hay que volver a tocar.
 - **N — Consola super-admin.** `src/components/admin/AdminShell.jsx` con
   navegación lateral y una página por entidad bajo `/admin/*`. Carga los datos
   una vez y los reparte por contexto del Outlet.
+- **O — Consola del director.** `src/components/panel/PanelShell.jsx` + una
+  página por sección en `src/pages/panel/` bajo `/panel/*` (Resumen, Miembros,
+  Grupos, Accesos, Contenido, Mi academia). El profesor entra al MISMO armazón
+  con menos secciones, resueltas por `seccionesPanel` en `src/lib/panelModelo.js`
+  (puro, con tests). Las secciones del panel viejo salieron a
+  `src/components/panel/*.jsx` y las reutiliza también el dashboard del
+  super-admin: `PanelAcademia.jsx` pasó de **1271 a ~140 líneas** y ya solo
+  compone. `ETIQUETA_ROL`/`ROLES` viven en `src/lib/roles.js`. La visibilidad
+  por grupo es ahora `components/panel/VisibilidadGrupos.jsx`, sección de
+  `/panel/grupos`, y `/temario` la reutiliza tal cual. Nuevo lector
+  `historialDeAcademia` (misma consulta filtrada por `academiaId` que
+  `historialPermisos`: no hizo falta tocar reglas).
 
 ### Correcciones a la auditoría original (importante)
 
@@ -149,37 +161,21 @@ Merecen recordarse porque marcan el patrón de error de este proyecto:
 
 ## 6. Lo que queda por hacer
 
-Orden recomendado y acordado: **O → Q → R → S → P**.
-(El motivo: S añade una pestaña al panel del director, y O reorganiza ese panel.
-Hacer O primero evita tocar `PanelAcademia.jsx` dos veces.)
-
-### Bloque O — Consola del director
-
-Misma operación que el bloque N, sobre `src/components/PanelAcademia.jsx`
-(**1271 líneas**, la más grande del repo). Trocear con el mismo `AdminShell` (o
-un gemelo) bajo `/panel/*`:
-
-- **Resumen** — alumnos activos, avance medio, alumnos en riesgo (ya lo calcula
-  `Estadisticas`), solicitudes pendientes, estado del plan.
-- **Miembros** — buscador y filtros; incluye las acciones de conceder/retirar
-  del bloque M.
-- **Grupos** — crear, renombrar, borrar, y **absorber la visibilidad por grupo
-  que hoy vive en `/temario`** (nombre que no dice lo que hace).
-- **Accesos** — códigos de academia y grupo, códigos de prueba, solicitudes
-  internas y las del directorio (bloque K), todo junto.
-- **Contenido** — entrada al editor, estado de cada curso, historial.
-- **Mi academia** — personalización del bloque L y ficha del directorio.
-
-El profesor ve el mismo armazón con menos secciones, resueltas por `capacidades`
-y `permisosEditor`. Dejar redirección desde `/panel`.
+Orden recomendado y acordado: **Q → R → S → P** (O ya está hecho).
+S añade una pestaña al panel del director; ahora que O lo troceó, eso es una
+página nueva en `src/pages/panel/` y una entrada en `SECCIONES_PANEL`.
 
 ### Bloque Q — Temario con tarjetas expandibles
 
-Rediseño visual de `src/pages/TemarioPage.jsx` según un boceto que dio el
-usuario. **Misma funcionalidad y misma lógica de guardado**: solo la disposición.
+Rediseño visual **de `src/components/panel/VisibilidadGrupos.jsx`** (antes vivía
+en `TemarioPage.jsx`; el bloque O lo extrajo tal cual, sin tocar su lógica),
+según un boceto que dio el usuario. **Misma funcionalidad y misma lógica de
+guardado**: solo la disposición. Al ser un componente compartido, el rediseño
+llega de golpe a `/panel/grupos` y a `/temario`.
 
-- Panel **«Espacios»** arriba a la derecha: selector de academia (super-admin),
-  selector de grupo y «Ocultar todo», separados del contenido.
+- Panel **«Espacios»**: hoy es el `<div className="temario-controles">` del
+  componente, que ya recibe por la prop `cabecera` el selector de academia del
+  super-admin. Ahí van también el selector de grupo y «Ocultar todo».
 - **Baraja de fases en acordeón**: una fase expandida a la vez con sus temas y su
   ojo por tema; las demás colapsadas a los lados. Hoy son 68 filas seguidas.
 - No tocar `guardar()`, `toggleFase()`, `toggleTema()`, `toggleTodo()` ni
@@ -197,7 +193,8 @@ nombre de la academia.
   lo que ese módulo decide. Así la lógica se prueba sin navegador.
 - Dibujar en `<canvas>` y descargar PNG. **Sin librerías** (no tocar la CSP).
 - Dos variantes: **completa** y **la del grupo** (respetando lo oculto).
-- Botón en el panel «Espacios» del bloque Q.
+- Botón en el panel «Espacios» del bloque Q (el `temario-controles` de
+  `VisibilidadGrupos.jsx`, así aparece en `/panel/grupos` y en `/temario`).
 
 ### Bloque S — Libro de calificaciones
 
@@ -226,8 +223,10 @@ Cálculo en `src/lib/calificacionesModelo.js` **puro y con tests**: promedio
 ponderado por alumno, por grupo y por evaluación, más detección de sin calificar.
 Nada de aritmética en los componentes.
 
-Interfaz: pestaña **Calificaciones** en el panel del maestro (tabla alumnos ×
-evaluaciones, edición en celda, promedios) y bloque propio en «Mi progreso».
+Interfaz: sección **Calificaciones** del panel (una página más en
+`src/pages/panel/` + su entrada en `SECCIONES_PANEL`, visible para el staff que
+dé clase: tabla alumnos × evaluaciones, edición en celda, promedios) y bloque
+propio en «Mi progreso».
 
 ### Bloque P — Alta de academia con materias
 
@@ -265,8 +264,8 @@ código todavía se puede rotar. Ahí encaja generar códigos con entropía.
 
 ## 8. Deuda conocida y no urgente
 
-- `PanelAcademia.jsx` (1271) y `EditorPage.jsx` (811) siguen siendo monolitos.
-  O ataca el primero.
+- `EditorPage.jsx` (811) sigue siendo un monolito. `PanelAcademia.jsx` ya no:
+  el bloque O lo dejó en ~140 líneas de composición.
 - Quedan ~12 clases de botón ad-hoc. Varias **no deben** convertirse: son
   tarjetas pulsables o controles de icono, no botones.
 - Breakpoints: 12 → 7. Bajar a 4 exige mover reglas hasta 80px y revisar

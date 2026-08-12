@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAdmin } from '../components/admin/AdminShell.jsx'
-import { ETIQUETA_ROL } from '../components/PanelAcademia.jsx'
+import { ETIQUETA_ROL, ROLES } from '../lib/roles.js'
 import { PLANES, TIPOS, ETIQUETA_PLAN, ETIQUETA_TIPO, DESCRIPCION_PLAN, validarPlanTipo } from '../lib/capacidades.js'
 import Icon from '../components/Icon.jsx'
 
@@ -14,8 +14,6 @@ import Icon from '../components/Icon.jsx'
 //  Facturación, anuncio, incidencias y códigos de prueba se fueron a sus
 //  propias rutas: aquí ya no estorban.
 // ============================================================
-
-const ROLES = ['alumno', 'instructor', 'admin_escuela', 'superadmin']
 
 // Secciones de la consola. Ya NO cargan datos ni comprueban el rol: de eso se
 // encarga AdminShell, que lo hace una sola vez para todas.

@@ -1312,8 +1312,17 @@ textarea:focus-visible,
 .admin-form .cuenta-error, .admin-form .cuenta-ok { flex-basis: 100%; }
 
 /* ===== Grupos internos de la academia ===== */
-.panel-grupos { display: flex; flex-direction: column; gap: var(--e-8); margin-top: var(--e-8); }
-.panel-grupos h2 {
+/* Visibilidad por grupo, contenido y últimos cambios: secciones nuevas del
+   panel del director (Bloque O). Comparten la forma de las de al lado. */
+.panel-grupos,
+.panel-visibilidad,
+.panel-contenido-estado,
+.panel-historial { display: flex; flex-direction: column; gap: var(--e-8); margin-top: var(--e-32); }
+.panel-contenido-estado .btn { align-self: flex-start; }
+.panel-grupos h2,
+.panel-visibilidad h2,
+.panel-contenido-estado h2,
+.panel-historial h2 {
   display: flex;
   align-items: center;
   gap: var(--e-8);

@@ -22,7 +22,13 @@ const BuscarPage = lazy(() => import('./pages/BuscarPage.jsx'))
 const AtlasPage = lazy(() => import('./pages/AtlasPage.jsx'))
 const TemarioPage = lazy(() => import('./pages/TemarioPage.jsx'))
 const Cuenta = lazy(() => import('./pages/Cuenta.jsx'))
-const PanelPage = lazy(() => import('./pages/PanelPage.jsx'))
+const PanelShell = lazy(() => import('./components/panel/PanelShell.jsx'))
+const PanelResumen = lazy(() => import('./pages/panel/Resumen.jsx'))
+const PanelMiembros = lazy(() => import('./pages/panel/Miembros.jsx'))
+const PanelGrupos = lazy(() => import('./pages/panel/Grupos.jsx'))
+const PanelAccesos = lazy(() => import('./pages/panel/Accesos.jsx'))
+const PanelContenido = lazy(() => import('./pages/panel/Contenido.jsx'))
+const PanelMiAcademia = lazy(() => import('./pages/panel/MiAcademia.jsx'))
 const AdminShell = lazy(() => import('./components/admin/AdminShell.jsx'))
 const AdminPage = lazy(() => import('./pages/AdminPage.jsx'))
 const AdminResumen = lazy(() => import('./pages/admin/Resumen.jsx'))
@@ -86,8 +92,19 @@ export default function App() {
             <Route path="/progreso" element={<RutaProtegida><ProgresoPage /></RutaProtegida>} />
             <Route path="/buscar" element={<RutaProtegida><BuscarPage /></RutaProtegida>} />
 
-            {/* Panel de avance: solo staff (la página valida el rol internamente) */}
-            <Route path="/panel" element={<RutaProtegida><PanelPage /></RutaProtegida>} />
+            {/* Consola del director (Bloque O): mismo patrón que /admin. Antes
+                era UNA página que apilaba avance, solicitudes, grupos, miembros,
+                permisos y códigos en una sola columna, y «qué ve cada grupo»
+                estaba escondido en /temario. El armazón valida el rol, carga los
+                datos de la academia una vez y los reparte por contexto. */}
+            <Route path="/panel" element={<RutaProtegida><PanelShell /></RutaProtegida>}>
+              <Route index element={<PanelResumen />} />
+              <Route path="miembros" element={<PanelMiembros />} />
+              <Route path="grupos" element={<PanelGrupos />} />
+              <Route path="accesos" element={<PanelAccesos />} />
+              <Route path="contenido" element={<PanelContenido />} />
+              <Route path="academia" element={<PanelMiAcademia />} />
+            </Route>
 
             {/* Editor estructural de contenido: director PRO / profesor
                 autorizado (su academia); superadmin en cualquiera o en modo

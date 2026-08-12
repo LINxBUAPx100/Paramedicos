@@ -1,6 +1,6 @@
 import { useAdmin } from '../../components/admin/AdminShell.jsx'
 import { FacturacionAcademias, AnuncioGlobal } from '../../components/AdminPlataforma.jsx'
-import { CodigosPrueba } from '../../components/PanelAcademia.jsx'
+import CodigosPrueba from '../../components/panel/CodigosPrueba.jsx'
 
 // Consola del super-admin · FACTURACIÓN Y PLATAFORMA.
 // Antes vivían a media altura del dashboard general, entre la lista de
