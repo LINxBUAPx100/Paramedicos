@@ -21,10 +21,19 @@ service cloud.firestore {
     // Admin supremo: reconocido por su correo de Auth (bootstrap sin consola).
     // El correo debe estar VERIFICADO: sin esto, cualquiera que registre una
     // cuenta con ese correo en otro proveedor podría suplantarlo.
+    //
+    // Se leen las claims con get(clave, default) y NO con notación de punto.
+    // Con el punto, un token que no traiga `email_verified` (sesión anónima,
+    // token personalizado, o cualquier proveedor que no emita la claim) no
+    // devuelve false: lanza un ERROR DE EVALUACIÓN, y eso tumba la expresión
+    // ENTERA donde aparezca. Como esSuper() empieza por esSupremo(), toda regla
+    // del tipo `esSuper() || <rama del alumno>` denegaba a ese usuario aunque su
+    // propia rama fuese válida. Lo detectó el CI en la lectura de `temas` de un
+    // alumno: "Property email_verified is undefined on object".
     function esSupremo() {
       return autenticado()
-        && request.auth.token.email_verified == true
-        && request.auth.token.email in ['mihayolo228@gmail.com'];
+        && request.auth.token.get('email_verified', false) == true
+        && request.auth.token.get('email', '') in ['mihayolo228@gmail.com'];
     }
     function esSuper() {
       return esSupremo()

@@ -19,10 +19,14 @@ service firebase.storage {
     function miDoc() {
       return firestore.get(/databases/(default)/documents/usuarios/$(request.auth.uid)).data;
     }
+    // Mismo criterio que firestore.rules: las claims se leen con
+    // get(clave, default). Con notación de punto, un token sin `email_verified`
+    // provoca un error de evaluación que deniega la expresión entera en la que
+    // aparece, no un simple false.
     function esSupremo() {
       return autenticado()
-        && request.auth.token.email_verified == true
-        && request.auth.token.email in ['mihayolo228@gmail.com'];
+        && request.auth.token.get('email_verified', false) == true
+        && request.auth.token.get('email', '') in ['mihayolo228@gmail.com'];
     }
     function esSuper() {
       return esSupremo()
