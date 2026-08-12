@@ -6536,3 +6536,26 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 .ba-avisos { flex-direction: column; align-items: flex-start; margin-top: var(--e-16); }
 .ba-aviso { display: flex; gap: var(--e-8); flex-wrap: wrap; width: 100%; }
 .ba-aviso input { flex: 1; min-width: 140px; }
+
+/* Simetría (Bloque M): acciones destructivas y auditoría visible */
+.pc-borrar { color: var(--peligro); }
+.pc-borrar:hover { background: color-mix(in srgb, var(--peligro) 12%, transparent); }
+.panel-revocar-codigos { margin-top: var(--e-6); }
+
+.pe-historial { margin-top: var(--e-24); border-top: 1px solid var(--borde); padding-top: var(--e-16); }
+.pe-historial summary {
+  display: flex; align-items: center; gap: var(--e-8);
+  cursor: pointer; font-size: var(--t-sm); font-weight: 600; color: var(--texto-2);
+}
+.pe-historial-lista { list-style: none; display: flex; flex-direction: column; gap: var(--e-6); margin-top: var(--e-12); }
+.pe-historial-lista li {
+  display: flex; align-items: baseline; gap: var(--e-8); flex-wrap: wrap;
+  padding: var(--e-6) var(--e-12);
+  border-radius: var(--radio-sm); background: var(--bg-3);
+  font-size: var(--t-sm);
+}
+.peh-fecha { color: var(--texto-3); font-family: var(--fuente-cifra); font-size: var(--t-xs); }
+.peh-accion { font-weight: 700; }
+.peh-accion--dar { color: var(--exito); }
+.peh-accion--quitar { color: var(--peligro); }
+.peh-detalle { color: var(--texto-2); }

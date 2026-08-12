@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import Icon from '../components/Icon.jsx'
+import ConfirmacionReforzada, { Dialogo } from '../components/ConfirmacionReforzada.jsx'
 import { ETIQUETA_PLAN, ETIQUETA_TIPO, planEfectivo } from '../lib/capacidades.js'
 import { ETIQUETA_ESTADO_PLANTILLA } from '../lib/plantillasModelo.js'
 import {
@@ -119,58 +120,6 @@ export default function ReplicacionPage() {
 // ------------------------------------------------------------
 //  Diálogo accesible con confirmación reforzada por FRASE.
 // ------------------------------------------------------------
-function Dialogo({ titulo, onCerrar, children }) {
-  const ref = useRef(null)
-  useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape') onCerrar() }
-    document.addEventListener('keydown', onKey)
-    ref.current?.querySelector('input, textarea, select, button')?.focus()
-    return () => document.removeEventListener('keydown', onKey)
-  }, [onCerrar])
-  return (
-    <div className="rp-dialogo-fondo" onClick={(e) => { if (e.target === e.currentTarget) onCerrar() }}>
-      <div className="rp-dialogo" role="dialog" aria-modal="true" aria-label={titulo} ref={ref}>
-        <div className="rp-dialogo-cab">
-          <h2>{titulo}</h2>
-          <button className="rp-cerrar" onClick={onCerrar} aria-label="Cerrar diálogo">✕</button>
-        </div>
-        {children}
-      </div>
-    </div>
-  )
-}
-
-function ConfirmacionReforzada({ titulo, resumen, frase, onConfirmar, onCerrar, ocupado }) {
-  const [texto, setTexto] = useState('')
-  const coincide = texto.trim().toUpperCase() === frase
-  return (
-    <Dialogo titulo={titulo} onCerrar={onCerrar}>
-      <div className="rp-confirmacion">
-        {resumen}
-        <p>
-          Para continuar, escribe exactamente la frase: <strong><code>{frase}</code></strong>
-        </p>
-        <label>
-          Frase de confirmación
-          <input
-            type="text"
-            value={texto}
-            onChange={(e) => setTexto(e.target.value)}
-            autoComplete="off"
-            spellCheck="false"
-          />
-        </label>
-        <div className="rp-dialogo-botones">
-          <button className="btn btn--peligro" disabled={!coincide || ocupado} onClick={() => onConfirmar(texto.trim().toUpperCase())}>
-            {ocupado ? 'Ejecutando…' : 'Confirmar y ejecutar'}
-          </button>
-          <button className="btn btn--suave" onClick={onCerrar} disabled={ocupado}>Cancelar</button>
-        </div>
-      </div>
-    </Dialogo>
-  )
-}
-
 // ------------------------------------------------------------
 //  PESTAÑA 1 · Plantillas globales
 // ------------------------------------------------------------

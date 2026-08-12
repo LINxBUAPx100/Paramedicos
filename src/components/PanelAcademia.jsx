@@ -5,6 +5,7 @@ import { useIndiceAcademia } from '../context/ContenidoContext.jsx'
 import Icon from './Icon.jsx'
 import CompartirCodigo from './CompartirCodigo.jsx'
 import PermisosEditoriales from './PermisosEditoriales.jsx'
+import ConfirmacionReforzada from './ConfirmacionReforzada.jsx'
 
 // ============================================================
 //  Dashboard de UNA academia (compartido por toda la jerarquía)
@@ -827,6 +828,25 @@ export function CodigosPrueba({ academiaId = null, academiaNombre = '', miUid, a
     }
   }
 
+  // Un código de prueba es efímero y no arrastra datos de nadie: quien lo
+  // canjeó conserva su acceso hasta que venza. Por eso basta un confirm y no
+  // la confirmación reforzada que sí piden los grupos.
+  const borrar = async (c) => {
+    if (!window.confirm(
+      `¿Borrar el código ${c.id}?\n\n` +
+      'Desaparece de la lista y deja de poder canjearse. Quien ya lo haya usado ' +
+      'conserva su acceso hasta que venza.\n\n' +
+      'Si solo quieres que deje de servir, usa "Desactivar": conserva el rastro.'
+    )) return
+    try {
+      const { borrarCodigo } = await import('../lib/firebase/codigos.js')
+      await borrarCodigo(c.id)
+      await cargar()
+    } catch (err) {
+      setError(errorCodigos(err, 'No se pudo borrar el código'))
+    }
+  }
+
   const copiar = (id) => {
     try { navigator.clipboard.writeText(id) } catch { /* sin permisos */ }
   }
@@ -929,6 +949,14 @@ export function CodigosPrueba({ academiaId = null, academiaNombre = '', miUid, a
                       {est === 'activo' ? 'Desactivar' : 'Reactivar'}
                     </button>
                   )}
+                  {/* SIMETRÍA (Bloque M): se creaban códigos y solo se podían
+                      desactivar. Los expirados se acumulaban en la lista para
+                      siempre, y `borrarCodigo` llevaba ahí sin usar. Desactivar
+                      sigue siendo lo recomendable —conserva el rastro—; borrar
+                      es para limpiar. */}
+                  <button className="pc-toggle pc-borrar" onClick={() => borrar(c)}>
+                    Borrar
+                  </button>
                 </span>
               </li>
             )
@@ -976,6 +1004,7 @@ function GruposAcademia({ academiaId, academiaNombre = '', grupos, miembros, miU
   const [nombreEdit, setNombreEdit] = useState('')
   const [ocupado, setOcupado] = useState(false)
   const [error, setError] = useState('')
+  const [borrando, setBorrando] = useState(null) // grupo pendiente de confirmar
 
   const cuentaDe = (gid) => {
     const del = miembros.filter((m) => m.grupoId === gid)
@@ -1025,6 +1054,22 @@ function GruposAcademia({ academiaId, academiaNombre = '', grupos, miembros, miU
     correr(async () => {
       const { alternarGrupo } = await import('../lib/firebase/grupos.js')
       await alternarGrupo(g.id, g.estado === 'activo' ? 'inactivo' : 'activo')
+    })
+
+  const borrar = (g) =>
+    correr(async () => {
+      const { borrarGrupo } = await import('../lib/firebase/grupos.js')
+      await borrarGrupo(g.id)
+      // Queda rastro: borrar un grupo cambia qué ve un puñado de alumnos y
+      // conviene poder reconstruir quién lo hizo y cuándo.
+      try {
+        const { registrarHistorial } = await import('../lib/firebase/contenido.js')
+        await registrarHistorial({
+          academiaId, accion: 'borrar-grupo', coleccion: 'grupos', docId: g.id,
+          antes: { nombre: g.nombre, estado: g.estado }, despues: null, origen: 'panel',
+        })
+      } catch { /* la auditoría no debe tumbar la operación principal */ }
+      setBorrando(null)
     })
 
   const copiar = (id) => {
@@ -1120,11 +1165,50 @@ function GruposAcademia({ academiaId, academiaNombre = '', grupos, miembros, miU
                   <button className="pc-toggle" onClick={() => alternar(g)}>
                     {activo ? 'Desactivar' : 'Reactivar'}
                   </button>
+                  {/* SIMETRÍA (Bloque M): se podían crear grupos y no borrarlos.
+                      `borrarGrupo` existía en la capa de datos desde siempre,
+                      sin un solo botón que la llamara. */}
+                  <button className="pc-toggle pc-borrar" onClick={() => setBorrando(g)}>
+                    Borrar
+                  </button>
                 </span>
               </li>
             )
           })}
         </ul>
+      )}
+
+      {borrando && (
+        <ConfirmacionReforzada
+          titulo={`Borrar el grupo "${borrando.nombre}"`}
+          frase="BORRAR GRUPO"
+          etiquetaConfirmar="Borrar definitivamente"
+          ocupado={ocupado}
+          onCerrar={() => setBorrando(null)}
+          onConfirmar={() => borrar(borrando)}
+          resumen={
+            <>
+              <p>
+                Se elimina el grupo y su código <code>{borrando.id}</code> deja de funcionar para
+                siempre.
+              </p>
+              {cuentaDe(borrando.id).alumnos + cuentaDe(borrando.id).profes > 0 ? (
+                <p className="cuenta-error">
+                  <strong>
+                    {cuentaDe(borrando.id).alumnos} alumno(s) y {cuentaDe(borrando.id).profes} profe(s)
+                    están en este grupo.
+                  </strong>{' '}
+                  No se les borra ni pierden su avance: quedan en la academia <em>sin grupo</em>, y
+                  volverán a ver todo el contenido que el grupo les ocultaba. Muévelos antes si no
+                  es lo que quieres.
+                </p>
+              ) : (
+                <p>El grupo está vacío, así que no afecta a nadie.</p>
+              )}
+              <p>Lo que sí se pierde: la configuración de qué contenido veía este grupo.</p>
+            </>
+          }
+        />
       )}
     </section>
   )
@@ -1154,6 +1238,23 @@ function GestionMiembros({ miembros, grupos = [], gestion, miUid, onCambio }) {
       onCambio()
     } catch {
       setError('No se pudo aplicar el cambio (revisa permisos o conexión).')
+    } finally {
+      setOcupado(null)
+    }
+  }
+
+  // Va por su propia función y no por `aplicar` porque el campo es distinto y
+  // el mensaje de error también debe serlo: si falla, lo que hay que revisar
+  // es el plan de la academia, no el rol del usuario.
+  const correrRevocar = async (uid) => {
+    setOcupado(uid)
+    setError('')
+    try {
+      const { revocarAccesoCodigos } = await import('../lib/firebase/solicitudes.js')
+      await revocarAccesoCodigos(uid)
+      onCambio()
+    } catch {
+      setError('No se pudo retirar el acceso a los códigos (revisa permisos o conexión).')
     } finally {
       setOcupado(null)
     }
@@ -1268,6 +1369,30 @@ function GestionMiembros({ miembros, grupos = [], gestion, miUid, onCambio }) {
                       <span className={`panel-rol-tag ${suspendido ? 'rol-suspendido' : 'rol-activo'}`}>
                         {suspendido ? 'Suspendido' : 'Activo'}
                       </span>
+                    )}
+                    {/* SIMETRÍA (Bloque M): el acceso a los códigos se podía
+                        conceder —al aprobar la solicitud del profesor— y no
+                        había NADA que lo retirara, ni en la interfaz ni en la
+                        capa de datos. Un profesor que dejaba de dar clase se
+                        quedaba para siempre con la capacidad de ver y repartir
+                        los códigos de la academia. */}
+                    {puede && m.rol === 'instructor' && m.puedeVerCodigos && (
+                      <button
+                        type="button"
+                        className="btn btn--sm btn--fantasma panel-revocar-codigos"
+                        disabled={ocupado === m.id}
+                        onClick={() => {
+                          if (!window.confirm(
+                            `¿Retirar a ${quien} el acceso a los códigos?\n\n` +
+                            'Dejará de ver los códigos de la academia y de sus grupos. ' +
+                            'Podrá volver a solicitarlo cuando lo necesite.'
+                          )) return
+                          correrRevocar(m.id)
+                        }}
+                        title="Retirar el acceso a los códigos de la academia"
+                      >
+                        <Icon name="candado" size={13} /> Quitar códigos
+                      </button>
                     )}
                   </td>
                 </tr>

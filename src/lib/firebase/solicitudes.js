@@ -86,3 +86,14 @@ export async function aprobarSolicitudCodigos(sol, resueltoPor) {
     estado: 'aprobada', resueltoPor, resuelto: serverTimestamp(),
   })
 }
+
+// RETIRA el acceso a los códigos a un profesor. No existía: se podía conceder
+// y no había absolutamente nada que lo deshiciera, ni en la interfaz ni en la
+// capa de datos. Un profesor que dejaba de dar clase conservaba para siempre
+// la capacidad de ver —y repartir— los códigos de la academia.
+//
+// La regla que lo permite es la misma que la de conceder: el director escribe
+// `puedeVerCodigos` de un instructor de SU academia.
+export async function revocarAccesoCodigos(uid) {
+  await updateDoc(doc(db, 'usuarios', uid), { puedeVerCodigos: false })
+}

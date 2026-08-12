@@ -63,7 +63,68 @@ export default function PermisosEditoriales({ academiaId, instructores = [], onC
           ))}
         </ul>
       )}
+
+      <HistorialDePermisos academiaId={academiaId} />
     </section>
+  )
+}
+
+// El texto de arriba promete que "cada cambio queda registrado" — y era verdad:
+// asignarPermisosEditor escribe en `historial` desde el primer día. Lo que
+// faltaba era ENSEÑARLO. `historialPermisos` llevaba ahí, exportada y sin que
+// nadie la llamara: una auditoría que nadie podía consultar no es una auditoría.
+function HistorialDePermisos({ academiaId }) {
+  const [entradas, setEntradas] = useState(null) // null = sin cargar
+  const [cargando, setCargando] = useState(false)
+
+  const cargar = async () => {
+    setCargando(true)
+    try {
+      const { historialPermisos } = await import('../lib/firebase/usuarios.js')
+      setEntradas(await historialPermisos(academiaId))
+    } catch {
+      setEntradas([])
+    } finally {
+      setCargando(false)
+    }
+  }
+
+  const fecha = (h) => (h.fecha?.seconds ? new Date(h.fecha.seconds * 1000).toLocaleString('es-MX', { dateStyle: 'medium', timeStyle: 'short' }) : '')
+  const claves = (m) => Object.entries(m || {}).filter(([k, v]) => v === true && k !== 'cursosPermitidos').map(([k]) => k)
+
+  return (
+    <details className="pe-historial" onToggle={(e) => { if (e.target.open && entradas === null) cargar() }}>
+      <summary>
+        <Icon name="reloj" size={15} /> Historial de cambios de permisos
+      </summary>
+      {cargando && <p className="panel-vacio">Cargando…</p>}
+      {entradas !== null && entradas.length === 0 && !cargando && (
+        <p className="panel-vacio">Todavía no se ha concedido ni retirado ningún permiso.</p>
+      )}
+      {entradas !== null && entradas.length > 0 && (
+        <ul className="pe-historial-lista">
+          {entradas.map((h) => {
+            const antes = claves(h.antes)
+            const despues = claves(h.despues)
+            const nuevos = despues.filter((k) => !antes.includes(k))
+            const quitados = antes.filter((k) => !despues.includes(k))
+            return (
+              <li key={h.id}>
+                <span className="peh-fecha">{fecha(h)}</span>
+                <span className={`peh-accion peh-accion--${h.accion === 'asignar-permisos' ? 'dar' : 'quitar'}`}>
+                  {h.accion === 'asignar-permisos' ? 'Concedió' : 'Revocó'}
+                </span>
+                <span className="peh-detalle">
+                  {nuevos.length > 0 && <>+{nuevos.join(', ')} </>}
+                  {quitados.length > 0 && <>−{quitados.join(', ')}</>}
+                  {nuevos.length === 0 && quitados.length === 0 && 'ajuste de cursos'}
+                </span>
+              </li>
+            )
+          })}
+        </ul>
+      )}
+    </details>
   )
 }
 
