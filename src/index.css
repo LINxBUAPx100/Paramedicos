@@ -2,6 +2,35 @@
    La Guía de Lin — Sistema de diseño
    ============================================================ */
 
+/* ---- Tipografías AUTO-ALOJADAS -------------------------------------------
+   Antes venían de fonts.googleapis.com. Se traen al propio origen porque:
+     · quita dos conexiones TLS (googleapis + gstatic) de la ruta crítica;
+     · permite cerrar `font-src` y `style-src` a 'self' en la CSP, que hasta
+       ahora tenía que abrir dos dominios de Google;
+     · elimina el <link rel="stylesheet"> bloqueante que hubo que dejar en el
+       Bloque C al quitar el onload inline (la CSP lo prohibía);
+     · y deja de filtrar a Google qué usuario abre la app y cuándo.
+
+   Subconjunto `latin`: cubre el español completo (áéíóú ñ ü ¿ ¡). No se trae
+   latin-ext, que es para lenguas de Europa del Este.
+   Los pesos son EXACTAMENTE los que pedía el <link> anterior, así que no
+   cambia nada visualmente. `@import` va primero: el CSS lo exige.
+   Cascadia ya estaba auto-alojada a mano en src/fonts, con estos mismos
+   nombres de archivo (son los de @fontsource). */
+@import '@fontsource/heebo/latin-400.css';
+@import '@fontsource/heebo/latin-500.css';
+@import '@fontsource/heebo/latin-700.css';
+@import '@fontsource/heebo/latin-800.css';
+@import '@fontsource/heebo/latin-900.css';
+@import '@fontsource/oswald/latin-400.css';
+@import '@fontsource/oswald/latin-500.css';
+@import '@fontsource/oswald/latin-600.css';
+@import '@fontsource/oswald/latin-700.css';
+@import '@fontsource/fira-sans/latin-400.css';
+@import '@fontsource/fira-sans/latin-500.css';
+@import '@fontsource/fira-sans/latin-600.css';
+@import '@fontsource/fira-sans/latin-700.css';
+
 /* Cascadia Code (auto-alojada en src/fonts) — fuente de NÚMEROS */
 @font-face { font-family: 'Cascadia Code'; font-style: normal; font-weight: 400; font-display: swap; src: url('./fonts/cascadia-code-latin-400-normal.woff2') format('woff2'); }
 @font-face { font-family: 'Cascadia Code'; font-style: normal; font-weight: 700; font-display: swap; src: url('./fonts/cascadia-code-latin-700-normal.woff2') format('woff2'); }
@@ -192,6 +221,14 @@ a {
   text-decoration: none;
 }
 a:hover { text-decoration: underline; }
+
+/* Aclaración de que los exámenes son autoevaluación. Discreta a propósito: es
+   honestidad, no una advertencia que desanime a practicar. */
+.examen-nota-autoeval {
+  font-size: var(--t-sm);
+  color: var(--texto-3);
+  max-width: 60ch;
+}
 
 /* Enlace del contenido que NO pasó el filtro de hrefSeguro (lib/enlaceSeguro.js):
    se muestra el título, nunca un href ejecutable. Se marca en gris tachado para

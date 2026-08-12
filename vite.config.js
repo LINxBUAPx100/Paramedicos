@@ -30,8 +30,9 @@ const VARS_FIREBASE = [
 //  Por qué cada origen está aquí:
 //    style-src 'unsafe-inline' → React escribe estilos en el atributo `style`
 //                                (p. ej. style={{'--d':'120ms'}} en Home).
-//    fonts.googleapis/gstatic  → Heebo, Oswald y Fira Sans. DESAPARECEN al
-//                                auto-alojarlas (Bloque I).
+//    font-src 'self'           → las tipografías se auto-alojan (Bloque I), así
+//                                que ya no hay que abrir fonts.googleapis.com
+//                                ni fonts.gstatic.com.
 //    lh3.googleusercontent     → imágenes de Google Drive (lib/img.js).
 //    wsrv.nl                   → proxy de imágenes externas (lib/img.js).
 //    firebasestorage           → descargables subidos por cada academia.
@@ -50,8 +51,8 @@ function construirCSP({ conAppCheck }) {
   return [
     "default-src 'self'",
     `script-src 'self'${scriptExtra}`,
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-    "font-src 'self' https://fonts.gstatic.com",
+    "style-src 'self' 'unsafe-inline'",
+    "font-src 'self'",
     "img-src 'self' data: blob: https://lh3.googleusercontent.com https://*.googleusercontent.com https://wsrv.nl https://firebasestorage.googleapis.com",
     "connect-src 'self' https://*.googleapis.com wss://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com",
     `frame-src https://ptem-a304f.firebaseapp.com https://accounts.google.com${frameExtra}`,
@@ -112,7 +113,10 @@ export default defineConfig(({ command, mode }) => {
     base: './',
     build: {
       outDir: 'dist',
-      chunkSizeWarningLimit: 1500,
+      // Estaba en 1500, que no arreglaba nada: silenciaba el aviso que señalaba
+      // el problema. A 500 vuelve a avisar de los dos chunks gordos (el SDK de
+      // Firestore y los datos del temario), que es información, no ruido.
+      chunkSizeWarningLimit: 500,
     },
   }
 })

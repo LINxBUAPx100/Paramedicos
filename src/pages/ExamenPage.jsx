@@ -103,10 +103,17 @@ export default function ExamenPage() {
     <div className="examen-page">
       <header className="examen-hero">
         <span className="examen-hero-ico"><Icon name="examen" size={46} /></span>
-        <h1>Exámenes</h1>
+        <h1>Ponte a prueba</h1>
         <p>
-          Practica con el examen general de todo el temario o presenta el examen de una fase
-          específica. Tu mejor puntuación por fase queda registrada para tu maestro.
+          Practica con preguntas de todo el temario o de una fase concreta. Tu mejor resultado
+          por fase queda registrado para que tú y tu maestro veáis por dónde vais.
+        </p>
+        {/* Honestidad sobre lo que esto ES: las respuestas correctas viajan en la
+            app, así que cualquiera puede consultarlas. Presentarlo como examen
+            acreditativo sería mentir; como autoevaluación es exactamente útil. */}
+        <p className="examen-nota-autoeval">
+          Son ejercicios de <strong>autoevaluación</strong>, no un examen oficial: sirven para
+          detectar qué repasar, no para acreditar.
         </p>
       </header>
 

@@ -92,8 +92,12 @@ export default function ExamenFasePage() {
             tu resultado se guarda como intento (fecha, puntaje y % de acierto) para que tú y tu
             maestro puedan seguir tu avance.
           </p>
+          <p className="examen-nota-autoeval">
+            Es una <strong>autoevaluación</strong> para saber qué repasar, no una calificación
+            oficial.
+          </p>
           <button className="btn btn--primario btn--lg" onClick={() => setIniciado(true)}>
-            Comenzar examen ({preguntas.length} preguntas)
+            Comenzar ({preguntas.length} preguntas)
           </button>
           <Link to={`/fase/${fase.id}`} className="link-discreto">← Volver a la fase</Link>
         </div>
