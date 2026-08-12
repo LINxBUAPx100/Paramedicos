@@ -5,6 +5,7 @@ import ErrorBoundary from './components/ErrorBoundary.jsx'
 import RutaProtegida from './components/RutaProtegida.jsx'
 import Home from './pages/Home.jsx'
 import Landing from './pages/Landing.jsx'
+import Bienvenida from './pages/Bienvenida.jsx'
 import NotFound from './pages/NotFound.jsx'
 import { useAuth } from './context/AuthContext.jsx'
 
@@ -36,18 +37,25 @@ function Cargando() {
   )
 }
 
-// La raíz sirve a dos personas distintas:
-//   sin sesión → Landing (qué es PTEM, muestra de contenido, cómo entrar)
-//   con sesión → Home (el recorrido de estudio)
+// La raíz sirve a TRES personas distintas, y hasta ahora les daba la misma
+// pantalla a las tres:
+//   sin sesión           → Landing    (qué es PTEM, muestra, cómo entrar)
+//   con sesión sin academia → Bienvenida (código o directorio)
+//   con academia         → Home       (el recorrido de estudio)
 //
-// Mientras se resuelve la sesión NO se pinta ninguna de las dos: enseñar la
-// portada comercial a un alumno que ya tiene cuenta, y quitársela medio segundo
-// después, es peor que un instante de esqueleto. Los rastreadores ejecutan JS y
-// esperan a que la app se asiente, así que la landing sigue siendo indexable.
+// Mientras se resuelve la sesión NO se pinta ninguna: enseñar la portada
+// comercial a un alumno que ya tiene cuenta, y quitársela medio segundo
+// después, es peor que un instante de esqueleto. Los rastreadores ejecutan JS
+// y esperan a que la app se asiente, así que la landing sigue siendo indexable.
+//
+// El super-admin y el staff sin academia van a Home: su sitio es el panel, no
+// una pantalla que les pide un código de alumno.
 function Inicio() {
-  const { autenticado, cargando } = useAuth()
-  if (cargando) return <Cargando />
-  return autenticado ? <Home /> : <Landing />
+  const { autenticado, cargando, accesoCargando, academiaId, esStaff, enPrueba } = useAuth()
+  if (cargando || accesoCargando) return <Cargando />
+  if (!autenticado) return <Landing />
+  if (!academiaId && !esStaff && !enPrueba) return <Bienvenida />
+  return <Home />
 }
 
 export default function App() {

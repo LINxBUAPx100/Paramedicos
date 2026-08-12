@@ -259,43 +259,19 @@ function Perfil({ user, perfil, salir, codigoInvitacion = '', onConsumir }) {
     : ''
 
   // Un solo campo para tres tipos de código: ACADEMIA, GRUPO (te une al grupo
-  // y a su academia) o PRUEBA temporal. Se intentan en ese orden.
+  // y a su academia) o PRUEBA temporal. La cascada vive en lib/firebase/canjear.js
+  // porque la pantalla de bienvenida usa exactamente la misma.
   const unir = async (e) => {
     e.preventDefault()
     setMsg(''); setError(''); setOcupado(true)
     try {
-      const { unirseAcademia } = await import('../lib/firebase/usuarios.js')
-      const aca = await unirseAcademia(user.uid, codigo)
-      setMsg(`Te uniste a: ${aca.nombre}`)
+      const { canjearCualquierCodigo } = await import('../lib/firebase/canjear.js')
+      const r = await canjearCualquierCodigo(user.uid, codigo)
+      setMsg(r.mensaje)
       setCodigo('')
       onConsumir?.()
     } catch (err) {
-      if (!String(err?.message || '').includes('No existe una academia')) {
-        setError(traducirError(err))
-        setOcupado(false)
-        return
-      }
-      try {
-        const { unirseGrupo } = await import('../lib/firebase/grupos.js')
-        const g = await unirseGrupo(user.uid, codigo)
-        setMsg(`Te uniste al grupo "${g.nombre}" de ${g.academia?.nombre || g.academiaId}.`)
-        setCodigo('')
-        onConsumir?.()
-      } catch (err2) {
-        if (!String(err2?.message || '').includes('No existe un grupo')) {
-          setError(traducirError(err2))
-        } else {
-          try {
-            const { canjearCodigo } = await import('../lib/firebase/codigos.js')
-            const expira = await canjearCodigo(user.uid, codigo)
-            setMsg(`Código de prueba activado: tienes acceso hasta el ${new Date(expira.toMillis()).toLocaleDateString('es-MX', { dateStyle: 'long' })}.`)
-            setCodigo('')
-            onConsumir?.()
-          } catch (err3) {
-            setError(traducirError(err3))
-          }
-        }
-      }
+      setError(traducirError(err))
     } finally {
       setOcupado(false)
     }
