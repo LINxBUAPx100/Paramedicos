@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Layout from './components/Layout.jsx'
 import ErrorBoundary from './components/ErrorBoundary.jsx'
 import RutaProtegida from './components/RutaProtegida.jsx'
@@ -23,7 +23,11 @@ const AtlasPage = lazy(() => import('./pages/AtlasPage.jsx'))
 const TemarioPage = lazy(() => import('./pages/TemarioPage.jsx'))
 const Cuenta = lazy(() => import('./pages/Cuenta.jsx'))
 const PanelPage = lazy(() => import('./pages/PanelPage.jsx'))
+const AdminShell = lazy(() => import('./components/admin/AdminShell.jsx'))
 const AdminPage = lazy(() => import('./pages/AdminPage.jsx'))
+const AdminResumen = lazy(() => import('./pages/admin/Resumen.jsx'))
+const AdminFacturacion = lazy(() => import('./pages/admin/Facturacion.jsx'))
+const AdminIncidencias = lazy(() => import('./pages/admin/Incidencias.jsx'))
 const AcademiaAdminPage = lazy(() => import('./pages/AcademiaAdminPage.jsx'))
 const EditorPage = lazy(() => import('./pages/EditorPage.jsx'))
 const ReplicacionPage = lazy(() => import('./pages/ReplicacionPage.jsx'))
@@ -93,12 +97,22 @@ export default function App() {
             <Route path="/editor/plantilla/:plantillaId" element={<RutaProtegida><EditorPage /></RutaProtegida>} />
             <Route path="/editor/:academiaId" element={<RutaProtegida><EditorPage /></RutaProtegida>} />
 
-            {/* Dashboard del super-admin: todas las academias + roles */}
-            <Route path="/admin" element={<RutaProtegida><AdminPage /></RutaProtegida>} />
-            <Route path="/admin/academia/:academiaId" element={<RutaProtegida><AcademiaAdminPage /></RutaProtegida>} />
-            {/* Plantillas globales y replicación (Fase 7): solo superadmin
-                (la página valida el rol; las reglas son la barrera final). */}
-            <Route path="/admin/replicacion" element={<RutaProtegida><ReplicacionPage /></RutaProtegida>} />
+            {/* Consola del super-admin (Bloque N): un armazón con navegación
+                propia y una página por entidad. Antes era UNA página de 736
+                líneas con todo apilado, más /admin/replicacion suelta por su
+                cuenta. El armazón carga academias/usuarios/intentos una sola
+                vez y los reparte por contexto. */}
+            <Route path="/admin" element={<RutaProtegida><AdminShell /></RutaProtegida>}>
+              <Route index element={<AdminResumen />} />
+              <Route path="academias" element={<AdminPage seccion="academias" />} />
+              <Route path="usuarios" element={<AdminPage seccion="usuarios" />} />
+              <Route path="contenido" element={<ReplicacionPage />} />
+              <Route path="facturacion" element={<AdminFacturacion />} />
+              <Route path="incidencias" element={<AdminIncidencias />} />
+              <Route path="academia/:academiaId" element={<AcademiaAdminPage />} />
+              {/* La ruta vieja seguía enlazada desde fuera y en marcadores. */}
+              <Route path="replicacion" element={<Navigate to="/admin/contenido" replace />} />
+            </Route>
 
             <Route path="*" element={<NotFound />} />
           </Routes>

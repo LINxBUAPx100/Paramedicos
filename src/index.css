@@ -6559,3 +6559,83 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 .peh-accion--dar { color: var(--exito); }
 .peh-accion--quitar { color: var(--peligro); }
 .peh-detalle { color: var(--texto-2); }
+
+/* ============================================================
+   Consola de administración (Bloque N)
+   ------------------------------------------------------------
+   Armazón con navegación propia. Sustituye a la página única de 736 líneas
+   donde academias, usuarios, facturación, anuncio y problemas iban apilados
+   en una sola columna, sin resumen ni jerarquía.
+   ============================================================ */
+.consola { display: grid; grid-template-columns: 216px minmax(0, 1fr); gap: var(--e-32); align-items: start; }
+.consola-nav {
+  position: sticky; top: var(--e-16);
+  display: flex; flex-direction: column; gap: var(--e-2);
+  padding: var(--e-12);
+  border: 1px solid var(--borde); border-radius: var(--radio);
+  background: var(--bg-2);
+}
+.consola-marca {
+  display: flex; align-items: center; gap: var(--e-8);
+  padding: var(--e-8) var(--e-12) var(--e-12);
+  font-family: var(--fuente-sub); font-size: var(--t-xs);
+  text-transform: uppercase; letter-spacing: 0.08em; color: var(--texto-3);
+}
+.consola-link {
+  display: flex; align-items: center; gap: var(--e-12);
+  padding: var(--e-8) var(--e-12);
+  border-radius: var(--radio-sm);
+  color: var(--texto-2); font-size: var(--t-sm); font-weight: 600;
+  transition: background var(--dur-rapida) var(--ease-out), color var(--dur-rapida) var(--ease-out);
+}
+.consola-link:hover { background: var(--bg-3); color: var(--texto); text-decoration: none; }
+.consola-link.active { background: color-mix(in srgb, var(--primario) 12%, transparent); color: var(--primario); }
+.consola-cuerpo { min-width: 0; }
+.cs-cabecera { margin-bottom: var(--e-24); }
+.cs-cabecera h1 { font-size: var(--t-xl); }
+.cs-cabecera p { color: var(--texto-2); margin-top: var(--e-4); }
+
+/* Resumen */
+.cs-alertas { list-style: none; display: flex; flex-direction: column; gap: var(--e-8); margin-bottom: var(--e-32); }
+.cs-alerta {
+  display: flex; align-items: center; gap: var(--e-16); flex-wrap: wrap;
+  padding: var(--e-12) var(--e-16);
+  border: 1px solid var(--borde); border-left-width: 4px;
+  border-radius: var(--radio-sm); background: var(--bg-2);
+}
+.cs-alerta > div { flex: 1; min-width: 200px; }
+.cs-alerta p { color: var(--texto-2); font-size: var(--t-sm); margin-top: var(--e-2); }
+.cs-alerta--mal { border-left-color: var(--peligro); }
+.cs-alerta--mal .cs-alerta-ico { color: var(--peligro); }
+.cs-alerta--aviso { border-left-color: var(--aviso); }
+.cs-alerta--aviso .cs-alerta-ico { color: var(--aviso); }
+.cs-alerta--info { border-left-color: var(--primario); }
+.cs-alerta--info .cs-alerta-ico { color: var(--primario); }
+.cs-todo-ok {
+  display: flex; align-items: center; gap: var(--e-8);
+  padding: var(--e-16); margin-bottom: var(--e-32);
+  border-radius: var(--radio-sm);
+  background: color-mix(in srgb, var(--exito) 10%, var(--bg-2));
+  color: var(--exito); font-weight: 600;
+}
+.cs-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--e-16); margin-bottom: var(--e-32); }
+.cs-kpi {
+  display: flex; flex-direction: column; gap: var(--e-2);
+  padding: var(--e-16);
+  border: 1px solid var(--borde); border-radius: var(--radio); background: var(--bg-2);
+}
+.cs-kpi b { font-family: var(--fuente-cifra); font-size: var(--t-2xl); line-height: 1; color: var(--primario-oscuro); }
+.cs-kpi span { font-family: var(--fuente-sub); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: 0.06em; color: var(--texto-2); }
+.cs-kpi small { color: var(--texto-3); font-size: var(--t-xs); }
+.cs-dos { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--e-24); }
+.cs-tabla-mini { padding: var(--e-16); border: 1px solid var(--borde); border-radius: var(--radio); background: var(--bg-2); }
+.cs-tabla-mini h2 { font-size: var(--t-md); margin-bottom: var(--e-12); }
+.cs-tabla-mini ul { list-style: none; display: flex; flex-direction: column; gap: var(--e-6); }
+.cs-tabla-mini li { display: flex; justify-content: space-between; font-size: var(--t-sm); }
+.cs-tabla-mini b { font-family: var(--fuente-cifra); }
+
+@media (max-width: 880px) {
+  .consola { grid-template-columns: 1fr; gap: var(--e-16); }
+  .consola-nav { position: static; flex-direction: row; flex-wrap: wrap; }
+  .consola-marca { display: none; }
+}

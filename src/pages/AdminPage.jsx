@@ -1,110 +1,42 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext.jsx'
-import { ETIQUETA_ROL, CodigosPrueba } from '../components/PanelAcademia.jsx'
-import { FacturacionAcademias, AnuncioGlobal } from '../components/AdminPlataforma.jsx'
+import { useAdmin } from '../components/admin/AdminShell.jsx'
+import { ETIQUETA_ROL } from '../components/PanelAcademia.jsx'
 import { PLANES, TIPOS, ETIQUETA_PLAN, ETIQUETA_TIPO, DESCRIPCION_PLAN, validarPlanTipo } from '../lib/capacidades.js'
 import Icon from '../components/Icon.jsx'
 
 // ============================================================
-//  Dashboard general del SUPER-ADMIN (/admin)
+//  Consola del super-admin · ACADEMIAS y USUARIOS (Bloque N)
 // ------------------------------------------------------------
-//  - Todas las academias (con alta de nuevas) y entrada a su dashboard.
-//  - Gestión global de usuarios: crear, cambiar rol/estado, renombrar,
-//    enviar restablecimiento de contraseña y eliminar.
-//  - Códigos de prueba globales.
+//  Dos secciones del armazón (components/admin/AdminShell.jsx), no una página.
+//  Comparten estas utilidades —crear, cambiar rol/estado, renombrar, enviar
+//  restablecimiento, dar de baja— y por eso viven en el mismo módulo.
+//  Facturación, anuncio, incidencias y códigos de prueba se fueron a sus
+//  propias rutas: aquí ya no estorban.
 // ============================================================
 
 const ROLES = ['alumno', 'instructor', 'admin_escuela', 'superadmin']
 
-export default function AdminPage() {
-  const { cargando, esSuperadmin, user } = useAuth()
-
-  const [datos, setDatos] = useState(null) // { academias, usuarios, intentos }
-  const [cargandoDatos, setCargandoDatos] = useState(true)
+// Secciones de la consola. Ya NO cargan datos ni comprueban el rol: de eso se
+// encarga AdminShell, que lo hace una sola vez para todas.
+export default function AdminPage({ seccion = 'academias' }) {
+  const { academias, usuarios, porAcademia, refrescar, miUid } = useAdmin()
   const [error, setError] = useState('')
   const [aviso, setAviso] = useState('')
   const [filtro, setFiltro] = useState('')
-  const [ocupado, setOcupado] = useState(null) // uid en proceso
-  const [editando, setEditando] = useState(null) // { uid, nombre } en edición
-  const [recarga, setRecarga] = useState(0)
+  const [ocupado, setOcupado] = useState(null)
+  const [editando, setEditando] = useState(null)
 
-  useEffect(() => {
-    if (!esSuperadmin) return
-    let activo = true
-    setCargandoDatos(true)
-    setError('')
-    ;(async () => {
-      try {
-        const [{ listarAcademias, listarUsuarios }, { listarIntentos }] = await Promise.all([
-          import('../lib/firebase/usuarios.js'),
-          import('../lib/firebase/intentos.js'),
-        ])
-        const [academias, usuarios, intentos] = await Promise.all([
-          listarAcademias(),
-          listarUsuarios(),
-          listarIntentos(),
-        ])
-        if (!activo) return
-        setDatos({ academias, usuarios, intentos })
-      } catch {
-        if (activo) setError('No se pudo cargar el dashboard. Verifica que las reglas de Firestore estén publicadas.')
-      } finally {
-        if (activo) setCargandoDatos(false)
-      }
-    })()
-    return () => { activo = false }
-  }, [esSuperadmin, recarga])
-
-  // Conteos por academia: alumnos, staff, intentos.
-  const porAcademia = useMemo(() => {
-    const map = {}
-    for (const u of datos?.usuarios || []) {
-      if (!u.academiaId) continue
-      const c = (map[u.academiaId] = map[u.academiaId] || { alumnos: 0, staff: 0, intentos: 0 })
-      if (u.rol === 'alumno') c.alumnos += 1
-      else c.staff += 1
-    }
-    for (const it of datos?.intentos || []) {
-      if (!it.academiaId) continue
-      const c = (map[it.academiaId] = map[it.academiaId] || { alumnos: 0, staff: 0, intentos: 0 })
-      c.intentos += 1
-    }
-    return map
-  }, [datos])
-
+  // El listado de usuarios es de TODA la plataforma y crece sin techo, así que
+  // el buscador no es un adorno: es la única forma de encontrar a alguien.
   const usuariosFiltrados = useMemo(() => {
     const q = filtro.trim().toLowerCase()
-    const lista = datos?.usuarios || []
-    if (!q) return lista
-    return lista.filter((u) =>
-      (u.nombre || '').toLowerCase().includes(q)
-      || (u.email || '').toLowerCase().includes(q)
-      || (u.academiaId || '').toLowerCase().includes(q)
-      || (u.rol || '').toLowerCase().includes(q)
+    if (!q) return usuarios
+    return usuarios.filter((u) =>
+      [u.nombre, u.email, u.academiaId, ETIQUETA_ROL[u.rol] || u.rol]
+        .some((v) => String(v || '').toLowerCase().includes(q))
     )
-  }, [datos, filtro])
-
-  if (cargando) {
-    return (
-      <div className="ruta-cargando" role="status">
-        <span className="ruta-spinner" aria-hidden="true" /> <span>Cargando…</span>
-      </div>
-    )
-  }
-
-  if (!esSuperadmin) {
-    return (
-      <div className="acceso-restringido" role="alert">
-        <span className="acceso-ico"><Icon name="candado" size={30} /></span>
-        <h1>Solo super-administradores</h1>
-        <p>Este dashboard es exclusivo del administrador de la plataforma.</p>
-        <Link to="/" className="btn btn--pildora btn--carbon">Volver al inicio</Link>
-      </div>
-    )
-  }
-
-  const refrescar = () => setRecarga((n) => n + 1)
+  }, [usuarios, filtro])
 
   const correr = async (uid, fn, exito = '') => {
     setOcupado(uid)
@@ -157,39 +89,22 @@ export default function AdminPage() {
     }, 'Usuario dado de baja: sin acceso, fuera de su academia y sin progreso.')
   }
 
-  const academias = datos?.academias || []
-  const usuarios = datos?.usuarios || []
-  const totalAlumnos = usuarios.filter((u) => u.rol === 'alumno').length
-
   return (
-    <div className="panel-page admin-page">
-      <header className="panel-header">
-        <div>
-          <h1><Icon name="capas" size={24} /> Dashboard general</h1>
-          <p>Vista de super-administrador: todas las academias y todos los usuarios de la plataforma.</p>
-        </div>
-        <Link to="/admin/replicacion" className="btn btn--suave">
-          <Icon name="copiar" size={16} /> Plantillas y replicación
-        </Link>
+    <div className="cs-seccion">
+      <header className="cs-cabecera">
+        <h1>{seccion === 'usuarios' ? 'Usuarios de la plataforma' : 'Academias'}</h1>
+        <p>
+          {seccion === 'usuarios'
+            ? 'Todos los usuarios registrados, de cualquier academia.'
+            : 'Cada academia, su estado y su actividad. Entra en una para gestionarla.'}
+        </p>
       </header>
 
       {error && <p className="cuenta-error" role="alert">{error}</p>}
       {aviso && <p className="cuenta-ok" role="status">{aviso}</p>}
-      {cargandoDatos && (
-        <div className="ruta-cargando" role="status">
-          <span className="ruta-spinner" aria-hidden="true" /> <span>Cargando plataforma…</span>
-        </div>
-      )}
 
-      {!cargandoDatos && datos && (
+      {seccion === 'academias' && (
         <>
-          <div className="panel-stats">
-            <span><strong>{academias.length}</strong> academias</span>
-            <span><strong>{usuarios.length}</strong> usuarios</span>
-            <span><strong>{totalAlumnos}</strong> alumnos</span>
-            <span><strong>{datos.intentos.length}</strong> intentos de examen</span>
-          </div>
-
           <section className="admin-academias">
             <h2><Icon name="temario" size={20} /> Academias</h2>
             {academias.length === 0 ? (
@@ -221,11 +136,11 @@ export default function AdminPage() {
             )}
             <NuevaAcademia onCreada={refrescar} />
           </section>
+        </>
+      )}
 
-          <FacturacionAcademias academias={academias} onCambio={refrescar} />
-
-          <AnuncioGlobal />
-
+      {seccion === 'usuarios' && (
+        <>
           <section className="admin-usuarios">
             <h2><Icon name="usuario" size={20} /> Usuarios y roles</h2>
             <p className="panel-gestion-sub">
@@ -255,7 +170,7 @@ export default function AdminPage() {
                 </thead>
                 <tbody>
                   {usuariosFiltrados.map((u) => {
-                    const soyYo = u.id === user?.uid
+                    const soyYo = u.id === miUid
                     const dadoDeBaja = u.estado === 'eliminado'
                     const suspendido = u.estado && u.estado !== 'activo'
                     const enEdicion = editando?.uid === u.id
@@ -437,10 +352,6 @@ export default function AdminPage() {
             </div>
             <NuevoUsuario academias={academias} onCreado={refrescar} />
           </section>
-
-          <ProblemasReportados />
-
-          <CodigosPrueba academiaId={null} miUid={user?.uid} academias={academias} />
         </>
       )}
     </div>
@@ -448,7 +359,7 @@ export default function AdminPage() {
 }
 
 // ---------- Problemas reportados en los temas ----------
-function ProblemasReportados() {
+export function ProblemasReportados() {
   const [reportes, setReportes] = useState(null)
   const [soloAbiertos, setSoloAbiertos] = useState(true)
   const [ocupado, setOcupado] = useState(null) // id en proceso
@@ -550,7 +461,7 @@ function ProblemasReportados() {
 }
 
 // ---------- Alta de academia ----------
-function NuevaAcademia({ onCreada }) {
+export function NuevaAcademia({ onCreada }) {
   const [abierto, setAbierto] = useState(false)
   const [codigo, setCodigo] = useState('')
   const [nombre, setNombre] = useState('')
@@ -651,7 +562,7 @@ function NuevaAcademia({ onCreada }) {
 }
 
 // ---------- Alta de usuario (app secundaria: no toca tu sesión) ----------
-function NuevoUsuario({ academias, onCreado }) {
+export function NuevoUsuario({ academias, onCreado }) {
   const [abierto, setAbierto] = useState(false)
   const [nombre, setNombre] = useState('')
   const [email, setEmail] = useState('')
