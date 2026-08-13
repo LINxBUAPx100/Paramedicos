@@ -1,7 +1,7 @@
 # HANDOFF — continuación del trabajo de auditoría y rework
 
 > **Escrito para retomar el trabajo en una sesión nueva sin contexto previo.**
-> Última actualización: 2026-08-12 · Rama: `claude/auditoria-endurecimiento`
+> Última actualización: 2026-08-13 · Rama: **`main`**
 > · CI: verde (184 unitarios + 54 de reglas)
 
 ---
@@ -9,11 +9,17 @@
 ## 1. Cómo empezar
 
 ```bash
-git checkout claude/auditoria-endurecimiento
+git checkout main
 npm ci
 npm test        # deben salir 184 pass, 0 fail
 npm run build
 ```
+
+**Se trabaja en `main` y solo `main` despliega** (decisión del 2026-08-13). El
+trabajo estuvo 21 commits en `claude/auditoria-endurecimiento`, que NO
+desplegaba: la web enseñó la versión vieja todo ese tiempo sin que nada fallara
+en rojo. Si algo se ve antiguo en producción, lo primero que hay que mirar es
+si el commit está en `main`.
 
 Lee este archivo entero antes de tocar nada. Después, el plan detallado de lo
 que queda está en la sección 6.
@@ -79,7 +85,7 @@ Resumen de qué cambió y qué NO hay que volver a tocar.
 
 - **A — CI.** `.github/workflows/deploy.yml`: job `test` (unitarios + reglas en
   emulador con Java 21) como puerta previa a `build`/`deploy`. Los tests corren
-  en cualquier rama; solo `main` y la rama vieja despliegan.
+  en cualquier rama; **solo `main` despliega**.
 - **B — Reglas.** `hasOnly` en la auto-edición de `usuarios/{uid}` (cerró que un
   alumno se auto-desbloqueara módulos y un profesor se auto-aprobara códigos) y
   validación de forma en `progreso/{uid}`.

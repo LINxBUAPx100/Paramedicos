@@ -64,11 +64,13 @@ jobs:
 
   build:
     needs: test
-    # Solo las ramas de publicación construyen y despliegan.
+    # Solo `main` construye y despliega. Antes también lo hacía una rama de
+    # trabajo vieja (`claude/paramedic-study-guide-4wf9cd`), y eso significaba
+    # que un push a esa rama republicaba el sitio ANTIGUO encima del bueno.
+    # Publica una sola rama: la que se mira para saber qué hay en producción.
     if: >
       github.event_name == 'workflow_dispatch'
       || github.ref == 'refs/heads/main'
-      || github.ref == 'refs/heads/claude/paramedic-study-guide-4wf9cd'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
