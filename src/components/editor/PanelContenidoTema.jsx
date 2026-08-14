@@ -6,7 +6,7 @@ import {
   TIPOS_BLOQUE, VARIANTES_CALLOUT, bloqueNuevo, preguntaNueva, duplicarPregunta,
   duplicarSeccion, correctasDe, normalizarContenido, validarContenidoTema,
 } from '../../lib/temaContenidoModelo.js'
-import { EXTENSIONES_PERMITIDAS } from '../../lib/archivosModelo.js'
+import { EXTENSIONES_PERMITIDAS, STORAGE_ACTIVO } from '../../lib/archivosModelo.js'
 
 // ============================================================
 //  Editor del CONTENIDO interno de un tema (Fase 4)
@@ -531,7 +531,9 @@ export default function PanelContenidoTema({
             filas={borrador.recursos.imagenes}
             campos={[{ campo: 'src', etiqueta: 'https://… (o sube una)', ancho: '40%' }, { campo: 'caption', etiqueta: 'Pie' }, { campo: 'busqueda', etiqueta: 'Término de búsqueda' }]}
             onCambio={(v) => editar((b) => { b.recursos.imagenes = v })} />
-          {!modoPlantilla && (
+          {/* Las imágenes ya se pegan por URL en la fila de arriba, así que sin
+              Storage no se pierde nada: solo desaparece el atajo. */}
+          {!modoPlantilla && STORAGE_ACTIVO && (
             <p className="ct-subir">
               <input ref={inputImagen} type="file" accept={ACCEPT_IMAGENES} className="sr-only"
                 id={`${uid}-subir-img`}
@@ -549,7 +551,17 @@ export default function PanelContenidoTema({
               <input type="text" aria-label={`Título del archivo ${i + 1}`} placeholder="Título"
                 value={a.titulo || ''} disabled={deshabilitado}
                 onChange={(e) => editar((b) => { b.recursos.archivos[i].titulo = e.target.value })} />
-              <span className="ct-archivo-nombre" title={a.path}>{(a.path || '').split('/').pop() || 'archivo'}</span>
+              {/* Un archivo SUBIDO se identifica por su ruta en el almacén y su
+                  url no se toca a mano; uno por ENLACE es justo la url. Antes
+                  solo se pintaba la ruta, así que un descargable por enlace no
+                  se podía ni crear ni corregir aunque el dato lo admitiera. */}
+              {a.path ? (
+                <span className="ct-archivo-nombre" title={a.path}>{a.path.split('/').pop() || 'archivo'}</span>
+              ) : (
+                <input type="url" aria-label={`Enlace del archivo ${i + 1}`} placeholder="https://… (Drive, Dropbox…)"
+                  value={a.url || ''} disabled={deshabilitado}
+                  onChange={(e) => editar((b) => { b.recursos.archivos[i].url = e.target.value })} />
+              )}
               <button type="button" className="editor-expandir ct-quitar" disabled={deshabilitado}
                 aria-label={`Quitar el archivo ${i + 1}`}
                 onClick={() => editar((b) => { b.recursos.archivos.splice(i, 1) })}>
@@ -558,19 +570,33 @@ export default function PanelContenidoTema({
             </div>
           ))}
           {modoPlantilla ? (
-            <p className="editor-nota">Las plantillas globales no llevan archivos: se suben en cada academia.</p>
+            <p className="editor-nota">Las plantillas globales no llevan archivos: se añaden en cada academia.</p>
           ) : (
             <p className="ct-subir">
-              <input ref={inputArchivo} type="file" accept={ACCEPT_ARCHIVOS} className="sr-only"
-                id={`${uid}-subir-arch`}
-                onChange={(e) => {
-                  const f = e.target.files?.[0]; e.target.value = ''
-                  subir(f, 'archivos', ({ url, path, tipo, tamano }) =>
-                    editar((b) => { b.recursos.archivos.push({ titulo: f.name.replace(/\.[a-z0-9]+$/i, ''), url, path, tipo, tamano }) }))
-                }} />
-              <BotonChico icono="subir" etiqueta={subiendo?.destino === 'archivos' ? `Subiendo… ${subiendo.pct}%` : 'Subir archivo (pdf, audio, video)'}
-                disabled={deshabilitado || !!subiendo} onClick={() => inputArchivo.current?.click()} />
-              <span className="editor-nota">Se aceptan: {ACCEPT_ARCHIVOS} · queda guardado en el almacén privado de esta academia.</span>
+              <BotonChico icono="mas" etiqueta="Añadir descargable por enlace" disabled={deshabilitado}
+                onClick={() => editar((b) => { b.recursos.archivos.push({ titulo: '', url: '' }) })} />
+              {/* La subida directa exige Firebase Storage (plan Blaze), que este
+                  proyecto no tiene: el bucket devuelve 404 y el botón fallaba al
+                  pulsarlo. Prometer algo imposible es peor que no ofrecerlo. */}
+              {STORAGE_ACTIVO ? (
+                <>
+                  <input ref={inputArchivo} type="file" accept={ACCEPT_ARCHIVOS} className="sr-only"
+                    id={`${uid}-subir-arch`}
+                    onChange={(e) => {
+                      const f = e.target.files?.[0]; e.target.value = ''
+                      subir(f, 'archivos', ({ url, path, tipo, tamano }) =>
+                        editar((b) => { b.recursos.archivos.push({ titulo: f.name.replace(/\.[a-z0-9]+$/i, ''), url, path, tipo, tamano }) }))
+                    }} />
+                  <BotonChico icono="subir" etiqueta={subiendo?.destino === 'archivos' ? `Subiendo… ${subiendo.pct}%` : 'Subir archivo (pdf, audio, video)'}
+                    disabled={deshabilitado || !!subiendo} onClick={() => inputArchivo.current?.click()} />
+                  <span className="editor-nota">Se aceptan: {ACCEPT_ARCHIVOS} · queda guardado en el almacén privado de esta academia.</span>
+                </>
+              ) : (
+                <span className="editor-nota">
+                  Sube el archivo a Drive, compártelo con «cualquiera con el enlace» y pega aquí ese
+                  enlace. Es como se sirve todo el material de la plataforma.
+                </span>
+              )}
             </p>
           )}
         </>

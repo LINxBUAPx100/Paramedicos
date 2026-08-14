@@ -72,7 +72,7 @@ npx firebase-tools@15 deploy --only firestore:rules --project ptem-a304f
 |---|---|
 | Reglas de Firestore | Desplegadas (incluidos los arreglos del 2026-08-12) |
 | Índices | Desplegados, incluido `temas: cursoId + academiaId + estado` |
-| **Firebase Storage** | ⚠️ **NUNCA configurado.** `storage.rules` no está desplegado y la subida de archivos por academia no ha funcionado nunca. Activarlo exige plan Blaze. Decisión pendiente del usuario |
+| **Firebase Storage** | **No se usa, y es una decisión tomada** (2026-08-14): el usuario no pasa a plan Blaze de momento. Comprobado que el bucket no existe (`firebasestorage.googleapis.com/v0/b/…` → 404, con los dos nombres posibles). El material se sirve **por enlace** (Drive), que es como funciona todo el contenido actual. La subida está detrás de `VITE_STORAGE_ACTIVO=1`: código y reglas escritos y probados en CI, apagados en la interfaz |
 | App Check | Código listo, inactivo hasta que exista `VITE_APPCHECK_SITE_KEY` |
 | Secrets en GitHub | Corregidos el 2026-08-14. **Estuvieron mal desde el 2026-08-11**: los seis tenían como valor el NOMBRE de su variable, así que la web publicada no autenticaba a nadie (`auth/api-key-not-valid`). El build ahora valida su forma, no solo que existan |
 | API key | Restringida por referente HTTP en Google Cloud |
@@ -318,6 +318,8 @@ código todavía se puede rotar. Ahí encaja generar códigos con entropía.
   pantalla por pantalla.
 - Los datos del temario son un solo chunk de ~190 kB gz. Dividirlo por fase
   exige volver asíncrona toda la API de contenido (se descartó por riesgo).
-- `borrarArchivoAcademia` sigue sin cablear porque **Storage no existe**.
+- `borrarArchivoAcademia` sigue sin cablear porque **Storage no existe**, y ya no
+  es deuda: sin subida no hay nada que borrar. Se cablea el día que se ponga
+  `VITE_STORAGE_ACTIVO=1`, no antes.
 - Avisos del runner: `actions/setup-java@v4` deprecado; acciones de Node 20
   forzadas a Node 24. No rompen nada hoy.

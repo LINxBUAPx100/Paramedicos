@@ -10,8 +10,14 @@
 // ============================================================
 import { app } from './init.js'
 import {
-  validarArchivoParaSubir, rutaArchivoAcademia, rutaEsDeAcademia,
+  validarArchivoParaSubir, rutaArchivoAcademia, rutaEsDeAcademia, STORAGE_ACTIVO,
 } from '../archivosModelo.js'
+
+// La bandera vive en archivosModelo.js (módulo PURO) y no aquí: la usa el
+// editor para decidir qué ofrecer, y si la importara de este fichero se
+// arrastraría Firebase al bundle del editor. Aquí solo se reexporta para quien
+// ya esté hablando con el almacén.
+export { STORAGE_ACTIVO }
 
 let _storage = null
 async function storageLib() {
@@ -22,6 +28,14 @@ async function storageLib() {
 // Sube un archivo del editor al prefijo de la academia y devuelve
 // { path, url, tipo, tamano }. `onProgreso` recibe 0-100.
 export async function subirArchivoAcademia({ academiaId, archivo, carpeta = 'archivos', onProgreso }) {
+  // Barrera explícita: si alguien llega aquí con Storage apagado, el error dice
+  // qué pasa y qué hacer, en vez del 404 crudo del bucket inexistente.
+  if (!STORAGE_ACTIVO) {
+    throw new Error(
+      'La subida de archivos no está disponible en esta instalación. ' +
+      'Pega el enlace del archivo (Drive, Dropbox…) en su lugar.'
+    )
+  }
   if (!academiaId) throw new Error('Falta la academia para subir el archivo.')
   const error = validarArchivoParaSubir({
     nombre: archivo?.name, tipo: archivo?.type, tamano: archivo?.size,

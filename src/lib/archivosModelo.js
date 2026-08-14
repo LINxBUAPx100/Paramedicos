@@ -17,6 +17,24 @@
 //     validan contra el prefijo de la academia.
 // ============================================================
 
+// ¿Existe Storage en esta instalación? NO se puede deducir de `storageBucket`:
+// la config de Firebase trae ese nombre siempre, exista el bucket o no.
+//
+// Firebase Storage exige plan Blaze y aquí NUNCA se activó: el bucket devuelve
+// 404, así que toda subida falla. Mientras esto sea falso, el editor ofrece
+// pegar un ENLACE —que es como se sirve todo el material de la plataforma— en
+// lugar de un botón de subida que se rompe al pulsarlo.
+//
+// Para encenderlo el día que haya Blaze: VITE_STORAGE_ACTIVO=1 y publicar
+// storage.rules. El código de subida está entero y sus reglas ya se prueban en
+// CI contra el emulador; no hay nada más que escribir.
+//
+// Vive en este módulo puro, y no en firebase/almacen.js, para que el editor
+// pueda leerla sin arrastrar Firebase a su bundle. Con acceso OPCIONAL porque
+// este módulo se prueba en Node, donde `import.meta.env` no existe: sin el `?.`
+// la suite entera se cae al importarlo.
+export const STORAGE_ACTIVO = import.meta.env?.VITE_STORAGE_ACTIVO === '1'
+
 // Extensión → { mime aceptados, categoría }. SOLO lo listado se admite:
 // ejecutables (.exe .bat .js .apk…), scripts y demás quedan fuera por diseño.
 export const TIPOS_ARCHIVO = {
