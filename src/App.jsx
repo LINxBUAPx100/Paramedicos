@@ -35,6 +35,7 @@ const AdminPage = lazy(() => import('./pages/AdminPage.jsx'))
 const AdminResumen = lazy(() => import('./pages/admin/Resumen.jsx'))
 const AdminFacturacion = lazy(() => import('./pages/admin/Facturacion.jsx'))
 const AdminIncidencias = lazy(() => import('./pages/admin/Incidencias.jsx'))
+const AdminLogs = lazy(() => import('./pages/admin/Logs.jsx'))
 const AcademiaAdminPage = lazy(() => import('./pages/AcademiaAdminPage.jsx'))
 const EditorPage = lazy(() => import('./pages/EditorPage.jsx'))
 const ReplicacionPage = lazy(() => import('./pages/ReplicacionPage.jsx'))
@@ -128,6 +129,7 @@ export default function App() {
               <Route path="contenido" element={<ReplicacionPage />} />
               <Route path="facturacion" element={<AdminFacturacion />} />
               <Route path="incidencias" element={<AdminIncidencias />} />
+              <Route path="logs" element={<AdminLogs />} />
               <Route path="academia/:academiaId" element={<AcademiaAdminPage />} />
               {/* La ruta vieja seguía enlazada desde fuera y en marcadores. */}
               <Route path="replicacion" element={<Navigate to="/admin/contenido" replace />} />

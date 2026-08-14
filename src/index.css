@@ -6921,3 +6921,33 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 .mis-calificaciones .mc-promedio b.ok { color: var(--verde); }
 .mis-calificaciones .mc-promedio b.mal { color: var(--rojo); }
 .mc-nota { color: var(--texto-3); }
+
+/* ===== Registro de actividad (super-admin) ===== */
+.logs-filtros { display: flex; flex-wrap: wrap; gap: var(--e-12); margin-bottom: var(--e-16); align-items: flex-end; }
+.logs-filtros input[type="search"] {
+  padding: var(--e-8) var(--e-12);
+  border: 1.5px solid var(--borde-fuerte);
+  border-radius: var(--radio-sm);
+  background: var(--bg-2);
+  color: var(--texto);
+  font-family: var(--fuente-cuerpo);
+  font-size: var(--t-base);
+  min-width: 220px;
+}
+.logs-fecha { white-space: nowrap; color: var(--texto-3); font-size: var(--t-sm); }
+.logs-doc small { color: var(--texto-3); }
+/* El tono acompaña al texto, nunca lo sustituye: la acción siempre se lee. */
+.logs-accion { font-weight: 600; }
+.logs-accion--peligro { color: var(--rojo); }
+.logs-accion--baja { color: var(--ambar); }
+.logs-accion--alta { color: var(--verde); }
+.logs-accion--aviso { color: var(--primario); }
+.logs-accion--neutro { color: var(--texto-2); }
+/* Franja izquierda por familia, para poder barrer la tabla de un vistazo. */
+.logs-fila--borrado { box-shadow: inset 3px 0 0 var(--rojo); }
+.logs-fila--baja { box-shadow: inset 3px 0 0 var(--ambar); }
+.logs-fila--alta { box-shadow: inset 3px 0 0 var(--verde); }
+.logs-cambios { list-style: none; margin-top: var(--e-6); font-size: var(--t-xs); color: var(--texto-2); }
+.logs-cambios li { padding: 2px 0; }
+.logs-antes { color: var(--texto-3); text-decoration: line-through; }
+.logs-despues { color: var(--texto); font-weight: 600; }

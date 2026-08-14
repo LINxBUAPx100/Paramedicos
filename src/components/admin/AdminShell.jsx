@@ -26,6 +26,7 @@ const SECCIONES = [
   { to: '/admin/contenido', icono: 'capas', etiqueta: 'Contenido' },
   { to: '/admin/facturacion', icono: 'pildora', etiqueta: 'Facturación' },
   { to: '/admin/incidencias', icono: 'alerta', etiqueta: 'Incidencias' },
+  { to: '/admin/logs', icono: 'reloj', etiqueta: 'Actividad' },
 ]
 
 export function useAdmin() {

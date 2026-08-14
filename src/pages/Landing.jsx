@@ -291,8 +291,16 @@ function CierreLanding() {
           <span className="lp-via-ico"><Icon name="temario" size={20} /></span>
           <h3>Soy una academia</h3>
           <p>Quiero PTEM para mis alumnos y llevar su avance desde un solo panel.</p>
-          <a href="mailto:contacto@riders.media?subject=PTEM%20para%20mi%20academia" className="btn btn--pildora btn--fantasma">
-            Hablar con nosotros
+          {/* WhatsApp de Riders.Media con el mensaje ya escrito: quien llega
+              aquí quiere preguntar, no redactar. `wa.me` necesita el número sin
+              espacios ni signos, con lada de país. */}
+          <a
+            href="https://wa.me/522202256586?text=Hola%2C%20quiero%20PTEM%20para%20mi%20academia."
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn--pildora btn--fantasma"
+          >
+            <Icon name="chispa" size={16} /> Hablar por WhatsApp
           </a>
         </article>
       </div>
