@@ -5511,6 +5511,39 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 .editor-guardado--error { color: var(--peligro); font-weight: 600; }
 .ruta-spinner--mini { width: 14px; height: 14px; border-width: 2px; }
 
+/* ============================================================
+   Guía del editor: el siguiente paso
+   ------------------------------------------------------------
+   Se lee como una indicación, no como un error: lleva el color primario y no
+   el ámbar de los avisos. El temario no está mal, está a medias.
+   ============================================================ */
+.editor-guia {
+  display: flex;
+  align-items: center;
+  gap: var(--e-16);
+  flex-wrap: wrap;
+  padding: var(--e-16) var(--e-20);
+  margin-bottom: var(--e-20);
+  border: 1px solid color-mix(in srgb, var(--primario) 35%, var(--borde));
+  border-left: 4px solid var(--primario);
+  border-radius: var(--radio);
+  background: color-mix(in srgb, var(--primario) 7%, var(--bg-2));
+}
+.editor-guia-ico {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--primario) 14%, transparent);
+  color: var(--primario);
+}
+.editor-guia-texto { flex: 1; min-width: 220px; }
+.editor-guia-texto strong { display: block; font-family: var(--fuente-sub); font-size: var(--t-base); }
+.editor-guia-texto p { color: var(--texto-2); font-size: var(--t-sm); margin-top: var(--e-4); }
+.editor-guia .btn { flex-shrink: 0; }
+
 /* Distribución: lateral (cursos + árbol) / panel */
 .editor-cuerpo {
   display: grid;

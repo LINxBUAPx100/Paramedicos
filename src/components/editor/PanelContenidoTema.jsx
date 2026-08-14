@@ -360,6 +360,9 @@ export default function PanelContenidoTema({
   const [error, setError] = useState('')
   const [previa, setPrevia] = useState(false)
   const [subiendo, setSubiendo] = useState(null) // { destino, pct }
+  // Apartados abiertos. Arranca con el contenido del tema, que es lo que casi
+  // siempre se viene a editar y lo único que el alumno ve de verdad.
+  const [abiertos, setAbiertos] = useState(() => new Set(['secciones']))
   const inputArchivo = useRef(null)
   const inputImagen = useRef(null)
 
@@ -679,7 +682,26 @@ export default function PanelContenidoTema({
       {grupos
         .filter((g) => !PERMISO_POR_GRUPO[g.clave] || puede[PERMISO_POR_GRUPO[g.clave]])
         .map((g) => (
-          <details className="ct-grupo" key={g.clave}>
+          // Acordeón CONTROLADO, con «Contenido del tema» abierto de entrada.
+          // Estaban los siete cerrados, así que abrir un tema enseñaba siete
+          // renglones y ni una pista de cuál es el que ve el alumno. Controlado
+          // y no `open` fijo: si fuera fijo, React reabriría el apartado cada
+          // vez que se repinta y no habría forma de cerrarlo.
+          <details
+            className="ct-grupo"
+            key={g.clave}
+            open={abiertos.has(g.clave)}
+            onToggle={(e) => {
+              const abierto = e.currentTarget.open
+              setAbiertos((prev) => {
+                if (prev.has(g.clave) === abierto) return prev
+                const s = new Set(prev)
+                if (abierto) s.add(g.clave)
+                else s.delete(g.clave)
+                return s
+              })
+            }}
+          >
             <summary>{g.titulo}</summary>
             <div className="ct-grupo-cuerpo">{g.cuerpo}</div>
           </details>

@@ -15,6 +15,7 @@ import {
   duplicarNodo, archivarNodo, restaurarNodo, despublicarNodo, publicarNodo,
 } from '../lib/editorModelo.js'
 import { capacidadesEditor } from '../lib/permisosEditor.js'
+import { siguientePaso } from '../lib/editorGuia.js'
 
 // La capa de datos se importa DIFERIDA (mismo patrón del resto de la app:
 // Firebase nunca entra al bundle inicial).
@@ -163,6 +164,19 @@ export default function EditorPage() {
 
   // Doc del tema seleccionado (carga diferida, cacheada por curso).
   const temaSel = seleccion?.temaId ? temasCache[seleccion.temaId] : null
+
+  // Siguiente paso del temario. `temaSel` puede ser undefined mientras carga y
+  // la guía lo trata como «aún no sé qué tiene dentro» (no dice que esté
+  // vacío): se normaliza a null para no depender de esa diferencia aquí.
+  const paso = useMemo(
+    () => siguientePaso({
+      estructura: curso?.estructura || [],
+      seleccion,
+      tema: temaSel || null,
+      puedeCrear: capsEditor.crearTemas,
+    }),
+    [curso, seleccion, temaSel, capsEditor.crearTemas]
+  )
   useEffect(() => {
     let vivo = true
     if (!seleccion?.temaId || temasCache[seleccion.temaId] || !curso) return
@@ -571,6 +585,29 @@ export default function EditorPage() {
           <span className="ruta-spinner" aria-hidden="true" /> <span>Cargando cursos…</span>
         </div>
       ) : (
+        <>
+        {/* El paso a paso, arriba y antes de las columnas: el editor pide cuatro
+            niveles (curso → fase → módulo → tema) y en ningún sitio lo decía.
+            Se calla solo en cuanto hay contenido — ver lib/editorGuia.js. */}
+        {curso && paso && (
+          <aside className="editor-guia" aria-label="Siguiente paso">
+            <span className="editor-guia-ico"><Icon name="chispa" size={20} /></span>
+            <div className="editor-guia-texto">
+              <strong>{paso.titulo}</strong>
+              <p>{paso.texto}</p>
+            </div>
+            {paso.accion && (
+              <button
+                type="button"
+                className="btn btn--primario"
+                disabled={ocupado}
+                onClick={() => setCrear({ ...paso.accion, titulo: '' })}
+              >
+                {paso.etiquetaAccion}
+              </button>
+            )}
+          </aside>
+        )}
         <div className="editor-cuerpo">
           {/* -------- columna izquierda: cursos + árbol -------- */}
           <div className="editor-lateral">
@@ -722,6 +759,7 @@ export default function EditorPage() {
             )}
           </div>
         </div>
+        </>
       )}
 
       {/* -------- diálogos -------- */}
