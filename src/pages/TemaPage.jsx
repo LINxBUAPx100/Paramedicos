@@ -9,6 +9,7 @@ import { useAuth } from '../context/AuthContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
 import { hrefSeguro } from '../lib/enlaceSeguro.js'
 import Contenido from '../components/Contenido.jsx'
+import { ResumenTema, ObjetivosTema, ConceptosTema } from '../components/BloquesTema.jsx'
 import Icon from '../components/Icon.jsx'
 import Recursos from '../components/Recursos.jsx'
 import Actividades from '../components/Actividades.jsx'
@@ -93,18 +94,8 @@ export default function TemaPage() {
         </div>
       </header>
 
-      <p className="tema-resumen">{tema.resumen}</p>
-
-      {tema.objetivos && (
-        <div className="objetivos">
-          <h3><Icon name="diana" size={17} /> Al terminar este tema podrás</h3>
-          <ul>
-            {tema.objetivos.map((o, i) => (
-              <li key={i}>{o}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <ResumenTema resumen={tema.resumen} />
+      <ObjetivosTema objetivos={tema.objetivos} />
 
       {recursos.length > 0 && (
         <div className="descargas">
@@ -154,19 +145,7 @@ export default function TemaPage() {
 
       <Recursos recursos={tema.recursos} />
 
-      {tema.conceptosClave && (
-        <section className="conceptos">
-          <h2 className="seccion-titulo">Conceptos clave</h2>
-          <div className="conceptos-grid">
-            {tema.conceptosClave.map((c, i) => (
-              <div className="concepto-card" key={i}>
-                <strong>{c.termino}</strong>
-                <p>{c.definicion}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+      <ConceptosTema conceptos={tema.conceptosClave} />
 
       <Actividades
         pares={tema.conceptosClave || []}

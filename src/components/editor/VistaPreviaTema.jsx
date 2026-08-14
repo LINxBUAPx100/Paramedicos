@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import Icon from '../Icon.jsx'
 import Contenido from '../Contenido.jsx'
+import { ResumenTema, ObjetivosTema, ConceptosTema } from '../BloquesTema.jsx'
 import Recursos from '../Recursos.jsx'
 import Actividades from '../Actividades.jsx'
 import Quiz from '../Quiz.jsx'
@@ -42,18 +43,24 @@ export default function VistaPreviaTema({ abierto, tema, onCerrar }) {
             </button>
           </div>
         </header>
+        {/* Mismo ORDEN y mismo marcado que TemaPage: resumen, objetivos,
+            contenido, recursos, conceptos y actividades. Estos bloques estaban
+            reescritos aquí y habían divergido —otro encabezado en los
+            objetivos, otra clase en el resumen, y los conceptos clave sin
+            pintar—, así que un tema creado desde la web no se veía como los
+            demás por más que el contenido fuera el mismo. */}
+        {/* Sin `--fase-color` propio: cae al de `:root` (el primario). El
+            editor no siempre sabe de qué fase cuelga el tema que se previsualiza,
+            y un color inventado engañaría más que el azul por defecto. */}
         <div className="previa-cuerpo">
-          {tema.resumen && <p className="previa-sub">{tema.resumen}</p>}
-          {(tema.objetivos || []).length > 0 && (
-            <div className="c-lista-wrap">
-              <h4 className="c-lista-titulo">Objetivos de aprendizaje</h4>
-              <ul className="c-lista">
-                {tema.objetivos.map((o, i) => <li key={i}>{o}</li>)}
-              </ul>
-            </div>
-          )}
+          <ResumenTema resumen={tema.resumen} />
+          <ObjetivosTema objetivos={tema.objetivos} />
           <Contenido secciones={tema.secciones || []} />
           <Recursos recursos={tema.recursos} />
+          <ConceptosTema conceptos={tema.conceptosClave} />
+          {/* El quiz SÍ es distinto a propósito: en la página real vive en su
+              propia ruta, y aquí se muestra en línea para poder revisarlo sin
+              salir del editor. Sin `onComplete`, así que no registra nada. */}
           {(tema.quiz || []).length > 0 && (
             <Quiz
               preguntas={tema.quiz}
