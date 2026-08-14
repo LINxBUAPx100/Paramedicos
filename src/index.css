@@ -4420,8 +4420,15 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
 
 /* ---- Sidebar como drawer en TODOS los anchos ---- */
 /* `flex: 1` para que la franja del medio se coma el espacio sobrante y el
-   footer quede pegado abajo (ver el comentario de `.app`). */
-.cuerpo { display: block; flex: 1 0 auto; }
+   footer quede pegado abajo (ver el comentario de `.app`).
+   Y columna flexible para PASAR ESE ALTO al `<main>`: si se queda en `block`,
+   el main mide lo que mida su contenido y el sobrante es del contenedor, que
+   lo pinta con el fondo claro del body. Eso dejaba una franja clara entre el
+   cierre oscuro de la landing y el footer.
+   `align-items: stretch` explícito porque la regla de más arriba trae
+   `flex-start` de cuando esto era una fila con la barra lateral: en columna,
+   eso encoge el main al ancho de su contenido. */
+.cuerpo { display: flex; flex-direction: column; align-items: stretch; flex: 1 0 auto; }
 .sidebar {
   position: fixed;
   top: 64px;
@@ -4445,8 +4452,18 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
    `--full` conservan el padding: sin él, las tablas se pegarían al borde. */
 .contenido--ancho { max-width: none; }
 
+/* Columna flexible en las páginas a sangre (portada y landing) para que puedan
+   REPARTIR el alto sobrante. Hace falta desde que el footer se pega a la base:
+   el hueco que lo empuja hay que pintarlo de algún color, y solo la página sabe
+   cuál le toca. */
+.contenido--full { display: flex; flex-direction: column; }
+
 /* ---- Footer PTEM ---- */
-.app-footer { background: var(--carbon); color: var(--carbon-texto-2); margin-top: var(--e-40); }
+/* Sin `margin-top`: desde que el footer se pega a la base, ese margen no separa
+   nada, abre un HUECO del color del fondo justo encima. Se veía como una franja
+   clara entre el cierre oscuro de la landing y el footer. El aire que hacía
+   falta lo da el padding inferior del contenido, que ya existía. */
+.app-footer { background: var(--carbon); color: var(--carbon-texto-2); }
 .footer-in {
   max-width: 1180px;
   margin: 0 auto;
@@ -6256,7 +6273,13 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
    Lo que ve quien NO tiene sesión. Todo el espaciado, tipografía y motion
    sale de las escalas del sistema: ni un valor suelto.
    ============================================================ */
-.lp { display: flex; flex-direction: column; }
+.lp { display: flex; flex-direction: column; flex: 1; }
+/* Relleno del hueco que queda cuando la landing no llega a llenar la pantalla.
+   Va como pseudo-elemento y no pintando `.lp` entera: así ninguna sección de
+   arriba cambia de fondo, solo se pinta lo que sobra al final. Del color del
+   cierre, que es la sección con la que enlaza, para que se lea como una sola
+   franja hasta el footer en vez de una banda clara metida entre dos oscuras. */
+.lp::after { content: ''; flex: 1 0 0; background: var(--carbon); }
 .lp-wrap { width: min(1120px, 100% - var(--e-32)); margin-inline: auto; }
 
 /* ---- Portada ---- */
