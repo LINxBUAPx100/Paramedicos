@@ -7024,3 +7024,31 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   font-family: var(--fuente-cifra);
 }
 .ba-progreso { margin-top: var(--e-12); color: var(--texto-2); font-size: var(--t-sm); }
+
+/* ===== Fases de un alumno (abrir cualquiera, no solo la siguiente) ===== */
+.fa-panel {
+  margin-top: var(--e-16);
+  padding: var(--e-16);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--bg-2);
+}
+.fa-cab { display: flex; align-items: baseline; justify-content: space-between; gap: var(--e-12); flex-wrap: wrap; margin-bottom: var(--e-12); }
+.fa-resumen { color: var(--texto-3); font-size: var(--t-sm); }
+.fa-lista { list-style: none; display: flex; flex-direction: column; gap: var(--e-6); }
+.fa-fila {
+  display: flex; align-items: center; gap: var(--e-12);
+  padding: var(--e-8) var(--e-12);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+  background: var(--bg);
+}
+.fa-fila--oculta { opacity: 0.72; }
+.fa-num { font-family: var(--fuente-cifra); font-weight: 700; color: var(--fase-color, var(--primario)); min-width: 26px; }
+.fa-titulo { flex: 1; min-width: 0; font-size: var(--t-sm); }
+/* El estado siempre en TEXTO: el color acompaña, no sustituye. */
+.fa-estado { font-size: var(--t-xs); font-weight: 600; white-space: nowrap; }
+.fa-estado--grupo { color: var(--texto-3); }
+.fa-estado--individual { color: var(--verde); }
+.fa-estado--oculta { color: var(--ambar); }
+.fa-nada { color: var(--texto-3); min-width: 54px; text-align: center; }

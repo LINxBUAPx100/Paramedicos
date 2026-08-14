@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { APROBADO } from '../../lib/panelModelo.js'
+import FasesDeAlumno from './FasesDeAlumno.jsx'
 
 // ============================================================
 //  Avance por alumno y por fase + habilitar/retroceder módulos
@@ -183,11 +184,38 @@ export default function AvanceAlumnos({
       </div>
 
       {alumnoAbierto && (
-        <DetalleAlumno
-          alumno={alumnos.find((a) => a.id === alumnoAbierto)}
-          intentos={intentos.filter((i) => i.uid === alumnoAbierto)}
-          onCerrar={() => setAlumnoAbierto(null)}
-        />
+        <>
+          {/* Las fases de ESA persona, todas a la vez. Antes solo se podía
+              habilitar la siguiente, así que llevar a alguien hasta la fase 5
+              costaba tres pulsaciones en orden. */}
+          {(() => {
+            const al = alumnos.find((a) => a.id === alumnoAbierto)
+            if (!al) return null
+            const ocultasDelGrupo = grupos.find((g) => g.id === al.grupoId)?.fasesOcultas || []
+            return (
+              <FasesDeAlumno
+                alumno={al}
+                fases={fases}
+                fasesOcultasDelGrupo={ocultasDelGrupo}
+                ocupado={desbloqueando === al.id}
+                onDesbloquear={(f) => habilitarFase(al.id, f)}
+                onBloquear={(f) => retrocederFase(al.id, f)}
+                onAbrirHasta={(ids) => correr(al.id, async () => {
+                  const { desbloquearFase } = await import('../../lib/firebase/solicitudes.js')
+                  // Una por una: `arrayUnion` es idempotente, así que reintentar
+                  // no duplica nada si alguna falla a mitad.
+                  for (const id of ids) await desbloquearFase(al.id, id)
+                }, 'No se pudieron abrir los módulos (revisa permisos o conexión).')}
+              />
+            )
+          })()}
+
+          <DetalleAlumno
+            alumno={alumnos.find((a) => a.id === alumnoAbierto)}
+            intentos={intentos.filter((i) => i.uid === alumnoAbierto)}
+            onCerrar={() => setAlumnoAbierto(null)}
+          />
+        </>
       )}
 
       <p className="panel-nota">
