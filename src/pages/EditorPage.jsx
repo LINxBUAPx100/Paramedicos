@@ -6,6 +6,7 @@ import ArbolCurso, { ChipEstado } from '../components/editor/ArbolCurso.jsx'
 import PanelNodo from '../components/editor/PanelNodo.jsx'
 import PanelContenidoTema from '../components/editor/PanelContenidoTema.jsx'
 import DialogoConfirmar from '../components/editor/DialogoConfirmar.jsx'
+import ActivarCopia from '../components/editor/ActivarCopia.jsx'
 import VistaPrevia from '../components/editor/VistaPrevia.jsx'
 import { academiaMigrada } from '../lib/contenidoApi.js'
 import {
@@ -465,6 +466,25 @@ export default function EditorPage() {
     }
   }
 
+  // ---------- arrancar el temario propio ----------
+  // El curso PRIMERO y la marca después: si la marca fallara, la academia
+  // se queda como estaba (viendo el estándar) con un borrador suelto que la
+  // siguiente pulsación reutiliza. Al revés dejaría la academia «migrada» y
+  // sin nada que editar, que es justo el estado del que venimos.
+  const empezarDesdeCero = async (titulo) => {
+    const ed = await editorLib()
+    const nuevo = await ed.crearCursoEditor(contexto, destino, { titulo })
+    const { activarCopiaEditable } = await import('../lib/firebase/contenido.js')
+    await activarCopiaEditable(destino.academiaId)
+    // El doc de la academia que tiene AuthContext sigue diciendo «sin migrar»,
+    // así que se corrige aquí mismo: si no, `recargar()` volvería a bloquear.
+    setAcademiaObjetivo((a) => (a ? { ...a, contenido: { ...(a.contenido || {}), estado: 'migrado' } } : a))
+    setCursos(await ed.listarCursosEditor(destino))
+    setCursoSelId(nuevo.id)
+    setSeleccion({ curso: true })
+    setGuardado({ estado: 'ok', mensaje: 'Temario creado: ya puedes añadir fases y temas' })
+  }
+
   // ---------- vista previa ----------
   const abrirPrevia = async () => {
     if (!curso) return
@@ -502,17 +522,15 @@ export default function EditorPage() {
   }
   if (destino.modo === 'academia' && cursos !== null && academiaObjetivo && !academiaMigrada(academiaObjetivo)) {
     return (
-      <Bloqueo icono="alerta" titulo="Esta academia todavía usa el contenido estándar">
-        <p>
-          El temario de {academiaObjetivo?.nombre || 'esta academia'} aún no tiene una copia propia
-          editable: usa el contenido estándar de la plataforma, que no se puede modificar desde aquí.
-        </p>
-        <p>
-          {esSuperadmin
-            ? 'Clona una plantilla a esta academia (migración de contenido) y vuelve para editar su copia.'
-            : 'Pide al administrador de la plataforma que active la copia editable de tu academia. Mientras tanto, tus alumnos siguen viendo el temario normal.'}
-        </p>
-      </Bloqueo>
+      <ActivarCopia
+        academiaNombre={academiaObjetivo?.nombre || destino.academiaId}
+        esSuperadmin={esSuperadmin}
+        // Las reglas dejan encender la copia al super-admin y al director cuyo
+        // plan incluye el editor. Un profesor, aunque tenga permisos
+        // editoriales, no: crear el temario de la academia es del director.
+        puedeActivar={esSuperadmin || (rol === 'admin_escuela' && Boolean(capacidades?.editorContenido))}
+        onEmpezarDesdeCero={empezarDesdeCero}
+      />
     )
   }
 

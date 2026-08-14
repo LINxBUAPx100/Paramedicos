@@ -155,3 +155,75 @@ test('excepción que ENCIENDE el editor gana al plan base', { skip }, async () =
     uploadBytes(ref(comoSt('dirBaseCon'), 'academias/BASECON/archivos/guia.pdf'), PDF, META)
   )
 })
+
+// ---------- activar la copia editable (director) ----------
+//  El director no podía escribir `academias/{id}.contenido`, así que el editor
+//  le enseñaba «pide al administrador de la plataforma» y ahí se acababa: no
+//  había forma de encender su propia copia sin el super-admin. Estas pruebas
+//  fijan que ahora puede, y que sigue sin poder colar nada más por esa puerta.
+
+test('el director con editor ACTIVA la copia editable de su academia', { skip }, async () => {
+  await preparar()
+  const { doc, updateDoc } = fsmod
+  const { assertSucceeds } = rut
+  await assertSucceeds(
+    updateDoc(doc(comoFs('dirAvanzada'), 'academias/AVANZADA'), {
+      contenido: { estado: 'migrando', plantillaId: 'tum', version: 1 },
+    })
+  )
+  await assertSucceeds(
+    updateDoc(doc(comoFs('dirAvanzada'), 'academias/AVANZADA'), {
+      contenido: { estado: 'migrado', plantillaId: 'tum', version: 1 },
+    })
+  )
+})
+
+test('sin capacidad de editor, no puede activarla', { skip }, async () => {
+  await preparar()
+  const { doc, updateDoc } = fsmod
+  const { assertFails } = rut
+  // Plan base de verdad...
+  await assertFails(
+    updateDoc(doc(comoFs('dirBasica'), 'academias/BASICA'), {
+      contenido: { estado: 'migrando', plantillaId: 'tum', version: 1 },
+    })
+  )
+  // ...y plan pro con el editor apagado por excepción.
+  await assertFails(
+    updateDoc(doc(comoFs('dirProSin'), 'academias/PROSIN'), {
+      contenido: { estado: 'migrando', plantillaId: 'tum', version: 1 },
+    })
+  )
+})
+
+test('activar la copia no es una puerta para tocar otros campos', { skip }, async () => {
+  await preparar()
+  const { doc, updateDoc } = fsmod
+  const { assertFails } = rut
+  // El plan y el estado comercial siguen siendo del super-admin: si `hasOnly`
+  // se relajara, un director se ascendería de plan en la misma escritura.
+  await assertFails(
+    updateDoc(doc(comoFs('dirAvanzada'), 'academias/AVANZADA'), {
+      contenido: { estado: 'migrado', plantillaId: 'tum', version: 1 },
+      planComercial: 'pro',
+    })
+  )
+  // Un estado inventado tampoco: los únicos que produce la clonación son
+  // migrando | migrado | error.
+  await assertFails(
+    updateDoc(doc(comoFs('dirAvanzada'), 'academias/AVANZADA'), {
+      contenido: { estado: 'lo-que-sea', plantillaId: 'tum', version: 1 },
+    })
+  )
+})
+
+test('un director no activa la copia de OTRA academia', { skip }, async () => {
+  await preparar()
+  const { doc, updateDoc } = fsmod
+  const { assertFails } = rut
+  await assertFails(
+    updateDoc(doc(comoFs('dirAvanzada'), 'academias/BASICA'), {
+      contenido: { estado: 'migrando', plantillaId: 'tum', version: 1 },
+    })
+  )
+})

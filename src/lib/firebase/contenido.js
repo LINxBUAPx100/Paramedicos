@@ -63,6 +63,25 @@ export async function historialDeAcademia(academiaId, { limite = 25 } = {}) {
     .slice(0, limite)
 }
 
+// --- Activar la copia editable SIN clonar nada ------------------------------
+// El editor exigía que la academia estuviera «migrada», y migrar era clonar una
+// plantilla, algo que solo podía hacer el super-admin desde otra pantalla. Un
+// director que quisiera montar su temario desde cero se topaba con un cartel
+// que le decía que pidiera ayuda. Esto enciende la copia y ya.
+//
+// No deja a nadie sin temario mientras se construye: sin cursos PUBLICADOS,
+// `indiceDeAcademia` y `contenidoDeAcademia` lanzan y sus llamantes caen al
+// bundle, así que los alumnos siguen viendo el contenido estándar hasta que su
+// academia publique el suyo.
+export async function activarCopiaEditable(academiaId) {
+  if (!academiaId) throw new Error('activarCopiaEditable: falta academiaId.')
+  await marcarEstadoContenido(academiaId, { estado: 'migrado', plantillaId: null, version: 1, origen: 'desde-cero' })
+  await registrarHistorial({
+    academiaId, accion: 'activar-copia-editable', coleccion: 'academias', docId: academiaId,
+    despues: { estado: 'migrado', origen: 'desde-cero' },
+  }).catch(() => null)
+}
+
 // --- Clonación plantilla → academia -----------------------------------------
 // Idempotente: los doc-id son deterministas, así que reejecutar REESCRIBE los
 // mismos documentos (nunca duplica) y sirve para reanudar una clonación

@@ -233,6 +233,21 @@ service cloud.firestore {
           || request.resource.data.homeSecciones == null
           || request.resource.data.homeSecciones is list
         );
+
+      // El director puede ACTIVAR la copia editable de SU academia, y nada más
+      // de ese documento. Antes no podía: `contenido` no estaba en la lista de
+      // arriba, así que el editor le decía «pide al administrador de la
+      // plataforma» y ahí se acababa el camino. Si su plan le deja editar
+      // contenido, poder encender su propia copia es parte de eso.
+      //
+      // Va en una regla aparte y no añadiendo 'contenido' a la lista de la
+      // personalización porque lo que se admite aquí es más estrecho: SOLO ese
+      // campo, y solo con los estados que produce la clonación. Mezclarlas
+      // dejaría cambiar el logo y el origen del temario en la misma escritura.
+      allow update: if esAdminDe(codigo)
+        && academiaEditaContenido(codigo)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['contenido'])
+        && request.resource.data.contenido.estado in ['migrando', 'migrado', 'error'];
     }
 
     // --- DIRECTORIO público (escaparate de academias que admiten solicitudes) ---
