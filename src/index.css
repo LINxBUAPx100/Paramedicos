@@ -2354,9 +2354,24 @@ html[data-tema='oscuro'] .cuenta-badge { color: var(--primario-claro); }
      que se remonta y la animación se reproduce en cada navegación. */
   animation: aparecer var(--dur-lenta) var(--ease-out) both;
 }
+/* SIN `transform`, y no es una simplificación estética: es lo que rompía todos
+   los diálogos de la aplicación.
+   `.contenido` lleva esta animación con `fill-mode: both`, así que su efecto se
+   queda aplicado para siempre. Un elemento con un transform que no sea `none`
+   se convierte en el BLOQUE CONTENEDOR de sus descendientes `position: fixed`,
+   y los diálogos viven dentro del <main>: se posicionaban respecto al main en
+   vez de respecto a la ventana. En una página larga el velo cubría los 2000px
+   del contenido y el cuadro quedaba centrado en la MITAD de esa altura, fuera
+   de pantalla. Se veía la página oscurecida y ningún diálogo.
+   Poner `transform: none` en el `to` NO lo arregla: mientras la animación
+   rellena, el valor computado es la matriz identidad —medido:
+   matrix(1,0,0,1,0,0)— y una identidad crea bloque contenedor igual. La única
+   salida es que aquí no haya transform ninguno.
+   Si alguien quiere devolver el desplazamiento de 12px, que NO sea con
+   transform ni con `translate`: rompería esto otra vez. */
 @keyframes aparecer {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* ============================================================
