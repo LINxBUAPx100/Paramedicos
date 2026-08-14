@@ -24,6 +24,14 @@
         { "fieldPath": "academiaId", "order": "ASCENDING" },
         { "fieldPath": "estado", "order": "ASCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "calificaciones",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "academiaId", "order": "ASCENDING" },
+        { "fieldPath": "uid", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []

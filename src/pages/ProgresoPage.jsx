@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useContenido, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
 import { useProgress } from '../context/ProgressContext.jsx'
+import MisCalificaciones from '../components/MisCalificaciones.jsx'
 
 function formatoFecha(ts) {
   return new Date(ts).toLocaleDateString('es-MX', {
@@ -129,6 +130,10 @@ export default function ProgresoPage() {
           </div>
         </section>
       )}
+
+      {/* Las calificaciones que le pone su maestro (Bloque S). Se pinta solo si
+          hay alguna: una seccion vacia le haria preguntarse si le falta algo. */}
+      <MisCalificaciones />
 
       <div className="progreso-reinicio">
         <button className="btn btn--peligro" onClick={confirmarReinicio}>

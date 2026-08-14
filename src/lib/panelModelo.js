@@ -23,6 +23,7 @@ export const SECCIONES_PANEL = [
   { id: 'miembros', ruta: '/panel/miembros', icono: 'usuario', etiqueta: 'Miembros' },
   { id: 'grupos', ruta: '/panel/grupos', icono: 'capas', etiqueta: 'Grupos' },
   { id: 'accesos', ruta: '/panel/accesos', icono: 'candado', etiqueta: 'Accesos' },
+  { id: 'calificaciones', ruta: '/panel/calificaciones', icono: 'examen', etiqueta: 'Calificaciones' },
   { id: 'contenido', ruta: '/panel/contenido', icono: 'herramientas', etiqueta: 'Contenido' },
   { id: 'academia', ruta: '/panel/academia', icono: 'temario', etiqueta: 'Mi academia' },
 ]
@@ -42,6 +43,9 @@ export function seccionesPanel({ rol, capacidades = null, permisosEditor = null 
     miembros: true, // el profesor la ve en solo lectura
     accesos: true, // el profesor pide aquí ver los códigos
     grupos: dirige,
+    // El profesor SI la ve: es quien evalua a su grupo. Es la unica seccion de
+    // escritura que un profesor tiene sin permisos editoriales, y es a proposito.
+    calificaciones: true,
     contenido: puedeEditar,
     academia: dirige,
   }

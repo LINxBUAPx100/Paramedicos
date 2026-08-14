@@ -514,6 +514,70 @@ service cloud.firestore {
     }
 
     // --- INTENTOS de examen de fase ---
+    // --- LIBRO DE CALIFICACIONES (evaluaciones del maestro) ---
+    // Separado de `intentos` a propósito: un intento lo genera el alumno y es
+    // repetible; una calificación la pone el staff y es un juicio. Mezclarlos
+    // en la misma colección obligaría a que las reglas distinguieran quién
+    // escribió qué, y ahí es donde se cuelan los errores.
+    match /evaluaciones/{id} {
+      // Leer: el staff de la academia, y los alumnos que PERTENECEN a ella
+      // (necesitan ver el título y la fecha de lo que se les califica).
+      // La consulta del cliente filtra por academiaId; sin ese filtro la regla
+      // no se puede satisfacer y Firestore deniega la lista entera.
+      allow get, list: if esSuper()
+        || esStaffDe(resource.data.academiaId)
+        || perteneceA(resource.data.academiaId);
+      // Crear y editar: el staff de ESA academia. Un profesor evalúa a su
+      // grupo, así que aquí no se distingue de un director; lo que un profesor
+      // no puede es BORRAR (más abajo).
+      allow create: if (esSuper() || esStaffDe(request.resource.data.academiaId))
+        && request.resource.data.titulo is string
+        && request.resource.data.titulo.size() > 0
+        && request.resource.data.titulo.size() <= 120
+        && request.resource.data.ponderacion is number
+        && request.resource.data.ponderacion > 0
+        && request.resource.data.ponderacion <= 100
+        && request.resource.data.creadoPor == request.auth.uid;
+      // La academia es inmutable: nadie mueve una evaluación a otra academia.
+      allow update: if (esSuper() || esStaffDe(resource.data.academiaId))
+        && request.resource.data.academiaId == resource.data.academiaId;
+      // Borrar: director o super. Borrar una evaluación tira TODAS sus notas,
+      // y eso no es una operación de rutina.
+      allow delete: if esSuper() || esAdminDe(resource.data.academiaId);
+    }
+
+    match /calificaciones/{id} {
+      // Leer: su dueño (el alumno), el staff de la academia, o el super. Un
+      // alumno JAMÁS lee las de otro: la consulta del alumno filtra por su uid.
+      allow get, list: if esSuper()
+        || esDueno(resource.data.uid)
+        || esStaffDe(resource.data.academiaId);
+      // Escribir: SOLO el staff. El alumno no se califica a sí mismo, y por eso
+      // no hay ninguna rama que le deje escribir aquí ni siquiera su propia
+      // nota.
+      //
+      // `valor` entero de 0 a 100 validado en el servidor, igual que se hace con
+      // el porcentaje de `intentos`: la validación del cliente sirve para no
+      // ofrecer lo que se va a rechazar, no para decidir.
+      allow create: if (esSuper() || esStaffDe(request.resource.data.academiaId))
+        && request.resource.data.valor is int
+        && request.resource.data.valor >= 0
+        && request.resource.data.valor <= 100
+        && request.resource.data.uid is string
+        && request.resource.data.evaluacionId is string
+        && request.resource.data.calificadoPor == request.auth.uid;
+      // Al corregir una nota no se puede cambiar de quién es ni de qué
+      // evaluación: eso sería mover una calificación de un alumno a otro.
+      allow update: if (esSuper() || esStaffDe(resource.data.academiaId))
+        && request.resource.data.valor is int
+        && request.resource.data.valor >= 0
+        && request.resource.data.valor <= 100
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.evaluacionId == resource.data.evaluacionId
+        && request.resource.data.academiaId == resource.data.academiaId;
+      allow delete: if esSuper() || esStaffDe(resource.data.academiaId);
+    }
+
     match /intentos/{id} {
       // Crear: el propio alumno, con su uid y su academia (no puede falsear
       // otra) y con un RESULTADO consistente (Fase 4): nadie inventa un

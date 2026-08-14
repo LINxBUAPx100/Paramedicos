@@ -6854,3 +6854,47 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   .consola-nav { position: static; flex-direction: row; flex-wrap: wrap; }
   .consola-marca { display: none; }
 }
+
+/* ============================================================
+   Libro de calificaciones (Bloque S)
+   ============================================================ */
+.cal-kpis { display: flex; flex-wrap: wrap; gap: var(--e-12); margin-bottom: var(--e-16); }
+.cal-acciones { display: flex; gap: var(--e-8); margin-bottom: var(--e-12); }
+.cal-form { margin-bottom: var(--e-16); }
+.cal-check { display: flex; align-items: center; gap: var(--e-8); font-size: var(--t-sm); }
+.cal-check input { width: auto; }
+
+/* Cabecera de columna: título, peso y media de la evaluación. */
+.cal-th { min-width: 132px; vertical-align: top; }
+.cal-th-titulo { display: block; font-weight: 700; }
+.cal-th small { display: block; color: var(--texto-3); font-size: var(--t-xs); font-weight: 400; margin: 2px 0 var(--e-4); }
+
+.cal-celda { text-align: center; }
+/* Celda editable: se lee como una nota, no como un formulario. El color va
+   ADEMÁS del número, nunca en su lugar. */
+.cal-input {
+  width: 56px;
+  padding: var(--e-6);
+  text-align: center;
+  font-family: var(--fuente-cifra);
+  font-size: var(--t-base);
+  font-weight: 700;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+  background: var(--bg-2);
+  color: var(--texto);
+}
+.cal-input:focus { border-color: var(--primario); outline: 2px solid color-mix(in srgb, var(--primario) 35%, transparent); }
+.cal-input.ok { color: var(--verde); border-color: color-mix(in srgb, var(--verde) 40%, var(--borde)); }
+.cal-input.mal { color: var(--rojo); border-color: color-mix(in srgb, var(--rojo) 40%, var(--borde)); }
+.cal-input.vacia { color: var(--texto-3); }
+
+.cal-promedio { text-align: center; font-family: var(--fuente-cifra); font-weight: 700; }
+.cal-promedio.ok { color: var(--verde); }
+.cal-promedio.mal { color: var(--rojo); }
+
+/* Bloque del alumno en «Mi progreso» */
+.mis-calificaciones .mc-promedio { margin-bottom: var(--e-12); color: var(--texto-2); }
+.mis-calificaciones .mc-promedio b.ok { color: var(--verde); }
+.mis-calificaciones .mc-promedio b.mal { color: var(--rojo); }
+.mc-nota { color: var(--texto-3); }

@@ -17,17 +17,17 @@ const ids = (secciones) => secciones.map((s) => s.id)
 
 test('el director ve todo su panel; el editor depende del plan', () => {
   const pro = seccionesPanel({ rol: 'admin_escuela', capacidades: { editorContenido: true } })
-  assert.deepEqual(ids(pro), ['resumen', 'miembros', 'grupos', 'accesos', 'contenido', 'academia'])
+  assert.deepEqual(ids(pro), ['resumen', 'miembros', 'grupos', 'accesos', 'calificaciones', 'contenido', 'academia'])
 
   // Plan BASE: sin editor de contenido, la sección no existe (no un botón que
   // lleve a una pantalla que le va a decir que no puede).
   const base = seccionesPanel({ rol: 'admin_escuela', capacidades: { editorContenido: false } })
-  assert.deepEqual(ids(base), ['resumen', 'miembros', 'grupos', 'accesos', 'academia'])
+  assert.deepEqual(ids(base), ['resumen', 'miembros', 'grupos', 'accesos', 'calificaciones', 'academia'])
 })
 
 test('el profesor entra al mismo armazón con menos secciones', () => {
   const profe = seccionesPanel({ rol: 'instructor' })
-  assert.deepEqual(ids(profe), ['resumen', 'miembros', 'accesos'])
+  assert.deepEqual(ids(profe), ['resumen', 'miembros', 'accesos', 'calificaciones'])
 
   // Un permiso editorial explícito le abre Contenido, aunque no dirija nada.
   const conPermiso = seccionesPanel({
@@ -35,7 +35,7 @@ test('el profesor entra al mismo armazón con menos secciones', () => {
     capacidades: { editorContenido: true }, // la capacidad del plan no le basta…
     permisosEditor: { editarContenido: true }, // …el permiso propio sí
   })
-  assert.deepEqual(ids(conPermiso), ['resumen', 'miembros', 'accesos', 'contenido'])
+  assert.deepEqual(ids(conPermiso), ['resumen', 'miembros', 'accesos', 'calificaciones', 'contenido'])
 
   // Y la capacidad del plan por sí sola NO le abre el editor.
   const sinPermiso = seccionesPanel({ rol: 'instructor', capacidades: { editorContenido: true } })
@@ -43,9 +43,9 @@ test('el profesor entra al mismo armazón con menos secciones', () => {
 })
 
 test('sin datos de sesión no se inventan secciones', () => {
-  assert.deepEqual(ids(seccionesPanel()), ['resumen', 'miembros', 'accesos'])
+  assert.deepEqual(ids(seccionesPanel()), ['resumen', 'miembros', 'accesos', 'calificaciones'])
   assert.deepEqual(ids(seccionesPanel({ rol: null, capacidades: null, permisosEditor: null })),
-    ['resumen', 'miembros', 'accesos'])
+    ['resumen', 'miembros', 'accesos', 'calificaciones'])
 })
 
 test('todas las secciones del catálogo cuelgan de /panel', () => {
