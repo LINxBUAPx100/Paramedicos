@@ -13,6 +13,52 @@ const VARS_FIREBASE = [
   'VITE_FIREBASE_APP_ID',
 ]
 
+// FORMA de cada valor, no solo su presencia.
+//
+// Comprobar «no está vacío» dejó pasar el peor build posible: los seis secrets
+// del repositorio se crearon con el NOMBRE de la variable pegado en la casilla
+// del valor, así que el bundle salió con apiKey: "VITE_FIREBASE_API_KEY". El
+// build en verde, el despliegue en verde, y la app publicada sin poder
+// autenticar a nadie: «auth/api-key-not-valid» para todo el mundo.
+//
+// Tardó tres días en verse porque la web se publicaba desde una rama anterior a
+// esta config, que la llevaba escrita en el código. Una comprobación que pasa
+// cuando no debería es peor que no tenerla: da una garantía falsa.
+const FORMA = {
+  VITE_FIREBASE_API_KEY: {
+    ok: (v) => /^AIza[\w-]{30,40}$/.test(v),
+    esperado: 'empieza por "AIza" (clave de API de Google, ~39 caracteres)',
+  },
+  VITE_FIREBASE_AUTH_DOMAIN: {
+    ok: (v) => v.includes('.') && !v.includes(' ') && !v.includes('/'),
+    esperado: 'un dominio, p. ej. tu-proyecto.firebaseapp.com',
+  },
+  VITE_FIREBASE_PROJECT_ID: {
+    ok: (v) => /^[a-z0-9-]{4,40}$/.test(v),
+    esperado: 'el id del proyecto en minúsculas, p. ej. ptem-a304f',
+  },
+  VITE_FIREBASE_STORAGE_BUCKET: {
+    ok: (v) => v.includes('.') && !v.includes(' '),
+    esperado: 'el bucket, p. ej. tu-proyecto.firebasestorage.app',
+  },
+  VITE_FIREBASE_MESSAGING_SENDER_ID: {
+    ok: (v) => /^\d{6,}$/.test(v),
+    esperado: 'solo dígitos',
+  },
+  VITE_FIREBASE_APP_ID: {
+    ok: (v) => /^1:\d+:web:[a-f0-9]+$/i.test(v),
+    esperado: 'con el formato 1:123456789:web:abc123',
+  },
+}
+
+// Un valor recortado para el mensaje de error. La config de cliente es pública
+// (acaba en el bundle), pero un secret mal puesto puede contener cualquier cosa
+// pegada por error, así que no se vuelca entero en el log del CI.
+function pista(valor) {
+  const v = String(valor)
+  return v.length <= 12 ? JSON.stringify(v) : JSON.stringify(v.slice(0, 8) + '…') + ` (${v.length} caracteres)`
+}
+
 // ============================================================
 //  Content-Security-Policy
 // ------------------------------------------------------------
@@ -96,15 +142,35 @@ export default defineConfig(({ command, mode }) => {
   // init.js; ahora se detiene aquí, en rojo y explicando qué falta.
   if (command === 'build') {
     const faltan = VARS_FIREBASE.filter((clave) => !env[clave])
-    if (faltan.length > 0) {
-      throw new Error(
-        `\n\n  Build detenido: falta la configuración de Firebase.\n\n` +
-          `  Sin estas variables la app se despliega sin poder conectarse:\n` +
-          faltan.map((c) => `    · ${c}`).join('\n') +
-          `\n\n  En local:  copia .env.example a .env y rellénalo.\n` +
-          `  En CI:     Settings → Secrets and variables → Actions,\n` +
-          `             y páselas al paso de build (ver .github/workflows/deploy.yml).\n`
-      )
+    // Un valor igual al nombre de su variable es el error de copiar y pegar que
+    // ya ocurrió una vez: se comprueba por separado para poder decirlo tal cual.
+    const sonElNombre = VARS_FIREBASE.filter((clave) => env[clave] === clave)
+    const malFormados = VARS_FIREBASE.filter(
+      (clave) => env[clave] && env[clave] !== clave && FORMA[clave] && !FORMA[clave].ok(env[clave])
+    )
+    if (faltan.length > 0 || sonElNombre.length > 0 || malFormados.length > 0) {
+      const partes = ['\n\n  Build detenido: la configuración de Firebase no sirve.\n']
+      if (faltan.length > 0) {
+        partes.push('  Faltan por completo:')
+        partes.push(faltan.map((c) => `    · ${c}`).join('\n') + '\n')
+      }
+      if (sonElNombre.length > 0) {
+        partes.push('  Tienen como valor su PROPIO NOMBRE (se pegó el nombre en vez del valor):')
+        partes.push(sonElNombre.map((c) => `    · ${c} = "${c}"`).join('\n') + '\n')
+      }
+      if (malFormados.length > 0) {
+        partes.push('  No tienen la forma esperada:')
+        partes.push(
+          malFormados
+            .map((c) => `    · ${c} = ${pista(env[c])}\n      esperado: ${FORMA[c].esperado}`)
+            .join('\n') + '\n'
+        )
+      }
+      partes.push('  En local:  copia .env.example a .env y rellénalo.')
+      partes.push('  En CI:     Settings → Secrets and variables → Actions.')
+      partes.push('             Los valores salen de la consola de Firebase →')
+      partes.push('             Configuración del proyecto → Tus apps → Configuración del SDK.\n')
+      throw new Error(partes.join('\n'))
     }
   }
 
