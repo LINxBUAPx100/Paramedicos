@@ -63,25 +63,22 @@ export default function Home() {
     prueba: <SeccionPrueba />,
     atlas: <SeccionAtlas />,
     flashcards: <SeccionFlashcards flashcards={stats.flashcards} />,
+    // La academia es UNA SECCIÓN MÁS: se puede ocultar y mover como las otras.
+    // Antes iba clavada detrás de la portada, fuera del catálogo, y por eso se
+    // leía como un aviso pegado al Home en vez de como una parte del Home.
+    academia: <BloqueAcademia />,
   }
 
-  // Bloques FIJOS (bienvenida de la academia + selector de grupo del
-  // profesor): tras la portada si está visible; si el director la ocultó,
-  // encabezan la página.
-  const fijas = (
-    <>
-      <BloqueAcademia />
-      <SelectorGrupoProfesor />
-    </>
-  )
-
+  // El selector de grupo del profesor SÍ sigue fijo: es una herramienta para
+  // trabajar, no presencia de marca. Si el director pudiera ocultarlo, sus
+  // profesores se quedarían sin poder cambiar de grupo.
   return (
     <div className="ph">
-      {!secciones.includes('hero') && fijas}
+      {!secciones.includes('hero') && <SelectorGrupoProfesor />}
       {secciones.map((id) => (
         <Fragment key={id}>
           {SECCION[id] || null}
-          {id === 'hero' && fijas}
+          {id === 'hero' && <SelectorGrupoProfesor />}
         </Fragment>
       ))}
     </div>
@@ -269,9 +266,9 @@ function SeccionFlashcards({ flashcards }) {
   )
 }
 
-// La banda de la academia vive ahora en components/BloqueAcademia.jsx, que el
-// director configura (variante, mensaje, avisos y accesos). Sin configurar se
-// ve EXACTAMENTE igual que la banda de antes.
+// La sección de la academia vive en components/BloqueAcademia.jsx, que el
+// director y el super-admin configuran (variante, mensaje, avisos y accesos).
+// Sin configurar enseña logo, nombre y lema, como la banda de siempre.
 
 // Panel de bienvenida SOLO para profesores (instructores): un profesor puede
 // atender varios grupos, así que aquí elige con cuál trabaja. La selección se

@@ -102,3 +102,57 @@ test('capacidad: paginaInicioConfigurable solo PRO/CURSO (fuente única)', () =>
   // Legacy sin campo ⇒ pro (conserva lo que hoy tiene).
   assert.equal(capacidadesDe({}).paginaInicioConfigurable, true)
 })
+
+// ---------- una sección nueva entra en SU SITIO, no al final ----------
+//  Se añadió «Tu academia» justo tras la portada. Con la regla vieja —los
+//  ausentes al final— cada academia que ya hubiera tocado su Home habría visto
+//  su identidad saltar al pie de la página sin pedirlo.
+
+test('una sección ausente entra donde le toca del catálogo', () => {
+  // Configuración vieja: no conoce 'academia'.
+  const vieja = [
+    { id: 'hero', visible: true },
+    { id: 'progreso', visible: true },
+    { id: 'fases', visible: true },
+  ]
+  const ids = normalizarHomeSecciones(vieja).map((s) => s.id)
+  assert.equal(ids[0], 'hero')
+  assert.equal(ids[1], 'academia', 'va tras la portada, no al final')
+  assert.equal(ids[2], 'progreso')
+})
+
+test('respeta el orden elegido por el director al insertar', () => {
+  // El director subió las fases por delante de la portada.
+  const suyo = [
+    { id: 'fases', visible: true },
+    { id: 'hero', visible: false },
+    { id: 'atlas', visible: true },
+  ]
+  const ids = normalizarHomeSecciones(suyo).map((s) => s.id)
+  // Su orden se conserva: fases sigue primera y hero sigue oculta.
+  assert.equal(ids[0], 'fases')
+  assert.equal(ids.indexOf('hero'), 1)
+  assert.equal(normalizarHomeSecciones(suyo).find((s) => s.id === 'hero').visible, false)
+  // Y 'academia' entra detrás de 'hero', su vecina anterior en el catálogo.
+  assert.equal(ids[2], 'academia')
+})
+
+test('si falta la PRIMERA del catálogo, abre la lista', () => {
+  const sinHero = [{ id: 'fases', visible: true }, { id: 'academia', visible: true }]
+  const ids = normalizarHomeSecciones(sinHero).map((s) => s.id)
+  assert.equal(ids[0], 'hero', 'no hay vecina anterior: encabeza')
+})
+
+test('la identidad de la academia se puede ocultar y mover como cualquier sección', () => {
+  const oculta = alternarSeccion(homeSeccionesDefault(), 'academia')
+  assert.equal(oculta.find((s) => s.id === 'academia').visible, false)
+  assert.ok(!idsVisiblesDeHome({ homeSecciones: oculta }).includes('academia'))
+
+  const movida = moverSeccion(homeSeccionesDefault(), 'academia', 'arriba')
+  assert.equal(movida[0].id, 'academia', 'sube por delante de la portada')
+})
+
+test('el default incluye la academia justo tras la portada', () => {
+  const ids = homeSeccionesDefault().map((s) => s.id)
+  assert.deepEqual(ids.slice(0, 2), ['hero', 'academia'])
+})

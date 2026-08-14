@@ -40,23 +40,33 @@ export default function BloqueAcademia({ academia: academiaProp = null, previa =
     ? <span className="aca-grupo">Grupo {grupo.nombre}</span>
     : null
 
+  // SECCIÓN de ancho completo, con el contenido centrado dentro (el mismo
+  // patrón que las bandas del Home: `ph-banda` > `ph-wrap`). Antes era al
+  // revés —un `ph-wrap` por fuera con una tarjeta dentro—, y eso es
+  // exactamente lo que la hacía leerse como un aviso pegado a la página en vez
+  // de como una parte de ella. En la vista previa del editor no se envuelve:
+  // ahí se mira el bloque, no la página.
   return (
-    <div className={previa ? '' : 'ph-wrap'}>
-      <section
-        className={`aca-bloque aca-bloque--${cfg.variante}`}
-        style={estilo}
-        aria-label={`Tu academia: ${cfg.titulo}`}
-      >
-        {cfg.variante === 'hero' && cfg.imagenFondo && (
-          <img
-            className="aca-fondo"
-            src={driveSrc(cfg.imagenFondo, 1600)}
-            alt=""
-            aria-hidden="true"
-            loading="lazy"
-          />
-        )}
+    <section
+      className={`aca-seccion aca-seccion--${cfg.variante}${previa ? ' aca-seccion--previa' : ''}`}
+      style={estilo}
+      aria-label={`Tu academia: ${cfg.titulo}`}
+    >
+      {/* Hija DIRECTA de la sección: así ocupa el ancho completo. Dentro del
+          bloque se anclaba al ancho de lectura y la imagen salía recortada con
+          franjas a los lados (medido: 1078px de 1265). */}
+      {cfg.variante === 'hero' && cfg.imagenFondo && (
+        <img
+          className="aca-fondo"
+          src={driveSrc(cfg.imagenFondo, 1600)}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+        />
+      )}
 
+      <div className={previa ? '' : 'ph-wrap'}>
+        <div className={`aca-bloque aca-bloque--${cfg.variante}`}>
         <div className="aca-cabecera">
           <span className="aca-logo">{logo}</span>
           <div className="aca-texto">
@@ -105,7 +115,8 @@ export default function BloqueAcademia({ academia: academiaProp = null, previa =
             ))}
           </nav>
         )}
-      </section>
-    </div>
+        </div>
+      </div>
+    </section>
   )
 }

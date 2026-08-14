@@ -7,8 +7,14 @@
 //  de Firestore acota quién la escribe); sin configuración, el Home es
 //  EXACTAMENTE el actual (default = comportamiento de siempre).
 //
-//  La banda de la academia (logo/lema) y el selector de grupo del profesor
-//  NO son configurables: son identidad y función, no marketing.
+//  La identidad de la academia SÍ es una sección de este catálogo («academia»):
+//  se puede ocultar y mover como cualquier otra. Estuvo fuera, clavada detrás
+//  de la portada, y por eso se leía como un aviso pegado al Home en vez de como
+//  una parte del Home.
+//
+//  El que sigue FUERA es el selector de grupo del profesor: es una herramienta
+//  para trabajar, no presencia de marca. Si el director pudiera ocultarlo, sus
+//  profesores se quedarían sin poder cambiar de grupo.
 // ============================================================
 
 // Catálogo de secciones configurables, en su ORDEN predeterminado (el Home
@@ -18,6 +24,11 @@ export const SECCIONES_HOME = [
     id: 'hero',
     etiqueta: 'Portada PTEM',
     descripcion: 'Presentación de la plataforma: marca, mensaje y estadísticas del temario.',
+  },
+  {
+    id: 'academia',
+    etiqueta: 'Tu academia',
+    descripcion: 'La identidad de la academia: logo, nombre, mensaje, avisos y accesos. Se configura más abajo.',
   },
   {
     id: 'progreso',
@@ -61,8 +72,11 @@ export function homeSeccionesDefault() {
 //  - solo ids del catálogo, sin duplicados, en el orden recibido;
 //  - `visible` booleano estricto (cualquier otra cosa ⇒ true, fail-open:
 //    un dato corrupto jamás borra secciones del Home);
-//  - las secciones que falten se AÑADEN al final visibles (una sección nueva
-//    del catálogo aparece sola en academias con configuración vieja).
+//  - las secciones que falten se AÑADEN visibles EN SU SITIO del catálogo, no
+//    al final. Antes iban al final, y eso bastaba mientras las secciones nuevas
+//    fueran invitaciones de marketing; en cuanto se añadió «Tu academia» —que
+//    va justo tras la portada— la regla vieja habría mandado la identidad de
+//    cada academia ya configurada al pie de su Home sin que nadie lo pidiera.
 export function normalizarHomeSecciones(config) {
   const conocidas = new Set(IDS_SECCIONES_HOME)
   const vistas = new Set()
@@ -73,8 +87,19 @@ export function normalizarHomeSecciones(config) {
     vistas.add(id)
     out.push({ id, visible: item.visible === false ? false : true })
   }
+  // Cada ausente entra detrás de su vecina anterior del catálogo que SÍ esté
+  // presente; si no hay ninguna (era la primera), abre la lista. Así se respeta
+  // el orden que eligió el director y la sección nueva cae donde le toca.
   for (const id of IDS_SECCIONES_HOME) {
-    if (!vistas.has(id)) out.push({ id, visible: true })
+    if (vistas.has(id)) continue
+    const posCatalogo = IDS_SECCIONES_HOME.indexOf(id)
+    const previas = IDS_SECCIONES_HOME.slice(0, posCatalogo)
+    let destino = 0
+    for (let i = out.length - 1; i >= 0; i--) {
+      if (previas.includes(out[i].id)) { destino = i + 1; break }
+    }
+    out.splice(destino, 0, { id, visible: true })
+    vistas.add(id)
   }
   return out
 }
