@@ -20,6 +20,10 @@ import {
   doc, getDoc, setDoc, updateDoc, deleteDoc, serverTimestamp,
   collection, query, where, getDocs, writeBatch,
 } from 'firebase/firestore'
+// El registro de actividad vive en contenido.js, que es de donde lo usa el
+// resto de la aplicación. Dar de baja una academia es justo lo que más falta
+// hace que quede anotado.
+import { registrarHistorial } from './contenido.js'
 
 // --- Academias ---
 
@@ -278,4 +282,102 @@ export async function eliminarUsuario(uid) {
 export async function enviarResetPassword(email) {
   if (!email) throw new Error('Ese usuario no tiene correo registrado.')
   await sendPasswordResetEmail(auth, email)
+}
+
+// ============================================================
+//  Dar de baja una academia (Bloque de borrado)
+// ------------------------------------------------------------
+//  Se podían crear academias y no borrarlas: solo suspenderlas, que las deja
+//  existiendo con todo dentro. Aquí están las tres salidas.
+//
+//  El borrado va EN CASCADA y es reanudable, con el mismo patrón que
+//  `cambiarCodigoAcademia`: una colección por vuelta, marcándola al terminarla,
+//  para que un corte a mitad no deje la academia medio borrada sin forma de
+//  continuar. Y las personas se resuelven PRIMERO: si se borrara la academia
+//  antes, quedarían apuntando a una que no existe, sin poder entrar y sin
+//  pantalla donde arreglarlo.
+// ============================================================
+
+// Reubica o da de baja a las personas de una academia.
+//   destino 'borrar' → baja lógica (nunca se borra la cuenta: es de la persona,
+//                      y borrar cuentas de Auth no se puede desde el cliente).
+//   destino 'sin'    → se quedan sin academia y pueden entrar a otra.
+//   otro             → se mueven a esa academia.
+export async function reubicarUsuariosDeAcademia(academiaId, destino) {
+  const snap = await getDocs(query(collection(db, 'usuarios'), where('academiaId', '==', academiaId)))
+  const docs = snap.docs.filter((d) => d.data()?.estado !== 'eliminado')
+  let batch = writeBatch(db)
+  let n = 0
+  for (const d of docs) {
+    const cambios = destino === 'borrar'
+      ? { estado: 'eliminado', academiaId: '', grupoId: null }
+      : { academiaId: destino === 'sin' ? '' : destino, grupoId: null }
+    batch.update(d.ref, cambios)
+    if (++n === 400) { await batch.commit(); batch = writeBatch(db); n = 0 }
+  }
+  if (n > 0) await batch.commit()
+  return docs.length
+}
+
+// Colecciones que se borran con la academia. `usuarios` NO está: las personas
+// se resuelven aparte porque son cuentas, no datos de la academia.
+const COLECCIONES_A_BORRAR = ['grupos', 'codigos', 'intentos', 'solicitudes', 'reportes']
+
+export async function borrarAcademiaEnCascada(academiaId, { destinoUsuarios, onProgreso } = {}) {
+  const codigo = String(academiaId || '').trim().toUpperCase()
+  if (!codigo) throw new Error('Falta el código de la academia.')
+
+  // 1) Las personas primero.
+  const movidos = await reubicarUsuariosDeAcademia(codigo, destinoUsuarios || 'sin')
+  onProgreso?.({ paso: 'usuarios', hechas: 1, total: COLECCIONES_A_BORRAR.length + 2, movidos })
+
+  // 2) Lo que cuelga, una colección por vuelta.
+  let hechas = 1
+  for (const col of COLECCIONES_A_BORRAR) {
+    const snap = await getDocs(query(collection(db, col), where('academiaId', '==', codigo)))
+    let batch = writeBatch(db)
+    let n = 0
+    for (const d of snap.docs) {
+      batch.delete(d.ref)
+      if (++n === 400) { await batch.commit(); batch = writeBatch(db); n = 0 }
+    }
+    if (n > 0) await batch.commit()
+    hechas += 1
+    onProgreso?.({ paso: col, hechas, total: COLECCIONES_A_BORRAR.length + 2, borrados: snap.size })
+  }
+
+  // 3) Su ficha del directorio, si se había publicado.
+  await deleteDoc(doc(db, 'directorio', codigo)).catch(() => null)
+
+  // 4) Y por último la academia. Al final a propósito: mientras exista, lo que
+  //    quede a medio borrar se puede seguir encontrando desde su ficha.
+  await deleteDoc(doc(db, 'academias', codigo))
+  onProgreso?.({ paso: 'academia', hechas: hechas + 1, total: COLECCIONES_A_BORRAR.length + 2 })
+
+  await registrarHistorial({
+    academiaId: codigo,
+    accion: 'borrar-academia',
+    coleccion: 'academias',
+    docId: codigo,
+    antes: { estado: 'existia', usuarios: movidos },
+    despues: { estado: 'borrada', destinoUsuarios: destinoUsuarios || 'sin' },
+  }).catch(() => null)
+
+  return { movidos }
+}
+
+// Archivar: reversible. La academia deja de aparecer y nadie entra, pero se
+// conserva todo. Es la salida por defecto frente al borrado.
+export async function archivarAcademia(academiaId, archivada = true) {
+  const codigo = String(academiaId || '').trim().toUpperCase()
+  await updateDoc(doc(db, 'academias', codigo), {
+    estado: archivada ? 'archivada' : 'activo',
+  })
+  await registrarHistorial({
+    academiaId: codigo,
+    accion: archivada ? 'archivar-academia' : 'restaurar-academia',
+    coleccion: 'academias',
+    docId: codigo,
+    despues: { estado: archivada ? 'archivada' : 'activo' },
+  }).catch(() => null)
 }

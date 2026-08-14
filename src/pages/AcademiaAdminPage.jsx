@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import PanelAcademia from '../components/PanelAcademia.jsx'
 import PersonalizacionAcademia from '../components/PersonalizacionAcademia.jsx'
+import BajaAcademia from '../components/admin/BajaAcademia.jsx'
 import { ETIQUETA_PLAN, ETIQUETA_TIPO, planEfectivo } from '../lib/capacidades.js'
 import Icon from '../components/Icon.jsx'
 
@@ -20,6 +21,61 @@ export default function AcademiaAdminPage() {
   const [editandoCodigo, setEditandoCodigo] = useState(false)
   const [codigoNuevo, setCodigoNuevo] = useState('')
   const [migrando, setMigrando] = useState(false)
+  const [baja, setBaja] = useState(false)
+  const [progreso, setProgreso] = useState(null)
+  // Para el paso 1 del asistente: a dónde se pueden mover sus personas y
+  // cuántas son. Se cargan solo al abrirlo, que es cuando hacen falta.
+  const [otras, setOtras] = useState([])
+  const [usuarios, setUsuarios] = useState([])
+
+  useEffect(() => {
+    if (!baja) return undefined
+    let vivo = true
+    ;(async () => {
+      try {
+        const { listarAcademias, listarUsuarios } = await import('../lib/firebase/usuarios.js')
+        const [as, us] = await Promise.all([listarAcademias(), listarUsuarios()])
+        if (!vivo) return
+        setOtras(as)
+        setUsuarios(us)
+      } catch {
+        if (vivo) setError('No se pudieron cargar las academias y usuarios para la baja.')
+      }
+    })()
+    return () => { vivo = false }
+  }, [baja])
+
+  // Ejecuta lo que se decidió en el asistente.
+  const ejecutarBaja = async ({ accion, destinoUsuarios }) => {
+    setOcupado(true)
+    setError('')
+    setProgreso(null)
+    try {
+      const api = await import('../lib/firebase/admin.js')
+      if (accion === 'borrar') {
+        await api.borrarAcademiaEnCascada(academia.id, { destinoUsuarios, onProgreso: setProgreso })
+        navigate('/admin/academias', { replace: true })
+        return
+      }
+      if (accion === 'archivar') {
+        // Las personas se reubican igual: una academia archivada tampoco deja
+        // entrar, y dejarlas dentro las bloquea sin decirles por qué.
+        if (destinoUsuarios) await api.reubicarUsuariosDeAcademia(academia.id, destinoUsuarios)
+        await api.archivarAcademia(academia.id, true)
+        setAcademia({ ...academia, estado: 'archivada' })
+      } else {
+        const { actualizarAcademia } = await import('../lib/firebase/usuarios.js')
+        await actualizarAcademia(academia.id, { estado: 'suspendida' })
+        setAcademia({ ...academia, estado: 'suspendida' })
+      }
+      setBaja(false)
+    } catch (err) {
+      setError(err?.message || 'No se pudo completar la baja de la academia.')
+    } finally {
+      setOcupado(false)
+      setProgreso(null)
+    }
+  }
 
   useEffect(() => {
     if (!esSuperadmin || !academiaId) return
@@ -142,6 +198,15 @@ export default function AcademiaAdminPage() {
           >
             Cambiar código
           </button>
+          {/* Se podían crear academias y no darlas de baja: solo suspenderlas,
+              que las deja existiendo con todo dentro. */}
+          <button
+            className="panel-estado-btn suspendido"
+            onClick={() => setBaja(true)}
+            disabled={ocupado || migrando}
+          >
+            <Icon name="basura" size={15} /> Dar de baja
+          </button>
         </div>
       </header>
 
@@ -170,6 +235,18 @@ export default function AcademiaAdminPage() {
       {error && <p className="cuenta-error" role="alert">{error}</p>}
 
       <PanelAcademia academiaId={academia.id} academiaNombre={academia.nombre || ''} miUid={user?.uid} />
+
+      {baja && (
+        <BajaAcademia
+          academia={academia}
+          academias={otras}
+          usuarios={usuarios}
+          ocupado={ocupado}
+          progreso={progreso}
+          onCerrar={() => setBaja(false)}
+          onConfirmar={ejecutarBaja}
+        />
+      )}
 
       <PersonalizacionAcademia
         academia={academia}

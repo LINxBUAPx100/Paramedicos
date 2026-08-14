@@ -6951,3 +6951,61 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 .logs-cambios li { padding: 2px 0; }
 .logs-antes { color: var(--texto-3); text-decoration: line-through; }
 .logs-despues { color: var(--texto); font-weight: 600; }
+
+/* ===== Asistente de baja de una academia (2 pasos) ===== */
+.ba-dialogo { max-width: 680px; }
+.ba-paso { display: block; font-size: var(--t-xs); font-weight: 400; color: var(--texto-3); margin-top: 2px; }
+.ba-pregunta { font-family: var(--fuente-sub); font-size: var(--t-md); margin-bottom: var(--e-6); }
+.ba-cuenta { color: var(--texto-2); font-size: var(--t-sm); margin-bottom: var(--e-16); }
+
+/* Borrar a la IZQUIERDA (en rojo) y el destino a la DERECHA: lo irreversible
+   separado de lo que se deshace, y no en la misma lista. */
+.ba-opciones {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--e-16);
+  flex-wrap: wrap;
+  padding: var(--e-16);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--bg-3);
+}
+.ba-destino { margin-left: auto; min-width: 260px; }
+.ba-destino select { width: 100%; }
+.ba-elegido { outline: 3px solid color-mix(in srgb, var(--rojo) 45%, transparent); outline-offset: 2px; }
+
+.ba-consecuencia {
+  display: flex; align-items: center; gap: var(--e-8);
+  margin-top: var(--e-12); padding: var(--e-12);
+  border-radius: var(--radio-sm);
+  background: color-mix(in srgb, var(--verde) 10%, transparent);
+  color: var(--texto-2); font-size: var(--t-sm);
+}
+.ba-consecuencia.mal { background: color-mix(in srgb, var(--rojo) 12%, transparent); color: var(--rojo); }
+
+.ba-acciones { display: flex; flex-direction: column; gap: var(--e-8); }
+.ba-accion {
+  display: flex; align-items: flex-start; gap: var(--e-12);
+  padding: var(--e-12);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+  cursor: pointer;
+}
+.ba-accion span { display: flex; flex-direction: column; gap: 2px; }
+.ba-accion small { color: var(--texto-3); font-size: var(--t-xs); }
+.ba-accion.elegida { border-color: var(--primario); background: color-mix(in srgb, var(--primario) 7%, transparent); }
+.ba-accion--peligro.elegida { border-color: var(--rojo); background: color-mix(in srgb, var(--rojo) 8%, transparent); }
+.ba-accion input { margin-top: 3px; width: auto; }
+
+.ba-confirmar { display: flex; flex-direction: column; gap: var(--e-6); margin-top: var(--e-16); font-size: var(--t-sm); }
+.ba-confirmar code { font-family: var(--fuente-cifra); color: var(--rojo); font-weight: 700; }
+.ba-confirmar input {
+  padding: var(--e-12);
+  border: 1.5px solid var(--rojo);
+  border-radius: var(--radio-sm);
+  background: var(--bg-2);
+  color: var(--texto);
+  font-family: var(--fuente-cifra);
+}
+.ba-progreso { margin-top: var(--e-12); color: var(--texto-2); font-size: var(--t-sm); }
