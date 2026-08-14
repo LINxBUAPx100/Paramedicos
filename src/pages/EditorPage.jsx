@@ -16,6 +16,7 @@ import {
 } from '../lib/editorModelo.js'
 import { capacidadesEditor } from '../lib/permisosEditor.js'
 import { siguientePaso } from '../lib/editorGuia.js'
+import { ocultarParaOtrosGrupos, creaSoloParaSuGrupo, avisoDeAlcance, esAcotable } from '../lib/alcanceContenido.js'
 
 // La capa de datos se importa DIFERIDA (mismo patrón del resto de la app:
 // Firebase nunca entra al bundle inicial).
@@ -446,6 +447,46 @@ export default function EditorPage() {
         : {}
     )
     if (r?.ref) setSeleccion(r.ref)
+    if (r?.nodo) await acotarAlGrupo(c.tipo, r.nodo.id)
+  }
+
+  // ---------- alcance de lo que crea un PROFESOR ----------
+  // El profesor crea para su grupo; el director, para la academia. El contenido
+  // vive en la academia, así que «solo mi grupo» se consigue ocultándolo en los
+  // DEMÁS grupos: ver lib/alcanceContenido.js, donde está el porqué de no haber
+  // separado el contenido por grupo.
+  //
+  // Va DESPUÉS del alta y no dentro: si esto falla, el tema existe y solo está
+  // más visible de lo previsto, algo que el director arregla en una pantalla que
+  // ya existe. Atarlo al alta habría hecho que un fallo de visibilidad tirara
+  // por tierra el tema entero.
+  const acotarAlGrupo = async (tipo, nodoId) => {
+    // Un módulo no se puede acotar (la visibilidad va por tema): decirle al
+    // profesor que «solo lo ve su grupo» sería falso.
+    if (!esAcotable(tipo)) return
+    if (!creaSoloParaSuGrupo({ esSuperadmin, rol, grupoId: perfil?.grupoId })) return
+    try {
+      const { listarGrupos, aplicarVisibilidad } = await import('../lib/firebase/grupos.js')
+      const grupos = await listarGrupos(destino.academiaId)
+      const cambios = ocultarParaOtrosGrupos({
+        grupos, grupoPropio: perfil.grupoId, tipo, id: nodoId,
+      })
+      await aplicarVisibilidad(cambios)
+      const aviso = avisoDeAlcance({
+        restringido: true,
+        nombreGrupo: grupos.find((g) => g.id === perfil.grupoId)?.nombre || '',
+        otrosGrupos: grupos.length - 1,
+      })
+      if (aviso) setGuardado({ estado: 'ok', mensaje: aviso })
+    } catch {
+      // No se pisa el «creado» con un error: lo que falló es el alcance, no el
+      // alta. Se dice exactamente eso, para que el profesor sepa que su tema
+      // está ahí y que puede verlo alguien más de lo previsto.
+      setGuardado({
+        estado: 'error',
+        mensaje: 'Se creó, pero no se pudo limitar a tu grupo: por ahora lo ve toda la academia. Avisa a tu director.',
+      })
+    }
   }
 
   // ---------- contenido enriquecido del tema (Fase 4) ----------

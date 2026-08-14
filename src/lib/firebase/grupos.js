@@ -65,6 +65,24 @@ export async function borrarGrupo(id) {
   await deleteDoc(doc(db, 'grupos', id))
 }
 
+// Aplica los cambios de visibilidad que calcula `alcanceContenido.js`. Las
+// reglas dejan al staff de la academia tocar SOLO `fasesOcultas` y
+// `temasOcultos`, así que esto vale también para un profesor.
+//
+// En un lote: son N-1 grupos y deben quedar todos o ninguno. Si se escribieran
+// de una en una y fallara la tercera, el tema quedaría visible para unos grupos
+// y no para otros, que es el peor de los dos resultados posibles.
+export async function aplicarVisibilidad(cambios) {
+  if (!Array.isArray(cambios) || cambios.length === 0) return 0
+  const { writeBatch } = await import('firebase/firestore')
+  const batch = writeBatch(db)
+  for (const c of cambios) {
+    batch.update(doc(db, 'grupos', c.grupoId), { [c.campo]: c.valores })
+  }
+  await batch.commit()
+  return cambios.length
+}
+
 // Une al usuario (alumno o profesor) a un grupo por su código: fija grupoId
 // y también academiaId (la academia del grupo). Devuelve el grupo.
 export async function unirseGrupo(uid, codigo) {

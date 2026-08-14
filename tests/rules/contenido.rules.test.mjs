@@ -121,6 +121,12 @@ async function preparar() {
       titulo: 'T7', estado: 'publicado', quiz: [], flashcards: [], secciones: [],
       origen: { plantillaId: 'tum', version: 1, hash: 'sello', replicacionId: 'clonacion' },
     })
+    // --- Grupos, para el ALCANCE del contenido de un profesor ---
+    // El profesor crea «para su grupo» ocultando lo nuevo en los DEMÁS grupos,
+    // y eso solo funciona si las reglas le dejan escribir esa visibilidad.
+    await pon('grupos/G-A1', { academiaId: 'ACA-A', nombre: 'Mañana', estado: 'activo', temasOcultos: [], fasesOcultas: [] })
+    await pon('grupos/G-A2', { academiaId: 'ACA-A', nombre: 'Tarde', estado: 'activo', temasOcultos: [], fasesOcultas: [] })
+    await pon('grupos/G-B1', { academiaId: 'ACA-B', nombre: 'De otra', estado: 'activo', temasOcultos: [], fasesOcultas: [] })
   })
   return env
 }
@@ -470,4 +476,62 @@ test('F7 sello de origen: ningún editor de academia puede tocarlo', { skip }, a
     { titulo: 'X', version: 2, origen: { plantillaId: 'tum', version: 1, hash: 'falso' } }))
   // Editar contenido SIN tocar el sello: flujo normal del editor.
   await assertSucceeds(updateDoc(doc(como('dirA'), t7), { titulo: 'T7 editado', version: 2 }))
+})
+
+// ============================================================
+//  Alcance del contenido de un PROFESOR (visibilidad por grupo)
+// ------------------------------------------------------------
+//  El profesor crea para su grupo sin que exista contenido separado por grupo:
+//  lo nuevo nace visible para todos y se OCULTA en los demás grupos. Todo el
+//  diseño se apoya en que las reglas le dejen escribir esos dos campos, así que
+//  aquí queda fijado. Si estas pruebas se ponen en rojo, un profesor deja de
+//  poder acotar sus temas y su contenido se filtra a la academia entera.
+// ============================================================
+
+test('un profesor ajusta la visibilidad de OTRO grupo de su academia', { skip }, async () => {
+  await preparar()
+  const { doc, updateDoc } = fsmod
+  const { assertSucceeds } = rut
+  await assertSucceeds(
+    updateDoc(doc(como('profA'), 'grupos/G-A2'), { temasOcultos: ['t-nuevo'] })
+  )
+  await assertSucceeds(
+    updateDoc(doc(como('profA'), 'grupos/G-A1'), { fasesOcultas: ['f-nueva'] })
+  )
+})
+
+test('la visibilidad es lo ÚNICO que un profesor toca de un grupo', { skip }, async () => {
+  await preparar()
+  const { doc, updateDoc } = fsmod
+  const { assertFails } = rut
+  // Renombrar o desactivar grupos es del director. Si `hasOnly` se relajara, un
+  // profesor podría desactivar el grupo de otro.
+  await assertFails(updateDoc(doc(como('profA'), 'grupos/G-A2'), { nombre: 'Mío ahora' }))
+  await assertFails(updateDoc(doc(como('profA'), 'grupos/G-A2'), { estado: 'inactivo' }))
+  // Ni colar el nombre junto a la visibilidad en la misma escritura.
+  await assertFails(
+    updateDoc(doc(como('profA'), 'grupos/G-A2'), { temasOcultos: ['x'], nombre: 'Mío' })
+  )
+  // Ni cambiar de academia el grupo.
+  await assertFails(updateDoc(doc(como('profA'), 'grupos/G-A2'), { academiaId: 'ACA-B' }))
+})
+
+test('un profesor NO toca los grupos de otra academia', { skip }, async () => {
+  await preparar()
+  const { doc, updateDoc } = fsmod
+  const { assertFails } = rut
+  await assertFails(
+    updateDoc(doc(como('profA'), 'grupos/G-B1'), { temasOcultos: ['t-nuevo'] })
+  )
+})
+
+test('un alumno no ajusta la visibilidad de su grupo', { skip }, async () => {
+  await preparar()
+  const { doc, updateDoc } = fsmod
+  const { assertFails } = rut
+  // Si pudiera, se desbloquearía a sí mismo el contenido que su profesor le
+  // oculta, que es justo lo que la visibilidad por grupo existe para impedir.
+  await assertFails(
+    updateDoc(doc(como('alumA'), 'grupos/G-A1'), { temasOcultos: [] })
+  )
 })
