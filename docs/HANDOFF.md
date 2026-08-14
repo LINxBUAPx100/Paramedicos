@@ -74,7 +74,7 @@ npx firebase-tools@15 deploy --only firestore:rules --project ptem-a304f
 | Índices | Desplegados, incluido `temas: cursoId + academiaId + estado` |
 | **Firebase Storage** | ⚠️ **NUNCA configurado.** `storage.rules` no está desplegado y la subida de archivos por academia no ha funcionado nunca. Activarlo exige plan Blaze. Decisión pendiente del usuario |
 | App Check | Código listo, inactivo hasta que exista `VITE_APPCHECK_SITE_KEY` |
-| Secrets en GitHub | Configurados (el build falla a propósito sin ellos) |
+| Secrets en GitHub | Corregidos el 2026-08-14. **Estuvieron mal desde el 2026-08-11**: los seis tenían como valor el NOMBRE de su variable, así que la web publicada no autenticaba a nadie (`auth/api-key-not-valid`). El build ahora valida su forma, no solo que existan |
 | API key | Restringida por referente HTTP en Google Cloud |
 
 ---
@@ -166,7 +166,7 @@ falsas**. No repetirlas:
 
 Lección: verificar cada función por su **nombre real** antes de declararla muerta.
 
-### Dos bugs de producción que encontró el CI
+### Bugs de producción y lo que enseñan
 
 Merecen recordarse porque marcan el patrón de error de este proyecto:
 
@@ -181,6 +181,32 @@ Merecen recordarse porque marcan el patrón de error de este proyecto:
    `permission-denied` **siempre**, y `ContenidoContext` lo tragaba cayendo al
    bundle: la academia migrada mostraba el temario genérico sin que nadie lo
    supiera.
+
+### El patrón de este proyecto: verde que no significa nada
+
+Los cuatro fallos serios encontrados hasta hoy comparten forma. **Ninguno salió
+en rojo.** Todos consistieron en una comprobación que pasaba cuando no debía, o
+en un resultado que nadie estaba mirando:
+
+| Fallo | Por qué el verde era falso |
+|---|---|
+| Reglas: claim opcional con notación de punto | los tests no cubrían el token sin la claim |
+| Reglas: `list` sin filtrar `academiaId` | el cliente tragaba el `permission-denied` y caía al bundle |
+| 21 commits sin desplegar (2026-08-13) | el job `test` corre en toda rama; el de despliegue no llegaba a ejecutarse |
+| Secrets con su propio nombre como valor | la guarda solo comprobaba «no vacío», y `"VITE_FIREBASE_API_KEY"` no lo está |
+
+De ahí tres reglas de trabajo, que valen más que cualquier arreglo concreto:
+
+1. **Verificar el efecto, no el paso.** Que el despliegue diga `success` no
+   dice que la web cambió: hay que leer el bundle publicado. Que el build pase
+   no dice que la config sirva: hay que probar la clave contra el servidor. Los
+   dos últimos fallos se cerraron así, no leyendo logs.
+2. **Una comprobación que puede pasar en falso es peor que no tenerla**, porque
+   se deja de mirar lo que vigila. Si se valida algo, se valida su FORMA (ver
+   `FORMA` en `vite.config.js`), no su presencia.
+3. **Preguntarse siempre quién mira este resultado.** El despliegue de `main`
+   llevaba días sin ejecutarse y nadie lo echó de menos porque la web se
+   publicaba desde otra rama.
 
 ---
 
