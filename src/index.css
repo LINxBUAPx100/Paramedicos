@@ -927,7 +927,7 @@ textarea:focus-visible,
   padding: var(--e-16);
   border: 1px solid var(--borde);
   border-radius: var(--radio);
-  background: var(--bg-1);
+  background: var(--bg-2);
   box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.32);
   animation: compartir-aparece 0.16s ease-out;
 }
@@ -999,7 +999,7 @@ textarea:focus-visible,
   display: block;
   padding: var(--e-8) var(--e-12);
   border-radius: var(--radio-sm);
-  background: var(--bg-1);
+  background: var(--bg-3);
   border: 1px dashed color-mix(in srgb, var(--primario) 45%, transparent);
   color: var(--primario);
   font-family: ui-monospace, SFMono-Regular, 'Cascadia Code', Consolas, monospace;
@@ -1445,7 +1445,7 @@ textarea:focus-visible,
   padding: var(--e-8) var(--e-16);
   border-radius: 999px;
   border: 1px solid var(--borde);
-  background: var(--bg-1);
+  background: var(--bg-3);
   color: var(--texto);
   font: inherit;
   font-size: var(--t-sm);
@@ -2122,7 +2122,11 @@ html[data-tema='oscuro'] .cuenta-badge { color: var(--primario-claro); }
 /* ============================================================
    Layout general
    ============================================================ */
-.app { min-height: 100vh; }
+/* Columna flexible para que el footer TOQUE SIEMPRE la base. `.app` tenía
+   `min-height: 100vh` pero no era flex, así que el `flex: 1` de `.contenido` no
+   hacía nada: con poco contenido el footer se quedaba a media página y debajo
+   quedaba una franja vacía del color del fondo. */
+.app { min-height: 100vh; display: flex; flex-direction: column; }
 
 .topbar {
   position: sticky;
@@ -3398,9 +3402,9 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
 .hero-orb { position: relative; z-index: 1; align-self: stretch; min-height: 340px; }
 .hero-orb .sph {
   position: absolute; border-radius: 50%;
-  background: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.9), var(--c) 42%, color-mix(in srgb, var(--c) 55%, #06121f) 100%);
+  background: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.9), var(--c, var(--primario)) 42%, color-mix(in srgb, var(--c, var(--primario)) 55%, #06121f) 100%);
   box-shadow:
-    0 26px 52px -12px color-mix(in srgb, var(--c) 70%, transparent),
+    0 26px 52px -12px color-mix(in srgb, var(--c, var(--primario)) 70%, transparent),
     inset -6px -8px 18px rgba(0, 0, 0, 0.28),
     inset 6px 8px 16px rgba(255, 255, 255, 0.25);
   animation-name: bob; animation-timing-function: ease-in-out; animation-iteration-count: infinite;
@@ -4415,7 +4419,9 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
 }
 
 /* ---- Sidebar como drawer en TODOS los anchos ---- */
-.cuerpo { display: block; }
+/* `flex: 1` para que la franja del medio se coma el espacio sobrante y el
+   footer quede pegado abajo (ver el comentario de `.app`). */
+.cuerpo { display: block; flex: 1 0 auto; }
 .sidebar {
   position: fixed;
   top: 64px;
@@ -4433,6 +4439,11 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
 
 .contenido { max-width: 1120px; }
 .contenido--full { max-width: none; margin: 0; padding: 0; }
+/* Las CONSOLAS (super-admin y director) sí quieren todo el ancho: son tablas,
+   rejillas de tarjetas y una navegación lateral propia, y a 1120px quedaban
+   apretadas en el centro con medio monitor vacío a los lados. A diferencia de
+   `--full` conservan el padding: sin él, las tablas se pegarían al borde. */
+.contenido--ancho { max-width: none; }
 
 /* ---- Footer PTEM ---- */
 .app-footer { background: var(--carbon); color: var(--carbon-texto-2); margin-top: var(--e-40); }
@@ -4792,7 +4803,7 @@ html[data-tema='oscuro'] .ph-eyebrow { color: var(--primario-claro); }
 .ph-wm-l {
   display: inline-block;
   animation: wmIn 0.7s var(--ease-out) both;
-  animation-delay: calc(var(--i) * 80ms + 100ms);
+  animation-delay: calc(var(--i, 0) * 80ms + 100ms);
 }
 @keyframes wmIn { from { opacity: 0; transform: translateY(0.3em) rotate(3deg); } to { opacity: 1; transform: none; } }
 
@@ -4909,7 +4920,7 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   cursor: pointer;
   overflow: hidden;
   /* Apilado PLANO (sin 3D): el z-index manda → la activa queda al frente */
-  transform: translateX(-50%) translateX(calc(var(--offset) * 104px)) scale(0.84);
+  transform: translateX(-50%) translateX(calc(var(--offset, 0) * 104px)) scale(0.84);
   transition: transform var(--dur-lenta) var(--ease-out), filter var(--dur-lenta) var(--ease-out),
     opacity var(--dur-lenta) var(--ease-out), box-shadow var(--dur-lenta) var(--ease-out), visibility var(--dur-lenta);
 }
@@ -5411,7 +5422,7 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
     height: 466px;
     width: min(370px, 92vw);
     padding: var(--e-24) var(--e-24) var(--e-20);
-    transform: translateX(-50%) translateX(calc(var(--offset) * 72px)) scale(0.85);
+    transform: translateX(-50%) translateX(calc(var(--offset, 0) * 72px)) scale(0.85);
   }
   .deck-card.is-activo { transform: translateX(-50%) translateY(-10px) scale(1.06); }
   .deck-num { font-size: 4.4rem; }
@@ -5847,7 +5858,7 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 .ct-grupo {
   border: 1px solid var(--borde);
   border-radius: var(--radio-sm);
-  background: var(--bg-1);
+  background: var(--bg-3);
 }
 .ct-grupo > summary {
   padding: var(--e-8) var(--e-12);
@@ -6179,7 +6190,7 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   border: 1px solid var(--borde);
   border-radius: var(--radio-sm);
   cursor: pointer;
-  background: var(--bg-1);
+  background: var(--bg-3);
 }
 .rp-estrategia.activa { border-color: var(--primario); background: var(--bg-2); }
 .rp-estrategia input { margin-top: 3px; flex: none; }
@@ -6191,7 +6202,7 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 .rp-detalle-academia {
   border: 1px solid var(--borde);
   border-radius: var(--radio-sm);
-  background: var(--bg-1);
+  background: var(--bg-3);
 }
 .rp-detalle-academia > summary { padding: var(--e-8) var(--e-12); cursor: pointer; }
 .rp-detalle-academia > :not(summary) { margin: var(--e-8) var(--e-12); }
@@ -6206,7 +6217,7 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   z-index: 300;
 }
 .rp-dialogo {
-  background: var(--bg-1);
+  background: var(--bg-2);
   border: 1px solid var(--borde);
   border-radius: var(--radio);
   max-width: 640px;

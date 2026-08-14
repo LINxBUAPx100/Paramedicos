@@ -59,6 +59,9 @@ export default function Layout({ children }) {
     .map((f) => ({ ...f, temas: f.temas.filter((t) => temaVisible(t.id)) }))
 
   const esHome = location.pathname === '/'
+  // Las consolas del super-admin y del director aprovechan todo el ancho: son
+  // tablas y rejillas con su propia navegación lateral, no texto para leer.
+  const esConsola = location.pathname.startsWith('/admin') || location.pathname.startsWith('/panel')
 
   // Al cambiar de ruta, arranca arriba (sin animación). Las páginas con saltos
   // propios (p. ej. TemaPage con ?ref=) se reposicionan después por su cuenta.
@@ -248,7 +251,7 @@ export default function Layout({ children }) {
         <main
           id="contenido-principal"
           tabIndex={-1}
-          className={`contenido ${esHome ? 'contenido--full' : ''}`}
+          className={`contenido ${esHome ? 'contenido--full' : ''} ${esConsola ? 'contenido--ancho' : ''}`}
           key={location.pathname}
         >
           {children}
