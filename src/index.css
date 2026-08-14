@@ -4626,9 +4626,16 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
 .ph-hero {
   position: relative;
   overflow: hidden;
-  /* Degradado plata de la referencia: luz arriba-izquierda, plata fría en los bordes */
+  /* Degradado plata de la referencia: luz arriba-izquierda, plata fría en los bordes.
+     La luz de arriba-izquierda RESPIRA: se desplaza y se abre muy despacio, lo
+     justo para que el fondo esté vivo sin pedir atención. Va en el degradado y
+     no en la estrella porque un símbolo que gira sin parar tira del ojo cada
+     vez que pasa, y compite con lo que se ha venido a leer. */
   background:
-    radial-gradient(135% 115% at 22% -10%, var(--plata-1), transparent 55%),
+    radial-gradient(
+      var(--luz-alto, 115%) var(--luz-ancho, 135%) at var(--luz-x, 22%) var(--luz-y, -10%),
+      var(--plata-1), transparent 55%
+    ),
     linear-gradient(150deg, var(--plata-1) 8%, var(--plata-2) 92%);
   /* el marco y el paramédico FLOTAN: hueco arriba (para que la cabeza salga sin
      tocar el nav) y abajo de la banda */
@@ -4650,18 +4657,39 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
   pointer-events: none;
 }
 html[data-tema='oscuro'] .ph-hero::after { opacity: 0.18; }
+/* La estrella QUIETA. Giraba sin parar y no hay nada que mirar en ella: es una
+   marca de agua, no un indicador de que algo esté cargando. Se queda con una
+   inclinación fija para que se lea como una marca colocada y no como un
+   símbolo que se quedó torcido. */
 .ph-hero-marca {
   position: absolute;
   right: -150px;
   top: 46%;
-  transform: translateY(-50%);
+  transform: translateY(-50%) rotate(-12deg);
   color: var(--texto);
   opacity: 0.05;
   z-index: -1;
-  animation: girarLento 90s linear infinite;
   pointer-events: none;
 }
-@keyframes girarLento { to { transform: translateY(-50%) rotate(360deg); } }
+
+/* Las custom properties no se pueden interpolar sin @property: sin registrarlas
+   el navegador las trata como texto y el degradado saltaría entre extremos en
+   vez de moverse. */
+@property --luz-x { syntax: '<percentage>'; inherits: false; initial-value: 22%; }
+@property --luz-y { syntax: '<percentage>'; inherits: false; initial-value: -10%; }
+@property --luz-ancho { syntax: '<percentage>'; inherits: false; initial-value: 135%; }
+@property --luz-alto { syntax: '<percentage>'; inherits: false; initial-value: 115%; }
+
+@keyframes respirarLuz {
+  0%   { --luz-x: 22%; --luz-y: -10%; --luz-ancho: 135%; --luz-alto: 115%; }
+  50%  { --luz-x: 38%; --luz-y: -4%;  --luz-ancho: 155%; --luz-alto: 132%; }
+  100% { --luz-x: 22%; --luz-y: -10%; --luz-ancho: 135%; --luz-alto: 115%; }
+}
+/* `--ease-out` disparaba la luz al máximo en los primeros segundos y la dejaba
+   ahí; para una respiración hace falta que la ida y la vuelta pesen igual. */
+@media (prefers-reduced-motion: no-preference) {
+  .ph-hero { animation: respirarLuz 24s var(--ease-in-out) infinite; }
+}
 .ph-hero-in {
   display: grid;
   grid-template-columns: 0.95fr 1.05fr;
@@ -5398,8 +5426,11 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 }
 
 /* ---- Reduced motion ---- */
+/* La estrella ya no se anima nunca, así que aquí no queda nada suyo que apagar.
+   El degradado del hero se activa a la inversa —solo con `no-preference`—, que
+   es más seguro: si algún día se copia esa regla, no se puede olvidar la
+   excepción. */
 @media (prefers-reduced-motion: reduce) {
-  .ph-hero-marca { animation: none; }
   .ph-wm-l { animation: none; }
 }
 
