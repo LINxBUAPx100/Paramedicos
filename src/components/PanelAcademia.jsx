@@ -111,7 +111,7 @@ export default function PanelAcademia({ academiaId, academiaNombre = '', miUid =
         <p className="panel-gestion-sub">
           Lo oculto desaparece de las listas de esos alumnos y sale bloqueado en el Atlas.
         </p>
-        <VisibilidadGrupos academiaId={academiaId} grupos={grupos} />
+        <VisibilidadGrupos academiaId={academiaId} academiaNombre={academiaNombre} grupos={grupos} />
       </section>
 
       <GestionMiembros

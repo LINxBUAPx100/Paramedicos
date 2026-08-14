@@ -37,7 +37,7 @@ export default function PanelGrupos() {
           pueden ver los alumnos del grupo elegido: lo oculto desaparece de sus listas y aparece
           bloqueado en el Atlas hasta que lo liberes.
         </p>
-        <VisibilidadGrupos academiaId={academiaId} grupos={grupos} />
+        <VisibilidadGrupos academiaId={academiaId} academiaNombre={academiaNombre} grupos={grupos} />
       </section>
     </div>
   )

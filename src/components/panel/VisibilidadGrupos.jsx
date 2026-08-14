@@ -33,7 +33,9 @@ import Icon from '../Icon.jsx'
 //  `toggleTodo` y `aplicarATodos` son las de siempre.
 // ============================================================
 
-export default function VisibilidadGrupos({ academiaId, grupos, cabecera = null }) {
+// `academiaNombre` es opcional y solo se usa para rotular la imagen exportada:
+// si no llega, se rotula con el código de la academia, que siempre existe.
+export default function VisibilidadGrupos({ academiaId, academiaNombre = '', grupos, cabecera = null }) {
   const { grupoId: miGrupoId, puedeVerCodigos } = useAuth()
   // Temario de LA ACADEMIA gestionada: su copia si está migrada, bundle si no.
   const { fases: fasesTemario } = useIndiceAcademia(academiaId)
@@ -48,6 +50,7 @@ export default function VisibilidadGrupos({ academiaId, grupos, cabecera = null 
   // null = el director las cerró todas a propósito.
   const [abiertaId, setAbiertaId] = useState(undefined)
   const cabeceras = useRef([])
+  const [exportando, setExportando] = useState(null) // 'completo' | 'grupo' | null
 
   // La copia local se rehace cuando quien monta esto recarga sus grupos
   // (p. ej. tras crear o borrar uno en la sección de al lado).
@@ -176,6 +179,26 @@ export default function VisibilidadGrupos({ academiaId, grupos, cabecera = null 
   const faseAbierta = abiertaId === undefined ? fasesTemario[0]?.id : abiertaId
   const alternarCarta = (id) => setAbiertaId(faseAbierta === id ? null : id)
 
+  // Exportar a PNG. `soloGrupo` decide si se respeta lo que el grupo tiene
+  // oculto o si sale el temario completo.
+  const exportar = async (soloGrupo) => {
+    setExportando(soloGrupo ? 'grupo' : 'completo')
+    setError('')
+    try {
+      const { descargarTemarioPNG } = await import('../../lib/pintarTemario.js')
+      await descargarTemarioPNG({
+        fases: fasesTemario,
+        ocultas: soloGrupo ? ocultas : null,
+        academia: academiaNombre || academiaId || '',
+        grupo: soloGrupo ? (grupo?.nombre || '') : '',
+      })
+    } catch (err) {
+      setError(err?.message || 'No se pudo generar la imagen del temario.')
+    } finally {
+      setExportando(null)
+    }
+  }
+
   const alTeclear = (e, indice) => {
     const destino = focoBaraja(indice, e.key, fasesTemario.length)
     if (destino === null) return // Tab, Enter y Espacio siguen siendo suyos
@@ -219,19 +242,36 @@ export default function VisibilidadGrupos({ academiaId, grupos, cabecera = null 
           )}
         </div>
 
-        {grupo && (
-          <div className="tv-espacios-acciones">
-            <button className="btn btn--sm btn--suave" onClick={toggleTodo} disabled={guardando}>
-              <Icon name={todoOculto ? 'ojo' : 'ojoCerrado'} size={15} />
-              {todoOculto ? 'Mostrar todo' : 'Ocultar todo'}
-            </button>
-            {lista.length > 1 && (
-              <button className="btn btn--sm btn--primario" onClick={aplicarATodos} disabled={guardando}>
-                <Icon name="capas" size={15} /> Aplicar a los {lista.length} grupos
+        <div className="tv-espacios-acciones">
+          {grupo && (
+            <>
+              <button className="btn btn--sm btn--suave" onClick={toggleTodo} disabled={guardando}>
+                <Icon name={todoOculto ? 'ojo' : 'ojoCerrado'} size={15} />
+                {todoOculto ? 'Mostrar todo' : 'Ocultar todo'}
               </button>
-            )}
-          </div>
-        )}
+              {lista.length > 1 && (
+                <button className="btn btn--sm btn--primario" onClick={aplicarATodos} disabled={guardando}>
+                  <Icon name="capas" size={15} /> Aplicar a los {lista.length} grupos
+                </button>
+              )}
+            </>
+          )}
+
+          {/* Exportar a imagen (Bloque R). Dos variantes, y la del grupo solo
+              cuando hay grupo elegido: sin él no hay nada que respetar. La
+              descarga NO depende de tener grupos, así que vive fuera de ese
+              condicional — una academia sin grupos también quiere su temario. */}
+          <button className="btn btn--sm btn--fantasma" onClick={() => exportar(false)} disabled={Boolean(exportando)}>
+            <Icon name="descarga" size={15} />
+            {exportando === 'completo' ? 'Generando…' : 'Descargar PNG'}
+          </button>
+          {grupo && temasOcultosTotal > 0 && (
+            <button className="btn btn--sm btn--fantasma" onClick={() => exportar(true)} disabled={Boolean(exportando)}>
+              <Icon name="descarga" size={15} />
+              {exportando === 'grupo' ? 'Generando…' : 'Descargar solo lo del grupo'}
+            </button>
+          )}
+        </div>
       </div>
 
       {error && <p className="cuenta-error" role="alert">{error}</p>}
