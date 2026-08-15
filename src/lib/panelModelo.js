@@ -22,6 +22,7 @@ export const SECCIONES_PANEL = [
   { id: 'resumen', ruta: '/panel', fin: true, icono: 'progreso', etiqueta: 'Resumen' },
   { id: 'miembros', ruta: '/panel/miembros', icono: 'usuario', etiqueta: 'Miembros' },
   { id: 'grupos', ruta: '/panel/grupos', icono: 'capas', etiqueta: 'Grupos' },
+  { id: 'invitaciones', ruta: '/panel/invitaciones', icono: 'llave', etiqueta: 'Invitaciones' },
   { id: 'accesos', ruta: '/panel/accesos', icono: 'candado', etiqueta: 'Accesos' },
   { id: 'calificaciones', ruta: '/panel/calificaciones', icono: 'examen', etiqueta: 'Calificaciones' },
   { id: 'contenido', ruta: '/panel/contenido', icono: 'herramientas', etiqueta: 'Contenido' },
@@ -43,6 +44,12 @@ export function seccionesPanel({ rol, capacidades = null, permisosEditor = null 
     miembros: true, // el profesor la ve en solo lectura
     accesos: true, // el profesor pide aquí ver los códigos
     grupos: dirige,
+    // Invitaciones POR ROL: SOLO director y super-admin. Un profesor no las ve
+    // ni de lejos — repartir la de 'admin_escuela' es repartir el mando de la
+    // academia, y ni siquiera tiene sentido enseñarle una lista que no puede
+    // usar. La barrera real está en firestore.rules; esto es no ofrecer una
+    // puerta que va a estar cerrada.
+    invitaciones: dirige,
     // El profesor SI la ve: es quien evalua a su grupo. Es la unica seccion de
     // escritura que un profesor tiene sin permisos editoriales, y es a proposito.
     calificaciones: true,

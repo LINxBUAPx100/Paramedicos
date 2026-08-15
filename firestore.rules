@@ -561,12 +561,14 @@ service cloud.firestore {
       // Consultar UNA invitación concreta: cualquier autenticado (para
       // canjearla). Nunca se enumeran sin filtro, igual que las academias.
       allow get: if autenticado();
-      // Listarlas: el super-admin, el director de esa academia, o un profesor
-      // al que el director ya le aprobó ver los códigos (mismo criterio que
-      // usa el panel para los códigos de academia y de grupo).
-      allow list: if esSuper()
-        || esAdminDe(resource.data.academiaId)
-        || (esStaffDe(resource.data.academiaId) && miDoc().get('puedeVerCodigos', false) == true);
+      // Listarlas: SOLO el super-admin y el director de esa academia.
+      //
+      // Un profesor NO, ni con `puedeVerCodigos` aprobado. Ese permiso existe
+      // para que reparta los códigos de academia y de grupo, que meten a todo
+      // el mundo como alumno; una invitación por rol reparte el rol, y entre
+      // ellas está la de 'admin_escuela'. Poder LEER la lista es poder copiar
+      // el enlace de director aunque no pueda crearlo.
+      allow list: if esSuper() || esAdminDe(resource.data.academiaId);
 
       // Crear: super-admin, o el DIRECTOR de SU academia. Un profesor no emite
       // invitaciones: podría fabricarse una de director y ascender solo.

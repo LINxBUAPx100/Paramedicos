@@ -230,6 +230,24 @@ a:hover { text-decoration: underline; }
   max-width: 60ch;
 }
 
+/* Aviso de que el examen de fase es una selección distinta por alumno. Va con
+   más presencia que la nota de autoevaluación —borde y color propios— porque
+   aquí el mensaje sí busca un efecto: que ni se intente copiar, y que se sepa
+   que hay que estudiar la fase entera. */
+.examen-fase-aviso {
+  display: flex;
+  align-items: center;
+  gap: var(--e-8);
+  max-width: 60ch;
+  padding: var(--e-8) var(--e-12);
+  border-left: 3px solid var(--primario);
+  border-radius: var(--radio-sm);
+  background: color-mix(in srgb, var(--primario) 8%, transparent);
+  color: var(--texto-2);
+  font-size: var(--t-sm);
+  text-align: left;
+}
+
 /* Enlace del contenido que NO pasó el filtro de hrefSeguro (lib/enlaceSeguro.js):
    se muestra el título, nunca un href ejecutable. Se marca en gris tachado para
    que el editor vea de un vistazo que ese recurso está mal escrito. */

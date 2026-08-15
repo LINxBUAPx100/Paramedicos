@@ -1,7 +1,10 @@
+import { useMemo, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useContenido, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
 import { useProgress } from '../context/ProgressContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
+import { nuevaSemilla } from '../lib/azar.js'
+import { seleccionarPreguntas } from '../lib/examenModelo.js'
 import Quiz from '../components/Quiz.jsx'
 import NotFound from './NotFound.jsx'
 import Icon from '../components/Icon.jsx'
@@ -12,6 +15,18 @@ export default function QuizPage() {
   const tema = contenido?.getTema(temaId)
   const { registrarQuiz } = useProgress()
   const { temaVisible } = useVisibilidad()
+  const [semilla, setSemilla] = useState(() => nuevaSemilla(temaId))
+
+  // El quiz de tema entraba SIEMPRE en el orden del temario: solo se barajaban
+  // las opciones. Con 7 preguntas fijas y en el mismo orden, a la tercera vuelta
+  // ya te sabes cuál toca antes de leerla, que es memorizar la posición y no el
+  // contenido. Aquí sí van todas —es práctica, no examen: quitar preguntas de
+  // un quiz de 7 solo dejaría al alumno sin repasar parte del tema—, pero cada
+  // vez en otro orden.
+  const preguntas = useMemo(
+    () => seleccionarPreguntas(tema?.quiz || [], { semilla, tamano: null }),
+    [tema, semilla]
+  )
 
   if (error) return <ErrorContenido onReintentar={reintentar} />
   if (!contenido) return <CargandoContenido />
@@ -45,9 +60,12 @@ export default function QuizPage() {
       </header>
 
       <Quiz
-        preguntas={tema.quiz}
+        key={semilla}
+        preguntas={preguntas}
         titulo={`Tema ${tema.numero}`}
+        semilla={semilla}
         onComplete={(aciertos, total) => registrarQuiz(temaId, aciertos, total)}
+        onReintentar={() => setSemilla(nuevaSemilla(temaId))}
       />
 
       <div className="quiz-page-pie">

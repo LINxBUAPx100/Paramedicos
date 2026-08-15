@@ -6,15 +6,8 @@ import { useAuth } from '../context/AuthContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
 import Quiz from '../components/Quiz.jsx'
 import Icon from '../components/Icon.jsx'
-
-function mezclar(arr) {
-  const a = [...arr]
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[a[i], a[j]] = [a[j], a[i]]
-  }
-  return a
-}
+import { nuevaSemilla } from '../lib/azar.js'
+import { seleccionarPreguntas } from '../lib/examenModelo.js'
 
 export default function ExamenPage() {
   const { registrarExamen } = useProgress()
@@ -65,9 +58,17 @@ export default function ExamenPage() {
     return map
   }, [intentos])
 
+  // El general SÍ deja elegir el tamaño (es práctica libre: quien quiere 5
+  // preguntas está repasando, no examinándose). El reparto por tema hace que
+  // esas 10 no caigan todas del mismo sitio; "Todas" pide el banco entero, y
+  // ahí `tamano: null` desactiva la política de tamaño.
   function iniciar(n) {
-    const seleccion = mezclar(preguntasDisponibles).slice(0, n)
-    setConfig({ preguntas: seleccion, key: Date.now() })
+    const semilla = nuevaSemilla('gen')
+    const tamano = n >= preguntasDisponibles.length ? null : n
+    setConfig({
+      preguntas: seleccionarPreguntas(preguntasDisponibles, { semilla, tamano }),
+      semilla,
+    })
   }
 
   if (error) return <ErrorContenido onReintentar={reintentar} />
@@ -83,10 +84,12 @@ export default function ExamenPage() {
           <p>{config.preguntas.length} preguntas aleatorias de todo el temario.</p>
         </header>
         <Quiz
-          key={config.key}
+          key={config.semilla}
           preguntas={config.preguntas}
           titulo="Examen general"
+          semilla={config.semilla}
           onComplete={(aciertos, total) => registrarExamen(aciertos, total)}
+          onReintentar={() => iniciar(cantidad)}
         />
         <div className="quiz-page-pie">
           <button className="btn btn--suave" onClick={() => setConfig(null)}>

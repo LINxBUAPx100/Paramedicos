@@ -71,7 +71,7 @@ prueba vigente); la distinción de rol la hace cada página. Las URLs `/fase/:id
 | `academias` | = código (AEP-2026) | nombre, tipo(basico\|avanzado\|medicina), plan(texto: periodicidad), estado, logo, lema, colorHero, fechaRenovacion, creado | super; director solo logo/lema/colorHero | get: autenticado; list: super |
 | `usuarios` | = uid Auth | nombre, email, rol, academiaId, grupoId, estado, esPrueba, pruebaHasta, invitacionUsada, fasesDesbloqueadas[], puedeVerCodigos | dueño (acotado; `rol` solo respaldado por una invitación válida), director (rol/estado/grupoId/puedeVerCodigos), staff (fasesDesbloqueadas), super | dueño, super, staff de su academia |
 | `progreso` | = uid | leidos{}, quizzes{}, examenes[], updatedAt (debounce 800 ms) | dueño | dueño, super |
-| `intentos` | auto | uid, academiaId, faseId/numero/titulo, aciertos, total, porcentaje, fecha | alumno (create, inmutable) | dueño, super, staff |
+| `intentos` | auto | uid, academiaId, faseId/numero/titulo, aciertos, total, porcentaje, **semilla**, fecha | alumno (create, inmutable) | dueño, super, staff |
 | `grupos` | = código GRP-XXXX | academiaId, nombre, estado, fasesOcultas[], temasOcultos[], creadoPor | director/super; staff solo visibilidad | get: autenticado; list: super/staff |
 | `codigos` | = código de prueba | academiaId, grupoId, creadoPor, nota, estado, dias, expira | super/director | get: autenticado; list: super/director |
 | `invitaciones` | = código INV-ACA-R-XXXX | academiaId, grupoId, **rol**(alumno\|instructor\|admin_escuela), creadoPor, nota, estado, dias, usos, maxUsos, expira, ultimoUso | super/director (crear, estado/nota/maxUsos); el invitado solo `usos+1` | get: autenticado; list: super/director/profesor con puedeVerCodigos |

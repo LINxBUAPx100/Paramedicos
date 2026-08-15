@@ -17,12 +17,35 @@ const ids = (secciones) => secciones.map((s) => s.id)
 
 test('el director ve todo su panel; el editor depende del plan', () => {
   const pro = seccionesPanel({ rol: 'admin_escuela', capacidades: { editorContenido: true } })
-  assert.deepEqual(ids(pro), ['resumen', 'miembros', 'grupos', 'accesos', 'calificaciones', 'contenido', 'academia'])
+  assert.deepEqual(ids(pro), [
+    'resumen', 'miembros', 'grupos', 'invitaciones', 'accesos', 'calificaciones',
+    'contenido', 'academia',
+  ])
 
   // Plan BASE: sin editor de contenido, la sección no existe (no un botón que
   // lleve a una pantalla que le va a decir que no puede).
   const base = seccionesPanel({ rol: 'admin_escuela', capacidades: { editorContenido: false } })
-  assert.deepEqual(ids(base), ['resumen', 'miembros', 'grupos', 'accesos', 'calificaciones', 'academia'])
+  assert.deepEqual(ids(base), [
+    'resumen', 'miembros', 'grupos', 'invitaciones', 'accesos', 'calificaciones', 'academia',
+  ])
+})
+
+test('INVITACIONES solo la ve quien dirige la academia', () => {
+  // Es la sección que reparte roles, incluido el de director. Un profesor no la
+  // ve ni con permisos editoriales ni con el acceso a códigos aprobado: eso
+  // último le abre los códigos de academia y grupo, que meten a todos como
+  // alumno, no el enlace que nombra directores.
+  for (const rol of ['admin_escuela', 'superadmin']) {
+    assert.ok(ids(seccionesPanel({ rol })).includes('invitaciones'), rol)
+  }
+  const profe = seccionesPanel({
+    rol: 'instructor',
+    capacidades: { editorContenido: true },
+    permisosEditor: { editarContenido: true },
+  })
+  assert.equal(ids(profe).includes('invitaciones'), false)
+  assert.equal(ids(seccionesPanel({ rol: 'alumno' })).includes('invitaciones'), false)
+  assert.equal(ids(seccionesPanel()).includes('invitaciones'), false)
 })
 
 test('el profesor entra al mismo armazón con menos secciones', () => {

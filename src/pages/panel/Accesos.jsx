@@ -2,7 +2,6 @@ import { usePanel } from '../../components/panel/PanelShell.jsx'
 import SolicitudesInternas from '../../components/panel/SolicitudesInternas.jsx'
 import SolicitudesDeAcceso from '../../components/panel/SolicitudesDeAcceso.jsx'
 import CodigosPrueba from '../../components/panel/CodigosPrueba.jsx'
-import InvitacionesRol from '../../components/panel/InvitacionesRol.jsx'
 import AccesoCodigos from '../../components/panel/AccesoCodigos.jsx'
 
 // ============================================================
@@ -46,18 +45,9 @@ export default function PanelAccesos() {
         />
       )}
 
-      {/* Invitaciones POR ROL: el único sitio donde se decide con qué rol entra
-          alguien sin tener que promoverlo después en Miembros. Va antes de los
-          códigos de prueba porque es el alta normal; la prueba es la excepción. */}
-      {gestion && (
-        <InvitacionesRol
-          academiaId={academiaId}
-          academiaNombre={academiaNombre}
-          miUid={miUid}
-          grupos={grupos}
-        />
-      )}
-
+      {/* Las invitaciones POR ROL tienen su propia sección (/panel/invitaciones):
+          dar de alta a un profesor no es un trámite que deba quedar al fondo de
+          esta pantalla, y además solo la ve quien dirige. */}
       {gestion ? (
         <CodigosPrueba
           academiaId={academiaId}

@@ -54,6 +54,11 @@ async function preparar() {
     await pon('usuarios/dirA', { rol: 'admin_escuela', academiaId: 'ACA-A', estado: 'activo' })
     await pon('usuarios/dirB', { rol: 'admin_escuela', academiaId: 'ACA-B', estado: 'activo' })
     await pon('usuarios/profA', { rol: 'instructor', academiaId: 'ACA-A', estado: 'activo' })
+    // Profesor CON el acceso a códigos aprobado: el caso que hay que negar
+    // explícitamente, porque ese permiso sí le abre los códigos de grupo.
+    await pon('usuarios/profVeCodigos', {
+      rol: 'instructor', academiaId: 'ACA-A', estado: 'activo', puedeVerCodigos: true,
+    })
 
     // Un usuario por escenario: cada prueba escribe su propio perfil y no debe
     // pisar el de otra (node:test corre los ficheros en paralelo por defecto).
@@ -243,6 +248,22 @@ test('invitaciones: un profesor NO emite invitaciones', { skip }, async () => {
       expira: Timestamp.fromDate(dentroDe(14 * DIA)),
     })
   )
+})
+
+test('invitaciones: un profesor NO puede ni LISTARLAS', { skip }, async () => {
+  await preparar()
+  const { collection, query, where, getDocs } = fsmod
+  const { assertFails, assertSucceeds } = rut
+  const suyas = (db) => query(collection(db, 'invitaciones'), where('academiaId', '==', 'ACA-A'))
+  // Ni con `puedeVerCodigos` aprobado: ese permiso es para los códigos de
+  // academia y grupo, que meten a todos como alumno. Leer esta lista es poder
+  // copiar el enlace de DIRECTOR aunque no se pueda crear.
+  await assertFails(getDocs(suyas(como('profA'))))
+  await assertFails(getDocs(suyas(como('profVeCodigos'))))
+  // El director de su academia sí.
+  await assertSucceeds(getDocs(suyas(como('dirA'))))
+  // Y el de otra academia no ve las ajenas.
+  await assertFails(getDocs(suyas(como('dirB'))))
 })
 
 test('invitaciones: un director no emite para la academia de otro', { skip }, async () => {

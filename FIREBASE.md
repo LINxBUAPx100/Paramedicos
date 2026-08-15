@@ -174,8 +174,9 @@ El código de la academia y el de cada grupo dicen **a dónde** entra la persona
 pero no **como qué**: quien los usa aterriza siempre como `alumno` y había que
 promoverlo a mano en Miembros. Las **invitaciones por rol** cierran ese hueco.
 
-En **/panel → Accesos** (y en el dashboard de academia del super-admin) el
-director crea una invitación eligiendo:
+Tienen **sección propia**: **/panel → Invitaciones** para el director, y el
+dashboard de cada academia (`/admin/academia/CODIGO`) para el super-admin. Ahí
+se crea una invitación eligiendo:
 
 - **Entra como**: Alumno · Profesor · Director.
 - **Grupo** (opcional): se integra al canjearla, igual que un código de grupo.
@@ -190,9 +191,12 @@ mismo botón **Compartir** que el resto —WhatsApp, enlace, código— y el tex
 dice explícitamente «te invita como profesor». El invitado lo activa en
 **Mi cuenta → Únete con tu código**, el mismo campo de siempre.
 
-Un **profesor** con el acceso a códigos aprobado puede **repartir** las
-invitaciones que su director emitió, pero **no crearlas**: se fabricaría la de
-director y ascendería solo (lo niegan la UI y las reglas).
+**Solo director y super-admin.** Un profesor no ve esta sección, ni siquiera con
+el acceso a códigos aprobado (`puedeVerCodigos`): ese permiso existe para que
+reparta los códigos de academia y de grupo, que meten a todo el mundo como
+alumno. Una invitación por rol reparte el rol, y entre ellas está la de
+director; poder **leer** la lista ya sería poder copiar ese enlace. Las reglas
+le niegan tanto `create` como `list`.
 
 **Lo que garantizan las reglas** (`invitacionValida()` en `firestore.rules`):
 es la única vía por la que alguien puede cambiar su propio `rol`, y el servidor
@@ -308,6 +312,41 @@ El botón ofrece "Enviar por WhatsApp", "Copiar enlace" y "Copiar solo el
 código" (en móvil usa la hoja de compartir nativa). El director comparte el
 código de academia (sin grupo) o el de cada grupo; el profesor autorizado
 comparte el de su grupo.
+
+## Aleatorización de exámenes (capa 0)
+
+Antes solo se barajaban las **opciones** de cada pregunta. El examen de fase
+usaba el banco COMPLETO (las 73 preguntas de la fase 1, por ejemplo), así que
+dos alumnos veían exactamente el mismo examen y pasarse las respuestas
+funcionaba. Ahora:
+
+- **Subconjunto del banco**, no el banco entero. La política vive en una sola
+  constante (`PORCION_DEL_BANCO` en `src/lib/examenModelo.js`): la mitad del
+  banco, mínimo 12, máximo 30. Con el temario actual → fase 1: 30 de 73;
+  fase 3: 23 de 46; fase 6: 15 de 29. Las fases 7 y 8 (14 y 12 preguntas) se
+  van al piso y salen casi enteras: con un banco así no hay reparto que valga,
+  solo escribir más preguntas.
+- **Reparto proporcional por tema**, no un puñado al azar. Si se cogieran 30
+  de 73 a lo bruto, un alumno podría librarse por suerte del tema que no
+  estudió. Con reparto, los 12 temas de la fase están siempre representados y
+  lo que varía es qué preguntas de cada uno tocan.
+- **Semilla por intento** (`src/lib/azar.js`, mulberry32). La misma semilla
+  produce siempre el mismo examen: **recargar la página ya no vuelve a tirar
+  los dados**, que era la forma trivial de repetir hasta que salieran las
+  preguntas cómodas. La semilla vive en `sessionStorage` mientras el intento
+  está abierto y se guarda en `intentos/{id}.semilla`, así que el examen exacto
+  de un alumno se puede regenerar si reclama una nota.
+- **Quiz de tema**: ahora también baraja el ORDEN de las preguntas (antes salían
+  siempre en el orden del temario). Las preguntas van todas — es práctica, no
+  examen.
+
+Medido contra el banco real de la fase 1: dos alumnos con semillas distintas
+reciben 30 preguntas cada uno, cubren los 12 temas, y **comparten 9 de 30 (30%)**.
+
+Esto **no** convierte los exámenes en acreditativos: las respuestas correctas
+siguen viajando en el bundle y se leen con las herramientas de desarrollador.
+Lo que cierra es que copiarle al de al lado sirva de algo. Blindarlo de verdad
+pide calificar en el servidor (Cloud Functions), que este proyecto no tiene.
 
 ## Visibilidad: flashcards y exámenes
 

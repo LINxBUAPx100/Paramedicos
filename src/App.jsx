@@ -26,6 +26,7 @@ const PanelShell = lazy(() => import('./components/panel/PanelShell.jsx'))
 const PanelResumen = lazy(() => import('./pages/panel/Resumen.jsx'))
 const PanelMiembros = lazy(() => import('./pages/panel/Miembros.jsx'))
 const PanelGrupos = lazy(() => import('./pages/panel/Grupos.jsx'))
+const PanelInvitaciones = lazy(() => import('./pages/panel/Invitaciones.jsx'))
 const PanelAccesos = lazy(() => import('./pages/panel/Accesos.jsx'))
 const PanelCalificaciones = lazy(() => import('./pages/panel/Calificaciones.jsx'))
 const PanelContenido = lazy(() => import('./pages/panel/Contenido.jsx'))
@@ -103,6 +104,7 @@ export default function App() {
               <Route index element={<PanelResumen />} />
               <Route path="miembros" element={<PanelMiembros />} />
               <Route path="grupos" element={<PanelGrupos />} />
+              <Route path="invitaciones" element={<PanelInvitaciones />} />
               <Route path="accesos" element={<PanelAccesos />} />
               <Route path="calificaciones" element={<PanelCalificaciones />} />
               <Route path="contenido" element={<PanelContenido />} />

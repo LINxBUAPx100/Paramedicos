@@ -7,14 +7,27 @@ import { useVisibilidad } from '../lib/useVisibilidad.js'
 import Quiz from '../components/Quiz.jsx'
 import Icon from '../components/Icon.jsx'
 import NotFound from './NotFound.jsx'
+import { nuevaSemilla } from '../lib/azar.js'
+import { seleccionarPreguntas, temasCubiertos } from '../lib/examenModelo.js'
 
-function mezclar(arr) {
-  const a = [...arr]
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[a[i], a[j]] = [a[j], a[i]]
-  }
-  return a
+// --- Semilla del intento en curso -------------------------------------------
+// El examen de fase es el único que se GUARDA (lo ve el maestro), así que es el
+// único donde refrescar la página no puede ser una tirada de dados nueva: con
+// un subconjunto del banco, recargar hasta que salgan las preguntas cómodas
+// sería trivial. La semilla vive en sessionStorage —una por fase— y solo la
+// renueva "Otro intento", que es lo que de verdad es un intento nuevo.
+//
+// sessionStorage y no localStorage a propósito: al cerrar la pestaña el examen
+// a medias se da por abandonado. Y si el navegador lo tiene bloqueado, se cae a
+// una semilla en memoria: se pierde la reproducibilidad al refrescar, nunca el
+// examen.
+const ssClave = (faseId) => `ptem-examen-semilla__${faseId}`
+
+function leerSemilla(faseId) {
+  try { return sessionStorage.getItem(ssClave(faseId)) || '' } catch { return '' }
+}
+function guardarSemilla(faseId, semilla) {
+  try { sessionStorage.setItem(ssClave(faseId), semilla) } catch { /* no disponible */ }
 }
 
 export default function ExamenFasePage() {
@@ -25,14 +38,28 @@ export default function ExamenFasePage() {
   const { faseVisible, temaVisible } = useVisibilidad()
 
   const [iniciado, setIniciado] = useState(false)
-  const [intentoKey, setIntentoKey] = useState(0)
   const [guardado, setGuardado] = useState(null) // { ok, pct } | { ok: false }
   const [fin, setFin] = useState(null) // { pct } → pantalla de felicitaciones
+  // Semilla del intento: se recupera de la sesión (refrescar = mismo examen) y
+  // solo nace una nueva si no había ninguna.
+  const [semilla, setSemilla] = useState(() => {
+    const guardada = leerSemilla(faseId)
+    if (guardada) return guardada
+    const nueva = nuevaSemilla(faseId)
+    guardarSemilla(faseId, nueva)
+    return nueva
+  })
 
-  // Baraja las preguntas de la fase (excluyendo temas ocultos) una vez por intento.
+  // Banco disponible: las preguntas de la fase, menos las de temas ocultos
+  // para el grupo del alumno.
+  const banco = useMemo(
+    () => (contenido?.preguntasDeFase(faseId) || []).filter((q) => temaVisible(q.temaId)),
+    [contenido, faseId, temaVisible]
+  )
+  // El examen: un SUBCONJUNTO repartido por tema, reproducible desde la semilla.
   const preguntas = useMemo(
-    () => mezclar((contenido?.preguntasDeFase(faseId) || []).filter((q) => temaVisible(q.temaId))),
-    [contenido, faseId, intentoKey, temaVisible]
+    () => seleccionarPreguntas(banco, { semilla }),
+    [banco, semilla]
   )
 
   if (error) return <ErrorContenido onReintentar={reintentar} />
@@ -63,6 +90,10 @@ export default function ExamenFasePage() {
         fase,
         aciertos,
         total,
+        // Con la semilla y el banco de la fase se regenera el examen EXACTO que
+        // vio este alumno. Sin ella, un intento es un número suelto y una
+        // reclamación de nota no se puede resolver.
+        semilla,
       })
       setGuardado({ ok: true, pct })
     } catch {
@@ -70,10 +101,13 @@ export default function ExamenFasePage() {
     }
   }
 
+  // Un intento nuevo es una semilla nueva: otras preguntas y otro orden.
   const otroIntento = () => {
     setGuardado(null)
     setFin(null)
-    setIntentoKey((k) => k + 1)
+    const nueva = nuevaSemilla(faseId)
+    guardarSemilla(faseId, nueva)
+    setSemilla(nueva)
   }
 
   return (
@@ -88,9 +122,16 @@ export default function ExamenFasePage() {
           <h1>Examen de la Fase {fase.numero}</h1>
           <p className="examen-fase-nombre">{fase.titulo}</p>
           <p>
-            {preguntas.length} preguntas de los {fase.temas.length} temas de esta fase. Al terminar,
-            tu resultado se guarda como intento (fecha, puntaje y % de acierto) para que tú y tu
-            maestro puedan seguir tu avance.
+            {preguntas.length} preguntas escogidas de las {banco.length} de esta fase, repartidas
+            entre sus {temasCubiertos(preguntas)} temas. Al terminar, tu resultado se guarda como
+            intento (fecha, puntaje y % de acierto) para que tú y tu maestro puedan seguir tu avance.
+          </p>
+          {/* Decirlo de frente tiene dos efectos y los dos interesan: quita la
+              idea de que copiarle al de al lado sirva, y avisa de que estudiar
+              media fase no basta porque van a caer preguntas de todos sus temas. */}
+          <p className="examen-fase-aviso">
+            <Icon name="candado" size={15} /> Cada alumno recibe una selección distinta, y
+            recargar la página no la cambia.
           </p>
           <p className="examen-nota-autoeval">
             Es una <strong>autoevaluación</strong> para saber qué repasar, no una calificación
@@ -120,10 +161,12 @@ export default function ExamenFasePage() {
           )}
 
           <Quiz
-            key={intentoKey}
+            key={semilla}
             preguntas={preguntas}
             titulo={`Fase ${fase.numero}`}
             onComplete={onComplete}
+            semilla={semilla}
+            onReintentar={otroIntento}
           />
 
           <div className="quiz-page-pie">

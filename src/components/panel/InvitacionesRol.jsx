@@ -14,14 +14,14 @@ import CompartirCodigo from '../CompartirCodigo.jsx'
 //  que promoverlo a mano en Miembros. Aquí se emite el enlace ya con el rol
 //  dentro: alumno, profesor o director.
 //
-//  `soloLectura` es la vista del PROFESOR con el acceso a códigos aprobado:
-//  puede repartir las invitaciones que su director emitió, pero no crearlas
-//  (podría fabricarse una de director y ascender solo; las reglas también lo
-//  impiden, esto solo evita ofrecerle un botón que va a fallar).
+//  SOLO lo monta quien dirige: la sección /panel/invitaciones (director) y el
+//  dashboard de academia del super-admin. Un profesor no lo ve ni en solo
+//  lectura — repartir la invitación de 'admin_escuela' es repartir el mando de
+//  la academia. La barrera real la ponen las reglas, que no le dejan ni listar.
 // ============================================================
 
 export default function InvitacionesRol({
-  academiaId, academiaNombre = '', miUid, grupos = [], soloLectura = false,
+  academiaId, academiaNombre = '', miUid, grupos = [],
 }) {
   const [lista, setLista] = useState(null)
   const [rol, setRol] = useState('alumno')
@@ -136,8 +136,7 @@ export default function InvitacionesRol({
         profesor o director, sin que tengas que promoverla después en Miembros.
       </p>
 
-      {!soloLectura && (
-        <form className="pc-form" onSubmit={crear}>
+      <form className="pc-form" onSubmit={crear}>
           <label>
             Entra como
             <select value={rol} onChange={(e) => cambiarRol(e.target.value)}>
@@ -189,10 +188,9 @@ export default function InvitacionesRol({
           <button className="btn btn--primario" type="submit" disabled={ocupado}>
             {ocupado ? 'Creando…' : '+ Crear invitación'}
           </button>
-        </form>
-      )}
+      </form>
 
-      {!soloLectura && rolActual && (
+      {rolActual && (
         <p className="pi-ayuda">
           <span className={`pi-rol ${rolActual.rol}`}>{rolActual.etiqueta}</span>
           {rolActual.descripcion}
@@ -220,11 +218,7 @@ export default function InvitacionesRol({
       {error && <p className="cuenta-error" role="alert">{error}</p>}
 
       {lista === null ? null : lista.length === 0 ? (
-        <p className="panel-vacio">
-          {soloLectura
-            ? 'Tu director aún no ha emitido invitaciones por rol.'
-            : 'Aún no has creado invitaciones por rol.'}
-        </p>
+        <p className="panel-vacio">Aún no has creado invitaciones por rol.</p>
       ) : (
         <ul className="pc-lista">
           {lista.map((inv) => {
@@ -252,16 +246,14 @@ export default function InvitacionesRol({
                       rol={inv.rol}
                     />
                   )}
-                  {!soloLectura && est !== 'expirada' && (
+                  {est !== 'expirada' && (
                     <button className="pc-toggle" onClick={() => alternar(inv)}>
                       {inv.estado === 'activo' ? 'Desactivar' : 'Reactivar'}
                     </button>
                   )}
-                  {!soloLectura && (
-                    <button className="pc-toggle pc-borrar" onClick={() => borrar(inv)}>
-                      Borrar
-                    </button>
-                  )}
+                  <button className="pc-toggle pc-borrar" onClick={() => borrar(inv)}>
+                    Borrar
+                  </button>
                 </span>
               </li>
             )

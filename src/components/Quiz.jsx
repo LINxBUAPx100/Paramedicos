@@ -5,8 +5,15 @@ import { barajarPreguntas } from '../lib/baraja.js'
 // props: preguntas [{ pregunta, opciones, correcta, explicacion }], onComplete(aciertos, total), titulo
 //   · `correcta` puede ser un índice o un arreglo de índices (1-3 correctas).
 //   · Las opciones se barajan en cada intento (la correcta no cae siempre en la misma letra).
-export default function Quiz({ preguntas, onComplete, titulo }) {
-  const [baraja, setBaraja] = useState(() => barajarPreguntas(preguntas))
+//   · `semilla`: si se pasa, el barajado es REPRODUCIBLE — refrescar la página
+//     devuelve exactamente el mismo examen. Quien la pasa es quien decide qué
+//     es un intento (ExamenFasePage la renueva al pulsar "Otro intento"); sin
+//     ella se cae a Math.random, que es lo que quiere una práctica suelta.
+//   · `onReintentar`: quien manda la semilla necesita enterarse de que empieza
+//     un intento nuevo para renovarla. Sin esto, "Intentar de nuevo" repetiría
+//     el mismo examen letra por letra.
+export default function Quiz({ preguntas, onComplete, titulo, semilla = null, onReintentar = null }) {
+  const [baraja, setBaraja] = useState(() => barajarPreguntas(preguntas, semilla))
   const [indice, setIndice] = useState(0)
   const [seleccion, setSeleccion] = useState(null)
   const [confirmado, setConfirmado] = useState(false)
@@ -38,7 +45,10 @@ export default function Quiz({ preguntas, onComplete, titulo }) {
   }
 
   function reiniciar() {
-    setBaraja(barajarPreguntas(preguntas)) // nuevo barajado en cada intento
+    // Con semilla, el reintento lo gobierna el padre (renueva la semilla y con
+    // ella las preguntas); sin semilla, se rebaraja aquí mismo.
+    if (onReintentar) { onReintentar(); return }
+    setBaraja(barajarPreguntas(preguntas))
     setIndice(0)
     setSeleccion(null)
     setConfirmado(false)

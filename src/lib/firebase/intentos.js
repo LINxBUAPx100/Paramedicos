@@ -10,7 +10,14 @@ import { db } from './init.js'
 import { collection, addDoc, query, where, getDocs, serverTimestamp } from 'firebase/firestore'
 
 // Registra un intento de examen de fase. Devuelve el porcentaje.
-export async function guardarIntentoFase({ uid, nombre, academiaId, fase, aciertos, total }) {
+//
+// `semilla`: con ella y el banco de la fase se REGENERA el examen exacto que
+// vio el alumno (lib/examenModelo.js). Desde que el examen es un subconjunto
+// del banco, sin este dato un intento es un porcentaje suelto y una
+// reclamación de nota no se puede resolver: nadie sabe qué preguntas tocaron.
+export async function guardarIntentoFase({
+  uid, nombre, academiaId, fase, aciertos, total, semilla = null,
+}) {
   const porcentaje = total ? Math.round((aciertos / total) * 100) : 0
   await addDoc(collection(db, 'intentos'), {
     uid,
@@ -22,6 +29,7 @@ export async function guardarIntentoFase({ uid, nombre, academiaId, fase, aciert
     aciertos,
     total,
     porcentaje,
+    semilla: semilla || null,
     fecha: serverTimestamp(),
   })
   return porcentaje
