@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '../../context/AuthContext.jsx'
 import Icon from '../Icon.jsx'
 import CompartirCodigo from '../CompartirCodigo.jsx'
+import InvitacionesRol from './InvitacionesRol.jsx'
 
 // Acceso de un PROFESOR a los códigos: los ve solo si su director se lo aprobó.
 // Mientras no lo tenga, esta sección es el sitio donde lo pide.
@@ -32,6 +33,7 @@ export default function AccesoCodigos({ academiaId, academiaNombre = '', grupos 
   // Acceso aprobado: lista de códigos en solo lectura.
   if (puedeVerCodigos) {
     return (
+      <>
       <section className="panel-codigos-acceso">
         <h2><Icon name="candado" size={20} /> Códigos de tu academia</h2>
         <p className="panel-gestion-sub">
@@ -59,6 +61,18 @@ export default function AccesoCodigos({ academiaId, academiaNombre = '', grupos 
           ))}
         </ul>
       </section>
+
+      {/* Las invitaciones POR ROL las EMITE el director; un profesor solo las
+          reparte. Crear una es lo que no puede: se fabricaría la de director y
+          ascendería solo (las reglas también lo niegan). */}
+      <InvitacionesRol
+        academiaId={academiaId}
+        academiaNombre={academiaNombre}
+        miUid={user?.uid || null}
+        grupos={grupos}
+        soloLectura
+      />
+      </>
     )
   }
 

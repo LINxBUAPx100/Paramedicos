@@ -203,6 +203,49 @@ service cloud.firestore {
         && academiaActiva(request.resource.data.academiaId);
     }
 
+    // Canje de una INVITACIÓN POR ROL sobre el propio perfil. Es la ÚNICA vía
+    // por la que el propio usuario puede cambiar su `rol`, y por eso se valida
+    // entera aquí y no se fía de nada que venga del cliente:
+    //   · la invitación existe, está activa y no ha vencido,
+    //   · no está agotada (maxUsos > 0 ⇒ usos < maxUsos),
+    //   · el rol escrito es EXACTAMENTE el de la invitación,
+    //   · ese rol sale del catálogo cerrado alumno|instructor|admin_escuela:
+    //     'superadmin' NO se reparte por enlace, ni aunque alguien consiguiera
+    //     escribirlo en el doc de la invitación,
+    //   · la academia y el grupo escritos son los de la invitación.
+    //
+    // `resource.data.rol in [...]` acota también el ORIGEN: un superadmin no se
+    // autodegrada por tocar un enlace de alumno.
+    //
+    // El contador `usos` lo escribe el propio invitado (regla de `invitaciones`
+    // más abajo), así que limita enlaces repartidos de buena fe, no a un actor
+    // hostil que ya tiene el código. Lo que sí se sostiene contra él es la
+    // caducidad y la desactivación, que solo escribe el director.
+    function invitacionDoc(cod) {
+      return get(/databases/$(database)/documents/invitaciones/$(cod)).data;
+    }
+    function invitacionValida() {
+      return ('invitacionUsada' in request.resource.data)
+        && request.resource.data.invitacionUsada is string
+        && exists(/databases/$(database)/documents/invitaciones/$(request.resource.data.invitacionUsada))
+        && invitacionDoc(request.resource.data.invitacionUsada).estado == 'activo'
+        && invitacionDoc(request.resource.data.invitacionUsada).expira > request.time
+        && (
+          invitacionDoc(request.resource.data.invitacionUsada).get('maxUsos', 0) == 0
+          || invitacionDoc(request.resource.data.invitacionUsada).get('usos', 0)
+             < invitacionDoc(request.resource.data.invitacionUsada).get('maxUsos', 0)
+        )
+        && invitacionDoc(request.resource.data.invitacionUsada).rol
+             in ['alumno', 'instructor', 'admin_escuela']
+        && request.resource.data.rol == invitacionDoc(request.resource.data.invitacionUsada).rol
+        && resource.data.rol in ['alumno', 'instructor', 'admin_escuela']
+        && request.resource.data.academiaId
+             == invitacionDoc(request.resource.data.invitacionUsada).academiaId
+        && academiaActiva(request.resource.data.academiaId)
+        && request.resource.data.get('grupoId', null)
+             == invitacionDoc(request.resource.data.invitacionUsada).get('grupoId', null);
+    }
+
     // --- ACADEMIAS (el id del doc ES el código, p.ej. "AEP-2026") ---
     match /academias/{codigo} {
       // Consultar UN código concreto: cualquier autenticado (validar el código
@@ -357,15 +400,27 @@ service cloud.firestore {
         //                    unirseAGrupo   (lib/firebase/grupos.js)
         //   codigoPrueba, pruebaHasta, (+academiaId, grupoId)
         //                  → canjearCodigo (lib/firebase/codigos.js)
+        //   rol, invitacionUsada, (+academiaId, grupoId, esPrueba)
+        //                  → canjearInvitacion (lib/firebase/invitaciones.js).
+        //     `rol` está en la lista, pero SOLO se deja cambiar respaldado por
+        //     una invitación válida (cláusula de más abajo). Sin ella, sigue
+        //     siendo inmutable para su dueño.
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
              'nombre', 'email', 'academiaId', 'grupoId',
-             'esPrueba', 'pruebaHasta', 'codigoPrueba'])
+             'esPrueba', 'pruebaHasta', 'codigoPrueba',
+             'rol', 'invitacionUsada'])
         // Los permisos editoriales NUNCA los edita el propio usuario (un
         // profesor no se auto-concede acceso): solo el director PRO / super.
         // Redundante con la lista blanca de arriba, y a propósito: si algún día
         // se amplía esa lista, esta barrera sigue en pie.
         && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['permisosEditor'])
-        && request.resource.data.rol == resource.data.rol
+        // El ROL solo se mueve solo si lo respalda una INVITACIÓN POR ROL. Se
+        // pone la igualdad primero para que el caso normal (editar el nombre,
+        // unirse por código) no gaste una lectura extra: `||` corta.
+        && (
+          request.resource.data.rol == resource.data.rol
+          || invitacionValida()
+        )
         && request.resource.data.estado == resource.data.estado
         // Unirse a una academia. DOS vías, nunca una tercera:
         //   · por CÓDIGO, solo si la academia NO está en el directorio;
@@ -376,12 +431,16 @@ service cloud.firestore {
         // una puerta abierta. Publicarse en el directorio, por tanto, cambia el
         // modo de acceso a "solo por aprobación". Los miembros actuales no se
         // ven afectados: ya tienen su academiaId puesto.
+        //   · por INVITACIÓN POR ROL, que vale INCLUSO si la academia está en
+        //     el directorio: ahí no hay código que adivinar, hay un enlace que
+        //     el director emitió a propósito.
         && (
           request.resource.data.academiaId == resource.data.academiaId
           || (academiaActiva(request.resource.data.academiaId)
               && !enDirectorio(request.resource.data.academiaId))
           || (academiaActiva(request.resource.data.academiaId)
               && solicitudAceptada(request.resource.data.academiaId))
+          || invitacionValida()
         )
         && (
           request.resource.data.get('pruebaHasta', null) == resource.data.get('pruebaHasta', null)
@@ -393,12 +452,16 @@ service cloud.firestore {
           || grupoValido()
         )
         // La marca de PRUEBA solo cambia con un canje válido o al unirse de
-        // verdad (cambio de academia/grupo validado por las cláusulas de arriba).
+        // verdad (cambio de academia/grupo validado por las cláusulas de arriba,
+        // o una invitación por rol: un alumno de prueba al que su director
+        // invita como profesor de SU MISMA academia no cambia de academia ni de
+        // grupo, y aun así deja de ser una cuenta de prueba).
         && (
           request.resource.data.get('esPrueba', false) == resource.data.get('esPrueba', false)
           || canjeValido()
           || request.resource.data.academiaId != resource.data.academiaId
           || request.resource.data.get('grupoId', null) != resource.data.get('grupoId', null)
+          || invitacionValida()
         );
 
       // El director (admin_escuela) gestiona a los miembros de SU academia:
@@ -487,6 +550,75 @@ service cloud.firestore {
         && request.resource.data.expira > request.time;
       // Desactivar/reactivar/borrar: super-admin o el director de su academia.
       allow update, delete: if esSuper() || esAdminDe(resource.data.academiaId);
+    }
+
+    // --- INVITACIONES POR ROL (el id del doc ES el código, INV-AEP-P-K3M9) ---
+    //  Academia y grupo ya tenían su código, pero ninguno decía COMO QUÉ entra
+    //  la persona. Esta colección sí: cada doc lleva un `rol`, y canjearla es
+    //  la única vía por la que alguien puede cambiar su propio rol (ver
+    //  `invitacionValida()` arriba y la regla de update de `usuarios`).
+    match /invitaciones/{codigo} {
+      // Consultar UNA invitación concreta: cualquier autenticado (para
+      // canjearla). Nunca se enumeran sin filtro, igual que las academias.
+      allow get: if autenticado();
+      // Listarlas: el super-admin, el director de esa academia, o un profesor
+      // al que el director ya le aprobó ver los códigos (mismo criterio que
+      // usa el panel para los códigos de academia y de grupo).
+      allow list: if esSuper()
+        || esAdminDe(resource.data.academiaId)
+        || (esStaffDe(resource.data.academiaId) && miDoc().get('puedeVerCodigos', false) == true);
+
+      // Crear: super-admin, o el DIRECTOR de SU academia. Un profesor no emite
+      // invitaciones: podría fabricarse una de director y ascender solo.
+      //
+      // El rol sale del catálogo CERRADO. 'superadmin' no está y no puede
+      // estar: no es un rol de academia, y una invitación es un enlace que
+      // circula por WhatsApp.
+      allow create: if request.resource.data.academiaId is string
+        && (esSuper() || esAdminDe(request.resource.data.academiaId))
+        && request.resource.data.creadoPor == request.auth.uid
+        && request.resource.data.rol in ['alumno', 'instructor', 'admin_escuela']
+        && request.resource.data.estado == 'activo'
+        && request.resource.data.expira > request.time
+        && request.resource.data.usos == 0
+        && request.resource.data.maxUsos is int
+        && request.resource.data.maxUsos >= 0
+        // Si lleva grupo, debe ser un grupo de ESA academia (no se invita al
+        // grupo de otra escuela).
+        && (
+          request.resource.data.get('grupoId', null) == null
+          || (
+            exists(/databases/$(database)/documents/grupos/$(request.resource.data.grupoId))
+            && grupoDoc(request.resource.data.grupoId).academiaId == request.resource.data.academiaId
+          )
+        );
+
+      // Administrarla (DIRECTOR): solo estado / nota / tope de usos. El ROL, la
+      // ACADEMIA y la CADUCIDAD son INMUTABLES a propósito: si el rol pudiera
+      // editarse, un enlace ya repartido como "alumno" se convertiría en uno de
+      // "director" en manos de quien ya lo tiene. Para cambiar el rol se emite
+      // otra invitación.
+      allow update: if esAdminDe(resource.data.academiaId)
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['estado', 'nota', 'maxUsos'])
+        && request.resource.data.estado in ['activo', 'inactivo']
+        && request.resource.data.maxUsos is int
+        && request.resource.data.maxUsos >= 0;
+
+      // Marcar el USO al canjear: lo escribe el invitado y SOLO puede sumar uno
+      // al contador. No toca rol, estado ni vigencia. Va en una regla aparte
+      // porque el permiso es de otro sujeto, no del director.
+      allow update: if autenticado()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['usos', 'ultimoUso'])
+        && request.resource.data.usos == resource.data.get('usos', 0) + 1;
+
+      // El super-admin, sin acotar: es quien migra `academiaId` al cambiar el
+      // código de una academia (admin.js:cambiarCodigoAcademia), y esa
+      // escritura no cabe en la lista del director. Mismo criterio que en
+      // `codigos` e `intentos`.
+      allow update: if esSuper();
+
+      allow delete: if esSuper() || esAdminDe(resource.data.academiaId);
     }
 
     // --- SOLICITUDES de acceso ---

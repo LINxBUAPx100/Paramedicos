@@ -258,9 +258,10 @@ function Perfil({ user, perfil, salir, codigoInvitacion = '', onConsumir }) {
     ? new Date(pruebaSeg * 1000).toLocaleDateString('es-MX', { dateStyle: 'long' })
     : ''
 
-  // Un solo campo para tres tipos de código: ACADEMIA, GRUPO (te une al grupo
-  // y a su academia) o PRUEBA temporal. La cascada vive en lib/firebase/canjear.js
-  // porque la pantalla de bienvenida usa exactamente la misma.
+  // Un solo campo para cuatro tipos de código: INVITACIÓN POR ROL (te une con
+  // el rol que trae dentro), ACADEMIA, GRUPO (te une al grupo y a su academia)
+  // o PRUEBA temporal. La cascada vive en lib/firebase/canjear.js porque la
+  // pantalla de bienvenida usa exactamente la misma.
   const unir = async (e) => {
     e.preventDefault()
     setMsg(''); setError(''); setOcupado(true)
@@ -326,13 +327,13 @@ function Perfil({ user, perfil, salir, codigoInvitacion = '', onConsumir }) {
             </p>
           )}
           <label>
-            Únete con tu código (academia, grupo o prueba)
+            Únete con tu código (invitación, academia, grupo o prueba)
             <input
               type="text"
               value={codigo}
               onChange={(e) => setCodigo(e.target.value)}
-              placeholder="AEP-2026, GRP-XXXX o PRUEBA-XXXX"
-              aria-label="Código de academia, grupo o prueba"
+              placeholder="INV-XXX-X-XXXX, AEP-2026 o GRP-XXXX"
+              aria-label="Código de invitación, academia, grupo o prueba"
             />
           </label>
           {error && <p className="cuenta-error" role="alert">{error}</p>}

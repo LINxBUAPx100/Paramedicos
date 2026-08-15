@@ -90,7 +90,7 @@ export async function crearAcademia({
 //   · respaldos / replicaciones → artefactos internos del super-admin.
 // ============================================================
 const COLECCIONES_CON_ACADEMIA = [
-  'usuarios', 'grupos', 'codigos', 'intentos', 'solicitudes', 'reportes',
+  'usuarios', 'grupos', 'codigos', 'invitaciones', 'intentos', 'solicitudes', 'reportes',
 ]
 
 const idAvance = (viejo, nuevo) => `cambio-codigo__${viejo}__${nuevo}`
@@ -321,7 +321,9 @@ export async function reubicarUsuariosDeAcademia(academiaId, destino) {
 
 // Colecciones que se borran con la academia. `usuarios` NO está: las personas
 // se resuelven aparte porque son cuentas, no datos de la academia.
-const COLECCIONES_A_BORRAR = ['grupos', 'codigos', 'intentos', 'solicitudes', 'reportes']
+const COLECCIONES_A_BORRAR = [
+  'grupos', 'codigos', 'invitaciones', 'intentos', 'solicitudes', 'reportes',
+]
 
 export async function borrarAcademiaEnCascada(academiaId, { destinoUsuarios, onProgreso } = {}) {
   const codigo = String(academiaId || '').trim().toUpperCase()

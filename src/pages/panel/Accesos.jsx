@@ -2,6 +2,7 @@ import { usePanel } from '../../components/panel/PanelShell.jsx'
 import SolicitudesInternas from '../../components/panel/SolicitudesInternas.jsx'
 import SolicitudesDeAcceso from '../../components/panel/SolicitudesDeAcceso.jsx'
 import CodigosPrueba from '../../components/panel/CodigosPrueba.jsx'
+import InvitacionesRol from '../../components/panel/InvitacionesRol.jsx'
 import AccesoCodigos from '../../components/panel/AccesoCodigos.jsx'
 
 // ============================================================
@@ -42,6 +43,18 @@ export default function PanelAccesos() {
           academiaId={academiaId}
           academiaNombre={academiaNombre}
           miUid={miUid}
+        />
+      )}
+
+      {/* Invitaciones POR ROL: el único sitio donde se decide con qué rol entra
+          alguien sin tener que promoverlo después en Miembros. Va antes de los
+          códigos de prueba porque es el alta normal; la prueba es la excepción. */}
+      {gestion && (
+        <InvitacionesRol
+          academiaId={academiaId}
+          academiaNombre={academiaNombre}
+          miUid={miUid}
+          grupos={grupos}
         />
       )}
 

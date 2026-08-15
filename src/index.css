@@ -882,6 +882,32 @@ textarea:focus-visible,
 .pc-grupo { color: var(--verde); background: color-mix(in srgb, var(--verde) 12%, transparent); }
 .admin-form--codigo { border-left: 4px solid var(--ambar); }
 
+/* Invitaciones POR ROL: el rol es lo primero que hay que poder leer de una
+   invitación, así que va como insignia y con un color por rol. El ámbar del
+   director no es decorativo: repartir ese enlace es la acción con más
+   consecuencias de esta pantalla. */
+.pi-rol {
+  padding: 2px var(--e-8);
+  border-radius: 999px;
+  font-size: var(--t-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--primario);
+  background: color-mix(in srgb, var(--primario) 12%, transparent);
+}
+.pi-rol.instructor { color: var(--verde); background: color-mix(in srgb, var(--verde) 12%, transparent); }
+.pi-rol.admin_escuela { color: var(--ambar); background: color-mix(in srgb, var(--ambar) 16%, transparent); }
+.pi-ayuda {
+  display: flex;
+  align-items: baseline;
+  gap: var(--e-8);
+  flex-wrap: wrap;
+  margin-top: var(--e-8);
+  color: var(--texto-2);
+  font-size: var(--t-sm);
+}
+
 /* Código de la academia (encabezado de Grupos) */
 .pc-academia-codigo {
   display: flex;
@@ -1101,6 +1127,12 @@ textarea:focus-visible,
 .pc-estado.activo { color: var(--verde); background: color-mix(in srgb, var(--verde) 12%, transparent); }
 .pc-estado.inactivo { color: var(--texto-3); background: var(--bg-2); }
 .pc-estado.expirado { color: var(--urgencia); background: color-mix(in srgb, var(--urgencia) 10%, transparent); }
+/* Estados de una INVITACIÓN por rol (invitacionesModelo.js): el femenino no es
+   cosmético, son las palabras que se muestran tal cual en la lista. */
+.pc-estado.activa { color: var(--verde); background: color-mix(in srgb, var(--verde) 12%, transparent); }
+.pc-estado.inactiva { color: var(--texto-3); background: var(--bg-2); }
+.pc-estado.expirada { color: var(--urgencia); background: color-mix(in srgb, var(--urgencia) 10%, transparent); }
+.pc-estado.agotada { color: var(--ambar); background: color-mix(in srgb, var(--ambar) 14%, transparent); }
 .pc-acciones { display: flex; gap: var(--e-8); }
 .pc-copiar, .pc-toggle {
   padding: var(--e-4) var(--e-8);
@@ -1369,11 +1401,13 @@ textarea:focus-visible,
 /* Visibilidad por grupo, contenido y últimos cambios: secciones nuevas del
    panel del director (Bloque O). Comparten la forma de las de al lado. */
 .panel-grupos,
+.panel-invitaciones,
 .panel-visibilidad,
 .panel-contenido-estado,
 .panel-historial { display: flex; flex-direction: column; gap: var(--e-8); margin-top: var(--e-32); }
 .panel-contenido-estado .btn { align-self: flex-start; }
 .panel-grupos h2,
+.panel-invitaciones h2,
 .panel-visibilidad h2,
 .panel-contenido-estado h2,
 .panel-historial h2 {

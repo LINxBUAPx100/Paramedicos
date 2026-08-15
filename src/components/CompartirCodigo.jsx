@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { etiquetaRol } from '../lib/invitacionesModelo.js'
 import Icon from './Icon.jsx'
 
 // Construye el enlace de invitación: lleva a /cuenta con el código pre-llenado.
@@ -22,7 +23,28 @@ function deducirTipo({ tipo, contexto }) {
 // Arma el título y el texto de la invitación según el tipo. El texto es la
 // versión compacta (ideal para WhatsApp): academia como institución principal,
 // grupo como dato secundario, enlace, código y una nota de ayuda.
-function construirInvitacion({ tipo, nombreAcademia, nombreGrupo, codigo, url }) {
+function construirInvitacion({ tipo, nombreAcademia, nombreGrupo, codigo, url, rol }) {
+  // INVITACIÓN POR ROL: lo que la distingue de las demás es que dice COMO QUÉ
+  // entra la persona, así que el rol va en la primera línea y no de nota al
+  // pie. Quien recibe "te invita como profesor" sabe que el enlace no es el
+  // mismo que circula por el grupo de los alumnos.
+  if (tipo === 'invitacion') {
+    const quien = etiquetaRol(rol).toLowerCase()
+    const titulo = `${nombreAcademia} te invita como ${quien}`
+    const lineas = [
+      `🎓 ${nombreAcademia} te invita como ${quien}`,
+      nombreGrupo ? `\nGrupo: ${nombreGrupo}` : null,
+      '',
+      'Ingresa aquí:',
+      url,
+      '',
+      `Código de acceso: ${codigo}`,
+      '',
+      `Al activarlo entrarás como ${quien}. El código ya viene incluido en el enlace.`,
+    ]
+    return { titulo, texto: lineas.filter((l) => l !== null).join('\n') }
+  }
+
   if (tipo === 'prueba') {
     const titulo = `Acceso de prueba a ${nombreAcademia}`
     const lineas = [
@@ -74,7 +96,7 @@ function construirInvitacion({ tipo, nombreAcademia, nombreGrupo, codigo, url })
 // Botón "Compartir" para un código (academia / grupo / prueba). En móvil usa la
 // hoja de compartir nativa (`navigator.share`); si no está disponible, o en
 // escritorio, abre una tarjeta con vista previa + WhatsApp + copiar.
-export default function CompartirCodigo({ codigo, nombre, contexto = '', tipo = '' }) {
+export default function CompartirCodigo({ codigo, nombre, contexto = '', tipo = '', rol = '' }) {
   const [abierto, setAbierto] = useState(false)
   const [copiado, setCopiado] = useState('') // 'invitacion' | 'enlace' | 'codigo'
   const popRef = useRef(null)
@@ -82,7 +104,11 @@ export default function CompartirCodigo({ codigo, nombre, contexto = '', tipo = 
 
   const tipoFinal = deducirTipo({ tipo, contexto })
   const nombreAcademia = nombre || 'PTEM'
-  const nombreGrupo = tipoFinal === 'grupo' ? (contexto || '').trim() : ''
+  // El grupo es dato secundario en las de grupo y en las de rol (que también
+  // pueden llevarlo); en las de academia y prueba no aplica.
+  const nombreGrupo = tipoFinal === 'grupo' || tipoFinal === 'invitacion'
+    ? (contexto || '').trim()
+    : ''
 
   // Cerrar con Escape, con clic fuera, y enfocar el botón de cerrar al abrir.
   useEffect(() => {
@@ -106,7 +132,7 @@ export default function CompartirCodigo({ codigo, nombre, contexto = '', tipo = 
 
   const url = enlaceInvitacion(codigo)
   const { titulo, texto } = construirInvitacion({
-    tipo: tipoFinal, nombreAcademia, nombreGrupo, codigo, url,
+    tipo: tipoFinal, nombreAcademia, nombreGrupo, codigo, url, rol,
   })
   const waUrl = `https://wa.me/?text=${encodeURIComponent(texto)}`
 
@@ -131,7 +157,9 @@ export default function CompartirCodigo({ codigo, nombre, contexto = '', tipo = 
     setAbierto((v) => !v)
   }
 
-  const etiquetaTipo = tipoFinal === 'prueba' ? 'Prueba' : tipoFinal === 'grupo' ? 'Grupo' : 'Academia'
+  const etiquetaTipo = tipoFinal === 'invitacion'
+    ? `Rol: ${etiquetaRol(rol)}`
+    : tipoFinal === 'prueba' ? 'Prueba' : tipoFinal === 'grupo' ? 'Grupo' : 'Academia'
 
   return (
     <span className="compartir">
@@ -156,7 +184,11 @@ export default function CompartirCodigo({ codigo, nombre, contexto = '', tipo = 
           <div className="compartir-encabezado">
             <div>
               <strong>Compartir invitación</strong>
-              <span>Envía el acceso al alumno o copia los datos.</span>
+              <span>
+                {tipoFinal === 'invitacion'
+                  ? `Quien la active entrará como ${etiquetaRol(rol).toLowerCase()}.`
+                  : 'Envía el acceso al alumno o copia los datos.'}
+              </span>
             </div>
             <button
               type="button"
@@ -171,7 +203,13 @@ export default function CompartirCodigo({ codigo, nombre, contexto = '', tipo = 
 
           <div className="compartir-vista-previa">
             <span className="compartir-academia">{nombreAcademia}</span>
-            {tipoFinal !== 'academia' && (
+            {tipoFinal === 'invitacion' && (
+              <div className="compartir-dato">
+                <small>Entra como</small>
+                <strong>{etiquetaRol(rol)}</strong>
+              </div>
+            )}
+            {tipoFinal !== 'academia' && (tipoFinal !== 'invitacion' || nombreGrupo) && (
               <div className="compartir-dato">
                 <small>{tipoFinal === 'prueba' ? 'Tipo de acceso' : 'Grupo'}</small>
                 <strong>{tipoFinal === 'prueba' ? 'Acceso de prueba' : nombreGrupo}</strong>

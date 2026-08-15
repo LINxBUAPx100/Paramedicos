@@ -69,11 +69,12 @@ prueba vigente); la distinción de rol la hace cada página. Las URLs `/fase/:id
 | Colección | Doc ID | Campos clave | Escribe | Lee |
 |---|---|---|---|---|
 | `academias` | = código (AEP-2026) | nombre, tipo(basico\|avanzado\|medicina), plan(texto: periodicidad), estado, logo, lema, colorHero, fechaRenovacion, creado | super; director solo logo/lema/colorHero | get: autenticado; list: super |
-| `usuarios` | = uid Auth | nombre, email, rol, academiaId, grupoId, estado, esPrueba, pruebaHasta, fasesDesbloqueadas[], puedeVerCodigos | dueño (acotado), director (rol/estado/grupoId/puedeVerCodigos), staff (fasesDesbloqueadas), super | dueño, super, staff de su academia |
+| `usuarios` | = uid Auth | nombre, email, rol, academiaId, grupoId, estado, esPrueba, pruebaHasta, invitacionUsada, fasesDesbloqueadas[], puedeVerCodigos | dueño (acotado; `rol` solo respaldado por una invitación válida), director (rol/estado/grupoId/puedeVerCodigos), staff (fasesDesbloqueadas), super | dueño, super, staff de su academia |
 | `progreso` | = uid | leidos{}, quizzes{}, examenes[], updatedAt (debounce 800 ms) | dueño | dueño, super |
 | `intentos` | auto | uid, academiaId, faseId/numero/titulo, aciertos, total, porcentaje, fecha | alumno (create, inmutable) | dueño, super, staff |
 | `grupos` | = código GRP-XXXX | academiaId, nombre, estado, fasesOcultas[], temasOcultos[], creadoPor | director/super; staff solo visibilidad | get: autenticado; list: super/staff |
 | `codigos` | = código de prueba | academiaId, grupoId, creadoPor, nota, estado, dias, expira | super/director | get: autenticado; list: super/director |
+| `invitaciones` | = código INV-ACA-R-XXXX | academiaId, grupoId, **rol**(alumno\|instructor\|admin_escuela), creadoPor, nota, estado, dias, usos, maxUsos, expira, ultimoUso | super/director (crear, estado/nota/maxUsos); el invitado solo `usos+1` | get: autenticado; list: super/director/profesor con puedeVerCodigos |
 | `solicitudes` | auto | tipo(modulo\|codigos), uid, academiaId, grupoId, fase*, estado, resueltoPor | dueño (create); staff/director resuelven | dueño, super, staff |
 | `reportes` | auto | uid, academiaId, temaId, mensaje, estado | autenticado (create); super | super |
 | `configuracion` | anuncio | mensaje, tipo, activo | super | **público** |
@@ -81,7 +82,28 @@ prueba vigente); la distinción de rol la hace cada página. Las URLs `/fase/:id
 ## 5. Mapa de reglas de seguridad (resumen)
 
 Helpers: `autenticado, esDueno, miDoc(get propio), esSupremo(correo verificado),
-esSuper, academiaActiva, esStaffDe, esAdminDe, canjeValido, grupoValido`.
+esSuper, academiaActiva, esStaffDe, esAdminDe, canjeValido, grupoValido,
+invitacionValida`.
+
+**Cómo se entra a una academia (cuatro vías, ninguna más).** Las tres primeras
+meten a la persona SIEMPRE como `alumno`; la cuarta es la única que decide el rol:
+
+1. **Código de academia** (= el id del doc) → solo si NO está en el directorio.
+2. **Código de grupo** (= el id del doc) → entra al grupo y a su academia.
+3. **Solicitud aceptada** desde el directorio público.
+4. **Invitación por rol** (`invitaciones/INV-ACA-R-XXXX`) → academia + grupo
+   opcional + **rol**: alumno, profesor o director. Vale incluso si la academia
+   está en el directorio (no hay código que adivinar: hay un enlace que el
+   director emitió a propósito).
+
+`invitacionValida()` es la ÚNICA puerta por la que el propio usuario puede
+cambiar su `rol`, y lo valida entero en el servidor: invitación existente,
+activa, vigente, no agotada, rol idéntico al del documento, rol dentro del
+catálogo cerrado (`superadmin` jamás), y academia/grupo iguales a los de la
+invitación. El contador `usos` lo escribe el invitado, así que `maxUsos` acota
+enlaces repartidos de buena fe; contra un actor hostil lo que sostiene es la
+caducidad y el «Desactivar», que solo escribe el director.
+
 Ya endurecidas (2026-07-13): sin `list` de academias para no-super, director acotado
 con `affectedKeys`, supremo con `email_verified`. Tabla completa por colección en el
 informe de la sección 4 (get/list/create/update/delete espejo de la columna

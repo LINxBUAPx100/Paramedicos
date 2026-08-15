@@ -71,9 +71,6 @@ function PortadaLanding() {
       <IconoEstrella size={620} className="lp-marca-fondo" aria-hidden="true" />
       <div className="lp-wrap lp-portada-in">
         <div className="lp-portada-texto">
-          <span className="lp-kicker">
-            <IconoEstrella size={16} aria-hidden="true" /> Plataforma para academias de TUM
-          </span>
           <h1>
             Forma paramédicos que <em>entienden</em> lo que hacen
           </h1>

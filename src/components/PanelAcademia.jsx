@@ -12,6 +12,7 @@ import SolicitudesDeAcceso from './panel/SolicitudesDeAcceso.jsx'
 import GruposAcademia from './panel/GruposAcademia.jsx'
 import GestionMiembros from './panel/GestionMiembros.jsx'
 import CodigosPrueba from './panel/CodigosPrueba.jsx'
+import InvitacionesRol from './panel/InvitacionesRol.jsx'
 import VisibilidadGrupos from './panel/VisibilidadGrupos.jsx'
 
 // ============================================================
@@ -126,6 +127,13 @@ export default function PanelAcademia({ academiaId, academiaNombre = '', miUid =
         academiaId={academiaId}
         instructores={miembros.filter((m) => m.rol === 'instructor')}
         onCambio={recargar}
+      />
+
+      <InvitacionesRol
+        academiaId={academiaId}
+        academiaNombre={academiaNombre}
+        miUid={miUid}
+        grupos={grupos}
       />
 
       <CodigosPrueba

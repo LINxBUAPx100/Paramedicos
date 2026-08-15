@@ -2,8 +2,13 @@
 //  Canje de UN código, sea del tipo que sea
 // ------------------------------------------------------------
 //  El usuario escribe un código y no tiene por qué saber de qué tipo es. Se
-//  prueban en orden: ACADEMIA → GRUPO (que une también a su academia) →
-//  PRUEBA temporal.
+//  prueban en orden: INVITACIÓN POR ROL → ACADEMIA → GRUPO (que une también a
+//  su academia) → PRUEBA temporal.
+//
+//  La invitación va PRIMERA porque es la única que trae un rol: si se probara
+//  al final, un código de invitación que además coincidiera con otro tipo
+//  metería a la persona como alumno y se perdería el rol. Al ir delante, su
+//  «no existe una invitación» es el que deja pasar al resto.
 //
 //  Vivía dentro de Cuenta.jsx, y al necesitarlo también la pantalla de
 //  bienvenida (Bloque K) se extrae aquí en vez de duplicar una cascada de
@@ -24,7 +29,24 @@ export async function canjearCualquierCodigo(uid, codigo) {
   const cod = String(codigo || '').trim()
   if (!cod) throw new Error('Escribe el código que te dieron.')
 
-  // 1) ¿Código de ACADEMIA?
+  // 1) ¿INVITACIÓN por rol? (academia + grupo opcional + ROL)
+  try {
+    const { canjearInvitacion } = await import('./invitaciones.js')
+    const inv = await canjearInvitacion(uid, cod)
+    const donde = inv.grupo
+      ? `${inv.academia?.nombre || inv.academiaId} · grupo "${inv.grupo.nombre}"`
+      : (inv.academia?.nombre || inv.academiaId)
+    return {
+      tipo: 'invitacion',
+      invitacion: inv,
+      rol: inv.rol,
+      mensaje: `Te uniste a ${donde} como ${inv.rolEtiqueta.toLowerCase()}.`,
+    }
+  } catch (err) {
+    if (!noEsDeEsteTipo(err, 'No existe una invitación')) throw err
+  }
+
+  // 2) ¿Código de ACADEMIA?
   try {
     const { unirseAcademia } = await import('./usuarios.js')
     const aca = await unirseAcademia(uid, cod)
@@ -33,7 +55,7 @@ export async function canjearCualquierCodigo(uid, codigo) {
     if (!noEsDeEsteTipo(err, 'No existe una academia')) throw err
   }
 
-  // 2) ¿Código de GRUPO? (une al grupo y, con él, a su academia)
+  // 3) ¿Código de GRUPO? (une al grupo y, con él, a su academia)
   try {
     const { unirseGrupo } = await import('./grupos.js')
     const g = await unirseGrupo(uid, cod)
@@ -46,7 +68,7 @@ export async function canjearCualquierCodigo(uid, codigo) {
     if (!noEsDeEsteTipo(err, 'No existe un grupo')) throw err
   }
 
-  // 3) ¿Código de PRUEBA temporal? Último intento: su error es el que se
+  // 4) ¿Código de PRUEBA temporal? Último intento: su error es el que se
   //    propaga si tampoco lo es.
   const { canjearCodigo } = await import('./codigos.js')
   const expira = await canjearCodigo(uid, cod)

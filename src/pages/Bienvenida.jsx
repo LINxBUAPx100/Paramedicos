@@ -155,8 +155,9 @@ export default function Bienvenida() {
         <section className="bv-via">
           <h2><Icon name="pildora" size={18} /> Tengo un código</h2>
           <p className="bv-ayuda">
-            Es el código que te dio tu academia al inscribirte. Sirve tanto el de la academia
-            como el de tu grupo, o uno de prueba temporal.
+            Es el código que te dio tu academia al inscribirte. Sirve el de la academia, el de
+            tu grupo, una invitación personal (empieza por <code>INV-</code>) o uno de prueba
+            temporal.
           </p>
           <form className="bv-form" onSubmit={usarCodigo}>
             <label className="sr-only" htmlFor="bv-codigo">Código de acceso</label>

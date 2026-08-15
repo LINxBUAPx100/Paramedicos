@@ -168,6 +168,45 @@ grupo activo entre los grupos de su academia, o "Todos los grupos". La elección
 se guarda en su perfil (`grupoId`) y se mantiene hasta que la cambie; ese grupo
 enfoca su panel de avance, sus reportes y su vista de "Temas".
 
+## Invitaciones por rol (alumno / profesor / director)
+
+El código de la academia y el de cada grupo dicen **a dónde** entra la persona,
+pero no **como qué**: quien los usa aterriza siempre como `alumno` y había que
+promoverlo a mano en Miembros. Las **invitaciones por rol** cierran ese hueco.
+
+En **/panel → Accesos** (y en el dashboard de academia del super-admin) el
+director crea una invitación eligiendo:
+
+- **Entra como**: Alumno · Profesor · Director.
+- **Grupo** (opcional): se integra al canjearla, igual que un código de grupo.
+- **Vigencia**: 3 / 7 / 14 / 30 / 90 días — siempre caduca.
+- **Cuántas personas**: 1 / 5 / 25 / sin límite. La de **director** se propone
+  de **un solo uso**: repartir la dirección de la academia no es un enlace que
+  deba quedarse abierto.
+
+El código resultante lleva el rol dentro y se lee de un vistazo:
+`INV-AEP-P-K3M9` (P = profesor; A = alumno, D = director). Se comparte con el
+mismo botón **Compartir** que el resto —WhatsApp, enlace, código— y el texto
+dice explícitamente «te invita como profesor». El invitado lo activa en
+**Mi cuenta → Únete con tu código**, el mismo campo de siempre.
+
+Un **profesor** con el acceso a códigos aprobado puede **repartir** las
+invitaciones que su director emitió, pero **no crearlas**: se fabricaría la de
+director y ascendería solo (lo niegan la UI y las reglas).
+
+**Lo que garantizan las reglas** (`invitacionValida()` en `firestore.rules`):
+es la única vía por la que alguien puede cambiar su propio `rol`, y el servidor
+revalida todo — que la invitación exista, esté activa, vigente y no agotada,
+que el rol escrito sea exactamente el suyo, y que la academia y el grupo sean
+los de la invitación. **`superadmin` no se reparte por invitación**, ni aunque
+alguien lograra sembrar ese valor en el documento. El rol de una invitación ya
+emitida es **inmutable**: para cambiarlo se emite otra.
+
+*Límite conocido:* el contador de usos lo escribe el propio invitado desde su
+navegador, así que `maxUsos` acota enlaces repartidos de buena fe; contra
+alguien con mala fe que ya tiene el código, lo que sostiene es la **caducidad**
+y el botón **Desactivar**, que solo escribe el director.
+
 ## Visibilidad de contenido por grupo (sección "Temas")
 
 **/temario ahora es SOLO para staff** (profesor, director, super-admin): es el
@@ -259,10 +298,12 @@ impiden inventarse la fecha o quitarse la marca sin una unión real.
 ## Enlaces de invitación (compartir por WhatsApp)
 
 Directores, super-admins y profesores autorizados tienen un botón **Compartir**
-junto a cada código (academia, grupo o prueba) en su dashboard. Genera un
+junto a cada código (invitación por rol, academia, grupo o prueba) en su
+dashboard. Genera un
 enlace `…/#/cuenta?c=CODIGO` que, al abrirse, lleva al login/registro con el
 código **pre-llenado**: el invitado crea su cuenta o entra y con un toque en
-«Activar código» queda unido (a la academia, al grupo, o con acceso de prueba).
+«Activar código» queda unido (a la academia, al grupo, con el rol de la
+invitación, o con acceso de prueba).
 El botón ofrece "Enviar por WhatsApp", "Copiar enlace" y "Copiar solo el
 código" (en móvil usa la hoja de compartir nativa). El director comparte el
 código de academia (sin grupo) o el de cada grupo; el profesor autorizado
