@@ -1,8 +1,8 @@
 # HANDOFF — continuación del trabajo de auditoría y rework
 
 > **Escrito para retomar el trabajo en una sesión nueva sin contexto previo.**
-> Última actualización: 2026-08-13 · Rama: **`main`**
-> · CI: verde (184 unitarios + 54 de reglas)
+> Última actualización: 2026-08-14 · Rama: **`main`**
+> · CI: verde (271 unitarios + 72 de reglas)
 
 ---
 
@@ -11,7 +11,7 @@
 ```bash
 git checkout main
 npm ci
-npm test        # deben salir 184 pass, 0 fail
+npm test        # deben salir 271 pass, 0 fail
 npm run build
 ```
 
@@ -212,16 +212,55 @@ De ahí tres reglas de trabajo, que valen más que cualquier arreglo concreto:
 
 ## 6. Lo que queda por hacer
 
-Orden recomendado y acordado: **R → S → P** (O y Q ya están hechos).
-S añade una pestaña al panel del director; ahora que O lo troceó, eso es una
-página nueva en `src/pages/panel/` y una entrada en `SECCIONES_PANEL`.
+**Estado a 2026-08-14.** R y S están hechos. Queda **P** y lo pedido después.
 
-Pendiente del bloque Q: **el usuario no ha visto la baraja todavía**. Se
-verificó por medición, no de vista (ver el bloque Q en la sección 5). El boceto
-decía «las demás colapsadas a los lados» y se resolvió como acordeón vertical,
-que es el patrón accesible y el que no dependía de interpretar el dibujo. Si
-quería una baraja horizontal, eso es un ajuste de la disposición, no de la
-lógica.
+### Sin empezar
+
+1. **Planes editables por el super-admin** (pedido el 2026-08-14). Hoy los
+   planes comerciales están **escritos en el código** (`PLANES`,
+   `ETIQUETA_PLAN`, `DESCRIPCION_PLAN` y el mapa de capacidades en
+   `src/lib/capacidades.js`); lo único configurable por academia son las
+   EXCEPCIONES en `academias/{id}.capacidades`. Que el super-admin «defina los
+   planes» significa mover ese catálogo a Firestore (colección `planes`) y que
+   `capacidades.js` lo lea, conservando el default del código como respaldo
+   fail-open: si la colección no existe o viene corrupta, se usa el de siempre.
+   **Ojo, lo pidió «desde la pantalla de progreso»**: como super-admin, esa
+   pantalla es hoy la vista de staff (`ProgresoStaff`). Conviene confirmar si
+   quiere el editor de planes AHÍ o en la consola (`/admin/facturacion`, que es
+   donde vive lo comercial). No construir sin preguntarlo: cambia dónde va todo.
+2. **Dashboard del director**: calificaciones agregadas por grupo y por alumno.
+   El cálculo ya existe y está probado (`calificacionesModelo.js`); falta la
+   pantalla que lo agrupe para quien dirige, no para quien da clase.
+3. **Bloque P** — alta de academia con materias (detalle más abajo).
+
+### Preparar el terreno para PAGOS y ASISTENCIAS (no construir aún)
+
+Pedido explícitamente como planeación. La decisión que hay que tomar ANTES de
+escribir la primera línea es **dónde cuelga el PERIODO**, porque calificaciones,
+pagos y asistencias lo necesitan los tres y si cada uno se inventa el suyo no se
+podrán cruzar nunca:
+
+- Hoy `evaluaciones` y `calificaciones` cuelgan de `academiaId` + `grupoId`, sin
+  periodo. Un grupo dura lo que dura una generación, así que **el grupo hace de
+  periodo de facto**. Eso aguanta para calificaciones pero se rompe con pagos:
+  una mensualidad es de un mes, no de una generación.
+- Propuesta: una colección `periodos` (`{academiaId, nombre, desde, hasta}`) y
+  que pagos y asistencias cuelguen de `{academiaId, grupoId, periodoId, uid}`.
+  Las calificaciones pueden seguir sin periodo y adoptarlo después sin migrar
+  nada, porque el grupo ya las acota.
+- Patrón a repetir de `calificaciones` (que ya está probado): id determinista
+  `{periodoId}__{uid}`, escritura solo del staff, lectura del dueño o del staff,
+  validación de importes/estados EN LA REGLA, y aritmética en un módulo puro.
+- Lo que NO hay que hacer: guardar dinero como `number` en coma flotante. Enteros
+  en centavos, o se acumulan errores de redondeo en los totales.
+
+### Pendiente de mirada del usuario (no de código)
+
+Nada de esto está verificado en uso real; hay una lista de pruebas manuales
+entregada el 2026-08-14. Lo más frágil: el acordeón del editor (se pasó a estado
+controlado), el borrado real de academias (irreversible) y el guardado en celda
+de las calificaciones. La baraja del temario sigue sin que el usuario diga si
+quería el acordeón vertical o las fases en horizontal.
 
 ### Bloque R — Exportar el temario a PNG
 
