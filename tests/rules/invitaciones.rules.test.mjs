@@ -14,6 +14,23 @@
 //      y solo puede sumar UNO al contador de usos.
 //
 //  Sin emulador la suite se OMITE con el motivo: npm run test:rules
+//
+//  OJO CON LOS IDS DE LOS FIXTURES. `node --test` corre los ficheros de prueba
+//  en PARALELO, y todos apuntan al MISMO proyecto del emulador
+//  (`ptem-rules-test`, con singleProjectMode). O sea que comparten base de
+//  datos: si dos ficheros siembran `usuarios/profA`, el último `setDoc` gana y
+//  le borra los campos al otro —setDoc REEMPLAZA el documento entero— mientras
+//  sus pruebas están corriendo.
+//
+//  Pasó de verdad: este fichero sembraba `usuarios/profA` sin `permisosEditor`
+//  y tumbó un test de contenido.rules.test.mjs que llevaba meses en verde
+//  («el profesor sin editarExamenes no cambia quiz ni estado»). El síntoma era
+//  un `evaluation error` en la regla de `temas`, que no invita precisamente a
+//  buscar la causa en otro fichero.
+//
+//  Por eso todo lo que se siembra aquí lleva prefijo propio (INVACA-A,
+//  INVGRP-A, invDirA, invProf…): no colisiona con nadie. Si añades un fixture,
+//  mantén el prefijo.
 // ============================================================
 import { test, after } from 'node:test'
 import { readFileSync } from 'node:fs'
@@ -45,19 +62,19 @@ async function preparar() {
     const pon = (r, d) => setDoc(doc(db, r), d)
     const ts = (ms) => Timestamp.fromDate(dentroDe(ms))
 
-    await pon('academias/ACA-A', { nombre: 'A', estado: 'activo', planComercial: 'pro' })
-    await pon('academias/ACA-B', { nombre: 'B', estado: 'activo', planComercial: 'pro' })
-    await pon('grupos/GRP-A', { academiaId: 'ACA-A', nombre: 'Gen 2026', estado: 'activo' })
-    await pon('grupos/GRP-B', { academiaId: 'ACA-B', nombre: 'Otra', estado: 'activo' })
+    await pon('academias/INVACA-A', { nombre: 'A', estado: 'activo', planComercial: 'pro' })
+    await pon('academias/INVACA-B', { nombre: 'B', estado: 'activo', planComercial: 'pro' })
+    await pon('grupos/INVGRP-A', { academiaId: 'INVACA-A', nombre: 'Gen 2026', estado: 'activo' })
+    await pon('grupos/INVGRP-B', { academiaId: 'INVACA-B', nombre: 'Otra', estado: 'activo' })
 
-    await pon('usuarios/superX', { rol: 'superadmin', academiaId: '', estado: 'activo' })
-    await pon('usuarios/dirA', { rol: 'admin_escuela', academiaId: 'ACA-A', estado: 'activo' })
-    await pon('usuarios/dirB', { rol: 'admin_escuela', academiaId: 'ACA-B', estado: 'activo' })
-    await pon('usuarios/profA', { rol: 'instructor', academiaId: 'ACA-A', estado: 'activo' })
+    await pon('usuarios/invSuper', { rol: 'superadmin', academiaId: '', estado: 'activo' })
+    await pon('usuarios/invDirA', { rol: 'admin_escuela', academiaId: 'INVACA-A', estado: 'activo' })
+    await pon('usuarios/invDirB', { rol: 'admin_escuela', academiaId: 'INVACA-B', estado: 'activo' })
+    await pon('usuarios/invProf', { rol: 'instructor', academiaId: 'INVACA-A', estado: 'activo' })
     // Profesor CON el acceso a códigos aprobado: el caso que hay que negar
     // explícitamente, porque ese permiso sí le abre los códigos de grupo.
-    await pon('usuarios/profVeCodigos', {
-      rol: 'instructor', academiaId: 'ACA-A', estado: 'activo', puedeVerCodigos: true,
+    await pon('usuarios/invProfCodigos', {
+      rol: 'instructor', academiaId: 'INVACA-A', estado: 'activo', puedeVerCodigos: true,
     })
 
     // Un usuario por escenario: cada prueba escribe su propio perfil y no debe
@@ -75,19 +92,19 @@ async function preparar() {
     }
 
     const base = {
-      academiaId: 'ACA-A', grupoId: null, creadoPor: 'dirA', nota: '',
+      academiaId: 'INVACA-A', grupoId: null, creadoPor: 'invDirA', nota: '',
       estado: 'activo', dias: 14, usos: 0, maxUsos: 0, expira: ts(7 * DIA),
     }
     await pon('invitaciones/INV-ACA-A-OK01', { ...base, rol: 'alumno' })
     await pon('invitaciones/INV-ACA-P-OK02', { ...base, rol: 'instructor' })
     await pon('invitaciones/INV-ACA-D-OK03', { ...base, rol: 'admin_escuela', maxUsos: 1 })
-    await pon('invitaciones/INV-ACA-A-GRUP', { ...base, rol: 'alumno', grupoId: 'GRP-A' })
+    await pon('invitaciones/INV-ACA-A-GRUP', { ...base, rol: 'alumno', grupoId: 'INVGRP-A' })
     await pon('invitaciones/INV-ACA-P-VIEJA', { ...base, rol: 'instructor', expira: ts(-DIA) })
     await pon('invitaciones/INV-ACA-P-OFF', { ...base, rol: 'instructor', estado: 'inactivo' })
     await pon('invitaciones/INV-ACA-D-USADA', {
       ...base, rol: 'admin_escuela', maxUsos: 1, usos: 1,
     })
-    await pon('invitaciones/INV-ACB-P-OTRA', { ...base, academiaId: 'ACA-B', rol: 'instructor' })
+    await pon('invitaciones/INV-ACB-P-OTRA', { ...base, academiaId: 'INVACA-B', rol: 'instructor' })
     // Documento IMPOSIBLE de crear por reglas, sembrado a mano: si alguna vez
     // apareciera (migración, script), el canje debe seguir negándose.
     await pon('invitaciones/INV-ACA-X-SUPER', { ...base, rol: 'superadmin' })
@@ -115,7 +132,7 @@ test('invitaciones: el invitado entra con el rol de la invitación', { skip }, a
   const { assertSucceeds } = rut
   await assertSucceeds(
     updateDoc(doc(como('invitadoProfe'), 'usuarios/invitadoProfe'),
-      canje({ codigo: 'INV-ACA-P-OK02', academiaId: 'ACA-A', rol: 'instructor' }))
+      canje({ codigo: 'INV-ACA-P-OK02', academiaId: 'INVACA-A', rol: 'instructor' }))
   )
 })
 
@@ -125,7 +142,7 @@ test('invitaciones: también la de DIRECTOR, que es la razón de todo esto', { s
   const { assertSucceeds } = rut
   await assertSucceeds(
     updateDoc(doc(como('invitadoDir'), 'usuarios/invitadoDir'),
-      canje({ codigo: 'INV-ACA-D-OK03', academiaId: 'ACA-A', rol: 'admin_escuela' }))
+      canje({ codigo: 'INV-ACA-D-OK03', academiaId: 'INVACA-A', rol: 'admin_escuela' }))
   )
 })
 
@@ -135,7 +152,7 @@ test('invitaciones: con grupo, entra al grupo de esa academia', { skip }, async 
   const { assertSucceeds } = rut
   await assertSucceeds(
     updateDoc(doc(como('invitadoGrupo'), 'usuarios/invitadoGrupo'),
-      canje({ codigo: 'INV-ACA-A-GRUP', academiaId: 'ACA-A', grupoId: 'GRP-A', rol: 'alumno' }))
+      canje({ codigo: 'INV-ACA-A-GRUP', academiaId: 'INVACA-A', grupoId: 'INVGRP-A', rol: 'alumno' }))
   )
 })
 
@@ -144,8 +161,8 @@ test('invitaciones: el director las crea para SU academia', { skip }, async () =
   const { doc, setDoc, Timestamp } = fsmod
   const { assertSucceeds } = rut
   await assertSucceeds(
-    setDoc(doc(como('dirA'), 'invitaciones/INV-ACA-P-NUEVA'), {
-      academiaId: 'ACA-A', grupoId: null, rol: 'instructor', creadoPor: 'dirA',
+    setDoc(doc(como('invDirA'), 'invitaciones/INV-ACA-P-NUEVA'), {
+      academiaId: 'INVACA-A', grupoId: null, rol: 'instructor', creadoPor: 'invDirA',
       nota: '', estado: 'activo', dias: 14, usos: 0, maxUsos: 0,
       expira: Timestamp.fromDate(dentroDe(14 * DIA)),
     })
@@ -181,7 +198,7 @@ test('invitaciones: no se puede pedir un rol DISTINTO al de la invitación', { s
   // La invitación es de alumno; el invitado escribe 'admin_escuela'.
   await assertFails(
     updateDoc(doc(como('invitadoMiente'), 'usuarios/invitadoMiente'),
-      canje({ codigo: 'INV-ACA-A-OK01', academiaId: 'ACA-A', rol: 'admin_escuela' }))
+      canje({ codigo: 'INV-ACA-A-OK01', academiaId: 'INVACA-A', rol: 'admin_escuela' }))
   )
 })
 
@@ -191,7 +208,7 @@ test('invitaciones: superadmin NO se reparte ni con el doc sembrado', { skip }, 
   const { assertFails } = rut
   await assertFails(
     updateDoc(doc(como('invitadoSuper'), 'usuarios/invitadoSuper'),
-      canje({ codigo: 'INV-ACA-X-SUPER', academiaId: 'ACA-A', rol: 'superadmin' }))
+      canje({ codigo: 'INV-ACA-X-SUPER', academiaId: 'INVACA-A', rol: 'superadmin' }))
   )
 })
 
@@ -201,15 +218,15 @@ test('invitaciones: vencida, desactivada o agotada no ascienden a nadie', { skip
   const { assertFails } = rut
   await assertFails(
     updateDoc(doc(como('invitadoVencida'), 'usuarios/invitadoVencida'),
-      canje({ codigo: 'INV-ACA-P-VIEJA', academiaId: 'ACA-A', rol: 'instructor' }))
+      canje({ codigo: 'INV-ACA-P-VIEJA', academiaId: 'INVACA-A', rol: 'instructor' }))
   )
   await assertFails(
     updateDoc(doc(como('invitadoApagada'), 'usuarios/invitadoApagada'),
-      canje({ codigo: 'INV-ACA-P-OFF', academiaId: 'ACA-A', rol: 'instructor' }))
+      canje({ codigo: 'INV-ACA-P-OFF', academiaId: 'INVACA-A', rol: 'instructor' }))
   )
   await assertFails(
     updateDoc(doc(como('invitadoAgotada'), 'usuarios/invitadoAgotada'),
-      canje({ codigo: 'INV-ACA-D-USADA', academiaId: 'ACA-A', rol: 'admin_escuela' }))
+      canje({ codigo: 'INV-ACA-D-USADA', academiaId: 'INVACA-A', rol: 'admin_escuela' }))
   )
 })
 
@@ -220,7 +237,7 @@ test('invitaciones: la de otra academia no sirve para entrar a esta', { skip }, 
   // Invitación de ACA-B usada para meterse en ACA-A como profesor.
   await assertFails(
     updateDoc(doc(como('invitadoAjena'), 'usuarios/invitadoAjena'),
-      canje({ codigo: 'INV-ACB-P-OTRA', academiaId: 'ACA-A', rol: 'instructor' }))
+      canje({ codigo: 'INV-ACB-P-OTRA', academiaId: 'INVACA-A', rol: 'instructor' }))
   )
 })
 
@@ -230,7 +247,7 @@ test('invitaciones: un código inventado no vale', { skip }, async () => {
   const { assertFails } = rut
   await assertFails(
     updateDoc(doc(como('invitadoOk'), 'usuarios/invitadoOk'),
-      canje({ codigo: 'INV-ACA-D-NOEXISTE', academiaId: 'ACA-A', rol: 'admin_escuela' }))
+      canje({ codigo: 'INV-ACA-D-NOEXISTE', academiaId: 'INVACA-A', rol: 'admin_escuela' }))
   )
 })
 
@@ -242,8 +259,8 @@ test('invitaciones: un profesor NO emite invitaciones', { skip }, async () => {
   const { assertFails } = rut
   // El caso que importa: se fabricaría la de director y ascendería solo.
   await assertFails(
-    setDoc(doc(como('profA'), 'invitaciones/INV-ACA-D-PWN'), {
-      academiaId: 'ACA-A', grupoId: null, rol: 'admin_escuela', creadoPor: 'profA',
+    setDoc(doc(como('invProf'), 'invitaciones/INV-ACA-D-PWN'), {
+      academiaId: 'INVACA-A', grupoId: null, rol: 'admin_escuela', creadoPor: 'invProf',
       nota: '', estado: 'activo', dias: 14, usos: 0, maxUsos: 1,
       expira: Timestamp.fromDate(dentroDe(14 * DIA)),
     })
@@ -254,16 +271,16 @@ test('invitaciones: un profesor NO puede ni LISTARLAS', { skip }, async () => {
   await preparar()
   const { collection, query, where, getDocs } = fsmod
   const { assertFails, assertSucceeds } = rut
-  const suyas = (db) => query(collection(db, 'invitaciones'), where('academiaId', '==', 'ACA-A'))
+  const suyas = (db) => query(collection(db, 'invitaciones'), where('academiaId', '==', 'INVACA-A'))
   // Ni con `puedeVerCodigos` aprobado: ese permiso es para los códigos de
   // academia y grupo, que meten a todos como alumno. Leer esta lista es poder
   // copiar el enlace de DIRECTOR aunque no se pueda crear.
-  await assertFails(getDocs(suyas(como('profA'))))
-  await assertFails(getDocs(suyas(como('profVeCodigos'))))
+  await assertFails(getDocs(suyas(como('invProf'))))
+  await assertFails(getDocs(suyas(como('invProfCodigos'))))
   // El director de su academia sí.
-  await assertSucceeds(getDocs(suyas(como('dirA'))))
+  await assertSucceeds(getDocs(suyas(como('invDirA'))))
   // Y el de otra academia no ve las ajenas.
-  await assertFails(getDocs(suyas(como('dirB'))))
+  await assertFails(getDocs(suyas(como('invDirB'))))
 })
 
 test('invitaciones: un director no emite para la academia de otro', { skip }, async () => {
@@ -271,8 +288,8 @@ test('invitaciones: un director no emite para la academia de otro', { skip }, as
   const { doc, setDoc, Timestamp } = fsmod
   const { assertFails } = rut
   await assertFails(
-    setDoc(doc(como('dirB'), 'invitaciones/INV-ACA-P-INTRUSA'), {
-      academiaId: 'ACA-A', grupoId: null, rol: 'instructor', creadoPor: 'dirB',
+    setDoc(doc(como('invDirB'), 'invitaciones/INV-ACA-P-INTRUSA'), {
+      academiaId: 'INVACA-A', grupoId: null, rol: 'instructor', creadoPor: 'invDirB',
       nota: '', estado: 'activo', dias: 14, usos: 0, maxUsos: 0,
       expira: Timestamp.fromDate(dentroDe(14 * DIA)),
     })
@@ -284,20 +301,20 @@ test('invitaciones: no se crea una de superadmin, ni ya vencida, ni con usos', {
   const { doc, setDoc, Timestamp } = fsmod
   const { assertFails } = rut
   const base = {
-    academiaId: 'ACA-A', grupoId: null, creadoPor: 'dirA', nota: '',
+    academiaId: 'INVACA-A', grupoId: null, creadoPor: 'invDirA', nota: '',
     estado: 'activo', dias: 14, usos: 0, maxUsos: 0,
     expira: Timestamp.fromDate(dentroDe(14 * DIA)),
   }
-  await assertFails(setDoc(doc(como('dirA'), 'invitaciones/INV-A-X-1'), { ...base, rol: 'superadmin' }))
-  await assertFails(setDoc(doc(como('dirA'), 'invitaciones/INV-A-X-2'), {
+  await assertFails(setDoc(doc(como('invDirA'), 'invitaciones/INV-A-X-1'), { ...base, rol: 'superadmin' }))
+  await assertFails(setDoc(doc(como('invDirA'), 'invitaciones/INV-A-X-2'), {
     ...base, rol: 'alumno', expira: Timestamp.fromDate(dentroDe(-DIA)),
   }))
-  await assertFails(setDoc(doc(como('dirA'), 'invitaciones/INV-A-X-3'), {
+  await assertFails(setDoc(doc(como('invDirA'), 'invitaciones/INV-A-X-3'), {
     ...base, rol: 'alumno', usos: 99,
   }))
   // Grupo de OTRA academia.
-  await assertFails(setDoc(doc(como('dirA'), 'invitaciones/INV-A-X-4'), {
-    ...base, rol: 'alumno', grupoId: 'GRP-B',
+  await assertFails(setDoc(doc(como('invDirA'), 'invitaciones/INV-A-X-4'), {
+    ...base, rol: 'alumno', grupoId: 'INVGRP-B',
   }))
 })
 
@@ -310,11 +327,11 @@ test('invitaciones: el rol de una ya repartida es INMUTABLE', { skip }, async ()
   // Si el rol se pudiera editar, un enlace que circula como "alumno" se
   // convertiría en uno de "director" en manos de quien ya lo tiene.
   await assertFails(
-    updateDoc(doc(como('dirA'), 'invitaciones/INV-ACA-A-OK01'), { rol: 'admin_escuela' })
+    updateDoc(doc(como('invDirA'), 'invitaciones/INV-ACA-A-OK01'), { rol: 'admin_escuela' })
   )
   // Desactivarla sí, que es la vía correcta.
   await assertSucceeds(
-    updateDoc(doc(como('dirA'), 'invitaciones/INV-ACA-A-OK01'), { estado: 'inactivo' })
+    updateDoc(doc(como('invDirA'), 'invitaciones/INV-ACA-A-OK01'), { estado: 'inactivo' })
   )
 })
 
@@ -327,11 +344,11 @@ test('invitaciones: el super-admin SÍ migra academiaId (cambio de código)', { 
   // apuntando a un código que ya no existe y nadie se enteraría hasta que un
   // invitado no pudiera entrar.
   await assertSucceeds(
-    updateDoc(doc(como('superX'), 'invitaciones/INV-ACA-A-MIGRA'), { academiaId: 'ACA-B' })
+    updateDoc(doc(como('invSuper'), 'invitaciones/INV-ACA-A-MIGRA'), { academiaId: 'INVACA-B' })
   )
   // El director NO: para él la academia sigue siendo inmutable.
   await assertFails(
-    updateDoc(doc(como('dirA'), 'invitaciones/INV-ACA-A-CNT1'), { academiaId: 'ACA-B' })
+    updateDoc(doc(como('invDirA'), 'invitaciones/INV-ACA-A-CNT1'), { academiaId: 'INVACA-B' })
   )
 })
 
