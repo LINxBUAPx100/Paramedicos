@@ -21,6 +21,7 @@ export const ACCIONES = {
   'cambiar-codigo': { texto: 'Cambió el código de la academia', tono: 'aviso' },
   'crear-usuario': { texto: 'Dio de alta a una persona', tono: 'alta' },
   'baja-usuario': { texto: 'Dio de baja a una persona', tono: 'baja' },
+  'reactivar-usuario': { texto: 'Reactivó una cuenta', tono: 'alta' },
   'borrar-usuario': { texto: 'Borró a una persona', tono: 'peligro' },
   'cambiar-rol': { texto: 'Cambió un rol', tono: 'aviso' },
   'conceder-permisos': { texto: 'Concedió permisos editoriales', tono: 'alta' },

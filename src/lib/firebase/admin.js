@@ -381,3 +381,42 @@ export async function archivarAcademia(academiaId, archivada = true) {
     despues: { estado: archivada ? 'archivada' : 'activo' },
   }).catch(() => null)
 }
+
+// Reactiva una cuenta dada de baja. La vuelta que faltaba: la baja es LÓGICA
+// —el documento se queda con estado 'eliminado'— pero no había ninguna pantalla
+// para deshacerla.
+//
+// Exige academia porque la baja se la quitó: sin ella la cuenta volvería
+// «activa» sin poder entrar a ningún contenido. Y NO devuelve los permisos
+// editoriales: la baja los retiró a propósito y se conceden otra vez si hacen
+// falta.
+//
+// «Volver a crear al usuario con los mismos datos» no es alternativa: su
+// registro de Auth sigue existiendo (solo se borra con el Admin SDK), así que
+// darlo de alta con el mismo correo falla. Reactivar conserva su uid, su
+// historial y sus intentos.
+export async function reactivarUsuario(uid, { academiaId, rol = 'alumno' } = {}) {
+  if (!uid) throw new Error('Falta el usuario.')
+  const destino = String(academiaId || '').trim().toUpperCase()
+  if (!destino) throw new Error('Elige la academia a la que vuelve.')
+  const aca = await getDoc(doc(db, 'academias', destino))
+  if (!aca.exists()) throw new Error(`No existe la academia ${destino}.`)
+
+  await updateDoc(doc(db, 'usuarios', uid), {
+    estado: 'activo',
+    academiaId: destino,
+    rol,
+    grupoId: null,
+    eliminadoEn: null,
+    reactivadoEn: serverTimestamp(),
+  })
+
+  await registrarHistorial({
+    academiaId: destino,
+    accion: 'reactivar-usuario',
+    coleccion: 'usuarios',
+    docId: uid,
+    antes: { estado: 'eliminado' },
+    despues: { estado: 'activo', academiaId: destino, rol },
+  }).catch(() => null)
+}

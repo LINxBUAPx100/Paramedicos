@@ -7052,3 +7052,14 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 .fa-estado--individual { color: var(--verde); }
 .fa-estado--oculta { color: var(--ambar); }
 .fa-nada { color: var(--texto-3); min-width: 54px; text-align: center; }
+
+/* Reactivar una cuenta dada de baja (pide academia de destino) */
+.admin-reactivar { display: inline-flex; align-items: center; gap: var(--e-8); flex-wrap: wrap; }
+.admin-reactivar select {
+  padding: var(--e-4) var(--e-8);
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio-sm);
+  background: var(--bg-2);
+  color: var(--texto);
+  font-size: var(--t-sm);
+}

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useAdmin } from '../components/admin/AdminShell.jsx'
 import { ETIQUETA_ROL, ROLES } from '../lib/roles.js'
 import { PLANES, TIPOS, ETIQUETA_PLAN, ETIQUETA_TIPO, DESCRIPCION_PLAN, validarPlanTipo } from '../lib/capacidades.js'
+import { rolAlReactivar, avisoDeReactivacion } from '../lib/cuentaModelo.js'
 import Icon from '../components/Icon.jsx'
 
 // ============================================================
@@ -19,6 +20,10 @@ import Icon from '../components/Icon.jsx'
 // encarga AdminShell, que lo hace una sola vez para todas.
 export default function AdminPage({ seccion = 'academias' }) {
   const { academias, usuarios, porAcademia, refrescar, miUid } = useAdmin()
+  // Reactivar una cuenta dada de baja: pide a que academia vuelve, porque la
+  // baja se la quito y sin ella volveria activa pero sin poder entrar a nada.
+  const [reactivando, setReactivando] = useState(null)
+  const [destinoReactivar, setDestinoReactivar] = useState('')
   const [error, setError] = useState('')
   const [aviso, setAviso] = useState('')
   const [filtro, setFiltro] = useState('')
@@ -275,11 +280,61 @@ export default function AdminPage({ seccion = 'academias' }) {
                           {soyYo ? (
                             <span className="panel-rol-tag rol-activo">Activo</span>
                           ) : dadoDeBaja ? (
-                            // Baja lógica: se conserva la fila para poder auditarla.
-                            // "Reactivar" desde aquí lo devolvería sin academia, así
-                            // que se reincorpora con el código, como cualquiera.
-                            <span className="panel-rol-tag rol-eliminado" title="Cuenta dada de baja">
-                              Eliminado
+                            // Baja lógica: la fila se conserva para poder auditarla,
+                            // y ahora también para poder DESHACERLA. Antes no se
+                            // ofrecía porque reactivar sin academia devuelve una
+                            // cuenta activa que no puede entrar a nada; por eso el
+                            // botón pide a qué academia vuelve.
+                            <span className="admin-reactivar">
+                              <span className="panel-rol-tag rol-eliminado" title="Cuenta dada de baja">
+                                Eliminado
+                              </span>
+                              {reactivando === u.id ? (
+                                <>
+                                  <select
+                                    value={destinoReactivar}
+                                    aria-label={`Academia a la que vuelve ${quien}`}
+                                    onChange={(e) => setDestinoReactivar(e.target.value)}
+                                  >
+                                    <option value="">Elige academia…</option>
+                                    {academias.map((a) => (
+                                      <option key={a.id} value={a.id}>{a.nombre || a.id}</option>
+                                    ))}
+                                  </select>
+                                  <button
+                                    type="button"
+                                    className="btn btn--sm btn--primario"
+                                    disabled={!destinoReactivar || ocupado === u.id}
+                                    onClick={() => correr(u.id, async () => {
+                                      const { reactivarUsuario } = await import('../lib/firebase/admin.js')
+                                      await reactivarUsuario(u.id, {
+                                        academiaId: destinoReactivar,
+                                        rol: rolAlReactivar(u),
+                                      })
+                                      setReactivando(null)
+                                      setDestinoReactivar('')
+                                    }, `${quien} vuelve a estar activo.`)}
+                                  >
+                                    Reactivar
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="btn btn--sm btn--fantasma"
+                                    onClick={() => { setReactivando(null); setDestinoReactivar('') }}
+                                  >
+                                    Cancelar
+                                  </button>
+                                </>
+                              ) : (
+                                <button
+                                  type="button"
+                                  className="btn btn--sm btn--suave"
+                                  title={avisoDeReactivacion()}
+                                  onClick={() => setReactivando(u.id)}
+                                >
+                                  Reactivar
+                                </button>
+                              )}
                             </span>
                           ) : (
                             <button
