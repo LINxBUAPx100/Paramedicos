@@ -7093,3 +7093,26 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 }
 .ps-destino-texto { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .ps-destino-texto small { color: var(--texto-2); font-size: var(--t-sm); }
+
+/* ===== Actividades del maestro, vistas por el alumno ===== */
+.mc-actividades { list-style: none; display: flex; flex-direction: column; gap: var(--e-8); }
+.mc-actividad {
+  display: flex; align-items: flex-start; gap: var(--e-12);
+  padding: var(--e-12) var(--e-16);
+  border: 1px solid var(--borde);
+  border-left: 4px solid var(--borde-fuerte);
+  border-radius: var(--radio-sm);
+  background: var(--bg-2);
+}
+/* La franja avisa del plazo; el texto lo dice igual, nunca solo el color. */
+.mc-actividad--vencida { border-left-color: var(--rojo); }
+.mc-actividad--pendiente { border-left-color: var(--ambar); }
+.mc-actividad--calificada { border-left-color: var(--verde); }
+.mc-cuerpo { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: var(--e-4); }
+.mc-desc { color: var(--texto-2); font-size: var(--t-sm); }
+.mc-nota { color: var(--texto-2); font-size: var(--t-sm); font-style: italic; }
+.mc-enlace { display: inline-flex; align-items: center; gap: var(--e-6); font-size: var(--t-sm); font-weight: 600; }
+.mc-plazo { font-size: var(--t-xs); font-weight: 600; white-space: nowrap; color: var(--texto-3); }
+.mc-plazo--vencida { color: var(--rojo); }
+.mc-plazo--pendiente { color: var(--ambar); }
+.mc-plazo--calificada { color: var(--verde); }

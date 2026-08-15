@@ -12,6 +12,7 @@ import assert from 'node:assert/strict'
 import {
   idCalificacion, validarValor, normalizarEvaluacion, indexarCalificaciones,
   promedioDeAlumno, resumenDeEvaluacion, resumenDelGrupo, misCalificaciones,
+  estadoDeActividad, textoDePlazo,
   APROBADO, ESCALA,
 } from '../src/lib/calificacionesModelo.js'
 
@@ -148,4 +149,60 @@ test('indexarCalificaciones ignora registros sin uid o sin evaluación', () => {
   ])
   assert.deepEqual(Object.keys(i), ['a1'])
   assert.deepEqual(Object.keys(i.a1), ['e1'])
+})
+
+// ---------- la actividad vista por el alumno ----------
+//  El maestro crea UNA actividad para todo el grupo y la califica uno por uno,
+//  asi que cada alumno la ve en un momento distinto: por entregar, vencida sin
+//  nota, o ya calificada.
+
+const AHORA = Date.parse('2026-08-14T12:00:00Z')
+const enDias = (d) => ({ seconds: Math.round((AHORA + d * 86400000) / 1000) })
+
+test('una actividad calificada NO se llama vencida aunque pasara la fecha', () => {
+  // Entregar tarde y que te califiquen es un final normal, no un incumplimiento.
+  const ev = { id: 'e1', fechaEntrega: enDias(-10) }
+  const r = estadoDeActividad(ev, { valor: 90 }, AHORA)
+  assert.equal(r.estado, 'calificada')
+  assert.equal(r.valor, 90)
+  assert.equal(r.aprobado, true)
+  assert.equal(textoDePlazo(r), '', 'ya calificada: el plazo deja de importar')
+})
+
+test('sin nota, el estado depende del plazo', () => {
+  const pendiente = estadoDeActividad({ fechaEntrega: enDias(3) }, null, AHORA)
+  assert.equal(pendiente.estado, 'pendiente')
+  assert.equal(textoDePlazo(pendiente), 'Vence en 3 días')
+
+  const vencida = estadoDeActividad({ fechaEntrega: enDias(-2) }, null, AHORA)
+  assert.equal(vencida.estado, 'vencida')
+  assert.equal(textoDePlazo(vencida), 'Venció hace 2 días')
+})
+
+test('hoy, mañana y ayer se dicen con palabras, no con números', () => {
+  assert.equal(textoDePlazo(estadoDeActividad({ fechaEntrega: enDias(0) }, null, AHORA)), 'Vence hoy')
+  assert.equal(textoDePlazo(estadoDeActividad({ fechaEntrega: enDias(1) }, null, AHORA)), 'Vence mañana')
+  assert.equal(textoDePlazo(estadoDeActividad({ fechaEntrega: enDias(-1) }, null, AHORA)), 'Venció ayer')
+})
+
+test('una actividad sin fecha no inventa un plazo', () => {
+  const r = estadoDeActividad({ id: 'e1' }, null, AHORA)
+  assert.equal(r.estado, 'sin-fecha')
+  assert.equal(textoDePlazo(r), 'Sin fecha de entrega')
+})
+
+test('un 0 calificado sigue siendo una calificación, no un pendiente', () => {
+  const r = estadoDeActividad({ fechaEntrega: enDias(-5) }, { valor: 0 }, AHORA)
+  assert.equal(r.estado, 'calificada')
+  assert.equal(r.aprobado, false)
+})
+
+test('normalizarEvaluacion conserva la fecha de entrega y el enlace', () => {
+  const ev = normalizarEvaluacion({ id: 'e1', titulo: 'Práctica', fechaEntrega: enDias(2), enlace: 'https://x.test/guia' })
+  assert.equal(ev.enlace, 'https://x.test/guia')
+  assert.ok(ev.fechaEntrega?.seconds)
+  // Y sin ellos no rompe: son opcionales.
+  const vacio = normalizarEvaluacion({ id: 'e2', titulo: 'X' })
+  assert.equal(vacio.enlace, '')
+  assert.equal(vacio.fechaEntrega, null)
 })

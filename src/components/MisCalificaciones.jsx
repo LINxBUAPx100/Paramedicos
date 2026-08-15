@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext.jsx'
-import { misCalificaciones, normalizarEvaluacion, APROBADO } from '../lib/calificacionesModelo.js'
+import {
+  misCalificaciones, normalizarEvaluacion, estadoDeActividad, textoDePlazo, APROBADO,
+} from '../lib/calificacionesModelo.js'
+import { hrefSeguro } from '../lib/enlaceSeguro.js'
 import Icon from './Icon.jsx'
 
 // ============================================================
@@ -68,22 +71,39 @@ export default function MisCalificaciones() {
         </p>
       )}
 
-      <div className="examenes-lista">
-        {datos.lista.map(({ evaluacion, valor, nota, aprobado }) => (
-          <div key={evaluacion.id} className="examen-fila">
-            <span className={`examen-pct ${valor === null ? '' : aprobado ? 'ok' : 'mal'}`}>
-              {valor === null ? '—' : `${valor}%`}
-            </span>
-            <span>
-              {evaluacion.titulo}
-              {nota && <small className="mc-nota"> · {nota}</small>}
-            </span>
-            <span className="examen-fecha">
-              {valor === null ? 'Sin calificar' : fechaTxt(evaluacion.fecha)}
-            </span>
-          </div>
-        ))}
-      </div>
+      {/* Cada actividad, no solo su nota: instrucciones, plazo y material. El
+          maestro la crea para todo el grupo y la califica uno por uno, así que
+          el alumno necesita saber QUÉ tiene que hacer y PARA CUÁNDO, no solo
+          cuánto sacó cuando ya es tarde. */}
+      <ul className="mc-actividades">
+        {datos.lista.map(({ evaluacion, valor, nota, aprobado }) => {
+          const est = estadoDeActividad(evaluacion, valor === null ? null : { valor })
+          const plazo = textoDePlazo(est)
+          const href = hrefSeguro(evaluacion.enlace)
+          return (
+            <li key={evaluacion.id} className={`mc-actividad mc-actividad--${est.estado}`}>
+              <span className={`examen-pct ${valor === null ? '' : aprobado ? 'ok' : 'mal'}`}>
+                {valor === null ? '—' : `${valor}%`}
+              </span>
+              <div className="mc-cuerpo">
+                <strong>{evaluacion.titulo}</strong>
+                {evaluacion.descripcion && <p className="mc-desc">{evaluacion.descripcion}</p>}
+                {nota && <p className="mc-nota">Tu maestro anotó: {nota}</p>}
+                {href && (
+                  <a className="mc-enlace" href={href} target="_blank" rel="noopener noreferrer">
+                    <Icon name="descarga" size={14} /> Ver el material
+                  </a>
+                )}
+              </div>
+              <span className={`mc-plazo mc-plazo--${est.estado}`}>
+                {est.estado === 'calificada'
+                  ? `Calificada${evaluacion.fecha ? ` · ${fechaTxt(evaluacion.fecha)}` : ''}`
+                  : plazo}
+              </span>
+            </li>
+          )
+        })}
+      </ul>
     </section>
   )
 }

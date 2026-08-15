@@ -47,11 +47,47 @@ export function normalizarEvaluacion(ev) {
     descripcion: String(ev?.descripcion || ''),
     grupoId: ev?.grupoId || null,
     fecha: ev?.fecha || null,
+    // Fecha de ENTREGA (la del alumno), distinta de `fecha` (cuando se creo).
+    fechaEntrega: ev?.fechaEntrega || null,
+    // Material o instrucciones. La escribe una persona, asi que quien la pinte
+    // debe pasarla por hrefSeguro: nunca va directa a un href.
+    enlace: String(ev?.enlace || ''),
     // Ponderación 1 por defecto: sin ella, todas pesan igual, que es lo que
     // espera quien no configuró nada.
     ponderacion: Number.isFinite(pond) && pond > 0 ? pond : 1,
     escala: Number(ev?.escala) > 0 ? Number(ev.escala) : ESCALA,
   }
+}
+
+// Estado de UNA actividad para UN alumno. El maestro crea la actividad para
+// todo el grupo y la califica uno por uno, así que cada alumno la ve en un
+// momento distinto de su vida: por entregar, vencida sin nota, o ya calificada.
+//
+// `ahora` entra por parámetro para que «vence mañana» sea comprobable sin
+// depender del reloj de la máquina.
+export function estadoDeActividad(evaluacion, calificacion, ahora = Date.now()) {
+  const valor = Number(calificacion?.valor)
+  if (Number.isFinite(valor)) {
+    return { estado: 'calificada', valor, dias: null, aprobado: valor >= APROBADO }
+  }
+  const seg = evaluacion?.fechaEntrega?.seconds
+  if (!seg) return { estado: 'sin-fecha', valor: null, dias: null, aprobado: false }
+  const dias = Math.ceil((seg * 1000 - ahora) / 86400000)
+  // Vencida = pasó la fecha y sigue sin nota. No se dice «vencida» de algo ya
+  // calificado: entregar tarde y que te califiquen es un final normal.
+  return { estado: dias < 0 ? 'vencida' : 'pendiente', valor: null, dias, aprobado: false }
+}
+
+// Cómo se lee el plazo. Aquí y no en el componente para poder probarlo: es lo
+// que el alumno mira para decidir qué hace hoy.
+export function textoDePlazo(estado) {
+  if (estado.estado === 'calificada') return ''
+  if (estado.estado === 'sin-fecha') return 'Sin fecha de entrega'
+  const d = estado.dias
+  if (d < 0) return d === -1 ? 'Venció ayer' : `Venció hace ${Math.abs(d)} días`
+  if (d === 0) return 'Vence hoy'
+  if (d === 1) return 'Vence mañana'
+  return `Vence en ${d} días`
 }
 
 // Índice { uid: { evaluacionId: calificacion } } para no recorrer la lista

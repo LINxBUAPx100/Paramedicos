@@ -32,7 +32,10 @@ export async function listarEvaluaciones(academiaId) {
     .sort((a, b) => (a.fecha?.seconds || 0) - (b.fecha?.seconds || 0))
 }
 
-export async function crearEvaluacion({ academiaId, grupoId = null, titulo, descripcion = '', ponderacion = 1, fecha = null }) {
+export async function crearEvaluacion({
+  academiaId, grupoId = null, titulo, descripcion = '', ponderacion = 1, fecha = null,
+  fechaEntrega = null, enlace = '',
+}) {
   const limpio = String(titulo || '').trim()
   if (!academiaId) throw new Error('Falta la academia.')
   if (!limpio) throw new Error('Escribe el título de la evaluación.')
@@ -47,6 +50,11 @@ export async function crearEvaluacion({ academiaId, grupoId = null, titulo, desc
     ponderacion: pond,
     escala: 100,
     fecha: fecha || serverTimestamp(),
+    // La fecha de ENTREGA es del alumno y es distinta de `fecha` (creación).
+    // Llega como 'YYYY-MM-DD' de un <input type="date">: se guarda como Date a
+    // las 23:59 locales, porque «entregar el día 20» incluye el día 20 entero.
+    fechaEntrega: fechaEntrega ? new Date(`${fechaEntrega}T23:59:59`) : null,
+    enlace: String(enlace || '').trim().slice(0, 500),
     creadoPor: uidActual(),
     creadoEn: serverTimestamp(),
   })

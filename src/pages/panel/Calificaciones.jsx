@@ -111,6 +111,8 @@ export default function PanelCalificaciones() {
         titulo: nueva.titulo,
         descripcion: nueva.descripcion,
         ponderacion: nueva.ponderacion,
+        fechaEntrega: nueva.fechaEntrega,
+        enlace: nueva.enlace,
       })
       setNueva(null)
       setAviso('Evaluación creada. Ya puedes calificar en su columna.')
@@ -188,9 +190,9 @@ export default function PanelCalificaciones() {
         <button
           type="button"
           className="btn btn--primario"
-          onClick={() => setNueva({ titulo: '', descripcion: '', ponderacion: 1, paraGrupo: true })}
+          onClick={() => setNueva({ titulo: '', descripcion: '', ponderacion: 1, paraGrupo: true, fechaEntrega: '', enlace: '' })}
         >
-          <Icon name="mas" size={15} /> Nueva evaluación
+          <Icon name="mas" size={15} /> Nueva actividad o evaluación
         </button>
       </div>
 
@@ -211,11 +213,25 @@ export default function PanelCalificaciones() {
               onChange={(e) => setNueva({ ...nueva, ponderacion: e.target.value })}
             />
           </label>
+          <label>
+            Fecha de entrega (opcional)
+            <input
+              type="date" value={nueva.fechaEntrega}
+              onChange={(e) => setNueva({ ...nueva, fechaEntrega: e.target.value })}
+            />
+          </label>
           <label className="pc-nota">
-            Descripción (opcional)
+            Instrucciones para el alumno (opcional)
             <input
               type="text" value={nueva.descripcion} maxLength={500}
               onChange={(e) => setNueva({ ...nueva, descripcion: e.target.value })}
+            />
+          </label>
+          <label className="pc-nota">
+            Enlace al material (opcional)
+            <input
+              type="url" value={nueva.enlace} placeholder="https://… (Drive, PDF, video)"
+              onChange={(e) => setNueva({ ...nueva, enlace: e.target.value })}
             />
           </label>
           {grupoFiltro && grupoFiltro !== 'sin' && (
