@@ -216,22 +216,64 @@ De ahí tres reglas de trabajo, que valen más que cualquier arreglo concreto:
 
 ### Sin empezar
 
-1. **Planes editables por el super-admin** (pedido el 2026-08-14). Hoy los
-   planes comerciales están **escritos en el código** (`PLANES`,
-   `ETIQUETA_PLAN`, `DESCRIPCION_PLAN` y el mapa de capacidades en
-   `src/lib/capacidades.js`); lo único configurable por academia son las
-   EXCEPCIONES en `academias/{id}.capacidades`. Que el super-admin «defina los
-   planes» significa mover ese catálogo a Firestore (colección `planes`) y que
-   `capacidades.js` lo lea, conservando el default del código como respaldo
-   fail-open: si la colección no existe o viene corrupta, se usa el de siempre.
-   **Ojo, lo pidió «desde la pantalla de progreso»**: como super-admin, esa
-   pantalla es hoy la vista de staff (`ProgresoStaff`). Conviene confirmar si
-   quiere el editor de planes AHÍ o en la consola (`/admin/facturacion`, que es
-   donde vive lo comercial). No construir sin preguntarlo: cambia dónde va todo.
-2. **Dashboard del director**: calificaciones agregadas por grupo y por alumno.
+1. **Planes editables por el super-admin** — EL BLOQUE GRANDE QUE QUEDA.
+   Decisiones ya tomadas con el usuario el 2026-08-14:
+
+   - **Dónde:** en `/admin/facturacion`, junto al resto de lo comercial. (Se
+     preguntó porque lo había pedido «desde progreso»; eligió facturación.)
+   - **Qué es editable: TODO.** Nombre, precio, descripción, capacidades **y el
+     CONTENIDO que incluye el plan** — sus palabras: «debo poder definir si el
+     base solo lleva TUM básico o más temas».
+   - **Y por academia:** cada academia puede ir con un **plan general** o con
+     uno **personalizado**. O sea, el plan es una plantilla y la academia puede
+     apartarse de ella.
+
+   Lo que eso implica, y por qué NO se hizo con prisa al final de la sesión:
+
+   - Hoy los planes están **en el código** (`PLANES`, `ETIQUETA_PLAN`,
+     `DESCRIPCION_PLAN` y el mapa de capacidades de `src/lib/capacidades.js`).
+     Lo único configurable por academia son las excepciones en
+     `academias/{id}.capacidades`, que ya existen y ya funcionan: **esa es la
+     base sobre la que construir «personalizado»**, no hay que inventarla.
+   - **Las REGLAS de Firestore leen las capacidades en el servidor**
+     (`academiaEditaContenido()`, `academiaOtorgaPermisos()`…). Si el catálogo
+     de planes pasa a Firestore, las reglas tienen que leerlo de ahí también, o
+     el cliente enseñará una cosa y el servidor impondrá otra. Este proyecto YA
+     pagó esa divergencia una vez: `academiaEditaContenido()` estaba escrita dos
+     veces con cuerpos distintos en `firestore.rules` y `storage.rules`, y una
+     academia podía editar contenido pero no subir un archivo. Hay una prueba de
+     reglas dedicada a eso (`capacidades.rules.test.mjs`); mirarla antes de
+     tocar nada.
+   - **El «contenido incluido en el plan» es una CAPA NUEVA de visibilidad.**
+     Hoy hay dos: lo que el grupo oculta (`grupos/{id}.fasesOcultas`) y lo que
+     se abre a un alumno (`usuarios/{uid}.fasesDesbloqueadas`). Esto añadiría
+     una tercera por encima —lo que la academia tiene contratado— y hay que
+     decidir su prioridad frente a las otras dos ANTES de escribir código. Lo
+     razonable: el plan acota el techo (lo que no incluye no lo puede abrir
+     nadie), y dentro de ese techo mandan grupo y alumno como ahora.
+   - Fail-open al leer: si la colección `planes` no existe o viene corrupta, se
+     usa el catálogo del código. Sin eso, un dato malo deja a todas las
+     academias sin capacidades.
+
+   Orden sugerido: (1) colección `planes` + editor de nombre/precio/descripción,
+   que no toca reglas; (2) capacidades por plan, con las reglas leyéndolas y sus
+   pruebas en el emulador; (3) la capa de contenido incluido, que es la más
+   delicada de las tres.
+
+2. **Pagos de colegiatura (Stripe u otro)** — pedido el 2026-08-14, **pendiente
+   a propósito**. Lo que dijo: que los alumnos paguen su colegiatura y que el
+   dinero llegue **directamente a la academia**, con cuentas distintas por
+   academia. Los detalles los especificará más adelante.
+   Lo que conviene tener claro desde ya: cobrar a nombre de terceros es
+   **Stripe Connect** (cuentas conectadas), no un Stripe normal; exige backend
+   para los secretos y los webhooks —no se puede hacer solo desde el navegador,
+   y este proyecto hoy es cliente puro sobre plan Spark—; y encaja con el modelo
+   de `periodos` descrito abajo. No empezar sin decidir la parte de servidor.
+3. **Dashboard del director** — HECHO el 2026-08-14 (retrato por grupos en `/panel/calificaciones`).
    El cálculo ya existe y está probado (`calificacionesModelo.js`); falta la
    pantalla que lo agrupe para quien dirige, no para quien da clase.
-3. **Bloque P** — alta de academia con materias (detalle más abajo).
+4. **Bloque P** — alta de academia con materias (detalle más abajo). Es el único
+   bloque del plan original que queda, y no depende de ninguna decisión.
 
 ### Preparar el terreno para PAGOS y ASISTENCIAS (no construir aún)
 
