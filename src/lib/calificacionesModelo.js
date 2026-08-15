@@ -170,6 +170,47 @@ export function resumenDelGrupo(evaluaciones, alumnos, indice) {
   }
 }
 
+// Retrato POR GRUPOS, que es lo que mira quien dirige: el maestro necesita ver
+// a sus alumnos uno por uno, y el director necesita comparar grupos y saber
+// dónde mirar. Son dos preguntas distintas y por eso son dos funciones.
+//
+// Cada grupo se evalúa con LAS EVALUACIONES QUE LE APLICAN: las suyas más las
+// de toda la academia. Meterle las de otro grupo le inventaría pendientes que
+// no le corresponden.
+export function resumenPorGrupos(evaluaciones, alumnos, indice, grupos) {
+  const filas = (grupos || []).map((g) => {
+    const suyos = (alumnos || []).filter((a) => a?.grupoId === g.id)
+    const suyas = (evaluaciones || []).filter((e) => !e.grupoId || e.grupoId === g.id)
+    const r = resumenDelGrupo(suyas, suyos, indice)
+    return {
+      grupo: g,
+      alumnos: suyos.length,
+      evaluaciones: suyas.length,
+      promedio: r.promedio,
+      enRiesgo: r.enRiesgo.length,
+      sinNota: r.sinNota.length,
+      pendientes: r.pendientesTotal,
+    }
+  })
+  // Sin grupo no es un caso raro: alguien recién inscrito todavía no lo tiene, y
+  // si no aparece aquí desaparece de la vista del director sin avisar.
+  const sueltos = (alumnos || []).filter((a) => !a?.grupoId)
+  if (sueltos.length > 0) {
+    const globales = (evaluaciones || []).filter((e) => !e.grupoId)
+    const r = resumenDelGrupo(globales, sueltos, indice)
+    filas.push({
+      grupo: { id: '', nombre: 'Sin grupo' },
+      alumnos: sueltos.length,
+      evaluaciones: globales.length,
+      promedio: r.promedio,
+      enRiesgo: r.enRiesgo.length,
+      sinNota: r.sinNota.length,
+      pendientes: r.pendientesTotal,
+    })
+  }
+  return filas
+}
+
 // Lo que ve el ALUMNO en «Mi progreso»: sus notas, nunca las de otros.
 export function misCalificaciones(uid, evaluaciones, calificaciones) {
   const indice = indexarCalificaciones(calificaciones)

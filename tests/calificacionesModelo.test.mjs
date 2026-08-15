@@ -12,7 +12,7 @@ import assert from 'node:assert/strict'
 import {
   idCalificacion, validarValor, normalizarEvaluacion, indexarCalificaciones,
   promedioDeAlumno, resumenDeEvaluacion, resumenDelGrupo, misCalificaciones,
-  estadoDeActividad, textoDePlazo,
+  estadoDeActividad, textoDePlazo, resumenPorGrupos,
   APROBADO, ESCALA,
 } from '../src/lib/calificacionesModelo.js'
 
@@ -205,4 +205,57 @@ test('normalizarEvaluacion conserva la fecha de entrega y el enlace', () => {
   const vacio = normalizarEvaluacion({ id: 'e2', titulo: 'X' })
   assert.equal(vacio.enlace, '')
   assert.equal(vacio.fechaEntrega, null)
+})
+
+// ---------- el retrato por GRUPOS (lo que mira el director) ----------
+
+const GRUPOS = [{ id: 'G1', nombre: 'Mañana' }, { id: 'G2', nombre: 'Tarde' }]
+
+test('cada grupo se mide con las evaluaciones que le APLICAN', () => {
+  const evs = [
+    normalizarEvaluacion({ id: 'gen', titulo: 'General', ponderacion: 1 }), // toda la academia
+    normalizarEvaluacion({ id: 'soloG1', titulo: 'Solo G1', ponderacion: 1, grupoId: 'G1' }),
+  ]
+  const alumnos = [
+    { id: 'a1', grupoId: 'G1' },
+    { id: 'a2', grupoId: 'G2' },
+  ]
+  const indice = indexarCalificaciones([
+    { uid: 'a1', evaluacionId: 'gen', valor: 80 },
+    { uid: 'a1', evaluacionId: 'soloG1', valor: 60 },
+    { uid: 'a2', evaluacionId: 'gen', valor: 90 },
+  ])
+  const r = resumenPorGrupos(evs, alumnos, indice, GRUPOS)
+  const g1 = r.find((x) => x.grupo.id === 'G1')
+  const g2 = r.find((x) => x.grupo.id === 'G2')
+  assert.equal(g1.evaluaciones, 2, 'la general y la suya')
+  assert.equal(g1.promedio, 70) // (80 + 60) / 2
+  // A G2 NO se le cuenta la evaluación de G1: le inventaría un pendiente que
+  // no le corresponde.
+  assert.equal(g2.evaluaciones, 1)
+  assert.equal(g2.promedio, 90)
+  assert.equal(g2.pendientes, 0)
+})
+
+test('los alumnos SIN grupo no desaparecen del retrato', () => {
+  // Alguien recién inscrito todavía no tiene grupo; si no apareciera aquí, se
+  // esfumaría de la vista del director sin avisar.
+  const evs = [normalizarEvaluacion({ id: 'gen', titulo: 'General', ponderacion: 1 })]
+  const alumnos = [{ id: 'a1', grupoId: 'G1' }, { id: 'z9' }]
+  const r = resumenPorGrupos(evs, alumnos, indexarCalificaciones([]), GRUPOS)
+  const sueltos = r.find((x) => x.grupo.nombre === 'Sin grupo')
+  assert.ok(sueltos, 'debe salir una fila para los que no tienen grupo')
+  assert.equal(sueltos.alumnos, 1)
+})
+
+test('sin alumnos sueltos NO se inventa la fila', () => {
+  const r = resumenPorGrupos([], [{ id: 'a1', grupoId: 'G1' }], indexarCalificaciones([]), GRUPOS)
+  assert.ok(!r.some((x) => x.grupo.nombre === 'Sin grupo'))
+  assert.equal(r.length, 2)
+})
+
+test('un grupo vacío sale con promedio null, no con 0', () => {
+  const r = resumenPorGrupos([], [], indexarCalificaciones([]), GRUPOS)
+  assert.equal(r[0].promedio, null)
+  assert.equal(r[0].alumnos, 0)
 })

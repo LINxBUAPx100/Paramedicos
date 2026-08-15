@@ -5,7 +5,7 @@ import ConfirmacionReforzada from '../../components/ConfirmacionReforzada.jsx'
 import Icon from '../../components/Icon.jsx'
 import {
   normalizarEvaluacion, indexarCalificaciones, resumenDelGrupo, resumenDeEvaluacion,
-  validarValor, APROBADO,
+  validarValor, resumenPorGrupos, APROBADO,
 } from '../../lib/calificacionesModelo.js'
 
 // ============================================================
@@ -20,7 +20,7 @@ import {
 // ============================================================
 
 export default function PanelCalificaciones() {
-  const { academiaId, alumnos, grupoFiltro, nombreGrupo, gestion } = usePanel()
+  const { academiaId, alumnos, grupos, grupoFiltro, nombreGrupo, gestion } = usePanel()
   const { esSuperadmin } = useAuth()
   const [evaluaciones, setEvaluaciones] = useState(null)
   const [calificaciones, setCalificaciones] = useState([])
@@ -67,6 +67,13 @@ export default function PanelCalificaciones() {
 
   const indice = useMemo(() => indexarCalificaciones(calificaciones), [calificaciones])
   const resumen = useMemo(() => resumenDelGrupo(visibles, alumnos, indice), [visibles, alumnos, indice])
+  // Retrato por grupos para quien dirige. Usa TODAS las evaluaciones, no las
+  // filtradas: cada grupo se mide con las que le aplican, y eso lo decide el
+  // modulo puro.
+  const porGrupos = useMemo(
+    () => resumenPorGrupos(evaluaciones || [], alumnos, indice, grupos || []),
+    [evaluaciones, alumnos, indice, grupos]
+  )
 
   const guardarNota = async (evaluacion, alumno, valor) => {
     const bruto = String(valor).trim()
@@ -185,6 +192,48 @@ export default function PanelCalificaciones() {
           <small>celdas por rellenar</small>
         </div>
       </section>
+
+      {/* Quien DIRIGE necesita comparar grupos; quien da clase necesita ver a
+          sus alumnos uno por uno. Son dos preguntas distintas, así que el
+          director recibe además este retrato — y solo cuando mira la academia
+          entera: con un grupo filtrado ya está viendo ese grupo. */}
+      {puedeBorrar && (!grupoFiltro || grupoFiltro === 'sin') && porGrupos.length > 0 && (
+        <section className="cal-grupos">
+          <h2>Por grupo</h2>
+          <div className="panel-tabla-wrap">
+            <table className="panel-tabla">
+              <thead>
+                <tr>
+                  <th scope="col">Grupo</th>
+                  <th scope="col">Alumnos</th>
+                  <th scope="col">Actividades</th>
+                  <th scope="col">Promedio</th>
+                  <th scope="col">En riesgo</th>
+                  <th scope="col">Sin calificar</th>
+                </tr>
+              </thead>
+              <tbody>
+                {porGrupos.map((g) => (
+                  <tr key={g.grupo.id || 'sin'}>
+                    <th scope="row">{g.grupo.nombre}</th>
+                    <td>{g.alumnos}</td>
+                    <td>{g.evaluaciones}</td>
+                    <td className={`cal-promedio ${g.promedio === null ? '' : g.promedio >= APROBADO ? 'ok' : 'mal'}`}>
+                      {g.promedio === null ? '—' : `${g.promedio}%`}
+                    </td>
+                    <td>{g.enRiesgo > 0 ? <strong className="cal-riesgo">{g.enRiesgo}</strong> : '—'}</td>
+                    <td>{g.pendientes > 0 ? g.pendientes : '—'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="panel-nota">
+            «En riesgo» cuenta solo a quien ya tiene alguna nota por debajo del {APROBADO}%. Quien
+            no tiene ninguna está <strong>sin evaluar</strong>, que no es lo mismo.
+          </p>
+        </section>
+      )}
 
       <div className="cal-acciones">
         <button

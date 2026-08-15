@@ -7116,3 +7116,8 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 .mc-plazo--vencida { color: var(--rojo); }
 .mc-plazo--pendiente { color: var(--ambar); }
 .mc-plazo--calificada { color: var(--verde); }
+
+/* Retrato por grupos (director) */
+.cal-grupos { margin-bottom: var(--e-24); }
+.cal-grupos h2 { font-family: var(--fuente-sub); font-size: var(--t-md); margin-bottom: var(--e-8); }
+.cal-riesgo { color: var(--rojo); }
