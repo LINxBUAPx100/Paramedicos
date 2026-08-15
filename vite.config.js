@@ -83,6 +83,10 @@ function pista(valor) {
 //    wsrv.nl                   → proxy de imágenes externas (lib/img.js).
 //    firebasestorage           → descargables subidos por cada academia.
 //    *.googleapis.com          → Firestore, Identity Toolkit, Secure Token.
+//    apis.google.com           → gapi: lo carga signInWithPopup ANTES de abrir
+//                                la ventana, para montar el iframe de Auth. Va
+//                                en script-src y en frame-src, y no depende de
+//                                App Check (ver construirCSP).
 //    frame-src                 → iframe del dominio de Auth y de la cuenta de
 //                                Google durante el login.
 // ============================================================
@@ -94,14 +98,31 @@ function construirCSP({ conAppCheck }) {
   // eso lo haría 'unsafe-inline', que no está aquí ni con App Check activo.
   const scriptExtra = conAppCheck ? ' https://www.google.com https://www.gstatic.com' : ''
   const frameExtra = conAppCheck ? ' https://www.google.com https://recaptcha.google.com' : ''
+
+  // apis.google.com NO es opcional ni depende de App Check: lo necesita el
+  // login con Google (`signInWithPopup`) SIEMPRE.
+  //
+  // Esto costó una tarde de diagnóstico. `signInWithPopup` no abre la ventana y
+  // ya: antes carga el gapi de `apis.google.com/js/api.js` para montar el
+  // iframe del dominio de Auth. Con `script-src 'self'` el navegador bloqueaba
+  // ese script, el resolutor del popup nunca arrancaba y el SDK devolvía
+  // `auth/internal-error` — un error genérico que no menciona ni la CSP ni
+  // Google, así que apuntaba a todos lados menos aquí. Encima solo pasaba en el
+  // sitio PUBLICADO (la CSP se inyecta solo en el build), y el mensaje se
+  // quedaba en pantalla mientras el usuario tecleaba su correo, con lo que
+  // parecía un fallo del login por contraseña.
+  //
+  // Si algún día se quita el botón de Google, esto se puede cerrar otra vez.
+  const scriptGoogle = ' https://apis.google.com'
+  const frameGoogle = ' https://apis.google.com'
   return [
     "default-src 'self'",
-    `script-src 'self'${scriptExtra}`,
+    `script-src 'self'${scriptGoogle}${scriptExtra}`,
     "style-src 'self' 'unsafe-inline'",
     "font-src 'self'",
     "img-src 'self' data: blob: https://lh3.googleusercontent.com https://*.googleusercontent.com https://wsrv.nl https://firebasestorage.googleapis.com",
     "connect-src 'self' https://*.googleapis.com wss://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com",
-    `frame-src https://ptem-a304f.firebaseapp.com https://accounts.google.com${frameExtra}`,
+    `frame-src https://ptem-a304f.firebaseapp.com https://accounts.google.com${frameGoogle}${frameExtra}`,
     "base-uri 'none'",
     "object-src 'none'",
     "form-action 'none'",
