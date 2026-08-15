@@ -1,7 +1,10 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useContenido, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
 import { useProgress } from '../context/ProgressContext.jsx'
 import MisCalificaciones from '../components/MisCalificaciones.jsx'
+import ProgresoStaff from '../components/ProgresoStaff.jsx'
+import { useAuth } from '../context/AuthContext.jsx'
 
 function formatoFecha(ts) {
   return new Date(ts).toLocaleDateString('es-MX', {
@@ -13,8 +16,41 @@ function formatoFecha(ts) {
 }
 
 export default function ProgresoPage() {
+  const { esStaff, user } = useAuth()
   const { contenido, error, reintentar } = useContenido()
   const { estado, reiniciar } = useProgress()
+
+  // Mejor calificación del alumno en el examen de CADA fase. Vive en Firestore
+  // (`intentos`), no en el progreso local, y hasta ahora solo la veía su
+  // profesor desde el panel: el alumno no tenía dónde consultar su propia nota.
+  const [mejorPorFase, setMejorPorFase] = useState({})
+  useEffect(() => {
+    if (!user?.uid || esStaff) return undefined
+    let vivo = true
+    ;(async () => {
+      try {
+        const { intentosDeAlumno } = await import('../lib/firebase/intentos.js')
+        const intentos = await intentosDeAlumno(user.uid)
+        if (!vivo) return
+        const mejor = {}
+        for (const it of intentos) {
+          const pct = Number(it?.porcentaje)
+          if (!it?.faseId || !Number.isFinite(pct)) continue
+          if (mejor[it.faseId] === undefined || pct > mejor[it.faseId]) mejor[it.faseId] = pct
+        }
+        setMejorPorFase(mejor)
+      } catch {
+        // Silencioso: sin esto el alumno sigue viendo su avance. Un error rojo
+        // aquí le preocuparía por algo que no puede resolver.
+      }
+    })()
+    return () => { vivo = false }
+  }, [user?.uid, esStaff])
+
+  // Quien DA CLASE no tiene progreso personal: se le enseña el de sus alumnos.
+  // Va lo primero, antes incluso de mirar el contenido, para no cargar el
+  // temario entero por una pantalla que no lo usa.
+  if (esStaff) return <ProgresoStaff />
 
   if (error) return <ErrorContenido onReintentar={reintentar} />
   if (!contenido) return <CargandoContenido />
@@ -75,13 +111,23 @@ export default function ProgresoPage() {
         {fases.map((fase) => {
           const leidos = fase.temas.filter((t) => estado.leidos[t.id]).length
           const pct = Math.round((leidos / fase.temas.length) * 100)
+          // La nota del examen de la fase: es la calificación que de verdad
+          // cuenta de cada materia, y estaba solo en el panel del profesor.
+          const nota = mejorPorFase[fase.id]
           return (
             <div className="progreso-fase" key={fase.id} style={{ '--fase-color': fase.color }}>
               <div className="progreso-fase-cab">
                 <span>
                   {fase.icono} <strong>Fase {fase.numero}:</strong> {fase.titulo}
                 </span>
-                <span>{leidos}/{fase.temas.length}</span>
+                <span className="pf-derecha">
+                  {nota !== undefined && (
+                    <b className={`pf-nota ${nota >= 70 ? 'ok' : 'mal'}`} title="Tu mejor calificación en el examen de esta fase">
+                      {nota}%
+                    </b>
+                  )}
+                  {leidos}/{fase.temas.length}
+                </span>
               </div>
               <div className="barra-fase">
                 <div className="barra-fase-fill" style={{ width: `${pct}%` }} />
@@ -89,6 +135,12 @@ export default function ProgresoPage() {
             </div>
           )
         })}
+        {Object.keys(mejorPorFase).length === 0 && (
+          <p className="panel-nota">
+            Cuando presentes el examen de una fase, tu calificación aparecerá aquí al lado de su
+            avance.
+          </p>
+        )}
       </section>
 
       <section className="progreso-temas">

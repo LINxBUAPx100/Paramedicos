@@ -7063,3 +7063,33 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   color: var(--texto);
   font-size: var(--t-sm);
 }
+
+/* ===== Progreso: nota del examen de fase junto al avance ===== */
+.pf-derecha { display: inline-flex; align-items: center; gap: var(--e-8); }
+.pf-nota { font-family: var(--fuente-cifra); }
+.pf-nota.ok { color: var(--verde); }
+.pf-nota.mal { color: var(--rojo); }
+
+/* ===== «Mi progreso» de quien da clase ===== */
+.ps-destinos { display: flex; flex-direction: column; gap: var(--e-12); margin-bottom: var(--e-24); }
+.ps-destino {
+  display: flex; align-items: center; gap: var(--e-16);
+  padding: var(--e-16) var(--e-20);
+  border: 1px solid var(--borde);
+  border-left: 4px solid var(--primario);
+  border-radius: var(--radio);
+  background: var(--bg-2);
+  color: var(--texto);
+  text-decoration: none;
+  transition: border-color var(--dur-rapida) var(--ease-out), background var(--dur-rapida) var(--ease-out);
+}
+.ps-destino:hover { text-decoration: none; background: color-mix(in srgb, var(--primario) 6%, var(--bg-2)); }
+.ps-destino-ico {
+  display: grid; place-items: center;
+  width: 44px; height: 44px; flex-shrink: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--primario) 14%, transparent);
+  color: var(--primario);
+}
+.ps-destino-texto { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.ps-destino-texto small { color: var(--texto-2); font-size: var(--t-sm); }
