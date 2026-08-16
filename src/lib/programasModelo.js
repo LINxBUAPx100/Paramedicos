@@ -152,13 +152,15 @@ const ESTADOS = ['borrador', 'publicado', 'archivado']
 const estadoDe = (n) => (ESTADOS.includes(n?.estado) ? n.estado : 'publicado')
 
 function normalizarTema(t) {
-  return {
+  const out = {
     id: t.id,
     titulo: t.titulo || '',
     estado: estadoDe(t),
     grupo: t.grupo ?? null,
     sesion: t.sesion ?? null,
   }
+  if (t.orden != null) out.orden = t.orden
+  return out
 }
 
 function normalizarUnidad(u) {
@@ -170,6 +172,8 @@ function normalizarUnidad(u) {
   }
   if (u.implicito) out.implicito = true
   if (u.tipo) out.tipo = u.tipo
+  if (u.numeroOficial != null) out.numeroOficial = u.numeroOficial
+  if (Array.isArray(u.sesiones) && u.sesiones.length) out.sesiones = u.sesiones.map((s) => ({ ...s }))
   if (u.semanas != null) out.semanas = u.semanas
   if (u.horas != null) out.horas = u.horas
   if (u.opcional) out.opcional = true
@@ -229,6 +233,8 @@ export function normalizarEstructura(estructura) {
         unidades,
       }
       if (m.totales) out.totales = { ...m.totales }
+      if (m.encabezadoOficial) out.encabezadoOficial = m.encabezadoOficial
+      if (m.numeroOficial != null) out.numeroOficial = m.numeroOficial
       return out
     })
 }
@@ -261,6 +267,130 @@ export function conteosDePrograma(estructura, { incluirBorradores = false } = {}
     }
   }
   return { modulos: modulos.length, unidades, temas, semanas, horas }
+}
+
+// ---------- ORDEN DEL MATERIAL ----------
+//
+//  Todo el material va EN EL ORDEN QUE DICTA EL PLAN. El orden es el de la
+//  estructura (módulos → unidades → temas), y dentro de cada tema el de sus
+//  propias listas. Igual que en el resto del repo: «id estable + campo orden»,
+//  nunca el orden de llegada de Firestore.
+
+// Lista PLANA de los temas en el orden exacto del plan, cada uno con su
+// ubicación y su posición global. Es la base de la navegación
+// anterior/siguiente y del alcance de los exámenes.
+export function temasEnOrden(estructura, { incluirBorradores = false } = {}) {
+  const visible = (n) => incluirBorradores || n.estado === 'publicado'
+  const salida = []
+  for (const m of normalizarEstructura(estructura).filter(visible)) {
+    for (const u of m.unidades.filter(visible)) {
+      for (const t of u.temas.filter(visible)) {
+        salida.push({
+          ...t,
+          moduloId: m.id,
+          moduloTitulo: m.titulo,
+          unidadId: u.id,
+          unidadTitulo: u.titulo,
+          unidadTipo: u.tipo || 'contenido',
+          posicion: salida.length + 1,
+        })
+      }
+    }
+  }
+  return salida
+}
+
+export function esUnidadExamen(unidad) {
+  return (unidad?.tipo || 'contenido') === 'examen'
+}
+
+// ¿Es un examen FINAL (cubre el módulo entero) o un parcial (cubre solo lo
+// visto desde el examen anterior)? El plan lo dice en el título: «EXAMEN FINAL
+// Y ENTREGA DE CALIFICACIONES» frente a «1er EXAMEN» / «1er PARCIAL».
+function esExamenFinal(unidad) {
+  return /\bfinal\b/i.test(unidad?.titulo || '')
+}
+
+/**
+ * Temas que ENTRAN en un examen, según su posición en el plan.
+ *
+ * Hasta ahora el examen de un módulo se derivaba del quiz de TODOS sus temas.
+ * Con el plan oficial eso deja de ser correcto: el Módulo 2 tiene un examen
+ * después de la unidad 1, otro después de la 3 y el final al cerrar; el
+ * Módulo 4 tiene un parcial a media carrera. Un parcial que preguntara temas
+ * que el grupo aún no ha visto sería, sencillamente, un examen mal armado.
+ *
+ * Regla (la del propio plan, y ajustable por la academia desde el editor):
+ *   · examen FINAL   → todos los temas de contenido del módulo.
+ *   · examen parcial → los temas desde el examen anterior hasta este.
+ * Las unidades de examen y de práctica nunca aportan temas al examen.
+ *
+ * @returns {{unidadId:string, esFinal:boolean, temas:object[]}|null}
+ */
+export function alcanceDeExamen(estructura, unidadExamenId, opciones = {}) {
+  const modulos = normalizarEstructura(estructura)
+  for (const m of modulos) {
+    const i = m.unidades.findIndex((u) => u.id === unidadExamenId)
+    if (i < 0) continue
+    const unidad = m.unidades[i]
+    if (!esUnidadExamen(unidad)) return null
+    const final = esExamenFinal(unidad)
+    // Desde dónde: el final arranca en el módulo; el parcial, justo después
+    // del examen anterior.
+    let desde = 0
+    if (!final) {
+      for (let k = i - 1; k >= 0; k--) {
+        if (esUnidadExamen(m.unidades[k])) { desde = k + 1; break }
+      }
+    }
+    const enAlcance = m.unidades
+      .slice(desde, i)
+      .filter((u) => (u.tipo || 'contenido') === 'contenido')
+      .map((u) => u.id)
+    const temas = temasEnOrden([m], opciones).filter((t) => enAlcance.includes(t.unidadId))
+    return { unidadId: unidad.id, moduloId: m.id, esFinal: final, temas }
+  }
+  return null
+}
+
+// Ordena una lista por su campo `orden` conservando la posición de los que no
+// lo traen (sort ESTABLE, mismo contrato que src/data/index.js). Ni muta la
+// entrada ni pierde elementos.
+function porOrden(lista) {
+  return [...(lista || [])].sort((a, b) => (a?.orden ?? 1e9) - (b?.orden ?? 1e9))
+}
+
+/**
+ * Devuelve el tema con TODO su material puesto en orden: secciones y sus
+ * bloques, quiz, flashcards, conceptos, recursos (videos, imágenes, fuentes,
+ * archivos) y actividades.
+ *
+ * Existe porque el material de un tema llega de sitios distintos —lo clonado
+ * de la plantilla, lo que añade el instructor, lo que sube al Storage— y sin
+ * un orden declarado se acaba pintando en el orden en que Firestore lo
+ * devuelve, que no es ninguno. El plan dicta la secuencia; esto la aplica.
+ */
+export function ordenarMaterialTema(tema) {
+  if (!tema || typeof tema !== 'object') return tema
+  const r = tema.recursos
+  return {
+    ...tema,
+    objetivos: [...(tema.objetivos || [])],
+    secciones: porOrden(tema.secciones).map((s) => ({ ...s, bloques: porOrden(s?.bloques) })),
+    conceptosClave: porOrden(tema.conceptosClave),
+    flashcards: porOrden(tema.flashcards),
+    quiz: porOrden(tema.quiz),
+    actividades: porOrden(tema.actividades),
+    recursos: r && typeof r === 'object'
+      ? {
+        ...r,
+        videos: porOrden(r.videos),
+        imagenes: porOrden(r.imagenes),
+        fuentes: porOrden(r.fuentes),
+        archivos: porOrden(r.archivos),
+      }
+      : (r ?? null),
+  }
 }
 
 // ---------- semilla → plantilla ----------
@@ -338,6 +468,9 @@ export function plantillaDesdePrograma(programa, { version = 1, temaDocId } = {}
           id: t.id,
           titulo: t.titulo,
           estado: 'publicado',
+          // `orden` explícito: el material se pinta en el orden del plan, no
+          // en el que Firestore devuelva los documentos.
+          orden: temasEstr.length + 1,
           grupo: t.grupo ?? null,
           sesion: t.sesion ?? null,
         })
@@ -352,6 +485,8 @@ export function plantillaDesdePrograma(programa, { version = 1, temaDocId } = {}
         titulo: u.titulo,
         estado: 'publicado',
         tipo: u.tipo || 'contenido',
+        // null donde el PDF no numera la fila (la PRACTICA del Módulo 4).
+        numeroOficial: u.numeroOficial ?? null,
         temas: temasEstr,
       }
       if (u.semanas != null) unidad.semanas = u.semanas
@@ -369,6 +504,11 @@ export function plantillaDesdePrograma(programa, { version = 1, temaDocId } = {}
       color: META_PROGRAMA[programa.tipoPrograma]?.color || '',
       icono: '',
       estado: 'publicado',
+      // Encabezado tal como está IMPRESO en el plan oficial, y número de la
+      // columna TEMA. Viajan con el contenido para que la academia pueda
+      // cotejarlo con su documento sin salir de la plataforma.
+      encabezadoOficial: m.encabezadoOficial || '',
+      numeroOficial: m.numeroOficial ?? null,
       unidades,
     }
     if (m.totales) modulo.totales = { ...m.totales }

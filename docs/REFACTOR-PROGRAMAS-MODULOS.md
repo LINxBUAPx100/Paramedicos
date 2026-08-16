@@ -587,3 +587,71 @@ Pendientes conocidos, para la pasada de correcciones:
 5. **`tipoDestino` vs `tipoPrograma`** conviven en `cursos` y significan cosas
    distintas (nivel de producto vs clase de estudio). Documentado, pero es una
    fuente de confusión que convendría unificar más adelante.
+
+---
+
+## 13. Auditoría de FIDELIDAD al documento impreso
+
+Requisito del dueño del producto: **todo debe decir exactamente lo que dice el
+plan** — nombres de módulos, de unidades y de temas, y el orden entre ellos.
+La auditoría contra el PDF encontró tres desviaciones, todas corregidas.
+
+### 13.1 Un título estaba «corregido» en vez de transcrito
+
+El encabezado impreso del Módulo 3 es:
+
+> `MODULO 3: EVALUACIÓN INCIAL Y SOPORTE VITAL.`
+
+—sin tilde en «MODULO» y con «INCIAL» por «INICIAL». La semilla guardaba el
+título ya corregido (`EVALUACIÓN INICIAL…`) mientras la nota decía otra cosa.
+**Restituido al original** y marcado con `revisar: true`.
+
+Era el único caso, pero es exactamente el error que no puede repetirse, así que
+hay una prueba que lo impide: *«ningún título de módulo viene corregido respecto
+al encabezado»* comprueba que `titulo` y `subtitulo` aparecen **literales**
+dentro de `encabezadoOficial`.
+
+### 13.2 Faltaba el encabezado literal
+
+Cada módulo lleva ahora `encabezadoOficial`: la línea completa tal como está
+impresa, incluidos el punto y coma del Módulo 2 y las tildes que faltan en el 3
+y el 6. `titulo`/`subtitulo` son esa misma cadena partida para poder mostrarla,
+nunca una reescritura.
+
+### 13.3 La numeración no era la del PDF
+
+La columna TEMA del Módulo 4 numera `1, 2, —, 3, 4…`: la fila **PRACTICA no
+lleva número**. La semilla renumeraba correlativo (1…13), desplazando todo lo
+que viene después. Ahora cada unidad lleva `numeroOficial`, que es **null**
+donde el documento no numera. El orden sigue siendo el del array; el número es
+lo que la academia lee en su papel.
+
+## 14. Orden de TODO el material
+
+El material se sirve en el orden que dicta el plan, en tres niveles:
+
+1. **Estructura** — `temasEnOrden()` recorre módulos → unidades → temas en la
+   secuencia del documento y numera la posición global. Los 287 temas salen en
+   el orden impreso, de «Introducción.» (Módulo 1) al Módulo 7.
+2. **Dentro del tema** — `ordenarMaterialTema()` ordena secciones y sus bloques,
+   quiz, flashcards, conceptos, actividades y los recursos (**videos,
+   imágenes, fuentes y archivos**) por su campo `orden`, con *sort estable*: lo
+   que no lo trae conserva su posición. Sin esto, el material se pintaba en el
+   orden en que Firestore devolviera los documentos, que no es ninguno.
+3. **Exámenes** — `alcanceDeExamen()` resuelve qué entra en cada examen **según
+   su posición en el plan**:
+   - examen **final** → todos los temas de contenido del módulo;
+   - examen **parcial** → solo desde el examen anterior hasta él.
+
+   Hasta ahora el examen se derivaba del quiz de *todos* los temas del módulo.
+   Con el plan oficial eso deja de ser correcto: el Módulo 2 examina tres veces
+   (tras la unidad 1, tras la 3 y al cerrar) y el Módulo 4 tiene un parcial a
+   media carrera. Un parcial que preguntara temas que el grupo todavía no ha
+   visto sería, sencillamente, un examen mal armado. Las unidades de examen y de
+   práctica nunca aportan temas.
+
+   > **Pendiente de cableado**: el modelo y sus pruebas están; falta que
+   > `ExamenModuloPage` lo consuma en vez de tomar el módulo entero. Es la
+   > primera tarea de la pasada de correcciones.
+
+`npm test`: **365 pruebas, 0 fallos**. `npm run build`: correcto.

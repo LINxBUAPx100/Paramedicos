@@ -9,7 +9,10 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
-import { plantillaDesdePrograma, normalizarEstructura, conteosDePrograma } from '../src/lib/programasModelo.js'
+import {
+  plantillaDesdePrograma, normalizarEstructura, conteosDePrograma,
+  alcanceDeExamen, temasEnOrden,
+} from '../src/lib/programasModelo.js'
 
 const SEMILLA = JSON.parse(
   readFileSync(new URL('../scripts/seed/plan-rescate.json', import.meta.url), 'utf8')
@@ -199,4 +202,110 @@ test('las especializaciones sin temario producen una plantilla vacía válida', 
   // El PDF no publica su temario: se siembra el envase para que la academia
   // lo llene desde el editor, no un temario inventado.
   assert.equal(acls.candidatoCertificacion, true)
+})
+
+// ---------- fidelidad literal al documento impreso ----------
+
+test('los encabezados de módulo son los IMPRESOS, erratas incluidas', () => {
+  const enc = TUM.modulos.map((m) => m.encabezadoOficial)
+  assert.deepEqual(enc, [
+    'MÓDULO 1: PROPEDÉUTICO (PRIMEROS AUXILIOS BASICOS E INTERMEDIOS)',
+    'MÓDULO 2: EL CUERPO HUMANO; (PRINCIPIOS DE ANATOMÍA Y FISIOLOGÍA.)',
+    // El PDF imprime «MODULO» sin tilde y «INCIAL» por «INICIAL». Se respeta.
+    'MODULO 3: EVALUACIÓN INCIAL Y SOPORTE VITAL.',
+    'MÓDULO 4: MANEJO DE URGENCIAS MÉDICO QUIRÚRGICAS.',
+    'MÓDULO 5: EMERGENCIAS TRAUMATOLÓGICAS',
+    // «PEDIATRICAS» sin tilde, tal cual.
+    'MÓDULO 6: POBLACIONES ESPECIALES (URGENCIAS PEDIATRICAS Y GERIÁTRICAS.)',
+    'MÓDULO 7: OPERACIONES ESPECIALES.',
+  ])
+})
+
+test('ningún título de módulo viene «corregido» respecto al encabezado', () => {
+  // Esta es la prueba que faltaba: el Módulo 3 llegó a guardarse con el título
+  // ya corregido («INICIAL») mientras la nota decía otra cosa.
+  for (const m of TUM.modulos) {
+    assert.ok(
+      m.encabezadoOficial.includes(m.titulo),
+      `el título de ${m.id} ("${m.titulo}") no aparece literal en su encabezado`
+    )
+    if (m.subtitulo) {
+      assert.ok(
+        m.encabezadoOficial.includes(m.subtitulo),
+        `el subtítulo de ${m.id} no aparece literal en su encabezado`
+      )
+    }
+  }
+})
+
+test('la numeración es la de la columna TEMA del PDF, con su salto', () => {
+  const m4 = TUM.modulos.find((m) => m.id === 'm4-urgencias-medico-quirurgicas')
+  assert.deepEqual(
+    m4.unidades.map((u) => u.numeroOficial),
+    [1, 2, null, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+    'la fila PRACTICA no lleva número en el PDF: la secuencia salta'
+  )
+  // El resto de módulos sí van correlativos desde 1.
+  for (const m of TUM.modulos.filter((x) => x.id !== 'm4-urgencias-medico-quirurgicas')) {
+    assert.deepEqual(
+      m.unidades.map((u) => u.numeroOficial),
+      m.unidades.map((_, i) => i + 1),
+      `numeración de ${m.id}`
+    )
+  }
+})
+
+test('el orden del plan se conserva al convertir a plantilla', () => {
+  const { plantilla } = plantillaDesdePrograma(TUM)
+  // Módulos en el orden impreso.
+  assert.deepEqual(
+    plantilla.estructura.map((m) => m.numeroOficial),
+    [1, 2, 3, 4, 5, 6, 7]
+  )
+  // Primera unidad del Módulo 1 y sus temas, en la secuencia del documento.
+  const u1 = plantilla.estructura[0].unidades[0]
+  assert.equal(u1.titulo, 'PRIMEROS AUXILIOS BÁSICOS.')
+  assert.deepEqual(u1.temas.map((t) => t.titulo), [
+    'Introducción.',
+    'AVDI y activación del SMU.',
+    'RCP legos en adulto.',
+    'Uso del DEA.',
+    'OVACE. En adultos',
+    'Hemorragias.',
+    'Fracturas.',
+    'Quemaduras.',
+    'Botiquín ideal.',
+  ])
+  // Y cada tema lleva su `orden` explícito, no depende del array.
+  assert.deepEqual(u1.temas.map((t) => t.orden), [1, 2, 3, 4, 5, 6, 7, 8, 9])
+})
+
+test('los exámenes del plan cubren lo que les precede, no el módulo entero', () => {
+  const { plantilla } = plantillaDesdePrograma(TUM)
+  // Módulo 2: examina tres veces (tras la unidad 1, tras la 3, y al final).
+  const p1 = alcanceDeExamen(plantilla.estructura, 'm2-examen-1')
+  assert.equal(p1.esFinal, false)
+  assert.deepEqual([...new Set(p1.temas.map((t) => t.unidadId))], ['m2-anat-fisio-esencial'])
+
+  const p2 = alcanceDeExamen(plantilla.estructura, 'm2-examen-2')
+  assert.deepEqual([...new Set(p2.temas.map((t) => t.unidadId))], ['m2-anat-fisio-intermedia'])
+
+  const fin = alcanceDeExamen(plantilla.estructura, 'm2-examen-final')
+  assert.equal(fin.esFinal, true)
+  assert.deepEqual([...new Set(fin.temas.map((t) => t.unidadId))], [
+    'm2-anat-fisio-esencial', 'm2-anat-fisio-intermedia', 'm2-anatomia-opcional',
+  ])
+})
+
+test('el temario completo se recorre en el orden exacto del plan', () => {
+  const { plantilla } = plantillaDesdePrograma(TUM)
+  const orden = temasEnOrden(plantilla.estructura)
+  assert.equal(orden.length, 287)
+  assert.equal(orden[0].id, 'm1-pab-introduccion', 'el primero es la Introducción del Módulo 1')
+  assert.equal(orden[orden.length - 1].moduloId, 'm7-operaciones-especiales')
+  // Las posiciones son correlativas y sin huecos.
+  assert.deepEqual(orden.map((t) => t.posicion), orden.map((_, i) => i + 1))
+  // Y AVDI va antes que Glasgow, como en el documento.
+  const pos = (id) => orden.find((t) => t.id === id).posicion
+  assert.ok(pos('m3-ep-avdi') < pos('m5-tcc-glasgow'))
 })

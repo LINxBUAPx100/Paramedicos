@@ -14,6 +14,7 @@ import {
   etiquetaTipoPrograma, validarTipoPrograma, normalizarEstructura,
   tieneUnidadesReales, conteosDePrograma, programasDeGrupo,
   puedeVerPrograma, programasVisibles, motivoSinPrograma,
+  temasEnOrden, alcanceDeExamen, ordenarMaterialTema, esUnidadExamen,
 } from '../src/lib/programasModelo.js'
 
 // ---------- catálogo ----------
@@ -203,4 +204,95 @@ test('con grupo y programa visible no hay motivo de bloqueo', () => {
   // El staff nunca se bloquea por programa.
   assert.equal(motivoSinPrograma({ rol: 'instructor', grupo: null }), null)
   assert.equal(motivoSinPrograma({ rol: 'alumno', esSuperadmin: true, grupo: null }), null)
+})
+
+// ---------- orden del material ----------
+
+const ESTR_PLAN = [{
+  id: 'm2', titulo: 'El cuerpo humano', estado: 'publicado',
+  unidades: [
+    { id: 'u1', titulo: 'Anat esencial', tipo: 'contenido', estado: 'publicado', temas: [{ id: 'a1', titulo: 'Célula', estado: 'publicado' }, { id: 'a2', titulo: 'Electrolitos', estado: 'publicado' }] },
+    { id: 'ex1', titulo: '1er EXAMEN', tipo: 'examen', estado: 'publicado', temas: [{ id: 'ex1-u', titulo: '1er EXAMEN', estado: 'publicado' }] },
+    { id: 'u2', titulo: 'Anat intermedia', tipo: 'contenido', estado: 'publicado', temas: [{ id: 'b1', titulo: 'Óseo', estado: 'publicado' }] },
+    { id: 'ex2', titulo: '2do EXAMEN', tipo: 'examen', estado: 'publicado', temas: [{ id: 'ex2-u', titulo: '2do EXAMEN', estado: 'publicado' }] },
+    { id: 'pr', titulo: 'PRÁCTICA', tipo: 'practica', estado: 'publicado', temas: [{ id: 'pr-u', titulo: 'PRÁCTICA', estado: 'publicado' }] },
+    { id: 'exf', titulo: 'EXAMEN FINAL', tipo: 'examen', estado: 'publicado', temas: [{ id: 'exf-u', titulo: 'EXAMEN FINAL', estado: 'publicado' }] },
+  ],
+}]
+
+test('temasEnOrden respeta EXACTAMENTE la secuencia del plan', () => {
+  const t = temasEnOrden(ESTR_PLAN)
+  assert.deepEqual(t.map((x) => x.id), ['a1', 'a2', 'ex1-u', 'b1', 'ex2-u', 'pr-u', 'exf-u'])
+  assert.equal(t[0].posicion, 1)
+  assert.equal(t[3].unidadId, 'u2')
+  assert.equal(t[2].unidadTipo, 'examen')
+})
+
+test('un examen PARCIAL solo cubre lo visto desde el examen anterior', () => {
+  // Es el punto del plan oficial: el Módulo 2 examina tres veces. Un parcial
+  // que preguntara temas que el grupo aún no ha visto sería un examen mal armado.
+  const a = alcanceDeExamen(ESTR_PLAN, 'ex1')
+  assert.equal(a.esFinal, false)
+  assert.deepEqual(a.temas.map((t) => t.id), ['a1', 'a2'])
+
+  const b = alcanceDeExamen(ESTR_PLAN, 'ex2')
+  assert.equal(b.esFinal, false)
+  assert.deepEqual(b.temas.map((t) => t.id), ['b1'], 'no repite lo del 1er examen')
+})
+
+test('el examen FINAL cubre el módulo entero', () => {
+  const f = alcanceDeExamen(ESTR_PLAN, 'exf')
+  assert.equal(f.esFinal, true)
+  assert.deepEqual(f.temas.map((t) => t.id), ['a1', 'a2', 'b1'])
+})
+
+test('los exámenes y las prácticas no aportan temas a ningún examen', () => {
+  for (const a of [alcanceDeExamen(ESTR_PLAN, 'ex1'), alcanceDeExamen(ESTR_PLAN, 'exf')]) {
+    assert.ok(!a.temas.some((t) => t.unidadTipo !== 'contenido'))
+  }
+  // Y pedir el alcance de algo que no es un examen no inventa nada.
+  assert.equal(alcanceDeExamen(ESTR_PLAN, 'u1'), null)
+  assert.equal(alcanceDeExamen(ESTR_PLAN, 'no-existe'), null)
+})
+
+test('ordenarMaterialTema pone TODO el material en el orden declarado', () => {
+  const tema = {
+    id: 't', titulo: 'T',
+    secciones: [
+      { titulo: 'B', orden: 2, bloques: [{ tipo: 'p', orden: 2 }, { tipo: 'h3', orden: 1 }] },
+      { titulo: 'A', orden: 1, bloques: [] },
+    ],
+    quiz: [{ id: 'q2', orden: 2 }, { id: 'q1', orden: 1 }],
+    flashcards: [{ id: 'f2', orden: 2 }, { id: 'f1', orden: 1 }],
+    conceptosClave: [{ termino: 'z', orden: 2 }, { termino: 'a', orden: 1 }],
+    actividades: [{ tipo: 'ordenar', orden: 2 }, { tipo: 'unir', orden: 1 }],
+    recursos: {
+      videos: [{ url: 'v2', orden: 2 }, { url: 'v1', orden: 1 }],
+      imagenes: [{ clave: 'i2', orden: 2 }, { clave: 'i1', orden: 1 }],
+      fuentes: [{ titulo: 's2', orden: 2 }, { titulo: 's1', orden: 1 }],
+      archivos: [{ titulo: 'a2', orden: 2 }, { titulo: 'a1', orden: 1 }],
+    },
+  }
+  const o = ordenarMaterialTema(tema)
+  assert.deepEqual(o.secciones.map((s) => s.titulo), ['A', 'B'])
+  assert.deepEqual(o.secciones[1].bloques.map((b) => b.tipo), ['h3', 'p'])
+  assert.deepEqual(o.quiz.map((q) => q.id), ['q1', 'q2'])
+  assert.deepEqual(o.flashcards.map((f) => f.id), ['f1', 'f2'])
+  assert.deepEqual(o.conceptosClave.map((c) => c.termino), ['a', 'z'])
+  assert.deepEqual(o.actividades.map((a) => a.tipo), ['unir', 'ordenar'])
+  assert.deepEqual(o.recursos.videos.map((v) => v.url), ['v1', 'v2'])
+  assert.deepEqual(o.recursos.imagenes.map((i) => i.clave), ['i1', 'i2'])
+  assert.deepEqual(o.recursos.fuentes.map((s) => s.titulo), ['s1', 's2'])
+  assert.deepEqual(o.recursos.archivos.map((a) => a.titulo), ['a1', 'a2'])
+})
+
+test('sin campo `orden` se conserva la posición (sort estable) y no se muta nada', () => {
+  const tema = { quiz: [{ id: 'q1' }, { id: 'q2' }, { id: 'q3' }], recursos: null }
+  const o = ordenarMaterialTema(tema)
+  assert.deepEqual(o.quiz.map((q) => q.id), ['q1', 'q2', 'q3'])
+  assert.equal(o.recursos, null)
+  // La entrada original queda intacta: el editor trabaja sobre su borrador.
+  tema.quiz.push({ id: 'q4' })
+  assert.equal(o.quiz.length, 3)
+  assert.equal(ordenarMaterialTema(null), null)
 })

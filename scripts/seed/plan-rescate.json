@@ -9,10 +9,11 @@
     "tema": "Viñeta de la columna SUBTEMAS del PDF. UNIDAD ESTUDIABLE: página propia, quiz, flashcards y progreso."
   },
   "avisos": [
-    "Los títulos se transcriben VERBATIM del PDF. Los que llevan `revisar:true` conservan la grafía original y proponen corrección en `notaRevision`; ninguna se aplicó sin autorización.",
-    "El PDF no indica qué subtema corresponde a qué día salvo cuando parte un tema en varias filas con sus propias semanas/horas. Por eso `sesion` solo viene poblado en esos casos; el resto queda en null para que lo asigne el instructor desde el editor.",
-    "Módulo 4 / tema 9 (URGENCIAS DEL SISTEMA NERVIOSO) declara 2 semanas y 5 horas. Es el ÚNICO descuadre aritmético del plan: el total del módulo declarado en el PDF (23 semanas / 115 horas) exige 10 horas ahí; con 5 la suma da 110. Se transcribe el valor original y se marca `revisar`.",
-    "Verificado: 7 módulos, 56 temas, 270 subtemas, 326 ids únicos, 88 semanas y 440 horas — coincide con la suma de los totales por módulo declarados en el PDF."
+    "Los títulos de módulos, unidades y temas se transcriben LITERALES del PDF, incluidas tildes ausentes y erratas. Los nodos con `revisar:true` conservan la grafía original y proponen la corrección en `notaRevision`; ninguna se aplicó sin autorización de la academia.",
+    "`encabezadoOficial` es la línea del encabezado tal como está impresa; `titulo`/`subtitulo` son la misma cadena partida para poder mostrarla.",
+    "`numeroOficial` es el número de la columna TEMA del PDF. Es null donde el documento no numera la fila (la PRACTICA del Módulo 4), por eso la secuencia de ese módulo salta de 2 a 3 con una fila intermedia.",
+    "Módulo 4 / unidad 9 (URGENCIAS DEL SISTEMA NERVIOSO) declara 2 semanas y 5 horas. Es el ÚNICO descuadre aritmético del plan: el total del módulo declarado en el PDF (23 semanas / 115 horas) exige 10 horas ahí; con 5 la suma da 110. Se transcribe el valor original y se marca `revisar`.",
+    "Verificado: 7 módulos, 56 unidades, 287 temas, 88 semanas y 440 horas — coincide con la suma de los totales por módulo declarados en el PDF."
   ],
   "programas": [
     {
@@ -39,7 +40,6 @@
       "modulos": [
         {
           "id": "m1-propedeutico",
-          "numero": 1,
           "titulo": "PROPEDÉUTICO",
           "subtitulo": "PRIMEROS AUXILIOS BASICOS E INTERMEDIOS",
           "totales": {
@@ -49,7 +49,6 @@
           "unidades": [
             {
               "id": "m1-primeros-auxilios-basicos",
-              "numero": 1,
               "titulo": "PRIMEROS AUXILIOS BÁSICOS.",
               "tipo": "contenido",
               "semanas": 1,
@@ -118,11 +117,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 1
             },
             {
               "id": "m1-primeros-auxilios-intermedios",
-              "numero": 2,
               "titulo": "PRIMEROS AUXILIOS INTERMEDIOS",
               "tipo": "contenido",
               "semanas": 1,
@@ -177,11 +176,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 2
             },
             {
               "id": "m1-introduccion-smu",
-              "numero": 3,
               "titulo": "INTRODUCCIÓN AL SISTEMA MÉDICO DE URGENCIAS.",
               "tipo": "contenido",
               "semanas": 1,
@@ -215,11 +214,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 3
             },
             {
               "id": "m1-examen",
-              "numero": 4,
               "titulo": "EXAMEN",
               "tipo": "examen",
               "semanas": 1,
@@ -232,13 +231,15 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 4
             }
-          ]
+          ],
+          "encabezadoOficial": "MÓDULO 1: PROPEDÉUTICO (PRIMEROS AUXILIOS BASICOS E INTERMEDIOS)",
+          "numeroOficial": 1
         },
         {
           "id": "m2-cuerpo-humano",
-          "numero": 2,
           "titulo": "EL CUERPO HUMANO",
           "subtitulo": "PRINCIPIOS DE ANATOMÍA Y FISIOLOGÍA.",
           "totales": {
@@ -248,7 +249,6 @@
           "unidades": [
             {
               "id": "m2-anat-fisio-esencial",
-              "numero": 1,
               "titulo": "ANAT Y FISIO ESCENCIAL.",
               "tipo": "contenido",
               "semanas": 5,
@@ -298,11 +298,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 1
             },
             {
               "id": "m2-examen-1",
-              "numero": 2,
               "titulo": "1er EXAMEN",
               "tipo": "examen",
               "semanas": 1,
@@ -317,11 +317,11 @@
                   "generado": true,
                   "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
                 }
-              ]
+              ],
+              "numeroOficial": 2
             },
             {
               "id": "m2-anat-fisio-intermedia",
-              "numero": 3,
               "titulo": "ANAT Y FISIO INTERMEDIA.",
               "tipo": "contenido",
               "semanas": 5,
@@ -369,11 +369,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 3
             },
             {
               "id": "m2-examen-2",
-              "numero": 4,
               "titulo": "2do EXAMEN",
               "tipo": "examen",
               "semanas": 1,
@@ -388,11 +388,11 @@
                   "generado": true,
                   "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
                 }
-              ]
+              ],
+              "numeroOficial": 4
             },
             {
               "id": "m2-anatomia-opcional",
-              "numero": 5,
               "titulo": "ANATOMÍA OPCIONAL",
               "tipo": "contenido",
               "opcional": true,
@@ -434,11 +434,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 5
             },
             {
               "id": "m2-practica",
-              "numero": 6,
               "titulo": "PRÁCTICA",
               "tipo": "practica",
               "semanas": 1,
@@ -453,11 +453,11 @@
                   "generado": true,
                   "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
                 }
-              ]
+              ],
+              "numeroOficial": 6
             },
             {
               "id": "m2-examen-final",
-              "numero": 7,
               "titulo": "EXAMEN FINAL",
               "tipo": "examen",
               "semanas": 1,
@@ -472,25 +472,26 @@
                   "generado": true,
                   "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
                 }
-              ]
+              ],
+              "numeroOficial": 7
             }
-          ]
+          ],
+          "encabezadoOficial": "MÓDULO 2: EL CUERPO HUMANO; (PRINCIPIOS DE ANATOMÍA Y FISIOLOGÍA.)",
+          "numeroOficial": 2
         },
         {
           "id": "m3-evaluacion-soporte-vital",
-          "numero": 3,
-          "titulo": "EVALUACIÓN INICIAL Y SOPORTE VITAL.",
+          "titulo": "EVALUACIÓN INCIAL Y SOPORTE VITAL.",
           "subtitulo": "",
           "totales": {
             "semanas": 9,
             "horas": 45
           },
           "revisar": true,
-          "notaRevision": "El PDF escribe «MODULO 3: EVALUACIÓN INICIAL…» (sin tilde en MÓDULO y con «INCIAL» en el encabezado original).",
+          "notaRevision": "Transcrito literal del PDF: el encabezado impreso dice «MODULO 3» (sin tilde) y «EVALUACIÓN INCIAL» (por «INICIAL»). La grafía correcta sería «MÓDULO 3: EVALUACIÓN INICIAL Y SOPORTE VITAL.».",
           "unidades": [
             {
               "id": "m3-evaluacion-primaria",
-              "numero": 1,
               "titulo": "Evaluación primaria.",
               "tipo": "contenido",
               "semanas": 1,
@@ -545,11 +546,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 1
             },
             {
               "id": "m3-evaluacion-secundaria",
-              "numero": 2,
               "titulo": "Evaluación secundaria.",
               "tipo": "contenido",
               "semanas": 1,
@@ -576,11 +577,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 2
             },
             {
               "id": "m3-examen-1",
-              "numero": 3,
               "titulo": "1er EXAMEN",
               "tipo": "examen",
               "semanas": 1,
@@ -595,11 +596,11 @@
                   "generado": true,
                   "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
                 }
-              ]
+              ],
+              "numeroOficial": 3
             },
             {
               "id": "m3-manejo-via-aerea",
-              "numero": 4,
               "titulo": "Manejo de Vía aérea.",
               "tipo": "contenido",
               "semanas": 3,
@@ -709,11 +710,11 @@
                   "grupo": "Oxigenoterapia",
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 4
             },
             {
               "id": "m3-via-intravenosa",
-              "numero": 5,
               "titulo": "Vía intravenosa.",
               "tipo": "contenido",
               "semanas": 1,
@@ -756,11 +757,11 @@
                   "revisar": true,
                   "notaRevision": "En contexto de accesos vasculares lo esperable es «osteoclisis» (infusión intraósea); «osteólisis» es destrucción ósea. Confirmar con la academia."
                 }
-              ]
+              ],
+              "numeroOficial": 5
             },
             {
               "id": "m3-monitor-desfibrilador",
-              "numero": 6,
               "titulo": "Monitor desfibrilador.",
               "tipo": "contenido",
               "semanas": 1,
@@ -794,11 +795,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 6
             },
             {
               "id": "m3-examen-final",
-              "numero": 7,
               "titulo": "EXAMEN FINAL Y ENTREGA DE CALIFICACIONES",
               "tipo": "examen",
               "semanas": 1,
@@ -813,13 +814,15 @@
                   "generado": true,
                   "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
                 }
-              ]
+              ],
+              "numeroOficial": 7
             }
-          ]
+          ],
+          "encabezadoOficial": "MODULO 3: EVALUACIÓN INCIAL Y SOPORTE VITAL.",
+          "numeroOficial": 3
         },
         {
           "id": "m4-urgencias-medico-quirurgicas",
-          "numero": 4,
           "titulo": "MANEJO DE URGENCIAS MÉDICO QUIRÚRGICAS.",
           "subtitulo": "",
           "totales": {
@@ -829,7 +832,6 @@
           "unidades": [
             {
               "id": "m4-epidemiologia",
-              "numero": 1,
               "titulo": "EPIDEMIOLOGÍA Y CLASIFICACIÓN DE ENFERMEDADES",
               "tipo": "contenido",
               "semanas": 1,
@@ -856,11 +858,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 1
             },
             {
               "id": "m4-farmacologia",
-              "numero": 2,
               "titulo": "FARMACOLOGÍA",
               "tipo": "contenido",
               "semanas": 2,
@@ -907,11 +909,11 @@
                   "grupo": null,
                   "sesion": 2
                 }
-              ]
+              ],
+              "numeroOficial": 2
             },
             {
               "id": "m4-practica-aminas",
-              "numero": 3,
               "titulo": "PRACTICA",
               "tipo": "practica",
               "semanas": 1,
@@ -924,11 +926,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": null
             },
             {
               "id": "m4-urgencias-respiratorias",
-              "numero": 4,
               "titulo": "URGENCIAS RESPIRATORIAS",
               "tipo": "contenido",
               "semanas": 3,
@@ -990,11 +992,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 3
             },
             {
               "id": "m4-urgencias-gastrointestinales",
-              "numero": 5,
               "titulo": "URGENCIAS GASTROINTESTINALES",
               "tipo": "contenido",
               "semanas": 3,
@@ -1063,11 +1065,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 4
             },
             {
               "id": "m4-urgencias-cardiologicas",
-              "numero": 6,
               "titulo": "URGENCIAS CARDIOLÓGICAS",
               "tipo": "contenido",
               "semanas": 3,
@@ -1122,11 +1124,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 5
             },
             {
               "id": "m4-urgencias-metabolicas",
-              "numero": 7,
               "titulo": "URGENCIAS METABÓLICAS",
               "tipo": "contenido",
               "semanas": 1,
@@ -1153,11 +1155,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 6
             },
             {
               "id": "m4-examen-1",
-              "numero": 8,
               "titulo": "1er EXAMEN",
               "tipo": "examen",
               "semanas": 1,
@@ -1172,11 +1174,11 @@
                   "generado": true,
                   "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
                 }
-              ]
+              ],
+              "numeroOficial": 7
             },
             {
               "id": "m4-urgencias-urinarias",
-              "numero": 9,
               "titulo": "URGENCIAS URINARIAS",
               "tipo": "contenido",
               "semanas": 1,
@@ -1210,11 +1212,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 8
             },
             {
               "id": "m4-urgencias-sistema-nervioso",
-              "numero": 10,
               "titulo": "URGENCIAS DEL SISTEMA NERVIOSO",
               "tipo": "contenido",
               "semanas": 2,
@@ -1257,11 +1259,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 9
             },
             {
               "id": "m4-urgencias-gineco-obstetricas",
-              "numero": 11,
               "titulo": "URGNCIAS GINECO-OBSTÉTRICAS",
               "tipo": "contenido",
               "semanas": 3,
@@ -1364,11 +1366,11 @@
                   "grupo": null,
                   "sesion": 3
                 }
-              ]
+              ],
+              "numeroOficial": 10
             },
             {
               "id": "m4-urgencias-toxicologicas",
-              "numero": 12,
               "titulo": "URGENCIAS TOXICOLÓGICAS.",
               "tipo": "contenido",
               "semanas": 1,
@@ -1402,11 +1404,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 11
             },
             {
               "id": "m4-examen-final",
-              "numero": 13,
               "titulo": "EXAMEN FINAL Y ENTREGA DE CALIFICACIONES",
               "tipo": "examen",
               "semanas": 1,
@@ -1421,13 +1423,15 @@
                   "generado": true,
                   "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
                 }
-              ]
+              ],
+              "numeroOficial": 12
             }
-          ]
+          ],
+          "encabezadoOficial": "MÓDULO 4: MANEJO DE URGENCIAS MÉDICO QUIRÚRGICAS.",
+          "numeroOficial": 4
         },
         {
           "id": "m5-emergencias-traumatologicas",
-          "numero": 5,
           "titulo": "EMERGENCIAS TRAUMATOLÓGICAS",
           "subtitulo": "",
           "totales": {
@@ -1437,7 +1441,6 @@
           "unidades": [
             {
               "id": "m5-cinematica-trauma",
-              "numero": 1,
               "titulo": "CINEMÁTICA DE TRAUMA Y MECANISMOS DE LESIÓN",
               "tipo": "contenido",
               "semanas": 2,
@@ -1522,11 +1525,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 1
             },
             {
               "id": "m5-hemorragia-shock",
-              "numero": 2,
               "titulo": "HEMORRAGIA Y ESTADO DE SHOCK",
               "tipo": "contenido",
               "semanas": 2,
@@ -1616,11 +1619,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 2
             },
             {
               "id": "m5-trauma-torax",
-              "numero": 3,
               "titulo": "TRAUMA DE TÓRAX",
               "tipo": "contenido",
               "semanas": 2,
@@ -1774,11 +1777,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 3
             },
             {
               "id": "m5-trauma-abdomen",
-              "numero": 4,
               "titulo": "TRAUMA DE ABDOMEN",
               "tipo": "contenido",
               "semanas": 2,
@@ -1848,11 +1851,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 4
             },
             {
               "id": "m5-examen-1",
-              "numero": 5,
               "titulo": "1er EXAMEN",
               "tipo": "examen",
               "semanas": 1,
@@ -1867,11 +1870,11 @@
                   "generado": true,
                   "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
                 }
-              ]
+              ],
+              "numeroOficial": 5
             },
             {
               "id": "m5-trauma-craneo-columna",
-              "numero": 6,
               "titulo": "TRAUMA DE CRÁNEO Y COLUMNA",
               "tipo": "contenido",
               "semanas": 2,
@@ -2026,11 +2029,11 @@
                   "grupo": "Columna",
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 6
             },
             {
               "id": "m5-trauma-ojo-cara-cuello",
-              "numero": 7,
               "titulo": "TRAUMA DE OJO, CARA Y CUELLO.",
               "tipo": "contenido",
               "semanas": 2,
@@ -2106,11 +2109,11 @@
                   "grupo": "Trauma de cuello",
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 7
             },
             {
               "id": "m5-trauma-musculoesqueletico",
-              "numero": 8,
               "titulo": "TRAUMA MUSCULOESQUELÉTICO.",
               "tipo": "contenido",
               "semanas": 2,
@@ -2167,11 +2170,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 8
             },
             {
               "id": "m5-lesiones-ambientales",
-              "numero": 9,
               "titulo": "LESIONES AMBIENTALES",
               "tipo": "contenido",
               "semanas": 1,
@@ -2198,11 +2201,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 9
             },
             {
               "id": "m5-quemaduras",
-              "numero": 10,
               "titulo": "QUEMADURAS",
               "tipo": "contenido",
               "semanas": 2,
@@ -2257,11 +2260,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 10
             },
             {
               "id": "m5-practica",
-              "numero": 11,
               "titulo": "PRÁCTICA",
               "tipo": "practica",
               "semanas": 1,
@@ -2276,11 +2279,11 @@
                   "generado": true,
                   "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
                 }
-              ]
+              ],
+              "numeroOficial": 11
             },
             {
               "id": "m5-examen-final",
-              "numero": 12,
               "titulo": "EXAMEN FINAL Y ENTREGA DE CALIFICACIONES",
               "tipo": "examen",
               "semanas": 1,
@@ -2295,13 +2298,15 @@
                   "generado": true,
                   "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
                 }
-              ]
+              ],
+              "numeroOficial": 12
             }
-          ]
+          ],
+          "encabezadoOficial": "MÓDULO 5: EMERGENCIAS TRAUMATOLÓGICAS",
+          "numeroOficial": 5
         },
         {
           "id": "m6-poblaciones-especiales",
-          "numero": 6,
           "titulo": "POBLACIONES ESPECIALES",
           "subtitulo": "URGENCIAS PEDIATRICAS Y GERIÁTRICAS.",
           "totales": {
@@ -2311,7 +2316,6 @@
           "unidades": [
             {
               "id": "m6-introduccion-pediatria",
-              "numero": 1,
               "titulo": "INTRODUCCIÓN A LA PEDIATRÍA Y EVALUACIÓN DEL PACIENTE PEDIÁTRICO",
               "tipo": "contenido",
               "semanas": 1,
@@ -2359,11 +2363,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 1
             },
             {
               "id": "m6-situaciones-especiales",
-              "numero": 2,
               "titulo": "SITUACIONES ESPECIALES",
               "tipo": "contenido",
               "semanas": 1,
@@ -2397,11 +2401,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 2
             },
             {
               "id": "m6-soporte-vital-pediatrico",
-              "numero": 3,
               "titulo": "SOPORTE VITAL EN PEDIATRICO",
               "tipo": "contenido",
               "semanas": 1,
@@ -2421,11 +2425,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 3
             },
             {
               "id": "m6-parcial-1",
-              "numero": 4,
               "titulo": "1er PARCIAL",
               "tipo": "examen",
               "semanas": 1,
@@ -2440,11 +2444,11 @@
                   "generado": true,
                   "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
                 }
-              ]
+              ],
+              "numeroOficial": 4
             },
             {
               "id": "m6-emergencias-pediatria",
-              "numero": 5,
               "titulo": "EMERGENCIAS MÉDICO QUIRÚRGICAS EN PEDIATRÍA",
               "tipo": "contenido",
               "semanas": 1,
@@ -2527,11 +2531,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 5
             },
             {
               "id": "m6-trauma-pediatrico",
-              "numero": 6,
               "titulo": "TRAUATISMO EN EL PACIENTE PEDIATRICO",
               "tipo": "contenido",
               "semanas": 1,
@@ -2576,11 +2580,11 @@
                   "revisar": true,
                   "notaRevision": "Mismo caso que en el Módulo 3: en contexto de accesos vasculares lo esperable es «osteoclisis» (vía intraósea)."
                 }
-              ]
+              ],
+              "numeroOficial": 6
             },
             {
               "id": "m6-introduccion-geriatria",
-              "numero": 7,
               "titulo": "INTRODUCCIÓN A LA GERIATRÍA",
               "tipo": "contenido",
               "semanas": 1,
@@ -2656,11 +2660,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 7
             },
             {
               "id": "m6-manejo-geriatrico",
-              "numero": 8,
               "titulo": "EVALUACIÓN Y MANEJO DEL PACIENTE GERIÁTRICO",
               "tipo": "contenido",
               "semanas": 1,
@@ -2687,11 +2691,11 @@
                   "grupo": null,
                   "sesion": null
                 }
-              ]
+              ],
+              "numeroOficial": 8
             },
             {
               "id": "m6-examen-final",
-              "numero": 9,
               "titulo": "EXAMEN FINAL Y ENTREGA DE CALIFICACIONES",
               "tipo": "examen",
               "semanas": 1,
@@ -2706,13 +2710,15 @@
                   "generado": true,
                   "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
                 }
-              ]
+              ],
+              "numeroOficial": 9
             }
-          ]
+          ],
+          "encabezadoOficial": "MÓDULO 6: POBLACIONES ESPECIALES (URGENCIAS PEDIATRICAS Y GERIÁTRICAS.)",
+          "numeroOficial": 6
         },
         {
           "id": "m7-operaciones-especiales",
-          "numero": 7,
           "titulo": "OPERACIONES ESPECIALES.",
           "subtitulo": "",
           "totales": {
@@ -2723,7 +2729,6 @@
           "unidades": [
             {
               "id": "m7-operaciones-ambulancias",
-              "numero": 1,
               "titulo": "OPERACIONES DE AMBULANCIAS.",
               "tipo": "contenido",
               "semanas": 1,
@@ -2738,11 +2743,11 @@
                   "generado": true,
                   "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
                 }
-              ]
+              ],
+              "numeroOficial": 1
             },
             {
               "id": "m7-acceso-extraccion",
-              "numero": 2,
               "titulo": "OBTENCIÓN DE ACCESO Y EXTRACCIÓN.",
               "tipo": "contenido",
               "semanas": 1,
@@ -2757,11 +2762,11 @@
                   "generado": true,
                   "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
                 }
-              ]
+              ],
+              "numeroOficial": 2
             },
             {
               "id": "m7-operaciones-especiales",
-              "numero": 3,
               "titulo": "OPERACIONES ESPECIALES",
               "tipo": "contenido",
               "semanas": 1,
@@ -2776,11 +2781,11 @@
                   "generado": true,
                   "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
                 }
-              ]
+              ],
+              "numeroOficial": 3
             },
             {
               "id": "m7-triage",
-              "numero": 4,
               "titulo": "MANEJO DE ESCENARIOS CON MÚLTIPLES VÍCTIMAS (TRIAGE).",
               "tipo": "contenido",
               "semanas": 1,
@@ -2795,9 +2800,12 @@
                   "generado": true,
                   "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
                 }
-              ]
+              ],
+              "numeroOficial": 4
             }
-          ]
+          ],
+          "encabezadoOficial": "MÓDULO 7: OPERACIONES ESPECIALES.",
+          "numeroOficial": 7
         }
       ]
     },
