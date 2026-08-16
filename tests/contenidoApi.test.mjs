@@ -8,13 +8,13 @@ import {
 } from '../src/lib/contenidoModelo.js'
 import {
   ESTADOS_CONTENIDO, estadoContenido, academiaMigrada,
-  temaDesdeDoc, ensamblarFases, construirApi,
+  temaDesdeDoc, ensamblarModulos, construirApi,
 } from '../src/lib/contenidoApi.js'
 
 const PLANTILLA = 'paramedico-tum'
 const { plantilla, temas } = plantillaDesdeData({
   id: PLANTILLA, nombre: 'Programa Paramédico (TUM)',
-  fases: legacy.fases, todosLosTemas: legacy.todosLosTemas,
+  modulos: legacy.modulos, todosLosTemas: legacy.todosLosTemas,
 })
 
 // Reconstruye la API de una academia como lo hará el resolutor:
@@ -25,8 +25,8 @@ function apiDeAcademia(academiaId) {
   })
   const curso = cursoDesdePlantilla({ academiaId, plantilla })
   const temasPorId = new Map(clonados.map((t) => [t.temaId, t]))
-  const { fases, faltantes } = ensamblarFases(curso.estructura, temasPorId)
-  return { api: construirApi(fases), faltantes, curso, clonados }
+  const { modulos, faltantes } = ensamblarModulos(curso.estructura, temasPorId)
+  return { api: construirApi(modulos), faltantes, curso, clonados }
 }
 
 // ---------- estados de migración ----------
@@ -54,9 +54,9 @@ test('resolutor: la API reconstruida de Firestore es equivalente a src/data', ()
   const { api, faltantes } = apiDeAcademia('AEP-2026')
   assert.equal(faltantes.length, 0)
 
-  // Mismas fases, mismo orden, misma numeración.
-  assert.deepEqual(api.fases.map((f) => f.id), legacy.fases.map((f) => f.id))
-  assert.deepEqual(api.fases.map((f) => f.numero), legacy.fases.map((f) => f.numero))
+  // Mismas módulos, mismo orden, misma numeración.
+  assert.deepEqual(api.modulos.map((f) => f.id), legacy.modulos.map((f) => f.id))
+  assert.deepEqual(api.modulos.map((f) => f.numero), legacy.modulos.map((f) => f.numero))
   // Mismos temas, mismo orden global y misma numeración '1.1'.
   assert.deepEqual(
     api.todosLosTemas.map((t) => t.id),
@@ -74,14 +74,14 @@ test('resolutor: la API reconstruida de Firestore es equivalente a src/data', ()
   assert.deepEqual(api.temaPorClaveImagen, legacy.temaPorClaveImagen)
 })
 
-test('resolutor: getFase/getTema/vecinos/preguntas se comportan como los legacy', () => {
+test('resolutor: getModulo/getTema/vecinos/preguntas se comportan como los legacy', () => {
   const { api } = apiDeAcademia('AEP-2026')
   const temaRef = legacy.todosLosTemas[10]
-  const faseRef = legacy.fases[2]
+  const moduloRef = legacy.modulos[2]
 
   assert.equal(api.getTema(temaRef.id).titulo, temaRef.titulo)
-  assert.equal(api.getTema(temaRef.id).faseId, temaRef.faseId)
-  assert.equal(api.getFase(faseRef.id).temas.length, faseRef.temas.length)
+  assert.equal(api.getTema(temaRef.id).moduloId, temaRef.moduloId)
+  assert.equal(api.getModulo(moduloRef.id).temas.length, moduloRef.temas.length)
   assert.equal(api.getTema('no-existe'), undefined)
 
   const vec = api.getTemaVecinos(temaRef.id)
@@ -91,8 +91,8 @@ test('resolutor: getFase/getTema/vecinos/preguntas se comportan como los legacy'
   assert.equal(vec.siguiente?.id, vecLegacy.siguiente?.id)
 
   assert.deepEqual(
-    api.preguntasDeFase(faseRef.id).map((q) => q.id),
-    legacy.preguntasDeFase(faseRef.id).map((q) => q.id)
+    api.preguntasDeModulo(moduloRef.id).map((q) => q.id),
+    legacy.preguntasDeModulo(moduloRef.id).map((q) => q.id)
   )
   // La búsqueda devuelve los mismos temas.
   assert.deepEqual(
@@ -106,7 +106,7 @@ test('resolutor: getFase/getTema/vecinos/preguntas se comportan como los legacy'
 test('ensamblar: los borradores NO se sirven por defecto (lo que ve el alumno)', () => {
   const estructura = [{
     id: 'f1', titulo: 'F1',
-    modulos: [{ id: 'principal', temas: [
+    unidades: [{ id: 'principal', temas: [
       { id: 't1', titulo: 'T1', estado: 'publicado' },
       { id: 't2', titulo: 'T2', estado: 'borrador' },
     ] }],
@@ -115,24 +115,24 @@ test('ensamblar: los borradores NO se sirven por defecto (lo que ve el alumno)',
     ['t1', { temaId: 't1', titulo: 'T1' }],
     ['t2', { temaId: 't2', titulo: 'T2' }],
   ])
-  const { fases } = ensamblarFases(estructura, docs)
-  assert.deepEqual(fases[0].temas.map((t) => t.id), ['t1'])
-  const conBorradores = ensamblarFases(estructura, docs, { incluirBorradores: true })
-  assert.deepEqual(conBorradores.fases[0].temas.map((t) => t.id), ['t1', 't2'])
+  const { modulos } = ensamblarModulos(estructura, docs)
+  assert.deepEqual(modulos[0].temas.map((t) => t.id), ['t1'])
+  const conBorradores = ensamblarModulos(estructura, docs, { incluirBorradores: true })
+  assert.deepEqual(conBorradores.modulos[0].temas.map((t) => t.id), ['t1', 't2'])
 })
 
 test('ensamblar: una clonación parcial reporta los temas faltantes', () => {
   const estructura = [{
     id: 'f1', titulo: 'F1',
-    modulos: [{ id: 'principal', temas: [
+    unidades: [{ id: 'principal', temas: [
       { id: 't1', titulo: 'T1', estado: 'publicado' },
       { id: 't2', titulo: 'T2', estado: 'publicado' },
     ] }],
   }]
   const docs = new Map([['t1', { temaId: 't1', titulo: 'T1' }]])
-  const { fases, faltantes } = ensamblarFases(estructura, docs)
+  const { modulos, faltantes } = ensamblarModulos(estructura, docs)
   assert.deepEqual(faltantes, ['t2'])
-  assert.deepEqual(fases[0].temas.map((t) => t.id), ['t1'])
+  assert.deepEqual(modulos[0].temas.map((t) => t.id), ['t1'])
 })
 
 test('temaDesdeDoc: recupera la forma que espera la UI (id, defaults)', () => {
@@ -172,12 +172,12 @@ test('aislamiento: mutar la estructura del curso clonado no toca la plantilla', 
   const curso = cursoDesdePlantilla({ academiaId: 'ACADEMIA-A', plantilla })
   assert.equal(curso.plantillaOrigenId, PLANTILLA)
   assert.equal(curso.versionOrigen, plantilla.version)
-  curso.estructura[0].titulo = 'FASE RENOMBRADA POR A'
-  curso.estructura[0].modulos[0].temas.pop()
-  assert.notEqual(plantilla.estructura[0].titulo, 'FASE RENOMBRADA POR A')
+  curso.estructura[0].titulo = 'MODULO RENOMBRADA POR A'
+  curso.estructura[0].unidades[0].temas.pop()
+  assert.notEqual(plantilla.estructura[0].titulo, 'MODULO RENOMBRADA POR A')
   assert.equal(
-    plantilla.estructura[0].modulos[0].temas.length,
-    legacy.fases[0].temas.length
+    plantilla.estructura[0].unidades[0].temas.length,
+    legacy.modulos[0].temas.length
   )
 })
 
@@ -185,9 +185,9 @@ test('aislamiento: dos academias pueden divergir del mismo curso sin interferirs
   const a = apiDeAcademia('ACADEMIA-A')
   const b = apiDeAcademia('ACADEMIA-B')
   // A recorta un tema de su estructura; B lo conserva.
-  a.curso.estructura[0].modulos[0].temas.shift()
-  const apiA = construirApi(ensamblarFases(a.curso.estructura, new Map(a.clonados.map((t) => [t.temaId, t]))).fases)
-  const apiB = construirApi(ensamblarFases(b.curso.estructura, new Map(b.clonados.map((t) => [t.temaId, t]))).fases)
+  a.curso.estructura[0].unidades[0].temas.shift()
+  const apiA = construirApi(ensamblarModulos(a.curso.estructura, new Map(a.clonados.map((t) => [t.temaId, t]))).modulos)
+  const apiB = construirApi(ensamblarModulos(b.curso.estructura, new Map(b.clonados.map((t) => [t.temaId, t]))).modulos)
   assert.equal(apiA.stats.temas, legacy.stats.temas - 1)
   assert.equal(apiB.stats.temas, legacy.stats.temas)
 })

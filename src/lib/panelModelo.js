@@ -59,14 +59,14 @@ export function seccionesPanel({ rol, capacidades = null, permisosEditor = null 
   return SECCIONES_PANEL.filter((s) => visible[s.id])
 }
 
-// Agrega los intentos por alumno y por fase:
-//   { uid: { faseId: { mejor, n, ultimo } } }
+// Agrega los intentos por alumno y por módulo:
+//   { uid: { moduloId: { mejor, n, ultimo } } }
 export function agregarIntentos(intentos) {
   const map = {}
   for (const it of intentos || []) {
     if (!it?.uid) continue
-    const porFase = (map[it.uid] = map[it.uid] || {})
-    const celda = (porFase[it.faseId] = porFase[it.faseId] || { mejor: 0, n: 0, ultimo: null })
+    const porModulo = (map[it.uid] = map[it.uid] || {})
+    const celda = (porModulo[it.moduloId] = porModulo[it.moduloId] || { mejor: 0, n: 0, ultimo: null })
     celda.n += 1
     if (it.porcentaje >= celda.mejor) celda.mejor = it.porcentaje
     const seg = it.fecha?.seconds || 0
@@ -88,7 +88,7 @@ const media = (valores) =>
 // Retrato de la academia (o del grupo filtrado). `ahora` entra por parámetro
 // para que "esta semana" sea comprobable sin depender del reloj de la máquina.
 export function resumenAcademia({
-  alumnos = [], staff = [], intentos = [], porAlumno = {}, fases = [], ahora = Date.now(),
+  alumnos = [], staff = [], intentos = [], porAlumno = {}, modulos = [], ahora = Date.now(),
 }) {
   const uidsAlumnos = new Set(alumnos.map((a) => a.id))
   const mejores = []
@@ -101,7 +101,7 @@ export function resumenAcademia({
     activos += 1
     mejores.push(...valores)
     const prom = media(valores)
-    if (prom < APROBADO) enRiesgo.push({ ...al, prom, fases: valores.length })
+    if (prom < APROBADO) enRiesgo.push({ ...al, prom, modulos: valores.length })
   }
 
   const hace7d = ahora / 1000 - SEMANA_SEG
@@ -109,11 +109,11 @@ export function resumenAcademia({
   const deAlumnos = intentos.filter((i) => uidsAlumnos.has(i.uid))
   const semana = deAlumnos.filter((i) => (i.fecha?.seconds || 0) >= hace7d).length
 
-  const porFase = fases.map((f) => {
+  const porModulo = modulos.map((f) => {
     const valores = alumnos
       .map((al) => porAlumno[al.id]?.[f.id]?.mejor)
       .filter((v) => v !== undefined)
-    return { fase: f, prom: media(valores), presentaron: valores.length }
+    return { modulo: f, prom: media(valores), presentaron: valores.length }
   })
 
   return {
@@ -125,7 +125,7 @@ export function resumenAcademia({
     totalAlumnos: alumnos.length,
     totalStaff: staff.length,
     semana,
-    porFase,
+    porModulo,
     recientes: deAlumnos.slice(0, 6),
     enRiesgo,
   }
@@ -133,18 +133,18 @@ export function resumenAcademia({
 
 // --- Visibilidad por grupo (la superficie que absorbe el panel) ---
 
-export function totalTemas(fases) {
-  return (fases || []).reduce((s, f) => s + f.temas.length, 0)
+export function totalTemas(modulos) {
+  return (modulos || []).reduce((s, f) => s + f.temas.length, 0)
 }
 
-// Estado de UNA fase para el grupo elegido, que es lo que la tarjeta tiene que
+// Estado de UNA módulo para el grupo elegido, que es lo que la tarjeta tiene que
 // poder decir de un vistazo (Bloque Q). `porModulo` distingue «la ocultó el ojo
 // del módulo» de «resultó oculta porque están tachados todos sus temas»: son la
 // misma pantalla pero se deshacen de forma distinta.
-export function estadoFase(fase, ocultas) {
-  const temas = fase?.temas || []
+export function estadoModulo(modulo, ocultas) {
+  const temas = modulo?.temas || []
   const total = temas.length
-  if ((ocultas?.fases || []).includes(fase?.id)) {
+  if ((ocultas?.modulos || []).includes(modulo?.id)) {
     return { estado: 'oculta', porModulo: true, visibles: 0, total }
   }
   const temasOcultos = new Set(ocultas?.temas || [])
@@ -153,7 +153,7 @@ export function estadoFase(fase, ocultas) {
   return { estado, porModulo: false, visibles, total }
 }
 
-// Navegación por teclado de la baraja de fases (patrón de acordeón de
+// Navegación por teclado de la baraja de módulos (patrón de acordeón de
 // WAI-ARIA): las flechas mueven el foco entre cabeceras y da la vuelta al
 // llegar al extremo; Inicio/Fin van a la primera y a la última. Devuelve el
 // índice al que hay que llevar el foco, o null si esa tecla no es de las suyas
@@ -176,13 +176,13 @@ export function focoBaraja(indice, tecla, total) {
   }
 }
 
-// Cuántos temas quedan ocultos para el grupo: los de una fase oculta cuentan
+// Cuántos temas quedan ocultos para el grupo: los de un módulo oculta cuentan
 // todos, aunque no estén marcados uno por uno.
-export function contarTemasOcultos(fases, ocultas) {
-  const fasesOcultas = new Set(ocultas?.fases || [])
+export function contarTemasOcultos(modulos, ocultas) {
+  const modulosOcultos = new Set(ocultas?.modulos || [])
   const temasOcultos = new Set(ocultas?.temas || [])
-  return (fases || []).reduce((s, f) => {
-    if (fasesOcultas.has(f.id)) return s + f.temas.length
+  return (modulos || []).reduce((s, f) => {
+    if (modulosOcultos.has(f.id)) return s + f.temas.length
     return s + f.temas.filter((t) => temasOcultos.has(t.id)).length
   }, 0)
 }

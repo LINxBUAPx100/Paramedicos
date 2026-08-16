@@ -62,15 +62,21 @@ async function preparar() {
     })
     // profC: profesor de la academia BASE (para "director BASE concede").
     await pon('usuarios/profC', { rol: 'instructor', academiaId: 'ACA-C', estado: 'activo' })
-    await pon('usuarios/alumA', { rol: 'alumno', academiaId: 'ACA-A', estado: 'activo' })
-    await pon('usuarios/alumB', { rol: 'alumno', academiaId: 'ACA-B', estado: 'activo' })
+    // El acceso al contenido lo define el GRUPO (aislamiento por programa):
+    // alumA cursa TUM, alumAenf cursa Enfermería en la MISMA academia, y
+    // alumAsin entró por código de academia y todavía no tiene grupo.
+    await pon('usuarios/alumA', { rol: 'alumno', academiaId: 'ACA-A', estado: 'activo', grupoId: 'G-A1' })
+    await pon('usuarios/alumAenf', { rol: 'alumno', academiaId: 'ACA-A', estado: 'activo', grupoId: 'G-A3' })
+    await pon('usuarios/alumAsin', { rol: 'alumno', academiaId: 'ACA-A', estado: 'activo' })
+    await pon('usuarios/alumAmas', { rol: 'alumno', academiaId: 'ACA-A', estado: 'activo', grupoId: 'G-A4' })
+    await pon('usuarios/alumB', { rol: 'alumno', academiaId: 'ACA-B', estado: 'activo', grupoId: 'G-B1' })
     await pon('plantillas/tum', { nombre: 'TUM', version: 1, estado: 'publicada', estructura: [] })
     await pon('plantillasTemas/tum__t1', { plantillaId: 'tum', temaId: 't1', titulo: 'T1' })
     for (const aca of ['ACA-A', 'ACA-B', 'ACA-C']) {
       await pon(`cursos/${aca}__tum`, {
         academiaId: aca, plantillaId: 'tum', titulo: 'TUM', estado: 'publicado',
         plantillaOrigenId: 'tum', versionOrigen: 1, version: 1, creadoPor: 'seed',
-        estructura: [{ id: 'f1', titulo: 'F1', estado: 'publicado', modulos: [{ id: 'principal', temas: [{ id: 't1', titulo: 'T1', estado: 'publicado' }] }] }],
+        estructura: [{ id: 'f1', titulo: 'F1', estado: 'publicado', unidades: [{ id: 'principal', temas: [{ id: 't1', titulo: 'T1', estado: 'publicado' }] }] }],
         clonacion: { plantillaId: 'tum', version: 1, completa: true },
       })
       await pon(`temas/${aca}__tum__t1`, {
@@ -124,9 +130,28 @@ async function preparar() {
     // --- Grupos, para el ALCANCE del contenido de un profesor ---
     // El profesor crea «para su grupo» ocultando lo nuevo en los DEMÁS grupos,
     // y eso solo funciona si las reglas le dejan escribir esa visibilidad.
-    await pon('grupos/G-A1', { academiaId: 'ACA-A', nombre: 'Mañana', estado: 'activo', temasOcultos: [], fasesOcultas: [] })
-    await pon('grupos/G-A2', { academiaId: 'ACA-A', nombre: 'Tarde', estado: 'activo', temasOcultos: [], fasesOcultas: [] })
-    await pon('grupos/G-B1', { academiaId: 'ACA-B', nombre: 'De otra', estado: 'activo', temasOcultos: [], fasesOcultas: [] })
+    // `programaId` es el PLAN DE ESTUDIOS del grupo: la llave del contenido.
+    await pon('grupos/G-A1', { academiaId: 'ACA-A', nombre: 'Mañana', estado: 'activo', temasOcultos: [], modulosOcultos: [], programaId: 'ACA-A__tum' })
+    await pon('grupos/G-A2', { academiaId: 'ACA-A', nombre: 'Tarde', estado: 'activo', temasOcultos: [], modulosOcultos: [], programaId: 'ACA-A__tum' })
+    // G-A3 cursa ENFERMERÍA en la misma academia que G-A1: es el escenario que
+    // prueba el aislamiento por programa DENTRO de una academia.
+    await pon('grupos/G-A3', { academiaId: 'ACA-A', nombre: 'Enfermería', estado: 'activo', programaId: 'ACA-A__enfermeria' })
+    // G-A4 cursa TUM + una especialización (programasExtra del plan oficial).
+    await pon('grupos/G-A4', { academiaId: 'ACA-A', nombre: 'TUM + ACLS', estado: 'activo', programaId: 'ACA-A__tum', programasExtra: ['ACA-A__enfermeria'] })
+    await pon('grupos/G-B1', { academiaId: 'ACA-B', nombre: 'De otra', estado: 'activo', temasOcultos: [], modulosOcultos: [], programaId: 'ACA-B__tum' })
+
+    // SEGUNDO PROGRAMA de la academia A (otra carrera, misma academia).
+    await pon('cursos/ACA-A__enfermeria', {
+      academiaId: 'ACA-A', plantillaId: 'enfermeria', titulo: 'Enfermería',
+      tipoPrograma: 'enfermeria', estado: 'publicado', version: 1, creadoPor: 'seed',
+      plantillaOrigenId: 'enfermeria', versionOrigen: 1,
+      estructura: [{ id: 'e1', titulo: 'E1', estado: 'publicado', unidades: [{ id: 'principal', temas: [{ id: 'e-t1', titulo: 'ET1', estado: 'publicado' }] }] }],
+      clonacion: { plantillaId: 'enfermeria', version: 1, completa: true },
+    })
+    await pon('temas/ACA-A__enfermeria__e-t1', {
+      academiaId: 'ACA-A', cursoId: 'ACA-A__enfermeria', temaId: 'e-t1', version: 1, creadoPor: 'seed',
+      titulo: 'ET1', estado: 'publicado', quiz: [], flashcards: [], secciones: [],
+    })
   })
   return env
 }
@@ -388,7 +413,7 @@ test('intentos: resultado consistente obligatorio (aciertos/total/porcentaje)', 
   const { collection, addDoc } = fsmod
   const { assertSucceeds, assertFails } = rut
   const db = como('alumA')
-  const base = { uid: 'alumA', academiaId: 'ACA-A', faseId: 'f1', numero: 1, titulo: 'F1', fecha: new Date() }
+  const base = { uid: 'alumA', academiaId: 'ACA-A', moduloId: 'f1', numero: 1, titulo: 'F1', fecha: new Date() }
   // Resultados reales (porcentaje = round(aciertos/total*100)) → aceptados.
   await assertSucceeds(addDoc(collection(db, 'intentos'), { ...base, aciertos: 7, total: 10, porcentaje: 70 }))
   await assertSucceeds(addDoc(collection(db, 'intentos'), { ...base, aciertos: 1, total: 3, porcentaje: 33 }))
@@ -452,7 +477,7 @@ test('home por secciones: director PRO configura la SUYA; BASE y campos ajenos n
   await preparar()
   const { doc, updateDoc } = fsmod
   const { assertSucceeds, assertFails } = rut
-  const config = [{ id: 'hero', visible: false }, { id: 'fases', visible: true }]
+  const config = [{ id: 'hero', visible: false }, { id: 'modulos', visible: true }]
   // Director PRO: puede guardar la configuración (y volver al default con null).
   await assertSucceeds(updateDoc(doc(como('dirA'), 'academias/ACA-A'), { homeSecciones: config }))
   await assertSucceeds(updateDoc(doc(como('dirA'), 'academias/ACA-A'), { homeSecciones: null }))
@@ -496,7 +521,7 @@ test('un profesor ajusta la visibilidad de OTRO grupo de su academia', { skip },
     updateDoc(doc(como('profA'), 'grupos/G-A2'), { temasOcultos: ['t-nuevo'] })
   )
   await assertSucceeds(
-    updateDoc(doc(como('profA'), 'grupos/G-A1'), { fasesOcultas: ['f-nueva'] })
+    updateDoc(doc(como('profA'), 'grupos/G-A1'), { modulosOcultos: ['f-nueva'] })
   )
 })
 
@@ -533,5 +558,110 @@ test('un alumno no ajusta la visibilidad de su grupo', { skip }, async () => {
   // oculta, que es justo lo que la visibilidad por grupo existe para impedir.
   await assertFails(
     updateDoc(doc(como('alumA'), 'grupos/G-A1'), { temasOcultos: [] })
+  )
+})
+
+// ============================================================
+//  AISLAMIENTO POR PROGRAMA (Fase C)
+// ------------------------------------------------------------
+//  La academia dejó de impartir una sola carrera. El contenido queda
+//  estrictamente aislado por programa y el programa lo define el GRUPO.
+//  Estas son las pruebas NEGATIVAS que sostienen ese requisito: si alguna
+//  pasa a verde por error, un alumno estaría viendo el temario de otra
+//  carrera de su misma academia.
+// ============================================================
+
+test('programa: un alumno de TUM NO lee el curso de Enfermería de su MISMA academia', { skip }, async () => {
+  await preparar()
+  const { doc, getDoc } = fsmod
+  const { assertFails, assertSucceeds } = rut
+  // Lo suyo sí.
+  await assertSucceeds(getDoc(doc(como('alumA'), 'cursos/ACA-A__tum')))
+  // Lo de la otra carrera NO, aunque comparta academia y esté publicado.
+  await assertFails(getDoc(doc(como('alumA'), 'cursos/ACA-A__enfermeria')))
+})
+
+test('programa: un alumno de TUM NO lee los TEMAS de Enfermería de su academia', { skip }, async () => {
+  await preparar()
+  const { doc, getDoc } = fsmod
+  const { assertFails, assertSucceeds } = rut
+  await assertSucceeds(getDoc(doc(como('alumA'), 'temas/ACA-A__tum__t1')))
+  await assertFails(getDoc(doc(como('alumA'), 'temas/ACA-A__enfermeria__e-t1')))
+})
+
+test('programa: el alumno de Enfermería lee LO SUYO y no el TUM', { skip }, async () => {
+  await preparar()
+  const { doc, getDoc } = fsmod
+  const { assertFails, assertSucceeds } = rut
+  await assertSucceeds(getDoc(doc(como('alumAenf'), 'cursos/ACA-A__enfermeria')))
+  await assertSucceeds(getDoc(doc(como('alumAenf'), 'temas/ACA-A__enfermeria__e-t1')))
+  // La simétrica de la prueba anterior: el aislamiento corta en los dos sentidos.
+  await assertFails(getDoc(doc(como('alumAenf'), 'temas/ACA-A__tum__t1')))
+})
+
+test('programa: un alumno SIN grupo no lee NADA', { skip }, async () => {
+  await preparar()
+  const { doc, getDoc } = fsmod
+  const { assertFails } = rut
+  // Entró por código de academia o de prueba: pertenece a la academia pero no
+  // cursa ningún plan. Antes del aislamiento veía TODO; ahora, nada.
+  await assertFails(getDoc(doc(como('alumAsin'), 'cursos/ACA-A__tum')))
+  await assertFails(getDoc(doc(como('alumAsin'), 'temas/ACA-A__tum__t1')))
+})
+
+test('programa: `programasExtra` da acceso a las especializaciones del grupo', { skip }, async () => {
+  await preparar()
+  const { doc, getDoc } = fsmod
+  const { assertSucceeds } = rut
+  // G-A4 cursa TUM y además otro programa: debe leer los dos.
+  await assertSucceeds(getDoc(doc(como('alumAmas'), 'temas/ACA-A__tum__t1')))
+  await assertSucceeds(getDoc(doc(como('alumAmas'), 'temas/ACA-A__enfermeria__e-t1')))
+})
+
+test('programa: el staff NO se filtra por programa (gestiona la academia entera)', { skip }, async () => {
+  await preparar()
+  const { doc, getDoc } = fsmod
+  const { assertSucceeds } = rut
+  // El profesor y el director necesitan ver todos los programas para editarlos
+  // y revisar avances; el filtro es para quien CURSA, no para quien gestiona.
+  await assertSucceeds(getDoc(doc(como('profA'), 'temas/ACA-A__enfermeria__e-t1')))
+  await assertSucceeds(getDoc(doc(como('dirA'), 'cursos/ACA-A__enfermeria')))
+  await assertSucceeds(getDoc(doc(como('super1'), 'cursos/ACA-A__enfermeria')))
+})
+
+test('programa: el aislamiento por ACADEMIA sigue en pie (no lo relaja el nuevo)', { skip }, async () => {
+  await preparar()
+  const { doc, getDoc } = fsmod
+  const { assertFails } = rut
+  // alumB cursa TUM en ACA-B; el TUM de ACA-A es otro documento y otra academia.
+  await assertFails(getDoc(doc(como('alumB'), 'cursos/ACA-A__tum')))
+  await assertFails(getDoc(doc(como('alumB'), 'temas/ACA-A__tum__t1')))
+})
+
+test('programa: un profesor NO cambia el plan de estudios de un grupo', { skip }, async () => {
+  await preparar()
+  const { doc, updateDoc } = fsmod
+  const { assertFails, assertSucceeds } = rut
+  // Mover un grupo de programa cambia el contenido de TODOS sus alumnos: es
+  // del director. El profesor solo toca la visibilidad (hasOnly).
+  await assertFails(
+    updateDoc(doc(como('profA'), 'grupos/G-A1'), { programaId: 'ACA-A__enfermeria' })
+  )
+  await assertSucceeds(
+    updateDoc(doc(como('dirA'), 'grupos/G-A1'), { programaId: 'ACA-A__tum' })
+  )
+})
+
+test('programa: un alumno no se auto-asigna otro plan de estudios', { skip }, async () => {
+  await preparar()
+  const { doc, updateDoc } = fsmod
+  const { assertFails } = rut
+  // La escalación evidente: si pudiera escribir `programaId` en su grupo, o
+  // moverse de grupo a mano, el aislamiento entero sería decorativo.
+  await assertFails(
+    updateDoc(doc(como('alumA'), 'grupos/G-A1'), { programaId: 'ACA-A__enfermeria' })
+  )
+  await assertFails(
+    updateDoc(doc(como('alumA'), 'usuarios/alumA'), { grupoId: 'G-A3' })
   )
 })

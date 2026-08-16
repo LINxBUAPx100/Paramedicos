@@ -7,7 +7,7 @@ import { barajarPreguntas } from '../lib/baraja.js'
 //   · Las opciones se barajan en cada intento (la correcta no cae siempre en la misma letra).
 //   · `semilla`: si se pasa, el barajado es REPRODUCIBLE — refrescar la página
 //     devuelve exactamente el mismo examen. Quien la pasa es quien decide qué
-//     es un intento (ExamenFasePage la renueva al pulsar "Otro intento"); sin
+//     es un intento (ExamenModuloPage la renueva al pulsar "Otro intento"); sin
 //     ella se cae a Math.random, que es lo que quiere una práctica suelta.
 //   · `onReintentar`: quien manda la semilla necesita enterarse de que empieza
 //     un intento nuevo para renovarla. Sin esto, "Intentar de nuevo" repetiría

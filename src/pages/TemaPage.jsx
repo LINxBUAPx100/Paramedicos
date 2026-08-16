@@ -58,7 +58,7 @@ export default function TemaPage() {
         <span className="acceso-ico"><Icon name="candado" size={30} /></span>
         <h1>Tema aún no disponible</h1>
         <p>Tu profesor todavía no libera este tema para tu grupo. Vuelve más adelante.</p>
-        <Link to={`/fase/${tema.faseId}`} className="btn btn--pildora btn--carbon">Volver a la fase</Link>
+        <Link to={`/modulo/${tema.moduloId}`} className="btn btn--pildora btn--carbon">Volver al módulo</Link>
       </div>
     )
   }
@@ -67,15 +67,15 @@ export default function TemaPage() {
   const leido = estado.leidos[temaId]
   const recursos = getRecursos(temaId)
   const galeria = imagenesDeTema(temaId)
-  // ¿Es el ÚLTIMO tema de su fase? Al terminarlo, el "Siguiente" lleva
-  // directo al EXAMEN del módulo (no al primer tema de la fase que sigue).
-  const ultimoDeFase = !vecinos.siguiente || vecinos.siguiente.faseId !== tema.faseId
+  // ¿Es el ÚLTIMO tema de su módulo? Al terminarlo, el "Siguiente" lleva
+  // directo al EXAMEN del módulo (no al primer tema del módulo que sigue).
+  const ultimoDeModulo = !vecinos.siguiente || vecinos.siguiente.moduloId !== tema.moduloId
 
   return (
-    <article className="tema-page" style={{ '--fase-color': tema.faseColor }}>
+    <article className="tema-page" style={{ '--modulo-color': tema.moduloColor }}>
       <nav className="migas">
         <Link to="/">Inicio</Link> <span>/</span>{' '}
-        <Link to={`/fase/${tema.faseId}`}>Fase {tema.faseNumero}</Link> <span>/</span>{' '}
+        <Link to={`/modulo/${tema.moduloId}`}>Modulo {tema.moduloNumero}</Link> <span>/</span>{' '}
         {tema.numero}
       </nav>
 
@@ -181,13 +181,13 @@ export default function TemaPage() {
         ) : (
           <span />
         )}
-        {ultimoDeFase ? (
+        {ultimoDeModulo ? (
           <button
             className="tema-nav-btn derecha tema-nav-btn--examen"
-            onClick={() => navigate(`/fase/${tema.faseId}/examen`)}
+            onClick={() => navigate(`/modulo/${tema.moduloId}/examen`)}
           >
             <span>Terminaste el módulo</span>
-            <strong>Presentar el examen de la Fase {tema.faseNumero}</strong>
+            <strong>Presentar el examen del Módulo {tema.moduloNumero}</strong>
           </button>
         ) : (
           <button

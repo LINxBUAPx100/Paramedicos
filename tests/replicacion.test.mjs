@@ -7,9 +7,9 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 
-import { fases, todosLosTemas } from '../src/data/index.js'
+import { modulos, todosLosTemas } from '../src/data/index.js'
 import {
-  plantillaDesdeData, docsClonadosParaAcademia, estructuraDesdeFases,
+  plantillaDesdeData, docsClonadosParaAcademia, estructuraDesdeModulos,
 } from '../src/lib/contenidoModelo.js'
 import {
   jsonEstable, huella, huellaTema, contenidoComparableTema,
@@ -23,12 +23,12 @@ import {
 // ---------- utilería: un mini-curso real clonado a una academia ----------
 
 const { plantilla, temas: temasPlantilla } = plantillaDesdeData({
-  id: 'tum', nombre: 'TUM', fases, todosLosTemas,
+  id: 'tum', nombre: 'TUM', modulos, todosLosTemas,
 })
 const temasOrigen = temasPlantilla.slice(0, 5).map((t) => ({ ...t, version: 1 }))
 const estructuraOrigen = [{
   id: 'f1', titulo: 'Fase 1', estado: 'publicado',
-  modulos: [{
+  unidades: [{
     id: 'principal', titulo: 'Contenido', implicito: true,
     temas: temasOrigen.map((t) => ({ id: t.temaId, titulo: t.titulo, estado: 'publicado' })),
   }],
@@ -204,8 +204,8 @@ test('idDuplicado: evita colisiones sin usar el separador reservado', () => {
 
 test('fusionar: agrega lo nuevo sin tocar el orden ni lo propio del destino', () => {
   const destino = [{
-    id: 'f1', titulo: 'Fase RENOMBRADA por la academia', estado: 'publicado',
-    modulos: [{
+    id: 'f1', titulo: 'Módulo RENOMBRADA por la academia', estado: 'publicado',
+    unidades: [{
       id: 'principal', titulo: 'Contenido', implicito: true,
       temas: [
         { id: 'propio', titulo: 'Tema propio', estado: 'publicado' },
@@ -219,12 +219,12 @@ test('fusionar: agrega lo nuevo sin tocar el orden ni lo propio del destino', ()
   ]
   const origen = [{
     id: 'f1', titulo: 'Fase 1',
-    modulos: [{ id: 'principal', titulo: 'Contenido', implicito: true, temas: [{ id: 'nuevo-1', titulo: 'Nuevo', estado: 'publicado' }] }],
+    unidades: [{ id: 'principal', titulo: 'Contenido', implicito: true, temas: [{ id: 'nuevo-1', titulo: 'Nuevo', estado: 'publicado' }] }],
   }]
   const fusion = fusionarEstructura({ estructuraOrigen: origen, estructuraDestino: destino, acciones })
   // El título local se respeta; el tema propio sigue primero; el nuevo se agrega.
-  assert.equal(fusion[0].titulo, 'Fase RENOMBRADA por la academia')
-  const ids = fusion[0].modulos[0].temas.map((t) => t.id)
+  assert.equal(fusion[0].titulo, 'Módulo RENOMBRADA por la academia')
+  const ids = fusion[0].unidades[0].temas.map((t) => t.id)
   assert.deepEqual(ids, ['propio', temasOrigen[0].temaId, 'nuevo-1'])
 })
 
@@ -236,7 +236,7 @@ test('fusionar: el duplicado entra JUNTO al original y nace en borrador', () => 
     acciones: [{ temaId, accion: 'duplicar' }],
     mapaDuplicados: { [temaId]: `${temaId}-v2` },
   })
-  const temas = fusion[0].modulos[0].temas
+  const temas = fusion[0].unidades[0].temas
   const idx = temas.findIndex((t) => t.id === temaId)
   assert.equal(temas[idx + 1].id, `${temaId}-v2`)
   assert.equal(temas[idx + 1].estado, 'borrador')
@@ -436,7 +436,7 @@ test('integración: clonar con sello y comparar da "sin cambios" en todo el tema
   const { temas } = docsClonadosParaAcademia({
     academiaId: 'ACA-R', plantillaId: 'tum', plantillaTemas: temasPlantilla,
   })
-  const estructura = estructuraDesdeFases(fases)
+  const estructura = estructuraDesdeModulos(modulos)
   const temasConSello = temas.map((t) => ({
     ...t, origen: { plantillaId: 'tum', version: 1, hash: huellaTema(t), replicacionId: 'clonacion' },
   }))

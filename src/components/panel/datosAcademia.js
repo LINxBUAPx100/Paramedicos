@@ -66,7 +66,7 @@ export function useDatosAcademia(academiaId) {
     return () => { activo = false }
   }, [academiaId, recarga])
 
-  // Mejor calificación y nº de intentos por alumno y fase: lo usan el resumen,
+  // Mejor calificación y nº de intentos por alumno y módulo: lo usan el resumen,
   // la tabla de avance y las estadísticas.
   const porAlumno = useMemo(() => agregarIntentos(datos?.intentos), [datos])
 

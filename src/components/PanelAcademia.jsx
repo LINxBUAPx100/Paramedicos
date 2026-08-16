@@ -28,9 +28,9 @@ import VisibilidadGrupos from './panel/VisibilidadGrupos.jsx'
 
 export default function PanelAcademia({ academiaId, academiaNombre = '', miUid = null }) {
   const { puedeVerCodigos } = useAuth()
-  // Fases de LA ACADEMIA gestionada (su copia si está migrada; bundle si no):
-  // el avance por fase debe alinearse con el contenido que ven SUS alumnos.
-  const { fases } = useIndiceAcademia(academiaId)
+  // Módulos de LA ACADEMIA gestionada (su copia si está migrada; bundle si no):
+  // el avance por módulo debe alinearse con el contenido que ven SUS alumnos.
+  const { modulos } = useIndiceAcademia(academiaId)
   const datos = useDatosAcademia(academiaId)
   const [grupoFiltro, setGrupoFiltro] = useState('') // '' = todos; 'sin' = sin grupo
 
@@ -70,7 +70,7 @@ export default function PanelAcademia({ academiaId, academiaNombre = '', miUid =
         staff={staff}
         intentos={intentos}
         porAlumno={porAlumno}
-        fases={fases}
+        modulos={modulos}
       />
 
       <SolicitudesInternas
@@ -88,7 +88,7 @@ export default function PanelAcademia({ academiaId, academiaNombre = '', miUid =
       <AvanceAlumnos
         alumnos={alumnos}
         grupos={grupos}
-        fases={fases}
+        modulos={modulos}
         porAlumno={porAlumno}
         intentos={intentos}
         grupoFiltro={grupoFiltro}

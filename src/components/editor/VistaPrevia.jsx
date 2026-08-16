@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react'
 import Icon from '../Icon.jsx'
-import { ensamblarFases, construirApi } from '../../lib/contenidoApi.js'
+import { ensamblarModulos, construirApi } from '../../lib/contenidoApi.js'
 
 // Vista previa del temario TAL COMO LO VERÍA UN ALUMNO:
 //  - solo contenido publicado (mismo filtro que la capa de acceso),
 //  - de solo lectura: no toca progreso, ni intentos, ni calificaciones
-//    (este componente no importa ninguno de esos módulos),
+//    (este componente no importa ninguno de esos unidades),
 //  - con un aviso permanente de que es una vista previa.
 export default function VistaPrevia({ abierto, curso, temasDocs = [], onCerrar }) {
   const refCerrar = useRef(null)
@@ -27,8 +27,8 @@ export default function VistaPrevia({ abierto, curso, temasDocs = [], onCerrar }
 
   const publicado = curso?.estado === 'publicado'
   const temasPorId = new Map(temasDocs.map((t) => [t.temaId, t]))
-  const { fases } = ensamblarFases(curso?.estructura || [], temasPorId)
-  const api = construirApi(fases)
+  const { modulos } = ensamblarModulos(curso?.estructura || [], temasPorId)
+  const api = construirApi(modulos)
 
   return (
     <div className="dialogo-fondo" onMouseDown={(e) => { if (e.target === e.currentTarget) onCerrar?.() }}>
@@ -52,19 +52,19 @@ export default function VistaPrevia({ abierto, curso, temasDocs = [], onCerrar }
           )}
         </header>
         <div className="previa-cuerpo">
-          {api.fases.length === 0 && (
+          {api.modulos.length === 0 && (
             <p className="editor-vacio">
-              No hay contenido publicado. Publica al menos una fase con un módulo
+              No hay contenido publicado. Publica al menos un módulo con una unidad
               y un tema publicados para que el alumno vea algo.
             </p>
           )}
-          <ol className="previa-fases">
-            {api.fases.map((fase) => (
-              <li key={fase.id}>
-                <h3>Fase {fase.numero} · {fase.titulo}</h3>
-                {fase.subtitulo && <p className="previa-sub">{fase.subtitulo}</p>}
+          <ol className="previa-modulos">
+            {api.modulos.map((modulo) => (
+              <li key={modulo.id}>
+                <h3>Módulo {modulo.numero} · {modulo.titulo}</h3>
+                {modulo.subtitulo && <p className="previa-sub">{modulo.subtitulo}</p>}
                 <ul className="previa-temas">
-                  {fase.temas.map((tema) => (
+                  {modulo.temas.map((tema) => (
                     <li key={tema.id}>
                       <span className="previa-tema-numero">{tema.numero}</span>
                       <div>
@@ -73,7 +73,7 @@ export default function VistaPrevia({ abierto, curso, temasDocs = [], onCerrar }
                       </div>
                     </li>
                   ))}
-                  {fase.temas.length === 0 && <li className="previa-tema-vacio">Sin temas publicados en esta fase.</li>}
+                  {modulo.temas.length === 0 && <li className="previa-tema-vacio">Sin temas publicados en este módulo.</li>}
                 </ul>
               </li>
             ))}

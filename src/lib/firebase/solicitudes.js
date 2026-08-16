@@ -2,9 +2,9 @@
 //  Solicitudes de acceso — colección `solicitudes`
 // ------------------------------------------------------------
 //  Dos tipos:
-//   - 'modulo'  → un alumno terminó una fase y pide que le habiliten la
+//   - 'módulo'  → un alumno terminó un módulo y pide que le habiliten la
 //                 siguiente. La aprueba cualquier staff de su academia:
-//                 añade la fase a usuarios/{uid}.fasesDesbloqueadas (ese
+//                 añade el módulo a usuarios/{uid}.modulosDesbloqueados (ese
 //                 campo anula lo oculto del grupo SOLO para ese alumno).
 //   - 'codigos' → un profesor pide ver los códigos de academia/grupos.
 //                 La aprueba el director o el super-admin: pone
@@ -18,7 +18,7 @@ import {
 
 export async function crearSolicitud({
   tipo, uid, nombre = '', academiaId = null, grupoId = null,
-  faseId = null, faseNumero = null, faseTitulo = '',
+  moduloId = null, moduloNumero = null, moduloTitulo = '',
 }) {
   const ref = await addDoc(collection(db, 'solicitudes'), {
     tipo,
@@ -26,9 +26,9 @@ export async function crearSolicitud({
     nombre,
     academiaId: academiaId || null,
     grupoId: grupoId || null,
-    faseId,
-    faseNumero,
-    faseTitulo,
+    moduloId,
+    moduloNumero,
+    moduloTitulo,
     estado: 'pendiente',
     fecha: serverTimestamp(),
     resueltoPor: null,
@@ -54,15 +54,15 @@ export async function misSolicitudes(uid) {
     .sort((a, b) => (b.fecha?.seconds || 0) - (a.fecha?.seconds || 0))
 }
 
-// Habilita una fase a UN alumno (staff): se suma a sus fases desbloqueadas.
-export async function desbloquearFase(uid, faseId) {
-  await updateDoc(doc(db, 'usuarios', uid), { fasesDesbloqueadas: arrayUnion(faseId) })
+// Habilita un módulo a UN alumno (staff): se suma a sus módulos desbloqueadas.
+export async function desbloquearModulo(uid, moduloId) {
+  await updateDoc(doc(db, 'usuarios', uid), { modulosDesbloqueados: arrayUnion(moduloId) })
 }
 
-// Retrocede: le quita al alumno una fase habilitada individualmente (vuelve a
-// regir lo oculto de su grupo). No afecta las fases que el grupo ya muestra.
-export async function bloquearFase(uid, faseId) {
-  await updateDoc(doc(db, 'usuarios', uid), { fasesDesbloqueadas: arrayRemove(faseId) })
+// Retrocede: le quita al alumno un módulo habilitada individualmente (vuelve a
+// regir lo oculto de su grupo). No afecta los módulos que el grupo ya muestra.
+export async function bloquearModulo(uid, moduloId) {
+  await updateDoc(doc(db, 'usuarios', uid), { modulosDesbloqueados: arrayRemove(moduloId) })
 }
 
 export async function rechazarSolicitud(id, resueltoPor) {
@@ -71,9 +71,9 @@ export async function rechazarSolicitud(id, resueltoPor) {
   })
 }
 
-// Aprueba una solicitud de MÓDULO: desbloquea la fase y marca la solicitud.
+// Aprueba una solicitud de MÓDULO: desbloquea el módulo y marca la solicitud.
 export async function aprobarSolicitudModulo(sol, resueltoPor) {
-  await desbloquearFase(sol.uid, sol.faseId)
+  await desbloquearModulo(sol.uid, sol.moduloId)
   await updateDoc(doc(db, 'solicitudes', sol.id), {
     estado: 'aprobada', resueltoPor, resuelto: serverTimestamp(),
   })

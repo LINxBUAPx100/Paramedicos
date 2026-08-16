@@ -12,7 +12,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 
 import {
-  componerTemario, envolver, fasesVisibles, nombreArchivo, ESTILOS, LIENZO,
+  componerTemario, envolver, modulosVisibles, nombreArchivo, ESTILOS, LIENZO,
 } from '../src/lib/exportarTemario.js'
 
 // Regla falsa pero coherente: el ancho depende del texto Y del estilo, igual
@@ -20,7 +20,7 @@ import {
 const medir = (texto, estilo = 'tema') =>
   String(texto).length * (ESTILOS[estilo]?.tamano ?? 14) * 0.55
 
-const FASES = [
+const MODULOS = [
   {
     id: 'f1', numero: 1, titulo: 'Fundamentos', subtitulo: 'Bases del oficio', color: '#0c5fc4',
     temas: [
@@ -60,39 +60,39 @@ test('envolver normaliza el espacio en blanco', () => {
   assert.deepEqual(envolver(null, 100, medir), [])
 })
 
-test('fasesVisibles respeta lo que el grupo tiene oculto', () => {
-  const v = fasesVisibles(FASES, { fases: ['f2'], temas: ['t1'] })
+test('modulosVisibles respeta lo que el grupo tiene oculto', () => {
+  const v = modulosVisibles(MODULOS, { modulos: ['f2'], temas: ['t1'] })
   assert.deepEqual(v.map((f) => f.id), ['f1'])
   assert.deepEqual(v[0].temas.map((t) => t.id), ['t2'])
 })
 
-test('una fase sin temas visibles NO se dibuja', () => {
+test('un módulo sin temas visibles NO se dibuja', () => {
   // Un círculo con título y nada debajo parece un error de la imagen.
-  const v = fasesVisibles(FASES, { fases: [], temas: ['t3'] })
+  const v = modulosVisibles(MODULOS, { modulos: [], temas: ['t3'] })
   assert.deepEqual(v.map((f) => f.id), ['f1'])
 })
 
 test('sin `ocultas` entra el temario completo', () => {
-  const v = fasesVisibles(FASES)
+  const v = modulosVisibles(MODULOS)
   assert.equal(v.length, 2)
   assert.equal(v.reduce((s, f) => s + f.temas.length, 0), 3)
 })
 
 test('compone la cabecera con academia, grupo y recuento', () => {
-  const r = componerTemario({ fases: FASES, academia: 'AEP', grupo: '2026-A', medir })
+  const r = componerTemario({ modulos: MODULOS, academia: 'AEP', grupo: '2026-A', medir })
   assert.equal(texto(r, 'titulo')[0].texto, 'Temario')
   assert.ok(textos(r).includes('AEP · Grupo 2026-A'))
-  assert.ok(textos(r).some((t) => t === '2 fases · 3 temas'))
+  assert.ok(textos(r).some((t) => t === '2 modulos · 3 temas'))
 })
 
 test('el recuento usa singular cuando toca', () => {
-  const una = { ...FASES[1] }
-  const r = componerTemario({ fases: [una], medir })
-  assert.ok(textos(r).some((t) => t === '1 fase · 1 tema'))
+  const una = { ...MODULOS[1] }
+  const r = componerTemario({ modulos: [una], medir })
+  assert.ok(textos(r).some((t) => t === '1 modulo · 1 tema'))
 })
 
-test('cada fase tiene su círculo, con su número y su color', () => {
-  const r = componerTemario({ fases: FASES, medir })
+test('cada módulo tiene su círculo, con su número y su color', () => {
+  const r = componerTemario({ modulos: MODULOS, medir })
   const circulos = r.elementos.filter((e) => e.tipo === 'circulo')
   assert.deepEqual(circulos.map((c) => c.texto), ['1', '2'])
   assert.deepEqual(circulos.map((c) => c.color), ['#0c5fc4', '#0f9d58'])
@@ -101,23 +101,23 @@ test('cada fase tiene su círculo, con su número y su color', () => {
 })
 
 test('nada se sale del lienzo y todo va en orden vertical', () => {
-  const r = componerTemario({ fases: FASES, academia: 'AEP', medir })
+  const r = componerTemario({ modulos: MODULOS, academia: 'AEP', medir })
   const conY = r.elementos.filter((e) => e.tipo === 'texto')
   for (const e of conY) {
     assert.ok(e.y > 0 && e.y < r.alto, `y fuera del lienzo: ${e.texto} (${e.y}/${r.alto})`)
     assert.ok(e.x >= 0 && e.x < r.ancho, `x fuera del lienzo: ${e.texto}`)
   }
   // El alto crece con el contenido, no es fijo.
-  const corto = componerTemario({ fases: [FASES[1]], medir })
+  const corto = componerTemario({ modulos: [MODULOS[1]], medir })
   assert.ok(r.alto > corto.alto, 'más temas debería dar más alto')
 })
 
-test('el eje llega desde la primera fase hasta el último tema', () => {
-  const r = componerTemario({ fases: FASES, medir })
+test('el eje llega desde la primer módulo hasta el último tema', () => {
+  const r = componerTemario({ modulos: MODULOS, medir })
   const eje = r.elementos.find((e) => e.tipo === 'linea')
   const circulos = r.elementos.filter((e) => e.tipo === 'circulo')
   const temas = texto(r, 'tema')
-  assert.ok(eje.y1 <= circulos[0].y, 'debe arrancar en la primera fase o antes')
+  assert.ok(eje.y1 <= circulos[0].y, 'debe arrancar en la primer módulo o antes')
   assert.ok(eje.y2 >= temas[temas.length - 1].y - ESTILOS.tema.alto, 'debe llegar al último tema')
   // Va ANTES que los círculos en la lista, para quedar pintado por debajo.
   assert.ok(r.elementos.indexOf(eje) < r.elementos.indexOf(circulos[0]))
@@ -128,21 +128,21 @@ test('el número del tema aparece UNA vez, aunque el título ocupe varias línea
     id: 'f9', numero: 9, titulo: 'F', color: '#000',
     temas: [{ id: 'tx', numero: '9.1', titulo: 'palabra '.repeat(40).trim() }],
   }
-  const r = componerTemario({ fases: [largo], medir })
+  const r = componerTemario({ modulos: [largo], medir })
   assert.ok(texto(r, 'tema').length > 1, 'el título debería ocupar varias líneas')
   // Repetido en cada línea se leería como temas distintos.
   assert.equal(textos(r).filter((t) => t === '9.1').length, 1)
 })
 
 test('un temario sin nada visible lo DICE, no devuelve una imagen vacía', () => {
-  const r = componerTemario({ fases: FASES, ocultas: { fases: ['f1', 'f2'], temas: [] }, medir })
+  const r = componerTemario({ modulos: MODULOS, ocultas: { modulos: ['f1', 'f2'], temas: [] }, medir })
   assert.ok(textos(r).some((t) => /no tiene ningún tema visible/.test(t)))
   assert.equal(r.elementos.filter((e) => e.tipo === 'circulo').length, 0)
   assert.ok(r.alto > 0)
 })
 
 test('exige la función de medir en vez de inventarse anchos', () => {
-  assert.throws(() => componerTemario({ fases: FASES }), /medir/)
+  assert.throws(() => componerTemario({ modulos: MODULOS }), /medir/)
 })
 
 test('el nombre del archivo es predecible y válido en Windows', () => {

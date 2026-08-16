@@ -2,31 +2,31 @@
 // aislamiento por academia. PURAS (sin Firebase) → corren con `npm test`.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { fases, todosLosTemas, stats } from '../src/data/index.js'
+import { modulos, todosLosTemas, stats } from '../src/data/index.js'
 import {
   SEP, cursoIdDe, temaDocIdEnCurso, temaDocIdEnPlantilla, lotes,
-  estructuraDesdeFases, contenidoTema, plantillaDesdeData, docsClonadosParaAcademia,
+  estructuraDesdeModulos, contenidoTema, plantillaDesdeData, docsClonadosParaAcademia,
 } from '../src/lib/contenidoModelo.js'
 
 const PLANTILLA = 'paramedico-tum'
 const { plantilla, temas } = plantillaDesdeData({
-  id: PLANTILLA, nombre: 'Programa Paramédico (TUM)', fases, todosLosTemas,
+  id: PLANTILLA, nombre: 'Programa Paramédico (TUM)', modulos, todosLosTemas,
 })
 
-test('migración: la plantilla tiene todas las fases y temas del temario', () => {
-  assert.equal(plantilla.estructura.length, stats.fases)
+test('migración: la plantilla tiene todas los módulos y temas del temario', () => {
+  assert.equal(plantilla.estructura.length, stats.modulos)
   assert.equal(temas.length, stats.temas)
 })
 
-test('migración: cada fase migra con un módulo implícito "principal"', () => {
+test('migración: cada módulo migra con una unidad implícito "principal"', () => {
   for (const f of plantilla.estructura) {
-    assert.equal(f.modulos.length, 1)
-    assert.equal(f.modulos[0].id, 'principal')
-    assert.equal(f.modulos[0].implicito, true)
+    assert.equal(f.unidades.length, 1)
+    assert.equal(f.unidades[0].id, 'principal')
+    assert.equal(f.unidades[0].implicito, true)
   }
-  // La suma de temas de todos los módulos = total de temas.
+  // La suma de temas de todos las unidades = total de temas.
   const enEstructura = plantilla.estructura.reduce(
-    (n, f) => n + f.modulos.reduce((m, mod) => m + mod.temas.length, 0), 0
+    (n, f) => n + f.unidades.reduce((m, mod) => m + mod.temas.length, 0), 0
   )
   assert.equal(enEstructura, stats.temas)
 })
@@ -40,9 +40,9 @@ test('migración: doc-id de tema únicos y con prefijo de la plantilla', () => {
   }
 })
 
-test('migración: el contenido NO filtra campos derivados de fase/numero', () => {
+test('migración: el contenido NO filtra campos derivados de módulo/numero', () => {
   for (const t of temas) {
-    for (const prohibido of ['numero', 'faseId', 'faseNumero', 'faseTitulo', 'faseColor']) {
+    for (const prohibido of ['numero', 'moduloId', 'moduloNumero', 'moduloTitulo', 'moduloColor']) {
       assert.equal(prohibido in t, false, `el tema ${t.temaId} filtró ${prohibido}`)
     }
     // Conserva lo esencial del contenido.
@@ -100,11 +100,11 @@ test('lotes: divide correctamente (chunking de writeBatch)', () => {
   assert.equal(lotes([1, 2, 3], 0).length, 3)
 })
 
-test('estructuraDesdeFases / contenidoTema con entradas mínimas', () => {
-  const e = estructuraDesdeFases([{ id: 'f1', titulo: 'F1', temas: [{ id: 't1', titulo: 'T1' }] }])
-  assert.equal(e[0].modulos[0].temas[0].id, 't1')
+test('estructuraDesdeModulos / contenidoTema con entradas mínimas', () => {
+  const e = estructuraDesdeModulos([{ id: 'f1', titulo: 'F1', temas: [{ id: 't1', titulo: 'T1' }] }])
+  assert.equal(e[0].unidades[0].temas[0].id, 't1')
   const c = contenidoTema({ id: 'x', titulo: 'X' })
   assert.deepEqual(c.objetivos, [])
   assert.equal(c.recursos, null)
-  assert.equal('faseId' in c, false)
+  assert.equal('moduloId' in c, false)
 })

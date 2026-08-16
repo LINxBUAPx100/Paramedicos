@@ -2,20 +2,20 @@
 //  Editor estructural — lógica PURA (Fase 3)
 // ------------------------------------------------------------
 //  Sin Firebase, sin React. Todas las operaciones del editor sobre la
-//  ESTRUCTURA de un curso (fases → módulos → temas) viven aquí como
+//  ESTRUCTURA de un curso (módulos → unidades → temas) viven aquí como
 //  funciones inmutables: reciben la estructura, devuelven una NUEVA
 //  (la original jamás se muta). La capa de datos (firebase/editor.js)
 //  las aplica dentro de una transacción con control de versión, y las
 //  pruebas de Node las ejercitan sin tocar Firestore.
 //
 //  Referencia a un nodo (ref):
-//    fase   → { faseId }
-//    módulo → { faseId, moduloId }
-//    tema   → { faseId, moduloId, temaId }
+//    módulo   → { moduloId }
+//    unidad → { moduloId, unidadId }
+//    tema   → { moduloId, unidadId, temaId }
 //
 //  Estados CENTRALIZADOS (no inventar variantes por componente):
 //  borrador | publicado | archivado. El alumno solo recibe 'publicado'
-//  (contenidoApi.ensamblarFases filtra el resto en fase, módulo y tema).
+//  (contenidoApi.ensamblarModulos filtra el resto en módulo, unidad y tema).
 //
 //  Política de ARCHIVADO (documentada también en docs/EDITOR-CONTENIDO.md):
 //  archivar un padre OCULTA toda su rama al alumno (los hijos conservan su
@@ -24,6 +24,7 @@
 // ============================================================
 import { clonProfundo } from './contenidoModelo.js'
 import { normalizarPermisos } from './permisosEditor.js'
+import { validarTipoPrograma } from './programasModelo.js'
 
 export const ESTADOS_NODO = ['borrador', 'publicado', 'archivado']
 
@@ -90,34 +91,34 @@ export function idUnico(titulo, existentes) {
 // ---------- localización dentro de la estructura ----------
 
 export function tipoDeRef(ref) {
-  if (!ref?.faseId) return null
+  if (!ref?.moduloId) return null
   if (ref.temaId) return 'tema'
-  if (ref.moduloId) return 'modulo'
-  return 'fase'
+  if (ref.unidadId) return 'unidad'
+  return 'modulo'
 }
 
 // Encuentra el nodo (y sus padres e índices) que señala una ref.
 // Lanza un error claro si la ref no existe (padre inválido, nodo borrado…).
 export function localizar(estructura, ref) {
-  const iFase = (estructura || []).findIndex((f) => f.id === ref?.faseId)
-  if (iFase < 0) throw new Error(`No existe la fase "${ref?.faseId}" en este curso.`)
-  const fase = estructura[iFase]
-  if (!ref.moduloId) return { tipo: 'fase', fase, iFase }
-  const iModulo = (fase.modulos || []).findIndex((m) => m.id === ref.moduloId)
-  if (iModulo < 0) throw new Error(`No existe el módulo "${ref.moduloId}" en la fase "${fase.titulo}".`)
-  const modulo = fase.modulos[iModulo]
-  if (!ref.temaId) return { tipo: 'modulo', fase, iFase, modulo, iModulo }
-  const iTema = (modulo.temas || []).findIndex((t) => t.id === ref.temaId)
-  if (iTema < 0) throw new Error(`No existe el tema "${ref.temaId}" en el módulo "${modulo.titulo}".`)
-  return { tipo: 'tema', fase, iFase, modulo, iModulo, tema: modulo.temas[iTema], iTema }
+  const iModulo = (estructura || []).findIndex((f) => f.id === ref?.moduloId)
+  if (iModulo < 0) throw new Error(`No existe el módulo "${ref?.moduloId}" en este curso.`)
+  const modulo = estructura[iModulo]
+  if (!ref.unidadId) return { tipo: 'modulo', modulo, iModulo }
+  const iUnidad = (modulo.unidades || []).findIndex((m) => m.id === ref.unidadId)
+  if (iUnidad < 0) throw new Error(`No existe la unidad "${ref.unidadId}" en el módulo "${modulo.titulo}".`)
+  const unidad = modulo.unidades[iUnidad]
+  if (!ref.temaId) return { tipo: 'unidad', modulo, iModulo, unidad, iUnidad }
+  const iTema = (unidad.temas || []).findIndex((t) => t.id === ref.temaId)
+  if (iTema < 0) throw new Error(`No existe el tema "${ref.temaId}" en la unidad "${unidad.titulo}".`)
+  return { tipo: 'tema', modulo, iModulo, unidad, iUnidad, tema: unidad.temas[iTema], iTema }
 }
 
 // Todos los ids de tema usados en el curso (los doc-id de tema se derivan
-// de ellos, así que deben ser únicos a nivel CURSO, no solo por módulo).
+// de ellos, así que deben ser únicos a nivel CURSO, no solo por unidad).
 export function idsDeTemas(estructura) {
   const ids = []
   for (const f of estructura || []) {
-    for (const m of f.modulos || []) {
+    for (const m of f.unidades || []) {
       for (const t of m.temas || []) ids.push(t.id)
     }
   }
@@ -128,19 +129,19 @@ export function idsDeTemas(estructura) {
 // ids únicos por nivel y estados dentro del catálogo.
 export function validarEstructura(estructura) {
   if (!Array.isArray(estructura)) return 'La estructura del curso es inválida.'
-  const fasesVistas = new Set()
+  const modulosVistas = new Set()
   const temasVistos = new Set()
   for (const f of estructura) {
-    if (!f?.id || typeof f.titulo !== 'string') return 'Hay una fase sin id o sin título.'
-    if (fasesVistas.has(f.id)) return `Id de fase duplicado: "${f.id}".`
-    fasesVistas.add(f.id)
-    if (f.estado && !esEstadoValido(f.estado)) return `Estado inválido en la fase "${f.titulo}".`
+    if (!f?.id || typeof f.titulo !== 'string') return 'Hay un módulo sin id o sin título.'
+    if (modulosVistas.has(f.id)) return `Id de módulo duplicado: "${f.id}".`
+    modulosVistas.add(f.id)
+    if (f.estado && !esEstadoValido(f.estado)) return `Estado inválido en el módulo "${f.titulo}".`
     const modVistos = new Set()
-    for (const m of f.modulos || []) {
-      if (!m?.id || typeof m.titulo !== 'string') return `Hay un módulo sin id o sin título en "${f.titulo}".`
-      if (modVistos.has(m.id)) return `Id de módulo duplicado en la fase "${f.titulo}": "${m.id}".`
+    for (const m of f.unidades || []) {
+      if (!m?.id || typeof m.titulo !== 'string') return `Hay una unidad sin id o sin título en "${f.titulo}".`
+      if (modVistos.has(m.id)) return `Id de unidad duplicado en el módulo "${f.titulo}": "${m.id}".`
       modVistos.add(m.id)
-      if (m.estado && !esEstadoValido(m.estado)) return `Estado inválido en el módulo "${m.titulo}".`
+      if (m.estado && !esEstadoValido(m.estado)) return `Estado inválido en la unidad "${m.titulo}".`
       for (const t of m.temas || []) {
         if (!t?.id || typeof t.titulo !== 'string') return `Hay un tema sin id o sin título en "${m.titulo}".`
         if (temasVistos.has(t.id)) return `Id de tema duplicado en el curso: "${t.id}".`
@@ -154,11 +155,11 @@ export function validarEstructura(estructura) {
 
 // ---------- creación ----------
 
-export function crearFase(estructura, { titulo, subtitulo = '', descripcion = '' }) {
+export function crearModulo(estructura, { titulo, subtitulo = '', descripcion = '' }) {
   const error = validarTitulo(titulo)
   if (error) throw new Error(error)
   const nueva = clonProfundo(estructura || [])
-  const fase = {
+  const modulo = {
     id: idUnico(titulo, nueva.map((f) => f.id)),
     titulo: titulo.trim(),
     subtitulo,
@@ -166,40 +167,40 @@ export function crearFase(estructura, { titulo, subtitulo = '', descripcion = ''
     color: '',
     icono: '',
     estado: 'borrador',
-    modulos: [],
+    unidades: [],
   }
-  nueva.push(fase)
-  return { estructura: nueva, nodo: fase, ref: { faseId: fase.id } }
+  nueva.push(modulo)
+  return { estructura: nueva, nodo: modulo, ref: { moduloId: modulo.id } }
 }
 
-export function crearModulo(estructura, { faseId, titulo, descripcion = '' }) {
+export function crearUnidad(estructura, { moduloId, titulo, descripcion = '' }) {
   const error = validarTitulo(titulo)
   if (error) throw new Error(error)
   const nueva = clonProfundo(estructura || [])
-  const { fase } = localizar(nueva, { faseId })
-  if (fase.estado === 'archivado') {
-    throw new Error('No puedes crear módulos dentro de una fase archivada. Restáurala primero.')
+  const { modulo } = localizar(nueva, { moduloId })
+  if (modulo.estado === 'archivado') {
+    throw new Error('No puedes crear unidades dentro de un módulo archivado. Restáuralo primero.')
   }
-  fase.modulos = fase.modulos || []
-  const modulo = {
-    id: idUnico(titulo, fase.modulos.map((m) => m.id)),
+  modulo.unidades = modulo.unidades || []
+  const unidad = {
+    id: idUnico(titulo, modulo.unidades.map((m) => m.id)),
     titulo: titulo.trim(),
     descripcion,
     estado: 'borrador',
     temas: [],
   }
-  fase.modulos.push(modulo)
-  return { estructura: nueva, nodo: modulo, ref: { faseId, moduloId: modulo.id } }
+  modulo.unidades.push(unidad)
+  return { estructura: nueva, nodo: unidad, ref: { moduloId, unidadId: unidad.id } }
 }
 
 // Crea la ENTRADA del tema en la estructura; el doc de contenido lo crea la
 // capa de datos (mismo id) dentro de la misma transacción.
-export function crearTema(estructura, { faseId, moduloId, titulo }) {
+export function crearTema(estructura, { moduloId, unidadId, titulo }) {
   const error = validarTitulo(titulo)
   if (error) throw new Error(error)
   const nueva = clonProfundo(estructura || [])
-  const { fase, modulo } = localizar(nueva, { faseId, moduloId })
-  if (fase.estado === 'archivado' || modulo.estado === 'archivado') {
+  const { modulo, unidad } = localizar(nueva, { moduloId, unidadId })
+  if (modulo.estado === 'archivado' || unidad.estado === 'archivado') {
     throw new Error('No puedes crear temas dentro de un elemento archivado. Restáuralo primero.')
   }
   const tema = {
@@ -207,16 +208,16 @@ export function crearTema(estructura, { faseId, moduloId, titulo }) {
     titulo: titulo.trim(),
     estado: 'borrador',
   }
-  modulo.temas = modulo.temas || []
-  modulo.temas.push(tema)
-  return { estructura: nueva, nodo: tema, ref: { faseId, moduloId, temaId: tema.id } }
+  unidad.temas = unidad.temas || []
+  unidad.temas.push(tema)
+  return { estructura: nueva, nodo: tema, ref: { moduloId, unidadId, temaId: tema.id } }
 }
 
 // ---------- edición de campos ----------
 
 const CAMPOS_EDITABLES = {
-  fase: ['titulo', 'subtitulo', 'descripcion', 'color', 'icono'],
-  modulo: ['titulo', 'descripcion'],
+  modulo: ['titulo', 'subtitulo', 'descripcion', 'color', 'icono'],
+  unidad: ['titulo', 'descripcion'],
   tema: ['titulo'], // el resumen/las secciones viven en el DOC del tema
 }
 
@@ -238,7 +239,7 @@ export function actualizarNodo(estructura, ref, campos) {
   }
   const nueva = clonProfundo(estructura)
   const loc = localizar(nueva, ref)
-  const nodo = loc.tema || loc.modulo || loc.fase
+  const nodo = loc.tema || loc.unidad || loc.modulo
   for (const [clave, valor] of Object.entries(campos || {})) {
     nodo[clave] = clave === 'titulo' ? valor.trim() : valor
   }
@@ -256,10 +257,10 @@ function moverEnArray(lista, desde, hasta) {
 export function reordenarNodo(estructura, ref, movimiento) {
   const nueva = clonProfundo(estructura)
   const loc = localizar(nueva, ref)
-  const lista = loc.tipo === 'fase' ? nueva
-    : loc.tipo === 'modulo' ? loc.fase.modulos
-    : loc.modulo.temas
-  const desde = loc.tipo === 'fase' ? loc.iFase : loc.tipo === 'modulo' ? loc.iModulo : loc.iTema
+  const lista = loc.tipo === 'modulo' ? nueva
+    : loc.tipo === 'unidad' ? loc.modulo.unidades
+    : loc.unidad.temas
+  const desde = loc.tipo === 'modulo' ? loc.iModulo : loc.tipo === 'unidad' ? loc.iUnidad : loc.iTema
   let hasta
   if (movimiento === 'arriba') hasta = desde - 1
   else if (movimiento === 'abajo') hasta = desde + 1
@@ -276,43 +277,43 @@ export function reordenarNodo(estructura, ref, movimiento) {
 
 // ---------- mover entre padres ----------
 
-// Módulo → otra fase del MISMO curso; tema → otro módulo del MISMO curso.
+// Unidad → otro módulo del MISMO curso; tema → otra unidad del MISMO curso.
 export function moverNodo(estructura, ref, destino) {
   const tipo = tipoDeRef(ref)
   const nueva = clonProfundo(estructura)
-  if (tipo === 'modulo') {
+  if (tipo === 'unidad') {
     const origen = localizar(nueva, ref)
-    const { fase: faseDestino } = localizar(nueva, { faseId: destino?.faseId })
-    if (faseDestino.estado === 'archivado') {
-      throw new Error('No puedes mover elementos a una fase archivada.')
+    const { modulo: moduloDestino } = localizar(nueva, { moduloId: destino?.moduloId })
+    if (moduloDestino.estado === 'archivado') {
+      throw new Error('No puedes mover elementos a un módulo archivado.')
     }
-    if (faseDestino.id === origen.fase.id) {
-      throw new Error('El módulo ya está en esa fase.')
+    if (moduloDestino.id === origen.modulo.id) {
+      throw new Error('La unidad ya está en esa modulo.')
     }
-    if ((faseDestino.modulos || []).some((m) => m.id === ref.moduloId)) {
-      throw new Error('La fase destino ya tiene un módulo con ese id.')
+    if ((moduloDestino.unidades || []).some((m) => m.id === ref.unidadId)) {
+      throw new Error('El módulo destino ya tiene una unidad con ese id.')
     }
-    const [modulo] = origen.fase.modulos.splice(origen.iModulo, 1)
-    faseDestino.modulos = faseDestino.modulos || []
-    faseDestino.modulos.push(modulo)
-    return { estructura: nueva, ref: { faseId: faseDestino.id, moduloId: modulo.id } }
+    const [unidad] = origen.modulo.unidades.splice(origen.iUnidad, 1)
+    moduloDestino.unidades = moduloDestino.unidades || []
+    moduloDestino.unidades.push(unidad)
+    return { estructura: nueva, ref: { moduloId: moduloDestino.id, unidadId: unidad.id } }
   }
   if (tipo === 'tema') {
     const origen = localizar(nueva, ref)
-    const { fase: faseDestino, modulo: moduloDestino } =
-      localizar(nueva, { faseId: destino?.faseId, moduloId: destino?.moduloId })
-    if (faseDestino.estado === 'archivado' || moduloDestino.estado === 'archivado') {
+    const { modulo: moduloDestino, unidad: unidadDestino } =
+      localizar(nueva, { moduloId: destino?.moduloId, unidadId: destino?.unidadId })
+    if (moduloDestino.estado === 'archivado' || unidadDestino.estado === 'archivado') {
       throw new Error('No puedes mover elementos a un destino archivado.')
     }
-    if (moduloDestino === origen.modulo) {
-      throw new Error('El tema ya está en ese módulo.')
+    if (unidadDestino === origen.unidad) {
+      throw new Error('El tema ya está en ese unidad.')
     }
-    const [tema] = origen.modulo.temas.splice(origen.iTema, 1)
-    moduloDestino.temas = moduloDestino.temas || []
-    moduloDestino.temas.push(tema)
-    return { estructura: nueva, ref: { faseId: faseDestino.id, moduloId: moduloDestino.id, temaId: tema.id } }
+    const [tema] = origen.unidad.temas.splice(origen.iTema, 1)
+    unidadDestino.temas = unidadDestino.temas || []
+    unidadDestino.temas.push(tema)
+    return { estructura: nueva, ref: { moduloId: moduloDestino.id, unidadId: unidadDestino.id, temaId: tema.id } }
   }
-  throw new Error('Las fases no se mueven entre padres: usa el reordenamiento.')
+  throw new Error('Los módulos no se mueven entre padres: usa el reordenamiento.')
 }
 
 // ---------- duplicación ----------
@@ -337,33 +338,33 @@ export function duplicarNodo(estructura, ref) {
   if (tipo === 'tema') {
     const copia = duplicarTemaEntrada(loc.tema)
     copia.titulo = `Copia de ${loc.tema.titulo}`
-    loc.modulo.temas.splice(loc.iTema + 1, 0, copia)
+    loc.unidad.temas.splice(loc.iTema + 1, 0, copia)
     return {
       estructura: nueva, mapeoTemas,
-      ref: { faseId: ref.faseId, moduloId: ref.moduloId, temaId: copia.id },
+      ref: { moduloId: ref.moduloId, unidadId: ref.unidadId, temaId: copia.id },
     }
   }
-  if (tipo === 'modulo') {
-    const copia = clonProfundo(loc.modulo)
-    copia.id = idUnico(`${loc.modulo.titulo} copia`, loc.fase.modulos.map((m) => m.id))
-    copia.titulo = `Copia de ${loc.modulo.titulo}`
+  if (tipo === 'unidad') {
+    const copia = clonProfundo(loc.unidad)
+    copia.id = idUnico(`${loc.unidad.titulo} copia`, loc.modulo.unidades.map((m) => m.id))
+    copia.titulo = `Copia de ${loc.unidad.titulo}`
     copia.estado = 'borrador'
     delete copia.implicito
     copia.temas = (copia.temas || []).map(duplicarTemaEntrada)
-    loc.fase.modulos.splice(loc.iModulo + 1, 0, copia)
-    return { estructura: nueva, mapeoTemas, ref: { faseId: ref.faseId, moduloId: copia.id } }
+    loc.modulo.unidades.splice(loc.iUnidad + 1, 0, copia)
+    return { estructura: nueva, mapeoTemas, ref: { moduloId: ref.moduloId, unidadId: copia.id } }
   }
-  // fase
-  const copia = clonProfundo(loc.fase)
-  copia.id = idUnico(`${loc.fase.titulo} copia`, nueva.map((f) => f.id))
-  copia.titulo = `Copia de ${loc.fase.titulo}`
+  // módulo
+  const copia = clonProfundo(loc.modulo)
+  copia.id = idUnico(`${loc.modulo.titulo} copia`, nueva.map((f) => f.id))
+  copia.titulo = `Copia de ${loc.modulo.titulo}`
   copia.estado = 'borrador'
-  copia.modulos = (copia.modulos || []).map((m) => ({
+  copia.unidades = (copia.unidades || []).map((m) => ({
     ...m,
     temas: (m.temas || []).map(duplicarTemaEntrada),
   }))
-  nueva.splice(loc.iFase + 1, 0, copia)
-  return { estructura: nueva, mapeoTemas, ref: { faseId: copia.id } }
+  nueva.splice(loc.iModulo + 1, 0, copia)
+  return { estructura: nueva, mapeoTemas, ref: { moduloId: copia.id } }
 }
 
 // ---------- archivado / restauración / publicación ----------
@@ -374,8 +375,8 @@ export function contarDescendientesActivos(estructura, ref) {
   const loc = localizar(estructura, ref)
   const contarTemas = (m) => (m.temas || []).filter((t) => t.estado !== 'archivado').length
   if (loc.tipo === 'tema') return 0
-  if (loc.tipo === 'modulo') return contarTemas(loc.modulo)
-  return (loc.fase.modulos || []).reduce(
+  if (loc.tipo === 'unidad') return contarTemas(loc.unidad)
+  return (loc.modulo.unidades || []).reduce(
     (n, m) => n + (m.estado !== 'archivado' ? 1 + contarTemas(m) : 0), 0
   )
 }
@@ -383,7 +384,7 @@ export function contarDescendientesActivos(estructura, ref) {
 function cambiarEstado(estructura, ref, estado) {
   const nueva = clonProfundo(estructura)
   const loc = localizar(nueva, ref)
-  const nodo = loc.tema || loc.modulo || loc.fase
+  const nodo = loc.tema || loc.unidad || loc.modulo
   nodo.estado = estado
   return { estructura: nueva, nodo }
 }
@@ -396,37 +397,37 @@ export function archivarNodo(estructura, ref) {
 
 export function restaurarNodo(estructura, ref) {
   const loc = localizar(estructura, ref)
-  const nodo = loc.tema || loc.modulo || loc.fase
+  const nodo = loc.tema || loc.unidad || loc.modulo
   if (nodo.estado !== 'archivado') throw new Error('Ese elemento no está archivado.')
   return cambiarEstado(estructura, ref, 'borrador')
 }
 
 export function despublicarNodo(estructura, ref) {
   const loc = localizar(estructura, ref)
-  const nodo = loc.tema || loc.modulo || loc.fase
+  const nodo = loc.tema || loc.unidad || loc.modulo
   if (nodo.estado !== 'publicado') throw new Error('Ese elemento no está publicado.')
   return cambiarEstado(estructura, ref, 'borrador')
 }
 
 // Publicar exige: título válido, nodo no archivado (primero se restaura) y
-// NINGÚN ancestro archivado (no se publica un tema cuya fase/módulo esté
+// NINGÚN ancestro archivado (no se publica un tema cuya modulo/unidad esté
 // archivado). `cursoEstado` permite bloquear también con el curso archivado.
 export function publicarNodo(estructura, ref, { cursoEstado = 'publicado' } = {}) {
   if (cursoEstado === 'archivado') {
     throw new Error('El curso está archivado: restáuralo antes de publicar contenido.')
   }
   const loc = localizar(estructura, ref)
-  const nodo = loc.tema || loc.modulo || loc.fase
+  const nodo = loc.tema || loc.unidad || loc.modulo
   const error = validarTitulo(nodo.titulo)
   if (error) throw new Error(`No se puede publicar: ${error}`)
   if (nodo.estado === 'archivado') {
     throw new Error('Ese elemento está archivado: restáuralo antes de publicarlo.')
   }
-  if (loc.tipo !== 'fase' && loc.fase.estado === 'archivado') {
-    throw new Error(`La fase "${loc.fase.titulo}" está archivada: restáurala antes de publicar su contenido.`)
+  if (loc.tipo !== 'modulo' && loc.modulo.estado === 'archivado') {
+    throw new Error(`El módulo "${loc.modulo.titulo}" está archivado: restáuralo antes de publicar su contenido.`)
   }
-  if (loc.tipo === 'tema' && loc.modulo.estado === 'archivado') {
-    throw new Error(`El módulo "${loc.modulo.titulo}" está archivado: restáuralo antes de publicar sus temas.`)
+  if (loc.tipo === 'tema' && loc.unidad.estado === 'archivado') {
+    throw new Error(`La unidad "${loc.unidad.titulo}" está archivada: restáurala antes de publicar sus temas.`)
   }
   return cambiarEstado(estructura, ref, 'publicado')
 }
@@ -434,9 +435,11 @@ export function publicarNodo(estructura, ref, { cursoEstado = 'publicado' } = {}
 // ---------- cursos (docs completos; la capa de datos solo los escribe) ----------
 
 // Doc de un curso NUEVO creado desde cero en el editor (sin plantilla).
-export function nuevoCurso({ academiaId, titulo, descripcion = '', cursosExistentes = [], uid = null, maxCursos = null }) {
+export function nuevoCurso({ academiaId, titulo, descripcion = '', tipoPrograma = 'tum', cursosExistentes = [], uid = null, maxCursos = null }) {
   const error = validarTitulo(titulo)
   if (error) throw new Error(error)
+  const errorTipo = validarTipoPrograma(tipoPrograma)
+  if (errorTipo) throw new Error(errorTipo)
   const errorDesc = validarDescripcion(descripcion)
   if (errorDesc) throw new Error(errorDesc)
   const activos = cursosExistentes.filter((c) => c.estado !== 'archivado')
@@ -456,6 +459,7 @@ export function nuevoCurso({ academiaId, titulo, descripcion = '', cursosExisten
     titulo: titulo.trim(),
     descripcion,
     tipoDestino: 'basico',
+    tipoPrograma,
     estado: 'borrador',
     orden,
     estructura: [],
@@ -474,6 +478,7 @@ export function duplicadoDeCurso({ curso, temasDocs = [], cursosExistentes = [],
     academiaId: curso.academiaId,
     titulo,
     descripcion: curso.descripcion || '',
+    tipoPrograma: curso.tipoPrograma || 'tum',
     cursosExistentes,
     uid,
     maxCursos,
@@ -481,11 +486,12 @@ export function duplicadoDeCurso({ curso, temasDocs = [], cursosExistentes = [],
   const nuevoCursoDoc = {
     ...base,
     tipoDestino: curso.tipoDestino || 'basico',
+    tipoPrograma: curso.tipoPrograma || 'tum',
     // El duplicado registra su origen y quién lo hizo; nace en borrador.
     duplicadoDe: curso.id,
     estructura: clonProfundo(curso.estructura || []),
   }
-  // Los ids internos (fase/módulo/tema) se CONSERVAN: viven en el namespace
+  // Los ids internos (modulo/unidad/tema) se CONSERVAN: viven en el namespace
   // del curso nuevo, así que no colisionan y el progreso no se ve afectado
   // (el progreso apunta a los temas del curso original, no al duplicado).
   const temasNuevos = temasDocs.map((t) => {

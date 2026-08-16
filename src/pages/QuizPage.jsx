@@ -39,16 +39,16 @@ export default function QuizPage() {
         <span className="acceso-ico"><Icon name="candado" size={30} /></span>
         <h1>Quiz no disponible</h1>
         <p>Tu profesor todavía no libera este tema para tu grupo. Vuelve más adelante.</p>
-        <Link to={`/fase/${tema.faseId}`} className="btn btn--pildora btn--carbon">Volver a la fase</Link>
+        <Link to={`/modulo/${tema.moduloId}`} className="btn btn--pildora btn--carbon">Volver al módulo</Link>
       </div>
     )
   }
 
   return (
-    <div className="quiz-page" style={{ '--fase-color': tema.faseColor }}>
+    <div className="quiz-page" style={{ '--modulo-color': tema.moduloColor }}>
       <nav className="migas">
         <Link to="/">Inicio</Link> <span>/</span>{' '}
-        <Link to={`/fase/${tema.faseId}`}>Fase {tema.faseNumero}</Link> <span>/</span>{' '}
+        <Link to={`/modulo/${tema.moduloId}`}>Modulo {tema.moduloNumero}</Link> <span>/</span>{' '}
         <Link to={`/tema/${temaId}`}>{tema.numero}</Link> <span>/</span> Quiz
       </nav>
 

@@ -5,47 +5,47 @@ import { useVisibilidad } from '../lib/useVisibilidad.js'
 import NotFound from './NotFound.jsx'
 import Icon from '../components/Icon.jsx'
 
-export default function FasePage() {
-  const { faseId } = useParams()
+export default function ModuloPage() {
+  const { moduloId } = useParams()
   const { contenido, error, reintentar } = useContenido()
-  const fase = contenido?.getFase(faseId)
+  const modulo = contenido?.getModulo(moduloId)
   const { estado } = useProgress()
-  const { faseVisible, temaVisible } = useVisibilidad()
+  const { moduloVisible, temaVisible } = useVisibilidad()
 
   if (error) return <ErrorContenido onReintentar={reintentar} />
-  if (!contenido) return <CargandoContenido variante="fase" />
-  if (!fase) return <NotFound />
+  if (!contenido) return <CargandoContenido variante="modulo" />
+  if (!modulo) return <NotFound />
 
-  // Fase oculta para el grupo del alumno: aún no disponible.
-  if (!faseVisible(fase.id)) {
+  // Módulo oculta para el grupo del alumno: aún no disponible.
+  if (!moduloVisible(modulo.id)) {
     return (
       <div className="acceso-restringido" role="alert">
         <span className="acceso-ico"><Icon name="candado" size={30} /></span>
         <h1>Módulo aún no disponible</h1>
-        <p>Tu profesor todavía no libera esta fase para tu grupo. Vuelve más adelante.</p>
+        <p>Tu profesor todavía no libera este módulo para tu grupo. Vuelve más adelante.</p>
         <Link to="/" className="btn btn--pildora btn--carbon">Volver al inicio</Link>
       </div>
     )
   }
 
-  const temas = fase.temas.filter((t) => temaVisible(t.id))
+  const temas = modulo.temas.filter((t) => temaVisible(t.id))
 
   return (
-    <div className="fase-page" style={{ '--fase-color': fase.color }}>
+    <div className="modulo-page" style={{ '--modulo-color': modulo.color }}>
       <nav className="migas">
-        <Link to="/">Inicio</Link> <span>/</span> Fase {fase.numero}
+        <Link to="/">Inicio</Link> <span>/</span> Modulo {modulo.numero}
       </nav>
 
-      <header className="fase-header">
-        <span className="fase-header-ico">{fase.icono}</span>
+      <header className="modulo-header">
+        <span className="modulo-header-ico">{modulo.icono}</span>
         <div>
-          <span className="fase-header-num">Fase {fase.numero}</span>
-          <h1>{fase.titulo}</h1>
-          <p className="fase-header-sub">{fase.subtitulo}</p>
+          <span className="modulo-header-num">Modulo {modulo.numero}</span>
+          <h1>{modulo.titulo}</h1>
+          <p className="modulo-header-sub">{modulo.subtitulo}</p>
         </div>
       </header>
 
-      <p className="fase-desc">{fase.descripcion}</p>
+      <p className="modulo-desc">{modulo.descripcion}</p>
 
       <div className="temas-lista">
         {temas.map((tema) => {
@@ -78,13 +78,13 @@ export default function FasePage() {
         })}
       </div>
 
-      <section className="fase-examen-cta">
-        <div className="fase-examen-txt">
-          <h2><Icon name="examen" size={22} /> Examen de la Fase {fase.numero}</h2>
-          <p>Pon a prueba todo lo visto en esta fase. Tu resultado se guarda como intento para seguir tu avance.</p>
+      <section className="modulo-examen-cta">
+        <div className="modulo-examen-txt">
+          <h2><Icon name="examen" size={22} /> Examen del Módulo {modulo.numero}</h2>
+          <p>Pon a prueba todo lo visto en este módulo. Tu resultado se guarda como intento para seguir tu avance.</p>
         </div>
-        <Link to={`/fase/${fase.id}/examen`} className="btn btn--primario btn--lg">
-          Presentar examen de fase
+        <Link to={`/modulo/${modulo.id}/examen`} className="btn btn--primario btn--lg">
+          Presentar examen de módulo
         </Link>
       </section>
     </div>

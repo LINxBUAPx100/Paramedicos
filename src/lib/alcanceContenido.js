@@ -3,7 +3,7 @@
 // ------------------------------------------------------------
 //  Un profesor crea contenido PARA SU GRUPO; un director, para toda su
 //  academia. Pero el contenido vive en la academia, no en el grupo: los grupos
-//  solo deciden QUÉ VEN sus alumnos (`grupos/{id}.fasesOcultas` y
+//  solo deciden QUÉ VEN sus alumnos (`grupos/{id}.modulosOcultos` y
 //  `.temasOcultos`). No hace falta contenido separado por grupo para conseguir
 //  lo que se pide, y separarlo de verdad costaría campo nuevo, reglas nuevas y
 //  consultas nuevas, fragmentaría el temario y complicaría la replicación — a
@@ -18,11 +18,11 @@
 //  Sin React y sin Firebase: se prueba con `npm test`.
 // ============================================================
 
-// Qué campo del grupo gobierna cada tipo de nodo. Un MÓDULO no está aquí a
-// propósito: la visibilidad por grupo no lo contempla, se decide tema a tema.
-// Por eso tampoco se le puede prometer a nadie que «su módulo solo lo ve su
+// Qué campo del grupo gobierna cada tipo de nodo. Una UNIDAD no está aquí a
+// propósito: la visibilidad por grupo no la contempla, se decide tema a tema.
+// Por eso tampoco se le puede prometer a nadie que «su unidad solo la ve su
 // grupo» — lo que se acota son los temas que se cuelguen dentro.
-const CAMPO = { tema: 'temasOcultos', fase: 'fasesOcultas' }
+const CAMPO = { tema: 'temasOcultos', modulo: 'modulosOcultos' }
 
 // ¿Se puede acotar este tipo de nodo a un grupo? Lo consulta quien avisa al
 // usuario, para no afirmar un alcance que no se ha aplicado.

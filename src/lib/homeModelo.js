@@ -36,9 +36,9 @@ export const SECCIONES_HOME = [
     descripcion: 'Barra con los temas leídos del alumno (solo aparece si ya empezó).',
   },
   {
-    id: 'fases',
-    etiqueta: 'Carrusel de fases',
-    descripcion: 'El recorrido del temario, fase por fase.',
+    id: 'modulos',
+    etiqueta: 'Carrusel de modulos',
+    descripcion: 'El recorrido del temario, modulo por módulo.',
   },
   {
     id: 'prueba',

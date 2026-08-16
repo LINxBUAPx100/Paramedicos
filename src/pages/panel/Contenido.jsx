@@ -92,7 +92,7 @@ export default function PanelContenido() {
               <li key={c.id} className={`pc-item ${c.estado === 'publicado' ? 'activo' : 'inactivo'}`}>
                 <strong className="pg-nombre">{c.titulo || c.id}</strong>
                 <span className="pc-detalle">
-                  {(c.estructura?.fases?.length ?? 0)} fase(s)
+                  {(c.estructura?.modulos?.length ?? 0)} modulo(s)
                   {c.version ? ` · versión ${c.version}` : ''}
                 </span>
                 <span className={`pc-estado ${c.estado === 'publicado' ? 'activo' : 'inactivo'}`}>

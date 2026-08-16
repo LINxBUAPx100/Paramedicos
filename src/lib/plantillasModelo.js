@@ -50,14 +50,14 @@ export function temaVersionDocId(plantillaId, version, temaId) {
 // ---------- Metadatos ----------
 
 export function conteosDeEstructura(estructura) {
-  const fases = (estructura || []).length
-  let modulos = 0
+  const modulos = (estructura || []).length
+  let unidades = 0
   let temas = 0
   for (const f of estructura || []) {
-    modulos += (f.modulos || []).length
-    for (const m of f.modulos || []) temas += (m.temas || []).length
+    unidades += (f.unidades || []).length
+    for (const m of f.unidades || []) temas += (m.temas || []).length
   }
-  return { cursos: 1, fases, modulos, temas }
+  return { cursos: 1, modulos, unidades, temas }
 }
 
 // Normaliza los metadatos editables de una plantilla (solo claves conocidas).

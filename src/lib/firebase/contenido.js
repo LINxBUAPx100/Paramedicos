@@ -20,10 +20,11 @@ import {
   cursoIdDe, lotes, cursoDesdePlantilla, docsClonadosParaAcademia,
 } from '../contenidoModelo.js'
 import {
-  academiaMigrada, ensamblarFases, construirApi,
-  indiceDesdeEstructura, indiceDesdeFases,
+  academiaMigrada, ensamblarModulos, construirApi,
+  indiceDesdeEstructura, indiceDesdeModulos,
 } from '../contenidoApi.js'
 import { huellaTema } from '../replicacionModelo.js'
+import { programasVisibles, programasDeGrupo } from '../programasModelo.js'
 import { obtenerPlantilla, temasDePlantilla } from './plantillas.js'
 
 // --- Estado de migración de la academia (academias/{id}.contenido) ---------
@@ -161,7 +162,7 @@ export async function verificarClonacion({ academiaId, plantillaId }) {
   if (!cursoSnap.exists()) return { existe: false, completa: false, faltantes: [] }
   const curso = cursoSnap.data()
   const esperados = (curso.estructura || []).flatMap((f) =>
-    (f.modulos || []).flatMap((m) => (m.temas || []).map((t) => t.id))
+    (f.unidades || []).flatMap((m) => (m.temas || []).map((t) => t.id))
   )
   const snap = await getDocs(query(collection(db, 'temas'), where('cursoId', '==', cursoId)))
   const presentes = new Set(snap.docs.map((d) => d.data().temaId))
@@ -216,10 +217,37 @@ export async function temaDeCurso(cursoId, temaId) {
 }
 
 // --- RESOLUTOR ------------------------------------------------------------
-// Caché por academiaId: nunca se mezclan resultados entre academias (cada
-// entrada del Map es de UNA academia; legacy tiene su propia entrada aparte).
+// Caché por academia Y POR ALCANCE DE PROGRAMAS: dos personas de la misma
+// academia en grupos distintos reciben contenido DISTINTO (un alumno de
+// Enfermería no ve TUM), así que la clave no puede ser solo el academiaId.
+// Si lo fuera, el primero en cargar dejaría su temario en caché para el resto.
 const cacheContenido = new Map()
 const CLAVE_LEGACY = '__legacy__'
+
+// Alcance normalizado de una persona: qué programas puede ver.
+//  - staff/superadmin → '*' (todos los de su academia)
+//  - alumno           → sus programas ordenados (clave estable)
+function claveAlcance(acceso) {
+  if (!acceso) return '*'
+  const { rol, esSuperadmin } = acceso
+  if (esSuperadmin || rol === 'instructor' || rol === 'admin_escuela') return '*'
+  const ids = programasDeGrupo(acceso.grupo)
+  return ids.length ? [...ids].sort().join(',') : '∅'
+}
+
+const claveContenido = (academiaId, acceso) => `${academiaId}||${claveAlcance(acceso)}`
+
+// Cursos de la academia que ESTA persona puede ver. Es el filtro de
+// aislamiento por programa en el cliente; la barrera real son las reglas
+// (firestore.rules), esto solo evita pedir lo que se va a rechazar.
+function cursosPermitidos(cursos, acceso) {
+  if (!acceso) return cursos
+  return programasVisibles(cursos, {
+    rol: acceso.rol,
+    esSuperadmin: acceso.esSuperadmin,
+    grupo: acceso.grupo,
+  })
+}
 
 function contenidoLegacy() {
   if (!cacheContenido.has(CLAVE_LEGACY)) {
@@ -231,10 +259,17 @@ function contenidoLegacy() {
   return cacheContenido.get(CLAVE_LEGACY)
 }
 
-async function cargarDeFirestore(academiaId) {
-  const cursos = await cursosDeAcademia(academiaId)
-  if (!cursos.length) throw new Error(`La academia ${academiaId} no tiene cursos publicados.`)
-  const curso = cursos[0] // multi-curso real llega con el editor (Fase 4)
+async function cargarDeFirestore(academiaId, acceso) {
+  const todos = await cursosDeAcademia(academiaId)
+  if (!todos.length) throw new Error(`La academia ${academiaId} no tiene cursos publicados.`)
+  const cursos = cursosPermitidos(todos, acceso)
+  if (!cursos.length) {
+    // NO es un error de datos: es el aislamiento funcionando. Cae a legacy
+    // igual que cualquier otro fallo del resolutor, pero la ruta protegida
+    // ya habrá bloqueado antes a quien no tiene programa (programasModelo).
+    throw new Error(`Sin programas visibles en ${academiaId} para este usuario.`)
+  }
+  const curso = cursos[0] // multi-programa real: el primero de SU alcance
   if (!curso.clonacion?.completa) {
     throw new Error(`El curso ${curso.id} tiene una clonación incompleta.`)
   }
@@ -242,15 +277,15 @@ async function cargarDeFirestore(academiaId) {
   // lectura se apoya en ese campo (ver el comentario de temasDeCurso).
   const temas = await temasDeCurso(curso.id, { academiaId })
   const temasPorId = new Map(temas.map((t) => [t.temaId, t]))
-  const { fases, faltantes } = ensamblarFases(curso.estructura, temasPorId)
+  const { modulos, faltantes } = ensamblarModulos(curso.estructura, temasPorId)
   if (faltantes.length) {
     throw new Error(`Faltan ${faltantes.length} temas del curso ${curso.id}: ${faltantes.slice(0, 5).join(', ')}…`)
   }
-  const api = construirApi(fases)
+  const api = construirApi(modulos)
   return {
     ...api,
     // Índice ligero EXACTO del contenido cargado (para el shell/nav).
-    indice: { ...indiceDesdeFases(api.fases), stats: api.stats, fuente: 'firestore' },
+    indice: { ...indiceDesdeModulos(api.modulos), stats: api.stats, fuente: 'firestore' },
     fuente: 'firestore',
     academiaId,
     cursoId: curso.id,
@@ -264,20 +299,23 @@ async function cargarDeFirestore(academiaId) {
 //  - Cualquier otro caso → bundle legacy (src/data) sin tocar Firestore.
 //  - Si la carga de Firestore falla (parcial, permisos, red) → fallback a
 //    legacy y se limpia la caché para poder reintentar después.
-export async function contenidoDeAcademia(academia) {
+//  `acceso` = { rol, esSuperadmin, grupo } de quien pide. Determina QUÉ
+//  programas ve (aislamiento por programa) y forma parte de la clave de caché.
+export async function contenidoDeAcademia(academia, acceso = null) {
   const academiaId = academia?.id
   if (!academiaId || !academiaMigrada(academia)) return contenidoLegacy()
-  if (!cacheContenido.has(academiaId)) {
+  const clave = claveContenido(academiaId, acceso)
+  if (!cacheContenido.has(clave)) {
     cacheContenido.set(
-      academiaId,
-      cargarDeFirestore(academiaId).catch((err) => {
+      clave,
+      cargarDeFirestore(academiaId, acceso).catch((err) => {
         console.warn(`[contenido] Fallback a legacy para ${academiaId}:`, err?.message || err)
-        cacheContenido.delete(academiaId)
+        cacheContenido.delete(clave)
         return contenidoLegacy()
       })
     )
   }
-  return cacheContenido.get(academiaId)
+  return cacheContenido.get(clave)
 }
 
 // --- Índice ligero por academia (para el shell: nav, home, temario, panel) --
@@ -285,16 +323,21 @@ export async function contenidoDeAcademia(academia) {
 // src/data/navIndice.js. Caché por academiaId, separada del contenido pesado.
 const cacheIndices = new Map()
 
-export async function indiceDeAcademia(academia) {
+export async function indiceDeAcademia(academia, acceso = null) {
   const academiaId = academia?.id
   // Sin academia o sin migrar: el shell sigue usando el índice del bundle.
   if (!academiaId || !academiaMigrada(academia)) return null
-  if (!cacheIndices.has(academiaId)) {
+  const clave = claveContenido(academiaId, acceso)
+  if (!cacheIndices.has(clave)) {
     cacheIndices.set(
-      academiaId,
+      clave,
       (async () => {
-        const cursos = await cursosDeAcademia(academiaId)
-        if (!cursos.length) throw new Error(`La academia ${academiaId} no tiene cursos publicados.`)
+        const todos = await cursosDeAcademia(academiaId)
+        if (!todos.length) throw new Error(`La academia ${academiaId} no tiene cursos publicados.`)
+        // MISMO filtro que el contenido completo: si el nav mostrara módulos
+        // de un programa ajeno, el alumno vería títulos que no puede abrir.
+        const cursos = cursosPermitidos(todos, acceso)
+        if (!cursos.length) throw new Error(`Sin programas visibles en ${academiaId} para este usuario.`)
         const curso = cursos[0] // mismo criterio que el resolutor de contenido
         if (!curso.clonacion?.completa) throw new Error(`El curso ${curso.id} tiene una clonación incompleta.`)
         return {
@@ -305,12 +348,12 @@ export async function indiceDeAcademia(academia) {
         }
       })().catch((err) => {
         console.warn(`[contenido] Índice legacy para ${academiaId}:`, err?.message || err)
-        cacheIndices.delete(academiaId)
+        cacheIndices.delete(clave)
         return null
       })
     )
   }
-  return cacheIndices.get(academiaId)
+  return cacheIndices.get(clave)
 }
 
 // Variante por ID (superadmin gestionando OTRA academia): baja su doc para
@@ -319,14 +362,24 @@ export async function indicePorAcademiaId(academiaId) {
   if (!academiaId) return null
   const snap = await getDoc(doc(db, 'academias', academiaId))
   if (!snap.exists()) return null
-  return indiceDeAcademia({ id: snap.id, ...snap.data() })
+  // Solo la usa el super-admin desde /admin y /temario: ve la academia entera,
+  // sin filtro de programa (es quien la gestiona, no quien la cursa).
+  return indiceDeAcademia({ id: snap.id, ...snap.data() }, { esSuperadmin: true })
 }
 
 // Limpia la caché (logout, cambio de academia, después de clonar/editar).
+// Las claves son `${academiaId}||${alcance}`, así que limpiar UNA academia es
+// borrar TODAS sus entradas: si solo se borrara la clave exacta, quedarían
+// vivos los alcances de otros grupos con la estructura vieja.
 export function limpiarCacheContenido(academiaId) {
   if (academiaId) {
-    cacheContenido.delete(academiaId)
-    cacheIndices.delete(academiaId)
+    const prefijo = `${academiaId}||`
+    for (const clave of [...cacheContenido.keys()]) {
+      if (clave.startsWith(prefijo)) cacheContenido.delete(clave)
+    }
+    for (const clave of [...cacheIndices.keys()]) {
+      if (clave.startsWith(prefijo)) cacheIndices.delete(clave)
+    }
   } else {
     cacheContenido.clear()
     cacheIndices.clear()

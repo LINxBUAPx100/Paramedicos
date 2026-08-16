@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { mensajeError } from '../../lib/panelModelo.js'
+import { metaDePrograma } from '../../lib/programasModelo.js'
 import Icon from '../Icon.jsx'
 import CompartirCodigo from '../CompartirCodigo.jsx'
 import ConfirmacionReforzada from '../ConfirmacionReforzada.jsx'
@@ -19,6 +20,40 @@ export default function GruposAcademia({ academiaId, academiaNombre = '', grupos
   const [ocupado, setOcupado] = useState(false)
   const [error, setError] = useState('')
   const [borrando, setBorrando] = useState(null) // grupo pendiente de confirmar
+  // Programas (planes de estudio) de la academia. El grupo define QUÉ estudia
+  // el alumno, así que sin esta lista el director no puede terminar de darlo
+  // de alta. Se cargan aquí y no se piden al padre: es la única pantalla que
+  // los necesita, y son 1 lectura por apertura.
+  const [programas, setProgramas] = useState(null) // null = cargando
+
+  useEffect(() => {
+    if (!academiaId) return undefined
+    let activo = true
+    ;(async () => {
+      try {
+        const { cursosDeAcademia } = await import('../../lib/firebase/contenido.js')
+        // Incluye borradores: el director asigna el programa ANTES de
+        // publicarlo, para que el grupo esté listo el día que abra.
+        const cursos = await cursosDeAcademia(academiaId, { soloPublicados: false })
+        if (activo) setProgramas(cursos)
+      } catch {
+        // Academia legacy (sin cursos clonados) o sin permisos: la pantalla
+        // sigue sirviendo para todo lo demás y el selector queda fuera.
+        if (activo) setProgramas([])
+      }
+    })()
+    return () => { activo = false }
+  }, [academiaId])
+
+  const asignarPrograma = (grupo, programaId) =>
+    correr(async () => {
+      const { asignarProgramaAGrupo } = await import('../../lib/firebase/grupos.js')
+      const prog = (programas || []).find((p) => p.id === programaId)
+      await asignarProgramaAGrupo(grupo.id, {
+        programaId: programaId || null,
+        tipoPrograma: prog ? metaDePrograma(prog).id : null,
+      })
+    })
 
   const cuentaDe = (gid) => {
     const del = miembros.filter((m) => m.grupoId === gid)
@@ -98,6 +133,8 @@ export default function GruposAcademia({ academiaId, academiaNombre = '', grupos
       <p className="panel-gestion-sub">
         Crea un grupo y comparte su código: profesores y alumnos se unen con él desde
         <strong> Mi cuenta → Únete con tu código</strong>, y sus avances quedan separados por grupo.
+        Cada grupo cursa <strong>un plan de estudios</strong> (TUM, Enfermería, TSU, Licenciatura,
+        un curso o una certificación) y sus alumnos solo ven el contenido de ese plan.
       </p>
 
       {/* Código de la ACADEMIA: unir sin grupo específico. */}
@@ -163,6 +200,35 @@ export default function GruposAcademia({ academiaId, academiaNombre = '', grupos
                 <span className="pc-detalle">
                   {c.alumnos} alumno{c.alumnos !== 1 ? 's' : ''} · {c.profes} profe{c.profes !== 1 ? 's' : ''}
                 </span>
+                {/* PLAN DE ESTUDIOS del grupo: define el «tipo de alumno» y,
+                    con él, TODO el contenido que verán sus miembros. Un grupo
+                    sin programa deja a sus alumnos sin acceso, así que se
+                    avisa en el sitio en vez de dejarlo pasar en silencio. */}
+                {programas !== null && programas.length > 0 && (
+                  <span className={`pg-programa ${g.programaId ? '' : 'pg-programa--vacio'}`}>
+                    <label className="sr-only" htmlFor={`prog-${g.id}`}>
+                      Plan de estudios del grupo {g.nombre}
+                    </label>
+                    <select
+                      id={`prog-${g.id}`}
+                      value={g.programaId || ''}
+                      disabled={ocupado}
+                      onChange={(e) => asignarPrograma(g, e.target.value)}
+                    >
+                      <option value="">— Sin plan de estudios —</option>
+                      {programas.map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.titulo} · {metaDePrograma(p).etiquetaCorta}
+                        </option>
+                      ))}
+                    </select>
+                    {!g.programaId && (
+                      <small className="pg-programa-aviso">
+                        Sus alumnos no verán contenido hasta que le asignes uno.
+                      </small>
+                    )}
+                  </span>
+                )}
                 <span className={`pc-estado ${activo ? 'activo' : 'inactivo'}`}>{activo ? 'activo' : 'inactivo'}</span>
                 <span className="pc-acciones">
                   <button className="pc-copiar" onClick={() => copiar(g.id)}>Copiar</button>
@@ -209,9 +275,10 @@ export default function GruposAcademia({ academiaId, academiaNombre = '', grupos
                     {cuentaDe(borrando.id).alumnos} alumno(s) y {cuentaDe(borrando.id).profes} profe(s)
                     están en este grupo.
                   </strong>{' '}
-                  No se les borra ni pierden su avance: quedan en la academia <em>sin grupo</em>, y
-                  volverán a ver todo el contenido que el grupo les ocultaba. Muévelos antes si no
-                  es lo que quieres.
+                  No se les borra ni pierden su avance, pero quedan en la academia <em>sin
+                  grupo</em> y, como el plan de estudios lo define el grupo,{' '}
+                  <strong>dejarán de ver contenido</strong> hasta que entren a otro. Muévelos antes
+                  si no es lo que quieres.
                 </p>
               ) : (
                 <p>El grupo está vacío, así que no afecta a nadie.</p>

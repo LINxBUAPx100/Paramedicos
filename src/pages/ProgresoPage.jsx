@@ -20,10 +20,10 @@ export default function ProgresoPage() {
   const { contenido, error, reintentar } = useContenido()
   const { estado, reiniciar } = useProgress()
 
-  // Mejor calificación del alumno en el examen de CADA fase. Vive en Firestore
+  // Mejor calificación del alumno en el examen de CADA módulo. Vive en Firestore
   // (`intentos`), no en el progreso local, y hasta ahora solo la veía su
   // profesor desde el panel: el alumno no tenía dónde consultar su propia nota.
-  const [mejorPorFase, setMejorPorFase] = useState({})
+  const [mejorPorModulo, setMejorPorModulo] = useState({})
   useEffect(() => {
     if (!user?.uid || esStaff) return undefined
     let vivo = true
@@ -35,10 +35,10 @@ export default function ProgresoPage() {
         const mejor = {}
         for (const it of intentos) {
           const pct = Number(it?.porcentaje)
-          if (!it?.faseId || !Number.isFinite(pct)) continue
-          if (mejor[it.faseId] === undefined || pct > mejor[it.faseId]) mejor[it.faseId] = pct
+          if (!it?.moduloId || !Number.isFinite(pct)) continue
+          if (mejor[it.moduloId] === undefined || pct > mejor[it.moduloId]) mejor[it.moduloId] = pct
         }
-        setMejorPorFase(mejor)
+        setMejorPorModulo(mejor)
       } catch {
         // Silencioso: sin esto el alumno sigue viendo su avance. Un error rojo
         // aquí le preocuparía por algo que no puede resolver.
@@ -54,7 +54,7 @@ export default function ProgresoPage() {
 
   if (error) return <ErrorContenido onReintentar={reintentar} />
   if (!contenido) return <CargandoContenido />
-  const { fases, stats, todosLosTemas } = contenido
+  const { modulos, stats, todosLosTemas } = contenido
 
   const temasLeidos = Object.values(estado.leidos).filter(Boolean).length
   const progresoGlobal = Math.round((temasLeidos / stats.temas) * 100)
@@ -106,38 +106,38 @@ export default function ProgresoPage() {
         </div>
       </div>
 
-      <section className="progreso-fases">
-        <h2 className="seccion-titulo">Avance por fase</h2>
-        {fases.map((fase) => {
-          const leidos = fase.temas.filter((t) => estado.leidos[t.id]).length
-          const pct = Math.round((leidos / fase.temas.length) * 100)
-          // La nota del examen de la fase: es la calificación que de verdad
+      <section className="progreso-modulos">
+        <h2 className="seccion-titulo">Avance por módulo</h2>
+        {modulos.map((modulo) => {
+          const leidos = modulo.temas.filter((t) => estado.leidos[t.id]).length
+          const pct = Math.round((leidos / modulo.temas.length) * 100)
+          // La nota del examen del módulo: es la calificación que de verdad
           // cuenta de cada materia, y estaba solo en el panel del profesor.
-          const nota = mejorPorFase[fase.id]
+          const nota = mejorPorModulo[modulo.id]
           return (
-            <div className="progreso-fase" key={fase.id} style={{ '--fase-color': fase.color }}>
-              <div className="progreso-fase-cab">
+            <div className="progreso-modulo" key={modulo.id} style={{ '--modulo-color': modulo.color }}>
+              <div className="progreso-modulo-cab">
                 <span>
-                  {fase.icono} <strong>Fase {fase.numero}:</strong> {fase.titulo}
+                  {modulo.icono} <strong>Modulo {modulo.numero}:</strong> {modulo.titulo}
                 </span>
                 <span className="pf-derecha">
                   {nota !== undefined && (
-                    <b className={`pf-nota ${nota >= 70 ? 'ok' : 'mal'}`} title="Tu mejor calificación en el examen de esta fase">
+                    <b className={`pf-nota ${nota >= 70 ? 'ok' : 'mal'}`} title="Tu mejor calificación en el examen de este módulo">
                       {nota}%
                     </b>
                   )}
-                  {leidos}/{fase.temas.length}
+                  {leidos}/{modulo.temas.length}
                 </span>
               </div>
-              <div className="barra-fase">
-                <div className="barra-fase-fill" style={{ width: `${pct}%` }} />
+              <div className="barra-modulo">
+                <div className="barra-modulo-fill" style={{ width: `${pct}%` }} />
               </div>
             </div>
           )
         })}
-        {Object.keys(mejorPorFase).length === 0 && (
+        {Object.keys(mejorPorModulo).length === 0 && (
           <p className="panel-nota">
-            Cuando presentes el examen de una fase, tu calificación aparecerá aquí al lado de su
+            Cuando presentes el examen de un módulo, tu calificación aparecerá aquí al lado de su
             avance.
           </p>
         )}

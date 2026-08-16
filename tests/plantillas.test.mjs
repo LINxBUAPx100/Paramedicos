@@ -17,7 +17,7 @@ import { huellaTema } from '../src/lib/replicacionModelo.js'
 
 const ESTRUCTURA = [{
   id: 'f1', titulo: 'F1', estado: 'publicado',
-  modulos: [{ id: 'principal', titulo: 'C', temas: [{ id: 't1', titulo: 'T1' }, { id: 't2', titulo: 'T2' }] }],
+  unidades: [{ id: 'principal', titulo: 'C', temas: [{ id: 't1', titulo: 'T1' }, { id: 't2', titulo: 'T2' }] }],
 }]
 const TEMAS = [
   { temaId: 't1', titulo: 'T1', resumen: 'r1', secciones: [], quiz: [], flashcards: [], estado: 'publicado' },
@@ -38,9 +38,9 @@ test('metadatos: slug seguro, normalización a claves conocidas y validación', 
   assert.equal(validarMetadatosPlantilla({ nombre: 'X' }), null)
 })
 
-test('conteos: cursos/fases/módulos/temas de la estructura', () => {
-  assert.deepEqual(conteosDeEstructura(ESTRUCTURA), { cursos: 1, fases: 1, modulos: 1, temas: 2 })
-  assert.deepEqual(conteosDeEstructura(null), { cursos: 1, fases: 0, modulos: 0, temas: 0 })
+test('conteos: cursos/modulos/unidades/temas de la estructura', () => {
+  assert.deepEqual(conteosDeEstructura(ESTRUCTURA), { cursos: 1, modulos: 1, unidades: 1, temas: 2 })
+  assert.deepEqual(conteosDeEstructura(null), { cursos: 1, modulos: 0, unidades: 0, temas: 0 })
 })
 
 test('ciclo de vida: solo el borrador se edita; publicada exige versión nueva', () => {

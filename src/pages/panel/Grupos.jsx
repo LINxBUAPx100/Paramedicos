@@ -33,7 +33,7 @@ export default function PanelGrupos() {
       <section className="panel-visibilidad">
         <h2><Icon name="ojo" size={20} /> Qué contenido ve cada grupo</h2>
         <p className="panel-gestion-sub">
-          Este es el 100% del contenido de tu academia. Usa los ojos para decidir qué fases y temas
+          Este es el 100% del contenido de tu academia. Usa los ojos para decidir qué módulos y temas
           pueden ver los alumnos del grupo elegido: lo oculto desaparece de sus listas y aparece
           bloqueado en el Atlas hasta que lo liberes.
         </p>

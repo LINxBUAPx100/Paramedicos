@@ -1,7 +1,7 @@
 // ============================================================
 //  Pruebas del PINTOR del temario
 // ------------------------------------------------------------
-//  El modulo puro decide y este pinta, pero «pintar» tiene sus propias formas
+//  El módulo puro decide y este pinta, pero «pintar» tiene sus propias formas
 //  de salir mal: un fondo que no se rellena (PNG transparente), un elemento que
 //  no se dibuja, o —la peor— medir con una fuente y pintar con otra, que
 //  desplazaria todos los saltos de linea.
@@ -36,7 +36,7 @@ function ctxFalso() {
 const medir = (texto, estilo = 'tema') =>
   String(texto).length * (ESTILOS[estilo]?.tamano ?? 14) * 0.55
 
-const FASES = [{
+const MODULOS = [{
   id: 'f1', numero: 1, titulo: 'Fundamentos', subtitulo: 'Bases', color: '#0c5fc4',
   temas: [{ id: 't1', numero: '1.1', titulo: 'Sistema de urgencias' }],
 }]
@@ -44,7 +44,7 @@ const FASES = [{
 function pintar(extra = {}) {
   const ctx = ctxFalso()
   const canvas = { getContext: () => ctx, width: 0, height: 0 }
-  const comp = componerTemario({ fases: FASES, medir, academia: 'AEP', ...extra })
+  const comp = componerTemario({ modulos: MODULOS, medir, academia: 'AEP', ...extra })
   dibujarTemario(canvas, comp)
   return { ctx, canvas, comp }
 }
@@ -73,7 +73,7 @@ test('pinta cada elemento que compuso el modulo puro', () => {
   assert.ok(ctx.registro.textos.length >= textosComp.length)
   assert.equal(ctx.registro.arcos.length, circulosComp.length)
   assert.equal(ctx.registro.lineas.length, comp.elementos.filter((e) => e.tipo === 'linea').length)
-  // Y en las coordenadas que dijo el modulo, sin recalcular nada.
+  // Y en las coordenadas que dijo el módulo, sin recalcular nada.
   for (const t of textosComp) {
     assert.ok(
       ctx.registro.textos.some((p) => p.texto === t.texto && p.x === t.x && p.y === t.y),
@@ -99,7 +99,7 @@ test('el numero del circulo se centra y devuelve la alineacion a su sitio', () =
 })
 
 test('un temario vacio tambien produce una imagen valida', () => {
-  const { ctx, comp } = pintar({ ocultas: { fases: ['f1'], temas: [] } })
+  const { ctx, comp } = pintar({ ocultas: { modulos: ['f1'], temas: [] } })
   assert.ok(comp.alto > 0)
   assert.ok(ctx.registro.rects.length > 0, 'con su fondo')
   assert.ok(ctx.registro.textos.some((t) => /no tiene ningún tema visible/.test(t.texto)))

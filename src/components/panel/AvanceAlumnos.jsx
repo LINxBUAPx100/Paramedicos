@@ -1,17 +1,17 @@
 import { useState } from 'react'
 import { APROBADO } from '../../lib/panelModelo.js'
-import FasesDeAlumno from './FasesDeAlumno.jsx'
+import ModulosDeAlumno from './ModulosDeAlumno.jsx'
 
 // ============================================================
-//  Avance por alumno y por fase + habilitar/retroceder módulos
+//  Avance por alumno y por módulo + habilitar/retroceder módulos
 // ------------------------------------------------------------
-//  Cada celda es la MEJOR calificación del examen de esa fase y el nº de
+//  Cada celda es la MEJOR calificación del examen de esa módulo y el nº de
 //  intentos. La última columna decide qué módulo se le habilita a un alumno
 //  por encima de lo que su grupo oculta, y también cómo retirárselo.
 // ============================================================
 
 export default function AvanceAlumnos({
-  alumnos, grupos, fases, porAlumno, intentos, grupoFiltro, nombreGrupo,
+  alumnos, grupos, modulos, porAlumno, intentos, grupoFiltro, nombreGrupo,
   academiaId, puedeVerCodigos, onCambio,
 }) {
   const [alumnoAbierto, setAlumnoAbierto] = useState(null)
@@ -20,21 +20,21 @@ export default function AvanceAlumnos({
 
   const fechaTxt = (seg) => (seg ? new Date(seg * 1000).toLocaleDateString('es-MX') : '')
 
-  // Siguiente módulo POR HABILITAR a un alumno: la primera fase que su grupo
+  // Siguiente módulo POR HABILITAR a un alumno: la primer módulo que su grupo
   // tiene oculta y que aún no se le ha desbloqueado individualmente.
   const siguientePorHabilitar = (al) => {
-    const ocultasDelGrupo = grupos.find((g) => g.id === al.grupoId)?.fasesOcultas || []
-    const yaDesbloqueadas = al.fasesDesbloqueadas || []
-    return fases.find((f) => ocultasDelGrupo.includes(f.id) && !yaDesbloqueadas.includes(f.id)) || null
+    const ocultasDelGrupo = grupos.find((g) => g.id === al.grupoId)?.modulosOcultos || []
+    const yaDesbloqueadas = al.modulosDesbloqueados || []
+    return modulos.find((f) => ocultasDelGrupo.includes(f.id) && !yaDesbloqueadas.includes(f.id)) || null
   }
 
-  // Última fase habilitada INDIVIDUALMENTE (y que el grupo aún oculta): es la
-  // que se puede retroceder. Las fases que el grupo ya muestra no se tocan aquí.
+  // Última módulo habilitada INDIVIDUALMENTE (y que el grupo aún oculta): es la
+  // que se puede retroceder. Los módulos que el grupo ya muestra no se tocan aquí.
   const ultimaHabilitada = (al) => {
-    const ocultasDelGrupo = grupos.find((g) => g.id === al.grupoId)?.fasesOcultas || []
-    const yaDesbloqueadas = al.fasesDesbloqueadas || []
+    const ocultasDelGrupo = grupos.find((g) => g.id === al.grupoId)?.modulosOcultos || []
+    const yaDesbloqueadas = al.modulosDesbloqueados || []
     return (
-      [...fases]
+      [...modulos]
         .reverse()
         .find((f) => yaDesbloqueadas.includes(f.id) && ocultasDelGrupo.includes(f.id)) || null
     )
@@ -53,16 +53,16 @@ export default function AvanceAlumnos({
     }
   }
 
-  const habilitarFase = (uid, f) =>
+  const habilitarModulo = (uid, f) =>
     correr(uid, async () => {
-      const { desbloquearFase } = await import('../../lib/firebase/solicitudes.js')
-      await desbloquearFase(uid, f.id)
+      const { desbloquearModulo } = await import('../../lib/firebase/solicitudes.js')
+      await desbloquearModulo(uid, f.id)
     }, 'No se pudo habilitar el módulo (revisa permisos o conexión).')
 
-  const retrocederFase = (uid, f) =>
+  const retrocederModulo = (uid, f) =>
     correr(uid, async () => {
-      const { bloquearFase } = await import('../../lib/firebase/solicitudes.js')
-      await bloquearFase(uid, f.id)
+      const { bloquearModulo } = await import('../../lib/firebase/solicitudes.js')
+      await bloquearModulo(uid, f.id)
     }, 'No se pudo retroceder el módulo (revisa permisos o conexión).')
 
   if (alumnos.length === 0) {
@@ -90,7 +90,7 @@ export default function AvanceAlumnos({
           <thead>
             <tr>
               <th scope="col">Alumno</th>
-              {fases.map((f) => (
+              {modulos.map((f) => (
                 <th key={f.id} scope="col">
                   <abbr title={f.titulo}>F{f.numero}</abbr>
                   <span className="sr-only">: {f.titulo}</span>
@@ -104,7 +104,7 @@ export default function AvanceAlumnos({
           </thead>
           <tbody>
             {alumnos.map((al) => {
-              const porFase = porAlumno[al.id] || {}
+              const porModulo = porAlumno[al.id] || {}
               const abierto = alumnoAbierto === al.id
               return (
                 <tr key={al.id} className={abierto ? 'abierto' : ''}>
@@ -126,8 +126,8 @@ export default function AvanceAlumnos({
                     )}
                     {al.estado !== 'activo' && <span className="panel-tag-suspendido">suspendido</span>}
                   </th>
-                  {fases.map((f) => {
-                    const c = porFase[f.id]
+                  {modulos.map((f) => {
+                    const c = porModulo[f.id]
                     if (!c) return <td key={f.id} className="panel-celda-vacia">—</td>
                     const nivel = c.mejor >= APROBADO ? 'ok' : 'mal'
                     return (
@@ -153,9 +153,9 @@ export default function AvanceAlumnos({
                               type="button"
                               className="panel-habilitar-btn"
                               disabled={desbloqueando === al.id}
-                              title={`Habilitarle la Fase ${sig.numero} · ${sig.titulo}`}
-                              aria-label={`Habilitar la Fase ${sig.numero} (${sig.titulo}) a ${al.nombre || al.email}`}
-                              onClick={() => habilitarFase(al.id, sig)}
+                              title={`Habilitarle el Módulo ${sig.numero} · ${sig.titulo}`}
+                              aria-label={`Habilitar el Módulo ${sig.numero} (${sig.titulo}) a ${al.nombre || al.email}`}
+                              onClick={() => habilitarModulo(al.id, sig)}
                             >
                               {desbloqueando === al.id ? '…' : `Habilitar F${sig.numero}`}
                             </button>
@@ -165,9 +165,9 @@ export default function AvanceAlumnos({
                               type="button"
                               className="panel-retroceder-btn"
                               disabled={desbloqueando === al.id}
-                              title={`Retroceder: volver a ocultarle la Fase ${ult.numero} · ${ult.titulo}`}
-                              aria-label={`Volver a ocultar la Fase ${ult.numero} (${ult.titulo}) a ${al.nombre || al.email}`}
-                              onClick={() => retrocederFase(al.id, ult)}
+                              title={`Retroceder: volver a ocultarle el Módulo ${ult.numero} · ${ult.titulo}`}
+                              aria-label={`Volver a ocultar el Módulo ${ult.numero} (${ult.titulo}) a ${al.nombre || al.email}`}
+                              onClick={() => retrocederModulo(al.id, ult)}
                             >
                               {desbloqueando === al.id ? '…' : `Ocultar F${ult.numero}`}
                             </button>
@@ -185,26 +185,26 @@ export default function AvanceAlumnos({
 
       {alumnoAbierto && (
         <>
-          {/* Las fases de ESA persona, todas a la vez. Antes solo se podía
-              habilitar la siguiente, así que llevar a alguien hasta la fase 5
+          {/* Los módulos de ESA persona, todos a la vez. Antes solo se podía
+              habilitar la siguiente, así que llevar a alguien hasta el módulo 5
               costaba tres pulsaciones en orden. */}
           {(() => {
             const al = alumnos.find((a) => a.id === alumnoAbierto)
             if (!al) return null
-            const ocultasDelGrupo = grupos.find((g) => g.id === al.grupoId)?.fasesOcultas || []
+            const ocultasDelGrupo = grupos.find((g) => g.id === al.grupoId)?.modulosOcultos || []
             return (
-              <FasesDeAlumno
+              <ModulosDeAlumno
                 alumno={al}
-                fases={fases}
-                fasesOcultasDelGrupo={ocultasDelGrupo}
+                modulos={modulos}
+                modulosOcultosDelGrupo={ocultasDelGrupo}
                 ocupado={desbloqueando === al.id}
-                onDesbloquear={(f) => habilitarFase(al.id, f)}
-                onBloquear={(f) => retrocederFase(al.id, f)}
+                onDesbloquear={(f) => habilitarModulo(al.id, f)}
+                onBloquear={(f) => retrocederModulo(al.id, f)}
                 onAbrirHasta={(ids) => correr(al.id, async () => {
-                  const { desbloquearFase } = await import('../../lib/firebase/solicitudes.js')
+                  const { desbloquearModulo } = await import('../../lib/firebase/solicitudes.js')
                   // Una por una: `arrayUnion` es idempotente, así que reintentar
                   // no duplica nada si alguna falla a mitad.
-                  for (const id of ids) await desbloquearFase(al.id, id)
+                  for (const id of ids) await desbloquearModulo(al.id, id)
                 }, 'No se pudieron abrir los módulos (revisa permisos o conexión).')}
               />
             )
@@ -219,7 +219,7 @@ export default function AvanceAlumnos({
       )}
 
       <p className="panel-nota">
-        Cada celda muestra la <strong>mejor calificación</strong> del examen de fase y el número de
+        Cada celda muestra la <strong>mejor calificación</strong> del examen de módulo y el número de
         intentos (×n). Toca un alumno para ver su historial completo.
       </p>
     </>
@@ -238,13 +238,13 @@ export function DetalleAlumno({ alumno, intentos, onCerrar }) {
         <button className="btn btn--suave" onClick={onCerrar}>Cerrar</button>
       </header>
       {intentos.length === 0 ? (
-        <p className="panel-vacio">Este alumno aún no presenta ningún examen de fase.</p>
+        <p className="panel-vacio">Este alumno aún no presenta ningún examen de módulo.</p>
       ) : (
         <ul className="panel-intentos">
           {intentos.map((it) => (
             <li key={it.id} className={it.porcentaje >= APROBADO ? 'ok' : 'mal'}>
-              <span className="pi-fase">Fase {it.faseNumero}</span>
-              <span className="pi-titulo">{it.faseTitulo}</span>
+              <span className="pi-modulo">Modulo {it.moduloNumero}</span>
+              <span className="pi-titulo">{it.moduloTitulo}</span>
               <span className="pi-nota">{it.aciertos}/{it.total} · <b>{it.porcentaje}%</b></span>
               <span className="pi-fecha">{fechaTxt(it.fecha)}</span>
             </li>

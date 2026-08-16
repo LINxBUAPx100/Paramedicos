@@ -30,8 +30,12 @@ export const ACCIONES = {
   'borrar-grupo': { texto: 'Borró un grupo', tono: 'peligro' },
   'activar-copia-editable': { texto: 'Activó la copia editable del temario', tono: 'alta' },
   'crear-plantilla': { texto: 'Creó una plantilla', tono: 'alta' },
-  'crear-fase': { texto: 'Creó una fase', tono: 'alta' },
+  // `crear-fase` es la clave ANTERIOR al renombrado Fase→Módulo. Se conserva
+  // porque el historial es append-only: si algún registro la lleva, debe seguir
+  // leyéndose, y lo que entonces se llamaba «fase» es hoy el módulo.
+  'crear-fase': { texto: 'Creó un módulo', tono: 'alta' },
   'crear-modulo': { texto: 'Creó un módulo', tono: 'alta' },
+  'crear-unidad': { texto: 'Creó una unidad', tono: 'alta' },
   'crear-tema': { texto: 'Creó un tema', tono: 'alta' },
   'archivar-nodo': { texto: 'Archivó contenido', tono: 'baja' },
   'publicar-nodo': { texto: 'Publicó contenido', tono: 'alta' },

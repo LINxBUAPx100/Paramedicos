@@ -7,7 +7,7 @@ import Icon from '../components/Icon.jsx'
 //  Bienvenida — con cuenta, todavía sin academia
 // ------------------------------------------------------------
 //  Este estado existía en los datos pero NO en el producto: quien se
-//  registraba sin código veía el Home completo (carrusel de fases, atlas,
+//  registraba sin código veía el Home completo (carrusel de módulos, atlas,
 //  flashcards) y cada enlace lo mandaba a «Únete a tu academia», una pantalla
 //  que le decía lo que le faltaba sin darle forma de conseguirlo.
 //

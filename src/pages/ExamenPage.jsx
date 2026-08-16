@@ -13,7 +13,7 @@ export default function ExamenPage() {
   const { registrarExamen } = useProgress()
   const { user } = useAuth()
   const { contenido, error, reintentar } = useContenido()
-  const { faseVisible, temaVisible } = useVisibilidad()
+  const { moduloVisible, temaVisible } = useVisibilidad()
   const [config, setConfig] = useState(null) // { preguntas }
   const [cantidad, setCantidad] = useState(10)
   const [intentos, setIntentos] = useState(null) // null = cargando; [] = sin intentos / no disponible
@@ -23,13 +23,13 @@ export default function ExamenPage() {
     () => (contenido?.todasLasPreguntas || []).filter((q) => temaVisible(q.temaId)),
     [contenido, temaVisible]
   )
-  // Fases visibles para la lista de "examen por fase".
-  const fasesDisponibles = useMemo(
-    () => (contenido?.fases || []).filter((f) => faseVisible(f.id)),
-    [contenido, faseVisible]
+  // Módulos visibles para la lista de "examen por módulo".
+  const modulosDisponibles = useMemo(
+    () => (contenido?.modulos || []).filter((f) => moduloVisible(f.id)),
+    [contenido, moduloVisible]
   )
 
-  // Intentos del alumno (para mostrar su mejor puntuación por fase).
+  // Intentos del alumno (para mostrar su mejor puntuación por módulo).
   useEffect(() => {
     if (!user) { setIntentos([]); return }
     let activo = true
@@ -45,11 +45,11 @@ export default function ExamenPage() {
     return () => { activo = false }
   }, [user])
 
-  // Mejor puntuación e intentos por fase.
-  const porFase = useMemo(() => {
+  // Mejor puntuación e intentos por módulo.
+  const porModulo = useMemo(() => {
     const map = {}
     for (const it of intentos || []) {
-      const c = (map[it.faseId] = map[it.faseId] || { mejor: 0, n: 0, ultima: 0 })
+      const c = (map[it.moduloId] = map[it.moduloId] || { mejor: 0, n: 0, ultima: 0 })
       c.n += 1
       if (it.porcentaje >= c.mejor) c.mejor = it.porcentaje
       const seg = it.fecha?.seconds || 0
@@ -108,8 +108,8 @@ export default function ExamenPage() {
         <span className="examen-hero-ico"><Icon name="examen" size={46} /></span>
         <h1>Ponte a prueba</h1>
         <p>
-          Practica con preguntas de todo el temario o de una fase concreta. Tu mejor resultado
-          por fase queda registrado para que tú y tu maestro veáis por dónde vais.
+          Practica con preguntas de todo el temario o de un módulo concreta. Tu mejor resultado
+          por módulo queda registrado para que tú y tu maestro veáis por dónde vais.
         </p>
         {/* Honestidad sobre lo que esto ES: las respuestas correctas viajan en la
             app, así que cualquiera puede consultarlas. Presentarlo como examen
@@ -144,20 +144,20 @@ export default function ExamenPage() {
         </button>
       </div>
 
-      <section className="examen-fases">
-        <h2><span className="examen-fases-ico"><Icon name="temario" size={22} /></span> Examen por fase</h2>
-        <p className="examen-fases-sub">
-          Cada examen reúne todas las preguntas de su fase. Se muestra tu mejor puntuación.
+      <section className="examen-modulos">
+        <h2><span className="examen-modulos-ico"><Icon name="temario" size={22} /></span> Examen por módulo</h2>
+        <p className="examen-modulos-sub">
+          Cada examen reúne todas las preguntas de su módulo. Se muestra tu mejor puntuación.
         </p>
-        <div className="examen-fases-lista">
-          {fasesDisponibles.map((f) => {
-            const m = porFase[f.id]
+        <div className="examen-modulos-lista">
+          {modulosDisponibles.map((f) => {
+            const m = porModulo[f.id]
             return (
               <Link
-                to={`/fase/${f.id}/examen`}
+                to={`/modulo/${f.id}/examen`}
                 key={f.id}
-                className="examen-fase-item"
-                style={{ '--fase-color': f.color }}
+                className="examen-modulo-item"
+                style={{ '--modulo-color': f.color }}
               >
                 <span className="ef-num">{String(f.numero).padStart(2, '0')}</span>
                 <div className="ef-info">

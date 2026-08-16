@@ -114,16 +114,16 @@ test('capacidadesEditor: el instructor refleja EXACTAMENTE sus permisos', () => 
 
 test('permisoDeAccion: mapea crear/duplicar y publicar/archivar', () => {
   assert.equal(permisoDeAccion('crear-tema'), 'crearTemas')
-  assert.equal(permisoDeAccion('crear-fase'), 'crearTemas')
+  assert.equal(permisoDeAccion('crear-modulo'), 'crearTemas')
   assert.equal(permisoDeAccion('duplicar-modulo'), 'crearTemas')
   assert.equal(permisoDeAccion('publicar-tema'), 'publicarContenido')
   assert.equal(permisoDeAccion('despublicar-curso'), 'publicarContenido')
-  assert.equal(permisoDeAccion('archivar-fase'), 'publicarContenido')
+  assert.equal(permisoDeAccion('archivar-modulo'), 'publicarContenido')
   assert.equal(permisoDeAccion('restaurar-tema'), 'publicarContenido')
   // Editar campos / mover / reordenar → solo el permiso base (null).
   assert.equal(permisoDeAccion('editar-tema'), null)
   assert.equal(permisoDeAccion('mover-modulo'), null)
-  assert.equal(permisoDeAccion('reordenar-fase'), null)
+  assert.equal(permisoDeAccion('reordenar-modulo'), null)
 })
 
 test('permisoAccionEditor: el instructor necesita el permiso fino; super/director no', () => {

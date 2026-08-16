@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { esCorreoSupremo } from '../lib/firebase/supremos.js'
 import { capacidadesDe, planEfectivo } from '../lib/capacidades.js'
 import { registrar } from '../lib/registro.js'
+import { normalizarGrupo, normalizarPerfil } from '../lib/compatNombres.js'
 
 const AuthContext = createContext(null)
 
@@ -75,7 +76,7 @@ export function AuthProvider({ children }) {
           unsubPerfil = fs.onSnapshot(
             fs.doc(db, 'usuarios', u.uid),
             (snap) => {
-              setPerfil(snap.exists() ? { id: snap.id, ...snap.data() } : null)
+              setPerfil(snap.exists() ? normalizarPerfil({ id: snap.id, ...snap.data() }) : null)
               setPerfilListo(true)
               setCargando(false)
             },
@@ -120,7 +121,7 @@ export function AuthProvider({ children }) {
       if (!activo) return
       unsub = fs.onSnapshot(
         fs.doc(db, 'grupos', gid),
-        (snap) => setGrupo(snap.exists() ? { id: snap.id, ...snap.data() } : null),
+        (snap) => setGrupo(snap.exists() ? normalizarGrupo({ id: snap.id, ...snap.data() }) : null),
         () => setGrupo(null)
       )
     })()

@@ -70,7 +70,7 @@ export function estructuraComparable(estructura) {
   return (estructura || []).map((f) => ({
     id: f.id, titulo: f.titulo, subtitulo: f.subtitulo || '', color: f.color || '',
     estado: f.estado || 'publicado',
-    modulos: (f.modulos || []).map((m) => ({
+    unidades: (f.unidades || []).map((m) => ({
       id: m.id, titulo: m.titulo, estado: m.estado || 'publicado',
       temas: (m.temas || []).map((t) => ({ id: t.id, titulo: t.titulo, estado: t.estado || 'publicado' })),
     })),
@@ -169,10 +169,10 @@ export function clasificarTema({ origen, destino }) {
   return 'modificado_en_origen'
 }
 
-// Ruta jerárquica legible de un tema dentro de una estructura (Fase > Módulo).
+// Ruta jerárquica legible de un tema dentro de una estructura (Módulo > Unidad).
 function rutaDeTema(estructura, temaId) {
   for (const f of estructura || []) {
-    for (const m of f.modulos || []) {
+    for (const m of f.unidades || []) {
       if ((m.temas || []).some((t) => t.id === temaId)) {
         return m.implicito ? f.titulo : `${f.titulo} › ${m.titulo}`
       }
@@ -338,40 +338,40 @@ export function idDuplicado(temaId, versionOrigen, existentes = new Set()) {
 // ---------- Fusión de estructura ----------
 
 // Fusiona la estructura del ORIGEN dentro de la del DESTINO según las
-// acciones: los temas 'crear' se insertan en su fase/módulo (creando la fase
+// acciones: los temas 'crear' se insertan en su módulo/unidad (creando el módulo
 // si no existe); los 'duplicar' se insertan junto al original con su id nuevo;
-// TODO lo local (fases/módulos/temas propios, orden, estados) se conserva.
+// TODO lo local (modulos/unidades/temas propios, orden, estados) se conserva.
 export function fusionarEstructura({ estructuraOrigen, estructuraDestino, acciones, mapaDuplicados = {} }) {
   const destino = clonProfundo(estructuraDestino || [])
   const accionDe = new Map((acciones || []).map((a) => [a.temaId, a.accion]))
 
-  const buscarFase = (fid) => destino.find((f) => f.id === fid)
+  const buscarModulo = (fid) => destino.find((f) => f.id === fid)
   const idsEnDestino = new Set(
-    destino.flatMap((f) => (f.modulos || []).flatMap((m) => (m.temas || []).map((t) => t.id)))
+    destino.flatMap((f) => (f.unidades || []).flatMap((m) => (m.temas || []).map((t) => t.id)))
   )
 
-  for (const faseOrigen of estructuraOrigen || []) {
-    let fase = buscarFase(faseOrigen.id)
-    for (const modOrigen of faseOrigen.modulos || []) {
+  for (const moduloOrigen of estructuraOrigen || []) {
+    let modulo = buscarModulo(moduloOrigen.id)
+    for (const modOrigen of moduloOrigen.unidades || []) {
       for (const temaOrigen of modOrigen.temas || []) {
         const accion = accionDe.get(temaOrigen.id)
         if (accion === 'crear' && !idsEnDestino.has(temaOrigen.id)) {
-          if (!fase) {
-            fase = {
-              id: faseOrigen.id, titulo: faseOrigen.titulo,
-              subtitulo: faseOrigen.subtitulo || '', descripcion: faseOrigen.descripcion || '',
-              color: faseOrigen.color || '', icono: faseOrigen.icono || '',
-              estado: faseOrigen.estado || 'publicado', modulos: [],
+          if (!modulo) {
+            modulo = {
+              id: moduloOrigen.id, titulo: moduloOrigen.titulo,
+              subtitulo: moduloOrigen.subtitulo || '', descripcion: moduloOrigen.descripcion || '',
+              color: moduloOrigen.color || '', icono: moduloOrigen.icono || '',
+              estado: moduloOrigen.estado || 'publicado', unidades: [],
             }
-            destino.push(fase)
+            destino.push(modulo)
           }
-          let mod = (fase.modulos || []).find((m) => m.id === modOrigen.id)
+          let mod = (modulo.unidades || []).find((m) => m.id === modOrigen.id)
           if (!mod) {
             mod = { id: modOrigen.id, titulo: modOrigen.titulo, temas: [] }
             if (modOrigen.implicito) mod.implicito = true
             if (modOrigen.estado) mod.estado = modOrigen.estado
-            fase.modulos = fase.modulos || []
-            fase.modulos.push(mod)
+            modulo.unidades = modulo.unidades || []
+            modulo.unidades.push(mod)
           }
           mod.temas = mod.temas || []
           mod.temas.push({ id: temaOrigen.id, titulo: temaOrigen.titulo, estado: temaOrigen.estado || 'publicado' })
@@ -380,9 +380,9 @@ export function fusionarEstructura({ estructuraOrigen, estructuraDestino, accion
         if (accion === 'duplicar') {
           const idNuevo = mapaDuplicados[temaOrigen.id]
           if (idNuevo && !idsEnDestino.has(idNuevo)) {
-            // Junto al tema local original, en el módulo donde viva.
+            // Junto al tema local original, en la unidad donde viva.
             for (const f of destino) {
-              for (const m of f.modulos || []) {
+              for (const m of f.unidades || []) {
                 const idx = (m.temas || []).findIndex((t) => t.id === temaOrigen.id)
                 if (idx >= 0) {
                   m.temas.splice(idx + 1, 0, {
@@ -400,7 +400,7 @@ export function fusionarEstructura({ estructuraOrigen, estructuraDestino, accion
           // El contenido vive en el doc del tema; en la estructura solo se
           // refresca el TÍTULO si la academia no lo había cambiado.
           for (const f of destino) {
-            for (const m of f.modulos || []) {
+            for (const m of f.unidades || []) {
               for (const t of m.temas || []) {
                 if (t.id === temaOrigen.id && t.titulo !== temaOrigen.titulo) {
                   t.titulo = temaOrigen.titulo
@@ -579,7 +579,7 @@ export function verificarRespaldo({ requeridos, respaldados }) {
 // Plan de reversión a partir de los respaldos de una replicación:
 //  - docs respaldados → restaurar su snapshot;
 //  - docs CREADOS por la replicación (sin respaldo previo) → archivar (nunca
-//    se elimina permanentemente contenido en esta fase);
+//    se elimina permanentemente contenido en este módulo);
 //  - si el doc cambió DESPUÉS de la replicación (huella actual ≠ huella que
 //    dejó la replicación), se marca advertencia y NO se toca salvo que el
 //    super-admin lo fuerce explícitamente (forzar[docId] = true).

@@ -11,31 +11,31 @@ import { nuevaSemilla } from '../lib/azar.js'
 import { seleccionarPreguntas, temasCubiertos } from '../lib/examenModelo.js'
 
 // --- Semilla del intento en curso -------------------------------------------
-// El examen de fase es el único que se GUARDA (lo ve el maestro), así que es el
+// El examen de módulo es el único que se GUARDA (lo ve el maestro), así que es el
 // único donde refrescar la página no puede ser una tirada de dados nueva: con
 // un subconjunto del banco, recargar hasta que salgan las preguntas cómodas
-// sería trivial. La semilla vive en sessionStorage —una por fase— y solo la
+// sería trivial. La semilla vive en sessionStorage —una por módulo— y solo la
 // renueva "Otro intento", que es lo que de verdad es un intento nuevo.
 //
 // sessionStorage y no localStorage a propósito: al cerrar la pestaña el examen
 // a medias se da por abandonado. Y si el navegador lo tiene bloqueado, se cae a
 // una semilla en memoria: se pierde la reproducibilidad al refrescar, nunca el
 // examen.
-const ssClave = (faseId) => `ptem-examen-semilla__${faseId}`
+const ssClave = (moduloId) => `ptem-examen-semilla__${moduloId}`
 
-function leerSemilla(faseId) {
-  try { return sessionStorage.getItem(ssClave(faseId)) || '' } catch { return '' }
+function leerSemilla(moduloId) {
+  try { return sessionStorage.getItem(ssClave(moduloId)) || '' } catch { return '' }
 }
-function guardarSemilla(faseId, semilla) {
-  try { sessionStorage.setItem(ssClave(faseId), semilla) } catch { /* no disponible */ }
+function guardarSemilla(moduloId, semilla) {
+  try { sessionStorage.setItem(ssClave(moduloId), semilla) } catch { /* no disponible */ }
 }
 
-export default function ExamenFasePage() {
-  const { faseId } = useParams()
+export default function ExamenModuloPage() {
+  const { moduloId } = useParams()
   const { contenido, error, reintentar } = useContenido()
-  const fase = contenido?.getFase(faseId)
+  const modulo = contenido?.getModulo(moduloId)
   const { user, perfil, academiaId } = useAuth()
-  const { faseVisible, temaVisible } = useVisibilidad()
+  const { moduloVisible, temaVisible } = useVisibilidad()
 
   const [iniciado, setIniciado] = useState(false)
   const [guardado, setGuardado] = useState(null) // { ok, pct } | { ok: false }
@@ -43,18 +43,18 @@ export default function ExamenFasePage() {
   // Semilla del intento: se recupera de la sesión (refrescar = mismo examen) y
   // solo nace una nueva si no había ninguna.
   const [semilla, setSemilla] = useState(() => {
-    const guardada = leerSemilla(faseId)
+    const guardada = leerSemilla(moduloId)
     if (guardada) return guardada
-    const nueva = nuevaSemilla(faseId)
-    guardarSemilla(faseId, nueva)
+    const nueva = nuevaSemilla(moduloId)
+    guardarSemilla(moduloId, nueva)
     return nueva
   })
 
-  // Banco disponible: las preguntas de la fase, menos las de temas ocultos
+  // Banco disponible: las preguntas del módulo, menos las de temas ocultos
   // para el grupo del alumno.
   const banco = useMemo(
-    () => (contenido?.preguntasDeFase(faseId) || []).filter((q) => temaVisible(q.temaId)),
-    [contenido, faseId, temaVisible]
+    () => (contenido?.preguntasDeModulo(moduloId) || []).filter((q) => temaVisible(q.temaId)),
+    [contenido, moduloId, temaVisible]
   )
   // El examen: un SUBCONJUNTO repartido por tema, reproducible desde la semilla.
   const preguntas = useMemo(
@@ -64,10 +64,10 @@ export default function ExamenFasePage() {
 
   if (error) return <ErrorContenido onReintentar={reintentar} />
   if (!contenido) return <CargandoContenido />
-  if (!fase) return <NotFound />
+  if (!modulo) return <NotFound />
 
-  // Fase (módulo) oculta para el grupo del alumno: examen no disponible.
-  if (!faseVisible(fase.id)) {
+  // Módulo (módulo) oculta para el grupo del alumno: examen no disponible.
+  if (!moduloVisible(modulo.id)) {
     return (
       <div className="acceso-restringido" role="alert">
         <span className="acceso-ico"><Icon name="candado" size={30} /></span>
@@ -82,15 +82,15 @@ export default function ExamenFasePage() {
     const pctLocal = total ? Math.round((aciertos / total) * 100) : 0
     setFin({ pct: pctLocal })
     try {
-      const { guardarIntentoFase } = await import('../lib/firebase/intentos.js')
-      const pct = await guardarIntentoFase({
+      const { guardarIntentoModulo } = await import('../lib/firebase/intentos.js')
+      const pct = await guardarIntentoModulo({
         uid: user.uid,
         nombre: perfil?.nombre || user.displayName || '',
         academiaId,
-        fase,
+        modulo,
         aciertos,
         total,
-        // Con la semilla y el banco de la fase se regenera el examen EXACTO que
+        // Con la semilla y el banco del módulo se regenera el examen EXACTO que
         // vio este alumno. Sin ella, un intento es un número suelto y una
         // reclamación de nota no se puede resolver.
         semilla,
@@ -105,31 +105,31 @@ export default function ExamenFasePage() {
   const otroIntento = () => {
     setGuardado(null)
     setFin(null)
-    const nueva = nuevaSemilla(faseId)
-    guardarSemilla(faseId, nueva)
+    const nueva = nuevaSemilla(moduloId)
+    guardarSemilla(moduloId, nueva)
     setSemilla(nueva)
   }
 
   return (
-    <div className="examen-page" style={{ '--fase-color': fase.color }}>
+    <div className="examen-page" style={{ '--modulo-color': modulo.color }}>
       <nav className="migas">
-        <Link to={`/fase/${fase.id}`}>Fase {fase.numero}</Link> <span>/</span> Examen de fase
+        <Link to={`/modulo/${modulo.id}`}>Modulo {modulo.numero}</Link> <span>/</span> Examen de módulo
       </nav>
 
       {!iniciado ? (
-        <div className="examen-fase-intro">
+        <div className="examen-modulo-intro">
           <span className="examen-hero-ico"><Icon name="examen" size={46} /></span>
-          <h1>Examen de la Fase {fase.numero}</h1>
-          <p className="examen-fase-nombre">{fase.titulo}</p>
+          <h1>Examen del Módulo {modulo.numero}</h1>
+          <p className="examen-modulo-nombre">{modulo.titulo}</p>
           <p>
-            {preguntas.length} preguntas escogidas de las {banco.length} de esta fase, repartidas
+            {preguntas.length} preguntas escogidas de las {banco.length} de este módulo, repartidas
             entre sus {temasCubiertos(preguntas)} temas. Al terminar, tu resultado se guarda como
             intento (fecha, puntaje y % de acierto) para que tú y tu maestro puedan seguir tu avance.
           </p>
           {/* Decirlo de frente tiene dos efectos y los dos interesan: quita la
               idea de que copiarle al de al lado sirva, y avisa de que estudiar
-              media fase no basta porque van a caer preguntas de todos sus temas. */}
-          <p className="examen-fase-aviso">
+              media modulo no basta porque van a caer preguntas de todos sus temas. */}
+          <p className="examen-modulo-aviso">
             <Icon name="candado" size={15} /> Cada alumno recibe una selección distinta, y
             recargar la página no la cambia.
           </p>
@@ -140,20 +140,20 @@ export default function ExamenFasePage() {
           <button className="btn btn--primario btn--lg" onClick={() => setIniciado(true)}>
             Comenzar ({preguntas.length} preguntas)
           </button>
-          <Link to={`/fase/${fase.id}`} className="link-discreto">← Volver a la fase</Link>
+          <Link to={`/modulo/${modulo.id}`} className="link-discreto">← Volver al módulo</Link>
         </div>
       ) : (
         <>
           <header className="quiz-page-header">
             <h1>
               <span className="quiz-page-ico"><Icon name="examen" size={24} /></span>
-              Examen · Fase {fase.numero}
+              Examen · Modulo {modulo.numero}
             </h1>
-            <p>{fase.titulo}</p>
+            <p>{modulo.titulo}</p>
           </header>
 
           {guardado && (
-            <div className={`examen-fase-guardado ${guardado.ok ? 'ok' : 'error'}`} role="status">
+            <div className={`examen-modulo-guardado ${guardado.ok ? 'ok' : 'error'}`} role="status">
               {guardado.ok
                 ? `Intento guardado (${guardado.pct}%). Tu maestro podrá verlo en tu avance.`
                 : 'No se pudo guardar el intento (revisa tu conexión). Tu resultado sigue abajo.'}
@@ -163,7 +163,7 @@ export default function ExamenFasePage() {
           <Quiz
             key={semilla}
             preguntas={preguntas}
-            titulo={`Fase ${fase.numero}`}
+            titulo={`Módulo ${modulo.numero}`}
             onComplete={onComplete}
             semilla={semilla}
             onReintentar={otroIntento}
@@ -173,12 +173,12 @@ export default function ExamenFasePage() {
             <button type="button" className="btn btn--suave" onClick={otroIntento}>
               Otro intento
             </button>
-            <Link to={`/fase/${fase.id}`} className="btn btn--suave">
-              ← Volver a la fase
+            <Link to={`/modulo/${modulo.id}`} className="btn btn--suave">
+              ← Volver al módulo
             </Link>
           </div>
 
-          {fin && <ModuloCompletado fase={fase} fases={contenido.fases} pct={fin.pct} onCerrar={() => setFin(null)} />}
+          {fin && <ModuloCompletado modulo={modulo} modulos={contenido.modulos} pct={fin.pct} onCerrar={() => setFin(null)} />}
         </>
       )}
     </div>
@@ -242,21 +242,21 @@ function mensajeDeNota(n, nombre) {
 }
 
 // ------------------------------------------------------------
-//  Pantalla completa al terminar el examen de fase: CALIFICACIÓN del
+//  Pantalla completa al terminar el examen de módulo: CALIFICACIÓN del
 //  módulo (60% examen + 40% actividades de los temas), felicitación
 //  personalizada por rango, resumen de aprendizajes con el desempeño
-//  por tema y, si la siguiente fase está bloqueada para el alumno,
+//  por tema y, si la siguiente módulo está bloqueada para el alumno,
 //  botón para SOLICITAR el acceso (el staff aprueba desde su panel).
 //  Con menos de 50% no se solicita: se invita a repasar.
 // ------------------------------------------------------------
-function ModuloCompletado({ fase, fases, pct, onCerrar }) {
+function ModuloCompletado({ modulo, modulos, pct, onCerrar }) {
   const { user, perfil, rol, academiaId, grupoId } = useAuth()
   const { estado } = useProgress()
-  const { faseVisible } = useVisibilidad()
+  const { moduloVisible } = useVisibilidad()
 
   // Desempeño en las ACTIVIDADES de cada tema (mejor quiz guardado del tema;
   // un tema sin quiz hecho cuenta como 0 — el desglose lo deja claro).
-  const porTema = fase.temas.map((t) => {
+  const porTema = modulo.temas.map((t) => {
     const q = estado.quizzes[t.id]
     return { id: t.id, numero: t.numero, titulo: t.titulo, pct: q ? Math.round((q.aciertos / q.total) * 100) : null }
   })
@@ -267,11 +267,11 @@ function ModuloCompletado({ fase, fases, pct, onCerrar }) {
   const nivelNota = calificacion >= 70 ? 'ok' : calificacion >= 50 ? 'media' : 'mal'
   const m = mensajeDeNota(calificacion, (perfil?.nombre || '').split(' ')[0])
 
-  const idx = fases.findIndex((f) => f.id === fase.id)
-  const siguiente = idx >= 0 ? fases[idx + 1] || null : null
-  // El alumno solo SOLICITA cuando la siguiente fase está oculta para él;
+  const idx = modulos.findIndex((f) => f.id === modulo.id)
+  const siguiente = idx >= 0 ? modulos[idx + 1] || null : null
+  // El alumno solo SOLICITA cuando la siguiente módulo está oculta para él;
   // si ya la ve (o es staff), se le invita a continuar directamente.
-  const bloqueada = Boolean(siguiente) && rol === 'alumno' && !faseVisible(siguiente.id)
+  const bloqueada = Boolean(siguiente) && rol === 'alumno' && !moduloVisible(siguiente.id)
 
   // Mientras el mensaje está en pantalla, congela el scroll del fondo para que
   // la pantalla quede optimizada y el mensaje siempre centrado hasta cerrarlo.
@@ -283,7 +283,7 @@ function ModuloCompletado({ fase, fases, pct, onCerrar }) {
 
   const [envio, setEnvio] = useState(bloqueada ? 'cargando' : 'puede')
   const [confirmar, setConfirmar] = useState(false) // muestra la advertencia antes de solicitar
-  // ¿Ya tiene una solicitud pendiente de esa fase? (no duplicar)
+  // ¿Ya tiene una solicitud pendiente de esa módulo? (no duplicar)
   useEffect(() => {
     if (!bloqueada) return
     let activo = true
@@ -292,7 +292,7 @@ function ModuloCompletado({ fase, fases, pct, onCerrar }) {
         const { misSolicitudes } = await import('../lib/firebase/solicitudes.js')
         const lista = await misSolicitudes(user.uid)
         const ya = lista.some(
-          (s) => s.tipo === 'modulo' && s.faseId === siguiente.id && s.estado === 'pendiente'
+          (s) => s.tipo === 'modulo' && s.moduloId === siguiente.id && s.estado === 'pendiente'
         )
         if (activo) setEnvio(ya ? 'pendiente' : 'puede')
       } catch {
@@ -312,9 +312,9 @@ function ModuloCompletado({ fase, fases, pct, onCerrar }) {
         nombre: perfil?.nombre || user.displayName || '',
         academiaId,
         grupoId,
-        faseId: siguiente.id,
-        faseNumero: siguiente.numero,
-        faseTitulo: siguiente.titulo,
+        moduloId: siguiente.id,
+        moduloNumero: siguiente.numero,
+        moduloTitulo: siguiente.titulo,
       })
       setEnvio('enviada')
     } catch {
@@ -324,8 +324,8 @@ function ModuloCompletado({ fase, fases, pct, onCerrar }) {
 
   return (
     <div className="modulo-fin" role="dialog" aria-modal="true" aria-label="Módulo completado">
-      <div className="modulo-fin-card" style={{ '--fase-color': fase.color }}>
-        <small className="modulo-fin-fase">Fase {fase.numero} · {fase.titulo}</small>
+      <div className="modulo-fin-card" style={{ '--modulo-color': modulo.color }}>
+        <small className="modulo-fin-modulo">Modulo {modulo.numero} · {modulo.titulo}</small>
         <span className={`modulo-fin-icono t-${m.tono}`} aria-hidden="true">
           <Icon name={m.icono} size={26} />
         </span>
@@ -345,7 +345,7 @@ function ModuloCompletado({ fase, fases, pct, onCerrar }) {
         <details className="modulo-fin-aprendizajes">
           <summary>
             <Icon name="diana" size={16} /> Aprendizajes de este módulo
-            <em>{fase.temas.length} temas</em>
+            <em>{modulo.temas.length} temas</em>
           </summary>
           <ul>
             {porTema.map((t) => (
@@ -361,12 +361,12 @@ function ModuloCompletado({ fase, fases, pct, onCerrar }) {
 
         <div className="modulo-fin-cta">
           {debeRepasar ? (
-            <Link to={`/fase/${fase.id}`} className="btn btn--primario btn--lg" onClick={onCerrar}>
-              Repasar los temas de la fase
+            <Link to={`/modulo/${modulo.id}`} className="btn btn--primario btn--lg" onClick={onCerrar}>
+              Repasar los temas del módulo
             </Link>
           ) : !siguiente ? (
             <p className="modulo-fin-final">
-              Esta era la última fase del temario: completaste todo el programa.
+              Esta era la última modulo del temario: completaste todo el programa.
             </p>
           ) : bloqueada ? (
             <>
@@ -374,12 +374,12 @@ function ModuloCompletado({ fase, fases, pct, onCerrar }) {
                 <p className="modulo-fin-final" role="status">
                   {envio === 'enviada' ? 'Solicitud enviada.' : 'Ya tienes una solicitud pendiente.'}{' '}
                   Tu profesor la verá en su panel y te habilitará la
-                  Fase {siguiente.numero} · {siguiente.titulo}.
+                  Modulo {siguiente.numero} · {siguiente.titulo}.
                 </p>
               ) : confirmar ? (
                 <div className="modulo-fin-aviso" role="alert">
                   <p>
-                    <b>Vas a solicitar avanzar a la Fase {siguiente.numero}.</b> Solo hazlo si ya
+                    <b>Vas a solicitar avanzar a el Módulo {siguiente.numero}.</b> Solo hazlo si ya
                     dominas este módulo: tu profesor revisará tu desempeño antes de habilitártela y
                     no podrás cancelar la solicitud una vez enviada.
                   </p>
@@ -416,14 +416,14 @@ function ModuloCompletado({ fase, fases, pct, onCerrar }) {
               )}
             </>
           ) : (
-            <Link to={`/fase/${siguiente.id}`} className="btn btn--primario btn--lg">
-              Continuar con la Fase {siguiente.numero} →
+            <Link to={`/modulo/${siguiente.id}`} className="btn btn--primario btn--lg">
+              Continuar con el Módulo {siguiente.numero} →
             </Link>
           )}
         </div>
 
         <button className="modulo-fin-cerrar" onClick={onCerrar}>
-          Seguir repasando esta fase
+          Seguir repasando este módulo
         </button>
       </div>
     </div>

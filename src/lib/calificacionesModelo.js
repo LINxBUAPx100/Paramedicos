@@ -2,7 +2,7 @@
 //  Libro de calificaciones — lógica PURA
 // ------------------------------------------------------------
 //  Se califican EVALUACIONES QUE CREA EL MAESTRO (un examen presencial, una
-//  práctica, un trabajo), no las fases del temario. Y van SEPARADAS de los
+//  práctica, un trabajo), no los módulos del temario. Y van SEPARADAS de los
 //  `intentos` de la app: un intento es repetible a voluntad, así que mezclarlos
 //  en el mismo promedio lo infla y deja de significar nada. Se muestran uno al
 //  lado del otro, cada uno con su promedio.

@@ -2,25 +2,25 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 
 import {
-  estadoFaseAlumno, sePuedeAlternar, accionDeAlternar,
-  avanceDeAlumno, fasesHasta, resumenAvanceGrupo,
+  estadoModuloAlumno, sePuedeAlternar, accionDeAlternar,
+  avanceDeAlumno, modulosHasta, resumenAvanceGrupo,
 } from '../src/lib/avanceAlumno.js'
 
-const FASES = [{ id: 'f1' }, { id: 'f2' }, { id: 'f3' }, { id: 'f4' }]
+const MODULOS = [{ id: 'f1' }, { id: 'f2' }, { id: 'f3' }, { id: 'f4' }]
 // El grupo muestra f1 y oculta f2, f3 y f4.
 const OCULTAS = ['f2', 'f3', 'f4']
 
 test('las dos capas: lo del grupo y lo del alumno', () => {
-  assert.equal(estadoFaseAlumno('f1', { fasesOcultasDelGrupo: OCULTAS }), 'grupo')
-  assert.equal(estadoFaseAlumno('f2', { fasesOcultasDelGrupo: OCULTAS }), 'oculta')
+  assert.equal(estadoModuloAlumno('f1', { modulosOcultosDelGrupo: OCULTAS }), 'grupo')
+  assert.equal(estadoModuloAlumno('f2', { modulosOcultosDelGrupo: OCULTAS }), 'oculta')
   assert.equal(
-    estadoFaseAlumno('f2', { fasesOcultasDelGrupo: OCULTAS, fasesDesbloqueadas: ['f2'] }),
+    estadoModuloAlumno('f2', { modulosOcultosDelGrupo: OCULTAS, modulosDesbloqueados: ['f2'] }),
     'individual',
     'lo desbloqueado al alumno anula lo oculto del grupo'
   )
 })
 
-test('una fase que el grupo YA muestra no se puede quitar a una sola persona', () => {
+test('un módulo que el grupo YA muestra no se puede quitar a una sola persona', () => {
   // El campo solo suma, no resta: ofrecer un interruptor que no hace nada es
   // peor que no ofrecerlo.
   assert.equal(sePuedeAlternar('grupo'), false)
@@ -32,8 +32,8 @@ test('una fase que el grupo YA muestra no se puede quitar a una sola persona', (
 })
 
 test('el avance de un alumno cuenta lo que ve y lo que se le abrió a él', () => {
-  const al = { id: 'a1', fasesDesbloqueadas: ['f2'] }
-  const r = avanceDeAlumno(al, FASES, OCULTAS)
+  const al = { id: 'a1', modulosDesbloqueados: ['f2'] }
+  const r = avanceDeAlumno(al, MODULOS, OCULTAS)
   assert.deepEqual(r.filas.map((x) => x.estado), ['grupo', 'individual', 'oculta', 'oculta'])
   assert.equal(r.visibles, 2) // f1 por grupo + f2 por desbloqueo
   assert.equal(r.individuales, 1) // solo f2 es trabajo del profesor
@@ -41,7 +41,7 @@ test('el avance de un alumno cuenta lo que ve y lo que se le abrió a él', () =
 })
 
 test('un alumno sin nada desbloqueado solo ve lo del grupo', () => {
-  const r = avanceDeAlumno({ id: 'a2' }, FASES, OCULTAS)
+  const r = avanceDeAlumno({ id: 'a2' }, MODULOS, OCULTAS)
   assert.equal(r.visibles, 1)
   assert.equal(r.individuales, 0)
 })
@@ -50,28 +50,28 @@ test('«ábrele hasta aquí» devuelve solo lo que falta', () => {
   // Un maestro no piensa «desbloquea la 2, la 3 y la 4», piensa «que llegue
   // hasta la 4».
   assert.deepEqual(
-    fasesHasta(FASES, 'f4', { fasesOcultasDelGrupo: OCULTAS }),
+    modulosHasta(MODULOS, 'f4', { modulosOcultosDelGrupo: OCULTAS }),
     ['f2', 'f3', 'f4']
   )
   // Lo que ya tiene no se vuelve a pedir.
   assert.deepEqual(
-    fasesHasta(FASES, 'f4', { fasesOcultasDelGrupo: OCULTAS, fasesDesbloqueadas: ['f3'] }),
+    modulosHasta(MODULOS, 'f4', { modulosOcultosDelGrupo: OCULTAS, modulosDesbloqueados: ['f3'] }),
     ['f2', 'f4']
   )
   // Lo que el grupo ya muestra no hace falta desbloquearlo.
-  assert.deepEqual(fasesHasta(FASES, 'f1', { fasesOcultasDelGrupo: OCULTAS }), [])
-  // Una fase que no existe no produce escrituras.
-  assert.deepEqual(fasesHasta(FASES, 'nope', { fasesOcultasDelGrupo: OCULTAS }), [])
+  assert.deepEqual(modulosHasta(MODULOS, 'f1', { modulosOcultosDelGrupo: OCULTAS }), [])
+  // Un módulo que no existe no produce escrituras.
+  assert.deepEqual(modulosHasta(MODULOS, 'nope', { modulosOcultosDelGrupo: OCULTAS }), [])
 })
 
-test('el resumen del grupo dice cuántos llegan a cada fase', () => {
+test('el resumen del grupo dice cuántos llegan a cada módulo', () => {
   const alumnos = [
-    { id: 'a1', fasesDesbloqueadas: ['f2'] },
-    { id: 'a2', fasesDesbloqueadas: ['f2', 'f3'] },
+    { id: 'a1', modulosDesbloqueados: ['f2'] },
+    { id: 'a2', modulosDesbloqueados: ['f2', 'f3'] },
     { id: 'a3' },
   ]
-  const r = resumenAvanceGrupo(alumnos, FASES, OCULTAS)
-  assert.deepEqual(r.map((x) => [x.fase.id, x.conAcceso, x.individuales]), [
+  const r = resumenAvanceGrupo(alumnos, MODULOS, OCULTAS)
+  assert.deepEqual(r.map((x) => [x.modulo.id, x.conAcceso, x.individuales]), [
     ['f1', 3, 0], // el grupo la muestra: todos
     ['f2', 2, 2], // dos la tienen abierta individualmente
     ['f3', 1, 1],
@@ -83,6 +83,6 @@ test('el resumen del grupo dice cuántos llegan a cada fase', () => {
 test('aguanta datos ausentes sin romperse', () => {
   assert.deepEqual(avanceDeAlumno(null, null, null).filas, [])
   assert.deepEqual(resumenAvanceGrupo(null, null, null), [])
-  assert.equal(estadoFaseAlumno('f1', {}), 'grupo')
-  assert.equal(estadoFaseAlumno('f1'), 'grupo')
+  assert.equal(estadoModuloAlumno('f1', {}), 'grupo')
+  assert.equal(estadoModuloAlumno('f1'), 'grupo')
 })

@@ -1,6 +1,6 @@
 // ⚠️ ARCHIVO GENERADO por scripts/gen-nav-indice.mjs — NO editar a mano.
 // Índice ligero de navegación (metadatos) para el shell, sin el contenido pesado.
-export const fasesNav = [
+export const modulosNav = [
   {
     "id": "fase-1",
     "numero": 1,
@@ -424,7 +424,7 @@ export const fasesNav = [
 ]
 
 export const stats = {
-  "fases": 8,
+  "modulos": 8,
   "temas": 68,
   "preguntas": 374,
   "flashcards": 457,

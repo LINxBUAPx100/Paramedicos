@@ -1,7 +1,7 @@
 // ============================================================
 //  Modelo de contenido multiacademia — lógica PURA
 // ------------------------------------------------------------
-//  Sin Firebase, sin React: convierte el temario (fases + temas) en los
+//  Sin Firebase, sin React: convierte el temario (módulos + temas) en los
 //  DOCUMENTOS que viven en Firestore, y genera los IDs deterministas que
 //  garantizan el aislamiento por academia.
 //
@@ -9,14 +9,14 @@
 //  las pruebas de Node (`npm test`), así que la migración es reproducible y
 //  verificable sin tocar Firestore.
 //
-//  Jerarquía objetivo: Curso → Fase → Módulo → Tema. El temario actual migra
-//  como 1 curso cuyas fases llevan un MÓDULO IMPLÍCITO ('principal'); así la
+//  Jerarquía objetivo: Curso → Módulo → Unidad → Tema. El temario actual migra
+//  como 1 curso cuyas módulos llevan un UNIDAD IMPLÍCITO ('principal'); así la
 //  jerarquía queda lista para el editor (Fase 4) sin re-migrar, y el resolutor
-//  (Fase 3) puede aplanar los módulos implícitos para conservar la UX actual.
+//  (Fase 3) puede aplanar las unidades implícitos para conservar la UX actual.
 // ============================================================
 
 // Separador de segmentos en los IDs de documento. No aparece en los ids de
-// fase/tema del temario (son slugs con guion simple), así que es un separador
+// modulo/tema del temario (son slugs con guion simple), así que es un separador
 // inequívoco: academiaId__plantillaId__temaId.
 export const SEP = '__'
 
@@ -56,10 +56,10 @@ export function lotes(items, tam = 20) {
 }
 
 // Estructura LIGERA de un curso (solo metadatos: ids, títulos, estado) a partir
-// de las fases del temario. Es lo que se lee para pintar el sidebar/carrusel o
+// de los módulos del temario. Es lo que se lee para pintar el sidebar/carrusel o
 // para reordenar — sin arrastrar el contenido pesado de los temas.
-export function estructuraDesdeFases(fases) {
-  return fases.map((f) => ({
+export function estructuraDesdeModulos(modulos) {
+  return modulos.map((f) => ({
     id: f.id,
     titulo: f.titulo,
     subtitulo: f.subtitulo || '',
@@ -67,7 +67,7 @@ export function estructuraDesdeFases(fases) {
     color: f.color || '',
     icono: f.icono || '',
     estado: 'publicado',
-    modulos: [
+    unidades: [
       {
         id: 'principal',
         titulo: 'Contenido',
@@ -83,7 +83,7 @@ export function estructuraDesdeFases(fases) {
 }
 
 // Contenido de UN tema como documento, SIN los campos derivados que index.js
-// calcula (numero, faseId/faseNumero/faseTitulo/faseColor): el orden y la fase
+// calcula (numero, moduloId/moduloNumero/moduloTitulo/moduloColor): el orden y el módulo
 // los define la estructura del curso, no el doc del tema.
 export function contenidoTema(tema) {
   return {
@@ -104,11 +104,11 @@ export function contenidoTema(tema) {
 }
 
 // Documentos de una PLANTILLA global a partir del temario ya ensamblado
-// (fases + todosLosTemas de src/data/index.js). Devuelve el doc de plantilla y
+// (módulos + todosLosTemas de src/data/index.js). Devuelve el doc de plantilla y
 // la lista de docs de tema (cada uno con su docId determinista).
-export function plantillaDesdeData({ id, nombre, tipoDestino = 'basico', version = 1, fases, todosLosTemas }) {
+export function plantillaDesdeData({ id, nombre, tipoDestino = 'basico', version = 1, modulos, todosLosTemas }) {
   if (!id) throw new Error('plantillaDesdeData: falta id de plantilla.')
-  const estructura = estructuraDesdeFases(fases)
+  const estructura = estructuraDesdeModulos(modulos)
   const temas = (todosLosTemas || []).map((t) => ({
     docId: temaDocIdEnPlantilla(id, t.id),
     plantillaId: id,
@@ -137,6 +137,10 @@ export function cursoDesdePlantilla({ academiaId, plantilla }) {
     plantillaId: plantilla.id,
     titulo: plantilla.nombre || plantilla.id,
     tipoDestino: plantilla.tipoDestino || 'basico',
+    // Clase de estudio (TUM, Enfermería, TSU, Licenciatura, Curso,
+    // Certificación). La hereda de la plantilla; ausente ⇒ 'tum', que es lo
+    // que las academias ya tenían clonado (ver programasModelo.js).
+    tipoPrograma: plantilla.tipoPrograma || 'tum',
     estado: 'publicado',
     orden: 1,
     plantillaOrigenId: plantilla.id,

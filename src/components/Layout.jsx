@@ -37,8 +37,8 @@ export default function Layout({ children }) {
   const drawerRef = useRef(null)
   const { estado, alternarTema } = useProgress()
   const { autenticado, perfil, user, esStaff, esSuperadmin } = useAuth()
-  const { fases } = useIndiceContenido() // índice de LA academia (bundle si legacy)
-  const { faseVisible, temaVisible } = useVisibilidad()
+  const { modulos } = useIndiceContenido() // índice de LA academia (bundle si legacy)
+  const { moduloVisible, temaVisible } = useVisibilidad()
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -54,8 +54,8 @@ export default function Layout({ children }) {
   const navDrawer = [...NAV.filter(soloStaff), ...extraDrawer]
 
   // Recorrido de estudio filtrado por la visibilidad del grupo del alumno.
-  const fasesVisibles = fases
-    .filter((f) => faseVisible(f.id))
+  const modulosVisibles = modulos
+    .filter((f) => moduloVisible(f.id))
     .map((f) => ({ ...f, temas: f.temas.filter((t) => temaVisible(t.id)) }))
 
   const esHome = location.pathname === '/'
@@ -210,23 +210,23 @@ export default function Layout({ children }) {
             ))}
 
             <div className="nav-titulo">Recorrido de estudio</div>
-            {fasesVisibles.map((fase) => (
-              <div key={fase.id} className="nav-grupo">
+            {modulosVisibles.map((modulo) => (
+              <div key={modulo.id} className="nav-grupo">
                 <NavLink
-                  to={`/fase/${fase.id}`}
-                  className="nav-fase"
-                  style={{ '--fase-color': fase.color }}
+                  to={`/modulo/${modulo.id}`}
+                  className="nav-modulo"
+                  style={{ '--modulo-color': modulo.color }}
                   onClick={cerrar}
                 >
-                  <span className="nav-fase-num">{String(fase.numero).padStart(2, '0')}</span>
+                  <span className="nav-modulo-num">{String(modulo.numero).padStart(2, '0')}</span>
                   <span>
-                    <small>Fase {fase.numero}</small>
+                    <small>Módulo {modulo.numero}</small>
                     <br />
-                    {fase.titulo}
+                    {modulo.titulo}
                   </span>
                 </NavLink>
                 <div className="nav-subtemas">
-                  {fase.temas.map((tema) => (
+                  {modulo.temas.map((tema) => (
                     <NavLink
                       key={tema.id}
                       to={`/tema/${tema.id}`}
@@ -280,7 +280,7 @@ export default function Layout({ children }) {
             <Link to="/progreso">Mi progreso</Link>
             <Link to="/buscar">Buscar</Link>
             {/* Sin sesión, "Empezar" lleva a crear la cuenta (no a un candado). */}
-            <Link to={autenticado ? '/fase/fase-1' : '/cuenta'}>Empezar</Link>
+            <Link to={autenticado && modulos[0] ? `/modulo/${modulos[0].id}` : '/cuenta'}>Empezar</Link>
           </div>
           <div className="footer-col">
             <h4>Materiales</h4>

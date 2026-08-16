@@ -4,7 +4,7 @@
 //  Cubre las dos escaladas de privilegios que la auditoría encontró en la
 //  regla de auto-edición de usuarios/{uid} (no tenía lista blanca de campos):
 //
-//    · un ALUMNO se escribía `fasesDesbloqueadas` y se saltaba la
+//    · un ALUMNO se escribía `modulosDesbloqueados` y se saltaba la
 //      visibilidad por grupo (src/lib/useVisibilidad.js la lee del perfil),
 //    · un PROFESOR se escribía `puedeVerCodigos` y se saltaba la aprobación
 //      del director (el flujo de solicitudes tipo 'codigos').
@@ -84,13 +84,13 @@ after(async () => {
 
 // ---------- usuarios/{uid}: escalada de privilegios (C1) ----------
 
-test('perfil: un alumno NO se desbloquea módulos escribiendo fasesDesbloqueadas', { skip }, async () => {
+test('perfil: un alumno NO se desbloquea módulos escribiendo modulosDesbloqueados', { skip }, async () => {
   await preparar()
   const { doc, updateDoc } = fsmod
   const { assertFails } = rut
   await assertFails(
     updateDoc(doc(como('alumEscala'), 'usuarios/alumEscala'), {
-      fasesDesbloqueadas: ['fase-1', 'fase-2', 'fase-3'],
+      modulosDesbloqueados: ['modulo-1', 'modulo-2', 'modulo-3'],
     })
   )
 })
@@ -144,7 +144,7 @@ test('perfil: el staff SÍ habilita módulos a un alumno de su academia', { skip
   // La regla legítima (solo staff, solo ese campo) no se ve afectada por la
   // lista blanca de auto-edición: es otra `allow update` distinta.
   await assertSucceeds(
-    updateDoc(doc(como('profEscala'), 'usuarios/alumStaff'), { fasesDesbloqueadas: ['fase-2'] })
+    updateDoc(doc(como('profEscala'), 'usuarios/alumStaff'), { modulosDesbloqueados: ['modulo-2'] })
   )
 })
 

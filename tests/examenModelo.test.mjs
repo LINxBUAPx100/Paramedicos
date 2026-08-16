@@ -1,7 +1,7 @@
 // ============================================================
 //  Pruebas de la selección de preguntas de examen
 // ------------------------------------------------------------
-//  El examen de fase usaba las 73 preguntas de la fase, todas, siempre. Con
+//  El examen de módulo usaba las 73 preguntas del módulo, todas, siempre. Con
 //  eso, barajar el orden no impedía que dos alumnos se pasaran las respuestas:
 //  veían el mismo examen. Lo que se protege aquí:
 //
@@ -63,16 +63,19 @@ test('elegirCon nunca repite ni devuelve de más', () => {
 test('la semilla se convierte a un entero sin signo estable', () => {
   // Con signo, el estado del generador arranca negativo y la progresión se
   // rompe: mismo texto tiene que dar el mismo número, y siempre ≥ 0.
-  assert.equal(semillaANumero('fase-1'), semillaANumero('fase-1'))
-  assert.ok(semillaANumero('fase-1') >= 0)
+  assert.equal(semillaANumero('modulo-1'), semillaANumero('modulo-1'))
+  assert.ok(semillaANumero('modulo-1') >= 0)
   assert.ok(semillaANumero('') >= 0)
-  assert.notEqual(semillaANumero('fase-1'), semillaANumero('fase-2'))
+  assert.notEqual(semillaANumero('modulo-1'), semillaANumero('modulo-2'))
 })
 
 test('una semilla nueva lleva su prefijo y no trae caracteres confusos', () => {
-  const s = nuevaSemilla('fase-3', () => 0.5)
-  assert.match(s, /^fase-3-[a-z2-9]{8}$/)
-  assert.doesNotMatch(s, /[01oil]/, 'sin 0/O ni 1/I/L: la semilla se dicta a mano')
+  const s = nuevaSemilla('modulo-3', () => 0.5)
+  assert.match(s, /^modulo-3-[a-z2-9]{8}$/)
+  // Lo dictable es el CUERPO aleatorio, no el prefijo: el prefijo es el id del
+  // módulo y puede traer cualquier letra ('modulo-poblaciones' lleva o/i/l).
+  const cuerpo = s.slice('modulo-3-'.length)
+  assert.doesNotMatch(cuerpo, /[01oil]/, 'sin 0/O ni 1/I/L: la semilla se dicta a mano')
 })
 
 // ---------- tamaño ----------
@@ -85,7 +88,7 @@ test('el tamaño es una porción del banco, con piso y techo', () => {
 })
 
 test('el tamaño nunca supera el banco disponible', () => {
-  // Fases 7 y 8 del temario real (14 y 12 preguntas): se van al piso y el
+  // Módulos 7 y 8 del temario real (14 y 12 preguntas): se van al piso y el
   // examen es casi el banco entero. Es lo que hay con un banco así; lo que NO
   // puede pasar es pedir 12 preguntas de un banco de 8.
   assert.equal(tamanoExamen(14), MINIMO_PREGUNTAS)
@@ -136,13 +139,13 @@ test('el examen es reproducible: misma semilla, mismas preguntas y mismo orden',
   // Es la prueba que sostiene todo: sin esto, recargar la página vuelve a tirar
   // los dados y el alumno repite hasta que le salga el examen fácil.
   const b = banco(12, 7)
-  const a1 = seleccionarPreguntas(b, { semilla: 'fase-1-k3m9' })
-  const a2 = seleccionarPreguntas(b, { semilla: 'fase-1-k3m9' })
+  const a1 = seleccionarPreguntas(b, { semilla: 'modulo-1-k3m9' })
+  const a2 = seleccionarPreguntas(b, { semilla: 'modulo-1-k3m9' })
   assert.deepEqual(a1.map((q) => q.id), a2.map((q) => q.id))
 })
 
 test('dos alumnos con semillas distintas NO reciben el mismo examen', () => {
-  const b = banco(12, 7) // 84 preguntas, como una fase grande
+  const b = banco(12, 7) // 84 preguntas, como un módulo grande
   const a = seleccionarPreguntas(b, { semilla: 'alumno-a' })
   const c = seleccionarPreguntas(b, { semilla: 'alumno-b' })
   assert.notDeepEqual(a.map((q) => q.id), c.map((q) => q.id))
@@ -151,7 +154,7 @@ test('dos alumnos con semillas distintas NO reciben el mismo examen', () => {
   assert.ok(comunes < a.length * 0.75, `comparten ${comunes} de ${a.length}`)
 })
 
-test('todos los temas de la fase quedan representados', () => {
+test('todos los temas del módulo quedan representados', () => {
   // Sin reparto, una tirada podía dejar temas enteros fuera y otro alumno
   // recibir cuatro preguntas de ese mismo tema. Eso no es rigor, es suerte.
   const b = banco(12, 7)

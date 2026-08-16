@@ -28,7 +28,7 @@ export function usePanel() {
 export default function PanelShell() {
   const { cargando, esStaff, esSuperadmin, academiaId, academia, rol, user, perfil, capacidades } = useAuth()
   const datos = useDatosAcademia(academiaId)
-  const { fases } = useIndiceAcademia(academiaId)
+  const { modulos } = useIndiceAcademia(academiaId)
 
   // Un profesor con grupo asignado queda fijado a su grupo y no puede cambiar
   // el filtro: no tiene por qué ver el avance de los grupos de otro.
@@ -61,10 +61,10 @@ export default function PanelShell() {
       setGrupoFiltro,
       alumnos,
       staff,
-      fases,
+      modulos,
       nombreGrupo: (id) => datos.grupos.find((g) => g.id === id)?.nombre || id,
     }),
-    [datos, academiaId, academia, esDirector, user, soloGrupo, filtroEfectivo, alumnos, staff, fases]
+    [datos, academiaId, academia, esDirector, user, soloGrupo, filtroEfectivo, alumnos, staff, modulos]
   )
 
   if (cargando) {

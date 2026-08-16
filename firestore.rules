@@ -65,6 +65,42 @@ service cloud.firestore {
         && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid))
         && miDoc().academiaId == acaId;
     }
+
+    // --- AISLAMIENTO POR PROGRAMA ------------------------------------------
+    // El contenido ya no es uno solo: la academia imparte varias carreras,
+    // cursos y certificaciones. El PROGRAMA de un alumno lo define su GRUPO,
+    // y esa es la única fuente (espejo de src/lib/programasModelo.js).
+    //
+    // Por qué el grupo y no un campo en `usuarios`: sin Cloud Functions (plan
+    // Spark) no hay forma de mantener sincronizada una copia en el perfil, y
+    // un permiso rancio ahí no sería una molestia: sería una fuga de contenido.
+    //
+    // Coste: Firestore CACHEA los get() dentro de una misma petición, así que
+    // listar los temas de un programa cuesta miDoc()+miGrupo() UNA vez, no N.
+    function miGrupoId() { return miDoc().get('grupoId', null); }
+    function tengoGrupo() {
+      return miGrupoId() != null
+        && exists(/databases/$(database)/documents/grupos/$(miGrupoId()));
+    }
+    function miGrupo() {
+      return get(/databases/$(database)/documents/grupos/$(miGrupoId())).data;
+    }
+    function misProgramas() {
+      return [miGrupo().get('programaId', '')]
+        .concat(miGrupo().get('programasExtra', []));
+    }
+    // ¿Este curso está dentro del alcance del grupo del solicitante?
+    // Se compara contra el ID DEL DOCUMENTO del curso, que es lo que guarda
+    // `grupos/{id}.programaId` (cursoId = academiaId__plantillaId).
+    function cursoEnMiPrograma(cursoId) {
+      return tengoGrupo() && misProgramas().hasAny([cursoId]);
+    }
+    // Lectura de contenido por un ALUMNO: su academia + publicado + SU programa.
+    // Sin grupo NO lee nada: entró por código de academia o de prueba y todavía
+    // no está en ningún plan de estudios (decisión explícita del producto).
+    function alumnoLeeCurso(acaId, estado, cursoId) {
+      return perteneceA(acaId) && estado == 'publicado' && cursoEnMiPrograma(cursoId);
+    }
     // Plan EFECTIVO de una academia (espejo de src/lib/capacidades.js):
     // tipo 'avanzado' fuerza 'pro'; sin campo planComercial = 'pro' (academia
     // previa a los planes). Solo se evalúa en ESCRITURAS, nunca en lecturas.
@@ -355,12 +391,16 @@ service cloud.firestore {
       allow create: if (esSuper() || esAdminDe(request.resource.data.academiaId))
         && request.resource.data.nombre is string
         && request.resource.data.estado == 'activo';
+      // El DIRECTOR gobierna su grupo entero, incluido el PROGRAMA que cursa
+      // (programaId/programasExtra): es la llave del contenido que verán sus
+      // alumnos, así que un profesor no la toca (ver el allow update de abajo).
       allow update, delete: if esSuper() || esAdminDe(resource.data.academiaId);
       // Los PROFESORES de la academia pueden ajustar SOLO la visibilidad del
-      // contenido para el grupo (qué fases/temas ven los alumnos).
+      // contenido para el grupo (qué módulos/temas ven los alumnos). NO pueden
+      // cambiar `programaId`: eso movería al grupo entero de plan de estudios.
       allow update: if esStaffDe(resource.data.academiaId)
         && request.resource.data.diff(resource.data).affectedKeys()
-             .hasOnly(['fasesOcultas', 'temasOcultos']);
+             .hasOnly(['modulosOcultos', 'temasOcultos']);
     }
 
     // --- REPORTES de problemas en temas (los revisa el super-admin) ---
@@ -389,7 +429,7 @@ service cloud.firestore {
         // LISTA BLANCA: el propio usuario solo toca sus datos personales y los
         // campos de auto-servicio (unirse por código / canjear prueba). Sin
         // esto, todo campo NO enumerado más abajo quedaba escribible por su
-        // dueño — incluidos `fasesDesbloqueadas` (un alumno se desbloqueaba los
+        // dueño — incluidos `modulosDesbloqueados` (un alumno se desbloqueaba los
         // módulos que su grupo tiene ocultos) y `puedeVerCodigos` (un profesor
         // se auto-aprobaba el acceso a los códigos, saltándose la aprobación
         // del director). Ambos campos tienen sus propias reglas más abajo:
@@ -500,12 +540,12 @@ service cloud.firestore {
         && permisosEditorFormaValida();
 
       // El STAFF (profesor o director) puede HABILITAR módulos a los alumnos
-      // de su academia: SOLO el campo fasesDesbloqueadas (anula lo oculto del
+      // de su academia: SOLO el campo modulosDesbloqueados (anula lo oculto del
       // grupo para ese alumno, nada más).
       allow update: if esStaffDe(resource.data.academiaId)
         && resource.data.rol == 'alumno'
         && request.resource.data.diff(resource.data).affectedKeys()
-             .hasOnly(['fasesDesbloqueadas']);
+             .hasOnly(['modulosDesbloqueados']);
 
       // Super-admin puede gestionar cualquier usuario (incluye al supremo
       // promoviendo su propio doc a rol 'superadmin' en su primer acceso).
@@ -624,7 +664,9 @@ service cloud.firestore {
     }
 
     // --- SOLICITUDES de acceso ---
-    //  tipo 'modulo'  → alumno terminó una fase y pide la siguiente.
+    //  tipo 'modulo'  → alumno terminó un módulo y pide el siguiente.
+    //  (el valor 'modulo' es DATO PERSISTIDO desde antes del renombrado
+    //   Fase→Módulo: ya significaba el nivel superior, así que no cambia.)
     //  tipo 'codigos' → profesor pide ver los códigos de academia/grupos.
     match /solicitudes/{id} {
       // Crear: el propio usuario, firmando con su uid, siempre 'pendiente'
@@ -647,7 +689,7 @@ service cloud.firestore {
       allow delete: if esSuper() || esAdminDe(resource.data.academiaId);
     }
 
-    // --- INTENTOS de examen de fase ---
+    // --- INTENTOS de examen de módulo ---
     // --- LIBRO DE CALIFICACIONES (evaluaciones del maestro) ---
     // Separado de `intentos` a propósito: un intento lo genera el alumno y es
     // repetible; una calificación la pone el staff y es un juicio. Mezclarlos
@@ -796,10 +838,11 @@ service cloud.firestore {
     // --- CURSOS por academia (estructura ligera del temario) ---
     match /cursos/{cursoId} {
       // Leer: super-admin; staff de la academia (incluye borradores);
-      // alumnos de la academia SOLO lo publicado.
+      // alumnos de la academia SOLO lo publicado Y DE SU PROGRAMA.
+      // El id del doc de curso ES lo que apunta `grupos/{id}.programaId`.
       allow get, list: if esSuper()
         || esStaffDe(resource.data.academiaId)
-        || (perteneceA(resource.data.academiaId) && resource.data.estado == 'publicado');
+        || alumnoLeeCurso(resource.data.academiaId, resource.data.estado, cursoId);
       // Crear: super-admin, o el DIRECTOR de su academia si su plan permite
       // editar contenido (base NO edita). El doc nace con SU academiaId,
       // firmado por su autor y con versión 1 (Fase 3).
@@ -833,11 +876,12 @@ service cloud.firestore {
     // --- TEMAS por academia (contenido pesado, 1 doc por tema) ---
     match /temas/{docId} {
       // Leer: super-admin; staff de la academia (incluye borradores);
-      // alumnos de la academia SOLO temas publicados (los borradores no
-      // se filtran a los alumnos ni de su propia academia).
+      // alumnos de la academia SOLO temas publicados DE SU PROGRAMA (los
+      // borradores no se filtran a los alumnos ni de su propia academia, y el
+      // temario de otra carrera tampoco: el tema lleva su `cursoId`).
       allow get, list: if esSuper()
         || esStaffDe(resource.data.academiaId)
-        || (perteneceA(resource.data.academiaId) && resource.data.estado == 'publicado');
+        || alumnoLeeCurso(resource.data.academiaId, resource.data.estado, resource.data.cursoId);
       // Crear: super; director PRO; o profesor con permiso de edición sobre el
       // curso Y el permiso crearTemas (crear un tema nuevo es "crear").
       allow create: if (esSuper()

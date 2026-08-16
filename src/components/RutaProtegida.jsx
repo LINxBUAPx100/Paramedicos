@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
+import { motivoSinPrograma } from '../lib/programasModelo.js'
 import Icon from './Icon.jsx'
 
 // Pantallas específicas según el motivo por el que se bloquea el contenido.
@@ -49,7 +50,7 @@ const MENSAJES = {
 }
 
 export default function RutaProtegida({ children }) {
-  const { puedeAcceder, accesoCargando, motivoBloqueo } = useAuth()
+  const { puedeAcceder, accesoCargando, motivoBloqueo, rol, grupo, esSuperadmin } = useAuth()
 
   if (accesoCargando) {
     return (
@@ -60,7 +61,28 @@ export default function RutaProtegida({ children }) {
     )
   }
 
-  if (puedeAcceder) return children
+  // Segunda puerta: el contenido está aislado por PROGRAMA y el programa lo
+  // define el grupo. Un alumno sin grupo entró por código de academia o de
+  // prueba y todavía no está en ningún plan de estudios: no se le enseña un
+  // temario genérico, se le manda a canjear el código de su grupo.
+  // El staff y el super-admin nunca pasan por aquí (gestionan la academia).
+  if (puedeAcceder) {
+    const bloqueo = motivoSinPrograma({ rol, esSuperadmin, grupo })
+    if (!bloqueo) return children
+    return (
+      <div className="acceso-restringido" role="alert">
+        <span className="acceso-ico"><Icon name="candado" size={30} /></span>
+        <h1>{bloqueo.titulo}</h1>
+        <p>{bloqueo.texto}</p>
+        <Link to={bloqueo.destino} className="btn btn--pildora btn--carbon">
+          {bloqueo.codigo === 'sin-grupo' ? 'Ingresar mi código de grupo' : 'Volver al inicio'}
+        </Link>
+        {bloqueo.destino !== '/' && (
+          <Link to="/" className="link-discreto">← Volver al inicio</Link>
+        )}
+      </div>
+    )
+  }
 
   const info = MENSAJES[motivoBloqueo] || MENSAJES['no-sesion']
   return (

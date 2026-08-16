@@ -11,7 +11,7 @@ import IconoEstrella from '../components/marca/IconoEstrella.jsx'
 //  Landing pública — lo que ve quien NO tiene sesión
 // ------------------------------------------------------------
 //  Antes, el visitante anónimo veía EXACTAMENTE el mismo Home que un alumno:
-//  el carrusel de fases, el atlas, las flashcards… y cada enlace lo estrellaba
+//  el carrusel de módulos, el atlas, las flashcards… y cada enlace lo estrellaba
 //  contra «Únete a tu academia». Un embudo que termina en un muro.
 //
 //  Esta página responde a las tres preguntas que trae quien llega de fuera:
@@ -42,7 +42,7 @@ const PILARES = [
     icono: 'capas',
     titulo: 'Un recorrido, no un archivero',
     texto:
-      'El temario avanza por fases, de la célula al paciente crítico. Cada academia decide qué módulos abre y cuándo, según el avance real de su grupo.',
+      'El temario avanza por módulos, de la célula al paciente crítico. Cada academia decide qué módulos abre y cuándo, según el avance real de su grupo.',
   },
   {
     icono: 'progreso',
@@ -89,7 +89,7 @@ function PortadaLanding() {
           </div>
           <dl className="lp-cifras">
             {[
-              [stats.fases, 'fases'],
+              [stats.modulos, 'módulos'],
               [stats.temas, 'temas'],
               [stats.preguntas, 'preguntas'],
               [stats.flashcards, 'flashcards'],
@@ -195,7 +195,7 @@ function DemoTema() {
           {estado === 'espera' ? (
             <div className="lp-demo-espera">
               <p>
-                Anatomía y Fisiología Cardiovascular — un tema completo de la Fase 1, con sus
+                Anatomía y Fisiología Cardiovascular — un tema completo del Módulo 1, con sus
                 secciones, diagramas y conceptos clave.
               </p>
               <button type="button" className="btn btn--pildora btn--carbon" onClick={cargar}>
@@ -213,10 +213,10 @@ function DemoTema() {
             </div>
           ) : (
             <>
-              <header className="lp-demo-header" style={{ '--fase-color': tema.faseColor }}>
+              <header className="lp-demo-header" style={{ '--modulo-color': tema.moduloColor }}>
                 <span className="lp-demo-ico">{tema.icono}</span>
                 <div>
-                  <span className="lp-demo-num">Fase {tema.faseNumero} · Tema {tema.numero}</span>
+                  <span className="lp-demo-num">Modulo {tema.moduloNumero} · Tema {tema.numero}</span>
                   <h3>{tema.titulo}</h3>
                 </div>
               </header>

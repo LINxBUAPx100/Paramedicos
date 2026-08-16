@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom'
 import Layout from './components/Layout.jsx'
 import ErrorBoundary from './components/ErrorBoundary.jsx'
 import RutaProtegida from './components/RutaProtegida.jsx'
@@ -11,11 +11,11 @@ import { useAuth } from './context/AuthContext.jsx'
 
 // Rutas de contenido: carga diferida. Su código y los datos pesados del temario
 // (data/index.js) salen del bundle inicial y se descargan solo al visitarlas.
-const FasePage = lazy(() => import('./pages/FasePage.jsx'))
+const ModuloPage = lazy(() => import('./pages/ModuloPage.jsx'))
 const TemaPage = lazy(() => import('./pages/TemaPage.jsx'))
 const QuizPage = lazy(() => import('./pages/QuizPage.jsx'))
 const ExamenPage = lazy(() => import('./pages/ExamenPage.jsx'))
-const ExamenFasePage = lazy(() => import('./pages/ExamenFasePage.jsx'))
+const ExamenModuloPage = lazy(() => import('./pages/ExamenModuloPage.jsx'))
 const FlashcardsPage = lazy(() => import('./pages/FlashcardsPage.jsx'))
 const ProgresoPage = lazy(() => import('./pages/ProgresoPage.jsx'))
 const BuscarPage = lazy(() => import('./pages/BuscarPage.jsx'))
@@ -71,6 +71,16 @@ function Inicio() {
   return <Home />
 }
 
+// Redirección de las URLs ANTERIORES al renombrado Fase→Módulo.
+// `/fase/:id` y `/fase/:id/examen` fueron durante meses la identidad pública
+// del contenido: hay enlaces compartidos por alumnos y guardados en marcadores.
+// `replace` evita dejar la URL vieja en el historial del navegador (con
+// HashRouter, volver atrás a una ruta muerta es especialmente confuso).
+function RedirigirModulo({ examen = false }) {
+  const { moduloId } = useParams()
+  return <Navigate to={`/modulo/${moduloId}${examen ? '/examen' : ''}`} replace />
+}
+
 export default function App() {
   const location = useLocation()
   return (
@@ -83,8 +93,12 @@ export default function App() {
             <Route path="/cuenta" element={<Cuenta />} />
 
             {/* Contenido: requiere sesión + academia activa (o superadmin) */}
-            <Route path="/fase/:faseId" element={<RutaProtegida><FasePage /></RutaProtegida>} />
-            <Route path="/fase/:faseId/examen" element={<RutaProtegida><ExamenFasePage /></RutaProtegida>} />
+            <Route path="/modulo/:moduloId" element={<RutaProtegida><ModuloPage /></RutaProtegida>} />
+            <Route path="/modulo/:moduloId/examen" element={<RutaProtegida><ExamenModuloPage /></RutaProtegida>} />
+
+            {/* Compatibilidad: enlaces antiguos /fase/* → /modulo/* */}
+            <Route path="/fase/:moduloId" element={<RedirigirModulo />} />
+            <Route path="/fase/:moduloId/examen" element={<RedirigirModulo examen />} />
             <Route path="/tema/:temaId" element={<RutaProtegida><TemaPage /></RutaProtegida>} />
             <Route path="/tema/:temaId/quiz" element={<RutaProtegida><QuizPage /></RutaProtegida>} />
             <Route path="/examen" element={<RutaProtegida><ExamenPage /></RutaProtegida>} />

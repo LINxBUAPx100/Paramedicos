@@ -66,7 +66,7 @@ export default function ActivarCopia({
       <p>
         Ahora mismo esta academia usa el <strong>temario estándar</strong> de la plataforma, que no
         se puede modificar. Para tener contenido propio hay que crear una copia editable: un temario
-        de la academia, con sus fases, sus temas y sus materiales.
+        de la academia, con sus modulos, sus temas y sus materiales.
       </p>
 
       <p className="editor-arranque-nota">

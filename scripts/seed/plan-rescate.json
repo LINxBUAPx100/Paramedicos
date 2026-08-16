@@ -1,0 +1,2929 @@
+{
+  "fuente": "PLAN DE ESTUDIOS PARAMÉDICO R.E.S.C.A.T.E. — DERECHOS RESERVADOS R.E.S.C.A.T.E. © 2024",
+  "extraidoDe": "PLAN DE ESTUDIOS PARAMÉDICO RESCATE OFICIAL.pdf (17 páginas)",
+  "version": 1,
+  "nomenclatura": {
+    "programa": "Carrera, curso o certificación completa. Es el doc `cursos` del modelo actual.",
+    "modulo": "Sustituye a \"fase\". Es la MÓDULO N del PDF.",
+    "unidad": "Fila TEMA del PDF. Agrupa temas; lleva las semanas/horas oficiales. No es estudiable por sí misma.",
+    "tema": "Viñeta de la columna SUBTEMAS del PDF. UNIDAD ESTUDIABLE: página propia, quiz, flashcards y progreso."
+  },
+  "avisos": [
+    "Los títulos se transcriben VERBATIM del PDF. Los que llevan `revisar:true` conservan la grafía original y proponen corrección en `notaRevision`; ninguna se aplicó sin autorización.",
+    "El PDF no indica qué subtema corresponde a qué día salvo cuando parte un tema en varias filas con sus propias semanas/horas. Por eso `sesion` solo viene poblado en esos casos; el resto queda en null para que lo asigne el instructor desde el editor.",
+    "Módulo 4 / tema 9 (URGENCIAS DEL SISTEMA NERVIOSO) declara 2 semanas y 5 horas. Es el ÚNICO descuadre aritmético del plan: el total del módulo declarado en el PDF (23 semanas / 115 horas) exige 10 horas ahí; con 5 la suma da 110. Se transcribe el valor original y se marca `revisar`.",
+    "Verificado: 7 módulos, 56 temas, 270 subtemas, 326 ids únicos, 88 semanas y 440 horas — coincide con la suma de los totales por módulo declarados en el PDF."
+  ],
+  "programas": [
+    {
+      "id": "tum-rescate",
+      "tipoPrograma": "tum",
+      "titulo": "Paramédico R.E.S.C.A.T.E. (TUM/TEM)",
+      "subtitulo": "Plan de estudios oficial",
+      "totales": {
+        "semanas": 88,
+        "horas": 440
+      },
+      "reglas": {
+        "especializacionesRequeridas": 2,
+        "notaOficial": "es requisito indispensable que el alumno tome 2 cursos de especialización durante su preparación profesional."
+      },
+      "bibliografiaSugerida": [
+        "PRINCIPIOS DE ANATOMÍA Y FISIOLOGÍA; TORTORA; ED PANAMERICANA.",
+        "MANUAL ACLS 2020",
+        "MANUAL \"PHTLS ED 9\", PALS, NALS,",
+        "AMLS, AMIR, MIR MOYA, MANUAL DE URGENCIAS JIMÉNEZ",
+        "EMPACT.",
+        "VADEMECUM FARMACOLOGÍA"
+      ],
+      "modulos": [
+        {
+          "id": "m1-propedeutico",
+          "numero": 1,
+          "titulo": "PROPEDÉUTICO",
+          "subtitulo": "PRIMEROS AUXILIOS BASICOS E INTERMEDIOS",
+          "totales": {
+            "semanas": 4,
+            "horas": 20
+          },
+          "unidades": [
+            {
+              "id": "m1-primeros-auxilios-basicos",
+              "numero": 1,
+              "titulo": "PRIMEROS AUXILIOS BÁSICOS.",
+              "tipo": "contenido",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m1-pab-introduccion",
+                  "titulo": "Introducción.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m1-pab-avdi",
+                  "titulo": "AVDI y activación del SMU.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m1-pab-rcp-legos-adulto",
+                  "titulo": "RCP legos en adulto.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m1-pab-dea",
+                  "titulo": "Uso del DEA.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m1-pab-ovace-adultos",
+                  "titulo": "OVACE. En adultos",
+                  "orden": 5,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m1-pab-hemorragias",
+                  "titulo": "Hemorragias.",
+                  "orden": 6,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m1-pab-fracturas",
+                  "titulo": "Fracturas.",
+                  "orden": 7,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m1-pab-quemaduras",
+                  "titulo": "Quemaduras.",
+                  "orden": 8,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m1-pab-botiquin",
+                  "titulo": "Botiquín ideal.",
+                  "orden": 9,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m1-primeros-auxilios-intermedios",
+              "numero": 2,
+              "titulo": "PRIMEROS AUXILIOS INTERMEDIOS",
+              "tipo": "contenido",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m1-pai-evaluacion-xabcde",
+                  "titulo": "Evaluación inicial y secundaria. (XABCDE)",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m1-pai-signos-vitales",
+                  "titulo": "Toma de signos vitales.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m1-pai-heridas-especiales",
+                  "titulo": "Heridas especiales. (evisceración, arma de fuego y amputación).",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m1-pai-rcp-pediatrico",
+                  "titulo": "RCP en pediátrico y lactante.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m1-pai-ovace-pediatrico",
+                  "titulo": "OVACE en pediátrico y lactante.",
+                  "orden": 5,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m1-pai-intoxicaciones",
+                  "titulo": "Intoxicaciones.",
+                  "orden": 6,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m1-pai-ferulas-vendajes",
+                  "titulo": "Taller de férulas y vendajes.",
+                  "orden": 7,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m1-introduccion-smu",
+              "numero": 3,
+              "titulo": "INTRODUCCIÓN AL SISTEMA MÉDICO DE URGENCIAS.",
+              "tipo": "contenido",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m1-smu-bienestar-tum",
+                  "titulo": "Bienestar del TUM.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m1-smu-medico-legales",
+                  "titulo": "Aspectos médico-legales.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m1-smu-terminologia",
+                  "titulo": "Terminología médica (sufijos y prefijos).",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m1-smu-posiciones-lineas",
+                  "titulo": "Posiciones, líneas anatómicas y cuadrantes.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m1-examen",
+              "numero": 4,
+              "titulo": "EXAMEN",
+              "tipo": "examen",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m1-examen-aplicacion",
+                  "titulo": "Aplicación de examen, calificación de examen y entrega de calificaciones.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "m2-cuerpo-humano",
+          "numero": 2,
+          "titulo": "EL CUERPO HUMANO",
+          "subtitulo": "PRINCIPIOS DE ANATOMÍA Y FISIOLOGÍA.",
+          "totales": {
+            "semanas": 19,
+            "horas": 95
+          },
+          "unidades": [
+            {
+              "id": "m2-anat-fisio-esencial",
+              "numero": 1,
+              "titulo": "ANAT Y FISIO ESCENCIAL.",
+              "tipo": "contenido",
+              "semanas": 5,
+              "horas": 25,
+              "revisar": true,
+              "notaRevision": "El PDF escribe «ESCENCIAL»; la grafía correcta sería «ESENCIAL».",
+              "temas": [
+                {
+                  "id": "m2-afe-celula",
+                  "titulo": "Célula función y organelos.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m2-afe-liquidos-electrolitos",
+                  "titulo": "Líquidos y electrolitos.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m2-afe-electrofisiologia",
+                  "titulo": "Electrofisiología.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m2-afe-acido-base",
+                  "titulo": "Equilibrio ácido base.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m2-afe-metabolismo",
+                  "titulo": "Metabolismo.",
+                  "orden": 5,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m2-afe-tegumentario",
+                  "titulo": "Sistema tegumentario.",
+                  "orden": 6,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m2-examen-1",
+              "numero": 2,
+              "titulo": "1er EXAMEN",
+              "tipo": "examen",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m2-examen-1-unico",
+                  "titulo": "1er EXAMEN",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null,
+                  "generado": true,
+                  "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
+                }
+              ]
+            },
+            {
+              "id": "m2-anat-fisio-intermedia",
+              "numero": 3,
+              "titulo": "ANAT Y FISIO INTERMEDIA.",
+              "tipo": "contenido",
+              "semanas": 5,
+              "horas": 25,
+              "temas": [
+                {
+                  "id": "m2-afi-oseo",
+                  "titulo": "Sistema óseo.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m2-afi-muscular",
+                  "titulo": "Sistema muscular.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m2-afi-cardiovascular",
+                  "titulo": "Sistema cardiovascular.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m2-afi-nervioso",
+                  "titulo": "Sistema nervioso.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m2-afi-digestivo",
+                  "titulo": "Sistema digestivo.",
+                  "orden": 5,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m2-afi-urinario",
+                  "titulo": "Sistema urinario.",
+                  "orden": 6,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m2-examen-2",
+              "numero": 4,
+              "titulo": "2do EXAMEN",
+              "tipo": "examen",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m2-examen-2-unico",
+                  "titulo": "2do EXAMEN",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null,
+                  "generado": true,
+                  "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
+                }
+              ]
+            },
+            {
+              "id": "m2-anatomia-opcional",
+              "numero": 5,
+              "titulo": "ANATOMÍA OPCIONAL",
+              "tipo": "contenido",
+              "opcional": true,
+              "semanas": 5,
+              "horas": 25,
+              "temas": [
+                {
+                  "id": "m2-ao-hematopoyetico",
+                  "titulo": "Sistema hematopoyético.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m2-ao-linfatico-inmunitario",
+                  "titulo": "Sistema linfático e inmunitario.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m2-ao-reproductor",
+                  "titulo": "Sistema reproductor masculino y femenino.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m2-ao-sentidos",
+                  "titulo": "Órganos de los sentidos.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m2-ao-endocrino",
+                  "titulo": "Sistema endocrino.",
+                  "orden": 5,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m2-practica",
+              "numero": 6,
+              "titulo": "PRÁCTICA",
+              "tipo": "practica",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m2-practica-unico",
+                  "titulo": "PRÁCTICA",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null,
+                  "generado": true,
+                  "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
+                }
+              ]
+            },
+            {
+              "id": "m2-examen-final",
+              "numero": 7,
+              "titulo": "EXAMEN FINAL",
+              "tipo": "examen",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m2-examen-final-unico",
+                  "titulo": "EXAMEN FINAL",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null,
+                  "generado": true,
+                  "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "m3-evaluacion-soporte-vital",
+          "numero": 3,
+          "titulo": "EVALUACIÓN INICIAL Y SOPORTE VITAL.",
+          "subtitulo": "",
+          "totales": {
+            "semanas": 9,
+            "horas": 45
+          },
+          "revisar": true,
+          "notaRevision": "El PDF escribe «MODULO 3: EVALUACIÓN INICIAL…» (sin tilde en MÓDULO y con «INCIAL» en el encabezado original).",
+          "unidades": [
+            {
+              "id": "m3-evaluacion-primaria",
+              "numero": 1,
+              "titulo": "Evaluación primaria.",
+              "tipo": "contenido",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m3-ep-sss",
+                  "titulo": "SSS.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m3-ep-avdi",
+                  "titulo": "AVDI",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m3-ep-via-aerea-cervicales",
+                  "titulo": "Apertura de vía aérea y control de cervicales.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m3-ep-respiracion",
+                  "titulo": "Evaluación de la respiración.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m3-ep-circulacion",
+                  "titulo": "Evaluación de la circulación.",
+                  "orden": 5,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m3-ep-neurologica",
+                  "titulo": "Evaluación neurológica.",
+                  "orden": 6,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m3-ep-exploracion-dirigida",
+                  "titulo": "Exploración dirigida",
+                  "orden": 7,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m3-evaluacion-secundaria",
+              "numero": 2,
+              "titulo": "Evaluación secundaria.",
+              "tipo": "contenido",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m3-es-abcde",
+                  "titulo": "ABCDE",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m3-es-sample",
+                  "titulo": "SAMPLE.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m3-es-exploracion-detallada",
+                  "titulo": "Exploración física detallada.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m3-examen-1",
+              "numero": 3,
+              "titulo": "1er EXAMEN",
+              "tipo": "examen",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m3-examen-1-unico",
+                  "titulo": "1er EXAMEN",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null,
+                  "generado": true,
+                  "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
+                }
+              ]
+            },
+            {
+              "id": "m3-manejo-via-aerea",
+              "numero": 4,
+              "titulo": "Manejo de Vía aérea.",
+              "tipo": "contenido",
+              "semanas": 3,
+              "horas": 15,
+              "grupos": [
+                "Métodos manuales",
+                "Métodos mecánicos",
+                "Métodos transtraqueales",
+                "Oxigenoterapia"
+              ],
+              "temas": [
+                {
+                  "id": "m3-va-repaso-anatomia",
+                  "titulo": "Repaso anatomía y fisiología pulmonar.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m3-va-levantamiento-menton",
+                  "titulo": "Levantamiento del mentón.",
+                  "orden": 2,
+                  "grupo": "Métodos manuales",
+                  "sesion": null
+                },
+                {
+                  "id": "m3-va-triple-maniobra",
+                  "titulo": "Triple maniobra mod.",
+                  "orden": 3,
+                  "grupo": "Métodos manuales",
+                  "sesion": null
+                },
+                {
+                  "id": "m3-va-menton-inclinacion",
+                  "titulo": "Levantamiento del mentón e inclinación de cervicales.",
+                  "orden": 4,
+                  "grupo": "Métodos manuales",
+                  "sesion": null
+                },
+                {
+                  "id": "m3-va-canulas-orofaringeas",
+                  "titulo": "Cánulas orofaríngeas.",
+                  "orden": 5,
+                  "grupo": "Métodos mecánicos",
+                  "sesion": null
+                },
+                {
+                  "id": "m3-va-canulas-nasofaringeas",
+                  "titulo": "Cánulas nasofaríngeas.",
+                  "orden": 6,
+                  "grupo": "Métodos mecánicos",
+                  "sesion": null
+                },
+                {
+                  "id": "m3-va-tecnica-intubacion",
+                  "titulo": "Técnica de Intubación.",
+                  "orden": 7,
+                  "grupo": "Métodos mecánicos",
+                  "sesion": null
+                },
+                {
+                  "id": "m3-va-hojas-tubos",
+                  "titulo": "Tipos de hojas y tamaños de tubo endotraqueal.",
+                  "orden": 8,
+                  "grupo": "Métodos mecánicos",
+                  "sesion": null
+                },
+                {
+                  "id": "m3-va-mascarilla-laringea",
+                  "titulo": "Mascarilla laríngea.",
+                  "orden": 9,
+                  "grupo": "Métodos mecánicos",
+                  "sesion": null
+                },
+                {
+                  "id": "m3-va-obturador-esofagico",
+                  "titulo": "Obturador esofágico.",
+                  "orden": 10,
+                  "grupo": "Métodos mecánicos",
+                  "sesion": null
+                },
+                {
+                  "id": "m3-va-cricotirotomia",
+                  "titulo": "CricotirotomÍa con aguja.",
+                  "orden": 11,
+                  "grupo": "Métodos transtraqueales",
+                  "sesion": null
+                },
+                {
+                  "id": "m3-va-dispositivos-o2",
+                  "titulo": "Dispositivos de oxigenoterapia. (puntas nasales y BVM).",
+                  "orden": 12,
+                  "grupo": "Oxigenoterapia",
+                  "sesion": null
+                },
+                {
+                  "id": "m3-va-tanques-o2",
+                  "titulo": "Tipos de tanques de o2.",
+                  "orden": 13,
+                  "grupo": "Oxigenoterapia",
+                  "sesion": null
+                },
+                {
+                  "id": "m3-va-isr",
+                  "titulo": "Intubación de secuencia rápida o asistida farmacológicamente.",
+                  "orden": 14,
+                  "grupo": "Oxigenoterapia",
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m3-via-intravenosa",
+              "numero": 5,
+              "titulo": "Vía intravenosa.",
+              "tipo": "contenido",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m3-vi-ventajas-desventajas",
+                  "titulo": "Terapia intravenosa ventajas y desventajas.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m3-vi-sitios-puncion",
+                  "titulo": "Sitios de punción.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m3-vi-cristaloides",
+                  "titulo": "Soluciones cristaloides.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m3-vi-canalizacion",
+                  "titulo": "Técnica de canalización y práctica.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m3-vi-osteolisis",
+                  "titulo": "Osteólisis.",
+                  "orden": 5,
+                  "grupo": null,
+                  "sesion": null,
+                  "revisar": true,
+                  "notaRevision": "En contexto de accesos vasculares lo esperable es «osteoclisis» (infusión intraósea); «osteólisis» es destrucción ósea. Confirmar con la academia."
+                }
+              ]
+            },
+            {
+              "id": "m3-monitor-desfibrilador",
+              "numero": 6,
+              "titulo": "Monitor desfibrilador.",
+              "tipo": "contenido",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m3-md-ecg-basica",
+                  "titulo": "Electrocardiografía básica.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m3-md-uso-monitor",
+                  "titulo": "Uso del monitor desfibrilador.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m3-md-arritmias-letales",
+                  "titulo": "Arritmias letales.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m3-md-codigo-mega",
+                  "titulo": "Código mega. Y práctica.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m3-examen-final",
+              "numero": 7,
+              "titulo": "EXAMEN FINAL Y ENTREGA DE CALIFICACIONES",
+              "tipo": "examen",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m3-examen-final-unico",
+                  "titulo": "EXAMEN FINAL Y ENTREGA DE CALIFICACIONES",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null,
+                  "generado": true,
+                  "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "m4-urgencias-medico-quirurgicas",
+          "numero": 4,
+          "titulo": "MANEJO DE URGENCIAS MÉDICO QUIRÚRGICAS.",
+          "subtitulo": "",
+          "totales": {
+            "semanas": 23,
+            "horas": 115
+          },
+          "unidades": [
+            {
+              "id": "m4-epidemiologia",
+              "numero": 1,
+              "titulo": "EPIDEMIOLOGÍA Y CLASIFICACIÓN DE ENFERMEDADES",
+              "tipo": "contenido",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m4-epi-conceptos",
+                  "titulo": "Conceptos básicos de epidemiología.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-epi-urgencia-emergencia",
+                  "titulo": "Urgencia y emergencia.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-epi-clasificacion",
+                  "titulo": "Agudas o crónicas, por frecuencia, por origen y por sistemas.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m4-farmacologia",
+              "numero": 2,
+              "titulo": "FARMACOLOGÍA",
+              "tipo": "contenido",
+              "semanas": 2,
+              "horas": 10,
+              "sesiones": [
+                {
+                  "n": 1,
+                  "semanas": 1,
+                  "horas": 5
+                },
+                {
+                  "n": 2,
+                  "semanas": 1,
+                  "horas": 5
+                }
+              ],
+              "notaEstructura": "El PDF parte este tema en DOS filas con 1 semana / 5 horas cada una: por eso `sesion` sí viene poblado aquí.",
+              "temas": [
+                {
+                  "id": "m4-far-generalidades",
+                  "titulo": "Generalidades de farmacología.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": 1
+                },
+                {
+                  "id": "m4-far-nom-034",
+                  "titulo": "Fármacos usados en el SMU según la NOM 034.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": 1
+                },
+                {
+                  "id": "m4-far-dosis-urgencia",
+                  "titulo": "Medicamentos y sus dosis en la urgencia.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": 2
+                },
+                {
+                  "id": "m4-far-infusiones-aminas",
+                  "titulo": "Manejo de infusiones y aminas.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": 2
+                }
+              ]
+            },
+            {
+              "id": "m4-practica-aminas",
+              "numero": 3,
+              "titulo": "PRACTICA",
+              "tipo": "practica",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m4-pra-taller-aminas",
+                  "titulo": "Taller de ejercicios de aminas.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m4-urgencias-respiratorias",
+              "numero": 4,
+              "titulo": "URGENCIAS RESPIRATORIAS",
+              "tipo": "contenido",
+              "semanas": 3,
+              "horas": 15,
+              "temas": [
+                {
+                  "id": "m4-resp-exploracion-torax",
+                  "titulo": "Exploración de tórax dirigida.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-resp-insuficiencia",
+                  "titulo": "Síndrome de insuficiencia respiratoria.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-resp-epoc",
+                  "titulo": "EPOC agudizado",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-resp-edema-pulmon",
+                  "titulo": "Edema agudo de pulmón.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-resp-neumotorax-espontaneo",
+                  "titulo": "Neumotórax espontáneo.",
+                  "orden": 5,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-resp-tep",
+                  "titulo": "TEP",
+                  "orden": 6,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-resp-neumonia-bronquitis",
+                  "titulo": "Neumonía y Bronquitis.",
+                  "orden": 7,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-resp-asma",
+                  "titulo": "Asma.",
+                  "orden": 8,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m4-urgencias-gastrointestinales",
+              "numero": 5,
+              "titulo": "URGENCIAS GASTROINTESTINALES",
+              "tipo": "contenido",
+              "semanas": 3,
+              "horas": 15,
+              "temas": [
+                {
+                  "id": "m4-gi-exploracion-abdominal",
+                  "titulo": "Exploración abdominal y abdomen agudo.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-gi-apendicitis",
+                  "titulo": "Apendicitis.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-gi-pancreatitis",
+                  "titulo": "Pancreatitis.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-gi-gastritis-colitis",
+                  "titulo": "Gastritis y colitis.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-gi-colelitiasis",
+                  "titulo": "Colelitiasis y colecistitis.",
+                  "orden": 5,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-gi-deshidratacion",
+                  "titulo": "Deshidratación.",
+                  "orden": 6,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-gi-oclusion-intestinal",
+                  "titulo": "Oclusión intestinal.",
+                  "orden": 7,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-gi-sangrado-tubo",
+                  "titulo": "Sangrado de tubo digestivo.",
+                  "orden": 8,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-gi-cirrosis-hepatitis",
+                  "titulo": "Cirrosis y hepatitis.",
+                  "orden": 9,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m4-urgencias-cardiologicas",
+              "numero": 6,
+              "titulo": "URGENCIAS CARDIOLÓGICAS",
+              "tipo": "contenido",
+              "semanas": 3,
+              "horas": 15,
+              "temas": [
+                {
+                  "id": "m4-card-exploracion",
+                  "titulo": "Exploración cardiaca.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-card-ecg-basica",
+                  "titulo": "Electrocardiografía básica.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-card-sca",
+                  "titulo": "Síndrome coronario agudo.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-card-pcr-megacode",
+                  "titulo": "Paro cardiorrespiratorio RCP avanzado. \"Mega code\"",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-card-arritmias",
+                  "titulo": "Bradiarritmias y taquiarritmias.",
+                  "orden": 5,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-card-insuficiencia",
+                  "titulo": "Insuficiencia cardiaca.",
+                  "orden": 6,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-card-hipertension",
+                  "titulo": "Hipertensión arterial.",
+                  "orden": 7,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m4-urgencias-metabolicas",
+              "numero": 7,
+              "titulo": "URGENCIAS METABÓLICAS",
+              "tipo": "contenido",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m4-met-diabetes",
+                  "titulo": "Diabetes mellitus.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-met-complicaciones",
+                  "titulo": "Complicaciones diabéticas.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-met-acido-base",
+                  "titulo": "Desequilibrio ácido- base.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m4-examen-1",
+              "numero": 8,
+              "titulo": "1er EXAMEN",
+              "tipo": "examen",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m4-examen-1-unico",
+                  "titulo": "1er EXAMEN",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null,
+                  "generado": true,
+                  "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
+                }
+              ]
+            },
+            {
+              "id": "m4-urgencias-urinarias",
+              "numero": 9,
+              "titulo": "URGENCIAS URINARIAS",
+              "tipo": "contenido",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m4-uri-ivu",
+                  "titulo": "Infección de vías urinarias.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-uri-urolitiasis",
+                  "titulo": "Urolitiasis.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-uri-desequilibrio-electrolitico",
+                  "titulo": "Desequilibrio electrolítico.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-uri-insuficiencia-renal",
+                  "titulo": "Insuficiencia renal.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m4-urgencias-sistema-nervioso",
+              "numero": 10,
+              "titulo": "URGENCIAS DEL SISTEMA NERVIOSO",
+              "tipo": "contenido",
+              "semanas": 2,
+              "horas": 5,
+              "revisar": true,
+              "notaRevision": "El PDF declara 2 semanas y 5 horas. El TOTAL del módulo declarado por el propio PDF (23 semanas / 115 horas) solo cuadra si aquí son 10 horas: sumando 5 da 110. Se transcribe el 5 tal cual y se marca para que la academia confirme el 10.",
+              "temas": [
+                {
+                  "id": "m4-neu-exploracion",
+                  "titulo": "Exploración neurológica dirigida.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-neu-cefalea-migrana",
+                  "titulo": "Cefalea y migraña.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-neu-evc",
+                  "titulo": "Accidente cerebrovascular.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-neu-crisis-convulsivas",
+                  "titulo": "Crisis convulsivas y status epiléptico.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-neu-sincope",
+                  "titulo": "Síncope.",
+                  "orden": 5,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m4-urgencias-gineco-obstetricas",
+              "numero": 11,
+              "titulo": "URGNCIAS GINECO-OBSTÉTRICAS",
+              "tipo": "contenido",
+              "semanas": 3,
+              "horas": 15,
+              "revisar": true,
+              "notaRevision": "El PDF escribe «URGNCIAS»; la grafía correcta sería «URGENCIAS».",
+              "sesiones": [
+                {
+                  "n": 1,
+                  "semanas": 1,
+                  "horas": 5
+                },
+                {
+                  "n": 2,
+                  "semanas": 1,
+                  "horas": 5
+                },
+                {
+                  "n": 3,
+                  "semanas": 1,
+                  "horas": 5
+                }
+              ],
+              "notaEstructura": "El PDF parte este tema en TRES filas de 1 semana / 5 horas: por eso `sesion` sí viene poblado aquí.",
+              "temas": [
+                {
+                  "id": "m4-gyn-exploracion",
+                  "titulo": "Exploración ginecológica dirigida.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": 1
+                },
+                {
+                  "id": "m4-gyn-cambios-embarazo",
+                  "titulo": "Cambios fisiológicos en el embarazo.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": 1
+                },
+                {
+                  "id": "m4-gyn-trabajo-parto",
+                  "titulo": "Atención al trabajo de parto.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": 2
+                },
+                {
+                  "id": "m4-gyn-parto-distocico",
+                  "titulo": "Atención a parto distócico.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": 2
+                },
+                {
+                  "id": "m4-gyn-sufrimiento-fetal",
+                  "titulo": "Sufrimiento fetal agudo",
+                  "orden": 5,
+                  "grupo": null,
+                  "sesion": 2
+                },
+                {
+                  "id": "m4-gyn-hemorragia-2do-3er",
+                  "titulo": "Hemorragia del 2do y 3er trimestre",
+                  "orden": 6,
+                  "grupo": null,
+                  "sesion": 3
+                },
+                {
+                  "id": "m4-gyn-aborto",
+                  "titulo": "Aborto",
+                  "orden": 7,
+                  "grupo": null,
+                  "sesion": 3
+                },
+                {
+                  "id": "m4-gyn-ectopico",
+                  "titulo": "Embarazo ectópico.",
+                  "orden": 8,
+                  "grupo": null,
+                  "sesion": 3
+                },
+                {
+                  "id": "m4-gyn-torsion-ovarica",
+                  "titulo": "Torsión ovárica.",
+                  "orden": 9,
+                  "grupo": null,
+                  "sesion": 3
+                },
+                {
+                  "id": "m4-gyn-hemorragia-postparto",
+                  "titulo": "Hemorragia postparto.",
+                  "orden": 10,
+                  "grupo": null,
+                  "sesion": 3
+                },
+                {
+                  "id": "m4-gyn-eclampsia",
+                  "titulo": "Eclampsia y preeclampsia.",
+                  "orden": 11,
+                  "grupo": null,
+                  "sesion": 3
+                }
+              ]
+            },
+            {
+              "id": "m4-urgencias-toxicologicas",
+              "numero": 12,
+              "titulo": "URGENCIAS TOXICOLÓGICAS.",
+              "tipo": "contenido",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m4-tox-toxindromes",
+                  "titulo": "Toxindromes e intoxicación por medicamentos.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-tox-abstinencia",
+                  "titulo": "Síndrome de abstinencia.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-tox-picaduras",
+                  "titulo": "Picadura de alacrán y mordedura de araña, serpientes y abejas.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m4-tox-anafilaxia",
+                  "titulo": "Reacciones anafilácticas",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m4-examen-final",
+              "numero": 13,
+              "titulo": "EXAMEN FINAL Y ENTREGA DE CALIFICACIONES",
+              "tipo": "examen",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m4-examen-final-unico",
+                  "titulo": "EXAMEN FINAL Y ENTREGA DE CALIFICACIONES",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null,
+                  "generado": true,
+                  "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "m5-emergencias-traumatologicas",
+          "numero": 5,
+          "titulo": "EMERGENCIAS TRAUMATOLÓGICAS",
+          "subtitulo": "",
+          "totales": {
+            "semanas": 20,
+            "horas": 100
+          },
+          "unidades": [
+            {
+              "id": "m5-cinematica-trauma",
+              "numero": 1,
+              "titulo": "CINEMÁTICA DE TRAUMA Y MECANISMOS DE LESIÓN",
+              "tipo": "contenido",
+              "semanas": 2,
+              "horas": 10,
+              "temas": [
+                {
+                  "id": "m5-cin-definicion",
+                  "titulo": "Definición de trauma y cinemática.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-cin-energia-cinetica",
+                  "titulo": "Energía cinética.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-cin-energia-potencial",
+                  "titulo": "Energía potencial.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-cin-abierto-cerrado",
+                  "titulo": "Trauma abierto o cerrado.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-cin-cavitacion",
+                  "titulo": "Cavitación.",
+                  "orden": 5,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-cin-arma-blanca-fuego",
+                  "titulo": "Impacto por arma blanca y arma de fuego.",
+                  "orden": 6,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-cin-triada-wadell",
+                  "titulo": "Tríada de Wadell.",
+                  "orden": 7,
+                  "grupo": null,
+                  "sesion": null,
+                  "revisar": true,
+                  "notaRevision": "La grafía habitual es «Waddell»."
+                },
+                {
+                  "id": "m5-cin-desaceleracion",
+                  "titulo": "Tipos de impacto en desaceleración.",
+                  "orden": 8,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-cin-vehiculo-automotor",
+                  "titulo": "Tipos de impacto en vehículo automotor.",
+                  "orden": 9,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-cin-motocicleta",
+                  "titulo": "Lesiones en motocicleta.",
+                  "orden": 10,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-cin-explosiones",
+                  "titulo": "Tipos de impactos en explosiones.",
+                  "orden": 11,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m5-hemorragia-shock",
+              "numero": 2,
+              "titulo": "HEMORRAGIA Y ESTADO DE SHOCK",
+              "tipo": "contenido",
+              "semanas": 2,
+              "horas": 10,
+              "temas": [
+                {
+                  "id": "m5-hs-definicion",
+                  "titulo": "Definición.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-hs-tipos-hemorragias",
+                  "titulo": "Tipos de hemorragias.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-hs-control-hemorragias",
+                  "titulo": "Control de hemorragias.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-hs-torniquete",
+                  "titulo": "Uso del torniquete.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-hs-definicion-tipos-shock",
+                  "titulo": "Definición y tipos de shock.",
+                  "orden": 5,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-hs-fisiopatologia",
+                  "titulo": "Fisiopatología del estado de shock.",
+                  "orden": 6,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-hs-hipovolemico",
+                  "titulo": "Shock hipovolémico, signos y síntomas y tratamiento.",
+                  "orden": 7,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-hs-cardiogenico",
+                  "titulo": "Shock cardiogénico.",
+                  "orden": 8,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-hs-neurogenico",
+                  "titulo": "Shock neurogénico",
+                  "orden": 9,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-hs-anafilactico",
+                  "titulo": "Shock anafiláctico.",
+                  "orden": 10,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-hs-septico",
+                  "titulo": "Shock séptico.",
+                  "orden": 11,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-hs-signos-tratamiento",
+                  "titulo": "Signos y síntomas y tratamiento prehospitalario.",
+                  "orden": 12,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m5-trauma-torax",
+              "numero": 3,
+              "titulo": "TRAUMA DE TÓRAX",
+              "tipo": "contenido",
+              "semanas": 2,
+              "horas": 10,
+              "notaOficial": "(signos y síntomas, soporte vital, toracentesis, pericardiocentesis.)",
+              "temas": [
+                {
+                  "id": "m5-tt-definicion",
+                  "titulo": "Definición.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tt-clasificacion",
+                  "titulo": "Clasificación de abierto o cerrado.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tt-clavicula",
+                  "titulo": "Lesión de clavícula.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tt-escapula",
+                  "titulo": "Lesión de escápula.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tt-esofago",
+                  "titulo": "Lesión de esófago.",
+                  "orden": 5,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tt-traquea-laringe",
+                  "titulo": "Lesión de tráquea y laringe.",
+                  "orden": 6,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tt-costilla",
+                  "titulo": "Lesión de costilla.",
+                  "orden": 7,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tt-torax-inestable",
+                  "titulo": "Tórax inestable o batiente.",
+                  "orden": 8,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tt-neumotorax-simple",
+                  "titulo": "Neumotórax simple.",
+                  "orden": 9,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tt-neumotorax-abierto",
+                  "titulo": "Neumotórax abierto.",
+                  "orden": 10,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tt-neumotorax-tension",
+                  "titulo": "Neumotórax a tensión.",
+                  "orden": 11,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tt-hemotorax",
+                  "titulo": "Hemotórax.",
+                  "orden": 12,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tt-hemoneumotorax",
+                  "titulo": "Hemo neumotórax.",
+                  "orden": 13,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tt-quilotorax",
+                  "titulo": "Quilotórax.",
+                  "orden": 14,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tt-contusion-pulmonar",
+                  "titulo": "Contusión pulmonar.",
+                  "orden": 15,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tt-traqueo-bronquial",
+                  "titulo": "Trauma traqueo bronquial.",
+                  "orden": 16,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tt-disrupcion-aortica",
+                  "titulo": "Desgarro o disrupción aórtica.",
+                  "orden": 17,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tt-taponamiento",
+                  "titulo": "Taponamiento cardiaco (triada de Beck).",
+                  "orden": 18,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tt-contusion-miocardica",
+                  "titulo": "Contusión miocárdica.",
+                  "orden": 19,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tt-asfixia-traumatica",
+                  "titulo": "Asfixia traumática.",
+                  "orden": 20,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tt-ruptura-diafragmatica",
+                  "titulo": "Ruptura diafragmática.",
+                  "orden": 21,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m5-trauma-abdomen",
+              "numero": 4,
+              "titulo": "TRAUMA DE ABDOMEN",
+              "tipo": "contenido",
+              "semanas": 2,
+              "horas": 10,
+              "notaOficial": "(signos y síntomas y tratamiento prehospitalario)",
+              "temas": [
+                {
+                  "id": "m5-ta-definicion",
+                  "titulo": "Definición.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-ta-abdomen-agudo",
+                  "titulo": "Abdomen agudo.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-ta-cuadrantes",
+                  "titulo": "Cuadrantes y exploración física.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-ta-estomago",
+                  "titulo": "lesión de estómago.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-ta-pancreas",
+                  "titulo": "Lesión de páncreas.",
+                  "orden": 5,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-ta-bazo",
+                  "titulo": "Lesión de bazo.",
+                  "orden": 6,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-ta-higado",
+                  "titulo": "Lesión de hígado.",
+                  "orden": 7,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-ta-intestino",
+                  "titulo": "Lesión de intestino.",
+                  "orden": 8,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-ta-genitourinaria",
+                  "titulo": "Lesión genitourinaria.",
+                  "orden": 9,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m5-examen-1",
+              "numero": 5,
+              "titulo": "1er EXAMEN",
+              "tipo": "examen",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m5-examen-1-unico",
+                  "titulo": "1er EXAMEN",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null,
+                  "generado": true,
+                  "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
+                }
+              ]
+            },
+            {
+              "id": "m5-trauma-craneo-columna",
+              "numero": 6,
+              "titulo": "TRAUMA DE CRÁNEO Y COLUMNA",
+              "tipo": "contenido",
+              "semanas": 2,
+              "horas": 10,
+              "grupos": [
+                "Columna"
+              ],
+              "temas": [
+                {
+                  "id": "m5-tcc-definicion",
+                  "titulo": "Definición.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tcc-kellie-monroe",
+                  "titulo": "Doctrina de Kellie Monroe.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null,
+                  "revisar": true,
+                  "notaRevision": "La grafía habitual es «doctrina de Monro-Kellie»."
+                },
+                {
+                  "id": "m5-tcc-fractura-craneo",
+                  "titulo": "Fractura de cráneo.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tcc-escalpe",
+                  "titulo": "Escalpe o avulsión de cuero cabelludo.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tcc-lesiones-difusas",
+                  "titulo": "Lesiones difusas.",
+                  "orden": 5,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tcc-lesiones-focales",
+                  "titulo": "Lesiones focales.",
+                  "orden": 6,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tcc-lesiones-intracraneales",
+                  "titulo": "Lesiones intracraneales.",
+                  "orden": 7,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tcc-glasgow",
+                  "titulo": "Escala de coma de Glasgow.",
+                  "orden": 8,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tcc-pic",
+                  "titulo": "Aumentos de la PIC (nivel1, 2 y 3).",
+                  "orden": 9,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tcc-signos-sintomas",
+                  "titulo": "Signos y síntomas.",
+                  "orden": 10,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tcc-tratamiento",
+                  "titulo": "Tratamiento prehospitalario.",
+                  "orden": 11,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tcc-manitol",
+                  "titulo": "Uso de manitol, anticonvulsivantes e intubación endotraqueal.",
+                  "orden": 12,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tcc-fracturas-vertebrales",
+                  "titulo": "Fracturas de cuerpo vertebral.",
+                  "orden": 13,
+                  "grupo": "Columna",
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tcc-medular-anterior",
+                  "titulo": "Lesión medular anterior.",
+                  "orden": 14,
+                  "grupo": "Columna",
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tcc-medular-posterior",
+                  "titulo": "Lesión medular posterior.",
+                  "orden": 15,
+                  "grupo": "Columna",
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tcc-cauda-equina",
+                  "titulo": "Síndrome de causa equina.",
+                  "orden": 16,
+                  "grupo": "Columna",
+                  "sesion": null,
+                  "revisar": true,
+                  "notaRevision": "La grafía correcta es «síndrome de cauda equina»."
+                },
+                {
+                  "id": "m5-tcc-brown-sequard",
+                  "titulo": "Síndrome de Brown sequard.",
+                  "orden": 17,
+                  "grupo": "Columna",
+                  "sesion": null,
+                  "revisar": true,
+                  "notaRevision": "La grafía habitual es «Brown-Séquard»."
+                },
+                {
+                  "id": "m5-tcc-exploracion-fisica",
+                  "titulo": "Exploración física.",
+                  "orden": 18,
+                  "grupo": "Columna",
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tcc-signos-tratamiento-columna",
+                  "titulo": "Signos y síntomas y tratamiento prehospitalario.",
+                  "orden": 19,
+                  "grupo": "Columna",
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tcc-inmovilizacion-espinal",
+                  "titulo": "Inmovilización espinal e indicaciones de tabla rígida.",
+                  "orden": 20,
+                  "grupo": "Columna",
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m5-trauma-ojo-cara-cuello",
+              "numero": 7,
+              "titulo": "TRAUMA DE OJO, CARA Y CUELLO.",
+              "tipo": "contenido",
+              "semanas": 2,
+              "horas": 10,
+              "grupos": [
+                "Trauma facial",
+                "Trauma ocular",
+                "Trauma de cuello"
+              ],
+              "temas": [
+                {
+                  "id": "m5-tocc-lefort",
+                  "titulo": "Fracturas de lefort. 1, ,2 y 3.",
+                  "orden": 1,
+                  "grupo": "Trauma facial",
+                  "sesion": null,
+                  "revisar": true,
+                  "notaRevision": "La grafía correcta es «fracturas de Le Fort I, II y III»."
+                },
+                {
+                  "id": "m5-tocc-facial-signos",
+                  "titulo": "Signos y síntomas y tratamiento.",
+                  "orden": 2,
+                  "grupo": "Trauma facial",
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tocc-ocular-empalado",
+                  "titulo": "Objeto empalado.",
+                  "orden": 3,
+                  "grupo": "Trauma ocular",
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tocc-hemorragia-conjuntival",
+                  "titulo": "Hemorragia conjuntival e hifema.",
+                  "orden": 4,
+                  "grupo": "Trauma ocular",
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tocc-lesion-muscular-ojo",
+                  "titulo": "Lesión muscular de ojo.",
+                  "orden": 5,
+                  "grupo": "Trauma ocular",
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tocc-ocular-exploracion",
+                  "titulo": "Exploración y tratamiento.",
+                  "orden": 6,
+                  "grupo": "Trauma ocular",
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tocc-cuello-hemorragias",
+                  "titulo": "Control de hemorragias.",
+                  "orden": 7,
+                  "grupo": "Trauma de cuello",
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tocc-cuello-exploracion",
+                  "titulo": "Exploración física.",
+                  "orden": 8,
+                  "grupo": "Trauma de cuello",
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tocc-cuello-empalado",
+                  "titulo": "Objeto empalado.",
+                  "orden": 9,
+                  "grupo": "Trauma de cuello",
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m5-trauma-musculoesqueletico",
+              "numero": 8,
+              "titulo": "TRAUMA MUSCULOESQUELÉTICO.",
+              "tipo": "contenido",
+              "semanas": 2,
+              "horas": 10,
+              "temas": [
+                {
+                  "id": "m5-tme-fracturas-inmovilizacion",
+                  "titulo": "Definición de Fracturas tipos de inmovilización.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tme-esguinces-luxaciones",
+                  "titulo": "Esguinces, luxaciones, desagarres y sus tratamientos.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null,
+                  "revisar": true,
+                  "notaRevision": "El PDF escribe «desagarres»; la grafía correcta sería «desgarros»."
+                },
+                {
+                  "id": "m5-tme-cadera",
+                  "titulo": "Lesión de cadera, signos y síntomas y tratamiento.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tme-compartimental",
+                  "titulo": "Síndrome compartimental.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tme-aplastamiento",
+                  "titulo": "Síndrome de aplastamiento.",
+                  "orden": 5,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tme-ferulas-sager-hare",
+                  "titulo": "Férulas sager y hare.",
+                  "orden": 6,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-tme-farmacos",
+                  "titulo": "Fármacos usados en trauma de extremidades sin poli trauma y paciente estable. (AINE, opioide, cloruro de etilo.)",
+                  "orden": 7,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m5-lesiones-ambientales",
+              "numero": 9,
+              "titulo": "LESIONES AMBIENTALES",
+              "tipo": "contenido",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m5-la-hipotermia",
+                  "titulo": "Hipotermia.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-la-golpe-calor",
+                  "titulo": "Golpe de calor.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-la-insolacion",
+                  "titulo": "Insolación.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m5-quemaduras",
+              "numero": 10,
+              "titulo": "QUEMADURAS",
+              "tipo": "contenido",
+              "semanas": 2,
+              "horas": 10,
+              "temas": [
+                {
+                  "id": "m5-que-definicion",
+                  "titulo": "Definición.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-que-agentes-termicos",
+                  "titulo": "Tipos de agentes térmicos.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-que-grados",
+                  "titulo": "Grados de quemaduras y sus signos y síntomas.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-que-regla-9s",
+                  "titulo": "Regla de los 9s.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-que-parkland",
+                  "titulo": "Fórmula de parkland y sus indicaciones.",
+                  "orden": 5,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-que-tratamiento",
+                  "titulo": "Tratamiento de quemaduras: analgesia, hipotermia, reposición de líquidos y sonda Foley.",
+                  "orden": 6,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m5-que-curacion",
+                  "titulo": "Curación de quemaduras en extremidad única.",
+                  "orden": 7,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m5-practica",
+              "numero": 11,
+              "titulo": "PRÁCTICA",
+              "tipo": "practica",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m5-practica-unico",
+                  "titulo": "PRÁCTICA",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null,
+                  "generado": true,
+                  "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
+                }
+              ]
+            },
+            {
+              "id": "m5-examen-final",
+              "numero": 12,
+              "titulo": "EXAMEN FINAL Y ENTREGA DE CALIFICACIONES",
+              "tipo": "examen",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m5-examen-final-unico",
+                  "titulo": "EXAMEN FINAL Y ENTREGA DE CALIFICACIONES",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null,
+                  "generado": true,
+                  "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "m6-poblaciones-especiales",
+          "numero": 6,
+          "titulo": "POBLACIONES ESPECIALES",
+          "subtitulo": "URGENCIAS PEDIATRICAS Y GERIÁTRICAS.",
+          "totales": {
+            "semanas": 9,
+            "horas": 45
+          },
+          "unidades": [
+            {
+              "id": "m6-introduccion-pediatria",
+              "numero": 1,
+              "titulo": "INTRODUCCIÓN A LA PEDIATRÍA Y EVALUACIÓN DEL PACIENTE PEDIÁTRICO",
+              "tipo": "contenido",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m6-ip-pediatria",
+                  "titulo": "Pediatría",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-ip-anatomia-fisiologia",
+                  "titulo": "Anatomía y fisiología",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-ip-crecimiento",
+                  "titulo": "Crecimiento y desarrollo",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-ip-impresion-general",
+                  "titulo": "Impresión general",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-ip-triangulo",
+                  "titulo": "Triángulo de evaluación pediátrica",
+                  "orden": 5,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-ip-xabcde",
+                  "titulo": "Evaluación de X, A, B, C, D, E.",
+                  "orden": 6,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m6-situaciones-especiales",
+              "numero": 2,
+              "titulo": "SITUACIONES ESPECIALES",
+              "tipo": "contenido",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m6-se-asuntos-familiares",
+                  "titulo": "Asuntos familiares",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-se-abuso-infantil",
+                  "titulo": "Abuso infantil",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-se-muerte-subita",
+                  "titulo": "Síndrome de muerte súbita infantil.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-se-necesidades-especiales",
+                  "titulo": "Lactantes y niños con necesidades especiales.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m6-soporte-vital-pediatrico",
+              "numero": 3,
+              "titulo": "SOPORTE VITAL EN PEDIATRICO",
+              "tipo": "contenido",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m6-svp-rcp-neonatal",
+                  "titulo": "RCP neonatal y pediátrico",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-svp-ovace",
+                  "titulo": "OVACE.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m6-parcial-1",
+              "numero": 4,
+              "titulo": "1er PARCIAL",
+              "tipo": "examen",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m6-parcial-1-unico",
+                  "titulo": "1er PARCIAL",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null,
+                  "generado": true,
+                  "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
+                }
+              ]
+            },
+            {
+              "id": "m6-emergencias-pediatria",
+              "numero": 5,
+              "titulo": "EMERGENCIAS MÉDICO QUIRÚRGICAS EN PEDIATRÍA",
+              "tipo": "contenido",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m6-emp-ivr",
+                  "titulo": "Infección de vías respiratorias.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-emp-sufrimiento-fetal",
+                  "titulo": "Sufrimiento fetal agudo",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-emp-patologia-respiratoria-rn",
+                  "titulo": "Patología respiratoria del recién nacido.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-emp-rn-sano-asfixia",
+                  "titulo": "Atención al recién nacido sano y con asfixia.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-emp-asma",
+                  "titulo": "Asma.",
+                  "orden": 5,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-emp-deshidratacion",
+                  "titulo": "Deshidratación",
+                  "orden": 6,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-emp-apendicitis",
+                  "titulo": "Apendicitis",
+                  "orden": 7,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-emp-oclusion-intestinal",
+                  "titulo": "Oclusión intestinal",
+                  "orden": 8,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-emp-sx-febril",
+                  "titulo": "Sx febril y convulsiones.",
+                  "orden": 9,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-emp-meningitis",
+                  "titulo": "Meningitis.",
+                  "orden": 10,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-emp-cardiopatias",
+                  "titulo": "Cardiopatías congénitas",
+                  "orden": 11,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m6-trauma-pediatrico",
+              "numero": 6,
+              "titulo": "TRAUATISMO EN EL PACIENTE PEDIATRICO",
+              "tipo": "contenido",
+              "semanas": 1,
+              "horas": 5,
+              "revisar": true,
+              "notaRevision": "El PDF escribe «TRAUATISMO … PEDIATRICO»; la grafía correcta sería «TRAUMATISMO EN EL PACIENTE PEDIÁTRICO».",
+              "temas": [
+                {
+                  "id": "m6-tp-introduccion",
+                  "titulo": "Introducción al trauma pediátrico.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-tp-sistemas-corporales",
+                  "titulo": "Lesiones en sistemas corporales específicos.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-tp-inmovilizacion",
+                  "titulo": "Inmovilización.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-tp-manejo-lesiones",
+                  "titulo": "Manejo de lesiones pediátricas.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-tp-osteolisis",
+                  "titulo": "Osteólisis.",
+                  "orden": 5,
+                  "grupo": null,
+                  "sesion": null,
+                  "revisar": true,
+                  "notaRevision": "Mismo caso que en el Módulo 3: en contexto de accesos vasculares lo esperable es «osteoclisis» (vía intraósea)."
+                }
+              ]
+            },
+            {
+              "id": "m6-introduccion-geriatria",
+              "numero": 7,
+              "titulo": "INTRODUCCIÓN A LA GERIATRÍA",
+              "tipo": "contenido",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m6-ig-definicion",
+                  "titulo": "Definición de geriatría.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-ig-comunicacion",
+                  "titulo": "La comunicación con el adulto mayor.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-ig-gems",
+                  "titulo": "El diamante GEMS.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-ig-cambios-fisiologicos",
+                  "titulo": "Cambios fisiológicos del paciente geriátrico.",
+                  "orden": 4,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-ig-causas-muerte",
+                  "titulo": "Causas principales de muerte.",
+                  "orden": 5,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-ig-polifarmacia",
+                  "titulo": "Polifarmacia.",
+                  "orden": 6,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-ig-envejecimiento-trauma",
+                  "titulo": "Impacto del envejecimiento en trauma.",
+                  "orden": 7,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-ig-envejecimiento-urgencias",
+                  "titulo": "Impacto del envejecimiento en urgencias médicas.",
+                  "orden": 8,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-ig-envejecimiento-psiquiatria",
+                  "titulo": "Impacto del envejecimiento en psiquiatría.",
+                  "orden": 9,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-ig-abuso-mayores",
+                  "titulo": "Abuso en personas mayores.",
+                  "orden": 10,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m6-manejo-geriatrico",
+              "numero": 8,
+              "titulo": "EVALUACIÓN Y MANEJO DEL PACIENTE GERIÁTRICO",
+              "tipo": "contenido",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m6-mg-evaluacion",
+                  "titulo": "Evaluación y manejo del paciente geriátrico.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-mg-traumatismo",
+                  "titulo": "Traumatismo geriátrico.",
+                  "orden": 2,
+                  "grupo": null,
+                  "sesion": null
+                },
+                {
+                  "id": "m6-mg-emergencias-medicas",
+                  "titulo": "Emergencias médicas geriátricas.",
+                  "orden": 3,
+                  "grupo": null,
+                  "sesion": null
+                }
+              ]
+            },
+            {
+              "id": "m6-examen-final",
+              "numero": 9,
+              "titulo": "EXAMEN FINAL Y ENTREGA DE CALIFICACIONES",
+              "tipo": "examen",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m6-examen-final-unico",
+                  "titulo": "EXAMEN FINAL Y ENTREGA DE CALIFICACIONES",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null,
+                  "generado": true,
+                  "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "m7-operaciones-especiales",
+          "numero": 7,
+          "titulo": "OPERACIONES ESPECIALES.",
+          "subtitulo": "",
+          "totales": {
+            "semanas": 4,
+            "horas": 20
+          },
+          "notaEstructura": "El PDF no desglosa subtemas para este módulo (columna SUBTEMA vacía).",
+          "unidades": [
+            {
+              "id": "m7-operaciones-ambulancias",
+              "numero": 1,
+              "titulo": "OPERACIONES DE AMBULANCIAS.",
+              "tipo": "contenido",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m7-operaciones-ambulancias-unico",
+                  "titulo": "OPERACIONES DE AMBULANCIAS.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null,
+                  "generado": true,
+                  "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
+                }
+              ]
+            },
+            {
+              "id": "m7-acceso-extraccion",
+              "numero": 2,
+              "titulo": "OBTENCIÓN DE ACCESO Y EXTRACCIÓN.",
+              "tipo": "contenido",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m7-acceso-extraccion-unico",
+                  "titulo": "OBTENCIÓN DE ACCESO Y EXTRACCIÓN.",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null,
+                  "generado": true,
+                  "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
+                }
+              ]
+            },
+            {
+              "id": "m7-operaciones-especiales",
+              "numero": 3,
+              "titulo": "OPERACIONES ESPECIALES",
+              "tipo": "contenido",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m7-operaciones-especiales-unico",
+                  "titulo": "OPERACIONES ESPECIALES",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null,
+                  "generado": true,
+                  "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
+                }
+              ]
+            },
+            {
+              "id": "m7-triage",
+              "numero": 4,
+              "titulo": "MANEJO DE ESCENARIOS CON MÚLTIPLES VÍCTIMAS (TRIAGE).",
+              "tipo": "contenido",
+              "semanas": 1,
+              "horas": 5,
+              "temas": [
+                {
+                  "id": "m7-triage-unico",
+                  "titulo": "MANEJO DE ESCENARIOS CON MÚLTIPLES VÍCTIMAS (TRIAGE).",
+                  "orden": 1,
+                  "grupo": null,
+                  "sesion": null,
+                  "generado": true,
+                  "notaGenerado": "El PDF no desglosa subtemas para esta unidad; se crea un tema homónimo."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "esp-seguridad-laboral",
+      "tipoPrograma": "curso",
+      "numeroOficial": 8,
+      "titulo": "SEGURIDAD LABORAL E INDUSTRIAL",
+      "categoria": "especializacion",
+      "modulos": []
+    },
+    {
+      "id": "esp-rescate-acuatico",
+      "tipoPrograma": "curso",
+      "numeroOficial": 9,
+      "titulo": "RESCATE ACUÁTICO.",
+      "categoria": "especializacion",
+      "modulos": []
+    },
+    {
+      "id": "esp-operaciones-ambulancias",
+      "tipoPrograma": "curso",
+      "numeroOficial": 10,
+      "titulo": "OPERACIONES DE AMBULANCIAS",
+      "categoria": "especializacion",
+      "modulos": []
+    },
+    {
+      "id": "esp-soporte-vital-avanzado",
+      "tipoPrograma": "curso",
+      "numeroOficial": 11,
+      "titulo": "SOPORTE VITAL AVANZADO (MANEJO DE VENTILADORES, BOMBAS DE INFUSIÓN, MONITOR MULTIPARÁMETROS).",
+      "categoria": "especializacion",
+      "modulos": []
+    },
+    {
+      "id": "esp-farmacologia-prehospitalaria",
+      "tipoPrograma": "curso",
+      "numeroOficial": 12,
+      "titulo": "FARMACOLOGÍA PREHOSPITALARIA.",
+      "categoria": "especializacion",
+      "modulos": []
+    },
+    {
+      "id": "esp-rescate-vertical",
+      "tipoPrograma": "curso",
+      "numeroOficial": 13,
+      "titulo": "RESCATE VERTICAL, DESCENSO Y ACENSO DE PACIENTES.",
+      "categoria": "especializacion",
+      "revisar": true,
+      "notaRevision": "El PDF escribe «ACENSO»; la grafía correcta sería «ASCENSO».",
+      "modulos": []
+    },
+    {
+      "id": "esp-acls",
+      "tipoPrograma": "curso",
+      "numeroOficial": 14,
+      "titulo": "CURSO DE CARDIOLOGÍA AVANZADA TIPO ACLS.",
+      "categoria": "especializacion",
+      "candidatoCertificacion": true,
+      "modulos": []
+    },
+    {
+      "id": "esp-casos-reales",
+      "tipoPrograma": "curso",
+      "numeroOficial": 15,
+      "titulo": "TALLER DE CASOS REALES TRAUMA Y MÉDICO QUIRÚRGICAS.",
+      "categoria": "especializacion",
+      "modulos": []
+    },
+    {
+      "id": "esp-camilleria",
+      "tipoPrograma": "curso",
+      "numeroOficial": 16,
+      "titulo": "CURSO DE CAMILLERÍA.",
+      "categoria": "especializacion",
+      "modulos": []
+    },
+    {
+      "id": "esp-phtls-9",
+      "tipoPrograma": "curso",
+      "numeroOficial": 17,
+      "titulo": "\" ACTUALIZACIONES DE TRAUMA PHTLS 9\"",
+      "categoria": "especializacion",
+      "candidatoCertificacion": true,
+      "modulos": []
+    },
+    {
+      "id": "esp-brigadistas-pc",
+      "tipoPrograma": "curso",
+      "numeroOficial": 18,
+      "titulo": "BRIGADISTAS PROTECCIÓN CIVIL",
+      "categoria": "especializacion",
+      "modulos": []
+    },
+    {
+      "id": "esp-instructores",
+      "tipoPrograma": "curso",
+      "numeroOficial": 19,
+      "titulo": "CURSO PARA INSTRUCTORES",
+      "categoria": "especializacion",
+      "modulos": []
+    },
+    {
+      "id": "esp-extraccion-vehicular",
+      "tipoPrograma": "curso",
+      "numeroOficial": 20,
+      "titulo": "TÉCNICO EN EXTRACCIÓN VEHICULAR",
+      "categoria": "especializacion",
+      "modulos": []
+    },
+    {
+      "id": "esp-via-aerea-avanzada",
+      "tipoPrograma": "curso",
+      "numeroOficial": 21,
+      "titulo": "MANEJO DE VÍA AÉREA AVANZADA",
+      "categoria": "especializacion",
+      "modulos": []
+    },
+    {
+      "id": "esp-traslado-criticos",
+      "tipoPrograma": "curso",
+      "numeroOficial": 22,
+      "titulo": "TRASLADO DE PACIENTES CRÍTICOS EN TERAPIA INTENSIVA",
+      "categoria": "especializacion",
+      "modulos": []
+    }
+  ]
+}

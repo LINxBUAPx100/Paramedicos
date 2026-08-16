@@ -5,7 +5,7 @@ import {
   validarTitulo, validarDescripcion, LIMITE_TITULO, LIMITE_DESCRIPCION,
 } from '../../lib/editorModelo.js'
 
-const ETIQUETA_TIPO = { curso: 'Curso', fase: 'Fase', modulo: 'Módulo', tema: 'Tema' }
+const ETIQUETA_TIPO = { curso: 'Curso', modulo: 'Modulo', unidad: 'Unidad', tema: 'Tema' }
 
 function fecha(ts) {
   const d = ts?.toDate?.() || (ts instanceof Date ? ts : null)
@@ -37,8 +37,8 @@ export default function PanelNodo({
   // Campos editables según el tipo (el contenido interno del tema es Fase 5).
   const campos = useMemo(() => {
     if (tipo === 'curso') return ['titulo', 'descripcion']
-    if (tipo === 'fase') return ['titulo', 'subtitulo', 'descripcion']
-    if (tipo === 'modulo') return ['titulo', 'descripcion']
+    if (tipo === 'modulo') return ['titulo', 'subtitulo', 'descripcion']
+    if (tipo === 'unidad') return ['titulo', 'descripcion']
     return ['titulo', 'resumen']
   }, [tipo])
 
@@ -199,7 +199,7 @@ export default function PanelNodo({
       {puede.editar && destinosMover.length > 0 && (
         <>
           <h3 className="editor-subtitulo">
-            {tipo === 'modulo' ? 'Mover a otra fase' : 'Mover a otro módulo'}
+            {tipo === 'unidad' ? 'Mover a otro módulo' : 'Mover a otra unidad'}
           </h3>
           <div className="editor-mover">
             <label htmlFor={`${uid}-mover`} className="sr-only">Destino</label>

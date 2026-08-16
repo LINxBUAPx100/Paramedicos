@@ -30,8 +30,8 @@ export default function TemarioPage() {
   const [error, setError] = useState('')
 
   const academiaActiva = esSuperadmin ? acaSel : academiaId
-  const { fases: fasesTemario } = useIndiceAcademia(academiaActiva)
-  const TOTAL_TEMAS = useMemo(() => totalTemas(fasesTemario), [fasesTemario])
+  const { modulos: modulosTemario } = useIndiceAcademia(academiaActiva)
+  const TOTAL_TEMAS = useMemo(() => totalTemas(modulosTemario), [modulosTemario])
 
   // Super-admin: lista de academias para elegir.
   useEffect(() => {
@@ -107,12 +107,12 @@ export default function TemarioPage() {
     <div className="temario temario--staff">
       <header className="temario-hero">
         <span className="temario-badge">
-          Temario completo · {fasesTemario.length} fases · {TOTAL_TEMAS} temas
+          Temario completo · {modulosTemario.length} módulos · {TOTAL_TEMAS} temas
         </span>
         <h1>Temario y visibilidad para alumnos</h1>
         <p className="temario-desc">
           Este es el 100% del contenido de la plataforma. Elige un grupo y usa los ojos para
-          decidir qué fases y temas pueden ver sus alumnos: lo oculto desaparece de sus listas y
+          decidir qué módulos y temas pueden ver sus alumnos: lo oculto desaparece de sus listas y
           aparece bloqueado en el Atlas hasta que lo liberes.
         </p>
         {error && <p className="cuenta-error" role="alert">{error}</p>}

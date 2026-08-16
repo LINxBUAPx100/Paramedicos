@@ -32,7 +32,7 @@ test('compatibilidad: el contenido de los 68 temas actuales valida sin errores',
 })
 
 test('compatibilidad: la calificación sin pesos reproduce el cálculo actual', () => {
-  // Cálculo actual (Quiz/ExamenFasePage): aciertos, total, round(a/t*100).
+  // Cálculo actual (Quiz/ExamenModuloPage): aciertos, total, round(a/t*100).
   const preguntas = todosLosTemas[0].quiz
   const respuestas = preguntas.map((q) => correctasDe(q)[0]) // todas bien
   const r = calcularCalificacion(preguntas, respuestas)

@@ -73,7 +73,7 @@ export function dibujarTemario(canvas, composicion) {
 }
 
 // Compone, pinta y descarga. Devuelve el nombre del archivo generado.
-export async function descargarTemarioPNG({ fases, ocultas, academia, grupo }) {
+export async function descargarTemarioPNG({ modulos, ocultas, academia, grupo }) {
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d')
   if (!ctx) throw new Error('Este navegador no permite generar la imagen.')
@@ -85,7 +85,7 @@ export async function descargarTemarioPNG({ fases, ocultas, academia, grupo }) {
   }
 
   const fecha = new Date().toISOString().slice(0, 10)
-  const composicion = componerTemario({ fases, ocultas, academia, grupo, fecha, medir })
+  const composicion = componerTemario({ modulos, ocultas, academia, grupo, fecha, medir })
   dibujarTemario(canvas, composicion)
 
   const nombre = nombreArchivo({ academia, grupo, fecha })

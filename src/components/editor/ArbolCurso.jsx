@@ -13,18 +13,18 @@ export function ChipEstado({ estado = 'publicado' }) {
 
 function mismaRef(a, b) {
   return !!a && !!b
-    && a.faseId === b.faseId
-    && (a.moduloId || null) === (b.moduloId || null)
+    && a.moduloId === b.moduloId
+    && (a.unidadId || null) === (b.unidadId || null)
     && (a.temaId || null) === (b.temaId || null)
 }
 
-// Árbol jerárquico Curso → Fase → Módulo → Tema.
+// Árbol jerárquico Curso → Módulo → Unidad → Tema.
 //  - Navegable 100 % con teclado (botones nativos: Tab + Enter).
 //  - Expandir/contraer con aria-expanded; nodo activo con aria-current.
 //  - Los estados se muestran con texto (chip), no solo con color.
 //  - Solo re-renderiza con cambios de estructura/selección (sin listeners).
 export default function ArbolCurso({ estructura, seleccion, onSeleccionar, onCrearHijo, puedeCrear = true, mostrarArchivados = true }) {
-  // Fases/módulos expandidos (por id). Por defecto: primera fase abierta.
+  // Modulos/unidades expandidos (por id). Por defecto: primer módulo abierta.
   const [abiertos, setAbiertos] = useState(() => new Set(estructura[0] ? [estructura[0].id] : []))
   const alternar = (id) => {
     setAbiertos((prev) => {
@@ -41,69 +41,69 @@ export default function ArbolCurso({ estructura, seleccion, onSeleccionar, onCre
     <nav className="editor-arbol" aria-label="Estructura del curso">
       {estructura.length === 0 && (
         <p className="editor-vacio">
-          Este curso todavía no tiene fases. Crea la primera para empezar a armar tu temario.
+          Este curso todavía no tiene modulos. Crea la primera para empezar a armar tu temario.
         </p>
       )}
       <ul className="editor-arbol-lista">
-        {estructura.filter(visible).map((fase) => {
-          const faseAbierta = abiertos.has(fase.id)
-          const refFase = { faseId: fase.id }
+        {estructura.filter(visible).map((modulo) => {
+          const moduloAbierta = abiertos.has(modulo.id)
+          const refModulo = { moduloId: modulo.id }
           return (
-            <li key={fase.id} className={fase.estado === 'archivado' ? 'editor-nodo--archivado' : ''}>
-              <div className={`editor-nodo ${mismaRef(seleccion, refFase) ? 'editor-nodo--activo' : ''}`}>
+            <li key={modulo.id} className={modulo.estado === 'archivado' ? 'editor-nodo--archivado' : ''}>
+              <div className={`editor-nodo ${mismaRef(seleccion, refModulo) ? 'editor-nodo--activo' : ''}`}>
                 <button
                   type="button"
                   className="editor-expandir"
-                  aria-expanded={faseAbierta}
-                  aria-label={`${faseAbierta ? 'Contraer' : 'Expandir'} la fase ${fase.titulo}`}
-                  onClick={() => alternar(fase.id)}
+                  aria-expanded={moduloAbierta}
+                  aria-label={`${moduloAbierta ? 'Contraer' : 'Expandir'} el módulo ${modulo.titulo}`}
+                  onClick={() => alternar(modulo.id)}
                 >
-                  <Icon name={faseAbierta ? 'chevronAbajo' : 'chevronDer'} size={16} />
+                  <Icon name={moduloAbierta ? 'chevronAbajo' : 'chevronDer'} size={16} />
                 </button>
                 <button
                   type="button"
                   className="editor-nombre"
-                  aria-current={mismaRef(seleccion, refFase) ? 'true' : undefined}
-                  onClick={() => onSeleccionar(refFase)}
+                  aria-current={mismaRef(seleccion, refModulo) ? 'true' : undefined}
+                  onClick={() => onSeleccionar(refModulo)}
                 >
                   <Icon name="capas" size={16} />
-                  <span>{fase.titulo}</span>
+                  <span>{modulo.titulo}</span>
                 </button>
-                <ChipEstado estado={fase.estado || 'publicado'} />
+                <ChipEstado estado={modulo.estado || 'publicado'} />
               </div>
-              {faseAbierta && (
+              {moduloAbierta && (
                 <ul className="editor-arbol-lista editor-arbol-lista--hijos">
-                  {(fase.modulos || []).filter(visible).map((modulo) => {
-                    const idModulo = `${fase.id}/${modulo.id}`
-                    const moduloAbierto = abiertos.has(idModulo)
-                    const refModulo = { faseId: fase.id, moduloId: modulo.id }
+                  {(modulo.unidades || []).filter(visible).map((unidad) => {
+                    const idUnidad = `${modulo.id}/${unidad.id}`
+                    const unidadAbierto = abiertos.has(idUnidad)
+                    const refUnidad = { moduloId: modulo.id, unidadId: unidad.id }
                     return (
-                      <li key={modulo.id} className={modulo.estado === 'archivado' ? 'editor-nodo--archivado' : ''}>
-                        <div className={`editor-nodo ${mismaRef(seleccion, refModulo) ? 'editor-nodo--activo' : ''}`}>
+                      <li key={unidad.id} className={unidad.estado === 'archivado' ? 'editor-nodo--archivado' : ''}>
+                        <div className={`editor-nodo ${mismaRef(seleccion, refUnidad) ? 'editor-nodo--activo' : ''}`}>
                           <button
                             type="button"
                             className="editor-expandir"
-                            aria-expanded={moduloAbierto}
-                            aria-label={`${moduloAbierto ? 'Contraer' : 'Expandir'} el módulo ${modulo.titulo}`}
-                            onClick={() => alternar(idModulo)}
+                            aria-expanded={unidadAbierto}
+                            aria-label={`${unidadAbierto ? 'Contraer' : 'Expandir'} la unidad ${unidad.titulo}`}
+                            onClick={() => alternar(idUnidad)}
                           >
-                            <Icon name={moduloAbierto ? 'chevronAbajo' : 'chevronDer'} size={16} />
+                            <Icon name={unidadAbierto ? 'chevronAbajo' : 'chevronDer'} size={16} />
                           </button>
                           <button
                             type="button"
                             className="editor-nombre"
-                            aria-current={mismaRef(seleccion, refModulo) ? 'true' : undefined}
-                            onClick={() => onSeleccionar(refModulo)}
+                            aria-current={mismaRef(seleccion, refUnidad) ? 'true' : undefined}
+                            onClick={() => onSeleccionar(refUnidad)}
                           >
                             <Icon name="carpeta" size={16} />
-                            <span>{modulo.titulo}</span>
+                            <span>{unidad.titulo}</span>
                           </button>
-                          <ChipEstado estado={modulo.estado || 'publicado'} />
+                          <ChipEstado estado={unidad.estado || 'publicado'} />
                         </div>
-                        {moduloAbierto && (
+                        {unidadAbierto && (
                           <ul className="editor-arbol-lista editor-arbol-lista--hijos">
-                            {(modulo.temas || []).filter(visible).map((tema) => {
-                              const refTema = { faseId: fase.id, moduloId: modulo.id, temaId: tema.id }
+                            {(unidad.temas || []).filter(visible).map((tema) => {
+                              const refTema = { moduloId: modulo.id, unidadId: unidad.id, temaId: tema.id }
                               return (
                                 <li key={tema.id} className={tema.estado === 'archivado' ? 'editor-nodo--archivado' : ''}>
                                   <div className={`editor-nodo editor-nodo--hoja ${mismaRef(seleccion, refTema) ? 'editor-nodo--activo' : ''}`}>
@@ -126,9 +126,9 @@ export default function ArbolCurso({ estructura, seleccion, onSeleccionar, onCre
                                 <button
                                   type="button"
                                   className="editor-crear-hijo"
-                                  onClick={() => onCrearHijo({ tipo: 'tema', faseId: fase.id, moduloId: modulo.id })}
+                                  onClick={() => onCrearHijo({ tipo: 'tema', moduloId: modulo.id, unidadId: unidad.id })}
                                 >
-                                  <Icon name="mas" size={14} /> Nuevo tema en “{modulo.titulo}”
+                                  <Icon name="mas" size={14} /> Nuevo tema en “{unidad.titulo}”
                                 </button>
                               </li>
                             )}
@@ -142,9 +142,9 @@ export default function ArbolCurso({ estructura, seleccion, onSeleccionar, onCre
                       <button
                         type="button"
                         className="editor-crear-hijo"
-                        onClick={() => onCrearHijo({ tipo: 'modulo', faseId: fase.id })}
+                        onClick={() => onCrearHijo({ tipo: 'unidad', moduloId: modulo.id })}
                       >
-                        <Icon name="mas" size={14} /> Nuevo módulo en “{fase.titulo}”
+                        <Icon name="mas" size={14} /> Nueva unidad en “{modulo.titulo}”
                       </button>
                     </li>
                   )}
@@ -155,8 +155,8 @@ export default function ArbolCurso({ estructura, seleccion, onSeleccionar, onCre
         })}
         {puedeCrear && (
           <li>
-            <button type="button" className="editor-crear-hijo" onClick={() => onCrearHijo({ tipo: 'fase' })}>
-              <Icon name="mas" size={14} /> Nueva fase
+            <button type="button" className="editor-crear-hijo" onClick={() => onCrearHijo({ tipo: 'modulo' })}>
+              <Icon name="mas" size={14} /> Nuevo módulo
             </button>
           </li>
         )}

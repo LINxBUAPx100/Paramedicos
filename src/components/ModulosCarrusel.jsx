@@ -2,13 +2,13 @@ import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Icon from './Icon.jsx'
 
-// Baraja "coverflow" de fases: tarjetas a tamaño completo, apiladas en
+// Baraja "coverflow" de módulos: tarjetas a tamaño completo, apiladas en
 // horizontal como naipes sobre una mesa. La tarjeta activa salta al frente,
 // grande y enfocada; las demás se desenfocan y atenúan a los lados.
 // Navega con chevrons ‹ ›, puntos, click en una tarjeta lateral, swipe y teclado.
-export default function FasesCarrusel({ fases, leidos = {} }) {
+export default function ModulosCarrusel({ modulos, leidos = {} }) {
   const [activo, setActivo] = useState(0)
-  const n = fases.length
+  const n = modulos.length
   const ptrX = useRef(null)
 
   const ir = (i) => setActivo(Math.max(0, Math.min(n - 1, i)))
@@ -32,7 +32,7 @@ export default function FasesCarrusel({ fases, leidos = {} }) {
         className="deck-flecha izq"
         onClick={() => ir(activo - 1)}
         disabled={activo === 0}
-        aria-label="Fase anterior"
+        aria-label="Módulo anterior"
       >
         <Icon name="chevronIzq" size={26} />
       </button>
@@ -41,25 +41,25 @@ export default function FasesCarrusel({ fases, leidos = {} }) {
         className="deck-pista"
         tabIndex={0}
         role="listbox"
-        aria-label="Fases de estudio"
+        aria-label="Módulos de estudio"
         onKeyDown={onKey}
         onPointerDown={onDown}
         onPointerUp={onUp}
       >
-        {fases.map((fase, i) => {
+        {modulos.map((modulo, i) => {
           const offset = i - activo
           const dist = Math.abs(offset)
           const esActivo = offset === 0
-          const num = String(fase.numero).padStart(2, '0')
-          const total = fase.temas.length
-          const leidosFase = fase.temas.filter((t) => leidos[t.id]).length
-          const pct = total ? Math.round((leidosFase / total) * 100) : 0
+          const num = String(modulo.numero).padStart(2, '0')
+          const total = modulo.temas.length
+          const leidosModulo = modulo.temas.filter((t) => leidos[t.id]).length
+          const pct = total ? Math.round((leidosModulo / total) * 100) : 0
           return (
             <article
-              key={fase.id}
+              key={modulo.id}
               className={`deck-card ${esActivo ? 'is-activo' : ''}`}
               style={{
-                '--fase-color': fase.color,
+                '--modulo-color': modulo.color,
                 '--offset': offset,
                 // La activa SIEMPRE al frente; las traseras detrás, en escalera.
                 zIndex: esActivo ? 100 : 50 - dist,
@@ -76,21 +76,21 @@ export default function FasesCarrusel({ fases, leidos = {} }) {
             >
               <span className="deck-num">{num}</span>
               <div className="deck-body">
-                <h3 className="deck-titulo">{fase.titulo}</h3>
-                <p className="deck-sub">{fase.subtitulo}</p>
-                <p className="deck-desc">{fase.descripcion}</p>
+                <h3 className="deck-titulo">{modulo.titulo}</h3>
+                <p className="deck-sub">{modulo.subtitulo}</p>
+                <p className="deck-desc">{modulo.descripcion}</p>
                 <div className="deck-pie">
                   <span className="deck-temas">{total} temas</span>
                   <Link
-                    to={`/fase/${fase.id}`}
+                    to={`/modulo/${modulo.id}`}
                     className="deck-boton"
-                    aria-label={`Entrar a la fase ${fase.numero}`}
+                    aria-label={`Entrar al módulo ${modulo.numero}`}
                     tabIndex={esActivo ? 0 : -1}
                     onClick={(e) => e.stopPropagation()}
                   >
                     <Icon name="chevronDer" size={22} />
                   </Link>
-                  <span className="deck-prog">{leidosFase}/{total}</span>
+                  <span className="deck-prog">{leidosModulo}/{total}</span>
                 </div>
                 <div className="deck-barra"><span style={{ width: `${pct}%` }} /></div>
               </div>
@@ -103,19 +103,19 @@ export default function FasesCarrusel({ fases, leidos = {} }) {
         className="deck-flecha der"
         onClick={() => ir(activo + 1)}
         disabled={activo === n - 1}
-        aria-label="Fase siguiente"
+        aria-label="Módulo siguiente"
       >
         <Icon name="chevronDer" size={26} />
       </button>
 
-      <div className="deck-puntos" role="tablist" aria-label="Ir a fase">
-        {fases.map((f, i) => (
+      <div className="deck-puntos" role="tablist" aria-label="Ir a modulo">
+        {modulos.map((f, i) => (
           <button
             key={f.id}
             className={`deck-punto ${i === activo ? 'on' : ''}`}
-            style={{ '--fase-color': f.color }}
+            style={{ '--modulo-color': f.color }}
             onClick={() => ir(i)}
-            aria-label={`Fase ${f.numero}: ${f.titulo}`}
+            aria-label={`Módulo ${f.numero}: ${f.titulo}`}
             aria-selected={i === activo}
           />
         ))}

@@ -14,7 +14,7 @@ import Icon from '../../components/Icon.jsx'
 
 export default function PanelResumen() {
   const {
-    academia, academiaId, alumnos, staff, intentos, porAlumno, fases, solicitudes,
+    academia, academiaId, alumnos, staff, intentos, porAlumno, modulos, solicitudes,
     gestion, soloGrupo,
   } = usePanel()
 
@@ -55,7 +55,7 @@ export default function PanelResumen() {
         staff={staff}
         intentos={intentos}
         porAlumno={porAlumno}
-        fases={fases}
+        modulos={modulos}
       />
     </div>
   )

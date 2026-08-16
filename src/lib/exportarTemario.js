@@ -1,7 +1,7 @@
 // ============================================================
 //  Exportar el temario a imagen — composición PURA
 // ------------------------------------------------------------
-//  Compone una LÍNEA DE TIEMPO del temario: las fases en vertical sobre un eje,
+//  Compone una LÍNEA DE TIEMPO del temario: los módulos en vertical sobre un eje,
 //  cada una con sus temas numerados, la marca PTEM y el nombre de la academia.
 //
 //  Aquí se decide TODO: qué entra, dónde va cada cosa, dónde se corta cada
@@ -24,8 +24,8 @@
 export const ESTILOS = {
   titulo: { tamano: 34, alto: 44, peso: '700', color: '#0b1220' },
   subtitulo: { tamano: 16, alto: 24, peso: '400', color: '#475569' },
-  fase: { tamano: 20, alto: 28, peso: '700', color: '#0b1220' },
-  faseSub: { tamano: 13, alto: 19, peso: '400', color: '#64748b' },
+  modulo: { tamano: 20, alto: 28, peso: '700', color: '#0b1220' },
+  moduloSub: { tamano: 13, alto: 19, peso: '400', color: '#64748b' },
   tema: { tamano: 14, alto: 21, peso: '400', color: '#1e293b' },
   meta: { tamano: 12, alto: 18, peso: '400', color: '#94a3b8' },
   numero: { tamano: 15, alto: 20, peso: '700', color: '#ffffff' },
@@ -36,12 +36,12 @@ export const ESTILOS = {
 export const LIENZO = {
   ancho: 1240,
   margen: 56,
-  ejeX: 96, // centro del eje vertical y de los círculos de fase
+  ejeX: 96, // centro del eje vertical y de los círculos de módulo
   radio: 22,
   sangriaTema: 148, // dónde empieza el texto de un tema
   huecoTrasCabecera: 28,
-  huecoEntreFases: 34,
-  huecoTrasFase: 14,
+  huecoEntreModulos: 34,
+  huecoTrasModulo: 14,
 }
 
 // Corta un texto en líneas que caben en `maxAncho`. Una palabra más larga que el
@@ -66,16 +66,16 @@ export function envolver(texto, maxAncho, medir, estilo = 'tema') {
   return lineas
 }
 
-// Qué fases y temas entran, según lo que el grupo tenga oculto. `ocultas` es el
-// mismo objeto que maneja la visibilidad por grupo ({ fases, temas }); sin él,
+// Qué módulos y temas entran, según lo que el grupo tenga oculto. `ocultas` es el
+// mismo objeto que maneja la visibilidad por grupo ({ módulos, temas }); sin él,
 // entra el temario completo.
-export function fasesVisibles(fases, ocultas = null) {
-  const fasesOcultas = new Set(ocultas?.fases || [])
+export function modulosVisibles(modulos, ocultas = null) {
+  const modulosOcultos = new Set(ocultas?.modulos || [])
   const temasOcultos = new Set(ocultas?.temas || [])
-  return (fases || [])
-    .filter((f) => f && !fasesOcultas.has(f.id))
+  return (modulos || [])
+    .filter((f) => f && !modulosOcultos.has(f.id))
     .map((f) => ({ ...f, temas: (f.temas || []).filter((t) => !temasOcultos.has(t.id)) }))
-    // Una fase que se queda sin temas visibles no se dibuja: un círculo con un
+    // Un módulo que se queda sin temas visibles no se dibuja: un círculo con un
     // título y nada debajo parece un error de la imagen.
     .filter((f) => f.temas.length > 0)
 }
@@ -83,7 +83,7 @@ export function fasesVisibles(fases, ocultas = null) {
 // Compone la imagen. Devuelve { ancho, alto, elementos }, y los elementos ya
 // llevan coordenadas absolutas: el canvas no calcula nada.
 export function componerTemario({
-  fases = [],
+  modulos = [],
   ocultas = null,
   academia = '',
   grupo = '',
@@ -95,10 +95,10 @@ export function componerTemario({
     throw new Error('componerTemario necesita una función medir(texto, estilo).')
   }
   const L = { ...LIENZO, ...lienzo }
-  const visibles = fasesVisibles(fases, ocultas)
+  const visibles = modulosVisibles(modulos, ocultas)
   const elementos = []
   const anchoTema = L.ancho - L.sangriaTema - L.margen
-  const anchoFase = L.ancho - L.ejeX - L.radio - 24 - L.margen
+  const anchoModulo = L.ancho - L.ejeX - L.radio - 24 - L.margen
 
   let y = L.margen
 
@@ -115,16 +115,16 @@ export function componerTemario({
   y += ESTILOS.subtitulo.alto
   elementos.push({
     tipo: 'texto', estilo: 'subtitulo', x: L.margen, y,
-    texto: `${visibles.length} ${visibles.length === 1 ? 'fase' : 'fases'} · ${totalTemas} ${totalTemas === 1 ? 'tema' : 'temas'}`,
+    texto: `${visibles.length} ${visibles.length === 1 ? 'modulo' : 'modulos'} · ${totalTemas} ${totalTemas === 1 ? 'tema' : 'temas'}`,
   })
 
   y += L.huecoTrasCabecera
 
   // Nada visible: se dice, en vez de devolver una imagen vacía que parece rota.
   if (visibles.length === 0) {
-    y += ESTILOS.fase.alto
+    y += ESTILOS.modulo.alto
     elementos.push({
-      tipo: 'texto', estilo: 'fase', x: L.margen, y,
+      tipo: 'texto', estilo: 'modulo', x: L.margen, y,
       texto: 'Este grupo no tiene ningún tema visible.',
     })
     return { ancho: L.ancho, alto: Math.round(y + L.margen), elementos }
@@ -137,39 +137,39 @@ export function componerTemario({
   let ejeDesde = null
   let ejeHasta = 0
 
-  visibles.forEach((fase, i) => {
-    if (i > 0) y += L.huecoEntreFases
+  visibles.forEach((modulo, i) => {
+    if (i > 0) y += L.huecoEntreModulos
 
     const centro = y + L.radio
     if (ejeDesde === null) ejeDesde = centro
     elementos.push({
       tipo: 'circulo', x: L.ejeX, y: centro, r: L.radio,
-      color: fase.color || '#0c5fc4',
-      texto: String(fase.numero ?? i + 1),
+      color: modulo.color || '#0c5fc4',
+      texto: String(modulo.numero ?? i + 1),
     })
 
-    // Título de la fase, a la derecha del círculo y envuelto si hace falta.
-    const xFase = L.ejeX + L.radio + 24
-    const lineasFase = envolver(fase.titulo, anchoFase, medir, 'fase')
-    let yFase = y + ESTILOS.fase.tamano
-    for (const linea of lineasFase) {
-      elementos.push({ tipo: 'texto', estilo: 'fase', x: xFase, y: yFase, texto: linea })
-      yFase += ESTILOS.fase.alto
+    // Título del módulo, a la derecha del círculo y envuelto si hace falta.
+    const xModulo = L.ejeX + L.radio + 24
+    const lineasModulo = envolver(modulo.titulo, anchoModulo, medir, 'modulo')
+    let yModulo = y + ESTILOS.modulo.tamano
+    for (const linea of lineasModulo) {
+      elementos.push({ tipo: 'texto', estilo: 'modulo', x: xModulo, y: yModulo, texto: linea })
+      yModulo += ESTILOS.modulo.alto
     }
-    if (fase.subtitulo) {
-      const lineasSub = envolver(fase.subtitulo, anchoFase, medir, 'faseSub')
+    if (modulo.subtitulo) {
+      const lineasSub = envolver(modulo.subtitulo, anchoModulo, medir, 'moduloSub')
       for (const linea of lineasSub) {
-        elementos.push({ tipo: 'texto', estilo: 'faseSub', x: xFase, y: yFase, texto: linea })
-        yFase += ESTILOS.faseSub.alto
+        elementos.push({ tipo: 'texto', estilo: 'moduloSub', x: xModulo, y: yModulo, texto: linea })
+        yModulo += ESTILOS.moduloSub.alto
       }
     }
 
-    // El bloque de la fase mide lo que ocupe su texto o su círculo, lo que sea
+    // El bloque del módulo mide lo que ocupe su texto o su círculo, lo que sea
     // más alto: si no, un título de una línea dejaría el círculo desbordando.
-    y = Math.max(yFase, centro + L.radio) + L.huecoTrasFase
+    y = Math.max(yModulo, centro + L.radio) + L.huecoTrasModulo
 
     // --- Temas ---
-    for (const tema of fase.temas) {
+    for (const tema of modulo.temas) {
       const lineas = envolver(tema.titulo, anchoTema, medir, 'tema')
       const num = String(tema.numero ?? '')
       lineas.forEach((linea, j) => {

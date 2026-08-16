@@ -11,7 +11,7 @@ import VistaPrevia from '../components/editor/VistaPrevia.jsx'
 import { academiaMigrada } from '../lib/contenidoApi.js'
 import {
   localizar, tipoDeRef, permisoEdicion, validarTitulo, contarDescendientesActivos,
-  crearFase, crearModulo, crearTema, actualizarNodo, reordenarNodo, moverNodo,
+  crearModulo, crearUnidad, crearTema, actualizarNodo, reordenarNodo, moverNodo,
   duplicarNodo, archivarNodo, restaurarNodo, despublicarNodo, publicarNodo,
 } from '../lib/editorModelo.js'
 import { capacidadesEditor } from '../lib/permisosEditor.js'
@@ -257,7 +257,7 @@ export default function EditorPage() {
     if (!seleccion || seleccion.curso || !curso) return null
     try {
       const loc = localizar(curso.estructura || [], seleccion)
-      return loc.tema || loc.modulo || loc.fase
+      return loc.tema || loc.unidad || loc.modulo
     } catch {
       return null
     }
@@ -295,8 +295,8 @@ export default function EditorPage() {
     } else if (accion === 'reordenar') {
       await ejecutar('reordenar-' + tipo, (e) => reordenarNodo(e, ref, param))
     } else if (accion === 'mover') {
-      const [faseId, moduloId] = String(param).split('/')
-      const destinoRef = tipo === 'modulo' ? { faseId } : { faseId, moduloId }
+      const [moduloId, unidadId] = String(param).split('/')
+      const destinoRef = tipo === 'unidad' ? { moduloId } : { moduloId, unidadId }
       setDialogo({
         titulo: `Mover ${tipo}`,
         cuerpo: `“${nodoSel?.titulo}” se moverá al final del destino seleccionado. El progreso de los alumnos no se pierde (los ids se conservan).`,
@@ -412,7 +412,7 @@ export default function EditorPage() {
     }
   }
 
-  // ---------- creación con título (fase, módulo, tema, curso) ----------
+  // ---------- creación con título (módulo, unidad, tema, curso) ----------
   const confirmarCrear = async () => {
     const c = crear
     if (!c) return
@@ -434,9 +434,9 @@ export default function EditorPage() {
       return
     }
     const transformaciones = {
-      fase: (est) => crearFase(est, { titulo: c.titulo }),
-      modulo: (est) => crearModulo(est, { faseId: c.faseId, titulo: c.titulo }),
-      tema: (est) => crearTema(est, { faseId: c.faseId, moduloId: c.moduloId, titulo: c.titulo }),
+      modulo: (est) => crearModulo(est, { titulo: c.titulo }),
+      unidad: (est) => crearUnidad(est, { moduloId: c.moduloId, titulo: c.titulo }),
+      tema: (est) => crearTema(est, { moduloId: c.moduloId, unidadId: c.unidadId, titulo: c.titulo }),
     }
     const r = await ejecutar(
       'crear-' + c.tipo,
@@ -461,7 +461,7 @@ export default function EditorPage() {
   // ya existe. Atarlo al alta habría hecho que un fallo de visibilidad tirara
   // por tierra el tema entero.
   const acotarAlGrupo = async (tipo, nodoId) => {
-    // Un módulo no se puede acotar (la visibilidad va por tema): decirle al
+    // Una unidad no se puede acotar (la visibilidad va por tema): decirle al
     // profesor que «solo lo ve su grupo» sería falso.
     if (!esAcotable(tipo)) return
     if (!creaSoloParaSuGrupo({ esSuperadmin, rol, grupoId: perfil?.grupoId })) return
@@ -537,7 +537,7 @@ export default function EditorPage() {
     setCursos(await ed.listarCursosEditor(destino))
     setCursoSelId(nuevo.id)
     setSeleccion({ curso: true })
-    setGuardado({ estado: 'ok', mensaje: 'Temario creado: ya puedes añadir fases y temas' })
+    setGuardado({ estado: 'ok', mensaje: 'Temario creado: ya puedes añadir módulos y temas' })
   }
 
   // ---------- vista previa ----------
@@ -628,7 +628,7 @@ export default function EditorPage() {
       ) : (
         <>
         {/* El paso a paso, arriba y antes de las columnas: el editor pide cuatro
-            niveles (curso → fase → módulo → tema) y en ningún sitio lo decía.
+            niveles (curso → modulo → unidad → tema) y en ningún sitio lo decía.
             Se calla solo en cuanto hay contenido — ver lib/editorGuia.js. */}
         {curso && paso && (
           <aside className="editor-guia" aria-label="Siguiente paso">
@@ -820,8 +820,8 @@ export default function EditorPage() {
           <div className="dialogo" role="dialog" aria-modal="true" aria-labelledby="crear-titulo">
             <h2 id="crear-titulo">
               {crear.tipo === 'curso' ? 'Nuevo curso'
-                : crear.tipo === 'fase' ? 'Nueva fase'
                 : crear.tipo === 'modulo' ? 'Nuevo módulo'
+                : crear.tipo === 'unidad' ? 'Nueva unidad'
                 : 'Nuevo tema'}
             </h2>
             <form
@@ -866,9 +866,9 @@ export default function EditorPage() {
 function posicionDe(estructura, ref) {
   try {
     const loc = localizar(estructura || [], ref)
-    if (loc.tipo === 'fase') return `${loc.iFase + 1} de ${estructura.length}`
-    if (loc.tipo === 'modulo') return `${loc.iModulo + 1} de ${loc.fase.modulos.length}`
-    return `${loc.iTema + 1} de ${loc.modulo.temas.length}`
+    if (loc.tipo === 'modulo') return `${loc.iModulo + 1} de ${estructura.length}`
+    if (loc.tipo === 'unidad') return `${loc.iUnidad + 1} de ${loc.modulo.unidades.length}`
+    return `${loc.iTema + 1} de ${loc.unidad.temas.length}`
   } catch {
     return null
   }
@@ -877,9 +877,9 @@ function posicionDe(estructura, ref) {
 function padreDe(estructura, ref, tituloCurso) {
   try {
     const loc = localizar(estructura || [], ref)
-    if (loc.tipo === 'fase') return `Curso “${tituloCurso}”`
-    if (loc.tipo === 'modulo') return `Fase “${loc.fase.titulo}”`
-    return `Módulo “${loc.modulo.titulo}” · Fase “${loc.fase.titulo}”`
+    if (loc.tipo === 'modulo') return `Curso “${tituloCurso}”`
+    if (loc.tipo === 'unidad') return `Módulo “${loc.modulo.titulo}”`
+    return `Unidad “${loc.unidad.titulo}” · Módulo “${loc.modulo.titulo}”`
   } catch {
     return null
   }
@@ -887,19 +887,19 @@ function padreDe(estructura, ref, tituloCurso) {
 
 function destinosMoverDe(estructura, ref) {
   const tipo = tipoDeRef(ref)
-  if (tipo === 'modulo') {
+  if (tipo === 'unidad') {
     return (estructura || [])
-      .filter((f) => f.id !== ref.faseId && f.estado !== 'archivado')
-      .map((f) => ({ valor: f.id, etiqueta: `Fase “${f.titulo}”` }))
+      .filter((f) => f.id !== ref.moduloId && f.estado !== 'archivado')
+      .map((f) => ({ valor: f.id, etiqueta: `Módulo “${f.titulo}”` }))
   }
   if (tipo === 'tema') {
     const opciones = []
     for (const f of estructura || []) {
       if (f.estado === 'archivado') continue
-      for (const m of f.modulos || []) {
+      for (const m of f.unidades || []) {
         if (m.estado === 'archivado') continue
-        if (f.id === ref.faseId && m.id === ref.moduloId) continue
-        opciones.push({ valor: `${f.id}/${m.id}`, etiqueta: `“${m.titulo}” (fase “${f.titulo}”)` })
+        if (f.id === ref.moduloId && m.id === ref.unidadId) continue
+        opciones.push({ valor: `${f.id}/${m.id}`, etiqueta: `“${m.titulo}” (módulo “${f.titulo}”)` })
       }
     }
     return opciones

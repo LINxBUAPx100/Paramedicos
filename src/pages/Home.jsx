@@ -9,7 +9,7 @@ import Icon from '../components/Icon.jsx'
 import Reveal from '../components/Reveal.jsx'
 import Imagen from '../components/Imagen.jsx'
 import Contador from '../components/Contador.jsx'
-import FasesCarrusel from '../components/FasesCarrusel.jsx'
+import ModulosCarrusel from '../components/ModulosCarrusel.jsx'
 import BloqueAcademia from '../components/BloqueAcademia.jsx'
 import IconoEstrella from '../components/marca/IconoEstrella.jsx'
 import { IMG } from '../data/imagenes.js'
@@ -17,7 +17,7 @@ import marcoUrl from '../assets/marco-paramedico.svg'
 import marcoFrenteUrl from '../assets/marco-paramedico - copia.svg'
 
 const STATS = [
-  { key: 'fases', label: 'Fases' },
+  { key: 'modulos', label: 'Módulos' },
   { key: 'temas', label: 'Temas' },
   { key: 'flashcards', label: 'Flashcards' },
   { key: 'preguntas', label: 'Preguntas' },
@@ -45,21 +45,21 @@ export default function Home() {
   const { estado } = useProgress()
   const { academia } = useAuth()
   // Índice de LA academia del usuario (bundle para visitantes/legacy).
-  const { fases, stats } = useIndiceContenido()
-  const { faseVisible } = useVisibilidad()
+  const { modulos, stats } = useIndiceContenido()
+  const { moduloVisible } = useVisibilidad()
   const leidos = estado.leidos
   const temasLeidos = Object.values(leidos).filter(Boolean).length
   const progresoGlobal = Math.round((temasLeidos / stats.temas) * 100)
-  // El carrusel solo muestra las fases liberadas para el grupo del alumno.
-  const fasesVisibles = fases.filter((f) => faseVisible(f.id))
+  // El carrusel solo muestra los módulos liberadas para el grupo del alumno.
+  const modulosVisibles = modulos.filter((f) => moduloVisible(f.id))
 
   const secciones = idsVisiblesDeHome(academia)
   const SECCION = {
-    hero: <SeccionHero stats={stats} />,
+    hero: <SeccionHero stats={stats} primerModulo={modulosVisibles[0] || null} />,
     progreso: temasLeidos > 0 ? (
       <SeccionProgreso temasLeidos={temasLeidos} total={stats.temas} pct={progresoGlobal} />
     ) : null,
-    fases: <SeccionFases fases={fasesVisibles} leidos={leidos} />,
+    modulos: <SeccionModulos modulos={modulosVisibles} leidos={leidos} />,
     prueba: <SeccionPrueba />,
     atlas: <SeccionAtlas />,
     flashcards: <SeccionFlashcards flashcards={stats.flashcards} />,
@@ -86,7 +86,10 @@ export default function Home() {
 }
 
 // ===== HERO (portada PTEM) =====
-function SeccionHero({ stats }) {
+// `primerModulo` sale del ÍNDICE, no de un id escrito a mano: el temario se va
+// a reemplazar por el oficial de R.E.S.C.A.T.E. y cada academia puede tener el
+// suyo, así que ningún id de contenido debe vivir incrustado en el código.
+function SeccionHero({ stats, primerModulo }) {
   return (
     <section className="ph-hero">
       <IconoEstrella size={680} className="ph-hero-marca" />
@@ -128,7 +131,7 @@ function SeccionHero({ stats }) {
             memorizar: teoría, fisiología, farmacología y correlación clínica de verdad.
           </p>
           <div className="ph-hero-cta reveal" style={{ '--d': '420ms' }}>
-            <Link to="/fase/fase-1" className="btn btn--pildora btn--carbon">
+            <Link to={primerModulo ? `/modulo/${primerModulo.id}` : '/temario'} className="btn btn--pildora btn--carbon">
               <Icon name="libro" size={18} /> Empezar a estudiar
             </Link>
             <Link to="/examen" className="btn btn--pildora btn--urgencia">
@@ -173,20 +176,20 @@ function SeccionProgreso({ temasLeidos, total, pct }) {
   )
 }
 
-// ===== FASES (carrusel) =====
-function SeccionFases({ fases, leidos }) {
+// ===== MODULOS (carrusel) =====
+function SeccionModulos({ modulos, leidos }) {
   return (
-    <section className="ph-fases">
+    <section className="ph-modulos">
       <div className="ph-wrap">
         <Reveal as="h2" className="ph-h2">
-          <IconoEstrella size={26} /> Fases
+          <IconoEstrella size={26} /> Modulos
         </Reveal>
         <Reveal as="p" className="ph-h2-sub" delay={70}>
-          Fases progresivas, del fundamento celular a la farmacología avanzada, las poblaciones
+          Modulos progresivas, del fundamento celular a la farmacología avanzada, las poblaciones
           especiales y el marco normativo.
         </Reveal>
       </div>
-      <FasesCarrusel fases={fases} leidos={leidos} />
+      <ModulosCarrusel modulos={modulos} leidos={leidos} />
     </section>
   )
 }
@@ -204,7 +207,7 @@ function SeccionPrueba() {
             Ponte <span className="ac">a</span> Prueba
           </h2>
           <p>
-            Quiz al final de cada tema y un examen general aleatorio que mezcla las 7 fases, con
+            Quiz al final de cada tema y un examen general aleatorio que mezcla las 7 modulos, con
             explicación de cada respuesta para que aprendas del error.
           </p>
           <Link to="/examen" className="btn btn--pildora btn--urgencia btn--lg">

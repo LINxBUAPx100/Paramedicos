@@ -42,7 +42,7 @@ export default function BuscarPage() {
 
       <div className="buscar-resultados">
         {resultados.map(({ tema, conceptos }) => (
-          <div className="buscar-card" key={tema.id} style={{ '--fase-color': tema.faseColor }}>
+          <div className="buscar-card" key={tema.id} style={{ '--modulo-color': tema.moduloColor }}>
             <Link to={`/tema/${tema.id}`} className="buscar-card-titulo">
               <span className="tema-fila-num">{tema.numero}</span>
               {tema.icono} {tema.titulo}
@@ -57,7 +57,7 @@ export default function BuscarPage() {
                 ))}
               </div>
             )}
-            <span className="buscar-card-fase">Fase {tema.faseNumero} · {tema.faseTitulo}</span>
+            <span className="buscar-card-modulo">Modulo {tema.moduloNumero} · {tema.moduloTitulo}</span>
           </div>
         ))}
       </div>

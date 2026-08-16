@@ -15,7 +15,7 @@
 //     consumen SIEMPRE la misma interfaz y nunca deciden entre fuentes:
 //     eso lo hace el resolutor (src/lib/firebase/contenido.js).
 //
-//  El orden y la numeración (fase.numero, tema.numero '1.1') se calculan de
+//  El orden y la numeración (módulo.numero, tema.numero '1.1') se calculan de
 //  la posición en la estructura — mismo contrato que src/data/index.js.
 // ============================================================
 
@@ -51,25 +51,25 @@ export function temaDesdeDoc(docTema) {
   }
 }
 
-// Ensambla las fases completas de un curso: estructura ligera (orden, títulos,
-// módulos) + mapa temaId→doc de contenido. Aplana los módulos (implícitos en
-// la migración) para conservar la UX actual Fase→Temas.
+// Ensambla los módulos completas de un curso: estructura ligera (orden, títulos,
+// unidades) + mapa temaId→doc de contenido. Aplana las unidades (implícitos en
+// la migración) para conservar la UX actual Modulo→Temas.
 //  - Por defecto solo entra lo PUBLICADO (lo que ve el alumno).
 //  - `faltantes` lista temas presentes en la estructura sin doc de contenido
 //    (clonación parcial): el resolutor decide si sirve o cae a legacy.
-export function ensamblarFases(estructura, temasPorId, { incluirBorradores = false } = {}) {
+export function ensamblarModulos(estructura, temasPorId, { incluirBorradores = false } = {}) {
   const visible = (x) => incluirBorradores || (x.estado || 'publicado') === 'publicado'
   const buscar = (id) => (temasPorId instanceof Map ? temasPorId.get(id) : temasPorId?.[id])
   const faltantes = []
-  const fases = (estructura || []).filter(visible).map((f) => ({
+  const modulos = (estructura || []).filter(visible).map((f) => ({
     id: f.id,
     titulo: f.titulo,
     subtitulo: f.subtitulo || '',
     descripcion: f.descripcion || '',
     color: f.color || '',
     icono: f.icono || '',
-    temas: (f.modulos || [])
-      .filter(visible) // un módulo en borrador/archivado oculta TODA su rama
+    temas: (f.unidades || [])
+      .filter(visible) // una unidad en borrador/archivado oculta TODA su rama
       .flatMap((m) => m.temas || [])
       .filter(visible)
       .map((t) => {
@@ -82,44 +82,44 @@ export function ensamblarFases(estructura, temasPorId, { incluirBorradores = fal
       })
       .filter(Boolean),
   }))
-  return { fases, faltantes }
+  return { modulos, faltantes }
 }
 
 // Índice LIGERO de navegación (la MISMA forma que src/data/navIndice.js:
-// fase {id, numero, titulo, subtitulo, descripcion, color, temas:[{id, numero,
+// módulo {id, numero, titulo, subtitulo, descripcion, color, temas:[{id, numero,
 // titulo}]}) a partir de SOLO la estructura del curso (1 doc, sin bajar los
-// temas). Filtra publicados con las mismas reglas que ensamblarFases y numera
+// temas). Filtra publicados con las mismas reglas que ensamblarModulos y numera
 // con las mismas que construirApi, para que nav y contenido no se desalineen.
 export function indiceDesdeEstructura(estructura, { incluirBorradores = false } = {}) {
   const visible = (x) => incluirBorradores || (x.estado || 'publicado') === 'publicado'
-  const fases = (estructura || []).filter(visible).map((f, i) => ({
+  const modulos = (estructura || []).filter(visible).map((f, i) => ({
     id: f.id,
     numero: i + 1,
     titulo: f.titulo,
     subtitulo: f.subtitulo || '',
     descripcion: f.descripcion || '',
     color: f.color || '',
-    temas: (f.modulos || [])
+    temas: (f.unidades || [])
       .filter(visible)
       .flatMap((m) => m.temas || [])
       .filter(visible)
       .map((t, j) => ({ id: t.id, numero: `${i + 1}.${j + 1}`, titulo: t.titulo })),
   }))
   return {
-    fases,
+    modulos,
     stats: {
-      fases: fases.length,
-      temas: fases.reduce((s, f) => s + f.temas.length, 0),
+      modulos: modulos.length,
+      temas: modulos.reduce((s, f) => s + f.temas.length, 0),
     },
   }
 }
 
-// El mismo índice ligero, desde las fases YA ensambladas y numeradas por
+// El mismo índice ligero, desde los módulos YA ensambladas y numeradas por
 // construirApi: cuando el contenido completo está cargado, el shell puede
 // reflejarlo exactamente (misma numeración, mismos filtros).
-export function indiceDesdeFases(fases) {
+export function indiceDesdeModulos(modulos) {
   return {
-    fases: (fases || []).map((f) => ({
+    modulos: (modulos || []).map((f) => ({
       id: f.id,
       numero: f.numero,
       titulo: f.titulo,
@@ -131,10 +131,10 @@ export function indiceDesdeFases(fases) {
   }
 }
 
-// Construye la MISMA API derivada que src/data/index.js a partir de fases ya
+// Construye la MISMA API derivada que src/data/index.js a partir de módulos ya
 // ensambladas y ordenadas. Los componentes no distinguen la fuente.
-export function construirApi(fasesBase) {
-  const fases = (fasesBase || []).map((f, i) => {
+export function construirApi(modulosBase) {
+  const modulos = (modulosBase || []).map((f, i) => {
     const numero = i + 1
     return {
       ...f,
@@ -143,13 +143,13 @@ export function construirApi(fasesBase) {
     }
   })
 
-  const todosLosTemas = fases.flatMap((fase) =>
-    fase.temas.map((tema) => ({
+  const todosLosTemas = modulos.flatMap((modulo) =>
+    modulo.temas.map((tema) => ({
       ...tema,
-      faseId: fase.id,
-      faseNumero: fase.numero,
-      faseTitulo: fase.titulo,
-      faseColor: fase.color,
+      moduloId: modulo.id,
+      moduloNumero: modulo.numero,
+      moduloTitulo: modulo.titulo,
+      moduloColor: modulo.color,
     }))
   )
 
@@ -167,13 +167,13 @@ export function construirApi(fasesBase) {
     return map
   })()
 
-  const getFase = (faseId) => fases.find((f) => f.id === faseId)
+  const getModulo = (moduloId) => modulos.find((f) => f.id === moduloId)
   const getTema = (temaId) => todosLosTemas.find((t) => t.id === temaId)
 
-  const preguntasDeFase = (faseId) => {
-    const fase = getFase(faseId)
-    if (!fase) return []
-    return fase.temas.flatMap((tema) =>
+  const preguntasDeModulo = (moduloId) => {
+    const modulo = getModulo(moduloId)
+    if (!modulo) return []
+    return modulo.temas.flatMap((tema) =>
       (tema.quiz || []).map((q, i) => ({
         ...q,
         id: `${tema.id}-${i}`,
@@ -194,7 +194,7 @@ export function construirApi(fasesBase) {
   }
 
   const stats = {
-    fases: fases.length,
+    modulos: modulos.length,
     temas: todosLosTemas.length,
     preguntas: todosLosTemas.reduce((acc, t) => acc + (t.quiz?.length || 0), 0),
     flashcards: todosLosTemas.reduce((acc, t) => acc + (t.flashcards?.length || 0), 0),
@@ -207,7 +207,7 @@ export function construirApi(fasesBase) {
       id: `${tema.id}-${i}`,
       temaId: tema.id,
       temaTitulo: tema.titulo,
-      faseColor: tema.faseColor,
+      moduloColor: tema.moduloColor,
     }))
   )
 
@@ -217,7 +217,7 @@ export function construirApi(fasesBase) {
       id: `${tema.id}-fc-${i}`,
       temaId: tema.id,
       temaTitulo: tema.titulo,
-      faseColor: tema.faseColor,
+      moduloColor: tema.moduloColor,
     }))
   )
 
@@ -241,12 +241,12 @@ export function construirApi(fasesBase) {
   }
 
   return {
-    fases,
+    modulos,
     todosLosTemas,
     temaPorClaveImagen,
-    getFase,
+    getModulo,
     getTema,
-    preguntasDeFase,
+    preguntasDeModulo,
     getTemaVecinos,
     stats,
     todasLasPreguntas,

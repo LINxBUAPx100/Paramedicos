@@ -84,7 +84,7 @@ export default function SolicitudesInternas({
                   {s.tipo === 'codigos' ? (
                     <span className="ps-detalle">pide <b>ver los códigos</b> de academia y grupos</span>
                   ) : (
-                    <span className="ps-detalle">pide la <b>Fase {s.faseNumero} · {s.faseTitulo}</b></span>
+                    <span className="ps-detalle">pide la <b>Modulo {s.moduloNumero} · {s.moduloTitulo}</b></span>
                   )}
                   {s.grupoId && !soloGrupo && (
                     <span className="panel-tag-grupo">{nombreGrupo(s.grupoId)}</span>

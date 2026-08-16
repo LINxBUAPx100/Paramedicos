@@ -1,9 +1,9 @@
 // ============================================================
 //  Guía del editor: cuál es el SIGUIENTE paso — lógica PURA
 // ------------------------------------------------------------
-//  El editor pide construir cuatro niveles —curso → fase → módulo → tema— y en
+//  El editor pide construir cuatro niveles —curso → módulo → unidad → tema— y en
 //  ningún sitio lo dice. Quien entra a crear su primer tema no tiene forma de
-//  saber que antes necesita una fase y un módulo: ve un árbol vacío, un enlace
+//  saber que antes necesita un módulo y una unidad: ve un árbol vacío, un enlace
 //  pequeño al final de una lista, y siete paneles de campos cuando por fin
 //  llega. El paso a paso existía solo en la cabeza de quien lo programó.
 //
@@ -31,60 +31,60 @@ export function temaSinContenido(tema) {
 }
 
 // Devuelve { clave, titulo, texto, etiquetaAccion, accion } o null.
-// `accion` es lo que el editor ya sabe ejecutar: { tipo: 'fase'|'modulo'|'tema',
-// faseId?, moduloId? }. Puede venir en null: hay pasos que solo hay que
+// `accion` es lo que el editor ya sabe ejecutar: { tipo: 'módulo'|'unidad'|'tema',
+// moduloId?, unidadId? }. Puede venir en null: hay pasos que solo hay que
 // SEÑALAR, y un botón que no lleva a ningún sitio nuevo es peor que una frase.
 export function siguientePaso({ estructura = [], seleccion = null, tema = null, puedeCrear = true } = {}) {
   if (!puedeCrear) return null
 
-  const fases = activos(estructura)
+  const modulos = activos(estructura)
 
-  // 1. Un temario sin fases. Es el estado en el que se queda quien acaba de
+  // 1. Un temario sin módulos. Es el estado en el que se queda quien acaba de
   //    crear su curso, y el más desorientador de todos.
-  if (fases.length === 0) {
-    return {
-      clave: 'sin-fases',
-      titulo: 'Tu temario está vacío',
-      texto: 'Un temario se organiza en fases (los grandes bloques del curso), cada fase en módulos, y cada módulo en temas. Empieza por la primera fase.',
-      etiquetaAccion: 'Crear la primera fase',
-      accion: { tipo: 'fase' },
-    }
-  }
-
-  // 2. Una fase sin módulos. Se prioriza la fase SELECCIONADA: si el usuario
-  //    está mirando una, el siguiente paso es el de esa y no el de otra.
-  const faseSel = seleccion?.faseId ? fases.find((f) => f.id === seleccion.faseId) : null
-  const faseVacia = (faseSel && activos(faseSel.modulos).length === 0)
-    ? faseSel
-    : fases.find((f) => activos(f.modulos).length === 0)
-  if (faseVacia) {
+  if (modulos.length === 0) {
     return {
       clave: 'sin-modulos',
-      titulo: `«${faseVacia.titulo}» no tiene módulos`,
-      texto: 'Los temas no cuelgan de la fase directamente: van dentro de un módulo. Crea el primero para poder añadir temas.',
-      etiquetaAccion: 'Crear un módulo aquí',
-      accion: { tipo: 'modulo', faseId: faseVacia.id },
+      titulo: 'Tu temario está vacío',
+      texto: 'Un temario se organiza en modulos (los grandes bloques del curso), cada módulo en unidades, y cada unidad en temas. Empieza por la primer módulo.',
+      etiquetaAccion: 'Crear la primer módulo',
+      accion: { tipo: 'modulo' },
     }
   }
 
-  // 3. Un módulo sin temas, con la misma preferencia por lo seleccionado.
-  const parejas = []
-  for (const f of fases) {
-    for (const m of activos(f.modulos)) parejas.push({ fase: f, modulo: m })
+  // 2. Un módulo sin unidades. Se prioriza el módulo SELECCIONADA: si el usuario
+  //    está mirando una, el siguiente paso es el de esa y no el de otra.
+  const moduloSel = seleccion?.moduloId ? modulos.find((f) => f.id === seleccion.moduloId) : null
+  const moduloVacia = (moduloSel && activos(moduloSel.unidades).length === 0)
+    ? moduloSel
+    : modulos.find((f) => activos(f.unidades).length === 0)
+  if (moduloVacia) {
+    return {
+      clave: 'sin-unidades',
+      titulo: `«${moduloVacia.titulo}» no tiene unidades`,
+      texto: 'Los temas no cuelgan del módulo directamente: van dentro de una unidad. Crea el primero para poder añadir temas.',
+      etiquetaAccion: 'Crear una unidad aquí',
+      accion: { tipo: 'unidad', moduloId: moduloVacia.id },
+    }
   }
-  const selPareja = seleccion?.moduloId
-    ? parejas.find((p) => p.modulo.id === seleccion.moduloId)
+
+  // 3. Una unidad sin temas, con la misma preferencia por lo seleccionado.
+  const parejas = []
+  for (const f of modulos) {
+    for (const m of activos(f.unidades)) parejas.push({ modulo: f, unidad: m })
+  }
+  const selPareja = seleccion?.unidadId
+    ? parejas.find((p) => p.unidad.id === seleccion.unidadId)
     : null
-  const moduloVacio = (selPareja && activos(selPareja.modulo.temas).length === 0)
+  const unidadVacio = (selPareja && activos(selPareja.unidad.temas).length === 0)
     ? selPareja
-    : parejas.find((p) => activos(p.modulo.temas).length === 0)
-  if (moduloVacio) {
+    : parejas.find((p) => activos(p.unidad.temas).length === 0)
+  if (unidadVacio) {
     return {
       clave: 'sin-temas',
-      titulo: `«${moduloVacio.modulo.titulo}» no tiene temas`,
+      titulo: `«${unidadVacio.unidad.titulo}» no tiene temas`,
       texto: 'El tema es la página que estudia el alumno. Ahí van el contenido, las imágenes, el quiz y las actividades.',
       etiquetaAccion: 'Crear un tema aquí',
-      accion: { tipo: 'tema', faseId: moduloVacio.fase.id, moduloId: moduloVacio.modulo.id },
+      accion: { tipo: 'tema', moduloId: unidadVacio.modulo.id, unidadId: unidadVacio.unidad.id },
     }
   }
 

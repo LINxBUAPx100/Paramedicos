@@ -13,51 +13,51 @@ import { siguientePaso, temaSinContenido } from '../src/lib/editorGuia.js'
 const tema = (extra = {}) => ({ titulo: 'T', secciones: [], ...extra })
 const conTexto = { secciones: [{ titulo: 'Intro', bloques: [{ tipo: 'p', texto: 'algo' }] }] }
 
-test('un temario sin fases manda crear la primera', () => {
+test('un temario sin modulos manda crear la primera', () => {
   const p = siguientePaso({ estructura: [] })
-  assert.equal(p.clave, 'sin-fases')
-  assert.deepEqual(p.accion, { tipo: 'fase' })
+  assert.equal(p.clave, 'sin-modulos')
+  assert.deepEqual(p.accion, { tipo: 'modulo' })
   // Explica la jerarquía, que es justo lo que no se adivina.
-  assert.match(p.texto, /fases/)
-  assert.match(p.texto, /módulos/)
+  assert.match(p.texto, /modulos/)
+  assert.match(p.texto, /unidades/)
 })
 
-test('una fase sin módulos manda crear el módulo DE ESA fase', () => {
-  const estructura = [{ id: 'f1', titulo: 'Fundamentos', estado: 'borrador', modulos: [] }]
+test('un módulo sin unidades manda crear la unidad DE ESA modulo', () => {
+  const estructura = [{ id: 'f1', titulo: 'Fundamentos', estado: 'borrador', unidades: [] }]
   const p = siguientePaso({ estructura })
-  assert.equal(p.clave, 'sin-modulos')
-  assert.deepEqual(p.accion, { tipo: 'modulo', faseId: 'f1' })
+  assert.equal(p.clave, 'sin-unidades')
+  assert.deepEqual(p.accion, { tipo: 'unidad', moduloId: 'f1' })
   assert.match(p.titulo, /Fundamentos/)
 })
 
-test('con varias fases vacías, atiende la SELECCIONADA', () => {
+test('con varias modulos vacías, atiende la SELECCIONADA', () => {
   const estructura = [
-    { id: 'f1', titulo: 'Uno', modulos: [] },
-    { id: 'f2', titulo: 'Dos', modulos: [] },
+    { id: 'f1', titulo: 'Uno', unidades: [] },
+    { id: 'f2', titulo: 'Dos', unidades: [] },
   ]
   // Sin selección: la primera.
-  assert.equal(siguientePaso({ estructura }).accion.faseId, 'f1')
+  assert.equal(siguientePaso({ estructura }).accion.moduloId, 'f1')
   // Mirando la segunda: la segunda. Sugerir otra seria mandar al usuario a un
   // sitio en el que no esta.
-  assert.equal(siguientePaso({ estructura, seleccion: { faseId: 'f2' } }).accion.faseId, 'f2')
+  assert.equal(siguientePaso({ estructura, seleccion: { moduloId: 'f2' } }).accion.moduloId, 'f2')
 })
 
-test('un módulo sin temas manda crear el tema, con su fase y su módulo', () => {
+test('una unidad sin temas manda crear el tema, con su módulo y su unidad', () => {
   const estructura = [{
     id: 'f1', titulo: 'Uno',
-    modulos: [{ id: 'm1', titulo: 'Anatomía', temas: [] }],
+    unidades: [{ id: 'm1', titulo: 'Anatomía', temas: [] }],
   }]
   const p = siguientePaso({ estructura })
   assert.equal(p.clave, 'sin-temas')
-  assert.deepEqual(p.accion, { tipo: 'tema', faseId: 'f1', moduloId: 'm1' })
+  assert.deepEqual(p.accion, { tipo: 'tema', moduloId: 'f1', unidadId: 'm1' })
 })
 
 test('un tema abierto y en blanco señala dónde se escribe', () => {
   const estructura = [{
     id: 'f1', titulo: 'Uno',
-    modulos: [{ id: 'm1', titulo: 'M', temas: [{ id: 't1', titulo: 'T' }] }],
+    unidades: [{ id: 'm1', titulo: 'M', temas: [{ id: 't1', titulo: 'T' }] }],
   }]
-  const p = siguientePaso({ estructura, seleccion: { faseId: 'f1', moduloId: 'm1', temaId: 't1' }, tema: tema() })
+  const p = siguientePaso({ estructura, seleccion: { moduloId: 'f1', unidadId: 'm1', temaId: 't1' }, tema: tema() })
   assert.equal(p.clave, 'tema-vacio')
   // Sin acción: el panel donde se escribe ya está abierto a la derecha. Un
   // botón que no lleve a ningún sitio nuevo estorba más de lo que ayuda.
@@ -68,11 +68,11 @@ test('un tema abierto y en blanco señala dónde se escribe', () => {
 test('SE CALLA cuando el temario ya tiene contenido', () => {
   const estructura = [{
     id: 'f1', titulo: 'Uno',
-    modulos: [{ id: 'm1', titulo: 'M', temas: [{ id: 't1', titulo: 'T' }] }],
+    unidades: [{ id: 'm1', titulo: 'M', temas: [{ id: 't1', titulo: 'T' }] }],
   }]
   // Tema con secciones escritas y seleccionado: no hay nada que sugerir.
   assert.equal(
-    siguientePaso({ estructura, seleccion: { faseId: 'f1', moduloId: 'm1', temaId: 't1' }, tema: tema(conTexto) }),
+    siguientePaso({ estructura, seleccion: { moduloId: 'f1', unidadId: 'm1', temaId: 't1' }, tema: tema(conTexto) }),
     null
   )
   // Y sin nada seleccionado, con la estructura completa, tampoco.
@@ -82,31 +82,31 @@ test('SE CALLA cuando el temario ya tiene contenido', () => {
 test('no opina sobre un tema que todavía no ha cargado', () => {
   const estructura = [{
     id: 'f1', titulo: 'Uno',
-    modulos: [{ id: 'm1', titulo: 'M', temas: [{ id: 't1', titulo: 'T' }] }],
+    unidades: [{ id: 'm1', titulo: 'M', temas: [{ id: 't1', titulo: 'T' }] }],
   }]
   // tema = null es «aún no sé qué tiene dentro». Decir que está vacío sería
   // mentir y, peor, invitar a escribir encima de algo que sí existe.
   assert.equal(
-    siguientePaso({ estructura, seleccion: { faseId: 'f1', moduloId: 'm1', temaId: 't1' }, tema: null }),
+    siguientePaso({ estructura, seleccion: { moduloId: 'f1', unidadId: 'm1', temaId: 't1' }, tema: null }),
     null
   )
 })
 
 test('lo ARCHIVADO no cuenta como contenido', () => {
-  // Una fase archivada no la ve nadie: el temario sigue vacío de hecho.
-  const soloArchivada = [{ id: 'f1', titulo: 'Vieja', estado: 'archivado', modulos: [] }]
-  assert.equal(siguientePaso({ estructura: soloArchivada }).clave, 'sin-fases')
+  // Un módulo archivada no la ve nadie: el temario sigue vacío de hecho.
+  const soloArchivada = [{ id: 'f1', titulo: 'Vieja', estado: 'archivado', unidades: [] }]
+  assert.equal(siguientePaso({ estructura: soloArchivada }).clave, 'sin-modulos')
 
-  // Y un módulo cuyo único tema está archivado sigue necesitando un tema.
+  // Y una unidad cuyo único tema está archivado sigue necesitando un tema.
   const temaArchivado = [{
     id: 'f1', titulo: 'Uno',
-    modulos: [{ id: 'm1', titulo: 'M', temas: [{ id: 't1', titulo: 'T', estado: 'archivado' }] }],
+    unidades: [{ id: 'm1', titulo: 'M', temas: [{ id: 't1', titulo: 'T', estado: 'archivado' }] }],
   }]
   assert.equal(siguientePaso({ estructura: temaArchivado }).clave, 'sin-temas')
 })
 
 test('quien no puede crear no recibe instrucciones de crear', () => {
-  // Un profesor sin permiso de alta: sugerirle crear una fase es ofrecerle un
+  // Un profesor sin permiso de alta: sugerirle crear un módulo es ofrecerle un
   // botón que le va a decir que no.
   assert.equal(siguientePaso({ estructura: [], puedeCrear: false }), null)
 })

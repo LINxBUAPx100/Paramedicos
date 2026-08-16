@@ -1,31 +1,32 @@
 // ============================================================
-//  Intentos de examen de fase — colección `intentos`
+//  Intentos de examen de módulo — colección `intentos`
 // ------------------------------------------------------------
 //  Cada intento queda guardado con uid + academiaId, para que el alumno vea su
-//  historial y su maestro/academia pueda revisar su avance por fase.
+//  historial y su maestro/academia pueda revisar su avance por módulo.
 //  Nota: se ordena en el CLIENTE (where + orderBy en campos distintos exigiría
 //  un índice compuesto en Firestore; así evitamos ese paso manual).
 // ============================================================
 import { db } from './init.js'
 import { collection, addDoc, query, where, getDocs, serverTimestamp } from 'firebase/firestore'
+import { normalizarIntentos } from '../compatNombres.js'
 
-// Registra un intento de examen de fase. Devuelve el porcentaje.
+// Registra un intento de examen de módulo. Devuelve el porcentaje.
 //
-// `semilla`: con ella y el banco de la fase se REGENERA el examen exacto que
+// `semilla`: con ella y el banco del módulo se REGENERA el examen exacto que
 // vio el alumno (lib/examenModelo.js). Desde que el examen es un subconjunto
 // del banco, sin este dato un intento es un porcentaje suelto y una
 // reclamación de nota no se puede resolver: nadie sabe qué preguntas tocaron.
-export async function guardarIntentoFase({
-  uid, nombre, academiaId, fase, aciertos, total, semilla = null,
+export async function guardarIntentoModulo({
+  uid, nombre, academiaId, modulo, aciertos, total, semilla = null,
 }) {
   const porcentaje = total ? Math.round((aciertos / total) * 100) : 0
   await addDoc(collection(db, 'intentos'), {
     uid,
     nombre: nombre || '',
     academiaId: academiaId || null,
-    faseId: fase.id,
-    faseNumero: fase.numero,
-    faseTitulo: fase.titulo,
+    moduloId: modulo.id,
+    moduloNumero: modulo.numero,
+    moduloTitulo: modulo.titulo,
     aciertos,
     total,
     porcentaje,
@@ -35,9 +36,11 @@ export async function guardarIntentoFase({
   return porcentaje
 }
 
-// Más reciente primero (orden en cliente).
+// Más reciente primero (orden en cliente). Traduce de paso los intentos
+// anteriores al renombrado (`faseId` → `moduloId`): son inmutables por regla,
+// así que conservarán el nombre viejo siempre (ver lib/compatNombres.js).
 function ordenar(docs) {
-  return docs.sort((a, b) => (b.fecha?.seconds || 0) - (a.fecha?.seconds || 0))
+  return normalizarIntentos(docs).sort((a, b) => (b.fecha?.seconds || 0) - (a.fecha?.seconds || 0))
 }
 
 // Intentos de un alumno (para su propio historial).

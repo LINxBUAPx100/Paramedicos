@@ -1,31 +1,38 @@
 import { REGISTRO } from './registro.js'
 
-// Ensambla las fases en ORDEN y con NUMERACIÓN AUTOMÁTICA (ver registro.js).
+// Ensambla los MÓDULOS en ORDEN y con NUMERACIÓN AUTOMÁTICA (ver registro.js).
 //  · El orden lo define el campo `orden` del registro.
-//  · `fase.numero` (1, 2, 3…) y `tema.numero` ('1.1', '1.2'…) se CALCULAN desde
+//  · `modulo.numero` (1, 2, 3…) y `tema.numero` ('1.1', '1.2'…) se CALCULAN desde
 //    la posición → reordenar el registro renumera todo, sin tocar el contenido.
-//  · El `id` de cada fase/tema es identidad estable (URLs + progreso) y no se toca.
+//  · El `id` de cada módulo/tema es identidad estable (URLs + progreso) y no se toca.
 //  · Cualquier `numero` escrito a mano en los archivos de datos se ignora aquí.
-export const fases = [...REGISTRO]
+//
+//  FRONTERA CON EL BUNDLE LEGACY: los archivos de `src/data/` (registro.js,
+//  faseN.js, extraFaseN.js) conservan a propósito la nomenclatura vieja —son el
+//  temario ficticio que el temario oficial R.E.S.C.A.T.E. va a reemplazar, y
+//  contienen la palabra "fase" dentro de TEXTO MÉDICO ("fase de shock"), así que
+//  renombrarlos sería a la vez inútil y peligroso. La traducción se hace aquí,
+//  en el único punto de entrada: `{ fase }` del registro → `modulo` de la API.
+export const modulos = [...REGISTRO]
   .sort((a, b) => a.orden - b.orden)
-  .map(({ fase, extra }, i) => {
+  .map(({ fase: modulo, extra }, i) => {
     const numero = i + 1
     // Los temas se ordenan por su campo `orden` opcional (para reordenar sin mover
     // contenido). Los que no lo tienen conservan su posición (sort estable).
-    const temas = [...fase.temas, ...(extra || [])]
+    const temas = [...modulo.temas, ...(extra || [])]
       .sort((a, b) => (a.orden ?? 1e9) - (b.orden ?? 1e9))
       .map((tema, j) => ({ ...tema, numero: `${numero}.${j + 1}` }))
-    return { ...fase, numero, temas }
+    return { ...modulo, numero, temas }
   })
 
-// Lista plana de todos los temas, enriquecida con datos de su fase.
-export const todosLosTemas = fases.flatMap((fase) =>
-  fase.temas.map((tema) => ({
+// Lista plana de todos los temas, enriquecida con datos de su módulo.
+export const todosLosTemas = modulos.flatMap((modulo) =>
+  modulo.temas.map((tema) => ({
     ...tema,
-    faseId: fase.id,
-    faseNumero: fase.numero,
-    faseTitulo: fase.titulo,
-    faseColor: fase.color,
+    moduloId: modulo.id,
+    moduloNumero: modulo.numero,
+    moduloTitulo: modulo.titulo,
+    moduloColor: modulo.color,
   }))
 )
 
@@ -45,19 +52,19 @@ export const temaPorClaveImagen = (() => {
   return map
 })()
 
-export function getFase(faseId) {
-  return fases.find((f) => f.id === faseId)
+export function getModulo(moduloId) {
+  return modulos.find((f) => f.id === moduloId)
 }
 
 export function getTema(temaId) {
   return todosLosTemas.find((t) => t.id === temaId)
 }
 
-// Todas las preguntas de una fase (de todos sus temas) — para el examen de fase.
-export function preguntasDeFase(faseId) {
-  const fase = getFase(faseId)
-  if (!fase) return []
-  return fase.temas.flatMap((tema) =>
+// Todas las preguntas de un módulo (de todos sus temas) — para el examen de módulo.
+export function preguntasDeModulo(moduloId) {
+  const modulo = getModulo(moduloId)
+  if (!modulo) return []
+  return modulo.temas.flatMap((tema) =>
     (tema.quiz || []).map((q, i) => ({
       ...q,
       id: `${tema.id}-${i}`,
@@ -80,7 +87,7 @@ export function getTemaVecinos(temaId) {
 
 // Estadísticas globales del temario.
 export const stats = {
-  fases: fases.length,
+  modulos: modulos.length,
   temas: todosLosTemas.length,
   preguntas: todosLosTemas.reduce((acc, t) => acc + (t.quiz?.length || 0), 0),
   flashcards: todosLosTemas.reduce((acc, t) => acc + (t.flashcards?.length || 0), 0),
@@ -94,7 +101,7 @@ export const todasLasPreguntas = todosLosTemas.flatMap((tema) =>
     id: `${tema.id}-${i}`,
     temaId: tema.id,
     temaTitulo: tema.titulo,
-    faseColor: tema.faseColor,
+    moduloColor: tema.moduloColor,
   }))
 )
 
@@ -105,7 +112,7 @@ export const todasLasFlashcards = todosLosTemas.flatMap((tema) =>
     id: `${tema.id}-fc-${i}`,
     temaId: tema.id,
     temaTitulo: tema.titulo,
-    faseColor: tema.faseColor,
+    moduloColor: tema.moduloColor,
   }))
 )
 

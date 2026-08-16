@@ -13,8 +13,8 @@ import {
 } from '../src/lib/alcanceContenido.js'
 
 const GRUPOS = [
-  { id: 'G1', nombre: 'Mañana', temasOcultos: [], fasesOcultas: [] },
-  { id: 'G2', nombre: 'Tarde', temasOcultos: ['viejo'], fasesOcultas: [] },
+  { id: 'G1', nombre: 'Mañana', temasOcultos: [], modulosOcultos: [] },
+  { id: 'G2', nombre: 'Tarde', temasOcultos: ['viejo'], modulosOcultos: [] },
   { id: 'G3', nombre: 'Sábados' }, // sin campos: academia con reglas viejas
 ]
 
@@ -43,9 +43,9 @@ test('es idempotente: no reescribe lo que ya está oculto', () => {
   assert.equal(c.length, 0, 'G2 ya lo oculta: no hay nada que escribir')
 })
 
-test('una fase usa fasesOcultas, no temasOcultos', () => {
-  const c = ocultarParaOtrosGrupos({ grupos: GRUPOS, grupoPropio: 'G1', tipo: 'fase', id: 'f5' })
-  assert.ok(c.every((x) => x.campo === 'fasesOcultas'))
+test('un módulo usa modulosOcultos, no temasOcultos', () => {
+  const c = ocultarParaOtrosGrupos({ grupos: GRUPOS, grupoPropio: 'G1', tipo: 'modulo', id: 'f5' })
+  assert.ok(c.every((x) => x.campo === 'modulosOcultos'))
   assert.deepEqual(c.find((x) => x.grupoId === 'G2').valores, ['f5'])
 })
 
@@ -61,7 +61,7 @@ test('con un solo grupo (el suyo) no hay nada que ocultar', () => {
 })
 
 test('un tipo o un id que no valen no producen escrituras', () => {
-  assert.deepEqual(ocultarParaOtrosGrupos({ grupos: GRUPOS, grupoPropio: 'G1', tipo: 'modulo', id: 'm1' }), [])
+  assert.deepEqual(ocultarParaOtrosGrupos({ grupos: GRUPOS, grupoPropio: 'G1', tipo: 'unidad', id: 'u1' }), [])
   assert.deepEqual(ocultarParaOtrosGrupos({ grupos: GRUPOS, grupoPropio: 'G1', tipo: 'tema', id: null }), [])
   assert.deepEqual(ocultarParaOtrosGrupos({}), [])
 })
@@ -86,12 +86,12 @@ test('el aviso dice la verdad en cada caso', () => {
   assert.match(avisoDeAlcance({ restringido: true, nombreGrupo: 'Mañana', otrosGrupos: 0 }), /tu academia/)
 })
 
-test('un módulo NO es acotable: su visibilidad no existe por grupo', () => {
-  // Prometerle al profesor que «su módulo solo lo ve su grupo» seria falso: lo
+test('una unidad NO es acotable: su visibilidad no existe por grupo', () => {
+  // Prometerle al profesor que «su unidad solo la ve su grupo» sería falso: lo
   // que se acota son los temas que cuelgue dentro.
   assert.equal(esAcotable('tema'), true)
-  assert.equal(esAcotable('fase'), true)
-  assert.equal(esAcotable('modulo'), false)
+  assert.equal(esAcotable('modulo'), true)
+  assert.equal(esAcotable('unidad'), false)
   assert.equal(esAcotable('curso'), false)
   assert.equal(esAcotable(undefined), false)
   // Y nada heredado de Object cuenta como tipo.

@@ -3,10 +3,10 @@ import { APROBADO, resumenAcademia } from '../../lib/panelModelo.js'
 
 // Retrato de la academia (o del grupo filtrado). Toda la aritmética está en
 // `lib/panelModelo.js`: aquí solo se pinta lo que ese módulo decide.
-export default function Estadisticas({ alumnos, staff, intentos, porAlumno, fases }) {
+export default function Estadisticas({ alumnos, staff, intentos, porAlumno, modulos }) {
   const stats = useMemo(
-    () => resumenAcademia({ alumnos, staff, intentos, porAlumno, fases }),
-    [alumnos, staff, intentos, porAlumno, fases]
+    () => resumenAcademia({ alumnos, staff, intentos, porAlumno, modulos }),
+    [alumnos, staff, intentos, porAlumno, modulos]
   )
 
   const fechaTxt = (f) =>
@@ -23,7 +23,7 @@ export default function Estadisticas({ alumnos, staff, intentos, porAlumno, fase
         <div className="pe-kpi">
           <b>{stats.aprobacion === null ? '—' : `${stats.aprobacion}%`}</b>
           <span>Aprobación</span>
-          <small>fases presentadas con ≥{APROBADO}%</small>
+          <small>módulos presentados con ≥{APROBADO}%</small>
         </div>
         <div className="pe-kpi">
           <b>{stats.activos}<small className="pe-kpi-de">/{stats.totalAlumnos}</small></b>
@@ -44,12 +44,12 @@ export default function Estadisticas({ alumnos, staff, intentos, porAlumno, fase
 
       <div className="pe-columnas">
         <div className="pe-card">
-          <h3>Dominio por fase</h3>
+          <h3>Dominio por módulo</h3>
           <p className="pe-card-sub">Promedio de la mejor calificación entre quienes presentaron.</p>
           <div className="pe-barras">
-            {stats.porFase.map(({ fase, prom, presentaron }) => (
-              <div className="pe-barra-fila" key={fase.id} style={{ '--fase-color': fase.color }}>
-                <span className="pe-barra-label" title={fase.titulo}>F{fase.numero}</span>
+            {stats.porModulo.map(({ modulo, prom, presentaron }) => (
+              <div className="pe-barra-fila" key={modulo.id} style={{ '--modulo-color': modulo.color }}>
+                <span className="pe-barra-label" title={modulo.titulo}>F{modulo.numero}</span>
                 <div className="pe-barra-pista">
                   <div
                     className={`pe-barra ${prom !== null && prom < APROBADO ? 'baja' : ''}`}
@@ -74,7 +74,7 @@ export default function Estadisticas({ alumnos, staff, intentos, porAlumno, fase
                 {stats.recientes.map((it) => (
                   <li key={it.id}>
                     <span className="pe-act-nombre">{it.nombre || '—'}</span>
-                    <span className="pe-act-fase">F{it.faseNumero}</span>
+                    <span className="pe-act-modulo">F{it.moduloNumero}</span>
                     <b className={it.porcentaje >= APROBADO ? 'ok' : 'mal'}>{it.porcentaje}%</b>
                     <small>{fechaTxt(it.fecha)}</small>
                   </li>
@@ -93,7 +93,7 @@ export default function Estadisticas({ alumnos, staff, intentos, porAlumno, fase
                   <li key={al.id}>
                     <span>{al.nombre || al.email}</span>
                     <b>{al.prom}%</b>
-                    <small>{al.fases} fase{al.fases !== 1 ? 's' : ''}</small>
+                    <small>{al.modulos} modulo{al.modulos !== 1 ? 's' : ''}</small>
                   </li>
                 ))}
               </ul>

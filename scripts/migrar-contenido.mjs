@@ -20,7 +20,7 @@
 //  Requiere `firebase-admin` (devDependency; fuera del bundle del frontend):
 //    npm i -D firebase-admin
 // ============================================================
-import { fases, todosLosTemas, stats } from '../src/data/index.js'
+import { modulos, todosLosTemas, stats } from '../src/data/index.js'
 import {
   plantillaDesdeData, docsClonadosParaAcademia, cursoDesdePlantilla, lotes,
 } from '../src/lib/contenidoModelo.js'
@@ -56,7 +56,7 @@ if (!SEED && !ACADEMIA && !VERIFICAR) {
   --apply                ESCRIBE (sin esto solo se muestra el plan)
   --produccion           permite conectar a producción (requiere GOOGLE_APPLICATION_CREDENTIALS)
 
-Temario local: ${stats.fases} fases · ${stats.temas} temas · ${stats.preguntas} preguntas · ${stats.flashcards} flashcards`)
+Temario local: ${stats.modulos} modulos · ${stats.temas} temas · ${stats.preguntas} preguntas · ${stats.flashcards} flashcards`)
   process.exit(0)
 }
 
@@ -82,7 +82,7 @@ const { plantilla, temas: temasPlantilla } = plantillaDesdeData({
   nombre: PLANTILLA_OFICIAL_NOMBRE,
   tipoDestino: 'basico',
   version: 1,
-  fases,
+  modulos,
   todosLosTemas,
 })
 
@@ -116,7 +116,7 @@ async function existeDoc(coleccion, id) {
 
 // ---------- SEED de la plantilla global ----------
 async function seed() {
-  console.log(`Seed de plantilla "${plantilla.id}" (${plantilla.estructura.length} fases, ${temasPlantilla.length} temas)`)
+  console.log(`Seed de plantilla "${plantilla.id}" (${plantilla.estructura.length} modulos, ${temasPlantilla.length} temas)`)
   const docs = [
     { coleccion: 'plantillas', id: plantilla.id },
     ...temasPlantilla.map((t) => ({ coleccion: 'plantillasTemas', id: t.docId })),
@@ -266,7 +266,7 @@ async function verificar(academiaId) {
   }
   const curso = cursoSnap.data()
   const esperados = (curso.estructura || []).flatMap((f) =>
-    (f.modulos || []).flatMap((m) => (m.temas || []).map((t) => t.id)))
+    (f.unidades || []).flatMap((m) => (m.temas || []).map((t) => t.id)))
   const snap = await dba.collection('temas').where('cursoId', '==', cursoId).get()
   resumen.leidos += snap.size
   const presentes = new Set(snap.docs.map((d) => d.data().temaId))

@@ -211,7 +211,7 @@ function SeccionPlantillas({ api }) {
                   </th>
                   <td><span className={`rp-chip rp-chip--${p.estado || 'borrador'}`}>{ETIQUETA_ESTADO_PLANTILLA[p.estado] || p.estado}</span></td>
                   <td>v{p.version ?? 1}</td>
-                  <td>{p.conteos ? `${p.conteos.fases} fases · ${p.conteos.temas} temas` : '—'}</td>
+                  <td>{p.conteos ? `${p.conteos.modulos} modulos · ${p.conteos.temas} temas` : '—'}</td>
                   <td className="rp-celda-acciones">
                     {p.estado === 'borrador' && (
                       <>

@@ -15,7 +15,7 @@
 //
 //  Esto lo cierra: un token que se usa sin reserva tiene que estar definido.
 //  Con reserva —`var(--x, algo)`— se admite: ahí el autor ya previó el hueco,
-//  y es el patrón de los tokens que se inyectan desde JS (`--fase-color`,
+//  y es el patrón de los tokens que se inyectan desde JS (`--modulo-color`,
 //  `--aca-color`).
 // ============================================================
 import test from 'node:test'

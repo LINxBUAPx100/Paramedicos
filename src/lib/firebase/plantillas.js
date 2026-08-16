@@ -20,13 +20,13 @@ export const PLANTILLA_OFICIAL_NOMBRE = 'Programa Paramédico (TUM)'
 // Idempotente: reescribe los mismos doc-id. Lo ejecuta el super-admin una vez.
 export async function importarPlantillaOficial({ onProgreso } = {}) {
   // El contenido pesado se importa de forma diferida solo al sembrar.
-  const { fases, todosLosTemas } = await import('../../data/index.js')
+  const { modulos, todosLosTemas } = await import('../../data/index.js')
   const { plantilla, temas } = plantillaDesdeData({
     id: PLANTILLA_OFICIAL_ID,
     nombre: PLANTILLA_OFICIAL_NOMBRE,
     tipoDestino: 'basico',
     version: 1,
-    fases,
+    modulos,
     todosLosTemas,
   })
 

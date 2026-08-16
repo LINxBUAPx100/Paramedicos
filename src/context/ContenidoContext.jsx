@@ -15,26 +15,39 @@
 //    DEMANDA: solo cuando una página de estudio lo pide, así el visitante
 //    anónimo y el alumno legacy no pagan lecturas ni descargas de más.
 //
-//  Las URLs públicas (/fase/:id, /tema/:id) no cambian: los ids viajan en
+//  Las URLs públicas (/modulo/:id, /tema/:id) no cambian: los ids viajan en
 //  la estructura de cada academia (la clonación los preserva).
 // ============================================================
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { useAuth } from './AuthContext.jsx'
 import { academiaMigrada } from '../lib/contenidoApi.js'
+import { programasDeGrupo } from '../lib/programasModelo.js'
 import { registrar } from '../lib/registro.js'
-import { fasesNav, stats as statsBundle } from '../data/navIndice.js'
+import { modulosNav, stats as statsBundle } from '../data/navIndice.js'
 
-const INDICE_BUNDLE = { fases: fasesNav, stats: statsBundle, fuente: 'legacy' }
+const INDICE_BUNDLE = { modulos: modulosNav, stats: statsBundle, fuente: 'legacy' }
 
 const ContenidoContext = createContext(null)
 
 export function ContenidoProvider({ children }) {
-  const { academia } = useAuth()
+  const { academia, rol, grupo, esSuperadmin } = useAuth()
   const academiaId = academia?.id || null
   const migrada = academiaMigrada(academia)
-  // Identidad de la FUENTE: si cambia (login/logout, cambio de academia o su
-  // clonación termina), se descarta lo cargado y se vuelve a resolver.
-  const clave = migrada ? academiaId : 'legacy'
+  // ALCANCE de programas de esta persona: define QUÉ contenido resuelve el
+  // resolutor (un alumno de Enfermería no recibe TUM). Se memoiza para no
+  // recrear el objeto en cada render y disparar los efectos de más.
+  const acceso = useMemo(
+    () => ({ rol, esSuperadmin, grupo }),
+    [rol, esSuperadmin, grupo]
+  )
+  // Identidad de la FUENTE: si cambia (login/logout, cambio de academia, fin
+  // de la clonación o CAMBIO DE GRUPO), se descarta lo cargado y se resuelve
+  // otra vez. El grupo entra en la clave porque cambia el contenido servido:
+  // sin él, quien pasa de un grupo a otro seguiría viendo el temario anterior.
+  const claveAcceso = esSuperadmin || rol === 'instructor' || rol === 'admin_escuela'
+    ? '*'
+    : programasDeGrupo(grupo).sort().join(',') || '∅'
+  const clave = migrada ? `${academiaId}|${claveAcceso}` : `legacy|${claveAcceso}`
 
   const [indice, setIndice] = useState(INDICE_BUNDLE)
   const [contenido, setContenido] = useState(null) // API completa | null
@@ -52,7 +65,7 @@ export function ContenidoProvider({ children }) {
     ;(async () => {
       try {
         const { indiceDeAcademia } = await import('../lib/firebase/contenido.js')
-        const ind = await indiceDeAcademia(academia)
+        const ind = await indiceDeAcademia(academia, acceso)
         if (activo && ind) {
           // preguntas/flashcards salen del bundle hasta cargar el contenido
           // completo (la estructura sola no las conoce): solo afinan contadores.
@@ -77,7 +90,7 @@ export function ContenidoProvider({ children }) {
     ;(async () => {
       try {
         const { contenidoDeAcademia } = await import('../lib/firebase/contenido.js')
-        const api = await contenidoDeAcademia(academia)
+        const api = await contenidoDeAcademia(academia, acceso)
         if (!activo) return
         setContenido(api)
         setError(null)
@@ -184,7 +197,7 @@ export function CargandoContenido({ variante = 'generico' }) {
           <span className="esq-linea esq-linea--media" aria-hidden="true" />
         </>
       )}
-      {variante === 'fase' && (
+      {variante === 'modulo' && (
         <>
           <span className="esq-linea esq-linea--migas" aria-hidden="true" />
           <div className="esq-cabecera" aria-hidden="true">

@@ -8,7 +8,7 @@
 //  Uso:   node scripts/gen-plantilla.mjs [ruta-salida.json]
 //  Por defecto escribe scripts/plantilla-oficial.json (git-ignored).
 // ============================================================
-import { fases, todosLosTemas, stats } from '../src/data/index.js'
+import { modulos, todosLosTemas, stats } from '../src/data/index.js'
 import { plantillaDesdeData } from '../src/lib/contenidoModelo.js'
 import { writeFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
@@ -25,7 +25,7 @@ const { plantilla, temas } = plantillaDesdeData({
   nombre: PLANTILLA_OFICIAL_NOMBRE,
   tipoDestino: 'basico',
   version: 1,
-  fases,
+  modulos,
   todosLosTemas,
 })
 
@@ -33,6 +33,6 @@ await writeFile(destino, JSON.stringify({ plantilla, temas, stats }, null, 2), '
 
 const mayor = temas.reduce((max, t) => Math.max(max, JSON.stringify(t).length), 0)
 console.log(
-  `plantilla "${plantilla.id}" → ${plantilla.estructura.length} fases, ${temas.length} temas`
+  `plantilla "${plantilla.id}" → ${plantilla.estructura.length} modulos, ${temas.length} temas`
   + ` (tema más grande ≈ ${(mayor / 1024).toFixed(1)} KB) → ${destino}`
 )

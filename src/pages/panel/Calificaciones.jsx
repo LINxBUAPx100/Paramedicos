@@ -12,7 +12,7 @@ import {
 //  Libro de calificaciones (Bloque S)
 // ------------------------------------------------------------
 //  Se califican EVALUACIONES DEL MAESTRO —un examen presencial, una práctica—,
-//  no las fases del temario, y van separadas de los `intentos` de la app: un
+//  no los módulos del temario, y van separadas de los `intentos` de la app: un
 //  intento es repetible a voluntad y mezclarlos infla el promedio.
 //
 //  Aquí no se calcula nada: todo sale de `lib/calificacionesModelo.js`, que es
@@ -69,7 +69,7 @@ export default function PanelCalificaciones() {
   const resumen = useMemo(() => resumenDelGrupo(visibles, alumnos, indice), [visibles, alumnos, indice])
   // Retrato por grupos para quien dirige. Usa TODAS las evaluaciones, no las
   // filtradas: cada grupo se mide con las que le aplican, y eso lo decide el
-  // modulo puro.
+  // módulo puro.
   const porGrupos = useMemo(
     () => resumenPorGrupos(evaluaciones || [], alumnos, indice, grupos || []),
     [evaluaciones, alumnos, indice, grupos]

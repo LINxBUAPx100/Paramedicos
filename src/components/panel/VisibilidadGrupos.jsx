@@ -2,15 +2,15 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { useIndiceAcademia } from '../../context/ContenidoContext.jsx'
-import { contarTemasOcultos, estadoFase, focoBaraja, totalTemas } from '../../lib/panelModelo.js'
+import { contarTemasOcultos, estadoModulo, focoBaraja, totalTemas } from '../../lib/panelModelo.js'
 import Icon from '../Icon.jsx'
 
 // ============================================================
 //  Visibilidad del contenido por GRUPO (antes suelta en /temario)
 // ------------------------------------------------------------
-//  Decide qué fases y temas ve cada grupo de alumnos:
+//  Decide qué módulos y temas ve cada grupo de alumnos:
 //    · «Ocultar todo / Mostrar todo» del grupo entero
-//    · Ojo por MÓDULO (fase): oculta/muestra el módulo completo
+//    · Ojo por MÓDULO (módulo): oculta/muestra el módulo completo
 //    · Ojo por TEMA: oculta/muestra ese tema individual
 //  Lo oculto desaparece de las listas del alumno y sale censurado en el Atlas.
 //
@@ -26,10 +26,10 @@ import Icon from '../Icon.jsx'
 //    · «Espacios» — a QUIÉN le estás cambiando la visibilidad (academia, grupo)
 //      y las acciones que afectan a todo. Es una tarjeta aparte porque decidir
 //      el destinatario y decidir el contenido son dos cosas distintas.
-//    · La baraja — una fase abierta a la vez; las demás, una línea que dice
+//    · La baraja — un módulo abierta a la vez; las demás, una línea que dice
 //      cuántos temas ve el grupo. Cabeceras como `<button aria-expanded>`
 //      navegables con flechas (patrón de acordeón de WAI-ARIA).
-//  La lógica de guardado NO cambió: `guardar`, `toggleFase`, `toggleTema`,
+//  La lógica de guardado NO cambió: `guardar`, `toggleModulo`, `toggleTema`,
 //  `toggleTodo` y `aplicarATodos` son las de siempre.
 // ============================================================
 
@@ -38,11 +38,11 @@ import Icon from '../Icon.jsx'
 export default function VisibilidadGrupos({ academiaId, academiaNombre = '', grupos, cabecera = null }) {
   const { grupoId: miGrupoId, puedeVerCodigos } = useAuth()
   // Temario de LA ACADEMIA gestionada: su copia si está migrada, bundle si no.
-  const { fases: fasesTemario } = useIndiceAcademia(academiaId)
+  const { modulos: modulosTemario } = useIndiceAcademia(academiaId)
 
   const [lista, setLista] = useState(grupos)
   const [grupoSel, setGrupoSel] = useState('')
-  const [ocultas, setOcultas] = useState({ fases: [], temas: [] })
+  const [ocultas, setOcultas] = useState({ modulos: [], temas: [] })
   const [guardando, setGuardando] = useState(false)
   const [error, setError] = useState('')
   const [aplicado, setAplicado] = useState(false)
@@ -67,11 +67,11 @@ export default function VisibilidadGrupos({ academiaId, academiaNombre = '', gru
 
   const grupo = useMemo(() => lista.find((g) => g.id === grupoSel) || null, [lista, grupoSel])
   useEffect(() => {
-    setOcultas({ fases: grupo?.fasesOcultas || [], temas: grupo?.temasOcultos || [] })
+    setOcultas({ modulos: grupo?.modulosOcultos || [], temas: grupo?.temasOcultos || [] })
   }, [grupo])
 
-  const TODAS_LAS_FASES = useMemo(() => fasesTemario.map((f) => f.id), [fasesTemario])
-  const TOTAL_TEMAS = useMemo(() => totalTemas(fasesTemario), [fasesTemario])
+  const TODAS_LAS_MODULOS = useMemo(() => modulosTemario.map((f) => f.id), [modulosTemario])
+  const TOTAL_TEMAS = useMemo(() => totalTemas(modulosTemario), [modulosTemario])
 
   // Escribe la visibilidad en el grupo (optimista, revierte si falla).
   const guardar = async (nuevas) => {
@@ -86,12 +86,12 @@ export default function VisibilidadGrupos({ academiaId, academiaNombre = '', gru
         import('firebase/firestore'),
       ])
       await fs.updateDoc(fs.doc(db, 'grupos', grupo.id), {
-        fasesOcultas: nuevas.fases,
+        modulosOcultos: nuevas.modulos,
         temasOcultos: nuevas.temas,
       })
       // Refleja el cambio en la lista local (para no perderlo al cambiar de grupo).
       setLista((gs) => gs.map((g) =>
-        g.id === grupo.id ? { ...g, fasesOcultas: nuevas.fases, temasOcultos: nuevas.temas } : g
+        g.id === grupo.id ? { ...g, modulosOcultos: nuevas.modulos, temasOcultos: nuevas.temas } : g
       ))
     } catch (err) {
       setOcultas(previas)
@@ -105,19 +105,19 @@ export default function VisibilidadGrupos({ academiaId, academiaNombre = '', gru
     }
   }
 
-  const faseOculta = (fid) => ocultas.fases.includes(fid)
+  const moduloOculta = (fid) => ocultas.modulos.includes(fid)
   const temaOcultoSolo = (tid) => ocultas.temas.includes(tid)
 
-  const toggleFase = (fase) => {
-    if (faseOculta(fase.id)) {
-      // Mostrar TODO el módulo: quita la fase y sus temas individuales.
-      const idsTemas = fase.temas.map((t) => t.id)
+  const toggleModulo = (modulo) => {
+    if (moduloOculta(modulo.id)) {
+      // Mostrar TODO el módulo: quita el módulo y sus temas individuales.
+      const idsTemas = modulo.temas.map((t) => t.id)
       guardar({
-        fases: ocultas.fases.filter((f) => f !== fase.id),
+        modulos: ocultas.modulos.filter((f) => f !== modulo.id),
         temas: ocultas.temas.filter((t) => !idsTemas.includes(t)),
       })
     } else {
-      guardar({ ...ocultas, fases: [...ocultas.fases, fase.id] })
+      guardar({ ...ocultas, modulos: [...ocultas.modulos, modulo.id] })
     }
   }
 
@@ -130,9 +130,9 @@ export default function VisibilidadGrupos({ academiaId, academiaNombre = '', gru
     })
   }
 
-  const todoOculto = ocultas.fases.length === TODAS_LAS_FASES.length
+  const todoOculto = ocultas.modulos.length === TODAS_LAS_MODULOS.length
   const toggleTodo = () => {
-    guardar(todoOculto ? { fases: [], temas: [] } : { fases: [...TODAS_LAS_FASES], temas: [] })
+    guardar(todoOculto ? { modulos: [], temas: [] } : { modulos: [...TODAS_LAS_MODULOS], temas: [] })
   }
 
   // Replica la configuración actual a TODOS los grupos de la academia a la vez.
@@ -154,12 +154,12 @@ export default function VisibilidadGrupos({ academiaId, academiaNombre = '', gru
       const batch = fs.writeBatch(db)
       lista.forEach((g) => {
         batch.update(fs.doc(db, 'grupos', g.id), {
-          fasesOcultas: ocultas.fases,
+          modulosOcultos: ocultas.modulos,
           temasOcultos: ocultas.temas,
         })
       })
       await batch.commit()
-      setLista((gs) => gs.map((g) => ({ ...g, fasesOcultas: ocultas.fases, temasOcultos: ocultas.temas })))
+      setLista((gs) => gs.map((g) => ({ ...g, modulosOcultos: ocultas.modulos, temasOcultos: ocultas.temas })))
       setAplicado(true)
       setTimeout(() => setAplicado(false), 3000)
     } catch (err) {
@@ -173,11 +173,11 @@ export default function VisibilidadGrupos({ academiaId, academiaNombre = '', gru
     }
   }
 
-  const temasOcultosTotal = contarTemasOcultos(fasesTemario, ocultas)
+  const temasOcultosTotal = contarTemasOcultos(modulosTemario, ocultas)
 
-  // Qué fase está abierta: la primera mientras nadie decida otra cosa.
-  const faseAbierta = abiertaId === undefined ? fasesTemario[0]?.id : abiertaId
-  const alternarCarta = (id) => setAbiertaId(faseAbierta === id ? null : id)
+  // Qué módulo está abierta: la primera mientras nadie decida otra cosa.
+  const moduloAbierta = abiertaId === undefined ? modulosTemario[0]?.id : abiertaId
+  const alternarCarta = (id) => setAbiertaId(moduloAbierta === id ? null : id)
 
   // Exportar a PNG. `soloGrupo` decide si se respeta lo que el grupo tiene
   // oculto o si sale el temario completo.
@@ -187,7 +187,7 @@ export default function VisibilidadGrupos({ academiaId, academiaNombre = '', gru
     try {
       const { descargarTemarioPNG } = await import('../../lib/pintarTemario.js')
       await descargarTemarioPNG({
-        fases: fasesTemario,
+        modulos: modulosTemario,
         ocultas: soloGrupo ? ocultas : null,
         academia: academiaNombre || academiaId || '',
         grupo: soloGrupo ? (grupo?.nombre || '') : '',
@@ -200,7 +200,7 @@ export default function VisibilidadGrupos({ academiaId, academiaNombre = '', gru
   }
 
   const alTeclear = (e, indice) => {
-    const destino = focoBaraja(indice, e.key, fasesTemario.length)
+    const destino = focoBaraja(indice, e.key, modulosTemario.length)
     if (destino === null) return // Tab, Enter y Espacio siguen siendo suyos
     e.preventDefault()
     cabeceras.current[destino]?.focus()
@@ -281,17 +281,17 @@ export default function VisibilidadGrupos({ academiaId, academiaNombre = '', gru
         </p>
       )}
 
-      {/* ---- Baraja de fases: una abierta a la vez ---- */}
+      {/* ---- Baraja de modulos: una abierta a la vez ---- */}
       <div className="tv-baraja">
-        {fasesTemario.map((fase, indice) => {
-          const est = estadoFase(fase, ocultas)
-          const abierta = faseAbierta === fase.id
-          const panelId = `tv-panel-${fase.id}`
+        {modulosTemario.map((modulo, indice) => {
+          const est = estadoModulo(modulo, ocultas)
+          const abierta = moduloAbierta === modulo.id
+          const panelId = `tv-panel-${modulo.id}`
           return (
             <section
               className={`tv-carta tv-carta--${est.estado} ${abierta ? 'abierta' : ''}`}
-              key={fase.id}
-              style={{ '--fase-color': fase.color }}
+              key={modulo.id}
+              style={{ '--modulo-color': modulo.color }}
             >
               <div className="tv-carta-cab">
                 <button
@@ -303,11 +303,11 @@ export default function VisibilidadGrupos({ academiaId, academiaNombre = '', gru
                   aria-controls={abierta ? panelId : undefined}
                   ref={(el) => { cabeceras.current[indice] = el }}
                   onKeyDown={(e) => alTeclear(e, indice)}
-                  onClick={() => alternarCarta(fase.id)}
+                  onClick={() => alternarCarta(modulo.id)}
                 >
-                  <span className="tv-carta-num">{String(fase.numero).padStart(2, '0')}</span>
+                  <span className="tv-carta-num">{String(modulo.numero).padStart(2, '0')}</span>
                   <span className="tv-carta-info">
-                    <strong>{fase.titulo}</strong>
+                    <strong>{modulo.titulo}</strong>
                     <small>
                       {est.estado === 'oculta'
                         ? est.porModulo
@@ -327,9 +327,9 @@ export default function VisibilidadGrupos({ academiaId, academiaNombre = '', gru
                   <button
                     type="button"
                     className="btn btn--sm btn--fantasma tv-ojo-txt"
-                    onClick={() => toggleFase(fase)}
+                    onClick={() => toggleModulo(modulo)}
                     disabled={guardando}
-                    aria-label={`${est.porModulo ? 'Mostrar' : 'Ocultar'} el módulo completo: Fase ${fase.numero}, ${fase.titulo}`}
+                    aria-label={`${est.porModulo ? 'Mostrar' : 'Ocultar'} el módulo completo: Módulo ${modulo.numero}, ${modulo.titulo}`}
                   >
                     <Icon name={est.porModulo ? 'ojoCerrado' : 'ojo'} size={16} />
                     {est.porModulo ? 'Mostrar módulo' : 'Ocultar módulo'}
@@ -339,7 +339,7 @@ export default function VisibilidadGrupos({ academiaId, academiaNombre = '', gru
 
               {abierta && (
                 <ul className="tv-temas" id={panelId}>
-                  {fase.temas.map((tema) => {
+                  {modulo.temas.map((tema) => {
                     const tOculto = est.porModulo || temaOcultoSolo(tema.id)
                     return (
                       <li key={tema.id} className={`tv-tema ${tOculto ? 'tv-oculto' : ''}`}>

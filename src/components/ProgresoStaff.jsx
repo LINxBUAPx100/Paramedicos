@@ -22,7 +22,7 @@ const DESTINOS = [
     ruta: '/panel',
     icono: 'progreso',
     titulo: 'Avance de tus alumnos',
-    texto: 'Quién va por dónde, fase por fase, con sus mejores calificaciones y sus intentos. Abre a un alumno para ver su historial y abrirle fases una a una.',
+    texto: 'Quién va por dónde, módulo por módulo, con sus mejores calificaciones y sus intentos. Abre a un alumno para ver su historial y abrirle módulos uno a uno.',
   },
   {
     ruta: '/panel/calificaciones',
@@ -34,7 +34,7 @@ const DESTINOS = [
     ruta: '/panel/grupos',
     icono: 'capas',
     titulo: 'Qué ve cada grupo',
-    texto: 'Abre o cierra fases y temas para un grupo entero. Para abrírselas a una sola persona, entra a su ficha desde el avance.',
+    texto: 'Abre o cierra módulos y temas para un grupo entero. Para abrírselas a una sola persona, entra a su ficha desde el avance.',
   },
 ]
 

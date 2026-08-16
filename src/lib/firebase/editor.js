@@ -203,13 +203,13 @@ export async function guardarEstructura(contexto, destino, cursoId, versionEsper
     // del alumno filtra por el estado del DOC). Se detecta por diff.
     const estadoAntes = new Map()
     for (const f of cursoSnap.data().estructura || []) {
-      for (const m of f.modulos || []) {
+      for (const m of f.unidades || []) {
         for (const t of m.temas || []) estadoAntes.set(t.id, t.estado || 'publicado')
       }
     }
     const temasEstadoCambiado = []
     for (const f of estructura) {
-      for (const m of f.modulos || []) {
+      for (const m of f.unidades || []) {
         for (const t of m.temas || []) {
           const antes = estadoAntes.get(t.id)
           const ahora = t.estado || 'publicado'
@@ -482,7 +482,7 @@ export async function reordenarCursosEditor(contexto, destino, cursosEnOrden) {
 export async function duplicarCursoEditor(contexto, destino, curso) {
   exigirPermiso(contexto, destino, curso?.id, 'duplicar-curso')
   if (destino.modo === 'plantilla') {
-    throw new Error('Duplicar plantillas completas llega con la replicación (fase posterior).')
+    throw new Error('Duplicar plantillas completas llega con la replicación (modulo posterior).')
   }
   const uid = auth.currentUser?.uid || null
   const temasDocs = await temasDeCursoEditor(destino, curso.id)

@@ -41,9 +41,9 @@ export const ETIQUETA_PERMISO = {
 
 export const DESCRIPCION_PERMISO = {
   editarContenido: 'Abrir el editor y modificar textos, secciones y bloques de los cursos permitidos.',
-  crearTemas: 'Crear fases, módulos y temas nuevos (y duplicar) dentro de los cursos permitidos.',
+  crearTemas: 'Crear modulos, unidades y temas nuevos (y duplicar) dentro de los cursos permitidos.',
   editarActividades: 'Editar las actividades de repaso (ordenar, completar, preguntas).',
-  editarExamenes: 'Editar el quiz del tema, que alimenta el examen de la fase.',
+  editarExamenes: 'Editar el quiz del tema, que alimenta el examen del módulo.',
   publicarContenido: 'Publicar, despublicar y archivar contenido (lo que ven los alumnos).',
   administrarRecursos: 'Subir, reemplazar y quitar recursos y archivos descargables.',
 }

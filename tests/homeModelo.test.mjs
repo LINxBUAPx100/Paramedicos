@@ -23,17 +23,17 @@ test('catálogo: secciones con id/etiqueta/descripcion y default todo visible', 
 
 test('normalizar: descarta ids desconocidos y duplicados; completa faltantes al final', () => {
   const norm = normalizarHomeSecciones([
-    { id: 'fases', visible: false },
+    { id: 'modulos', visible: false },
     { id: 'inventada', visible: true },
-    { id: 'fases', visible: true }, // duplicado: gana el primero
+    { id: 'modulos', visible: true }, // duplicado: gana el primero
     { id: 'hero', visible: true },
   ])
   assert.deepEqual(norm.slice(0, 2), [
-    { id: 'fases', visible: false },
+    { id: 'modulos', visible: false },
     { id: 'hero', visible: true },
   ])
   // Las que faltan se añaden visibles, en el orden del catálogo.
-  const resto = IDS_SECCIONES_HOME.filter((id) => id !== 'fases' && id !== 'hero')
+  const resto = IDS_SECCIONES_HOME.filter((id) => id !== 'modulos' && id !== 'hero')
   assert.deepEqual(norm.slice(2).map((s) => s.id), resto)
   assert.ok(norm.slice(2).every((s) => s.visible))
 })
@@ -45,9 +45,9 @@ test('normalizar: basura de Firestore es fail-open (nunca borra el Home)', () =>
     assert.ok(norm.every((s) => s.visible === true))
   }
   // `visible` no booleano ⇒ visible (solo `false` explícito oculta).
-  const raro = normalizarHomeSecciones([{ id: 'hero', visible: 0 }, { id: 'fases', visible: false }])
+  const raro = normalizarHomeSecciones([{ id: 'hero', visible: 0 }, { id: 'modulos', visible: false }])
   assert.equal(raro.find((s) => s.id === 'hero').visible, true)
-  assert.equal(raro.find((s) => s.id === 'fases').visible, false)
+  assert.equal(raro.find((s) => s.id === 'modulos').visible, false)
 })
 
 test('seccionesDeHome: sin academia o sin configuración = el Home de siempre', () => {
@@ -61,13 +61,13 @@ test('seccionesDeHome: respeta orden y ocultamientos guardados', () => {
   const academia = {
     id: 'A',
     homeSecciones: [
-      { id: 'fases', visible: true },
+      { id: 'modulos', visible: true },
       { id: 'hero', visible: false },
       { id: 'flashcards', visible: true },
     ],
   }
   const ids = idsVisiblesDeHome(academia)
-  assert.equal(ids[0], 'fases')
+  assert.equal(ids[0], 'modulos')
   assert.ok(!ids.includes('hero'))
   assert.ok(ids.includes('flashcards'))
   // Las no mencionadas siguen visibles (completadas al final).
@@ -79,9 +79,9 @@ test('alternar y mover: inmutables, con límites y sin perder secciones', () => 
   const sinHero = alternarSeccion(base, 'hero')
   assert.equal(sinHero.find((s) => s.id === 'hero').visible, false)
   assert.equal(base.find((s) => s.id === 'hero').visible, true) // no muta
-  const subida = moverSeccion(base, 'fases', 'arriba')
-  const idxAntes = base.findIndex((s) => s.id === 'fases')
-  assert.equal(subida.findIndex((s) => s.id === 'fases'), idxAntes - 1)
+  const subida = moverSeccion(base, 'modulos', 'arriba')
+  const idxAntes = base.findIndex((s) => s.id === 'modulos')
+  assert.equal(subida.findIndex((s) => s.id === 'modulos'), idxAntes - 1)
   // Límite superior/inferior: no pasa nada.
   assert.deepEqual(moverSeccion(base, base[0].id, 'arriba'), base)
   assert.deepEqual(moverSeccion(base, base[base.length - 1].id, 'abajo'), base)
@@ -92,7 +92,7 @@ test('esHomeDefault: detecta el default (para guardar null y no arrastrar campo)
   assert.ok(esHomeDefault(homeSeccionesDefault()))
   assert.ok(esHomeDefault(null))
   assert.ok(!esHomeDefault(alternarSeccion(homeSeccionesDefault(), 'hero')))
-  assert.ok(!esHomeDefault(moverSeccion(homeSeccionesDefault(), 'fases', 'arriba')))
+  assert.ok(!esHomeDefault(moverSeccion(homeSeccionesDefault(), 'modulos', 'arriba')))
 })
 
 test('capacidad: paginaInicioConfigurable solo PRO/CURSO (fuente única)', () => {
@@ -113,7 +113,7 @@ test('una sección ausente entra donde le toca del catálogo', () => {
   const vieja = [
     { id: 'hero', visible: true },
     { id: 'progreso', visible: true },
-    { id: 'fases', visible: true },
+    { id: 'modulos', visible: true },
   ]
   const ids = normalizarHomeSecciones(vieja).map((s) => s.id)
   assert.equal(ids[0], 'hero')
@@ -122,15 +122,15 @@ test('una sección ausente entra donde le toca del catálogo', () => {
 })
 
 test('respeta el orden elegido por el director al insertar', () => {
-  // El director subió las fases por delante de la portada.
+  // El director subió los módulos por delante de la portada.
   const suyo = [
-    { id: 'fases', visible: true },
+    { id: 'modulos', visible: true },
     { id: 'hero', visible: false },
     { id: 'atlas', visible: true },
   ]
   const ids = normalizarHomeSecciones(suyo).map((s) => s.id)
-  // Su orden se conserva: fases sigue primera y hero sigue oculta.
-  assert.equal(ids[0], 'fases')
+  // Su orden se conserva: módulos sigue primera y hero sigue oculta.
+  assert.equal(ids[0], 'modulos')
   assert.equal(ids.indexOf('hero'), 1)
   assert.equal(normalizarHomeSecciones(suyo).find((s) => s.id === 'hero').visible, false)
   // Y 'academia' entra detrás de 'hero', su vecina anterior en el catálogo.
@@ -138,7 +138,7 @@ test('respeta el orden elegido por el director al insertar', () => {
 })
 
 test('si falta la PRIMERA del catálogo, abre la lista', () => {
-  const sinHero = [{ id: 'fases', visible: true }, { id: 'academia', visible: true }]
+  const sinHero = [{ id: 'modulos', visible: true }, { id: 'academia', visible: true }]
   const ids = normalizarHomeSecciones(sinHero).map((s) => s.id)
   assert.equal(ids[0], 'hero', 'no hay vecina anterior: encabeza')
 })

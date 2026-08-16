@@ -1,7 +1,7 @@
 // ============================================================
 //  Selección de preguntas de examen (módulo PURO)
 // ------------------------------------------------------------
-//  El examen de fase usaba las 73 preguntas de la fase. Todas. Siempre. Con
+//  El examen de módulo usaba las 73 preguntas del módulo. Todas. Siempre. Con
 //  eso, barajar el orden no sirve de nada para evitar que se pasen las
 //  respuestas: dos alumnos sentados juntos ven exactamente el mismo examen.
 //
@@ -15,7 +15,7 @@
 //      30 de 73 a lo bruto, un alumno podría librarse por suerte del tema que
 //      no estudió mientras a otro le caen cuatro preguntas de ese mismo tema.
 //      Eso no es rigor, es lotería. Con reparto proporcional todos los temas
-//      de la fase están representados y lo que varía es QUÉ preguntas de cada
+//      del módulo están representados y lo que varía es QUÉ preguntas de cada
 //      tema tocan.
 // ============================================================
 import { generador, barajarCon, elegirCon } from './azar.js'
@@ -31,11 +31,11 @@ import { generador, barajarCon, elegirCon } from './azar.js'
 // El % es lo que un compañero ve TAMBIÉN en su examen. Con los valores de
 // abajo (50%, tope 30, piso 12) el temario actual queda así:
 //
-//   Fase 1 · banco 73 → 30 preguntas (41% compartido)
-//   Fase 2 · banco 71 → 30 (42%)      Fase 5 · banco 61 → 30 (49%)
-//   Fase 3 · banco 46 → 23 (50%)      Fase 6 · banco 29 → 15 (52%)
-//   Fase 4 · banco 68 → 30 (44%)      Fase 7 · banco 14 → 12 (86%)
-//                                     Fase 8 · banco 12 → 12 (100%)
+//   Módulo 1 · banco 73 → 30 preguntas (41% compartido)
+//   Módulo 2 · banco 71 → 30 (42%)      Módulo 5 · banco 61 → 30 (49%)
+//   Módulo 3 · banco 46 → 23 (50%)      Módulo 6 · banco 29 → 15 (52%)
+//   Módulo 4 · banco 68 → 30 (44%)      Módulo 7 · banco 14 → 12 (86%)
+//                                      Módulo 8 · banco 12 → 12 (100%)
 //
 // Las fases 7 y 8 (14 y 12 preguntas) se van al piso y comparten casi todo: con
 // un banco así no existe subconjunto que sirva de nada. Ahí lo único que sube
@@ -79,7 +79,7 @@ function porTema(preguntas) {
 // exactamente `tamano`, sin que el redondeo invente ni pierda una plaza.
 //
 // Empates de decimal: los rompe la semilla, no el orden del temario. Si no,
-// los temas del final de la fase quedarían sistemáticamente infrarrepresentados.
+// los temas del final del módulo quedarían sistemáticamente infrarrepresentados.
 export function repartoPorTema(grupos, tamano, rng) {
   const disponibles = grupos.map((g) => g.preguntas.length)
   const total = disponibles.reduce((a, b) => a + b, 0)

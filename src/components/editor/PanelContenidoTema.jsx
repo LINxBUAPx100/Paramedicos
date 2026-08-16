@@ -503,7 +503,7 @@ export default function PanelContenidoTema({
       ),
     },
     {
-      clave: 'quiz', titulo: `Quiz del tema (${contadores.quiz} preguntas) — también alimenta el examen de la fase`,
+      clave: 'quiz', titulo: `Quiz del tema (${contadores.quiz} preguntas) — también alimenta el examen del módulo`,
       cuerpo: (
         <>
           <p className="editor-nota">

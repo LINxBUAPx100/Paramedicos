@@ -71,7 +71,7 @@ export function elegirCon(rng, arr, n) {
 // de academia, grupo e invitación: una semilla se dicta y se teclea a mano.
 const ABC = 'abcdefghjkmnpqrstuvwxyz23456789'
 
-// Semilla nueva para un intento. Lleva prefijo (p. ej. la fase) para que al
+// Semilla nueva para un intento. Lleva prefijo (p. ej. el módulo) para que al
 // leerla en el panel se sepa de qué examen era sin cruzar datos.
 //
 // `aleatorio` se inyecta en las pruebas; en la app es Math.random, que aquí SÍ

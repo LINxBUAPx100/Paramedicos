@@ -66,7 +66,7 @@
   --plata-1: #f4f6f8;         /* degradado plata del hero (claro) */
   --plata-2: #d8dde3;
 
-  --fase-color: var(--primario);
+  --modulo-color: var(--primario);
 
   --fuente-display: 'Heebo', system-ui, -apple-system, 'Segoe UI', sans-serif; /* títulos */
   --fuente-cifra: 'Cascadia Code', 'Heebo', ui-monospace, monospace;          /* números */
@@ -87,7 +87,7 @@
   --sombra: 0 1px 2px rgba(15, 23, 42, 0.06), 0 2px 8px rgba(15, 23, 42, 0.05);
   --sombra-md: 0 6px 18px rgba(15, 23, 42, 0.09);
   --sombra-lg: 0 18px 44px rgba(15, 23, 42, 0.16);
-  --sombra-color: 0 10px 30px -8px color-mix(in srgb, var(--fase-color) 45%, transparent);
+  --sombra-color: 0 10px 30px -8px color-mix(in srgb, var(--modulo-color) 45%, transparent);
   --radio: 16px;
   --radio-sm: 11px;
   --radio-lg: 24px;
@@ -175,7 +175,7 @@ html[data-tema='oscuro'] {
   --sombra: 0 1px 2px rgba(0, 0, 0, 0.5), 0 2px 10px rgba(0, 0, 0, 0.4);
   --sombra-md: 0 8px 22px rgba(0, 0, 0, 0.55);
   --sombra-lg: 0 22px 50px rgba(0, 0, 0, 0.65);
-  --sombra-color: 0 12px 34px -8px color-mix(in srgb, var(--fase-color) 55%, transparent);
+  --sombra-color: 0 12px 34px -8px color-mix(in srgb, var(--modulo-color) 55%, transparent);
 
   /* Color semántico en oscuro. Sin esto, el verde y el rojo del tema claro se
      usaban tal cual sobre fondo oscuro (el fallo de contraste del quiz).
@@ -211,7 +211,7 @@ body {
 }
 
 h1, h2, h3, .hero-titulo, .seccion-titulo, .seccion-titulo-centro,
-.fase-card-titulo, .tema-header-info h1, .temario-hero h1 {
+.modulo-card-titulo, .tema-header-info h1, .temario-hero h1 {
   font-family: var(--fuente-display);
   letter-spacing: -0.018em;
 }
@@ -230,11 +230,11 @@ a:hover { text-decoration: underline; }
   max-width: 60ch;
 }
 
-/* Aviso de que el examen de fase es una selección distinta por alumno. Va con
+/* Aviso de que el examen de modulo es una selección distinta por alumno. Va con
    más presencia que la nota de autoevaluación —borde y color propios— porque
    aquí el mensaje sí busca un efecto: que ni se intente copiar, y que se sepa
-   que hay que estudiar la fase entera. */
-.examen-fase-aviso {
+   que hay que estudiar la modulo entera. */
+.examen-modulo-aviso {
   display: flex;
   align-items: center;
   gap: var(--e-8);
@@ -321,7 +321,7 @@ textarea:focus-visible,
 /* ============================================================
    Esqueletos de carga (páginas de estudio)
    ------------------------------------------------------------
-   Sustituyen al spinner en TemaPage y FasePage: dibujan la silueta de lo que
+   Sustituyen al spinner en TemaPage y ModuloPage: dibujan la silueta de lo que
    va a llegar. Se percibe más rápido y, sobre todo, el contenido real aterriza
    donde ya había hueco — sin el salto de layout del spinner centrado.
    El brillo que recorre las barras respeta prefers-reduced-motion por el
@@ -463,8 +463,8 @@ textarea:focus-visible,
 .editor-arranque-alterna { font-size: var(--t-sm); color: var(--texto-3); margin-top: var(--e-8); }
 .acceso-restringido .btn btn--pildora { margin-top: var(--e-6); }
 
-/* ===== Examen de fase ===== */
-.fase-examen-cta {
+/* ===== Examen de modulo ===== */
+.modulo-examen-cta {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -476,24 +476,24 @@ textarea:focus-visible,
   border: 1px solid var(--borde);
   background: linear-gradient(
     120deg,
-    color-mix(in srgb, var(--fase-color, var(--primario)) 12%, var(--bg-2)),
+    color-mix(in srgb, var(--modulo-color, var(--primario)) 12%, var(--bg-2)),
     var(--bg-2) 70%
   );
-  border-left: 5px solid var(--fase-color, var(--primario));
+  border-left: 5px solid var(--modulo-color, var(--primario));
 }
-.fase-examen-txt h2 {
+.modulo-examen-txt h2 {
   display: flex;
   align-items: center;
   gap: var(--e-8);
   font-family: var(--fuente-display);
   font-size: var(--t-md);
   margin-bottom: var(--e-4);
-  color: var(--fase-color, var(--primario));
+  color: var(--modulo-color, var(--primario));
 }
-.fase-examen-txt p { color: var(--texto-2); font-size: var(--t-sm); max-width: 52ch; }
-.fase-examen-cta .btn { flex-shrink: 0; }
+.modulo-examen-txt p { color: var(--texto-2); font-size: var(--t-sm); max-width: 52ch; }
+.modulo-examen-cta .btn { flex-shrink: 0; }
 
-.examen-fase-intro {
+.examen-modulo-intro {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -503,24 +503,24 @@ textarea:focus-visible,
   margin: 0 auto;
   padding: clamp(var(--e-24), 5vw, var(--e-40)) var(--e-20);
 }
-.examen-fase-intro h1 { font-family: var(--fuente-display); }
-.examen-fase-nombre {
+.examen-modulo-intro h1 { font-family: var(--fuente-display); }
+.examen-modulo-nombre {
   font-family: var(--fuente-sub);
   font-weight: 600;
-  color: var(--fase-color, var(--primario));
+  color: var(--modulo-color, var(--primario));
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
-.examen-fase-intro p { color: var(--texto-2); }
-.examen-fase-guardado {
+.examen-modulo-intro p { color: var(--texto-2); }
+.examen-modulo-guardado {
   margin: var(--e-12) 0 var(--e-16);
   padding: var(--e-12) var(--e-16);
   border-radius: var(--radio-sm);
   font-size: var(--t-sm);
   font-weight: 600;
 }
-.examen-fase-guardado.ok { color: var(--verde); background: color-mix(in srgb, var(--verde) 12%, transparent); }
-.examen-fase-guardado.error { color: var(--urgencia); background: color-mix(in srgb, var(--urgencia) 10%, transparent); }
+.examen-modulo-guardado.ok { color: var(--verde); background: color-mix(in srgb, var(--verde) 12%, transparent); }
+.examen-modulo-guardado.error { color: var(--urgencia); background: color-mix(in srgb, var(--urgencia) 10%, transparent); }
 .quiz-page-pie { display: flex; gap: var(--e-12); flex-wrap: wrap; margin-top: var(--e-16); }
 
 /* ===== Panel del maestro / admin ===== */
@@ -652,7 +652,7 @@ textarea:focus-visible,
 }
 .panel-intentos li.ok { border-left: 3px solid var(--verde); }
 .panel-intentos li.mal { border-left: 3px solid var(--urgencia); }
-.pi-fase { font-family: var(--fuente-sub); font-weight: 600; white-space: nowrap; }
+.pi-modulo { font-family: var(--fuente-sub); font-weight: 600; white-space: nowrap; }
 .pi-titulo { color: var(--texto-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pi-nota { white-space: nowrap; }
 .pi-nota b { font-family: var(--fuente-cifra); }
@@ -784,12 +784,12 @@ textarea:focus-visible,
 .pe-lado { display: flex; flex-direction: column; gap: var(--e-12); }
 .pe-barras { display: flex; flex-direction: column; gap: var(--e-8); }
 .pe-barra-fila { display: grid; grid-template-columns: 34px 1fr auto; gap: var(--e-8); align-items: center; }
-.pe-barra-label { font-family: var(--fuente-cifra); font-weight: 700; color: var(--fase-color, var(--primario)); }
+.pe-barra-label { font-family: var(--fuente-cifra); font-weight: 700; color: var(--modulo-color, var(--primario)); }
 .pe-barra-pista { height: 10px; border-radius: 999px; background: var(--bg-3); overflow: hidden; }
 .pe-barra {
   height: 100%;
   border-radius: 999px;
-  background: var(--fase-color, var(--primario));
+  background: var(--modulo-color, var(--primario));
   transition: width var(--dur-lenta) ease;
 }
 .pe-barra.baja { background: var(--ambar); }
@@ -808,7 +808,7 @@ textarea:focus-visible,
   background: var(--bg-3);
 }
 .pe-act-nombre { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.pe-act-fase { color: var(--texto-3); font-family: var(--fuente-cifra); }
+.pe-act-modulo { color: var(--texto-3); font-family: var(--fuente-cifra); }
 .pe-actividad b { font-family: var(--fuente-cifra); }
 .pe-actividad b.ok { color: var(--verde); }
 .pe-actividad b.mal { color: var(--urgencia); }
@@ -1436,6 +1436,16 @@ textarea:focus-visible,
   font-size: var(--t-lg);
 }
 .pg-nombre { font-family: var(--fuente-sub); font-weight: 600; }
+
+/* Plan de estudios del grupo. Un grupo sin plan deja a sus alumnos sin
+   contenido, así que se marca en ámbar: no es un error, es algo a terminar. */
+.pg-programa { display: inline-flex; flex-direction: column; gap: 2px; min-width: 200px; }
+.pg-programa select {
+  padding: 5px 8px; border-radius: 8px; font-size: .85rem;
+  border: 1px solid var(--borde); background: var(--bg-2); color: var(--texto);
+}
+.pg-programa--vacio select { border-color: var(--aviso); }
+.pg-programa-aviso { color: var(--aviso); font-size: .74rem; line-height: 1.3; }
 .panel-tag-grupo {
   margin-left: var(--e-8);
   padding: 2px var(--e-8);
@@ -1688,28 +1698,28 @@ textarea:focus-visible,
   font-size: var(--t-sm);
 }
 /* ============================================================
-   Baraja de fases: una abierta a la vez (Bloque Q)
+   Baraja de modulos: una abierta a la vez (Bloque Q)
    ------------------------------------------------------------
    Eran 68 filas seguidas: para llegar a la fase 8 había que pasar por delante
-   de los 60 temas anteriores. Ahora cada fase es una carta que dice cuántos
+   de los 60 temas anteriores. Ahora cada modulo es una carta que dice cuántos
    temas ve el grupo, y solo la abierta despliega sus temas.
    ============================================================ */
 .tv-baraja { display: flex; flex-direction: column; gap: var(--e-8); }
 .tv-carta {
   border: 1px solid var(--borde);
-  border-left: 5px solid var(--fase-color, var(--primario));
+  border-left: 5px solid var(--modulo-color, var(--primario));
   border-radius: var(--radio);
   background: var(--bg-2);
   overflow: hidden;
   transition: border-color var(--dur-rapida) var(--ease-out);
 }
-/* La abierta se señala tiñendo su cabecera con el color de la fase. Antes esto
+/* La abierta se señala tiñendo su cabecera con el color de la modulo. Antes esto
    era `border-color`, que pisaba TAMBIÉN el borde izquierdo y le borraba la
    franja de color justo a la carta que estabas mirando. */
-.tv-carta.abierta .tv-carta-cab { background: color-mix(in srgb, var(--fase-color, var(--primario)) 8%, transparent); }
-/* Una fase oculta apaga su franja de color y tacha el título. El fondo NO
+.tv-carta.abierta .tv-carta-cab { background: color-mix(in srgb, var(--modulo-color, var(--primario)) 8%, transparent); }
+/* Una modulo oculta apaga su franja de color y tacha el título. El fondo NO
    cambia: en oscuro, --bg es exactamente el fondo de la página, así que
-   pintarla así dejaba la tarjeta como un agujero en vez de como una fase
+   pintarla así dejaba la tarjeta como un agujero en vez de como una modulo
    apagada (contraste 1.1 contra el fondo, medido). */
 .tv-carta--oculta { border-left-color: var(--borde-fuerte); }
 .tv-carta--oculta .tv-carta-num { color: var(--texto-3); }
@@ -1736,13 +1746,13 @@ textarea:focus-visible,
   cursor: pointer;
   color: inherit;
 }
-.tv-carta-abrir:hover .tv-carta-info strong { color: var(--fase-color, var(--primario)); }
+.tv-carta-abrir:hover .tv-carta-info strong { color: var(--modulo-color, var(--primario)); }
 .tv-carta-num {
   font-family: var(--fuente-cifra);
   font-size: var(--t-xl);
   font-weight: 700;
   line-height: 1;
-  color: var(--fase-color, var(--primario));
+  color: var(--modulo-color, var(--primario));
   flex-shrink: 0;
 }
 .tv-carta-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
@@ -1784,7 +1794,7 @@ textarea:focus-visible,
   font-family: var(--fuente-cifra);
   font-weight: 700;
   font-size: var(--t-sm);
-  color: var(--fase-color, var(--primario));
+  color: var(--modulo-color, var(--primario));
   min-width: 34px;
 }
 .tv-tema-titulo { flex: 1; min-width: 0; color: var(--texto); text-decoration: none; font-size: var(--t-sm); }
@@ -2330,7 +2340,7 @@ html[data-tema='oscuro'] .cuenta-badge { color: var(--primario-claro); }
 }
 
 .nav-grupo { margin-bottom: var(--e-6); }
-.nav-fase {
+.nav-modulo {
   display: flex;
   align-items: center;
   gap: var(--e-8);
@@ -2339,14 +2349,14 @@ html[data-tema='oscuro'] .cuenta-badge { color: var(--primario-claro); }
   color: var(--texto);
   font-weight: 600;
   font-size: var(--t-sm);
-  border-left: 3px solid var(--fase-color);
+  border-left: 3px solid var(--modulo-color);
   background: var(--bg-3);
   margin-bottom: 2px;
 }
-.nav-fase:hover { text-decoration: none; background: color-mix(in srgb, var(--fase-color) 10%, var(--bg-3)); }
-.nav-fase.active { background: color-mix(in srgb, var(--fase-color) 18%, transparent); }
-.nav-fase small { color: var(--texto-3); font-size: var(--t-xs); font-weight: 600; }
-.nav-fase-num {
+.nav-modulo:hover { text-decoration: none; background: color-mix(in srgb, var(--modulo-color) 10%, var(--bg-3)); }
+.nav-modulo.active { background: color-mix(in srgb, var(--modulo-color) 18%, transparent); }
+.nav-modulo small { color: var(--texto-3); font-size: var(--t-xs); font-weight: 600; }
+.nav-modulo-num {
   display: grid;
   place-items: center;
   width: 30px;
@@ -2356,8 +2366,8 @@ html[data-tema='oscuro'] .cuenta-badge { color: var(--primario-claro); }
   font-family: var(--fuente-display);
   font-size: var(--t-sm);
   font-weight: 700;
-  color: var(--fase-color);
-  background: color-mix(in srgb, var(--fase-color) 15%, transparent);
+  color: var(--modulo-color);
+  background: color-mix(in srgb, var(--modulo-color) 15%, transparent);
 }
 
 .nav-subtemas {
@@ -2433,7 +2443,7 @@ html[data-tema='oscuro'] .cuenta-badge { color: var(--primario-claro); }
    BOTONES — un solo primitivo
    ------------------------------------------------------------
    Convivían DOS sistemas completos, definidos con 2000 líneas de distancia y
-   nacidos en fases distintas del proyecto:
+   nacidos en modulos distintas del proyecto:
        .btn + .btn--primario/.btn--suave/…   (71 usos)
        .btn btn--pildora + --solido/--oscuro/…       (47 usos)
    más 12 clases de botón ad-hoc con su propio color y su propio padding.
@@ -2443,7 +2453,7 @@ html[data-tema='oscuro'] .cuenta-badge { color: var(--primario-claro); }
 
    Ahora hay UN primitivo y tres ejes que se combinan libremente:
        jerarquía → --primario --suave --fantasma --carbon --urgencia
-                   --fase --peligro --exito
+                   --modulo --peligro --exito
        forma     → --pildora  (identidad de portada: radio completo,
                                tipografía display y la flecha que avanza)
        tamaño    → --sm --lg
@@ -2514,10 +2524,10 @@ html[data-tema='oscuro'] .cuenta-badge { color: var(--primario-claro); }
   box-shadow: 0 10px 24px -8px color-mix(in srgb, var(--urgencia) 60%, transparent);
 }
 .btn--urgencia:hover { box-shadow: 0 16px 34px -8px color-mix(in srgb, var(--urgencia) 70%, transparent); }
-.btn--fase {
-  background: var(--fase-color);
+.btn--modulo {
+  background: var(--modulo-color);
   color: #fff;
-  box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--fase-color) 70%, transparent);
+  box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--modulo-color) 70%, transparent);
 }
 /* Rellenos semánticos: fondo SÓLIDO (no el token que se invierte por tema),
    porque encima va texto blanco. Antes .btn--peligro usaba --rojo (#ef4444),
@@ -2684,13 +2694,13 @@ html[data-tema='oscuro'] .hero-aurora { opacity: 0.4; }
   max-width: 620px;
 }
 
-.fases-grid { margin-bottom: 60px; }
-.grid-fases {
+.modulos-grid { margin-bottom: 60px; }
+.grid-modulos {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
   gap: var(--e-20);
 }
-.fase-card {
+.modulo-card {
   position: relative;
   overflow: hidden;
   background: var(--bg-2);
@@ -2703,80 +2713,80 @@ html[data-tema='oscuro'] .hero-aurora { opacity: 0.4; }
   box-shadow: var(--sombra);
   transition: transform var(--dur-media) var(--ease-out), box-shadow var(--dur-media) var(--ease-out), border-color var(--dur-media) var(--ease-out);
 }
-.fase-card::before {
+.modulo-card::before {
   content: '';
   position: absolute;
   inset: 0 0 auto 0;
   height: 3px;
-  background: var(--fase-color);
+  background: var(--modulo-color);
   opacity: 0.9;
 }
-.fase-card::after {
+.modulo-card::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(120% 80% at 100% 0, color-mix(in srgb, var(--fase-color) 16%, transparent), transparent 60%);
+  background: radial-gradient(120% 80% at 100% 0, color-mix(in srgb, var(--modulo-color) 16%, transparent), transparent 60%);
   opacity: 0;
   transition: opacity var(--dur-media) var(--ease-out);
   pointer-events: none;
 }
-.fase-card:hover {
+.modulo-card:hover {
   text-decoration: none;
   transform: translateY(-6px);
   box-shadow: var(--sombra-color);
-  border-color: color-mix(in srgb, var(--fase-color) 45%, var(--borde));
+  border-color: color-mix(in srgb, var(--modulo-color) 45%, var(--borde));
 }
-.fase-card:hover::after { opacity: 1; }
-.fase-card-top {
+.modulo-card:hover::after { opacity: 1; }
+.modulo-card-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: var(--e-12);
 }
-.fase-card-num {
+.modulo-card-num {
   font-family: var(--fuente-display);
   font-size: var(--t-3xl);
   font-weight: 700;
   line-height: 1;
-  color: var(--fase-color);
+  color: var(--modulo-color);
   opacity: 0.85;
 }
-.fase-card-flecha {
+.modulo-card-flecha {
   display: grid;
   place-items: center;
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  color: var(--fase-color);
-  background: color-mix(in srgb, var(--fase-color) 12%, transparent);
+  color: var(--modulo-color);
+  background: color-mix(in srgb, var(--modulo-color) 12%, transparent);
   opacity: 0;
   transform: translateX(-6px);
   transition: var(--dur-media) var(--ease-out);
 }
-.fase-card:hover .fase-card-flecha { opacity: 1; transform: none; }
-.fase-card-titulo { font-size: var(--t-lg); margin-bottom: 3px; }
-.fase-card-sub { color: var(--fase-color); font-weight: 600; font-size: var(--t-sm); margin-bottom: var(--e-8); }
-.fase-card-desc { color: var(--texto-2); font-size: var(--t-sm); flex: 1; }
-.fase-card-pie {
+.modulo-card:hover .modulo-card-flecha { opacity: 1; transform: none; }
+.modulo-card-titulo { font-size: var(--t-lg); margin-bottom: 3px; }
+.modulo-card-sub { color: var(--modulo-color); font-weight: 600; font-size: var(--t-sm); margin-bottom: var(--e-8); }
+.modulo-card-desc { color: var(--texto-2); font-size: var(--t-sm); flex: 1; }
+.modulo-card-pie {
   display: flex;
   justify-content: space-between;
   margin-top: var(--e-16);
   font-size: var(--t-sm);
   color: var(--texto-2);
 }
-.fase-card-prog { color: var(--fase-color); font-weight: 700; font-variant-numeric: tabular-nums; }
-.fase-card-barra {
+.modulo-card-prog { color: var(--modulo-color); font-weight: 700; font-variant-numeric: tabular-nums; }
+.modulo-card-barra {
   height: 5px;
   margin-top: var(--e-8);
   border-radius: 999px;
   background: var(--bg-3);
   overflow: hidden;
 }
-.fase-card-barra span {
+.modulo-card-barra span {
   display: block;
   height: 100%;
   border-radius: 999px;
-  background: var(--fase-color);
+  background: var(--modulo-color);
   transition: width var(--dur-lenta) var(--ease-out);
 }
 
@@ -2819,39 +2829,39 @@ html[data-tema='oscuro'] .hero-aurora { opacity: 0.4; }
 .migas a { color: var(--texto-2); }
 .migas span { margin: 0 var(--e-4); }
 
-.fase-header, .tema-header {
+.modulo-header, .tema-header {
   display: flex;
   gap: var(--e-16);
   align-items: center;
   margin-bottom: var(--e-16);
 }
-.fase-header-ico, .tema-header-ico {
+.modulo-header-ico, .tema-header-ico {
   font-size: var(--t-3xl);
   display: grid;
   place-items: center;
   width: 70px;
   height: 70px;
-  background: color-mix(in srgb, var(--fase-color) 14%, transparent);
+  background: color-mix(in srgb, var(--modulo-color) 14%, transparent);
   border-radius: 18px;
   flex-shrink: 0;
 }
-.fase-header-num, .tema-header-num {
+.modulo-header-num, .tema-header-num {
   font-size: var(--t-xs);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--fase-color);
+  color: var(--modulo-color);
 }
-.fase-header h1, .tema-header h1 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); line-height: 1.15; }
-.fase-header-sub { color: var(--texto-2); font-weight: 500; }
-.fase-desc {
+.modulo-header h1, .tema-header h1 { font-size: clamp(1.6rem, 3.5vw, 2.2rem); line-height: 1.15; }
+.modulo-header-sub { color: var(--texto-2); font-weight: 500; }
+.modulo-desc {
   color: var(--texto-2);
   font-size: var(--t-base);
   margin-bottom: var(--e-32);
   max-width: 800px;
 }
 
-.tema-header-meta, .fase-card-pie {
+.tema-header-meta, .modulo-card-pie {
   display: flex;
   gap: var(--e-16);
   flex-wrap: wrap;
@@ -2861,7 +2871,7 @@ html[data-tema='oscuro'] .hero-aurora { opacity: 0.4; }
 }
 
 /* ============================================================
-   Lista de temas (FasePage)
+   Lista de temas (ModuloPage)
    ============================================================ */
 .temas-lista { display: flex; flex-direction: column; gap: var(--e-12); }
 .tema-fila {
@@ -2870,7 +2880,7 @@ html[data-tema='oscuro'] .hero-aurora { opacity: 0.4; }
   gap: var(--e-16);
   background: var(--bg-2);
   border: 1px solid var(--borde);
-  border-left: 4px solid var(--fase-color);
+  border-left: 4px solid var(--modulo-color);
   border-radius: var(--radio);
   padding: var(--e-16) var(--e-20);
   color: var(--texto);
@@ -2893,7 +2903,7 @@ html[data-tema='oscuro'] .hero-aurora { opacity: 0.4; }
   flex-wrap: wrap;
 }
 .tema-fila-num {
-  color: var(--fase-color);
+  color: var(--modulo-color);
   font-weight: 800;
   font-size: var(--t-sm);
 }
@@ -2919,13 +2929,13 @@ html[data-tema='oscuro'] .hero-aurora { opacity: 0.4; }
 .tema-resumen {
   font-size: var(--t-md);
   color: var(--texto-2);
-  border-left: 4px solid var(--fase-color);
+  border-left: 4px solid var(--modulo-color);
   padding-left: var(--e-16);
   margin: var(--e-8) 0 var(--e-24);
   font-style: italic;
 }
 .objetivos {
-  background: color-mix(in srgb, var(--fase-color) 8%, var(--bg-2));
+  background: color-mix(in srgb, var(--modulo-color) 8%, var(--bg-2));
   border: 1px solid var(--borde);
   border-radius: var(--radio);
   padding: var(--e-20) var(--e-24);
@@ -2949,10 +2959,10 @@ html[data-tema='oscuro'] .hero-aurora { opacity: 0.4; }
 .c-subtitulo { font-size: var(--t-md); margin: var(--e-20) 0 var(--e-8); }
 
 .c-lista-wrap { margin-bottom: var(--e-20); }
-.c-lista-titulo { font-size: var(--t-base); margin-bottom: var(--e-8); color: var(--fase-color); }
+.c-lista-titulo { font-size: var(--t-base); margin-bottom: var(--e-8); color: var(--modulo-color); }
 .c-lista { padding-left: var(--e-24); }
 .c-lista li { margin-bottom: var(--e-8); }
-.c-lista li::marker { color: var(--fase-color); }
+.c-lista li::marker { color: var(--modulo-color); }
 
 .c-pasos { list-style: none; counter-reset: paso; }
 .c-pasos li {
@@ -2967,7 +2977,7 @@ html[data-tema='oscuro'] .hero-aurora { opacity: 0.4; }
   width: 28px;
   height: 28px;
   flex-shrink: 0;
-  background: var(--fase-color);
+  background: var(--modulo-color);
   color: #fff;
   border-radius: 50%;
   font-size: var(--t-sm);
@@ -2982,7 +2992,7 @@ html[data-tema='oscuro'] .hero-aurora { opacity: 0.4; }
   background: var(--bg-2);
 }
 .c-tabla th {
-  background: var(--fase-color);
+  background: var(--modulo-color);
   color: #fff;
   text-align: left;
   padding: var(--e-12) var(--e-12);
@@ -3068,7 +3078,7 @@ html[data-tema='oscuro'] .hero-aurora { opacity: 0.4; }
   text-align: center;
   line-height: 1.5;
 }
-.c-imagen figcaption a { color: var(--fase-color); }
+.c-imagen figcaption a { color: var(--modulo-color); }
 
 /* Placeholder cuando no hay imagen o falla al cargar */
 .c-imagen--placeholder { border-radius: var(--radio); }
@@ -3091,7 +3101,7 @@ html[data-tema='oscuro'] .hero-aurora { opacity: 0.4; }
   display: inline-block;
   padding: var(--e-8) var(--e-16);
   border-radius: var(--radio-sm);
-  background: var(--fase-color);
+  background: var(--modulo-color);
   color: #fff;
   font-size: var(--t-sm);
   font-weight: 600;
@@ -3116,12 +3126,12 @@ html[data-tema='oscuro'] .hero-aurora { opacity: 0.4; }
   border-radius: var(--radio);
   background: var(--bg-3);
   border: 1px solid var(--borde);
-  border-left: 3px solid var(--fase-color);
+  border-left: 3px solid var(--modulo-color);
 }
 .c-fuentes-titulo { font-size: var(--t-base); margin-bottom: var(--e-8); color: var(--texto); }
 .c-fuentes-lista { list-style: none; display: flex; flex-direction: column; gap: var(--e-8); }
 .c-fuentes-lista li { font-size: var(--t-sm); line-height: 1.5; }
-.c-fuentes-lista a { color: var(--fase-color); font-weight: 600; }
+.c-fuentes-lista a { color: var(--modulo-color); font-weight: 600; }
 .c-fuentes-nota { color: var(--texto-3); }
 
 /* ============================================================
@@ -3225,9 +3235,9 @@ a.temario-subtema-link:hover {
   margin: var(--e-8) 0 var(--e-24);
   padding: var(--e-16) var(--e-20);
   border-radius: var(--radio);
-  background: color-mix(in srgb, var(--fase-color, var(--primario)) 7%, var(--bg-2));
+  background: color-mix(in srgb, var(--modulo-color, var(--primario)) 7%, var(--bg-2));
   border: 1px solid var(--borde);
-  border-left: 3px solid var(--fase-color, var(--primario));
+  border-left: 3px solid var(--modulo-color, var(--primario));
 }
 .descargas--general { margin-bottom: var(--e-24); }
 .descargas h3 { font-size: var(--t-base); margin-bottom: var(--e-12); color: var(--texto); }
@@ -3251,8 +3261,8 @@ a.temario-subtema-link:hover {
 }
 .descarga-btn:hover {
   text-decoration: none;
-  border-color: var(--fase-color, var(--primario-claro));
-  background: color-mix(in srgb, var(--fase-color, var(--primario)) 10%, var(--bg-2));
+  border-color: var(--modulo-color, var(--primario-claro));
+  background: color-mix(in srgb, var(--modulo-color, var(--primario)) 10%, var(--bg-2));
   transform: translateY(-1px);
 }
 .descarga-ico { font-size: var(--t-lg); flex-shrink: 0; }
@@ -3316,17 +3326,17 @@ html[data-tema='oscuro'] .home-bg { opacity: 0.85; }
 }
 
 /* --- Más orgánico: esquinas generosas, borde tenue --- */
-.fase-card, .stat-card, .modo-card, .home-progreso { border-radius: 28px; }
-.fase-card { border-color: color-mix(in srgb, var(--borde) 55%, transparent); }
+.modulo-card, .stat-card, .modo-card, .home-progreso { border-radius: 28px; }
+.modulo-card { border-color: color-mix(in srgb, var(--borde) 55%, transparent); }
 .stat-card, .modo-card { border-color: color-mix(in srgb, var(--borde) 55%, transparent); }
 
-/* --- Spotlight que sigue el cursor en las tarjetas de fase --- */
-.fase-card::after {
+/* --- Spotlight que sigue el cursor en las tarjetas de modulo --- */
+.modulo-card::after {
   background: radial-gradient(240px circle at var(--mx, 80%) var(--my, 0%),
-    color-mix(in srgb, var(--fase-color) 22%, transparent), transparent 62%);
+    color-mix(in srgb, var(--modulo-color) 22%, transparent), transparent 62%);
   opacity: 0;
 }
-.fase-card:hover::after { opacity: 1; }
+.modulo-card:hover::after { opacity: 1; }
 
 /* --- Stats que flotan (rompen la rejilla cuadrada) --- */
 .hero-stats { align-items: start; }
@@ -3336,7 +3346,7 @@ html[data-tema='oscuro'] .home-bg { opacity: 0.85; }
 .stat-card:nth-child(4) { margin-top: var(--e-8); }
 
 @media (hover: none) {
-  .fase-card::after { display: none; }
+  .modulo-card::after { display: none; }
 }
 @media (max-width: 720px) {
   .home-bg .blob { opacity: 0.7; }
@@ -3356,11 +3366,11 @@ html[data-tema='oscuro'] .home-bg { opacity: 0.85; }
 }
 
 /* Celdas de reveal: la tarjeta llena su celda dentro de la rejilla */
-.grid-fases > .reveal-os, .grid-modos > .reveal-os { display: flex; }
-.grid-fases .fase-card, .grid-modos .modo-card { flex: 1; width: 100%; }
+.grid-modulos > .reveal-os, .grid-modos > .reveal-os { display: flex; }
+.grid-modulos .modulo-card, .grid-modos .modo-card { flex: 1; width: 100%; }
 
 /* Contenido por encima del wash del spotlight (legibilidad) */
-.fase-card > *, .modo-card > * { position: relative; z-index: 1; }
+.modulo-card > *, .modo-card > * { position: relative; z-index: 1; }
 
 /* Spotlight suave en tarjetas "Cómo aprenderás" */
 .modo-card { position: relative; overflow: hidden; }
@@ -3485,11 +3495,11 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
 }
 
 /* Inclinación 3D que sigue el cursor en tarjetas */
-.fase-card.tilt {
+.modulo-card.tilt {
   transform-style: preserve-3d; will-change: transform;
   transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(var(--lift, 0px));
 }
-.fase-card.tilt:hover { --lift: -4px; }
+.modulo-card.tilt:hover { --lift: -4px; }
 .modo-card {
   transform-style: preserve-3d; will-change: transform;
   transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(var(--lift, 0px));
@@ -3508,7 +3518,7 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
   .hero-sub { font-size: var(--t-base); }
 }
 @media (hover: none) {
-  .fase-card.tilt, .modo-card { transform: none; }
+  .modulo-card.tilt, .modo-card { transform: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-aurora .au, .hero-orb .sph { animation: none; }
@@ -3519,13 +3529,13 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
    Recorrido de estudio: acordeón horizontal
    (hover = la tarjeta crece, las demás se desenfocan)
    ============================================================ */
-.fases-accordion {
+.modulos-accordion {
   display: flex;
   gap: var(--e-12);
   height: 360px;
   margin-top: var(--e-6);
 }
-.fase-panel {
+.modulo-panel {
   position: relative;
   flex: 1 1 0;
   min-width: 0;
@@ -3534,9 +3544,9 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
   padding: var(--e-24) var(--e-20);
   color: var(--texto);
   background:
-    radial-gradient(130% 90% at 0 0, color-mix(in srgb, var(--fase-color) 16%, transparent), transparent 55%),
+    radial-gradient(130% 90% at 0 0, color-mix(in srgb, var(--modulo-color) 16%, transparent), transparent 55%),
     var(--bg-2);
-  border: 1px solid color-mix(in srgb, var(--fase-color) 22%, var(--borde));
+  border: 1px solid color-mix(in srgb, var(--modulo-color) 22%, var(--borde));
   box-shadow: var(--sombra);
   display: flex;
   flex-direction: column;
@@ -3544,25 +3554,25 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
   transition: flex-grow var(--dur-lenta) var(--ease-out), filter var(--dur-lenta) var(--ease-out),
     opacity var(--dur-lenta) var(--ease-out), transform var(--dur-lenta) var(--ease-out), box-shadow var(--dur-lenta) var(--ease-out);
 }
-.fase-panel::before {
+.modulo-panel::before {
   content: '';
   position: absolute;
   inset: 0 0 auto 0;
   height: 4px;
-  background: var(--fase-color);
+  background: var(--modulo-color);
 }
-.fase-panel:hover { text-decoration: none; }
+.modulo-panel:hover { text-decoration: none; }
 .fp-num {
   font-family: var(--fuente-display);
   font-size: var(--t-3xl);
   font-weight: 700;
   line-height: 1;
-  color: var(--fase-color);
+  color: var(--modulo-color);
   margin-bottom: var(--e-12);
 }
 .fp-body { width: 300px; flex: 1; } /* ancho fijo: el contenido no se reacomoda al expandir */
 .fp-titulo { font-size: var(--t-md); line-height: 1.2; margin-bottom: var(--e-4); }
-.fp-sub { color: var(--fase-color); font-weight: 600; font-size: var(--t-sm); margin-bottom: var(--e-12); }
+.fp-sub { color: var(--modulo-color); font-weight: 600; font-size: var(--t-sm); margin-bottom: var(--e-12); }
 .fp-desc {
   color: var(--texto-2);
   font-size: var(--t-sm);
@@ -3578,7 +3588,7 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
   opacity: 0;
   transition: opacity var(--dur-media) var(--ease-out);
 }
-.fp-prog { color: var(--fase-color); font-weight: 700; }
+.fp-prog { color: var(--modulo-color); font-weight: 700; }
 .fp-flecha {
   position: absolute;
   right: 20px;
@@ -3589,44 +3599,44 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
   display: grid;
   place-items: center;
   color: #fff;
-  background: var(--fase-color);
+  background: var(--modulo-color);
   opacity: 0;
   transform: translateX(-8px);
   transition: var(--dur-media) var(--ease-out);
 }
 
 /* Estados del acordeón al pasar el mouse */
-.fases-accordion:hover .fase-panel {
+.modulos-accordion:hover .modulo-panel {
   flex-grow: 0.7;
   filter: blur(3px) saturate(0.92);
   opacity: 0.5;
   transform: scale(0.985);
 }
-.fases-accordion .fase-panel:hover {
+.modulos-accordion .modulo-panel:hover {
   flex-grow: 3.4;
   filter: none;
   opacity: 1;
   transform: none;
   box-shadow: var(--sombra-lg);
 }
-.fase-panel:hover .fp-desc,
-.fase-panel:hover .fp-pie,
-.fase-panel:hover .fp-flecha { opacity: 1; }
-.fase-panel:hover .fp-flecha { transform: none; }
+.modulo-panel:hover .fp-desc,
+.modulo-panel:hover .fp-pie,
+.modulo-panel:hover .fp-flecha { opacity: 1; }
+.modulo-panel:hover .fp-flecha { transform: none; }
 
 /* Apilado en pantallas pequeñas o táctiles */
 @media (hover: none), (max-width: 768px) {
-  .fases-accordion { flex-direction: column; height: auto; }
-  .fase-panel { flex: none; }
-  .fase-panel .fp-body { width: auto; }
-  .fase-panel .fp-desc,
-  .fase-panel .fp-pie,
-  .fase-panel .fp-flecha { opacity: 1; }
-  .fase-panel .fp-flecha { transform: none; position: static; margin-top: var(--e-12); }
-  .fases-accordion:hover .fase-panel { flex: none; filter: none; opacity: 1; transform: none; }
+  .modulos-accordion { flex-direction: column; height: auto; }
+  .modulo-panel { flex: none; }
+  .modulo-panel .fp-body { width: auto; }
+  .modulo-panel .fp-desc,
+  .modulo-panel .fp-pie,
+  .modulo-panel .fp-flecha { opacity: 1; }
+  .modulo-panel .fp-flecha { transform: none; position: static; margin-top: var(--e-12); }
+  .modulos-accordion:hover .modulo-panel { flex: none; filter: none; opacity: 1; transform: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .fases-accordion:hover .fase-panel { filter: none; transform: none; }
+  .modulos-accordion:hover .modulo-panel { filter: none; transform: none; }
 }
 
 /* ============================================================
@@ -3650,14 +3660,14 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
 .intro-cta { display: flex; gap: var(--e-12); flex-wrap: wrap; margin-bottom: var(--e-24); }
 .intro-stats { display: flex; flex-wrap: wrap; gap: var(--e-12); }
 
-/* Tarjetas de fase: cuadrícula cómoda; al hover crecen y se elevan sobre las demás */
-.fases-pop {
+/* Tarjetas de modulo: cuadrícula cómoda; al hover crecen y se elevan sobre las demás */
+.modulos-pop {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(244px, 1fr));
   gap: var(--e-16);
   margin-top: var(--e-6);
 }
-.fase-pop {
+.modulo-pop {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -3669,43 +3679,43 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
   box-shadow: var(--sombra);
   transition: transform var(--dur-media) var(--ease-out), box-shadow var(--dur-media) var(--ease-out), border-color var(--dur-media) var(--ease-out);
 }
-.fase-pop::before {
+.modulo-pop::before {
   content: '';
   position: absolute;
   inset: 0 0 auto 0;
   height: 4px;
   border-radius: 22px 22px 0 0;
-  background: var(--fase-color);
+  background: var(--modulo-color);
 }
 .fp2-num {
   font-family: var(--fuente-display);
   font-size: var(--t-2xl); font-weight: 700; line-height: 1;
-  color: var(--fase-color); margin-bottom: var(--e-8);
+  color: var(--modulo-color); margin-bottom: var(--e-8);
 }
 .fp2-titulo { font-size: var(--t-md); line-height: 1.25; margin-bottom: 3px; }
-.fp2-sub { color: var(--fase-color); font-weight: 600; font-size: var(--t-sm); margin-bottom: var(--e-8); }
+.fp2-sub { color: var(--modulo-color); font-weight: 600; font-size: var(--t-sm); margin-bottom: var(--e-8); }
 .fp2-desc { color: var(--texto-2); font-size: var(--t-sm); flex: 1; }
 .fp2-pie {
   display: flex; justify-content: space-between;
   margin-top: var(--e-16); font-size: var(--t-sm); color: var(--texto-3);
 }
-.fp2-prog { color: var(--fase-color); font-weight: 700; font-variant-numeric: tabular-nums; }
+.fp2-prog { color: var(--modulo-color); font-weight: 700; font-variant-numeric: tabular-nums; }
 .fp2-barra { height: 5px; margin-top: var(--e-8); border-radius: 999px; background: var(--bg-3); overflow: hidden; }
-.fp2-barra span { display: block; height: 100%; border-radius: 999px; background: var(--fase-color); }
+.fp2-barra span { display: block; height: 100%; border-radius: 999px; background: var(--modulo-color); }
 
-.fase-pop:hover {
+.modulo-pop:hover {
   text-decoration: none;
   transform: scale(1.07) translateY(-6px);
   z-index: 6;
   box-shadow: var(--sombra-lg);
-  border-color: var(--fase-color);
+  border-color: var(--modulo-color);
 }
 
 @media (hover: none) {
-  .fase-pop:hover { transform: none; }
+  .modulo-pop:hover { transform: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .fase-pop:hover { transform: none; }
+  .modulo-pop:hover { transform: none; }
 }
 
 /* Atlas: galería de imágenes reales (anatomía / fisiología) */
@@ -3764,11 +3774,11 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
 .concepto-card {
   background: var(--bg-2);
   border: 1px solid var(--borde);
-  border-left: 3px solid var(--fase-color);
+  border-left: 3px solid var(--modulo-color);
   border-radius: var(--radio-sm);
   padding: var(--e-12) var(--e-16);
 }
-.concepto-card strong { color: var(--fase-color); display: block; margin-bottom: var(--e-4); }
+.concepto-card strong { color: var(--modulo-color); display: block; margin-bottom: var(--e-4); }
 .concepto-card p { font-size: var(--t-sm); color: var(--texto-2); }
 
 /* ===== Recursos del tema (videos / fuentes / imágenes) ===== */
@@ -3810,7 +3820,7 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
 }
 .act-cabe { display: flex; align-items: center; justify-content: space-between; gap: var(--e-8); margin-bottom: var(--e-16); }
 .act-cabe h4 { display: flex; align-items: center; gap: var(--e-8); font-size: var(--t-base); }
-.act-cabe h4 svg { color: var(--fase-color); }
+.act-cabe h4 svg { color: var(--modulo-color); }
 .act-progreso {
   font-family: var(--fuente-cifra, monospace); font-weight: 600; font-size: var(--t-sm);
   color: var(--texto-2); background: var(--bg-3); border-radius: 999px; padding: 2px var(--e-12);
@@ -3850,7 +3860,7 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
 .ordenar-num {
   flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
   display: grid; place-items: center; font-weight: 700; font-size: var(--t-sm);
-  background: var(--fase-color); color: #fff;
+  background: var(--modulo-color); color: #fff;
 }
 .ordenar-txt { flex: 1; font-size: var(--t-sm); }
 .ordenar-flechas { display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; }
@@ -3935,7 +3945,7 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
   max-width: 48%;
   transition: var(--dur-rapida);
 }
-.tema-nav-btn:hover { border-color: var(--fase-color); transform: translateY(-2px); }
+.tema-nav-btn:hover { border-color: var(--modulo-color); transform: translateY(-2px); }
 .tema-nav-btn.derecha { text-align: right; }
 .tema-nav-btn span { color: var(--texto-3); font-size: var(--t-xs); }
 .tema-nav-btn strong { font-size: var(--t-sm); }
@@ -3963,7 +3973,7 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
   font-size: var(--t-sm);
   color: var(--texto-3);
 }
-.quiz-titulo { font-weight: 700; color: var(--fase-color); }
+.quiz-titulo { font-weight: 700; color: var(--modulo-color); }
 .quiz-barra {
   height: 8px;
   background: var(--bg-3);
@@ -4113,38 +4123,38 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
 .examen-cantidad:hover { border-color: var(--primario-claro); }
 .examen-cantidad.activa { background: var(--primario); color: #fff; border-color: var(--primario); }
 
-/* Exámenes por fase (con la mejor puntuación del alumno) */
-.examen-fases { display: flex; flex-direction: column; gap: var(--e-12); margin: var(--e-24) 0 var(--e-16); }
-.examen-fases h2 {
+/* Exámenes por modulo (con la mejor puntuación del alumno) */
+.examen-modulos { display: flex; flex-direction: column; gap: var(--e-12); margin: var(--e-24) 0 var(--e-16); }
+.examen-modulos h2 {
   display: flex;
   align-items: center;
   gap: var(--e-8);
   font-family: var(--fuente-display);
   font-size: var(--t-lg);
 }
-.examen-fases-ico { display: inline-flex; color: var(--primario); }
-.examen-fases-sub { color: var(--texto-2); font-size: var(--t-sm); margin-top: -6px; }
-.examen-fases-lista { display: flex; flex-direction: column; gap: var(--e-8); }
-.examen-fase-item {
+.examen-modulos-ico { display: inline-flex; color: var(--primario); }
+.examen-modulos-sub { color: var(--texto-2); font-size: var(--t-sm); margin-top: -6px; }
+.examen-modulos-lista { display: flex; flex-direction: column; gap: var(--e-8); }
+.examen-modulo-item {
   display: flex;
   align-items: center;
   gap: var(--e-12);
   padding: var(--e-12) var(--e-16);
   border: 1px solid var(--borde);
-  border-left: 4px solid var(--fase-color, var(--primario));
+  border-left: 4px solid var(--modulo-color, var(--primario));
   border-radius: var(--radio);
   background: var(--bg-2);
   color: inherit;
   text-decoration: none;
   transition: border-color var(--dur-rapida) ease, transform var(--dur-rapida) ease;
 }
-.examen-fase-item:hover { border-color: var(--fase-color, var(--primario)); transform: translateX(3px); }
-.examen-fase-item > svg { color: var(--texto-3); flex-shrink: 0; }
+.examen-modulo-item:hover { border-color: var(--modulo-color, var(--primario)); transform: translateX(3px); }
+.examen-modulo-item > svg { color: var(--texto-3); flex-shrink: 0; }
 .ef-num {
   font-family: var(--fuente-cifra);
   font-size: var(--t-lg);
   font-weight: 700;
-  color: var(--fase-color, var(--primario));
+  color: var(--modulo-color, var(--primario));
   flex-shrink: 0;
 }
 .ef-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
@@ -4164,7 +4174,7 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
 .ef-mejor small { color: var(--texto-3); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: 0.05em; }
 .ef-mejor--vacio { color: var(--texto-3); font-size: var(--t-base); }
 @media (max-width: 560px) {
-  .examen-fase-item { gap: var(--e-8); padding: var(--e-12) var(--e-12); }
+  .examen-modulo-item { gap: var(--e-8); padding: var(--e-12) var(--e-12); }
   .ef-info strong { white-space: normal; font-size: var(--t-sm); }
 }
 
@@ -4263,11 +4273,11 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
 .resumen-num { font-size: var(--t-2xl); font-weight: 800; color: var(--primario-claro); }
 .resumen-label { color: var(--texto-2); font-size: var(--t-sm); margin-bottom: var(--e-8); }
 
-.progreso-fases { margin-bottom: var(--e-32); }
-.progreso-fase { margin-bottom: var(--e-16); }
-.progreso-fase-cab { display: flex; justify-content: space-between; margin-bottom: var(--e-6); font-size: var(--t-sm); }
-.barra-fase { height: 10px; background: var(--bg-3); border-radius: 999px; overflow: hidden; border: 1px solid var(--borde); }
-.barra-fase-fill { height: 100%; background: var(--fase-color); border-radius: 999px; transition: width var(--dur-lenta); }
+.progreso-modulos { margin-bottom: var(--e-32); }
+.progreso-modulo { margin-bottom: var(--e-16); }
+.progreso-modulo-cab { display: flex; justify-content: space-between; margin-bottom: var(--e-6); font-size: var(--t-sm); }
+.barra-modulo { height: 10px; background: var(--bg-3); border-radius: 999px; overflow: hidden; border: 1px solid var(--borde); }
+.barra-modulo-fill { height: 100%; background: var(--modulo-color); border-radius: 999px; transition: width var(--dur-lenta); }
 
 .progreso-tabla { display: flex; flex-direction: column; gap: var(--e-6); }
 .progreso-tema-fila {
@@ -4327,7 +4337,7 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
 .buscar-card {
   background: var(--bg-2);
   border: 1px solid var(--borde);
-  border-left: 4px solid var(--fase-color);
+  border-left: 4px solid var(--modulo-color);
   border-radius: var(--radio);
   padding: var(--e-16) var(--e-20);
 }
@@ -4335,8 +4345,8 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
 .buscar-card-resumen { color: var(--texto-2); font-size: var(--t-sm); margin: var(--e-6) 0; }
 .buscar-conceptos { display: flex; flex-direction: column; gap: var(--e-6); margin: var(--e-8) 0; }
 .buscar-concepto { font-size: var(--t-sm); color: var(--texto-2); background: var(--bg-3); padding: var(--e-8) var(--e-12); border-radius: 8px; }
-.buscar-concepto strong { color: var(--fase-color); }
-.buscar-card-fase { font-size: var(--t-xs); color: var(--texto-3); }
+.buscar-concepto strong { color: var(--modulo-color); }
+.buscar-card-modulo { font-size: var(--t-xs); color: var(--texto-3); }
 .buscar-vacio { text-align: center; padding: 50px; color: var(--texto-3); }
 .buscar-vacio span { display: block; margin-bottom: var(--e-8); color: var(--texto-3); }
 
@@ -4600,7 +4610,7 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
 /* ---- Píldoras (botones del diseño) ---- */
 /* (Aquí vivía el segundo sistema de botones: .btn btn--pildora y sus 6 variantes.
    Todo eso está ahora en el primitivo único de arriba, como los modificadores
-   --pildora / --carbon / --urgencia / --fantasma / --fase.) */
+   --pildora / --carbon / --urgencia / --fantasma / --modulo.) */
 
 /* ---- Imagen responsiva (Drive) + placeholder ---- */
 .imagen {
@@ -4963,7 +4973,7 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 .ph-link { display: inline-flex; align-items: center; gap: var(--e-4); margin-top: var(--e-12); font-weight: 700; font-family: var(--fuente-display); }
 
 /* ---- Encabezado de sección ---- */
-.ph-fases { padding: clamp(var(--e-40), 6vw, 72px) 0 clamp(var(--e-32), 4vw, 50px); }
+.ph-modulos { padding: clamp(var(--e-40), 6vw, 72px) 0 clamp(var(--e-32), 4vw, 50px); }
 .ph-h2 {
   display: flex;
   align-items: center;
@@ -4976,7 +4986,7 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 .ph-h2 svg { color: var(--primario); flex-shrink: 0; }
 .ph-h2-sub { color: var(--texto-2); max-width: 60ch; margin-top: var(--e-6); }
 
-/* ---- Fases: baraja coverflow (naipes apilados; la activa salta al frente) ---- */
+/* ---- Modulos: baraja coverflow (naipes apilados; la activa salta al frente) ---- */
 .deck {
   position: relative;
   height: 560px;
@@ -4998,7 +5008,7 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   border-radius: 28px;
   padding: var(--e-32) var(--e-32) var(--e-24);
   color: var(--texto);
-  background: linear-gradient(180deg, color-mix(in srgb, var(--fase-color) 7%, var(--bg-2)), var(--bg-2) 58%);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--modulo-color) 7%, var(--bg-2)), var(--bg-2) 58%);
   border: 1px solid var(--borde);
   box-shadow: var(--sombra-lg);
   cursor: pointer;
@@ -5013,14 +5023,14 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   position: absolute;
   inset: 0 0 auto 0;
   height: 6px;
-  background: var(--fase-color);
+  background: var(--modulo-color);
 }
 .deck-card.is-activo {
   transform: translateX(-50%) translateY(-16px) scale(1.1);
   cursor: default;
   background: var(--bg-2);
-  border-color: color-mix(in srgb, var(--fase-color) 45%, var(--borde));
-  box-shadow: 0 50px 100px -30px color-mix(in srgb, var(--fase-color) 48%, rgba(0, 0, 0, 0.6)),
+  border-color: color-mix(in srgb, var(--modulo-color) 45%, var(--borde));
+  box-shadow: 0 50px 100px -30px color-mix(in srgb, var(--modulo-color) 48%, rgba(0, 0, 0, 0.6)),
     0 22px 50px -20px rgba(0, 0, 0, 0.38);
 }
 .deck-num {
@@ -5030,7 +5040,7 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   font-weight: 700;
   font-size: 5.4rem;
   line-height: 0.85;
-  color: var(--fase-color);
+  color: var(--modulo-color);
 }
 .deck-card.is-activo .deck-num { font-size: 4.2rem; }
 .deck-body {
@@ -5052,7 +5062,7 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 }
 .deck-sub {
   font-family: var(--fuente-sub);
-  color: var(--fase-color);
+  color: var(--modulo-color);
   font-weight: 500;
   font-size: var(--t-base);
   letter-spacing: 0.01em;
@@ -5095,7 +5105,7 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   padding: var(--e-20) var(--e-24) var(--e-16);
   border-radius: var(--radio);
   background: var(--bg-2);
-  border-top: 6px solid var(--fase-color, var(--primario));
+  border-top: 6px solid var(--modulo-color, var(--primario));
   box-shadow: 0 30px 80px -20px rgb(0 0 0 / 0.55);
 }
 /* Icono de resultado: badge circular con color según el rango de la nota */
@@ -5125,13 +5135,13 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   color: var(--urgencia);
   background: color-mix(in srgb, var(--urgencia) 12%, transparent);
 }
-.modulo-fin-fase {
+.modulo-fin-modulo {
   font-family: var(--fuente-sub);
   font-size: var(--t-xs);
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--fase-color, var(--primario));
+  color: var(--modulo-color, var(--primario));
 }
 .modulo-fin-nota {
   display: flex;
@@ -5194,7 +5204,7 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   cursor: pointer;
   font-family: var(--fuente-display);
   font-size: var(--t-sm);
-  color: var(--fase-color, var(--primario));
+  color: var(--modulo-color, var(--primario));
   list-style: none;
 }
 .modulo-fin-aprendizajes summary::-webkit-details-marker { display: none; }
@@ -5227,7 +5237,7 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   font-family: var(--fuente-cifra);
   font-weight: 700;
   font-size: var(--t-xs);
-  color: var(--fase-color, var(--primario));
+  color: var(--modulo-color, var(--primario));
   min-width: 30px;
 }
 .modulo-fin-cta { display: flex; flex-direction: column; align-items: center; gap: var(--e-8); width: 100%; }
@@ -5260,12 +5270,12 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 }
 .modulo-fin-cerrar:hover { color: var(--texto); }
 
-/* Último tema de la fase: el "Siguiente" lleva al examen del módulo */
+/* Último tema de la modulo: el "Siguiente" lleva al examen del módulo */
 .tema-nav-btn--examen {
-  border-color: color-mix(in srgb, var(--fase-color, var(--primario)) 55%, transparent);
-  background: color-mix(in srgb, var(--fase-color, var(--primario)) 8%, transparent);
+  border-color: color-mix(in srgb, var(--modulo-color, var(--primario)) 55%, transparent);
+  background: color-mix(in srgb, var(--modulo-color, var(--primario)) 8%, transparent);
 }
-.tema-nav-btn--examen strong { color: var(--fase-color, var(--primario)); }
+.tema-nav-btn--examen strong { color: var(--modulo-color, var(--primario)); }
 
 /* ============================================================
    Solicitudes de acceso (panel del staff) + códigos para profesores
@@ -5382,7 +5392,7 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 }
 .panel-habilitar-btn:disabled { opacity: 0.55; cursor: default; }
 .deck-temas, .deck-prog { font-family: var(--fuente-cifra); font-size: var(--t-base); color: var(--texto-3); font-weight: 500; }
-.deck-prog { color: var(--fase-color); font-weight: 600; font-variant-numeric: tabular-nums; }
+.deck-prog { color: var(--modulo-color); font-weight: 600; font-variant-numeric: tabular-nums; }
 .deck-boton {
   display: grid;
   place-items: center;
@@ -5390,13 +5400,13 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   height: 56px;
   border-radius: 50%;
   color: #fff;
-  background: var(--fase-color);
-  box-shadow: 0 12px 26px -8px color-mix(in srgb, var(--fase-color) 70%, transparent);
+  background: var(--modulo-color);
+  box-shadow: 0 12px 26px -8px color-mix(in srgb, var(--modulo-color) 70%, transparent);
   transition: transform var(--dur-rapida) var(--ease-out);
 }
 .deck-boton:hover { transform: scale(1.1); text-decoration: none; }
 .deck-barra { height: 5px; margin-top: var(--e-12); border-radius: 999px; background: var(--bg-3); overflow: hidden; }
-.deck-barra span { display: block; height: 100%; border-radius: 999px; background: var(--fase-color); transition: width var(--dur-lenta) var(--ease-out); }
+.deck-barra span { display: block; height: 100%; border-radius: 999px; background: var(--modulo-color); transition: width var(--dur-lenta) var(--ease-out); }
 
 .deck-flecha {
   position: absolute;
@@ -5430,7 +5440,7 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   cursor: pointer;
   transition: width var(--dur-media) var(--ease-out), background var(--dur-media) var(--ease-out);
 }
-.deck-punto.on { width: 28px; border-radius: 999px; background: var(--fase-color); }
+.deck-punto.on { width: 28px; border-radius: 999px; background: var(--modulo-color); }
 
 /* ---- Bandas (Ponte a Prueba / Atlas / FlashCards) ---- */
 .ph-banda { padding: clamp(var(--e-40), 6vw, 80px) 0; }
@@ -5894,8 +5904,8 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 .previa-fila h2 { margin: 0; }
 .previa-fila .btn btn--pildora { display: inline-flex; align-items: center; gap: var(--e-6); }
 .previa-cuerpo { margin-top: var(--e-12); }
-.previa-fases { margin: 0; padding: 0 0 0 2px; list-style: none; display: flex; flex-direction: column; gap: var(--e-16); }
-.previa-fases h3 { margin: 0 0 var(--e-4); font-size: var(--t-base); }
+.previa-modulos { margin: 0; padding: 0 0 0 2px; list-style: none; display: flex; flex-direction: column; gap: var(--e-16); }
+.previa-modulos h3 { margin: 0 0 var(--e-4); font-size: var(--t-base); }
 .previa-sub { margin: 0 0 var(--e-6); color: var(--texto-2); font-size: var(--t-sm); }
 .previa-temas { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--e-8); }
 .previa-temas li { display: flex; gap: var(--e-8); padding: var(--e-8) var(--e-8); border: 1px solid var(--borde); border-radius: var(--radio-sm); background: var(--bg-3); }
@@ -6485,7 +6495,7 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   font-size: var(--t-xs);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--fase-color, var(--primario));
+  color: var(--modulo-color, var(--primario));
 }
 .lp-demo-header h3 { font-size: var(--t-xl); margin-top: var(--e-4); }
 .lp-demo-resumen {
@@ -7077,7 +7087,7 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 }
 .ba-progreso { margin-top: var(--e-12); color: var(--texto-2); font-size: var(--t-sm); }
 
-/* ===== Fases de un alumno (abrir cualquiera, no solo la siguiente) ===== */
+/* ===== Modulos de un alumno (abrir cualquiera, no solo la siguiente) ===== */
 .fa-panel {
   margin-top: var(--e-16);
   padding: var(--e-16);
@@ -7096,7 +7106,7 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   background: var(--bg);
 }
 .fa-fila--oculta { opacity: 0.72; }
-.fa-num { font-family: var(--fuente-cifra); font-weight: 700; color: var(--fase-color, var(--primario)); min-width: 26px; }
+.fa-num { font-family: var(--fuente-cifra); font-weight: 700; color: var(--modulo-color, var(--primario)); min-width: 26px; }
 .fa-titulo { flex: 1; min-width: 0; font-size: var(--t-sm); }
 /* El estado siempre en TEXTO: el color acompaña, no sustituye. */
 .fa-estado { font-size: var(--t-xs); font-weight: 600; white-space: nowrap; }
@@ -7116,7 +7126,7 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   font-size: var(--t-sm);
 }
 
-/* ===== Progreso: nota del examen de fase junto al avance ===== */
+/* ===== Progreso: nota del examen de modulo junto al avance ===== */
 .pf-derecha { display: inline-flex; align-items: center; gap: var(--e-8); }
 .pf-nota { font-family: var(--fuente-cifra); }
 .pf-nota.ok { color: var(--verde); }

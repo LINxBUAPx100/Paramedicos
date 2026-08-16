@@ -49,8 +49,8 @@ export default function VistaPreviaTema({ abierto, tema, onCerrar }) {
             objetivos, otra clase en el resumen, y los conceptos clave sin
             pintar—, así que un tema creado desde la web no se veía como los
             demás por más que el contenido fuera el mismo. */}
-        {/* Sin `--fase-color` propio: cae al de `:root` (el primario). El
-            editor no siempre sabe de qué fase cuelga el tema que se previsualiza,
+        {/* Sin `--modulo-color` propio: cae al de `:root` (el primario). El
+            editor no siempre sabe de qué modulo cuelga el tema que se previsualiza,
             y un color inventado engañaría más que el azul por defecto. */}
         <div className="previa-cuerpo">
           <ResumenTema resumen={tema.resumen} />
