@@ -1,4 +1,14 @@
-import { REGISTRO } from './registro.js'
+import { planRescate } from './planRescate.js'
+
+// TEMARIO OFICIAL de la academia R.E.S.C.A.T.E. (generado desde
+// scripts/seed/plan-rescate.json — ver scripts/gen-plan-rescate.mjs).
+//
+// Sustituye al temario ficticio que vivía en registro.js + faseN.js. Esos
+// archivos SIGUEN en el repo pero ya no se importan: se conservan porque
+// contienen el material redactado (374 preguntas, 457 flashcards) que puede
+// reaprovecharse al llenar los temas oficiales, y porque revertir esta fase es
+// cambiar esta línea por `import { REGISTRO } from './registro.js'`.
+const REGISTRO = planRescate.map((modulo, i) => ({ orden: i + 1, fase: modulo }))
 
 // Ensambla los MÓDULOS en ORDEN y con NUMERACIÓN AUTOMÁTICA (ver registro.js).
 //  · El orden lo define el campo `orden` del registro.

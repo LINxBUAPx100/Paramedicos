@@ -33,7 +33,17 @@ test('compatibilidad: el contenido de los 68 temas actuales valida sin errores',
 
 test('compatibilidad: la calificación sin pesos reproduce el cálculo actual', () => {
   // Cálculo actual (Quiz/ExamenModuloPage): aciertos, total, round(a/t*100).
-  const preguntas = todosLosTemas[0].quiz
+  //
+  // El quiz es SINTÉTICO a propósito: el temario del bundle es ahora el plan
+  // oficial de R.E.S.C.A.T.E., cuyos temas nacen sin contenido. Atar esta
+  // prueba al primer tema del corpus la volvía a hacer depender de que alguien
+  // hubiera redactado preguntas ahí, que es justo lo que no debe verificar.
+  const preguntas = [
+    { pregunta: '¿1?', opciones: ['a', 'b', 'c'], correcta: 0 },
+    { pregunta: '¿2?', opciones: ['a', 'b', 'c'], correcta: 2 },
+    { pregunta: '¿3?', opciones: ['a', 'b'], correcta: 1 },
+    { pregunta: '¿4?', opciones: ['a', 'b', 'c'], correcta: 1 },
+  ]
   const respuestas = preguntas.map((q) => correctasDe(q)[0]) // todas bien
   const r = calcularCalificacion(preguntas, respuestas)
   assert.equal(r.aciertos, preguntas.length)

@@ -4,6 +4,7 @@
 import { db } from './init.js'
 import { doc, getDoc, updateDoc, collection, query, where, getDocs } from 'firebase/firestore'
 import { normalizarPermisos, validarPermisos, PERMISOS_EDITOR } from '../permisosEditor.js'
+import { normalizarPase, validarPase } from '../revisionDocente.js'
 
 // Une al alumno a una academia validando su código (el código ES el id del doc).
 export async function unirseAcademia(uid, codigo) {
@@ -111,4 +112,78 @@ export async function historialPermisos(academiaId) {
     .map((d) => ({ id: d.id, ...d.data() }))
     .filter((h) => h.accion === 'asignar-permisos' || h.accion === 'revocar-permisos')
     .sort((a, b) => (b.fecha?.seconds || 0) - (a.fecha?.seconds || 0))
+}
+
+// ============================================================
+//  Pase de revisión docente (usuarios/{uid}.revisorTemporal)
+// ------------------------------------------------------------
+//  Lo concede el admin supremo —o el director de la academia— para que un
+//  profesor pueda FIRMAR dictámenes sobre el contenido: validar, pedir
+//  correcciones o reportar. No concede edición, ni publicación, ni
+//  administración: eso vive en `permisosEditor` y no se toca aquí.
+//
+//  El pase CADUCA. Es la diferencia entre pedirle a alguien que revise el
+//  temario y convertirlo en administrador para siempre.
+// ============================================================
+
+// Concede o renueva el pase. `hasta` en AAAA-MM-DD; `hoy` también, para que la
+// vigencia no dependa del reloj del navegador sin control. Devuelve el pase
+// normalizado tal como quedó escrito.
+export async function otorgarPaseRevisor(instructorUid, { hasta, nota = '' }, { hoy, porUid = null } = {}) {
+  const error = validarPase({ hasta, nota }, hoy)
+  if (error) throw new Error(error)
+
+  const ref = doc(db, 'usuarios', instructorUid)
+  const snap = await getDoc(ref)
+  if (!snap.exists()) throw new Error('Ese usuario ya no existe.')
+  const datos = snap.data()
+  if (datos.rol !== 'instructor') {
+    throw new Error('El pase de revisión solo se concede a profesores.')
+  }
+  const antes = normalizarPase(datos.revisorTemporal)
+  const pase = normalizarPase({ hasta, nota, otorgadoPor: porUid, otorgadoEn: hoy })
+
+  await updateDoc(ref, { revisorTemporal: pase })
+
+  // Auditoría best-effort: conceder acceso a firmar dictámenes deja rastro,
+  // pero un fallo del historial no debe tumbar la concesión.
+  try {
+    const { registrarHistorial } = await import('./contenido.js')
+    await registrarHistorial({
+      academiaId: datos.academiaId || null,
+      accion: 'otorgar-pase-revisor',
+      coleccion: 'usuarios',
+      docId: instructorUid,
+      antes,
+      despues: pase,
+      origen: 'panel',
+    })
+  } catch { /* la auditoría no bloquea la operación principal */ }
+
+  return pase
+}
+
+// Retira el pase antes de su caducidad.
+export async function revocarPaseRevisor(instructorUid, { porUid = null } = {}) {
+  const ref = doc(db, 'usuarios', instructorUid)
+  const snap = await getDoc(ref)
+  if (!snap.exists()) throw new Error('Ese usuario ya no existe.')
+  const datos = snap.data()
+  const antes = normalizarPase(datos.revisorTemporal)
+
+  await updateDoc(ref, { revisorTemporal: null })
+
+  try {
+    const { registrarHistorial } = await import('./contenido.js')
+    await registrarHistorial({
+      academiaId: datos.academiaId || null,
+      accion: 'revocar-pase-revisor',
+      coleccion: 'usuarios',
+      docId: instructorUid,
+      antes,
+      despues: null,
+      origen: 'panel',
+      actorUid: porUid || null,
+    })
+  } catch { /* idem */ }
 }

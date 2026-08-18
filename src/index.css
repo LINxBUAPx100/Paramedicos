@@ -1790,6 +1790,35 @@ textarea:focus-visible,
   background: var(--bg);
 }
 .tv-tema.tv-oculto .tv-tema-titulo { color: var(--texto-3); text-decoration: line-through; text-decoration-thickness: 1px; }
+
+/* Semáforo de avance editorial (solo superadmin).
+   Punto y no texto: la fila ya lleva número, título y acción, y un cuarto
+   elemento textual la volvería ilegible. El color NO es el único portador de la
+   información —cada punto lleva `title` y `aria-label` con el estado escrito—,
+   porque quien no distinga rojo de verde tiene el mismo derecho a coordinar el
+   temario. */
+.tv-semaforo {
+  flex: 0 0 auto;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px color-mix(in srgb, currentColor 22%, transparent);
+}
+.tv-semaforo--rojo { background: var(--peligro); color: var(--peligro); }
+.tv-semaforo--ambar { background: var(--aviso); color: var(--aviso); }
+.tv-semaforo--verde { background: var(--exito); color: var(--exito); }
+
+.tv-leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--e-16);
+  margin-bottom: var(--e-12);
+  font-size: var(--t-sm);
+  color: var(--texto-2);
+}
+.tv-leyenda-item { display: inline-flex; align-items: center; gap: var(--e-6); }
+.tv-leyenda-nota { color: var(--texto-3); font-style: italic; }
 .tv-tema-num {
   font-family: var(--fuente-cifra);
   font-weight: 700;
@@ -2870,6 +2899,140 @@ html[data-tema='oscuro'] .hero-aurora { opacity: 0.4; }
   margin-top: var(--e-6);
 }
 
+.tema-header-oficial {
+  font-size: var(--t-sm);
+  color: var(--texto-2);
+  margin-top: var(--e-4);
+  font-style: italic;
+}
+
+/* ============================================================
+   Aviso de estado EDITORIAL del tema
+   ------------------------------------------------------------
+   Tres variantes con peso visual distinto a propósito: «en revisión» avisa
+   sin alarmar (el alumno SÍ debe leer el tema), mientras que «vacío» y
+   «bloqueado» explican por qué no hay nada que leer. Ninguna es descartable.
+   ============================================================ */
+.aviso-editorial {
+  display: flex;
+  gap: var(--e-12);
+  align-items: flex-start;
+  padding: var(--e-16);
+  border-radius: var(--radio);
+  border: 1px solid var(--borde);
+  background: var(--bg-2);
+  margin-bottom: var(--e-24);
+  max-width: 800px;
+}
+.aviso-editorial--revision {
+  border-color: color-mix(in srgb, var(--aviso) 45%, var(--borde));
+  background: color-mix(in srgb, var(--aviso-suave) 55%, var(--bg-2));
+}
+.aviso-editorial--bloqueado {
+  border-color: color-mix(in srgb, var(--peligro) 35%, var(--borde));
+  background: color-mix(in srgb, var(--peligro-suave) 40%, var(--bg-2));
+}
+.aviso-editorial-ico {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: var(--aviso);
+  background: color-mix(in srgb, var(--aviso) 14%, transparent);
+}
+.aviso-editorial--bloqueado .aviso-editorial-ico {
+  color: var(--peligro);
+  background: color-mix(in srgb, var(--peligro) 14%, transparent);
+}
+.aviso-editorial--vacio .aviso-editorial-ico {
+  color: var(--texto-2);
+  background: color-mix(in srgb, var(--texto-2) 12%, transparent);
+}
+.aviso-editorial-cuerpo { display: flex; flex-direction: column; gap: var(--e-4); }
+.aviso-editorial-cuerpo strong { font-family: var(--fuente-display); font-size: var(--t-md); }
+.aviso-editorial-cuerpo p { color: var(--texto-2); font-size: var(--t-sm); }
+.aviso-editorial-meta { font-size: var(--t-xs); }
+.aviso-editorial-obs {
+  margin: var(--e-4) 0 0 var(--e-16);
+  color: var(--texto-2);
+  font-size: var(--t-xs);
+  list-style: disc;
+}
+
+.sin-contenido {
+  max-width: 800px;
+  margin-bottom: var(--e-32);
+  color: var(--texto-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-8);
+}
+.sin-contenido-pregunta {
+  border-left: 3px solid var(--borde-fuerte);
+  padding-left: var(--e-12);
+  font-size: var(--t-sm);
+}
+
+/* ============================================================
+   Ficha de EXAMEN o PRÁCTICA (nodos de evaluación del plan)
+   ------------------------------------------------------------
+   Deliberadamente NO se parece a una lección: quien abre este nodo tiene que
+   ver de un vistazo qué entra, de dónde salen los reactivos y qué sigue sin
+   decidir la academia.
+   ============================================================ */
+.ficha-eval {
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-20);
+  padding: var(--e-24);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--bg-2);
+  margin-bottom: var(--e-32);
+}
+.ficha-eval-cab { display: flex; gap: var(--e-16); align-items: flex-start; }
+.ficha-eval-cab h2 { font-family: var(--fuente-display); font-size: var(--t-lg); }
+.ficha-eval-cab p { color: var(--texto-2); font-size: var(--t-sm); margin-top: var(--e-4); }
+.ficha-eval-ico {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  color: var(--modulo-color, var(--primario));
+  background: color-mix(in srgb, var(--modulo-color, var(--primario)) 12%, transparent);
+}
+.ficha-eval-bloque h3 {
+  font-family: var(--fuente-display);
+  font-size: var(--t-md);
+  margin-bottom: var(--e-8);
+  display: flex;
+  align-items: center;
+  gap: var(--e-6);
+}
+.ficha-eval-bloque p, .ficha-eval-bloque li { color: var(--texto-2); font-size: var(--t-sm); }
+.ficha-eval-bloque ul { margin-left: var(--e-16); list-style: disc; display: grid; gap: var(--e-4); }
+.ficha-eval-temas { list-style: none; margin-left: 0; }
+.ficha-eval-temas a { color: var(--texto-2); }
+.ficha-eval-temas a:hover { color: var(--modulo-color, var(--primario)); }
+.ficha-eval-cotejo li.es-critico { color: var(--texto); }
+.chip-critico {
+  margin-left: var(--e-8);
+  background: color-mix(in srgb, var(--peligro) 15%, transparent);
+  color: var(--peligro);
+}
+.ficha-eval-pendiente {
+  border-left: 3px solid var(--aviso);
+  padding-left: var(--e-12);
+}
+.ficha-eval-pendiente h3 { color: var(--aviso); }
+.ficha-eval-vacio { color: var(--texto-2); font-size: var(--t-sm); }
+.ficha-eval-nota { color: var(--aviso); font-size: var(--t-sm); }
+
 /* ============================================================
    Lista de temas (ModuloPage)
    ============================================================ */
@@ -2922,6 +3085,18 @@ html[data-tema='oscuro'] .hero-aurora { opacity: 0.4; }
 .chip-ok { background: color-mix(in srgb, var(--verde) 18%, transparent); color: var(--verde); }
 .chip-quiz { background: color-mix(in srgb, var(--azul) 18%, transparent); color: var(--azul); }
 .chip-pendiente { background: var(--bg-3); color: var(--texto-3); }
+/* Estado editorial en el listado: solo se pinta cuando NO está avalado, así
+   que la ausencia de chip es la señal de «esto ya lo revisó un docente». */
+.chip-editorial { background: var(--bg-3); color: var(--texto-2); }
+.chip-editorial--borrador,
+.chip-editorial--en_revision {
+  background: color-mix(in srgb, var(--aviso) 18%, transparent);
+  color: var(--aviso);
+}
+.chip-editorial--bloqueado_por_decision {
+  background: color-mix(in srgb, var(--peligro) 15%, transparent);
+  color: var(--peligro);
+}
 
 /* ============================================================
    Página de tema (contenido)
@@ -7183,3 +7358,266 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 .cal-grupos { margin-bottom: var(--e-24); }
 .cal-grupos h2 { font-family: var(--fuente-sub); font-size: var(--t-md); margin-bottom: var(--e-8); }
 .cal-riesgo { color: var(--rojo); }
+
+/* ============================================================
+   Revisión docente — barra de tres botones en cada tema
+   ------------------------------------------------------------
+   Validar · Corregir · Reportar. Reemplaza al antiguo botón suelto
+   de "Reportar un problema", que ahora es la tercera acción.
+   Los tres colores no son decorativos: verde firma, ámbar pide
+   cambios, rojo avisa de un fallo. El mismo semáforo que usa el
+   estado editorial en el resto de la app.
+   ============================================================ */
+.revdoc {
+  margin: var(--e-8) 0 var(--e-4);
+  padding: var(--e-12);
+  border: 1px solid var(--borde);
+  border-radius: var(--r-12, 12px);
+  background: var(--panel, #fff);
+}
+.revdoc-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-8);
+  align-items: center;
+  margin-bottom: var(--e-8);
+}
+.revdoc-estado {
+  font-family: var(--fuente-sub);
+  font-size: var(--t-xs);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--borde);
+  color: var(--texto-2);
+}
+.revdoc-estado--validado,
+.revdoc-estado--publicado { color: #0f7a53; border-color: #a7e0c8; background: #eafaf3; }
+.revdoc-estado--borrador,
+.revdoc-estado--en_revision { color: #8a5a00; border-color: #f4dca0; background: #fff8e6; }
+.revdoc-estado--vacio,
+.revdoc-estado--bloqueado_por_decision { color: #a01521; border-color: #f3bcc1; background: #fdeef0; }
+
+.revdoc-pase,
+.revdoc-cola {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--t-xs);
+  color: var(--texto-2);
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--bg);
+}
+.revdoc-pase--caduca { color: #a01521; background: #fdeef0; }
+
+.revdoc-botones { display: flex; flex-wrap: wrap; gap: var(--e-8); }
+.revdoc-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  font-family: var(--fuente-sub);
+  font-size: var(--t-sm);
+  border-radius: 999px;
+  border: 1px solid var(--borde);
+  background: #fff;
+  color: var(--texto);
+  cursor: pointer;
+  transition: border-color .15s, color .15s, background .15s;
+}
+.revdoc-btn:hover:not(:disabled) { background: var(--bg); }
+.revdoc-btn:disabled { opacity: .55; cursor: not-allowed; }
+.revdoc-btn--validar:hover:not(:disabled),
+.revdoc-btn--validar.es-activo { color: #0f7a53; border-color: #0f7a53; }
+.revdoc-btn--corregir:hover:not(:disabled),
+.revdoc-btn--corregir.es-activo { color: #8a5a00; border-color: #d99a00; }
+.revdoc-btn--reportar:hover:not(:disabled),
+.revdoc-btn--reportar.es-activo { color: var(--urgencia); border-color: var(--urgencia); }
+
+.revdoc-nota {
+  margin: var(--e-8) 0 0;
+  font-size: var(--t-xs);
+  color: var(--texto-2);
+}
+
+.revdoc-form {
+  margin-top: var(--e-12);
+  padding-top: var(--e-12);
+  border-top: 1px dashed var(--borde);
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-8);
+}
+.revdoc-form-intro { margin: 0; font-size: var(--t-sm); color: var(--texto-2); }
+.revdoc-campo { display: flex; flex-direction: column; gap: 4px; }
+.revdoc-campo > span {
+  font-family: var(--fuente-sub);
+  font-size: var(--t-xs);
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  color: var(--texto-2);
+}
+.revdoc-campo input,
+.revdoc-campo select,
+.revdoc-campo textarea {
+  width: 100%;
+  padding: 8px 10px;
+  font: inherit;
+  font-size: var(--t-sm);
+  color: var(--texto);
+  background: #fff;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  resize: vertical;
+}
+.revdoc-campo textarea { font-family: var(--fuente-cuerpo); line-height: 1.5; }
+
+.revdoc-checklist {
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  padding: var(--e-8) var(--e-12);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.revdoc-checklist legend {
+  font-family: var(--fuente-sub);
+  font-size: var(--t-xs);
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  color: var(--texto-2);
+  padding: 0 6px;
+}
+.revdoc-check {
+  display: flex;
+  gap: var(--e-8);
+  align-items: flex-start;
+  font-size: var(--t-sm);
+  line-height: 1.45;
+}
+.revdoc-check input { margin-top: 3px; flex: none; }
+
+/* Deudas que el propio tema declara. Se muestran ANTES de firmar porque
+   validar una lección cuyo autor marcó datos sin comprobar es firmar algo
+   incompleto: la interfaz debe decirlo antes, no después. */
+.revdoc-deudas {
+  border: 1px solid #f4dca0;
+  background: #fff8e6;
+  border-radius: 10px;
+  padding: var(--e-8) var(--e-12);
+  font-size: var(--t-sm);
+}
+.revdoc-deudas > p { margin: 0 0 6px; display: flex; align-items: center; gap: 6px; color: #8a5a00; }
+.revdoc-deudas ul { margin: 0 0 var(--e-8); padding-left: 1.1rem; }
+.revdoc-deudas li { margin-bottom: 3px; color: var(--texto-2); }
+
+.revdoc-aviso {
+  margin: 0;
+  font-size: var(--t-sm);
+  color: var(--texto-2);
+  background: var(--bg);
+  border-radius: 8px;
+  padding: var(--e-8);
+}
+.revdoc-acciones { display: flex; gap: var(--e-8); flex-wrap: wrap; }
+
+/* ---------- Pase de revisión en el panel del administrador ---------- */
+.pe-pase {
+  border: 1px solid var(--borde);
+  border-radius: 10px;
+  padding: var(--e-8) var(--e-12);
+  margin-bottom: var(--e-12);
+  background: var(--bg);
+}
+.pe-pase-fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-8);
+  align-items: center;
+  justify-content: space-between;
+}
+.pe-pase-estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--t-sm);
+  color: var(--texto-2);
+}
+.pe-pase-estado.es-activo { color: #0f7a53; font-weight: 600; }
+.pe-pase-acciones { display: flex; gap: 6px; flex-wrap: wrap; }
+.pe-pase-nota { margin: 6px 0 0; font-size: var(--t-xs); color: var(--texto-2); font-style: italic; }
+.pe-pase-form {
+  margin-top: var(--e-8);
+  padding-top: var(--e-8);
+  border-top: 1px dashed var(--borde);
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-8);
+}
+.pe-pase-explica { margin: 0; font-size: var(--t-sm); color: var(--texto-2); }
+.pe-pase-caduca { margin: 0; font-size: var(--t-sm); }
+
+/* ---------- Cola de dictámenes (panel del administrador) ---------- */
+.panel-dictamenes { margin-top: var(--e-24, 24px); }
+.dic-resumen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-12);
+  align-items: center;
+  padding: var(--e-8) 0;
+  font-size: var(--t-sm);
+  color: var(--texto-2);
+}
+.dic-lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--e-8); }
+.dic-item {
+  border: 1px solid var(--borde);
+  border-left: 3px solid var(--borde);
+  border-radius: 10px;
+  padding: var(--e-8) var(--e-12);
+  background: #fff;
+}
+.dic-item--validar { border-left-color: #0f7a53; }
+.dic-item--corregir { border-left-color: #d99a00; }
+.dic-item--reportar { border-left-color: var(--urgencia); }
+.dic-item.es-resuelto { opacity: .6; }
+.dic-cabecera { display: flex; flex-wrap: wrap; gap: var(--e-8); align-items: center; }
+.dic-accion {
+  font-family: var(--fuente-sub);
+  font-size: var(--t-xs);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--bg);
+}
+.dic-accion--validar { color: #0f7a53; }
+.dic-accion--corregir { color: #8a5a00; }
+.dic-accion--reportar { color: var(--urgencia); }
+.dic-tema { font-size: var(--t-sm); }
+.dic-fecha { font-size: var(--t-xs); color: var(--texto-2); margin-left: auto; }
+.dic-firma, .dic-comentario, .dic-resolucion, .dic-deudas {
+  margin: 6px 0 0;
+  font-size: var(--t-sm);
+}
+.dic-comentario { white-space: pre-wrap; line-height: 1.5; }
+.dic-deudas { display: flex; align-items: center; gap: 6px; color: #8a5a00; font-size: var(--t-xs); }
+.dic-resolucion { color: var(--texto-2); font-style: italic; }
+.dic-fuentes { margin: 6px 0 0; padding-left: 1.1rem; font-size: var(--t-xs); color: var(--texto-2); }
+.dic-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin-top: var(--e-8);
+}
+.dic-nota {
+  flex: 1 1 220px;
+  min-width: 160px;
+  padding: 6px 9px;
+  font: inherit;
+  font-size: var(--t-sm);
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+}

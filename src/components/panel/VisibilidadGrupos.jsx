@@ -3,7 +3,28 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { useIndiceAcademia } from '../../context/ContenidoContext.jsx'
 import { contarTemasOcultos, estadoModulo, focoBaraja, totalTemas } from '../../lib/panelModelo.js'
+import { semaforoDe, tituloSemaforo } from '../../lib/estadoEditorial.js'
+import { estadosEditoriales } from '../../data/navIndice.js'
 import Icon from '../Icon.jsx'
+
+// Semáforo de avance editorial del temario oficial. Solo se pinta para el
+// superadmin: a un profesor le diría que un tema «no está listo» sin que pueda
+// hacer nada al respecto, y al alumno ya se le informa con el aviso de la propia
+// página del tema, que es donde la advertencia sirve de algo.
+function SemaforoEditorial({ temaId }) {
+  const estado = estadosEditoriales[temaId]
+  if (!estado) return null // academia con temario propio: no hay estado oficial que mostrar
+  const color = semaforoDe(estado)
+  const titulo = tituloSemaforo(estado)
+  return (
+    <span
+      className={`tv-semaforo tv-semaforo--${color}`}
+      title={titulo}
+      aria-label={titulo}
+      role="img"
+    />
+  )
+}
 
 // ============================================================
 //  Visibilidad del contenido por GRUPO (antes suelta en /temario)
@@ -36,7 +57,7 @@ import Icon from '../Icon.jsx'
 // `academiaNombre` es opcional y solo se usa para rotular la imagen exportada:
 // si no llega, se rotula con el código de la academia, que siempre existe.
 export default function VisibilidadGrupos({ academiaId, academiaNombre = '', grupos, cabecera = null }) {
-  const { grupoId: miGrupoId, puedeVerCodigos } = useAuth()
+  const { grupoId: miGrupoId, puedeVerCodigos, esSuperadmin } = useAuth()
   // Temario de LA ACADEMIA gestionada: su copia si está migrada, bundle si no.
   const { modulos: modulosTemario } = useIndiceAcademia(academiaId)
 
@@ -282,6 +303,21 @@ export default function VisibilidadGrupos({ academiaId, academiaNombre = '', gru
       )}
 
       {/* ---- Baraja de modulos: una abierta a la vez ---- */}
+      {esSuperadmin && (
+        <p className="tv-leyenda">
+          <span className="tv-leyenda-item">
+            <span className="tv-semaforo tv-semaforo--rojo" aria-hidden="true" /> Sin contenido
+          </span>
+          <span className="tv-leyenda-item">
+            <span className="tv-semaforo tv-semaforo--ambar" aria-hidden="true" /> En desarrollo
+          </span>
+          <span className="tv-leyenda-item">
+            <span className="tv-semaforo tv-semaforo--verde" aria-hidden="true" /> Listo y aprobado
+          </span>
+          <span className="tv-leyenda-nota">Avance editorial del temario oficial. Solo tú lo ves.</span>
+        </p>
+      )}
+
       <div className="tv-baraja">
         {modulosTemario.map((modulo, indice) => {
           const est = estadoModulo(modulo, ocultas)
@@ -343,6 +379,7 @@ export default function VisibilidadGrupos({ academiaId, academiaNombre = '', gru
                     const tOculto = est.porModulo || temaOcultoSolo(tema.id)
                     return (
                       <li key={tema.id} className={`tv-tema ${tOculto ? 'tv-oculto' : ''}`}>
+                        {esSuperadmin && <SemaforoEditorial temaId={tema.id} />}
                         <span className="tv-tema-num">{tema.numero}</span>
                         <Link to={`/tema/${tema.id}`} className="tv-tema-titulo">{tema.titulo}</Link>
                         {est.porModulo ? (

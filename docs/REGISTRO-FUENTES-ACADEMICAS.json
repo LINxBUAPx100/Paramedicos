@@ -1,0 +1,630 @@
+{
+  "schemaVersion": 1,
+  "fechaCorte": "2026-08-16",
+  "aviso": "Este registro orienta la investigación. No convierte una fuente en permiso para copiarla ni sustituye la revisión docente.",
+  "fuenteEstructural": {
+    "clave": "plan_rescate_2024",
+    "ruta": "C:/Users/PC/Downloads/PLAN DE ESTUDIOS PARAMÉDICO RESCATE OFICIAL.pdf",
+    "uso": "Única autoridad para módulos, unidades, temas, horas y orden. La bibliografía del PDF es global, no está distribuida por módulo."
+  },
+  "fuentes": {
+    "aha_first_aid_2024": {
+      "nombre": "2024 American Heart Association and American Red Cross Guidelines for First Aid",
+      "tipo": "guia_primaria_actual",
+      "url": "https://cpr.heart.org/en/resuscitation-science/2024-first-aid-guidelines"
+    },
+    "aha_bls_adulto_2025": {
+      "nombre": "AHA 2025 Adult Basic Life Support",
+      "tipo": "guia_primaria_actual",
+      "url": "https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/adult-basic-life-support"
+    },
+    "aha_als_adulto_2025": {
+      "nombre": "AHA 2025 Adult Advanced Life Support",
+      "tipo": "guia_primaria_actual",
+      "url": "https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/adult-advanced-life-support"
+    },
+    "aha_pbls_2025": {
+      "nombre": "AHA/AAP 2025 Pediatric Basic Life Support",
+      "tipo": "guia_primaria_actual",
+      "url": "https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/pediatric-basic-life-support"
+    },
+    "aha_pals_2025": {
+      "nombre": "AHA 2025 Pediatric Advanced Life Support",
+      "tipo": "guia_primaria_actual",
+      "url": "https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/pediatric-advanced-life-support"
+    },
+    "aha_neonatal_2025": {
+      "nombre": "AHA/AAP 2025 Neonatal Resuscitation",
+      "tipo": "guia_primaria_actual",
+      "url": "https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/neonatal-resuscitation"
+    },
+    "who_bec": {
+      "nombre": "WHO-ICRC Basic Emergency Care",
+      "tipo": "manual_publico_prehospitalario",
+      "url": "https://www.who.int/publications/i/item/9789241513081"
+    },
+    "who_prehospital_clinical_2026": {
+      "nombre": "WHO. Prehospital emergency care: pocket reference, 2026",
+      "tipo": "guia_clinica_prehospitalaria_actual",
+      "url": "https://www.who.int/publications/b/82620"
+    },
+    "who_prehospital_2025": {
+      "nombre": "WHO 2025 Prehospital emergency care: operational guidance for ambulance systems",
+      "tipo": "guia_operativa_actual",
+      "url": "https://www.who.int/publications/b/79743"
+    },
+    "who_mcm": {
+      "nombre": "WHO Mass Casualty Management",
+      "tipo": "guia_operativa_actual",
+      "url": "https://www.who.int/teams/integrated-health-services/clinical-services-and-systems/emergency-and-critical-care/mass-casualty-management"
+    },
+    "who_iitt": {
+      "nombre": "WHO/ICRC/MSF Interagency Integrated Triage Tool",
+      "tipo": "herramienta_primaria_actual",
+      "url": "https://www.who.int/tools/triage"
+    },
+    "tortora_15": {
+      "nombre": "Tortora y Derrickson. Principios de anatomía y fisiología, 15.ª ed., 2018",
+      "tipo": "manual_curricular_comercial",
+      "url": "https://www.medicapanamericana.com/es-MX-L/es-US/libros/principios-de-anatomia-y-fisiologia-15a-edicion",
+      "condicion": "Requiere copia licenciada para consultar capítulos o páginas."
+    },
+    "phtls_9": {
+      "nombre": "PHTLS 9.ª edición",
+      "tipo": "manual_curricular_comercial_historico",
+      "url": "https://drive.google.com/file/d/1jLzVf0xf3jOZcm7tO3RpiMCbY7tUQWvi/view",
+      "isbn": "978-1-284-10330-4",
+      "condicion": "Edición nombrada por el plan. La copia aportada por el usuario fue identificada y es consultable; citar capítulo y página exacta, sin copiar extensamente ni redistribuir."
+    },
+    "phtls_10": {
+      "nombre": "PHTLS 10.ª edición",
+      "tipo": "manual_curricular_comercial_actual",
+      "url": "https://www.naemt.org/education/trauma-education/phtls/phtls-courses",
+      "copiaDrive": "https://drive.google.com/file/d/1a2Q8tDeEqzHdOizmgg3NSboBW53-eJUR/view",
+      "condicion": "La copia de Drive declara traducción automática de Google: no es citable ni debe usarse para fijar terminología."
+    },
+    "aaos_anat_fisio_paramedico": {
+      "nombre": "AAOS. Anatomía y fisiología para el paramédico",
+      "tipo": "manual_comercial_prehospitalario",
+      "url": "https://drive.google.com/file/d/17b3AOCzK6AU-eX7r2ThrFSLM01JxFyla/view",
+      "condicion": "Copia aportada por el usuario. Es apoyo para Módulo 2, pero no sustituye ni debe presentarse como Tortora. Verificar página exacta."
+    },
+    "moore_7_drive": {
+      "nombre": "Moore. Anatomía con orientación clínica, 7.ª edición",
+      "tipo": "manual_comercial_anatomia",
+      "url": "https://drive.google.com/file/d/1vmSUTPhdNeQp5cX1y9NhpM3Mxyzhjmou/view",
+      "condicion": "Copia aportada por el usuario; usar para anatomía regional con página exacta."
+    },
+    "guyton_13_drive": {
+      "nombre": "Guyton y Hall. Compendio de fisiología médica, 13.ª edición, 2016",
+      "tipo": "manual_comercial_fisiologia",
+      "url": "https://drive.google.com/file/d/1l6QsQajrNZ-lCp3dvAtTtK9UUyJdiCsH/view",
+      "condicion": "Fundamento fisiológico; no gobierna algoritmos prehospitalarios."
+    },
+    "fisiologia_respiratoria_3_drive": {
+      "nombre": "Fisiología respiratoria. Lo esencial en la práctica clínica, 3.ª edición",
+      "tipo": "manual_comercial_fisiologia",
+      "url": "https://drive.google.com/file/d/1HaZkra5LrXyOvAqjLTDlr3Mg73drRRfu/view",
+      "condicion": "Apoyo fisiológico. Contrastar toda conducta clínica con la guía vigente específica."
+    },
+    "katzung_12_drive": {
+      "nombre": "Katzung. Farmacología básica y clínica, 12.ª edición",
+      "tipo": "manual_comercial_farmacologia_historico",
+      "url": "https://drive.google.com/file/d/1m9PurYton1siAwOHFrVaRjMT9f-JxxRK/view",
+      "condicion": "Edición 2012/2013. Útil para principios; no gobierna dosis, indicaciones ni concentraciones actuales."
+    },
+    "bibiano_3_drive": {
+      "nombre": "Bibiano Guillén et al. Manual de Urgencias, 3.ª edición, 2018",
+      "tipo": "manual_comercial_urgencias_secundario",
+      "url": "https://drive.google.com/file/d/1efzjl1xNKP_bUoVSTuqoM0-XGfiB-rPn/view",
+      "isbn": "978-84-16831-98-2",
+      "condicion": "Fuente hospitalaria secundaria. No es el Manual de Urgencias Jiménez y no debe trasladarse sin adaptación al ámbito prehospitalario."
+    },
+    "zubiran_7_drive": {
+      "nombre": "Manual de terapéutica médica y procedimientos de urgencias Zubirán, 7.ª edición",
+      "tipo": "manual_comercial_urgencias_secundario",
+      "url": "https://drive.google.com/file/d/1P9pme1tSpMcT8hnMaVVvee6BAuIEn21d/view",
+      "condicion": "Apoyo secundario; verificar ficha y página. No trasladar terapéutica hospitalaria directamente a ambulancia."
+    },
+    "pals_drive_por_verificar": {
+      "nombre": "PALS, copia aportada por el usuario, edición por verificar",
+      "tipo": "manual_comercial_identidad_pendiente",
+      "url": "https://drive.google.com/file/d/1uOKFCUUEXptPlpycDmITW4yVRYorUi5U/view",
+      "condicion": "No citar una recomendación sensible hasta verificar portada y edición; contrastar con AHA/AAP 2025."
+    },
+    "acls_2020_drive_por_verificar": {
+      "nombre": "ACLS Manual 2020, copia aportada por el usuario",
+      "tipo": "manual_comercial_historico_identidad_pendiente",
+      "url": "https://drive.google.com/file/d/1PabyY6IwbsJEuvWyE3qL_AuvadBaJBH_/view",
+      "condicion": "Verificar portada y edición. AHA 2025 gobierna toda recomendación sustituida."
+    },
+    "educacion_pediatrica_prehospitalaria_drive": {
+      "nombre": "Educación Pediátrica Prehospitalaria, copia aportada por el usuario",
+      "tipo": "manual_prehospitalario_identidad_pendiente",
+      "url": "https://drive.google.com/file/d/1TVMSKWs3LQybPCWufh27s_HxycR2osle/view",
+      "condicion": "Fuente candidata de apoyo; verificar autor, edición y página antes de citar datos sensibles."
+    },
+    "amls_4": {
+      "nombre": "NAEMT Advanced Medical Life Support, 4.ª edición",
+      "tipo": "manual_curricular_comercial_actual",
+      "url": "https://www.naemt.org/education/medical-education/amls"
+    },
+    "acls_2020": {
+      "nombre": "AHA ACLS 2020",
+      "tipo": "manual_curricular_comercial_historico",
+      "condicion": "Conservar como correspondencia del plan; una recomendación sustituida se actualiza con AHA 2025."
+    },
+    "empact_2012": {
+      "nombre": "Emergency Medical Patients: Assessment, Care, and Transport, 1.ª ed., 2012",
+      "tipo": "manual_secundario_historico",
+      "url": "https://www.pearson.com/en-us/subject-catalog/p/emergency-medical-patients-assessment-care-and-transport/P200000000933?view=educator",
+      "condicion": "No usar para dosis, algoritmos o recomendaciones actuales."
+    },
+    "pals_edicion_aprobada": {
+      "nombre": "PALS, edición que apruebe la academia",
+      "tipo": "manual_curricular_comercial",
+      "condicion": "La edición no está indicada en el PDF; contrastar con AHA 2025."
+    },
+    "nals_no_resuelto": {
+      "nombre": "NALS citado por el PDF",
+      "tipo": "referencia_ambigua",
+      "condicion": "No citar hasta identificar organización, título, edición e ISBN."
+    },
+    "gems_3": {
+      "nombre": "NAEMT Geriatric Education for EMS, 3.ª edición",
+      "tipo": "manual_prehospitalario_actual",
+      "url": "https://naemt.org/education/medical-education/gems"
+    },
+    "evos": {
+      "nombre": "NAEMT EMS Vehicle Operator Safety",
+      "tipo": "programa_operativo_actual",
+      "url": "https://www.naemt.org/education/operational-education/ems-vehicle-operator-safety"
+    },
+    "nom_034": {
+      "nombre": "NOM-034-SSA3-2013, atención médica prehospitalaria",
+      "tipo": "norma_mexicana",
+      "url": "https://www.dof.gob.mx/normasOficiales.php?codp=5473&view=si",
+      "condicion": "Texto vigente al corte. El Programa Nacional de Infraestructura de la Calidad 2026 mantiene su modificación como proyecto; no presentar ese proyecto como reforma publicada. Verificar el DOF antes de cada actualización jurídica."
+    },
+    "nom_004": {
+      "nombre": "NOM-004-SSA3-2012, expediente clínico",
+      "tipo": "norma_mexicana",
+      "url": "https://www.dof.gob.mx/normasOficiales/4909/SALUD/SALUD.html"
+    },
+    "ley_general_salud": {
+      "nombre": "Ley General de Salud, texto vigente",
+      "tipo": "ley_mexicana",
+      "url": "https://www.diputados.gob.mx/LeyesBiblio/pdf/LGS.pdf"
+    },
+    "reglamento_atencion_medica": {
+      "nombre": "Reglamento de la Ley General de Salud en Materia de Prestación de Servicios de Atención Médica, texto vigente; artículo 72",
+      "tipo": "reglamento_mexicano",
+      "url": "https://www.diputados.gob.mx/LeyesBiblio/regley/Reg_LGS_MPSAM_170718.pdf",
+      "condicion": "El artículo 72 define urgencia; no atribuirle por sí solo obligaciones prehospitalarias que correspondan a otros artículos o a la NOM-034."
+    },
+    "ley_datos_particulares_2025": {
+      "nombre": "Ley Federal de Protección de Datos Personales en Posesión de los Particulares, 2025",
+      "tipo": "ley_mexicana",
+      "url": "https://www.dof.gob.mx/nota_detalle.php?codigo=5752569&fecha=20/03/2025"
+    },
+    "cnpp": {
+      "nombre": "Código Nacional de Procedimientos Penales, texto vigente",
+      "tipo": "ley_mexicana",
+      "url": "https://www.diputados.gob.mx/LeyesBiblio/pdf/CNPP.pdf"
+    },
+    "cofepris_ipp": {
+      "nombre": "COFEPRIS, guía para Información para Prescribir y registros sanitarios",
+      "tipo": "fuente_regulatoria_farmacos",
+      "url": "https://www.gob.mx/cofepris/documentos/guia-para-estructurar-y-redactar-la-informacion-para-prescribir-e-instructivo"
+    },
+    "gina_2026": {
+      "nombre": "GINA 2026 Strategy Report",
+      "tipo": "guia_primaria_actual",
+      "url": "https://ginasthma.org/reports/"
+    },
+    "gold_2026": {
+      "nombre": "GOLD 2026 Report and Pocket Guide",
+      "tipo": "guia_primaria_actual",
+      "url": "https://goldcopd.org/2026-gold-report-and-pocket-guide/"
+    },
+    "aha_hf_2022": {
+      "nombre": "2022 AHA/ACC/HFSA Guideline for the Management of Heart Failure",
+      "tipo": "guia_primaria_vigente",
+      "url": "https://professional.heart.org/en/guidelines-statements/2022-ahaacchfsa-guideline-for-the-management-of-heart-failure-a-report-of-thecir0000000000001063"
+    },
+    "aha_acs_2025": {
+      "nombre": "2025 ACC/AHA/ACEP/NAEMSP/SCAI Guideline for Acute Coronary Syndromes",
+      "tipo": "guia_primaria_actual",
+      "url": "https://professional.heart.org/en/guidelines-statements/2025-accahaacepnaemspscai-guideline-for-the-management-of-patients-with-acutecir0000000000001309"
+    },
+    "aha_hbp_2025": {
+      "nombre": "2025 AHA/ACC Multisociety Guideline for High Blood Pressure in Adults",
+      "tipo": "guia_primaria_actual",
+      "url": "https://professional.heart.org/en/guidelines-statements/2025-ahaaccaanpaapaabcaccpacpmagsamaaspcnmapcnasgim-guideline-for-thehyp0000000000000249",
+      "condicion": "Distinguir hipertensión crónica de presión severamente elevada con daño agudo de órgano diana; no enseñar descenso prehospitalario indiscriminado."
+    },
+    "bts_pleural_2023": {
+      "nombre": "British Thoracic Society Guideline for Pleural Disease, 2023",
+      "tipo": "guia_primaria_vigente",
+      "url": "https://www.brit-thoracic.org.uk/clinical-resources/guidelines/pleural-disease/"
+    },
+    "esc_tep_2019": {
+      "nombre": "2019 ESC Guidelines for the diagnosis and management of acute pulmonary embolism",
+      "tipo": "guia_primaria_vigente",
+      "url": "https://www.escardio.org/guidelines/clinical-practice-guidelines/all-esc-practice-guidelines/acute-pulmonary-embolism/",
+      "condicion": "Continúa como guía específica publicada en el catálogo oficial al corte; comprobar si aparece una sustitución antes de redactar."
+    },
+    "ats_idsa_cap_2019": {
+      "nombre": "ATS/IDSA Clinical Practice Guideline for Community-Acquired Pneumonia in Adults, 2019",
+      "tipo": "guia_primaria_vigente",
+      "url": "https://www.idsociety.org/practice-guideline/community-acquired-pneumonia-cap-in-adults"
+    },
+    "ada_2026": {
+      "nombre": "ADA Standards of Care in Diabetes 2026",
+      "tipo": "guia_primaria_actual",
+      "url": "https://diabetesjournals.org/care/article/49/Supplement_1/S6/163930/Summary-of-Revisions-Standards-of-Care-in-Diabetes"
+    },
+    "ada_crisis_hiperglucemicas_2024": {
+      "nombre": "ADA/EASD/JBDS/AACE/DTS. Hyperglycemic Crises in Adults With Diabetes: A Consensus Report, 2024",
+      "tipo": "consenso_primario_actual",
+      "url": "https://diabetesjournals.org/care/article/47/8/1257/156808/Hyperglycemic-Crises-in-Adults-With-Diabetes-A"
+    },
+    "aha_stroke_2026": {
+      "nombre": "AHA/ASA 2026 Acute Ischemic Stroke Guideline",
+      "tipo": "guia_primaria_actual",
+      "url": "https://professional.heart.org/en/guidelines-statements/2026-guideline-for-the-early-management-of-patients-with-acute-ischemic-strokestr0000000000000513"
+    },
+    "aha_ich_2022": {
+      "nombre": "AHA/ASA 2022 Guideline for Spontaneous Intracerebral Hemorrhage",
+      "tipo": "guia_primaria_vigente",
+      "url": "https://professional.heart.org/en/guidelines-statements/2022-guideline-for-the-management-of-patients-with-spontaneous-intracerebralstr0000000000000407"
+    },
+    "acep_cefalea_2019": {
+      "nombre": "ACEP Clinical Policy: Acute Headache, 2019",
+      "tipo": "politica_clinica_primaria_vigente",
+      "url": "https://www.acep.org/siteassets/sites/acep/media/clinical-policies/cp-headache.pdf"
+    },
+    "aha_sincope_2017": {
+      "nombre": "2017 ACC/AHA/HRS Guideline for Syncope",
+      "tipo": "guia_primaria_vigente",
+      "url": "https://professional.heart.org/en/science-news/2017-acc-aha-hrs-guideline-for-the-evaluation-and-management-of-patients-with-syncope"
+    },
+    "who_mhgap_2023": {
+      "nombre": "WHO mhGAP Guideline for Mental, Neurological and Substance Use Disorders, 3rd edition, 2023",
+      "tipo": "guia_primaria_actual",
+      "url": "https://www.who.int/publications/i/item/9789240084278"
+    },
+    "aes_status_2016": {
+      "nombre": "American Epilepsy Society. Treatment of Convulsive Status Epilepticus in Children and Adults, 2016",
+      "tipo": "guia_primaria_vigente",
+      "url": "https://aesnet.org/clinical-care/clinical-guidance",
+      "condicion": "Usar para definición y principio terapéutico; dosis y vías dependen de guía farmacológica vigente y protocolo local."
+    },
+    "kdigo_2024": {
+      "nombre": "KDIGO 2024 CKD Guideline",
+      "tipo": "guia_primaria_actual",
+      "url": "https://kdigo.org/guidelines/ckd-evaluation-and-management/"
+    },
+    "idsa_cuti_2025": {
+      "nombre": "IDSA 2025 Guideline Update on Complicated Urinary Tract Infections",
+      "tipo": "guia_primaria_actual",
+      "url": "https://www.idsociety.org/practice-guideline/complicated-urinary-tract-infections/"
+    },
+    "eau_urolitiasis_2026": {
+      "nombre": "EAU Guidelines on Urolithiasis, 2026",
+      "tipo": "guia_primaria_actual",
+      "url": "https://uroweb.org/guidelines/urolithiasis/chapter/guidelines"
+    },
+    "ukka_hiperpotasemia_2023": {
+      "nombre": "UK Kidney Association Clinical Practice Guideline: Management of Hyperkalaemia in Adults, 2023",
+      "tipo": "guia_primaria_vigente",
+      "url": "https://www.ukkidney.org/health-professionals/guidelines/treatment-acute-hyperkalaemia-adults-0"
+    },
+    "nice_aki_2024": {
+      "nombre": "NICE NG148 Acute Kidney Injury: Prevention, Detection and Management, updated 2024",
+      "tipo": "guia_primaria_vigente",
+      "url": "https://www.nice.org.uk/guidance/ng148/chapter/Recommendations",
+      "condicion": "KDIGO 2027 AKI permanece como borrador al corte y no debe citarse como guía publicada."
+    },
+    "who_obstetricia": {
+      "nombre": "WHO Managing complications in pregnancy and childbirth, 2nd edition",
+      "tipo": "manual_primario",
+      "url": "https://www.who.int/publications/i/item/9789241565493"
+    },
+    "who_maternal_2025": {
+      "nombre": "WHO Recommendations on Maternal Health, 2nd edition, 2025",
+      "tipo": "guia_primaria_actual",
+      "url": "https://www.who.int/westernpacific/publications/i/item/9789240080591"
+    },
+    "who_intraparto_2018": {
+      "nombre": "WHO Recommendations: Intrapartum Care for a Positive Childbirth Experience, 2018",
+      "tipo": "guia_primaria_vigente",
+      "url": "https://www.who.int/publications/i/item/WHO-RHR-18.12"
+    },
+    "who_aborto_2022": {
+      "nombre": "WHO Abortion Care Guideline, 2022",
+      "tipo": "guia_primaria_vigente",
+      "url": "https://www.who.int/news/item/09-03-2022-access-to-safe-abortion-critical-for-health-of-women-and-girls",
+      "condicion": "Separar atención clínica de requisitos legales locales; no enseñar esquemas farmacológicos prehospitalarios sin protocolo."
+    },
+    "nice_ectopico_2026": {
+      "nombre": "NICE NG126 Ectopic Pregnancy and Miscarriage, updated June 2026",
+      "tipo": "guia_primaria_actual",
+      "url": "https://www.nice.org.uk/guidance/ng126"
+    },
+    "acog_torsion_2019": {
+      "nombre": "ACOG Committee Opinion 783: Adnexal Torsion in Adolescents, 2019",
+      "tipo": "documento_primario_vigente",
+      "url": "https://www.acog.org/clinical/clinical-guidance/committee-opinion/articles/2019/08/adnexal-torsion-in-adolescents"
+    },
+    "who_hpp_2025": {
+      "nombre": "WHO 2025 recommendations on postpartum haemorrhage",
+      "tipo": "guia_primaria_actual",
+      "url": "https://www.who.int/publications/i/item/9789240115637"
+    },
+    "aha_toxicologia_2025": {
+      "nombre": "AHA 2025 Adult and Pediatric Special Circumstances of Resuscitation: Poisoning and Anaphylaxis",
+      "tipo": "guia_primaria_actual",
+      "url": "https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/adult-and-pediatric-special-circumstances-of-resuscitation"
+    },
+    "who_alcohol_2023": {
+      "nombre": "WHO mhGAP Evidence Centre: Management of Alcohol Withdrawal",
+      "tipo": "guia_primaria_vigente",
+      "url": "https://www.who.int/teams/mental-health-and-substance-use/treatment-care/mental-health-gap-action-programme/evidence-centre/alcohol-use-disorders"
+    },
+    "wao_anafilaxia_2020": {
+      "nombre": "World Allergy Organization Anaphylaxis Guidance 2020",
+      "tipo": "guia_primaria_vigente",
+      "url": "https://www.worldallergyorganizationjournal.org/article/S1939-4551(20)30375-6/fulltext"
+    },
+    "acs_trauma": {
+      "nombre": "American College of Surgeons Trauma Quality Programs Best Practices Guidelines",
+      "tipo": "guias_primarias_actuales",
+      "url": "https://www.facs.org/quality-programs/trauma/quality/best-practices-guidelines/"
+    },
+    "acs_field_triage_2021": {
+      "nombre": "ACS. Guidelines for the Field Triage of Injured Patients, 2021",
+      "tipo": "guia_primaria_actual",
+      "url": "https://www.facs.org/quality-programs/trauma/systems/field-triage-guidelines/",
+      "condicion": "La revisión es de 2021 y fue publicada en 2022. Usar el mecanismo para estimar riesgo y destino, nunca como diagnóstico de una lesión concreta."
+    },
+    "btf_tce": {
+      "nombre": "Brain Trauma Foundation Guidelines for Severe TBI, 4th edition",
+      "tipo": "guia_primaria",
+      "url": "https://braintrauma.org/coma/guidelines/severe-tbi"
+    },
+    "btf_tce_prehospital_3": {
+      "nombre": "Brain Trauma Foundation. Guidelines for Prehospital Management of Traumatic Brain Injury, 3rd edition",
+      "tipo": "guia_primaria_prehospitalaria_actual",
+      "url": "https://braintrauma.org/coma/guidelines/pre-hospital"
+    },
+    "acs_tce_2024": {
+      "nombre": "American College of Surgeons. Best Practices Guidelines: The Management of Traumatic Brain Injury, 2024",
+      "tipo": "guia_primaria_actual",
+      "url": "https://www.facs.org/media/vgfgjpfk/best-practices-guidelines-traumatic-brain-injury.pdf"
+    },
+    "aba_quemaduras_2024": {
+      "nombre": "American Burn Association Clinical Practice Guideline on Burn Shock Resuscitation, 2024",
+      "tipo": "guia_primaria_actual",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38051821/"
+    },
+    "ssa_ponzonas_2024": {
+      "nombre": "Secretaría de Salud, Manual de Procedimientos Estandarizados para la Vigilancia Epidemiológica de Intoxicaciones por Animales Ponzoñosos 2024",
+      "tipo": "manual_oficial_mexicano",
+      "url": "https://epidemiologia.salud.gob.mx/gobmx/salud/documentos/manuales/26_Manual_de_Procedimientos_Ponzona_2024.pdf",
+      "condicion": "Es una fuente epidemiológica; no sustituye el protocolo terapéutico o la IPP del antiveneno."
+    },
+    "protocolo_local": {
+      "nombre": "Protocolos, formulario, concentraciones, equipos y dirección médica de R.E.S.C.A.T.E.",
+      "tipo": "fuente_local_obligatoria",
+      "condicion": "Debe ser entregada y aprobada por la academia. No puede inventarse."
+    }
+  },
+  "asignacionPorUnidad": {
+    "m1-primeros-auxilios-basicos": {
+      "primarias": ["aha_first_aid_2024", "aha_bls_adulto_2025"],
+      "apoyo": ["who_bec", "phtls_9"]
+    },
+    "m1-primeros-auxilios-intermedios": {
+      "primarias": ["who_bec", "aha_pbls_2025", "phtls_9"],
+      "apoyo": ["aha_first_aid_2024"]
+    },
+    "m1-introduccion-smu": {
+      "primarias": ["who_prehospital_2025", "nom_034", "nom_004", "ley_general_salud", "ley_datos_particulares_2025", "cnpp"],
+      "requiere": ["protocolo_local"]
+    },
+    "m2-anat-fisio-esencial": {
+      "primarias": ["tortora_15"],
+      "apoyoDrive": ["aaos_anat_fisio_paramedico", "guyton_13_drive", "moore_7_drive"],
+      "nota": "Tortora no está en la carpeta aportada. No atribuirle contenido de los manuales de apoyo."
+    },
+    "m2-anat-fisio-intermedia": {
+      "primarias": ["tortora_15"],
+      "apoyoDrive": ["aaos_anat_fisio_paramedico", "guyton_13_drive", "moore_7_drive"]
+    },
+    "m2-anatomia-opcional": {
+      "primarias": ["tortora_15"],
+      "apoyoDrive": ["aaos_anat_fisio_paramedico", "moore_7_drive"]
+    },
+    "m3-evaluacion-primaria": {
+      "primarias": ["who_bec", "phtls_9"],
+      "actualizacion": ["phtls_10"]
+    },
+    "m3-evaluacion-secundaria": {
+      "primarias": ["who_bec", "phtls_9"],
+      "actualizacion": ["phtls_10"]
+    },
+    "m3-manejo-via-aerea": {
+      "primarias": ["aha_bls_adulto_2025", "aha_als_adulto_2025", "phtls_9"],
+      "requiere": ["nom_034", "protocolo_local"],
+      "bloqueos": ["RSI y cricotiroidotomía hasta definir alcance y dirección médica", "Obturador esofágico: solo contexto histórico"]
+    },
+    "m3-via-intravenosa": {
+      "primarias": ["who_bec", "cofepris_ipp"],
+      "requiere": ["nom_034", "protocolo_local"],
+      "nota": "Mostrar acceso intraóseo/osteoclisis; conservar osteólisis solo como errata documental."
+    },
+    "m3-monitor-desfibrilador": {
+      "primarias": ["aha_bls_adulto_2025", "aha_als_adulto_2025"],
+      "requiere": ["protocolo_local"],
+      "nota": "Añadir manual del fabricante del equipo real."
+    },
+    "m4-epidemiologia": {
+      "primarias": ["who_bec", "reglamento_atencion_medica", "nom_034"],
+      "requiere": ["protocolo_local"],
+      "nota": "Agregar fuente oficial mexicana para cualquier dato epidemiológico cuantitativo."
+    },
+    "m4-farmacologia": {
+      "primarias": ["cofepris_ipp", "nom_034"],
+      "apoyo": ["amls_4", "katzung_12_drive"],
+      "requiere": ["protocolo_local"],
+      "bloqueos": ["Vademécum no identificado", "Dosis e infusiones sin formulario y concentraciones locales"]
+    },
+    "m4-urgencias-respiratorias": {
+      "primarias": ["who_prehospital_clinical_2026", "who_bec", "gina_2026", "gold_2026", "aha_hf_2022", "bts_pleural_2023", "esc_tep_2019", "ats_idsa_cap_2019"],
+      "apoyo": ["amls_4", "fisiologia_respiratoria_3_drive", "bibiano_3_drive", "zubiran_7_drive"],
+      "requiere": ["nom_034", "cofepris_ipp", "protocolo_local"],
+      "nota": "Asignación específica: GINA para asma; GOLD para EPOC; AHA/ACC/HFSA para edema pulmonar cardiogénico; BTS para neumotórax espontáneo; ESC para TEP; ATS/IDSA para neumonía adulta. WHO 2026/BEC gobiernan evaluación y estabilización prehospitalaria. No usar una guía de una entidad para otra."
+    },
+    "m4-urgencias-gastrointestinales": {
+      "primarias": ["who_bec", "amls_4"],
+      "apoyo": ["bibiano_3_drive", "zubiran_7_drive"],
+      "requiere": ["protocolo_local"],
+      "nota": "La academia debe identificar el Manual de Urgencias Jiménez antes de citarlo."
+    },
+    "m4-urgencias-cardiologicas": {
+      "primarias": ["aha_bls_adulto_2025", "aha_als_adulto_2025", "aha_acs_2025", "aha_hf_2022", "aha_hbp_2025"],
+      "historicas": ["acls_2020", "acls_2020_drive_por_verificar"],
+      "apoyo": ["amls_4", "bibiano_3_drive", "zubiran_7_drive"],
+      "requiere": ["protocolo_local"]
+    },
+    "m4-urgencias-metabolicas": {
+      "primarias": ["ada_2026", "ada_crisis_hiperglucemicas_2024"],
+      "apoyo": ["amls_4", "guyton_13_drive"],
+      "requiere": ["protocolo_local"]
+    },
+    "m4-urgencias-urinarias": {
+      "primarias": ["idsa_cuti_2025", "eau_urolitiasis_2026", "ukka_hiperpotasemia_2023", "nice_aki_2024", "kdigo_2024"],
+      "apoyo": ["amls_4", "guyton_13_drive"],
+      "requiere": ["protocolo_local"]
+    },
+    "m4-urgencias-sistema-nervioso": {
+      "primarias": ["aha_stroke_2026", "aha_ich_2022", "acep_cefalea_2019", "aha_sincope_2017", "who_mhgap_2023", "aes_status_2016"],
+      "apoyo": ["amls_4"],
+      "requiere": ["protocolo_local"]
+    },
+    "m4-urgencias-gineco-obstetricas": {
+      "primarias": ["who_maternal_2025", "who_obstetricia", "who_intraparto_2018", "who_hpp_2025", "who_aborto_2022", "nice_ectopico_2026", "acog_torsion_2019", "aha_neonatal_2025"],
+      "requiere": ["protocolo_local"]
+    },
+    "m4-urgencias-toxicologicas": {
+      "primarias": ["aha_toxicologia_2025", "who_alcohol_2023", "wao_anafilaxia_2020", "ssa_ponzonas_2024", "cofepris_ipp", "aha_first_aid_2024"],
+      "apoyo": ["amls_4"],
+      "requiere": ["protocolo_local"],
+      "nota": "Agregar centro toxicológico/protocolo de antivenenos; no derivar dosis del manual epidemiológico."
+    },
+    "m5-cinematica-trauma": {
+      "primarias": ["phtls_9"],
+      "actualizacion": ["acs_field_triage_2021", "acs_trauma"],
+      "noCitable": ["phtls_10"]
+    },
+    "m5-hemorragia-shock": {
+      "primarias": ["phtls_9", "aha_first_aid_2024"],
+      "actualizacion": ["acs_trauma", "who_bec"],
+      "noCitable": ["phtls_10"],
+      "requiere": ["protocolo_local"]
+    },
+    "m5-trauma-torax": {
+      "primarias": ["phtls_9", "aha_first_aid_2024", "who_bec", "acs_trauma"],
+      "noCitable": ["phtls_10"],
+      "requiere": ["protocolo_local"]
+    },
+    "m5-trauma-abdomen": {
+      "primarias": ["phtls_9", "acs_trauma"],
+      "apoyo": ["who_bec"],
+      "noCitable": ["phtls_10"]
+    },
+    "m5-trauma-craneo-columna": {
+      "primarias": ["phtls_9", "btf_tce_prehospital_3", "acs_tce_2024", "btf_tce", "acs_trauma"],
+      "noCitable": ["phtls_10"],
+      "requiere": ["protocolo_local"]
+    },
+    "m5-trauma-ojo-cara-cuello": {
+      "primarias": ["phtls_9", "acs_trauma"],
+      "actualizacion": ["phtls_10"]
+    },
+    "m5-trauma-musculoesqueletico": {
+      "primarias": ["phtls_9", "acs_trauma"],
+      "actualizacion": ["phtls_10"],
+      "requiere": ["protocolo_local"]
+    },
+    "m5-lesiones-ambientales": {
+      "primarias": ["aha_first_aid_2024", "phtls_9"],
+      "actualizacion": ["phtls_10"]
+    },
+    "m5-quemaduras": {
+      "primarias": ["phtls_9", "aba_quemaduras_2024"],
+      "actualizacion": ["phtls_10"],
+      "requiere": ["protocolo_local"]
+    },
+    "m6-introduccion-pediatria": {
+      "primarias": ["aha_pals_2025", "pals_edicion_aprobada", "who_bec"]
+    },
+    "m6-situaciones-especiales": {
+      "primarias": ["aha_pals_2025", "ley_general_salud"],
+      "requiere": ["protocolo_local"]
+    },
+    "m6-soporte-vital-pediatrico": {
+      "primarias": ["aha_pbls_2025", "aha_pals_2025", "aha_neonatal_2025"],
+      "historicas": ["pals_edicion_aprobada"],
+      "bloqueos": ["NALS no identificado"]
+    },
+    "m6-emergencias-pediatria": {
+      "primarias": ["aha_pals_2025", "aha_neonatal_2025", "who_bec"],
+      "apoyo": ["pals_edicion_aprobada", "pals_drive_por_verificar", "educacion_pediatrica_prehospitalaria_drive"],
+      "requiere": ["protocolo_local"],
+      "nota": "Revisar la ubicación de sufrimiento fetal agudo con la academia."
+    },
+    "m6-trauma-pediatrico": {
+      "primarias": ["phtls_9", "aha_pbls_2025", "aha_pals_2025"],
+      "actualizacion": ["phtls_10"],
+      "requiere": ["protocolo_local"]
+    },
+    "m6-introduccion-geriatria": {
+      "primarias": ["gems_3"],
+      "apoyo": ["amls_4"],
+      "historicas": ["empact_2012"]
+    },
+    "m6-manejo-geriatrico": {
+      "primarias": ["gems_3", "acs_trauma"],
+      "apoyo": ["amls_4"],
+      "requiere": ["protocolo_local"]
+    },
+    "m7-operaciones-ambulancias": {
+      "estado": "bloqueado_por_decision",
+      "candidatas": ["nom_034", "who_prehospital_2025", "evos", "protocolo_local"]
+    },
+    "m7-acceso-extraccion": {
+      "estado": "bloqueado_por_decision",
+      "candidatas": ["phtls_9", "phtls_10", "protocolo_local"],
+      "pregunta": "¿Acceso a escena, acceso al paciente, extricación vehicular o acceso vascular?"
+    },
+    "m7-operaciones-especiales": {
+      "estado": "bloqueado_por_decision",
+      "candidatas": ["who_prehospital_2025", "protocolo_local"],
+      "pregunta": "¿Qué operaciones especiales forman parte de la competencia oficial?"
+    },
+    "m7-triage": {
+      "estado": "bloqueado_por_decision",
+      "candidatas": ["who_mcm", "who_iitt", "who_prehospital_2025", "protocolo_local"],
+      "pregunta": "¿Qué sistema de triage y comando aprueba la academia para el ámbito prehospitalario?"
+    }
+  },
+  "referenciasNoResueltas": [
+    "Manual de Urgencias Jiménez: confirmar autor, título, edición e ISBN.",
+    "AMIR: confirmar título y edición.",
+    "Vademécum farmacología: confirmar autor/editorial/edición o reemplazar por IPP COFEPRIS y formulario local.",
+    "NALS: confirmar organización, título, edición e ISBN.",
+    "Alcance profesional y protocolos locales de R.E.S.C.A.T.E."
+  ]
+}

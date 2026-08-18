@@ -1,5 +1,5 @@
 import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useContenido, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
 import { getRecursos } from '../data/recursosDescarga.js'
 import { imagenesDeTema } from '../data/imagenes.js'
@@ -13,6 +13,12 @@ import { ResumenTema, ObjetivosTema, ConceptosTema } from '../components/Bloques
 import Icon from '../components/Icon.jsx'
 import Recursos from '../components/Recursos.jsx'
 import Actividades from '../components/Actividades.jsx'
+import AvisoEditorial, { CuerpoSinContenido } from '../components/AvisoEditorial.jsx'
+import FichaEvaluacion from '../components/FichaEvaluacion.jsx'
+import RevisionDocente from '../components/RevisionDocente.jsx'
+import { estadoEditorialDe, muestraContenido, esNodoDeEvaluacion } from '../lib/estadoEditorial.js'
+import { bancoDeExamen, temasEsperandoValidacion } from '../lib/bancoExamen.js'
+import { tituloVisibleDe } from '../data/contenido/titulosVisibles.js'
 import NotFound from './NotFound.jsx'
 
 export default function TemaPage() {
@@ -70,6 +76,19 @@ export default function TemaPage() {
   // ¿Es el ÚLTIMO tema de su módulo? Al terminarlo, el "Siguiente" lleva
   // directo al EXAMEN del módulo (no al primer tema del módulo que sigue).
   const ultimoDeModulo = !vecinos.siguiente || vecinos.siguiente.moduloId !== tema.moduloId
+  // Estado EDITORIAL (de dónde salió el material y quién respondió por él); no
+  // confundir con la visibilidad por grupo que se resolvió arriba.
+  const estadoEd = estadoEditorialDe(tema)
+  const esEvaluacion = esNodoDeEvaluacion(tema)
+  const hayContenido = muestraContenido(estadoEd) && !esEvaluacion
+  // Temas que entran en este examen. La ficha muestra TODO el alcance —el
+  // alumno tiene derecho a saber qué le van a preguntar— pero el banco solo
+  // cuenta los temas avalados, que es la regla real del examen.
+  const temasDelAlcance = (tema.alcanceExamen?.temas || [])
+    .map((id) => contenido.getTema(id))
+    .filter((t) => t && temaVisible(t.id))
+  const preguntasDisponibles = bancoDeExamen(temasDelAlcance, { temaVisible }).length
+  const pendientesDeValidar = temasEsperandoValidacion(temasDelAlcance, { temaVisible }).length
 
   return (
     <article className="tema-page" style={{ '--modulo-color': tema.moduloColor }}>
@@ -79,20 +98,39 @@ export default function TemaPage() {
         {tema.numero}
       </nav>
 
-      <ReportarProblema tema={tema} />
+      <RevisionDocente tema={tema} />
 
       <header className="tema-header">
         <span className="tema-header-ico">{tema.icono}</span>
         <div className="tema-header-info">
           <span className="tema-header-num">Tema {tema.numero}</span>
-          <h1>{tema.titulo}</h1>
+          <h1>{tituloVisibleDe(tema)}</h1>
+          {tema.tituloVisible && tema.tituloOficial && (
+            <p className="tema-header-oficial">
+              Título en el plan oficial: «{tema.tituloOficial}»
+            </p>
+          )}
           <div className="tema-header-meta">
-            <span><Icon name="reloj" size={15} /> {tema.duracion}</span>
+            {tema.duracion && <span><Icon name="reloj" size={15} /> {tema.duracion}</span>}
             <span><Icon name="pregunta" size={15} /> {tema.quiz.length} preguntas</span>
             <span><Icon name="flashcards" size={15} /> {tema.flashcards.length} flashcards</span>
           </div>
         </div>
       </header>
+
+      <AvisoEditorial estado={estadoEd} revision={tema.revision} />
+      {!esEvaluacion && <CuerpoSinContenido estado={estadoEd} revision={tema.revision} />}
+
+      {/* Un nodo de examen o de práctica no es una lección: se presenta como lo
+          que es, con su alcance y sus reglas. */}
+      {esEvaluacion && (
+        <FichaEvaluacion
+          tema={tema}
+          temasDelAlcance={temasDelAlcance}
+          preguntasDisponibles={preguntasDisponibles}
+          pendientesDeValidar={pendientesDeValidar}
+        />
+      )}
 
       <ResumenTema resumen={tema.resumen} />
       <ObjetivosTema objetivos={tema.objetivos} />
@@ -154,20 +192,28 @@ export default function TemaPage() {
         preguntas={tema.actividades?.preguntas || []}
       />
 
-      <div className="tema-acciones">
-        <button
-          className={`btn ${leido ? 'btn--exito' : 'btn--suave'}`}
-          onClick={() => marcarLeido(temaId, !leido)}
-        >
-          {leido ? 'Marcado como leído' : 'Marcar como leído'}
-        </button>
-        <Link to={`/tema/${temaId}/quiz`} className="btn btn--primario">
-          <Icon name="matraz" size={17} /> Hacer el quiz de este tema
-        </Link>
-        <Link to={`/flashcards/${temaId}`} className="btn btn--suave">
-          <Icon name="flashcards" size={17} /> Repasar flashcards
-        </Link>
-      </div>
+      {/* Sin material no hay nada que marcar como leído ni que evaluar: ofrecer
+          un quiz de cero preguntas es prometer un estudio que no existe. */}
+      {hayContenido && (
+        <div className="tema-acciones">
+          <button
+            className={`btn ${leido ? 'btn--exito' : 'btn--suave'}`}
+            onClick={() => marcarLeido(temaId, !leido)}
+          >
+            {leido ? 'Marcado como leído' : 'Marcar como leído'}
+          </button>
+          {tema.quiz.length > 0 && (
+            <Link to={`/tema/${temaId}/quiz`} className="btn btn--primario">
+              <Icon name="matraz" size={17} /> Hacer el quiz de este tema
+            </Link>
+          )}
+          {tema.flashcards.length > 0 && (
+            <Link to={`/flashcards/${temaId}`} className="btn btn--suave">
+              <Icon name="flashcards" size={17} /> Repasar flashcards
+            </Link>
+          )}
+        </div>
+      )}
 
       <nav className="tema-nav">
         {vecinos.anterior ? (
@@ -203,70 +249,3 @@ export default function TemaPage() {
   )
 }
 
-// Botón "Reportar un problema" del tema: guarda el reporte en Firestore para
-// que el super-administrador lo revise en su dashboard (/admin → Problemas).
-function ReportarProblema({ tema }) {
-  const { user, perfil, academiaId } = useAuth()
-  const [abierto, setAbierto] = useState(false)
-  const [mensaje, setMensaje] = useState('')
-  const [estado, setEstado] = useState('') // '' | 'enviando' | 'ok' | 'error'
-
-  if (!user) return null // sin sesión no se puede firmar el reporte
-
-  const enviar = async (e) => {
-    e.preventDefault()
-    setEstado('enviando')
-    try {
-      const { crearReporte } = await import('../lib/firebase/reportes.js')
-      await crearReporte({
-        uid: user.uid,
-        nombre: perfil?.nombre || user.displayName || '',
-        email: user.email || '',
-        academiaId,
-        grupoId: perfil?.grupoId || null,
-        temaId: tema.id,
-        temaTitulo: `${tema.numero} · ${tema.titulo}`,
-        mensaje,
-      })
-      setEstado('ok')
-      setMensaje('')
-      setTimeout(() => { setAbierto(false); setEstado('') }, 2600)
-    } catch {
-      setEstado('error')
-    }
-  }
-
-  return (
-    <div className="tema-reporte">
-      <button
-        className="tema-reporte-btn"
-        onClick={() => { setAbierto((v) => !v); setEstado('') }}
-        aria-expanded={abierto}
-      >
-        <Icon name="alerta" size={15} /> Reportar un problema
-      </button>
-      {abierto && (
-        <form className="tema-reporte-form" onSubmit={enviar}>
-          <textarea
-            value={mensaje}
-            onChange={(e) => setMensaje(e.target.value)}
-            placeholder="¿Qué está mal en este tema? (error de contenido, imagen rota, falta algo…)"
-            rows={3}
-            maxLength={1000}
-            required
-          />
-          <div className="tema-reporte-acciones">
-            <button type="submit" className="btn btn--primario" disabled={estado === 'enviando'}>
-              {estado === 'enviando' ? 'Enviando…' : 'Enviar reporte'}
-            </button>
-            <button type="button" className="btn btn--suave" onClick={() => setAbierto(false)}>
-              Cancelar
-            </button>
-          </div>
-          {estado === 'ok' && <p className="cuenta-ok" role="status">Reporte enviado. Gracias por avisar.</p>}
-          {estado === 'error' && <p className="cuenta-error" role="alert">No se pudo enviar (revisa tu conexión).</p>}
-        </form>
-      )}
-    </div>
-  )
-}

@@ -12,3 +12,8 @@ yarn-error.log*
 
 # Artefacto reproducible de la plantilla oficial (se regenera con gen:plantilla)
 scripts/plantilla-oficial.json
+
+# Material de trabajo: renders de PDF y volcados intermedios. Son artefactos
+# temporales y, en el caso del plan oficial, material de terceros: no se
+# publican en un repositorio que sirve el sitio.
+tmp/

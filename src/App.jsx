@@ -16,6 +16,7 @@ const TemaPage = lazy(() => import('./pages/TemaPage.jsx'))
 const QuizPage = lazy(() => import('./pages/QuizPage.jsx'))
 const ExamenPage = lazy(() => import('./pages/ExamenPage.jsx'))
 const ExamenModuloPage = lazy(() => import('./pages/ExamenModuloPage.jsx'))
+const ExamenUnidadPage = lazy(() => import('./pages/ExamenUnidadPage.jsx'))
 const FlashcardsPage = lazy(() => import('./pages/FlashcardsPage.jsx'))
 const ProgresoPage = lazy(() => import('./pages/ProgresoPage.jsx'))
 const BuscarPage = lazy(() => import('./pages/BuscarPage.jsx'))
@@ -101,6 +102,9 @@ export default function App() {
             <Route path="/fase/:moduloId/examen" element={<RedirigirModulo examen />} />
             <Route path="/tema/:temaId" element={<RutaProtegida><TemaPage /></RutaProtegida>} />
             <Route path="/tema/:temaId/quiz" element={<RutaProtegida><QuizPage /></RutaProtegida>} />
+            {/* Examen de UNIDAD del plan (parcial o final): su alcance sale de la
+                posición de la unidad en el módulo, no del módulo entero. */}
+            <Route path="/tema/:temaId/examen" element={<RutaProtegida><ExamenUnidadPage /></RutaProtegida>} />
             <Route path="/examen" element={<RutaProtegida><ExamenPage /></RutaProtegida>} />
             <Route path="/flashcards" element={<RutaProtegida><FlashcardsPage /></RutaProtegida>} />
             <Route path="/flashcards/:temaId" element={<RutaProtegida><FlashcardsPage /></RutaProtegida>} />

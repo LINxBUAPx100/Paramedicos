@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "gen:nav": "node scripts/gen-nav-indice.mjs",
-    "prebuild": "node scripts/gen-nav-indice.mjs",
+    "prebuild": "node scripts/gen-plan-rescate.mjs && node scripts/gen-nav-indice.mjs",
     "build": "vite build",
     "preview": "vite preview",
     "test": "node --test \"tests/*.test.mjs\"",
@@ -16,7 +16,12 @@
     "migrar": "node scripts/migrar-contenido.mjs",
     "replicar": "node scripts/replicar-contenido.mjs",
     "deploy": "npm run build",
-    "seed:programas": "node scripts/seed-programas.mjs"
+    "seed:programas": "node scripts/seed-programas.mjs",
+    "gen:plan": "node scripts/gen-plan-rescate.mjs",
+    "mapear:legado": "node scripts/mapear-legado.mjs",
+    "inventario": "node scripts/inventario-contenido.mjs",
+    "biblioteca": "node scripts/biblioteca.mjs",
+    "matriz": "node scripts/matriz-decisiones.mjs"
   },
   "dependencies": {
     "@fontsource/fira-sans": "^5.3.0",

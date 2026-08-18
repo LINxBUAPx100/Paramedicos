@@ -4,6 +4,7 @@ import { useIndiceAcademia } from '../context/ContenidoContext.jsx'
 import { pasaFiltroGrupo } from '../lib/panelModelo.js'
 import Icon from './Icon.jsx'
 import PermisosEditoriales from './PermisosEditoriales.jsx'
+import ColaDictamenes from './ColaDictamenes.jsx'
 import { useDatosAcademia } from './panel/datosAcademia.js'
 import Estadisticas from './panel/Estadisticas.jsx'
 import AvanceAlumnos from './panel/AvanceAlumnos.jsx'
@@ -128,6 +129,11 @@ export default function PanelAcademia({ academiaId, academiaNombre = '', miUid =
         instructores={miembros.filter((m) => m.rol === 'instructor')}
         onCambio={recargar}
       />
+
+      {/* Lo que los profesores con pase de revisión han firmado sobre el
+          contenido. Va justo después de los permisos porque es su consecuencia:
+          se concede el pase arriba y se lee el resultado aquí. */}
+      <ColaDictamenes academiaId={academiaId} />
 
       <InvitacionesRol
         academiaId={academiaId}

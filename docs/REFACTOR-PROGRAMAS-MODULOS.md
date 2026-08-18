@@ -655,3 +655,134 @@ El material se sirve en el orden que dicta el plan, en tres niveles:
    > primera tarea de la pasada de correcciones.
 
 `npm test`: **365 pruebas, 0 fallos**. `npm run build`: correcto.
+
+---
+
+## 15. El temario oficial ya es lo que la app SIRVE
+
+Hasta aquí el renombrado había sido del **código**, no del **contenido**: la app
+seguía enseñando el temario ficticio («Ciencias Básicas y Fundamentos»,
+«TUM-Básico»…) porque el plan oficial vivía solo en la semilla, y la semilla
+solo llega a la app sembrando en Firestore — que exige credenciales.
+
+El bundle `src/data` es el fallback del resolutor: lo que ve **toda** academia
+que aún no tiene su copia clonada. Así que el temario oficial se genera ahí.
+
+- **`scripts/gen-plan-rescate.mjs`** (`npm run gen:plan`) → genera
+  `src/data/planRescate.js` desde la semilla. Corre en `prebuild`, junto a
+  `gen:nav`, así que el bundle nunca puede quedar desincronizado del plan.
+- **`src/data/index.js`** construye su REGISTRO desde `planRescate` en vez de
+  `registro.js`.
+
+Verificado en navegador: **7 módulos · 287 temas**, con los nombres oficiales
+(incluida la errata «EVALUACIÓN INCIAL» del Módulo 3) y sin rastro de los
+títulos ficticios. Consola limpia.
+
+### Lo único que no sale del PDF
+
+Color e icono de cada módulo: el documento no los define. Nada más — títulos,
+subtítulos, orden, unidades, semanas y horas son transcripción.
+
+### Consecuencia que hay que tener presente
+
+Los 287 temas **nacen vacíos**, así que la portada ahora dice
+`0 PREGUNTAS · 0 FLASHCARDS`. Es correcto: ese material pertenecía al temario
+ficticio, que ya no existe. Los archivos viejos (`registro.js`, `faseN.js`,
+`extraFaseN.js`) **siguen en el repo sin importarse**, precisamente para poder
+reaprovechar sus 374 preguntas y 457 flashcards al redactar los temas oficiales.
+
+Revertir es cambiar una línea en `src/data/index.js`
+(`import { REGISTRO } from './registro.js'`).
+
+Efectos colaterales conocidos, para la pasada de correcciones:
+- El **Atlas** (`imagenes.js`) y los **recursos descargables**
+  (`recursosDescarga.js`) siguen indexados por los `temaId` viejos: quedan
+  huérfanos hasta que se reasignen a los temas oficiales.
+- El **tema de muestra** de la landing apunta a un id del temario ficticio.
+- La portada anuncia contadores en cero hasta que haya contenido redactado.
+
+---
+
+## 16. Contenido: reutilización del corpus anterior
+
+El temario ficticio cubría en buena medida los mismos contenidos que el plan
+oficial, con otros títulos y otro agrupamiento: 68 temas amplios («Soporte
+Vital Básico y RCP») frente a los 287 granulares del plan («RCP legos en
+adulto», «Uso del DEA», «OVACE. En adultos»). Ese material **ya estaba
+redactado**, así que no se reescribe: se redistribuye.
+
+### Motor de reparto — `src/lib/reutilizarContenido.js`
+
+Cada pieza (sección, concepto, flashcard, pregunta) se asigna al tema oficial
+que mejor la describe, puntuando el solapamiento de términos con **peso IDF**:
+«sistema» aparece en decenas de temas y no distingue nada; «glasgow» aparece en
+uno y lo identifica solo. Sin ese peso, las palabras de relleno decidían el
+destino.
+
+Tres pases, en cascada:
+
+1. **Por título del tema** — el caso limpio.
+2. **Por título de la unidad** — muchos temas del plan son viñetas cuyo título
+   no dice nada aislado («Definición.», «Signos y síntomas.», «Objeto
+   empalado.») y solo significan algo dentro de su unidad.
+3. **Por el tema de origen** — si nada casa, la pieza va al tema oficial que
+   corresponde al tema viejo del que salió. Es lo que rescató la mayor parte:
+   «Electrocardiografía Básica» corresponde sin ambigüedad a «Electrocardiografía
+   básica.», pero una pregunta suya sobre *derivaciones precordiales* no comparte
+   ni una palabra con ese título.
+
+Dos errores propios que costaron cobertura y conviene recordar: el tokenizador
+descartaba palabras de menos de cuatro letras —y en urgencias las siglas cortas
+(**DEA, SSS, TEP, RCP, PIC**) son de los términos más discriminantes que hay— y
+no reducía plurales, así que «quemaduras» no casaba con «quemadura». Corregidos,
+las piezas sin ubicar bajaron de 142 a **27**.
+
+### Resultado
+
+| | |
+|---|---|
+| Temas del plan con material | **160 de 287** |
+| Preguntas | **380** |
+| Flashcards | **461** |
+| Conceptos clave | **407** |
+| Secciones | **293** |
+| Piezas sin ubicar | 27 |
+
+Cada pieza conserva su texto íntegro y lleva `procedencia.temaOriginal`; las
+colocadas por el segundo o tercer pase llevan además `procedencia.porUnidad`,
+que marca las que se ubicaron por contexto y conviene repasar primero.
+
+### Material redactado a mano
+
+`src/data/contenido/` — un archivo por módulo, con **prioridad** sobre lo
+reutilizado. Ya está el **Módulo 1** (8 temas de primeros auxilios básicos:
+introducción, AVDI, RCP, DEA, OVACE, hemorragias, fracturas, quemaduras y
+botiquín) con secciones, conceptos, flashcards, quiz y actividades, apegado a
+AHA 2020 y PHTLS 9 —la bibliografía que declara el propio plan—.
+
+### Lo que NO está cubierto, y por qué
+
+Quedan **118 temas sin material** (12 de ellos son unidades de examen o práctica, que no llevan prosa). No es un fallo del reparto: son contenidos
+que el temario anterior sencillamente no tenía desglosados —*Colelitiasis y
+colecistitis*, *TEP*, *Quilotórax*, *Torsión ovárica*, *El diamante GEMS*— o
+que solo existen en el plan oficial. `npm run mapear:legado -- --detalle` los
+lista uno a uno: es la lista de trabajo editorial pendiente.
+
+En sentido inverso, el corpus viejo traía un bloque entero (*Transición a
+Medicina*, *Diagnóstico por Imagen*, *Microbiología y Sepsis*) que el plan de
+R.E.S.C.A.T.E. no contempla; ese material queda sin destino a propósito.
+
+### Advertencia de uso
+
+El reparto es **automático**. La ubicación de cada pieza es una **propuesta**,
+no una decisión pedagógica: el cuerpo docente debe revisarla antes de publicar,
+empezando por las marcadas `porUnidad`. Y ninguna cifra clínica reutilizada
+sustituye la validación contra la bibliografía oficial.
+
+### Comandos
+
+```bash
+npm run mapear:legado            # informe de cobertura, no escribe
+npm run mapear:legado -- --detalle --escribir
+npm run gen:plan                 # regenera el temario con el material fusionado
+```

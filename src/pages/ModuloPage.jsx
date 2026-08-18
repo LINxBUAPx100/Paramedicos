@@ -4,6 +4,8 @@ import { useProgress } from '../context/ProgressContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
 import NotFound from './NotFound.jsx'
 import Icon from '../components/Icon.jsx'
+import { estadoEditorialDe, estaAvalado, ETIQUETA_ESTADO } from '../lib/estadoEditorial.js'
+import { tituloVisibleDe } from '../data/contenido/titulosVisibles.js'
 
 export default function ModuloPage() {
   const { moduloId } = useParams()
@@ -40,7 +42,7 @@ export default function ModuloPage() {
         <span className="modulo-header-ico">{modulo.icono}</span>
         <div>
           <span className="modulo-header-num">Modulo {modulo.numero}</span>
-          <h1>{modulo.titulo}</h1>
+          <h1>{modulo.tituloVisible || modulo.titulo}</h1>
           <p className="modulo-header-sub">{modulo.subtitulo}</p>
         </div>
       </header>
@@ -51,13 +53,21 @@ export default function ModuloPage() {
         {temas.map((tema) => {
           const leido = estado.leidos[tema.id]
           const quiz = estado.quizzes[tema.id]
+          // El listado dice el estado editorial ANTES de entrar: abrir cinco
+          // temas seguidos para descubrir que están vacíos es peor que verlo.
+          const estadoEd = estadoEditorialDe(tema)
           return (
             <Link to={`/tema/${tema.id}`} key={tema.id} className="tema-fila">
               <span className="tema-fila-ico">{tema.icono}</span>
               <div className="tema-fila-info">
                 <div className="tema-fila-titulo">
                   <span className="tema-fila-num">{tema.numero}</span>
-                  {tema.titulo}
+                  {tituloVisibleDe(tema)}
+                  {!estaAvalado(estadoEd) && (
+                    <span className={`chip chip-editorial chip-editorial--${estadoEd}`}>
+                      {ETIQUETA_ESTADO[estadoEd]}
+                    </span>
+                  )}
                   {leido && <span className="chip chip-ok">✓ Leído</span>}
                   {quiz && (
                     <span className="chip chip-quiz">
@@ -67,7 +77,7 @@ export default function ModuloPage() {
                 </div>
                 <p className="tema-fila-resumen">{tema.resumen}</p>
                 <div className="tema-fila-meta">
-                  <span><Icon name="reloj" size={14} /> {tema.duracion}</span>
+                  {tema.duracion && <span><Icon name="reloj" size={14} /> {tema.duracion}</span>}
                   <span><Icon name="pregunta" size={14} /> {tema.quiz.length} preguntas</span>
                   <span><Icon name="flashcards" size={14} /> {tema.flashcards.length} flashcards</span>
                 </div>

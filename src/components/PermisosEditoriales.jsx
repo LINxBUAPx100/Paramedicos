@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import Icon from './Icon.jsx'
+import PaseRevisor from './PaseRevisor.jsx'
 import {
   PERMISOS_EDITOR, ETIQUETA_PERMISO, DESCRIPCION_PERMISO, normalizarPermisos,
 } from '../lib/permisosEditor.js'
@@ -188,6 +189,11 @@ function FilaProfesor({ profesor, cursos, onCambio }) {
           </span>
         </summary>
         <div className="pe-permisos-cuerpo">
+          {/* Pase de REVISIÓN: habilita firmar dictámenes sobre el contenido, no
+              editarlo. Va antes que la matriz de edición porque es lo que se
+              concede con más frecuencia y lo que menos concede. */}
+          <PaseRevisor profesor={profesor} onCambio={onCambio} />
+
           <fieldset className="pe-checks">
             <legend>Puede</legend>
             {PERMISOS_EDITOR.map((k) => {
