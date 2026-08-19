@@ -100,9 +100,9 @@ public/imagenes/
    escrito de la academia. **No** capturas de manuales protegidos: el temario ya
    arrastra deuda bibliográfica y una imagen copiada de PHTLS no se puede
    publicar.
-2. **Convertir y pesar**: script `scripts/optimizar-imagenes.mjs` (pendiente,
-   mismo patrón que `optimizar-hero.mjs`) → WebP 1200 px, ≤300 KB, informe de
-   los que se pasen.
+2. **Convertir y pesar**: `npm run optimizar:imagenes` (`scripts/optimizar-imagenes.mjs`,
+   ya escrito) → WebP y AVIF a varios anchos conservando la transparencia, con
+   informe de peso. Los originales van a `scripts/img-src/`.
 3. **Enganchar cada imagen a su tema**: bloque `imagen` en las secciones del
    tema, con `alt` y `caption` escritos, y la ficha de fuente cuando la licencia
    lo exija.

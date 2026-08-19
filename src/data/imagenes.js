@@ -12,16 +12,47 @@
 //  "Cualquier persona con el enlace · Lector" para que cargue en la web.
 //
 //  Deja '' (vacío) para mostrar el placeholder «enlace de la imagen aquí».
+//
+//  LO PREFERIBLE, sin embargo, es una imagen PROPIA en `public/imagenes/` (o un
+//  juego responsivo, ver más abajo): Drive no garantiza el hotlink y obliga a
+//  compartir cada archivo a mano. Ver docs/PLAN-IMAGENES-PTEM.md.
 // ============================================================
+import { juegoResponsivo } from '../lib/imagenLocal.js'
 
 // --- Home -------------------------------------------------------------------
+//  Las tres imágenes de las bandas se sirven CON EL SITIO, en WebP y AVIF a tres
+//  anchos, igual que el hero del paramédico. Antes eran enlaces de Google Drive
+//  y eso costaba dos cosas a la vez:
+//
+//    · no se podían tocar. Recortar, recolocar o cambiar de tamaño dependía de
+//      lo que Drive decidiera servir, y su CDN no garantiza el hotlink: el día
+//      que responde mal, el Home sale sin imágenes;
+//    · cada visita descargaba el PNG entero (0,5–1,1 MB por imagen).
+//
+//  Ahora pesan entre 9 y 48 KB según el dispositivo, y son archivos del
+//  repositorio: se recortan, se mueven y se reemplazan como cualquier otro.
+//  Los originales están en `scripts/img-src/` y se reconvierten con
+//  `npm run optimizar:imagenes`. Los anchos declarados aquí TIENEN que existir
+//  como archivo; `tests/imagenesTemario.test.mjs` lo comprueba.
+//
+//  El hero va aparte porque lo precarga index.html (es el LCP): sus URLs se
+//  construyen en Home.jsx desde public/hero/.
+export const ANCHOS_HOME = [480, 800, 1200]
+// Cada banda ocupa la columna estrecha de un grid de dos (0.7fr de ~1200 px) y
+// pasa a ancho completo en móvil.
+const SIZES_HOME = '(max-width: 880px) 90vw, 520px'
+
+const bandaHome = (nombre) =>
+  juegoResponsivo(nombre, { carpeta: 'home', anchos: ANCHOS_HOME, sizes: SIZES_HOME })
+
 export const IMG = {
-  // El hero se sirve optimizado (WebP/AVIF responsivos) directamente en Home.jsx
-  // desde public/hero/ (generado por scripts/optimizar-hero.mjs).
-  ponteAprueba: 'https://drive.google.com/file/d/1nFKl_QgYJ998yDPhEsxN4tPCKiMFIaJn/view?usp=drive_web', // enlace de la imagen aquí — examen / checklist con bolígrafo
-  atlas: 'https://drive.google.com/file/d/1faEMyolaKa7Ermyog9sO8VaC3lWuHNmz/view?usp=drive_web', // enlace de la imagen aquí — pila de libros / atlas
-  flashcards: 'https://drive.google.com/file/d/1Ef50Mau9pkOkz8GA9BUu7dh9KVNYuxJd/view?usp=drive_web', // enlace de la imagen aquí — persona con botiquín
+  ponteAprueba: bandaHome('ponte-a-prueba'), // hojas de examen con bolígrafo
+  atlas: bandaHome('logros'), // pila de libros
+  flashcards: bandaHome('flashcards'), // persona con botiquín
 }
+
+// Nombres de archivo de las bandas (para la prueba que comprueba que existen).
+export const BANDAS_HOME = ['ponte-a-prueba', 'logros', 'flashcards']
 
 // --- LOGROS: galería de imágenes del temario ---------------------------------
 //  Cada entrada: { clave, titulo, tema, src }.

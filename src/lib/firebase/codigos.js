@@ -8,24 +8,27 @@
 //  las reglas validan que pruebaHasta COPIE la expiración real del código.
 // ============================================================
 import { db } from './init.js'
+import { secretoAleatorio } from '../codigoSeguro.js'
 import {
   doc, getDoc, setDoc, updateDoc, deleteDoc, collection, query, where,
   getDocs, serverTimestamp, Timestamp,
 } from 'firebase/firestore'
 
-const ABC = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789' // sin caracteres confusos (0/O, 1/I/L)
-const rand = (n) =>
-  Array.from({ length: n }, () => ABC[Math.floor(Math.random() * ABC.length)]).join('')
+// El secreto sale de lib/codigoSeguro.js (crypto + longitud suficiente). Antes
+// eran DOS caracteres: 961 combinaciones, que se agotan en segundos probándolas
+// contra Firestore, y cada acierto es acceso al contenido de una academia.
 const abreviar = (txt, n) =>
   String(txt || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, n)
 
 // Código legible y con significado: ABREVIATURA de la academia (el primer
 // segmento de su código, p. ej. AEP-2026 → AEP) + 2 letras del GRUPO +
-// vigencia y azar (7D4K = 7 días + sufijo). Ej: AEP-GE-7D4K. Sin academia → PT.
+// vigencia y SECRETO (7D + 8 caracteres). Ej: AEP-GE-7DK3M9P2QR. Sin academia
+// → PT. La parte legible sigue siendo legible; lo que ya no se puede es
+// adivinar el código entero.
 function generarCodigo({ academiaId = null, grupoNombre = '', dias = 7 } = {}) {
   const aca = academiaId ? abreviar(academiaId.split('-')[0], 4) || 'PT' : 'PT'
   const grp = abreviar(grupoNombre, 2)
-  const cola = `${dias}D${rand(2)}`
+  const cola = `${dias}D${secretoAleatorio()}`
   return [aca, grp, cola].filter(Boolean).join('-')
 }
 

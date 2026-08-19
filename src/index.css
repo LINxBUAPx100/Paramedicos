@@ -4925,7 +4925,20 @@ html[data-tema='oscuro'] .glosario-termino { color: var(--texto); }
 /* ============================================================
    PTEM · HOME
    ============================================================ */
-.ph { color: var(--texto); }
+/* UN SOLO degradado para todo el Home, no uno por banda. Con uno por sección se
+   veía el corte: el blanco arrancaba de cero tres veces seguidas. Aquí recorre
+   la página entera, del blanco del fondo a un azul oscuro muy diluido (14 %).
+   El hero conserva su plata encima, que es su identidad y cae justo en el
+   extremo claro del degradado. */
+.ph {
+  color: var(--texto);
+  background: linear-gradient(
+    180deg,
+    var(--bg-3) 0%,
+    var(--bg-3) 18%,
+    color-mix(in srgb, var(--primario-oscuro) 14%, var(--bg-3)) 100%
+  );
+}
 .ph-wrap {
   max-width: 1180px;
   margin: 0 auto;
@@ -5630,6 +5643,11 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 /* ---- Modulos: baraja coverflow (naipes apilados; la activa salta al frente) ---- */
 .deck {
   position: relative;
+  /* Contexto de apilado propio: dentro, la tarjeta activa se pone delante de
+     sus hermanas (z-index en línea), pero el conjunto sigue por DEBAJO de la
+     barra de navegación (z-index 50). Sin esto, la tarjeta pasaba por encima
+     de la barra al hacer scroll. */
+  z-index: 0;
   height: 560px;
   margin-top: var(--e-24);
 }
@@ -6085,9 +6103,9 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 
 /* ---- Bandas (Ponte a Prueba / Atlas / FlashCards) ---- */
 .ph-banda { padding: clamp(var(--e-40), 6vw, 80px) 0; }
-.ph-prueba { background: var(--bg-3); }
-.ph-atlas { background: var(--bg-2); }
-.ph-flash { background: linear-gradient(160deg, var(--plata-1), var(--bg-2)); }
+/* Las bandas NO pintan fondo: dejan pasar el degradado único de .ph. Cada una
+   con el suyo era justo lo que se veía cortado entre sección y sección. */
+.ph-prueba, .ph-atlas, .ph-flash { background: none; }
 .ph-banda-in {
   display: grid;
   grid-template-columns: 1.3fr 0.7fr;
@@ -6108,19 +6126,10 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   letter-spacing: -0.03em;
   margin-bottom: var(--e-16);
 }
-.ph-titular .ac { color: var(--urgencia); position: relative; white-space: nowrap; }
-.ph-titular .ac::after {
-  content: '';
-  position: absolute;
-  left: -1px;
-  right: -1px;
-  bottom: 0.05em;
-  height: 0.13em;
-  background: var(--urgencia);
-  border-radius: 999px;
-  transform: skewX(-14deg);
-  opacity: 0.5;
-}
+/* La palabra de acento va en ROJO y nada más. La barra inclinada que llevaba
+   debajo está retirada a petición: con titulares de este tamaño se le echaba
+   encima a la línea siguiente, y el color por sí solo ya marca el acento. */
+.ph-titular .ac { color: var(--urgencia); white-space: nowrap; }
 .ph-banda-texto p { color: var(--texto-2); font-size: var(--t-base); max-width: 46ch; margin-bottom: var(--e-24); }
 /* Número GIGANTE detrás del texto (efecto editorial épico, como el PDF) */
 .ph-flash-texto { position: relative; isolation: isolate; }
@@ -6140,6 +6149,100 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   pointer-events: none;
   user-select: none;
 }
+
+/* ---- COMPOSICIÓN de las bandas (según el diseño de referencia) ----
+   Cambia la DISTRIBUCIÓN y los TAMAÑOS; ni un color se toca.
+
+   Tres cosas que la versión anterior no hacía:
+     · titulares mucho mayores, con su propia composición en cada banda
+       (dos líneas, escalera, o cruzando el ancho completo);
+     · las imágenes grandes y SALIÉNDOSE por el borde exterior de la banda,
+       que es lo que les da la escala del diseño;
+     · el bloque de texto alineado hacia el lado por el que respira la banda.
+
+   El sangrado va en % del propio hueco (no en vw): así es predecible a
+   cualquier ancho y no depende de la anchura de la ventana. Cada banda
+   recorta con overflow: hidden, que produce el corte limpio del diseño sin
+   provocar scroll horizontal en la página. */
+.ph-banda { overflow: hidden; }
+.ph-tl { display: block; }
+.ph-titular--xl {
+  font-size: clamp(2.8rem, 12vw, 10rem);
+  /* Algo de aire entre las dos líneas: la inicial de acento es mayor que el
+     resto y con el interlineado apretado del titular base se tocarían. */
+  line-height: 1.02;
+  margin-bottom: var(--e-20);
+}
+/* Inicial de acento a gran tamaño: en rojo, sin subrayado. */
+.ph-ac--xl { font-size: 1.22em; }
+
+/* Banda 1 — Ponte a Prueba: figura a la izquierda saliéndose del borde,
+   texto alineado a la derecha. */
+.ph-banda-in--prueba { grid-template-columns: 1fr 1fr; }
+/* `width` por encima del 100 % de su columna: la figura crece de verdad sin
+   quitarle sitio al titular (que es lo que pasaría moviendo las columnas). */
+.ph-banda-img--sangra-izq { margin-inline-start: -30%; width: 132%; }
+.ph-banda-img--sangra-der { margin-inline-end: -30%; width: 132%; }
+.ph-banda-in--prueba .ph-banda-texto { position: relative; z-index: 1; }
+.ph-banda-texto--der { text-align: right; }
+.ph-banda-texto--der p { margin-inline-start: auto; }
+/* El titular llega hasta el borde real de la banda (se come el padding del
+   contenedor), como en el diseño. El botón NO: un control cortado por el borde
+   es un fallo de uso, no un detalle de diseño. */
+.ph-banda-texto--der .ph-titular { margin-inline-end: calc(-1 * clamp(18px, 4vw, 56px)); }
+/* La figura se apoya en el borde por el que sangra. Sin esto, object-fit:
+   contain la centra dentro de su caja: la caja sale del borde, pero el dibujo
+   se queda flotando en medio y no se corta nada. */
+.ph-banda-img--sangra-izq .imagen--figura img { object-position: left bottom; }
+.ph-banda-img--sangra-der .imagen--figura img { object-position: right center; }
+.ph-flash-img .imagen--figura img { object-position: left bottom; }
+
+/* Banda 2 — Logros: titular en escalera y la pila de libros saliéndose por la
+   derecha. La primera línea puede pasar por delante de la imagen (como en el
+   diseño), así que el texto va en un plano por encima. */
+.ph-banda-in--logros { grid-template-columns: 0.95fr 1.05fr; }
+.ph-banda-in--logros .ph-banda-texto { position: relative; z-index: 1; }
+.ph-titular--escalera { font-size: clamp(2.4rem, 9.5vw, 8rem); }
+.ph-titular--escalera .ph-tl { white-space: nowrap; }
+.ph-titular--escalera .ph-tl--b { font-size: 0.72em; }
+.ph-titular--escalera .ph-tl--c { font-size: 0.62em; }
+
+/* Banda 3 — FlashCards: el titular cruza el ancho completo y la figura entra
+   por abajo a la izquierda, recortada por el borde inferior de la banda (el
+   margen negativo se come justo el padding de la banda). */
+.ph-flash-in {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-areas: 'titulo titulo' 'imagen texto';
+  column-gap: clamp(var(--e-16), 2.5vw, 40px);
+  align-items: end;
+}
+.ph-flash-titulo {
+  grid-area: titulo;
+  /* Mucho mayor y casi centrado; queda DETRÁS de la figura (z-index 0 contra
+     el 1 de la imagen), que es lo que da la profundidad del diseño. */
+  font-size: clamp(3rem, 16vw, 13.5rem);
+  text-align: center;
+  margin-bottom: 0;
+  position: relative;
+  z-index: 0;
+}
+.ph-flash-img {
+  grid-area: imagen;
+  position: relative;
+  z-index: 1;
+  margin-inline-start: -26%;
+  width: 136%;
+  /* Sube por delante del titular y se recorta contra el borde inferior. */
+  margin-top: -22%;
+  margin-bottom: calc(-1 * clamp(var(--e-40), 6vw, 80px));
+}
+.ph-flash-in .ph-flash-texto {
+  grid-area: texto;
+  padding-bottom: var(--e-24);
+  position: relative;
+  z-index: 1;
+}
 /* ---- Responsive Home ---- */
 @media (max-width: 880px) {
   .ph-hero-in { grid-template-columns: 1fr; }
@@ -6150,6 +6253,21 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   .ph-hero-texto { align-self: auto; padding-bottom: clamp(var(--e-24), 6vw, var(--e-40)); }
   .ph-banda-in { grid-template-columns: 1fr; }
   .ph-banda-in--rev .ph-banda-texto { order: 0; }
+  /* En una sola columna, un sangrado recorta la figura por la mitad y un
+     titular partido a mano deja huecos: se deshace todo y el contenido vuelve
+     a fluir. */
+  .ph-banda-in--prueba, .ph-banda-in--logros { grid-template-columns: 1fr; }
+  .ph-banda-img--sangra-izq, .ph-banda-img--sangra-der { margin-inline: 0; width: auto; }
+  .ph-banda-texto--der { text-align: left; }
+  .ph-banda-texto--der p { margin-inline-start: 0; }
+  .ph-banda-texto--der .ph-titular { margin-inline-end: 0; }
+  .ph-titular--escalera .ph-tl { white-space: normal; }
+  .ph-flash-in {
+    grid-template-columns: 1fr;
+    grid-template-areas: 'titulo' 'imagen' 'texto';
+    row-gap: var(--e-16);
+  }
+  .ph-flash-img { margin-inline-start: 0; margin-top: 0; margin-bottom: 0; width: auto; }
 }
 @media (max-width: 768px) {
   .deck { height: 524px; }

@@ -12,14 +12,15 @@ import {
   getDocs, serverTimestamp,
 } from 'firebase/firestore'
 import { normalizarGrupo, normalizarGrupos } from '../compatNombres.js'
+import { secretoAleatorio } from '../codigoSeguro.js'
 import { normalizarGeneracion } from '../invitacionesCentro.js'
 
-// Código legible tipo GRP-7K3M (sin caracteres confusos).
+// Código tipo GRP-K3M9P2QR. El secreto sale de lib/codigoSeguro.js: entrar a un
+// grupo es entrar a su academia Y a su plan de estudios, así que un sufijo de 4
+// caracteres (≈9×10⁵ combinaciones, recorribles por fuerza bruta contra
+// Firestore) era una puerta de entrada adivinable.
 function generarCodigoGrupo() {
-  const abc = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'
-  let sufijo = ''
-  for (let i = 0; i < 4; i++) sufijo += abc[Math.floor(Math.random() * abc.length)]
-  return `GRP-${sufijo}`
+  return `GRP-${secretoAleatorio()}`
 }
 
 // Crea un grupo de la academia. Devuelve { id }.

@@ -41,7 +41,8 @@ test('superadmin NO es invitable por ninguna vía', () => {
 })
 
 test('el código lleva la academia y el rol dentro', () => {
-  const azar = () => 'K'
+  // `azar` devuelve el SECRETO entero (antes se llamaba una vez por carácter).
+  const azar = () => 'KKKK'
   assert.equal(
     generarCodigoInvitacion({ academiaId: 'AEP-2026', rol: 'instructor', azar }),
     'INV-AEP-P-KKKK'
@@ -57,7 +58,7 @@ test('el código lleva la academia y el rol dentro', () => {
 })
 
 test('el código tolera una academia con nombre raro o ausente', () => {
-  const azar = () => '7'
+  const azar = () => '7777'
   // Sin academia no se queda en 'INV--A-...': cae al prefijo genérico, igual
   // que hace generarCodigo() en codigos.js.
   assert.equal(generarCodigoInvitacion({ rol: 'alumno', azar }), 'INV-PT-A-7777')

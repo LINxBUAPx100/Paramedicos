@@ -25,7 +25,7 @@ const STATS = [
 ]
 
 // Hero optimizado: MISMA imagen del paramédico, servida en WebP/AVIF responsivos
-// (generadas por scripts/optimizar-hero.mjs → public/hero/). Idéntica a la vista;
+// (generadas por scripts/optimizar-imagenes.mjs → public/hero/). Idéntica a la vista;
 // solo cambia el peso (~3.4 MB → ~40-150 KB según dispositivo).
 const HERO_ANCHOS = [480, 800, 1200, 1600, 2000]
 const heroSet = (ext) =>
@@ -214,13 +214,17 @@ function SeccionModulos({ modulos, leidos }) {
 function SeccionPrueba() {
   return (
     <Reveal as="section" className="ph-banda ph-prueba">
-      <div className="ph-wrap ph-banda-in">
-        <div className="ph-banda-img">
-          <Imagen src={IMG.ponteAprueba} ratio="4 / 3" figura busqueda="examen test checklist bolígrafo" />
+      <div className="ph-wrap ph-banda-in ph-banda-in--prueba">
+        <div className="ph-banda-img ph-banda-img--sangra-izq">
+          <Imagen {...IMG.ponteAprueba} ratio="4 / 3" figura zoom={false} alt="Hojas de examen con las respuestas marcadas y un bolígrafo" />
         </div>
-        <div className="ph-banda-texto">
-          <h2 className="ph-titular">
-            Ponte <span className="ac">a</span> Prueba
+        <div className="ph-banda-texto ph-banda-texto--der">
+          {/* Dos líneas fijas, como el diseño: «Ponte a» arriba con la inicial
+              de acento grande, y «Prueba» debajo. En móvil el titular vuelve a
+              fluir solo (el CSS deshace el corte). */}
+          <h2 className="ph-titular ph-titular--xl">
+            <span className="ph-tl">Ponte <span className="ac ph-ac--xl">a</span></span>
+            <span className="ph-tl">Prueba</span>
           </h2>
           <p>
             Quiz al final de cada tema y un examen general aleatorio que mezcla las 7 modulos, con
@@ -241,10 +245,14 @@ function SeccionPrueba() {
 function SeccionAtlas() {
   return (
     <Reveal as="section" className="ph-banda ph-atlas">
-      <div className="ph-wrap ph-banda-in ph-banda-in--rev">
+      <div className="ph-wrap ph-banda-in ph-banda-in--rev ph-banda-in--logros">
         <div className="ph-banda-texto">
-          <h2 className="ph-titular">
-            Descubre tus <span className="ac">Logros</span>
+          {/* Titular en ESCALERA (cada línea más pequeña que la anterior), que es
+              la composición del diseño para esta banda. */}
+          <h2 className="ph-titular ph-titular--escalera">
+            <span className="ph-tl ph-tl--a">Descubre</span>
+            <span className="ph-tl ph-tl--b">tus</span>
+            <span className="ph-tl ph-tl--c"><span className="ac">Logros</span></span>
           </h2>
           <p>
             Las imágenes del temario y el glosario con cada palabra que hay que dominar. Se
@@ -254,8 +262,11 @@ function SeccionAtlas() {
             Ver mis logros <Icon name="chevronDer" size={18} />
           </Link>
         </div>
-        <div className="ph-banda-img">
-          <Imagen src={IMG.atlas} ratio="4 / 3" figura busqueda="logros medicina estudio" />
+        {/* La pila de libros es VERTICAL (1333×2000): en una caja 4/3 salía
+            diminuta, limitada por el alto. Con 3/4 ocupa lo que el diseño le da,
+            y sale por el borde derecho de la banda. */}
+        <div className="ph-banda-img ph-banda-img--sangra-der">
+          <Imagen {...IMG.atlas} ratio="1 / 1" figura zoom={false} alt="Pila de libros de estudio" />
         </div>
       </div>
     </Reveal>
@@ -266,17 +277,20 @@ function SeccionAtlas() {
 function SeccionFlashcards({ flashcards }) {
   return (
     <Reveal as="section" className="ph-banda ph-flash">
-      <div className="ph-wrap ph-banda-in">
-        <div className="ph-banda-img">
-          <Imagen src={IMG.flashcards} ratio="4 / 3" figura busqueda="estudiante repaso tarjetas botiquín" />
+      {/* Composición distinta a las otras dos bandas, como en el diseño: el
+          titular cruza el ancho COMPLETO arriba, y debajo la figura (que entra
+          por abajo a la izquierda, recortada por el borde) y el texto. */}
+      <div className="ph-wrap ph-flash-in">
+        <h2 className="ph-titular ph-flash-titulo">
+          Flash<span className="ac">Cards</span>
+        </h2>
+        <div className="ph-banda-img ph-flash-img">
+          <Imagen {...IMG.flashcards} ratio="4 / 3" figura zoom={false} alt="Persona señalando un botiquín de primeros auxilios" />
         </div>
         <div className="ph-banda-texto ph-flash-texto">
           <span className="ph-flash-bignum">
             <Contador valor={flashcards} />
           </span>
-          <h2 className="ph-titular">
-            Flash<span className="ac">Cards</span>
-          </h2>
           <p>Repasa con nuestras flashcards por tema o globales para fijar los conceptos de alto rendimiento.</p>
           <Link to="/flashcards" className="btn btn--pildora btn--carbon btn--lg">
             Repasar <Icon name="chevronDer" size={18} />

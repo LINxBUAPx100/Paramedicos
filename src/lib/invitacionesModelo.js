@@ -21,6 +21,8 @@
 //  lista vive en el cliente y el cliente no decide.
 // ============================================================
 
+import { secretoAleatorio } from './codigoSeguro.js'
+
 // Catálogo CERRADO de roles invitables. El `rol` es el valor que se escribe en
 // usuarios/{uid}.rol; la `letra` va dentro del código para que se lea de un
 // vistazo de quién es la invitación sin abrir el panel.
@@ -76,22 +78,25 @@ export function maxUsosPorDefecto(rol) {
 }
 
 // --- Código -----------------------------------------------------------------
-// Mismo alfabeto que grupos y códigos de prueba: sin 0/O ni 1/I/L, que son los
-// que la gente teclea mal cuando copia un código de una captura de pantalla.
-const ABC = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'
+// El alfabeto y el secreto salen de lib/codigoSeguro.js, que usa
+// `crypto.getRandomValues` y un sufijo largo. El porqué, en corto: la invitación
+// lleva el ROL dentro, cualquier usuario autenticado puede CONSULTAR un código
+// concreto (hace falta para poder canjearlo) y con 4 caracteres el espacio
+// entero —incluidas las invitaciones de DIRECTOR— se recorría por fuerza bruta
+// en minutos y por céntimos.
 
 const abreviar = (txt, n) =>
   String(txt || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, n)
 
-// INV-<ACADEMIA>-<ROL>-<AZAR>, p. ej. INV-AEP-P-K3M9 (profesor de AEP-2026).
-// El prefijo INV lo distingue a simple vista de un código de academia
-// (AEP-2026), de grupo (GRP-7K3M) o de prueba (AEP-GE-7D4K).
+// INV-<ACADEMIA>-<ROL>-<SECRETO>, p. ej. INV-AEP-P-K3M9P2QR (profesor de
+// AEP-2026). El prefijo INV lo distingue a simple vista de un código de
+// academia (AEP-2026), de grupo (GRP-…) o de prueba (AEP-GE-7D…).
 //
-// `azar` se inyecta para poder probar el formato sin depender de Math.random.
+// `azar` se inyecta en las pruebas para fijar el secreto y comprobar el
+// formato; en producción siempre sale del generador criptográfico.
 export function generarCodigoInvitacion({ academiaId, rol, azar = null } = {}) {
-  const aleatorio = azar || (() => ABC[Math.floor(Math.random() * ABC.length)])
   const aca = abreviar(String(academiaId || '').split('-')[0], 4) || 'PT'
-  const sufijo = Array.from({ length: 4 }, () => aleatorio()).join('')
+  const sufijo = azar ? azar() : secretoAleatorio()
   return `INV-${aca}-${letraRol(rol)}-${sufijo}`
 }
 

@@ -30,9 +30,17 @@ export default function Imagen({
   // el principio; lo que faltaba era esta línea.
   completa = false,
   // Toda imagen se puede abrir en el visor a pantalla completa: en la tarjeta,
-  // un esquema con texto es ilegible. Se apaga (`zoom={false}`) solo donde
-  // ampliar no significa nada, como el logo de una academia.
+  // un esquema con texto es ilegible. Se apaga (`zoom={false}`) donde ampliar no
+  // significa nada —el logo de una academia, las ilustraciones decorativas del
+  // Home— o donde abriría una puerta falsa (las tarjetas bloqueadas de Logros).
   zoom = true,
+  // JUEGO RESPONSIVO PROPIO: la misma imagen en varios anchos y en dos formatos,
+  // servida por este sitio (`scripts/optimizar-imagenes.mjs` los genera y
+  // `lib/imagenLocal.js` arma estas dos cadenas). Cuando llegan, el componente
+  // pinta un <picture> con AVIF primero y WebP de reserva, y NO toca `src` con
+  // driveSrc: aquí no hay nada que reescribir, los archivos ya son los buenos.
+  srcSet: srcSetPropio,
+  srcSetAvif,
 }) {
   const [error, setError] = useState(false)
   const [cargada, setCargada] = useState(false)
@@ -82,6 +90,35 @@ export default function Imagen({
     setAbierta(true)
   }
 
+  // Un juego propio ya trae sus URLs hechas; lo demás pasa por driveSrc, que
+  // resuelve Drive, el proxy de imágenes externas o la ruta propia.
+  const propio = Boolean(srcSetPropio || srcSetAvif)
+  const elImg = (
+    <img
+      src={propio ? src : driveSrc(src, ancho)}
+      srcSet={propio ? srcSetPropio : driveSrcSet(src)}
+      sizes={sizes}
+      alt={alt || caption || ''}
+      loading={eager ? 'eager' : 'lazy'}
+      fetchpriority={eager ? 'high' : 'auto'}
+      decoding="async"
+      onLoad={(e) => {
+        setCargada(true)
+        setSrcCargada(e.currentTarget.currentSrc || e.currentTarget.src || '')
+      }}
+      onError={() => setError(true)}
+    />
+  )
+  // AVIF primero (pesa la mitad que WebP a igual calidad) y WebP de reserva. El
+  // <picture> solo aparece si de verdad hay un AVIF: envolver por costumbre
+  // añadiría un nodo que no hace nada.
+  const elMedio = srcSetAvif ? (
+    <picture>
+      <source type="image/avif" srcSet={srcSetAvif} sizes={sizes} />
+      {elImg}
+    </picture>
+  ) : elImg
+
   const laFigura = (
     <figure
       className={`${clases} ${cargada ? 'is-cargada' : ''} ${ampliable ? 'imagen--ampliable' : ''}`.trim()}
@@ -99,20 +136,7 @@ export default function Imagen({
           <Icon name="expandir" size={17} />
         </button>
       )}
-      <img
-        src={driveSrc(src, ancho)}
-        srcSet={driveSrcSet(src)}
-        sizes={sizes}
-        alt={alt || caption || ''}
-        loading={eager ? 'eager' : 'lazy'}
-        fetchpriority={eager ? 'high' : 'auto'}
-        decoding="async"
-        onLoad={(e) => {
-          setCargada(true)
-          setSrcCargada(e.currentTarget.currentSrc || e.currentTarget.src || '')
-        }}
-        onError={() => setError(true)}
-      />
+      {elMedio}
       {(caption || fuente) && (
         <figcaption>
           {caption}
