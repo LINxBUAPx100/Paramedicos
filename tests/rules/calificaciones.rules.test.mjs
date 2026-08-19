@@ -23,7 +23,12 @@ async function preparar() {
   if (env) return env
   fsmod = await import('firebase/firestore')
   env = await rut.initializeTestEnvironment({
-    projectId: process.env.GCLOUD_PROJECT || 'ptem-rules-test',
+    // Cada archivo de reglas corre en su PROPIO proyecto del emulador. Sin
+    // esto todos compartían dataset y `node --test` los ejecuta en paralelo:
+    // el fixture de un archivo pisaba el de otro (p. ej. calificaciones sembraba
+    // usuarios/alumA SIN grupoId y borraba el grupo que contenido necesitaba),
+    // así que una prueba pasaba o fallaba según quién escribiera último.
+    projectId: `${process.env.GCLOUD_PROJECT || 'ptem-rules-test'}-calificaciones`,
     firestore: { rules: readFileSync(new URL('../../firestore.rules', import.meta.url), 'utf8') },
   })
   await env.withSecurityRulesDisabled(async (ctx) => {

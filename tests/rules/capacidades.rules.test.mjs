@@ -46,6 +46,13 @@ async function preparar() {
   fsmod = await import('firebase/firestore')
   st = await import('firebase/storage')
   env = await rut.initializeTestEnvironment({
+    // Los demás archivos de reglas corren cada uno en su PROPIO proyecto para
+    // no pisarse los fixtures. Este NO puede: el emulador de Storage solo sirve
+    // el bucket por defecto del proyecto que recibe `emulators:exec`, así que
+    // con un projectId propio `ctx.storage()` apunta a un bucket inexistente.
+    // Se queda en el proyecto base, que comparte solo con capacidades/storage;
+    // sus fixtures son disjuntos a propósito (academias y uids distintos) y hay
+    // que mantenerlos así al añadir casos.
     projectId: process.env.GCLOUD_PROJECT || 'ptem-rules-test',
     firestore: { rules: readFileSync(new URL('../../firestore.rules', import.meta.url), 'utf8') },
     storage: { rules: readFileSync(new URL('../../storage.rules', import.meta.url), 'utf8') },
