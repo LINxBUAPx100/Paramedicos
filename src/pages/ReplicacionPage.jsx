@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import Icon from '../components/Icon.jsx'
 import ConfirmacionReforzada, { Dialogo } from '../components/ConfirmacionReforzada.jsx'
+import ColaDictamenes from '../components/ColaDictamenes.jsx'
 import { ETIQUETA_PLAN, ETIQUETA_TIPO, planEfectivo } from '../lib/capacidades.js'
 import { ETIQUETA_ESTADO_PLANTILLA } from '../lib/plantillasModelo.js'
+import { META_PROGRAMA, TIPOS_PROGRAMA } from '../lib/programasModelo.js'
 import {
   ESTRATEGIAS, ESTRATEGIA_DEFAULT, ETIQUETA_ESTRATEGIA, DESCRIPCION_ESTRATEGIA,
   fraseConfirmacion, requiereConfirmacionReforzada,
@@ -67,7 +69,8 @@ export default function ReplicacionPage() {
   }
 
   const pestanas = [
-    { id: 'plantillas', label: 'Plantillas' },
+    { id: 'plantillas', label: 'Contenido por curso' },
+    { id: 'revision', label: 'Revisión docente' },
     { id: 'replicar', label: 'Clonar y replicar' },
     { id: 'historial', label: 'Historial y rollback' },
   ]
@@ -109,6 +112,7 @@ export default function ReplicacionPage() {
       ) : (
         <div id={`rp-panel-${pestana}`} role="tabpanel" aria-labelledby={`rp-tab-${pestana}`}>
           {pestana === 'plantillas' && <SeccionPlantillas api={api} />}
+          {pestana === 'revision' && <SeccionRevision />}
           {pestana === 'replicar' && <SeccionReplicar api={api} />}
           {pestana === 'historial' && <SeccionHistorial api={api} />}
         </div>
@@ -173,102 +177,170 @@ function SeccionPlantillas({ api }) {
     return <div className="ruta-cargando" role="status"><span className="ruta-spinner" aria-hidden="true" /> <span>Cargando plantillas…</span></div>
   }
 
+  // El contenido se agrupa por CURSO —paramédico, enfermería, TSU…— porque esa
+  // es la pregunta real de quien entra aquí («¿qué tiene enfermería?»), no
+  // «¿qué plantillas existen?». Una tabla plana de plantillas obligaba a leer
+  // fila por fila para deducirlo. `tipoPrograma` sale de META_PROGRAMA; las
+  // plantillas anteriores al campo se leen como las de paramédico (TUM).
+  const porCurso = new Map()
+  for (const p of plantillas) {
+    const curso = META_PROGRAMA[p.tipoPrograma] ? p.tipoPrograma : 'tum'
+    if (!porCurso.has(curso)) porCurso.set(curso, [])
+    porCurso.get(curso).push(p)
+  }
+  const cursosConContenido = TIPOS_PROGRAMA.filter((t) => porCurso.has(t))
+  const cursosSinContenido = TIPOS_PROGRAMA.filter((t) => !porCurso.has(t))
+
   return (
-    <section aria-label="Plantillas globales">
-      <div className="rp-acciones-cab">
-        <button className="btn btn--primario" onClick={() => setDialogo({ tipo: 'nueva' })}>
-          <Icon name="mas" size={15} /> Nueva plantilla
-        </button>
-        <button className="btn btn--suave" onClick={() => setDialogo({ tipo: 'desde-curso' })}>
-          <Icon name="copiar" size={15} /> Desde un curso de academia
-        </button>
-      </div>
+    <section aria-label="Contenido por curso">
+      <p className="rp-ayuda">
+        Cada <strong>curso</strong> tiene su propio contenido: el de paramédico (TUM) es el que
+        está escrito hoy, y enfermería o los demás empiezan vacíos hasta que se les crea el suyo.
+        Dentro de un curso, el contenido vive en una <strong>plantilla</strong>: se edita en
+        borrador, se <strong>publica</strong> como versión inmutable y esa versión es la que se
+        copia a cada academia desde <em>Clonar y replicar</em>.
+      </p>
+
       {aviso && <p className="cuenta-ok" role="status">{aviso}</p>}
       {error && <p className="cuenta-error" role="alert">{error}</p>}
 
-      {plantillas.length === 0 ? (
-        <p className="rp-vacio">
-          No hay plantillas todavía. Siembra la oficial con <code>npm run migrar -- --seed</code> o crea una aquí.
-        </p>
-      ) : (
-        <div className="rp-tabla-scroll">
-          <table className="rp-tabla">
-            <thead>
-              <tr>
-                <th scope="col">Plantilla</th>
-                <th scope="col">Estado</th>
-                <th scope="col">Versión</th>
-                <th scope="col">Contenido</th>
-                <th scope="col">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {plantillas.map((p) => (
-                <tr key={p.id}>
-                  <th scope="row">
-                    <strong>{p.nombre || p.id}</strong>
-                    <small className="rp-sub">{p.id} · {ETIQUETA_TIPO[p.tipoDestino] || p.tipoDestino}</small>
-                  </th>
-                  <td><span className={`rp-chip rp-chip--${p.estado || 'borrador'}`}>{ETIQUETA_ESTADO_PLANTILLA[p.estado] || p.estado}</span></td>
-                  <td>v{p.version ?? 1}</td>
-                  <td>{p.conteos ? `${p.conteos.modulos} modulos · ${p.conteos.temas} temas` : '—'}</td>
-                  <td className="rp-celda-acciones">
-                    {p.estado === 'borrador' && (
-                      <>
-                        <Link className="btn btn--sm btn--suave" to={`/editor/plantilla/${p.id}`}>
-                          <Icon name="editar" size={13} /> Editar contenido
-                        </Link>
-                        <button className="btn btn--sm btn--primario" disabled={ocupado} onClick={() => setDialogo({ tipo: 'publicar', plantilla: p })}>
-                          <Icon name="verificado" size={13} /> Publicar v{p.version ?? 1}
+      {cursosConContenido.map((curso) => {
+        const meta = META_PROGRAMA[curso]
+        const lista = porCurso.get(curso)
+        const temas = lista.reduce((n, p) => n + (p.conteos?.temas || 0), 0)
+        return (
+          <article className="rp-curso" key={curso} style={{ '--curso-color': meta.color }}>
+            <header className="rp-curso-cab">
+              <span className="rp-curso-ico"><Icon name={meta.icono} size={22} /></span>
+              <div className="rp-curso-id">
+                <h3>{meta.etiqueta}</h3>
+                <small>
+                  {lista.length} plantilla{lista.length === 1 ? '' : 's'}
+                  {temas > 0 && ` · ${temas} temas escritos`}
+                </small>
+              </div>
+              <button
+                className="btn btn--sm btn--suave"
+                onClick={() => setDialogo({ tipo: 'nueva', curso })}
+              >
+                <Icon name="mas" size={14} /> Otra plantilla de {meta.etiquetaCorta}
+              </button>
+            </header>
+
+            <ul className="rp-curso-lista">
+              {lista.map((p) => {
+                const version = p.version ?? 1
+                return (
+                  <li className="rp-plantilla" key={p.id}>
+                    <div className="rp-plantilla-id">
+                      <strong>{p.nombre || p.id}</strong>
+                      <small className="rp-sub">
+                        v{version} · {ETIQUETA_TIPO[p.tipoDestino] || p.tipoDestino} ·{' '}
+                        {p.conteos ? `${p.conteos.modulos} módulos · ${p.conteos.temas} temas` : 'sin contenido todavía'}
+                      </small>
+                    </div>
+                    <span className={`rp-chip rp-chip--${p.estado || 'borrador'}`}>
+                      {ETIQUETA_ESTADO_PLANTILLA[p.estado] || p.estado}
+                    </span>
+
+                    {/* Una sola acción destacada por estado: es lo que toca hacer
+                        ahora. El resto queda en la fila de abajo, en gris. */}
+                    <div className="rp-plantilla-acciones">
+                      {p.estado === 'borrador' && (
+                        <>
+                          <Link className="btn btn--sm btn--primario" to={`/editor/plantilla/${p.id}`}>
+                            <Icon name="editar" size={13} /> {p.conteos?.temas ? 'Seguir escribiendo' : 'Crear el contenido'}
+                          </Link>
+                          <button className="btn btn--sm btn--suave" disabled={ocupado} onClick={() => setDialogo({ tipo: 'publicar', plantilla: p })}>
+                            <Icon name="verificado" size={13} /> Publicar v{version}
+                          </button>
+                        </>
+                      )}
+                      {p.estado === 'publicada' && (
+                        <button
+                          className="btn btn--sm btn--primario"
+                          disabled={ocupado}
+                          onClick={() => ejecutar(() => api.abrirSiguienteVersion(p.id), `Se abrió el borrador v${version + 1} de "${p.nombre}".`)}
+                        >
+                          <Icon name="mas" size={13} /> Editar: abrir v{version + 1}
                         </button>
-                      </>
-                    )}
-                    {p.estado === 'publicada' && (
-                      <button
-                        className="btn btn--sm btn--suave"
-                        disabled={ocupado}
-                        onClick={() => ejecutar(() => api.abrirSiguienteVersion(p.id), `Se abrió el borrador v${(p.version ?? 1) + 1} de "${p.nombre}".`)}
-                      >
-                        <Icon name="mas" size={13} /> Abrir v{(p.version ?? 1) + 1}
+                      )}
+                      {p.estado === 'archivada' && (
+                        <button
+                          className="btn btn--sm btn--primario"
+                          disabled={ocupado}
+                          onClick={() => ejecutar(
+                            () => api.cambiarEstadoPlantilla(p.id, p.publicadaEn ? 'publicada' : 'borrador'),
+                            `Plantilla "${p.nombre}" restaurada.`
+                          )}
+                        >
+                          <Icon name="restaurar" size={13} /> Restaurar
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="rp-plantilla-secundarias">
+                      <button className="rp-enlace" onClick={() => verVersiones(p)}>
+                        <Icon name="reloj" size={13} /> Versiones y uso
                       </button>
-                    )}
-                    <button className="btn btn--sm btn--suave" onClick={() => verVersiones(p)}>
-                      <Icon name="reloj" size={13} /> Versiones
-                    </button>
-                    <button className="btn btn--sm btn--suave" disabled={ocupado} onClick={() => setDialogo({ tipo: 'duplicar', plantilla: p })}>
-                      <Icon name="copiar" size={13} /> Duplicar
-                    </button>
-                    {p.estado !== 'archivada' ? (
-                      <button
-                        className="btn btn--sm btn--suave"
-                        disabled={ocupado}
-                        onClick={() => setDialogo({ tipo: 'archivar', plantilla: p })}
-                      >
-                        <Icon name="archivo" size={13} /> Archivar
+                      <button className="rp-enlace" disabled={ocupado} onClick={() => setDialogo({ tipo: 'duplicar', plantilla: p })}>
+                        <Icon name="copiar" size={13} /> Duplicar
                       </button>
-                    ) : (
-                      <button
-                        className="btn btn--sm btn--suave"
-                        disabled={ocupado}
-                        onClick={() => ejecutar(
-                          () => api.cambiarEstadoPlantilla(p.id, p.publicadaEn ? 'publicada' : 'borrador'),
-                          `Plantilla "${p.nombre}" restaurada.`
-                        )}
-                      >
-                        <Icon name="restaurar" size={13} /> Restaurar
-                      </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                      {p.estado !== 'archivada' && (
+                        <button className="rp-enlace" disabled={ocupado} onClick={() => setDialogo({ tipo: 'archivar', plantilla: p })}>
+                          <Icon name="archivo" size={13} /> Archivar
+                        </button>
+                      )}
+                    </div>
+                  </li>
+                )
+              })}
+            </ul>
+          </article>
+        )
+      })}
+
+      {/* Cursos que todavía no existen. Se enseñan como lo que son —una puerta
+          abierta, no un error— para que crear el de enfermería sea un clic y no
+          una búsqueda por el formulario genérico. */}
+      <article className="rp-curso rp-curso--vacio">
+        <header className="rp-curso-cab">
+          <span className="rp-curso-ico"><Icon name="mas" size={22} /></span>
+          <div className="rp-curso-id">
+            <h3>Empezar otro curso</h3>
+            <small>Crea su primera plantilla en borrador; el contenido se escribe después, en el editor.</small>
+          </div>
+        </header>
+        <div className="rp-curso-nuevos">
+          {cursosSinContenido.map((t) => (
+            <button key={t} className="btn btn--sm btn--suave" onClick={() => setDialogo({ tipo: 'nueva', curso: t })}>
+              <Icon name={META_PROGRAMA[t].icono} size={14} /> {META_PROGRAMA[t].etiqueta}
+            </button>
+          ))}
+          {cursosSinContenido.length === 0 && (
+            <p className="rp-vacio">Todos los cursos del catálogo ya tienen contenido.</p>
+          )}
+          <button className="btn btn--sm btn--suave" onClick={() => setDialogo({ tipo: 'desde-curso' })}>
+            <Icon name="copiar" size={14} /> Partir del curso de una academia
+          </button>
         </div>
+      </article>
+
+      {plantillas.length === 0 && (
+        <p className="rp-vacio">
+          No hay contenido todavía en ningún curso. Siembra el oficial con{' '}
+          <code>npm run migrar -- --seed</code> o crea el primero aquí arriba.
+        </p>
       )}
 
       {dialogo?.tipo === 'nueva' && (
         <FormPlantilla
-          titulo="Nueva plantilla (borrador)"
+          titulo={
+            dialogo.curso
+              ? `Nuevo contenido de ${META_PROGRAMA[dialogo.curso]?.etiquetaCorta || dialogo.curso} (borrador)`
+              : 'Nueva plantilla (borrador)'
+          }
+          curso={dialogo.curso}
           ocupado={ocupado}
           onCerrar={() => setDialogo(null)}
           onGuardar={(datos) => ejecutar(() => api.crearPlantillaVacia(datos), 'Plantilla creada en borrador. Edita su contenido y publícala.')}
@@ -359,8 +431,38 @@ function SeccionPlantillas({ api }) {
   )
 }
 
-function FormPlantilla({ titulo, conCursoId = false, ocupado, onCerrar, onGuardar }) {
-  const [datos, setDatos] = useState({ nombre: '', descripcion: '', categoria: '', tipoDestino: 'basico', cursoId: '' })
+// ------------------------------------------------------------
+//  Revisión docente del contenido (pestaña de la consola)
+// ------------------------------------------------------------
+//  La revisión ya existía, pero solo dentro de una academia: el director veía
+//  la cola en su panel. Las firmas sobre el contenido GLOBAL —el que se escribe
+//  en la plantilla y se replica después— no pertenecen a ninguna academia, así
+//  que no salían en ninguna cola: quedaban firmadas y sin resolver. Aquí se ven
+//  todas, que es donde toca, porque el contenido por curso se administra en
+//  esta misma pantalla.
+function SeccionRevision() {
+  return (
+    <section aria-label="Revisión docente del contenido">
+      <p className="rp-ayuda">
+        Lo que los profesores con <strong>pase de revisión</strong> han firmado sobre cada tema, de
+        todas las academias y también del contenido global. Validar no asciende el tema por sí
+        solo: el estado <em>validado</em> abre el banco de examen, así que la firma se resuelve
+        aquí y el cambio pasa por el editor.
+      </p>
+      <ColaDictamenes plataforma desplegada />
+    </section>
+  )
+}
+
+// `curso` llega preseleccionado cuando se pulsa «crear el contenido de X» en la
+// tarjeta de ese curso: quien ya dijo qué curso quiere no tiene que repetirlo en
+// un desplegable.
+function FormPlantilla({ titulo, curso, conCursoId = false, ocupado, onCerrar, onGuardar }) {
+  const [datos, setDatos] = useState({
+    nombre: '', descripcion: '', categoria: '',
+    tipoPrograma: curso && META_PROGRAMA[curso] ? curso : 'tum',
+    tipoDestino: 'basico', cursoId: '',
+  })
   const pon = (k) => (e) => setDatos((d) => ({ ...d, [k]: e.target.value }))
   return (
     <Dialogo titulo={titulo} onCerrar={onCerrar}>
@@ -385,6 +487,17 @@ function FormPlantilla({ titulo, conCursoId = false, ocupado, onCerrar, onGuarda
         <label>
           Categoría
           <input type="text" value={datos.categoria} onChange={pon('categoria')} maxLength={60} placeholder="p. ej. Programa completo, Capacitación" />
+        </label>
+        <label>
+          Curso al que pertenece
+          <select value={datos.tipoPrograma} onChange={pon('tipoPrograma')}>
+            {TIPOS_PROGRAMA.map((t) => (
+              <option key={t} value={t}>{META_PROGRAMA[t].etiqueta}</option>
+            ))}
+          </select>
+          <small className="rp-sub">
+            Agrupa el contenido en la consola: paramédico y enfermería no se mezclan.
+          </small>
         </label>
         <label>
           Tipo de academia destino

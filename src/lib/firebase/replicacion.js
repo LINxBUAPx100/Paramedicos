@@ -56,8 +56,15 @@ export async function listarPlantillasAdmin() {
     .sort((a, b) => String(a.nombre || a.id).localeCompare(String(b.nombre || b.id)))
 }
 
-export async function crearPlantillaVacia({ nombre, descripcion = '', categoria = '', tipoDestino = 'basico', planesCompatibles }) {
-  const meta = normalizarMetadatosPlantilla({ nombre, descripcion, categoria, tipoDestino, planesCompatibles })
+export async function crearPlantillaVacia({
+  nombre, descripcion = '', categoria = '', tipoPrograma, tipoDestino = 'basico', planesCompatibles,
+}) {
+  // `tipoPrograma` es el CURSO (paramédico, enfermería…). Va explícito porque
+  // esta función desestructura: si se olvida un campo aquí, el formulario lo
+  // manda y la plantilla se guarda sin él, agrupada donde no toca.
+  const meta = normalizarMetadatosPlantilla({
+    nombre, descripcion, categoria, tipoPrograma, tipoDestino, planesCompatibles,
+  })
   const error = validarMetadatosPlantilla(meta)
   if (error) throw new Error(error)
   const id = slugPlantilla(nombre)
@@ -79,6 +86,11 @@ export async function crearPlantillaVacia({ nombre, descripcion = '', categoria 
 
 // Metadatos SIEMPRE editables (no son contenido); el contenido de una
 // publicada es inmutable (editor bloqueado por puedeEditarPlantilla).
+//
+// OJO: `meta` se normaliza ENTERO y se escribe entero, así que hay que pasarle
+// todos los campos, no solo los que cambian. Un `{ nombre }` suelto dejaría
+// `tipoPrograma` en su valor por defecto y movería el contenido de enfermería
+// al grupo de paramédico sin decir nada.
 export async function actualizarMetadatosPlantilla(plantillaId, meta) {
   const m = normalizarMetadatosPlantilla(meta)
   const error = validarMetadatosPlantilla(m)

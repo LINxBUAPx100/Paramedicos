@@ -93,6 +93,7 @@
   --radio-lg: 24px;
   --sidebar-w: 290px;
   --topbar-h: 62px;
+  --consola-riel: 216px; /* navegación fija de /admin y /panel */
 
   /* ============================================================
      ESCALAS DEL SISTEMA
@@ -4703,6 +4704,11 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
    apretadas en el centro con medio monitor vacío a los lados. A diferencia de
    `--full` conservan el padding: sin él, las tablas se pegarían al borde. */
 .contenido--ancho { max-width: none; }
+/* Hueco del riel fijo: borde + ancho + separación con el cuerpo. Solo desde
+   881px, que es donde el riel deja de ir en el flujo. */
+@media (min-width: 881px) {
+  .contenido--ancho { padding-left: calc(var(--e-12) + var(--consola-riel) + var(--e-24)); }
+}
 
 /* Columna flexible en las páginas a sangre (portada y landing) para que puedan
    REPARTIR el alto sobrante. Hace falta desde que el footer se pega a la base:
@@ -5087,21 +5093,28 @@ html[data-tema='oscuro'] .ph-eyebrow { color: var(--primario-claro); }
 .ph-stats {
   display: flex;
   flex-wrap: wrap;
-  gap: clamp(var(--e-12), 2.2vw, var(--e-32));
+  gap: clamp(var(--e-20), 2.6vw, var(--e-40));
   align-items: flex-end;
 }
-/* Cada stat: label en negrita abajo-izquierda + número gigante itálico
-   atenuado superpuesto a la derecha (estilo editorial de la referencia) */
+/* Cada stat: número gigante itálico atenuado DETRÁS y etiqueta encima.
+   El número iba en `position: absolute`, así que no medía: la caja del stat
+   valía lo que su etiqueta y una cifra de cuatro dígitos se salía por la
+   izquierda hasta montarse sobre la etiqueta vecina (se leía «7287 1428»).
+   Ahora ambos comparten una celda de rejilla: la columna mide lo que el más
+   ancho de los dos, los stats no se pisan y el número sigue detrás —mismo
+   tamaño, misma opacidad— en vez de al lado. */
 .ph-stat {
   position: relative;
-  display: flex;
-  align-items: flex-end;
-  padding: 0 clamp(var(--e-12), 1.4vw, var(--e-16)) 0.18em 0;
+  display: grid;
+  grid-template-areas: 'apilado';
+  align-items: end;
+  justify-items: center;
+  padding: 0 0 0.18em;
 }
+.ph-stat > * { grid-area: apilado; }
 .ph-stat-num {
-  position: absolute;
-  right: 0;
-  bottom: -0.06em;
+  align-self: end;
+  margin-bottom: -0.06em;
   font-family: var(--fuente-cifra);
   font-style: italic;
   font-weight: 600;
@@ -6382,6 +6395,55 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   background: var(--bg-2);
 }
 .rp-acciones-cab { display: flex; gap: var(--e-8); flex-wrap: wrap; margin-bottom: var(--e-8); }
+
+/* ---- Contenido por CURSO (paramédico, enfermería…) ----
+   La tabla plana de plantillas obligaba a deducir a qué carrera pertenecía
+   cada fila. Ahora cada curso es una tarjeta con su color, su recuento y una
+   sola acción destacada por plantilla; lo demás baja a una fila de enlaces
+   para que la acción que toca no compita con cinco botones iguales. */
+.rp-ayuda {
+  color: var(--texto-2); font-size: var(--t-sm); line-height: 1.55;
+  max-width: 78ch; margin-bottom: var(--e-20);
+}
+.rp-curso {
+  border: 1px solid var(--borde); border-left: 4px solid var(--curso-color, var(--borde));
+  border-radius: var(--radio); background: var(--bg-2);
+  padding: var(--e-16); margin-bottom: var(--e-16);
+}
+.rp-curso--vacio { border-left-color: var(--borde); background: transparent; border-style: dashed; }
+.rp-curso-cab { display: flex; align-items: center; gap: var(--e-12); flex-wrap: wrap; }
+.rp-curso-ico {
+  display: grid; place-items: center; width: 40px; height: 40px; flex-shrink: 0;
+  border-radius: var(--radio-sm);
+  background: color-mix(in srgb, var(--curso-color, var(--primario)) 14%, transparent);
+  color: var(--curso-color, var(--primario));
+}
+.rp-curso-id { flex: 1; min-width: 200px; }
+.rp-curso-id h3 { font-size: var(--t-md); }
+.rp-curso-id small { color: var(--texto-3); font-size: var(--t-xs); }
+.rp-curso-lista { list-style: none; display: flex; flex-direction: column; gap: var(--e-8); margin-top: var(--e-16); }
+.rp-curso-nuevos { display: flex; flex-wrap: wrap; gap: var(--e-8); margin-top: var(--e-16); }
+.rp-plantilla {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--e-8) var(--e-12); align-items: center;
+  padding: var(--e-12); border: 1px solid var(--borde); border-radius: var(--radio-sm);
+  background: var(--bg-3);
+}
+.rp-plantilla-id strong { display: block; }
+.rp-plantilla-acciones { display: flex; gap: var(--e-8); flex-wrap: wrap; grid-column: 1 / -1; }
+.rp-plantilla-secundarias { display: flex; gap: var(--e-16); flex-wrap: wrap; grid-column: 1 / -1; }
+.rp-enlace {
+  display: inline-flex; align-items: center; gap: var(--e-4);
+  min-height: 32px; padding: 0; border: none; background: none;
+  color: var(--texto-3); font: inherit; font-size: var(--t-xs); cursor: pointer;
+}
+.rp-enlace:hover:not(:disabled) { color: var(--primario); text-decoration: underline; }
+.rp-enlace:disabled { opacity: 0.5; cursor: default; }
+
+@media (max-width: 640px) {
+  .rp-plantilla { grid-template-columns: 1fr; }
+}
 .rp-vacio { color: var(--texto-2); padding: var(--e-12) 0; }
 .rp-sub { display: block; color: var(--texto-3); font-weight: 400; font-size: var(--t-xs); }
 .rp-tabla-scroll { overflow-x: auto; }
@@ -7057,9 +7119,22 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
    donde academias, usuarios, facturación, anuncio y problemas iban apilados
    en una sola columna, sin resumen ni jerarquía.
    ============================================================ */
-.consola { display: grid; grid-template-columns: 216px minmax(0, 1fr); gap: var(--e-32); align-items: start; }
+/* El riel de navegación va FIJO al borde izquierdo de la pantalla, no dentro
+   del contenedor centrado. Antes era una columna `sticky` de la rejilla: con
+   el padding de la página quedaba flotando lejos del borde y solo se
+   enganchaba después de desplazar. Ahora no se mueve y el cuerpo ocupa el
+   ancho restante; el hueco lo abre el padding de `.contenido--ancho`. */
+.consola { display: block; }
 .consola-nav {
-  position: sticky; top: var(--e-16);
+  position: fixed;
+  top: calc(var(--topbar-h) + var(--e-12));
+  left: var(--e-12);
+  width: var(--consola-riel);
+  /* Con la ventana baja el riel se desplaza por dentro en lugar de
+     desbordarse por debajo del pie. */
+  max-height: calc(100vh - var(--topbar-h) - var(--e-24));
+  overflow-y: auto;
+  z-index: 30; /* por debajo de la topbar (50) y del cajón lateral (60) */
   display: flex; flex-direction: column; gap: var(--e-2);
   padding: var(--e-12);
   border: 1px solid var(--borde); border-radius: var(--radio);
@@ -7125,8 +7200,11 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 .cs-tabla-mini b { font-family: var(--fuente-cifra); }
 
 @media (max-width: 880px) {
-  .consola { grid-template-columns: 1fr; gap: var(--e-16); }
-  .consola-nav { position: static; flex-direction: row; flex-wrap: wrap; }
+  .consola { gap: var(--e-16); }
+  .consola-nav {
+    position: static; flex-direction: row; flex-wrap: wrap;
+    width: auto; max-height: none; margin-bottom: var(--e-16);
+  }
   .consola-marca { display: none; }
 }
 

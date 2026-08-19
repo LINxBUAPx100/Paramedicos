@@ -156,6 +156,25 @@ const paths = {
   subir: <path d="M12 19V5M6 11l6-6 6 6" />,
   bajar: <path d="M12 5v14M6 13l6 6 6-6" />,
   moverA: <path d="M4 6h9M4 12h5M4 18h9M15 9l4 3-4 3M19 12h-6" />,
+  // Iconos de los CURSOS (src/lib/programasModelo.js → META_PROGRAMA). El
+  // catálogo los nombraba desde el principio, pero no existían aquí: `Icon`
+  // devuelve null ante un nombre desconocido, así que las tarjetas de curso
+  // salían con el hueco vacío en vez de con su icono.
+  ambulancia: (
+    <>
+      <path d="M3 16.5V8a1 1 0 0 1 1-1h9v9.5M13 10.5h3.6l3.4 3.4v2.6" />
+      <path d="M6.5 10.5h3M8 9v3" />
+      <circle cx="7.5" cy="17.5" r="1.7" />
+      <circle cx="16.5" cy="17.5" r="1.7" />
+    </>
+  ),
+  corazon: <path d="M12 20s-7-4.3-7-9.1A3.9 3.9 0 0 1 12 8.1 3.9 3.9 0 0 1 19 10.9c0 4.8-7 9.1-7 9.1Z" />,
+  birrete: (
+    <>
+      <path d="M12 5 2.5 9.2 12 13.4l9.5-4.2L12 5Z" />
+      <path d="M6.6 11.2V16c0 1.4 2.4 2.4 5.4 2.4s5.4-1 5.4-2.4v-4.8" />
+    </>
+  ),
 }
 
 export default function Icon({ name, size = 22, className = '', strokeWidth = 1.75, style }) {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useContenido, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
 import { useProgress } from '../context/ProgressContext.jsx'
 import MisCalificaciones from '../components/MisCalificaciones.jsx'
@@ -15,8 +15,66 @@ function formatoFecha(ts) {
   })
 }
 
+// ============================================================
+//  /progreso — dos vistas, no una
+// ------------------------------------------------------------
+//  Quien da clase entraba directo al avance de sus alumnos y su propio
+//  progreso quedaba inalcanzable: el «Ver detalle» de la portada llevaba aquí
+//  y le enseñaba la tabla de otros. Pero el staff TAMBIÉN estudia —el
+//  super-admin es el primero que recorre el temario para revisarlo—, así que
+//  su avance personal existe y hay que poder verlo. Ahora son dos pestañas y
+//  la vista viaja en la URL (`?vista=mio`), que es lo que permite enlazar
+//  directamente a la propia desde la portada.
+// ============================================================
 export default function ProgresoPage() {
-  const { esStaff, user } = useAuth()
+  const { esStaff } = useAuth()
+  const [params, setParams] = useSearchParams()
+  const vista = params.get('vista') === 'mio' ? 'mio' : 'alumnos'
+
+  // Quien no da clase solo tiene una vista posible: la suya. Sin pestañas.
+  if (!esStaff) return <MiProgreso />
+
+  const VISTAS = [
+    { id: 'alumnos', label: 'Avance de mis alumnos' },
+    { id: 'mio', label: 'Mi progreso' },
+  ]
+
+  return (
+    <div className="progreso-page">
+      <header className="progreso-header">
+        <h1>Progreso</h1>
+        <p>El avance de tus alumnos y, en su propia pestaña, el tuyo.</p>
+      </header>
+
+      <div className="rp-tabs" role="tablist" aria-label="Vistas de progreso">
+        {VISTAS.map((v) => (
+          <button
+            key={v.id}
+            role="tab"
+            id={`pg-tab-${v.id}`}
+            aria-selected={vista === v.id}
+            aria-controls={`pg-panel-${v.id}`}
+            className={`rp-tab ${vista === v.id ? 'activa' : ''}`}
+            // `replace` para no llenar el historial: alternar pestañas no es
+            // navegar, y con push el botón Atrás obligaría a pasar por cada una.
+            onClick={() => setParams(v.id === 'mio' ? { vista: 'mio' } : {}, { replace: true })}
+          >
+            {v.label}
+          </button>
+        ))}
+      </div>
+
+      <div id={`pg-panel-${vista}`} role="tabpanel" aria-labelledby={`pg-tab-${vista}`}>
+        {vista === 'mio' ? <MiProgreso conCabecera={false} /> : <ProgresoStaff conCabecera={false} />}
+      </div>
+    </div>
+  )
+}
+
+// Avance personal: el de quien mira. Se usa suelto (alumno) y dentro de la
+// pestaña «Mi progreso» del staff, de ahí `conCabecera`.
+function MiProgreso({ conCabecera = true }) {
+  const { user } = useAuth()
   const { contenido, error, reintentar } = useContenido()
   const { estado, reiniciar } = useProgress()
 
@@ -25,7 +83,7 @@ export default function ProgresoPage() {
   // profesor desde el panel: el alumno no tenía dónde consultar su propia nota.
   const [mejorPorModulo, setMejorPorModulo] = useState({})
   useEffect(() => {
-    if (!user?.uid || esStaff) return undefined
+    if (!user?.uid) return undefined
     let vivo = true
     ;(async () => {
       try {
@@ -45,12 +103,7 @@ export default function ProgresoPage() {
       }
     })()
     return () => { vivo = false }
-  }, [user?.uid, esStaff])
-
-  // Quien DA CLASE no tiene progreso personal: se le enseña el de sus alumnos.
-  // Va lo primero, antes incluso de mirar el contenido, para no cargar el
-  // temario entero por una pantalla que no lo usa.
-  if (esStaff) return <ProgresoStaff />
+  }, [user?.uid])
 
   if (error) return <ErrorContenido onReintentar={reintentar} />
   if (!contenido) return <CargandoContenido />
@@ -78,11 +131,13 @@ export default function ProgresoPage() {
   }
 
   return (
-    <div className="progreso-page">
-      <header className="progreso-header">
-        <h1>Mi progreso</h1>
-        <p>Tu avance se guarda automáticamente en este navegador.</p>
-      </header>
+    <div className={conCabecera ? 'progreso-page' : ''}>
+      {conCabecera && (
+        <header className="progreso-header">
+          <h1>Mi progreso</h1>
+          <p>Tu avance se guarda automáticamente en este navegador.</p>
+        </header>
+      )}
 
       <div className="progreso-resumen">
         <div className="resumen-card">

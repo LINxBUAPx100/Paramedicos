@@ -168,7 +168,10 @@ function SeccionProgreso({ temasLeidos, total, pct }) {
         <div className="ph-progreso-barra">
           <span style={{ width: `${pct}%` }} />
         </div>
-        <Link to="/progreso" className="ph-link">
+        {/* A la vista PERSONAL: quien da clase (y el super-admin) tiene además
+            la de sus alumnos, y sin este parámetro «Ver detalle» le abría esa
+            en vez de la barra que acaba de leer aquí. */}
+        <Link to="/progreso?vista=mio" className="ph-link">
           Ver detalle <Icon name="chevronDer" size={15} />
         </Link>
       </Reveal>

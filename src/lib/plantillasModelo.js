@@ -15,6 +15,7 @@ import {
   huella, huellaTema, huellaEstructura, contenidoComparableTema,
 } from './replicacionModelo.js'
 import { rutaDesdeUrlStorage } from './archivosModelo.js'
+import { TIPOS_PROGRAMA } from './programasModelo.js'
 
 export const ESTADOS_PLANTILLA = ['borrador', 'publicada', 'archivada']
 
@@ -66,6 +67,14 @@ export function normalizarMetadatosPlantilla(meta = {}) {
     nombre: String(meta.nombre || '').trim().slice(0, 120),
     descripcion: String(meta.descripcion || '').trim().slice(0, 600),
     categoria: String(meta.categoria || '').trim().slice(0, 60),
+    // CURSO al que pertenece la plantilla: paramédico (TUM), enfermería, TSU…
+    // Sin este campo todas las plantillas caían en un mismo montón y la consola
+    // no podía responder «¿qué contenido tiene enfermería?», que es la pregunta
+    // que se hace en cuanto la plataforma imparte más de una carrera.
+    // El valor por defecto es 'tum' a propósito: es el único plan que la
+    // plataforma tiene escrito hoy, así que las plantillas anteriores a este
+    // campo se leen como lo que son, el de paramédico, y se pueden reasignar.
+    tipoPrograma: TIPOS_PROGRAMA.includes(meta.tipoPrograma) ? meta.tipoPrograma : 'tum',
     tipoDestino: ['basico', 'avanzado', 'medicina'].includes(meta.tipoDestino) ? meta.tipoDestino : 'basico',
     planesCompatibles: Array.isArray(meta.planesCompatibles)
       ? meta.planesCompatibles.filter((p) => ['base', 'pro', 'curso'].includes(p))

@@ -23,7 +23,16 @@ import {
 
 const hoyISO = () => new Date().toISOString().slice(0, 10)
 
-export default function ColaDictamenes({ academiaId }) {
+/**
+ * @param {object} props
+ * @param {string} [props.academiaId] Cola de UNA academia (panel del director).
+ * @param {boolean} [props.plataforma] Cola GLOBAL, del super-admin: incluye las
+ *   firmas sobre la plantilla, que no pertenecen a ninguna academia y por eso
+ *   no salían en ninguna cola.
+ * @param {boolean} [props.desplegada] Abre la lista sin tener que hacer clic:
+ *   en una pantalla dedicada a revisar, el acordeón cerrado esconde el trabajo.
+ */
+export default function ColaDictamenes({ academiaId, plataforma = false, desplegada = false }) {
   const { user } = useAuth()
   const [lista, setLista] = useState(null) // null = sin cargar
   const [cargando, setCargando] = useState(false)
@@ -34,8 +43,8 @@ export default function ColaDictamenes({ academiaId }) {
     setCargando(true)
     setError('')
     try {
-      const { dictamenesDeAcademia } = await import('../lib/firebase/dictamenes.js')
-      setLista(await dictamenesDeAcademia(academiaId))
+      const api = await import('../lib/firebase/dictamenes.js')
+      setLista(plataforma ? await api.dictamenesTodos() : await api.dictamenesDeAcademia(academiaId))
     } catch {
       setLista([])
       setError('No se pudo leer la cola de dictámenes.')
@@ -43,6 +52,12 @@ export default function ColaDictamenes({ academiaId }) {
       setCargando(false)
     }
   }
+
+  // Con la lista desplegada de salida nadie pulsa el <summary>, así que la
+  // carga no puede depender del `onToggle`.
+  useEffect(() => {
+    if (desplegada && lista === null && !cargando) cargar()
+  }) // eslint-disable-line react-hooks/exhaustive-deps
 
   const resumen = useMemo(() => resumenDictamenes(lista || []), [lista])
   const visibles = (lista || []).filter((d) => (verResueltos ? true : (d.estado || 'abierto') === 'abierto'))
@@ -56,7 +71,7 @@ export default function ColaDictamenes({ academiaId }) {
         aplicas aquí y el cambio pasa por el editor.
       </p>
 
-      <details onToggle={(e) => { if (e.target.open && lista === null) cargar() }}>
+      <details open={desplegada} onToggle={(e) => { if (e.target.open && lista === null) cargar() }}>
         <summary>
           <Icon name="reloj" size={15} /> Ver cola de dictámenes
           {lista !== null && resumen.abiertos > 0 && (

@@ -77,6 +77,27 @@ export async function dictamenesDeAcademia(academiaId, { soloAbiertos = false } 
 }
 
 /**
+ * Cola de la PLATAFORMA: todos los dictámenes, sean de la academia que sean.
+ *
+ * Existe porque el contenido que se revisa en la consola del super-admin no es
+ * de ninguna academia: es la plantilla global, y quien la revisa firma con
+ * `academiaId` nulo (el super-admin no pertenece a una). Con
+ * `dictamenesDeAcademia` esas firmas no aparecían en ninguna cola: se quedaban
+ * escritas y sin nadie que las resolviera.
+ *
+ * Solo el super-admin puede leerla; las reglas rechazan la consulta a cualquier
+ * otro (`allow read: if esSuper() || esStaffDe(...)`, y aquí no hay filtro por
+ * academia que satisfaga la segunda mitad).
+ */
+export async function dictamenesTodos({ soloAbiertos = false } = {}) {
+  const snap = await getDocs(collection(db, 'dictamenes'))
+  const todos = snap.docs
+    .map((d) => ({ id: d.id, ...d.data() }))
+    .sort((a, b) => (b.fecha?.seconds || 0) - (a.fecha?.seconds || 0))
+  return soloAbiertos ? todos.filter((d) => (d.estado || 'abierto') === 'abierto') : todos
+}
+
+/**
  * Marca un dictamen como aplicado o descartado. `nota` explica qué se hizo,
  * porque un dictamen descartado sin motivo es una decisión sin rastro.
  */

@@ -3,12 +3,15 @@ import { useAuth } from '../context/AuthContext.jsx'
 import Icon from './Icon.jsx'
 
 // ============================================================
-//  «Mi progreso» para quien DA CLASE
+//  Progreso para quien DA CLASE
 // ------------------------------------------------------------
-//  Un profesor no tiene progreso personal: no estudia el temario, lo enseña.
-//  Aun así se le pintaba la misma pantalla que a un alumno —barra de temas
-//  leídos, promedio de sus quizzes, botón de reiniciar su progreso—, que para
-//  él no significa nada y encima le ofrece borrar algo que no usa.
+//  Lo primero que ve un profesor al entrar a /progreso no es su avance
+//  personal, sino el de sus alumnos: antes se le pintaba la misma pantalla que
+//  a un alumno —barra de temas leídos, promedio de sus quizzes, botón de
+//  reiniciar su progreso— como si el temario lo estudiara en vez de enseñarlo.
+//  Su avance personal SÍ existe, y sí se puede consultar: vive en la segunda
+//  pestaña de /progreso (`?vista=mio`), que es adonde apunta «Ver detalle» de
+//  la portada.
 //
 //  Lo que sí necesita es el avance de SUS ALUMNOS. Eso ya existe y está bien
 //  hecho en el panel, así que esta pantalla NO lo repite: lo señala. Mantener
@@ -38,20 +41,25 @@ const DESTINOS = [
   },
 ]
 
-export default function ProgresoStaff() {
+// `conCabecera` es false cuando esto va dentro de la pestaña «Avance de mis
+// alumnos» de /progreso: el título y el encabezado los pone ya la pestaña, y
+// dos <h1> seguidos rompen el orden de encabezados de la página.
+export default function ProgresoStaff({ conCabecera = true }) {
   const { rol, academia, grupo } = useAuth()
   const esDirector = rol === 'admin_escuela' || rol === 'superadmin'
 
   return (
-    <div className="progreso-page">
-      <header className="progreso-header">
-        <h1>{esDirector ? 'Avance de tu academia' : 'Avance de tus grupos'}</h1>
-        <p>
-          Aquí no hay progreso personal: el temario lo enseñas, no lo estudias.
-          {grupo?.nombre && <> Trabajas con <strong>{grupo.nombre}</strong>.</>}
-          {academia?.nombre && !grupo?.nombre && <> {academia.nombre}.</>}
-        </p>
-      </header>
+    <div className={conCabecera ? 'progreso-page' : ''}>
+      {conCabecera && (
+        <header className="progreso-header">
+          <h1>{esDirector ? 'Avance de tu academia' : 'Avance de tus grupos'}</h1>
+          <p>
+            El avance de quienes estudian contigo.
+            {grupo?.nombre && <> Trabajas con <strong>{grupo.nombre}</strong>.</>}
+            {academia?.nombre && !grupo?.nombre && <> {academia.nombre}.</>}
+          </p>
+        </header>
+      )}
 
       <div className="ps-destinos">
         {DESTINOS.map((d) => (
@@ -69,7 +77,8 @@ export default function ProgresoStaff() {
       <p className="panel-nota">
         ¿Quieres estudiar el temario tú mismo? Está entero en{' '}
         <Link to="/temario">Temario</Link> y en el <Link to="/atlas">Atlas</Link>: lo ves completo,
-        sin restricciones de grupo.
+        sin restricciones de grupo. Tu propio avance está en la pestaña{' '}
+        <Link to="/progreso?vista=mio">Mi progreso</Link>.
       </p>
     </div>
   )

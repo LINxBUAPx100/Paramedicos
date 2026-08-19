@@ -32,10 +32,21 @@ test('metadatos: slug seguro, normalización a claves conocidas y validación', 
   })
   assert.deepEqual(m, {
     nombre: 'Plan', descripcion: '', categoria: '',
-    tipoDestino: 'basico', planesCompatibles: ['pro'],
+    tipoPrograma: 'tum', tipoDestino: 'basico', planesCompatibles: ['pro'],
   })
   assert.equal(validarMetadatosPlantilla({ nombre: '' }), 'La plantilla necesita un nombre.')
   assert.equal(validarMetadatosPlantilla({ nombre: 'X' }), null)
+})
+
+test('metadatos: la plantilla declara a qué CURSO pertenece', () => {
+  // El curso es lo que separa el contenido de paramédico del de enfermería en
+  // la consola. Un valor inventado no puede colarse: caería en un grupo que
+  // ninguna pantalla sabe pintar.
+  assert.equal(normalizarMetadatosPlantilla({ nombre: 'A', tipoPrograma: 'enfermeria' }).tipoPrograma, 'enfermeria')
+  assert.equal(normalizarMetadatosPlantilla({ nombre: 'A', tipoPrograma: 'brujeria' }).tipoPrograma, 'tum')
+  // Plantilla anterior al campo: se lee como la de paramédico, que es el único
+  // plan escrito hasta ahora, y desde la consola se puede reasignar.
+  assert.equal(normalizarMetadatosPlantilla({ nombre: 'A' }).tipoPrograma, 'tum')
 })
 
 test('conteos: cursos/modulos/unidades/temas de la estructura', () => {
