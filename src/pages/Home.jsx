@@ -216,7 +216,7 @@ function SeccionPrueba() {
     <Reveal as="section" className="ph-banda ph-prueba">
       <div className="ph-wrap ph-banda-in ph-banda-in--prueba">
         <div className="ph-banda-img ph-banda-img--sangra-izq">
-          <Imagen {...IMG.ponteAprueba} ratio="4 / 3" figura zoom={false} alt="Hojas de examen con las respuestas marcadas y un bolígrafo" />
+          <Imagen {...IMG.ponteAprueba} figura zoom={false} alt="Hojas de examen con las respuestas marcadas y un bolígrafo" />
         </div>
         <div className="ph-banda-texto ph-banda-texto--der">
           {/* Dos líneas fijas, como el diseño: «Ponte a» arriba con la inicial
@@ -266,7 +266,7 @@ function SeccionAtlas() {
             diminuta, limitada por el alto. Con 3/4 ocupa lo que el diseño le da,
             y sale por el borde derecho de la banda. */}
         <div className="ph-banda-img ph-banda-img--sangra-der">
-          <Imagen {...IMG.atlas} ratio="1 / 1" figura zoom={false} alt="Pila de libros de estudio" />
+          <Imagen {...IMG.atlas} figura zoom={false} alt="Pila de libros de estudio" />
         </div>
       </div>
     </Reveal>
@@ -285,7 +285,7 @@ function SeccionFlashcards({ flashcards }) {
           Flash<span className="ac">Cards</span>
         </h2>
         <div className="ph-banda-img ph-flash-img">
-          <Imagen {...IMG.flashcards} ratio="4 / 3" figura zoom={false} alt="Persona señalando un botiquín de primeros auxilios" />
+          <Imagen {...IMG.flashcards} figura zoom={false} alt="Persona señalando un botiquín de primeros auxilios" />
         </div>
         <div className="ph-banda-texto ph-flash-texto">
           <span className="ph-flash-bignum">

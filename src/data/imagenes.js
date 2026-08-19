@@ -37,22 +37,33 @@ import { juegoResponsivo } from '../lib/imagenLocal.js'
 //
 //  El hero va aparte porque lo precarga index.html (es el LCP): sus URLs se
 //  construyen en Home.jsx desde public/hero/.
-export const ANCHOS_HOME = [480, 800, 1200]
-// Cada banda ocupa la columna estrecha de un grid de dos (0.7fr de ~1200 px) y
-// pasa a ancho completo en móvil.
-const SIZES_HOME = '(max-width: 880px) 90vw, 520px'
+// Cada banda ocupa una columna de un grid de dos y pasa a ancho completo en móvil.
+const SIZES_HOME = '(max-width: 880px) 90vw, 620px'
 
-const bandaHome = (nombre) =>
-  juegoResponsivo(nombre, { carpeta: 'home', anchos: ANCHOS_HOME, sizes: SIZES_HOME })
+//  Los tres archivos vienen RECORTADOS al dibujo (el script les quita el margen
+//  transparente, que era entre el 49 % y el 65 % del lienzo). Dos consecuencias
+//  que hay que declarar aquí:
+//
+//   · `anchos` es distinto en cada uno, porque al recortar cada dibujo se queda
+//     con el ancho que de verdad tiene. Pedir un ancho que no existe deja un
+//     `srcset` prometiendo un archivo que da 404.
+//   · `aspecto` es la proporción REAL del dibujo. Al pasarla como `ratio` de la
+//     caja, `object-fit: contain` la llena por completo: ni franjas vacías ni
+//     recorte ni deformación. Antes el margen transparente falseaba la
+//     proporción (los libros venían en un archivo vertical siendo cuadrados) y
+//     por eso el dibujo salía pequeño dentro de una caja llena de aire.
+export const BANDAS_HOME = [
+  { clave: 'ponteAprueba', nombre: 'ponte-a-prueba', anchos: [480, 800, 1200], aspecto: '1418 / 1084' },
+  { clave: 'atlas', nombre: 'logros', anchos: [480, 800, 960], aspecto: '973 / 959' },
+  { clave: 'flashcards', nombre: 'flashcards', anchos: [480, 800, 1080], aspecto: '1092 / 1224' },
+]
 
-export const IMG = {
-  ponteAprueba: bandaHome('ponte-a-prueba'), // hojas de examen con bolígrafo
-  atlas: bandaHome('logros'), // pila de libros
-  flashcards: bandaHome('flashcards'), // persona con botiquín
-}
-
-// Nombres de archivo de las bandas (para la prueba que comprueba que existen).
-export const BANDAS_HOME = ['ponte-a-prueba', 'logros', 'flashcards']
+export const IMG = Object.fromEntries(
+  BANDAS_HOME.map(({ clave, nombre, anchos, aspecto }) => [
+    clave,
+    { ...juegoResponsivo(nombre, { carpeta: 'home', anchos, sizes: SIZES_HOME }), ratio: aspecto },
+  ])
+)
 
 // --- LOGROS: galería de imágenes del temario ---------------------------------
 //  Cada entrada: { clave, titulo, tema, src }.

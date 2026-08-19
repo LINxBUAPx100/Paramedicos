@@ -42,25 +42,37 @@ const IMAGENES = [
   },
   // Bandas del Home. Se muestran a ~0.7fr del contenedor (unos 400–520 px CSS),
   // así que 1200 px ya cubre pantallas de alta densidad; pedir 2000 solo pesaría.
+  //
+  // `recortar` quita el margen TRANSPARENTE que rodea al dibujo. No es un
+  // capricho de peso: los tres originales traían entre un 49 % y un 65 % de
+  // lienzo vacío, así que al colocarlos en su caja la mitad del hueco era aire
+  // invisible y el dibujo salía pequeño por más que se agrandara la caja. Peor
+  // aún, el margen falseaba la PROPORCIÓN: la pila de libros venía en un
+  // archivo vertical (0.67) cuando su contenido real es cuadrado (1.01), y el
+  // chico en uno horizontal (1.50) cuando él es vertical (0.89). Recortado, la
+  // proporción del archivo ES la del dibujo y la caja se le puede ajustar.
   {
     nombre: 'ponte-a-prueba',
     origen: 'scripts/img-src/ponteAprueba.png',
     destino: 'public/home',
     anchos: [480, 800, 1200],
+    recortar: true,
     nota: 'banda «Ponte a Prueba»',
   },
   {
     nombre: 'logros',
     origen: 'scripts/img-src/atlas.png',
     destino: 'public/home',
-    anchos: [480, 800, 1200],
+    anchos: [480, 800, 960],
+    recortar: true,
     nota: 'banda «Descubre tus Logros»',
   },
   {
     nombre: 'flashcards',
     origen: 'scripts/img-src/flashcards.png',
     destino: 'public/home',
-    anchos: [480, 800, 1200],
+    anchos: [480, 800, 1080],
+    recortar: true,
     nota: 'banda «FlashCards»',
   },
 ]
@@ -82,13 +94,33 @@ for (const img of IMAGENES) {
     `${meta.hasAlpha ? ' · con transparencia' : ''}`
   )
 
+  // Fuente efectiva: recortada si se pidió. Se calcula UNA vez y se reutiliza,
+  // porque el recorte hay que aplicarlo antes de cada redimensionado y el
+  // tamaño resultante es el que manda para saber qué anchos existen de verdad.
+  let fuente = origen
+  let ancho = meta.width
+  let alto = meta.height
+  if (img.recortar) {
+    // threshold 1: se va todo lo que sea completamente transparente.
+    const { data, info } = await sharp(origen).trim({ threshold: 1 })
+      .toBuffer({ resolveWithObject: true })
+    fuente = data
+    ancho = info.width
+    alto = info.height
+    const perdido = Math.round(100 - (ancho * alto) / (meta.width * meta.height) * 100)
+    console.log(
+      `  recortado: ${ancho}×${alto} (aspecto ${(ancho / alto).toFixed(2)}) — ` +
+      `era ${perdido} % de margen transparente`
+    )
+  }
+
   const hechos = []
   for (const w of img.anchos) {
-    if (w > meta.width) {
-      console.log(`  ${String(w).padStart(4)}w  →  omitido (el original solo tiene ${meta.width} px)`)
+    if (w > ancho) {
+      console.log(`  ${String(w).padStart(4)}w  →  omitido (la imagen solo tiene ${ancho} px de ancho)`)
       continue
     }
-    const base = sharp(origen).resize({ width: w, withoutEnlargement: true })
+    const base = sharp(fuente).resize({ width: w, withoutEnlargement: true })
     const webp = path.join(destino, `${img.nombre}-${w}.webp`)
     const avif = path.join(destino, `${img.nombre}-${w}.avif`)
     // Calidad alta y alfa conservado: el resultado es visualmente idéntico.

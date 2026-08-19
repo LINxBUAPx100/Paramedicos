@@ -6200,7 +6200,7 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 /* Banda 2 — Logros: titular en escalera y la pila de libros saliéndose por la
    derecha. La primera línea puede pasar por delante de la imagen (como en el
    diseño), así que el texto va en un plano por encima. */
-.ph-banda-in--logros { grid-template-columns: 0.95fr 1.05fr; }
+.ph-banda-in--logros { grid-template-columns: 0.88fr 1.12fr; }
 .ph-banda-in--logros .ph-banda-texto { position: relative; z-index: 1; }
 .ph-titular--escalera { font-size: clamp(2.4rem, 9.5vw, 8rem); }
 .ph-titular--escalera .ph-tl { white-space: nowrap; }
@@ -6212,7 +6212,7 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
    margen negativo se come justo el padding de la banda). */
 .ph-flash-in {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-columns: 0.85fr 1.15fr;
   grid-template-areas: 'titulo titulo' 'imagen texto';
   column-gap: clamp(var(--e-16), 2.5vw, 40px);
   align-items: end;
@@ -6231,18 +6231,38 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   grid-area: imagen;
   position: relative;
   z-index: 1;
-  margin-inline-start: -26%;
-  width: 136%;
-  /* Sube por delante del titular y se recorta contra el borde inferior. */
-  margin-top: -22%;
+  /* Sale por el borde izquierdo y sube POR DELANTE del titular, que es lo que
+     el diseño pide: «FlashCards» queda por detrás de la figura. El recorte de
+     abajo lo hace el borde de la banda (overflow: hidden). */
+  margin-inline-start: -22%;
+  width: 128%;
+  margin-top: -26%;
   margin-bottom: calc(-1 * clamp(var(--e-40), 6vw, 80px));
 }
 .ph-flash-in .ph-flash-texto {
   grid-area: texto;
-  padding-bottom: var(--e-24);
   position: relative;
   z-index: 1;
+  /* El bloque OCUPA su celda de arriba abajo y el texto empieza arriba: antes
+     se alineaba al fondo y dejaba media columna vacía sobre él. */
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--e-20);
+  padding-block: var(--e-24);
 }
+/* Este párrafo es el texto principal de la banda, no un pie: crece con la
+   banda y usa el ancho de su columna (el tope de 46 caracteres lo dejaba en
+   una tira estrecha abajo). */
+.ph-flash-in .ph-flash-texto p {
+  max-width: 34ch;
+  margin-bottom: 0;
+  font-size: clamp(1.05rem, 2.1vw, 2rem);
+  line-height: 1.35;
+  color: var(--texto);
+}
+.ph-flash-in .ph-flash-texto .btn { align-self: start; }
 /* ---- Responsive Home ---- */
 @media (max-width: 880px) {
   .ph-hero-in { grid-template-columns: 1fr; }
