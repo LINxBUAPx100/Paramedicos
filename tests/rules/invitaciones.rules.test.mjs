@@ -117,6 +117,8 @@ async function preparar() {
     await pon('invitaciones/INV-ACA-A-CNT1', { ...base, rol: 'alumno' })
     await pon('invitaciones/INV-ACA-A-CNT2', { ...base, rol: 'alumno' })
     await pon('invitaciones/INV-ACA-A-MIGRA', { ...base, rol: 'alumno' })
+    // Emitida POR EL PROFESOR con permiso: es la única que él puede ver y tocar.
+    await pon('invitaciones/INV-ACA-A-PROFE', { ...base, rol: 'alumno', creadoPor: 'invProfCodigos' })
   })
   return env
 }
@@ -258,30 +260,82 @@ test('invitaciones: un código inventado no vale', { skip }, async () => {
 
 // ---------- Quién EMITE ----------
 
-test('invitaciones: un profesor NO emite invitaciones', { skip }, async () => {
+test('invitaciones: un profesor jamás emite un ROL, ni con permiso', { skip }, async () => {
   await preparar()
   const { doc, setDoc, Timestamp } = fsmod
   const { assertFails } = rut
+  const invitacion = (rol, creadoPor) => ({
+    academiaId: 'INVACA-A', grupoId: null, rol, creadoPor,
+    nota: '', estado: 'activo', dias: 14, usos: 0, maxUsos: 1,
+    expira: Timestamp.fromDate(dentroDe(14 * DIA)),
+  })
   // El caso que importa: se fabricaría la de director y ascendería solo.
+  // Ni el profesor con el permiso de códigos aprobado puede repartir roles.
   await assertFails(
-    setDoc(doc(como('invProf'), 'invitaciones/INV-ACA-D-PWN'), {
-      academiaId: 'INVACA-A', grupoId: null, rol: 'admin_escuela', creadoPor: 'invProf',
+    setDoc(doc(como('invProfCodigos'), 'invitaciones/INV-ACA-D-PWN'), invitacion('admin_escuela', 'invProfCodigos'))
+  )
+  await assertFails(
+    setDoc(doc(como('invProfCodigos'), 'invitaciones/INV-ACA-P-PWN'), invitacion('instructor', 'invProfCodigos'))
+  )
+  // Y sin el permiso no emite NADA, tampoco de alumno.
+  await assertFails(
+    setDoc(doc(como('invProf'), 'invitaciones/INV-ACA-A-PWN'), invitacion('alumno', 'invProf'))
+  )
+})
+
+test('invitaciones: el profesor CON permiso sí invita alumnos', { skip }, async () => {
+  await preparar()
+  const { doc, setDoc, Timestamp } = fsmod
+  const { assertSucceeds, assertFails } = rut
+  // Por qué se le deja: con `puedeVerCodigos` ya reparte el código de su
+  // grupo, que mete a quien sea como alumno para siempre y sin tope. Una
+  // invitación de alumno es lo mismo pero caduca y se agota.
+  await assertSucceeds(
+    setDoc(doc(como('invProfCodigos'), 'invitaciones/INV-ACA-A-NUEVA'), {
+      academiaId: 'INVACA-A', grupoId: 'INVGRP-A', rol: 'alumno', creadoPor: 'invProfCodigos',
+      nota: '', estado: 'activo', dias: 14, usos: 0, maxUsos: 5,
+      expira: Timestamp.fromDate(dentroDe(14 * DIA)),
+    })
+  )
+  // Firmando con el uid de otro, no: la autoría es lo que acota su lista.
+  await assertFails(
+    setDoc(doc(como('invProfCodigos'), 'invitaciones/INV-ACA-A-FIRMA'), {
+      academiaId: 'INVACA-A', grupoId: null, rol: 'alumno', creadoPor: 'invDirA',
+      nota: '', estado: 'activo', dias: 14, usos: 0, maxUsos: 1,
+      expira: Timestamp.fromDate(dentroDe(14 * DIA)),
+    })
+  )
+  // Ni para la academia de otro.
+  await assertFails(
+    setDoc(doc(como('invProfCodigos'), 'invitaciones/INV-ACB-A-AJENA'), {
+      academiaId: 'INVACA-B', grupoId: null, rol: 'alumno', creadoPor: 'invProfCodigos',
       nota: '', estado: 'activo', dias: 14, usos: 0, maxUsos: 1,
       expira: Timestamp.fromDate(dentroDe(14 * DIA)),
     })
   )
 })
 
-test('invitaciones: un profesor NO puede ni LISTARLAS', { skip }, async () => {
+test('invitaciones: el profesor solo LISTA las que él emitió', { skip }, async () => {
   await preparar()
   const { collection, query, where, getDocs } = fsmod
   const { assertFails, assertSucceeds } = rut
   const suyas = (db) => query(collection(db, 'invitaciones'), where('academiaId', '==', 'INVACA-A'))
-  // Ni con `puedeVerCodigos` aprobado: ese permiso es para los códigos de
-  // academia y grupo, que meten a todos como alumno. Leer esta lista es poder
-  // copiar el enlace de DIRECTOR aunque no se pueda crear.
+  // La lista COMPLETA de la academia, no: incluye el enlace de DIRECTOR, y
+  // poder copiarlo equivale a poder crearlo.
   await assertFails(getDocs(suyas(como('invProf'))))
   await assertFails(getDocs(suyas(como('invProfCodigos'))))
+  // Filtrando por su autoría y por rol de alumno, sí: son las que emitió él.
+  const mias = (db, uid) => query(
+    collection(db, 'invitaciones'),
+    where('academiaId', '==', 'INVACA-A'),
+    where('rol', '==', 'alumno'),
+    where('creadoPor', '==', uid),
+  )
+  await assertSucceeds(getDocs(mias(como('invProfCodigos'), 'invProfCodigos')))
+  // Y no puede asomarse a las de su director cambiando el filtro.
+  await assertFails(getDocs(mias(como('invProfCodigos'), 'invDirA')))
+  // El profesor SIN permiso no lista ni las suyas.
+  await assertFails(getDocs(mias(como('invProf'), 'invProf')))
   // El director de su academia sí.
   await assertSucceeds(getDocs(suyas(como('invDirA'))))
   // Y el de otra academia no ve las ajenas.

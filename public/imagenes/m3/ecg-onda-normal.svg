@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 460" role="img" aria-labelledby="t d" width="820" height="460">
+  <title id="t">Onda electrocardiográfica normal</title>
+  <desc id="d">Trazo de un latido normal con la onda P, el complejo QRS y la onda T, sobre papel de ECG a 25 mm/s, con los intervalos PR, QRS y QT y el segmento ST señalados.</desc>
+
+  <defs>
+    <pattern id="chico" width="10" height="10" patternUnits="userSpaceOnUse">
+      <path d="M10 0H0V10" fill="none" stroke="#f6d3d3" stroke-width="1"/>
+    </pattern>
+    <pattern id="grande" width="50" height="50" patternUnits="userSpaceOnUse">
+      <rect width="50" height="50" fill="url(#chico)"/>
+      <path d="M50 0H0V50" fill="none" stroke="#eda6a6" stroke-width="1.6"/>
+    </pattern>
+  </defs>
+
+  <rect width="820" height="460" rx="14" fill="#ffffff" stroke="#dbe3ee"/>
+  <text x="32" y="46" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="21" font-weight="700" fill="#0b1220">Onda electrocardiográfica normal</text>
+  <text x="32" y="70" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="14" fill="#6b7280">Papel a 25 mm/s · cuadro grande = 0,20 s · cuadro chico = 0,04 s</text>
+
+  <rect x="32" y="88" width="756" height="266" fill="url(#grande)" stroke="#eda6a6"/>
+
+  <!-- Trazo: línea de base, P, QRS, ST y T -->
+  <path d="M40 250 H140
+           C160 250 168 214 186 214 C204 214 212 250 232 250
+           H262
+           L270 264 L282 128 L296 288 L306 250
+           H352
+           C378 250 384 206 412 206 C440 206 446 250 472 250
+           H560
+           C580 250 588 214 606 214 C624 214 632 250 652 250
+           H780"
+        fill="none" stroke="#0b1220" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+
+  <g font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="700" fill="#0c5fc4">
+    <text x="186" y="200" text-anchor="middle">P</text>
+    <text x="282" y="118" text-anchor="middle">R</text>
+    <text x="264" y="284" text-anchor="middle">Q</text>
+    <text x="300" y="312" text-anchor="middle">S</text>
+    <text x="412" y="192" text-anchor="middle">T</text>
+  </g>
+
+  <!-- Segmento ST resaltado sobre la línea de base -->
+  <path d="M306 250 H352" stroke="#10804a" stroke-width="5" stroke-linecap="round" fill="none"/>
+  <text x="329" y="240" text-anchor="middle" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" fill="#10804a">ST</text>
+
+  <!-- Intervalos -->
+  <g stroke="#0c5fc4" stroke-width="1.6" fill="none">
+    <path d="M168 372 V362 H262 V372"/>
+    <path d="M262 404 V394 H306 V404"/>
+    <path d="M262 436 V426 H472 V436"/>
+  </g>
+  <g font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#0b1220">
+    <text x="215" y="390" text-anchor="middle">Intervalo PR · 0,12–0,20 s</text>
+    <text x="284" y="422" text-anchor="middle">QRS &lt; 0,12 s</text>
+    <text x="367" y="454" text-anchor="middle">Intervalo QT (varía con la frecuencia)</text>
+  </g>
+</svg>

@@ -19,14 +19,47 @@ const RAIZ = new URL('../src/', import.meta.url).pathname.replace(/^\/([A-Za-z]:
 const APP = fs.readFileSync(path.join(RAIZ, 'App.jsx'), 'utf8')
 
 // ---------- 1. Árbol de rutas declarado ----------
+//  Las etiquetas se recorren a mano y no con una expresión regular simple: un
+//  atributo como `element={<AcademiaShell />}` lleva un `>` DENTRO, y un
+//  `<Route …[^>]*>` lo toma por el cierre de la etiqueta. Eso hacía leer como
+//  autocerrada una ruta que en realidad tiene hijas, y a partir de ahí todo el
+//  árbol quedaba con el prefijo equivocado. Aquí se avanza contando llaves y
+//  solo el `>` en profundidad 0 cierra la etiqueta.
+function* etiquetasRoute(texto) {
+  let i = 0
+  while (i < texto.length) {
+    const cierre = texto.indexOf('</Route>', i)
+    const abre = texto.indexOf('<Route', i)
+    if (abre === -1 && cierre === -1) return
+    if (cierre !== -1 && (abre === -1 || cierre < abre)) {
+      yield { cierra: true }
+      i = cierre + 8
+      continue
+    }
+    let j = abre + 6
+    let llaves = 0
+    let comilla = null
+    for (; j < texto.length; j++) {
+      const c = texto[j]
+      if (comilla) { if (c === comilla) comilla = null; continue }
+      if (c === '"' || c === "'") { comilla = c; continue }
+      if (c === '{') llaves += 1
+      else if (c === '}') llaves -= 1
+      else if (c === '>' && llaves === 0) break
+    }
+    const cuerpo = texto.slice(abre + 6, j)
+    yield { atributos: cuerpo, autocierre: cuerpo.trimEnd().endsWith('/') }
+    i = j + 1
+  }
+}
+
 function rutasDeclaradas(texto) {
   const rutas = new Set()
   const pila = [''] // prefijos de los <Route> abiertos
-  const re = /<Route\b([^>]*?)(\/?)>|<\/Route>/g
-  for (const m of texto.matchAll(re)) {
-    if (m[0] === '</Route>') { pila.pop(); continue }
-    const atributos = m[1]
-    const autocierre = m[2] === '/'
+  for (const m of etiquetasRoute(texto)) {
+    if (m.cierra) { pila.pop(); continue }
+    const atributos = m.atributos
+    const autocierre = m.autocierre
     const padre = pila[pila.length - 1]
     const conPath = /\bpath="([^"]*)"/.exec(atributos)
     const esIndex = /\bindex\b/.test(atributos)
@@ -82,6 +115,25 @@ test('el árbol de rutas de App.jsx se lee entero (guardia de la propia prueba)'
   assert.ok(DECLARADAS.includes('/'), 'debería estar la portada')
   assert.ok(DECLARADAS.includes('/admin/incidencias'), 'las rutas hijas deben componerse con su padre')
   assert.ok(DECLARADAS.includes('/tema/:temaId'), 'deberían estar las rutas con parámetro')
+})
+
+test('ningún enlace de fragmento (href="#…") sin su propio salto a mano', () => {
+  // La app monta HashRouter: el fragmento de la URL ES la ruta. Un
+  // `href="#glosario"` no baja a esa sección — el router lo interpreta como la
+  // ruta /glosario y deja al usuario en un 404. Pasó dos veces: el botón «Ir al
+  // glosario» de Logros y el «Ver el contenido por dentro» de la portada.
+  // Se admite el patrón accesible (href + onClick que hace el scroll), que es el
+  // que usa el «Saltar al contenido principal» del Layout.
+  const malos = []
+  for (const f of archivos(RAIZ)) {
+    const texto = fs.readFileSync(f, 'utf8')
+    for (const m of texto.matchAll(/<[a-zA-Z][^>]*href="#[^"]*"[^>]*>/g)) {
+      if (!/onClick/.test(m[0])) {
+        malos.push(`${path.relative(RAIZ, f).replace(/\\/g, '/')} → ${m[0].slice(0, 70)}`)
+      }
+    }
+  }
+  assert.deepEqual(malos, [], `Fragmentos que romperán la ruta:\n  ${malos.join('\n  ')}`)
 })
 
 test('todo enlace interno apunta a una ruta declarada', () => {

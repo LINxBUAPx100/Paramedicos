@@ -43,11 +43,48 @@ function proxyUrl(url, ancho) {
   return `https://wsrv.nl/?url=${destino}&w=${ancho}&output=webp&q=82&we`
 }
 
-// URL de imagen lista para <img src>. Tres rutas según la fuente:
+// ============================================================
+//  Imágenes PROPIAS, servidas por el propio sitio
+// ------------------------------------------------------------
+//  El material del temario deja de vivir en Google Drive: se guarda en
+//  `public/imagenes/…` y se publica con el sitio. Motivos: Drive no garantiza
+//  el hotlink (cambia de dominio y limita), obliga a que cada archivo esté
+//  compartido a mano, y no es un hosting de imágenes.
+//
+//  El contenido guarda una RUTA RELATIVA («imagenes/m2/nefrona.webp»), nunca
+//  una URL completa. Esta función la convierte en la URL final, y es el único
+//  sitio donde eso se decide:
+//
+//    · hoy, GitHub Pages sirve el sitio bajo /Paramedicos/, así que la URL
+//      lleva delante el BASE_URL que Vite ya calcula;
+//    · el día que el material se sirva desde otro hosting o un CDN, se define
+//      VITE_IMAGENES_BASE y cambia la respuesta de esta única función. Ni una
+//      ruta del contenido hay que tocar.
+//
+//  Una URL absoluta se respeta tal cual: sirve para el material que ya vive
+//  fuera mientras dure la migración.
+export function rutaImagen(ruta) {
+  const s = String(ruta || '').trim()
+  if (!s) return ''
+  if (/^(https?:)?\/\//i.test(s) || s.startsWith('data:')) return s
+  const base = (import.meta.env?.VITE_IMAGENES_BASE || import.meta.env?.BASE_URL || '/').replace(/\/+$/, '')
+  return `${base}/${s.replace(/^\/+/, '')}`
+}
+
+// ¿La entrada es una ruta de imagen propia (y no una URL ni un id de Drive)?
+export function esImagenPropia(input) {
+  const s = String(input || '').trim()
+  if (!s || /^(https?:)?\/\//i.test(s) || s.startsWith('data:')) return false
+  return !parseDriveId(s) && /\.(webp|avif|png|jpe?g|svg)$/i.test(s)
+}
+
+// URL de imagen lista para <img src>. Cuatro rutas según la fuente:
+//   · ruta propia (imagenes/…) → la sirve este mismo sitio, sin proxy.
 //   · Drive → CDN lh3 de Google (=w####), rápido y ya redimensionado.
 //   · Otra URL externa → proxy wsrv.nl (cache + WebP + resize).
 //   · vacío → '' (el componente muestra el placeholder).
 export function driveSrc(input, ancho = 1200) {
+  if (esImagenPropia(input)) return rutaImagen(input)
   const id = parseDriveId(input)
   if (id) return `https://lh3.googleusercontent.com/d/${id}=w${ancho}`
   const url = input ? String(input).trim() : ''
@@ -59,6 +96,11 @@ export function driveSrc(input, ancho = 1200) {
 // Drive → lh3; URL externa → proxy wsrv.nl (ambos redimensionan del lado del
 // servidor). Sin fuente → undefined.
 export function driveSrcSet(input, anchos = [480, 800, 1200, 1600]) {
+  // La imagen propia se sirve tal cual: no hay servidor que la redimensione,
+  // así que un srcset con la misma URL cuatro veces solo engañaría al navegador
+  // (elegiría «la más grande» creyendo que hay variantes). El tamaño se decide
+  // al preparar el archivo, no aquí.
+  if (esImagenPropia(input)) return undefined
   const id = parseDriveId(input)
   if (id) {
     return anchos

@@ -31,7 +31,7 @@ export const SECCIONES_PANEL = [
 
 // Qué secciones ve quien mira. El profesor entra al MISMO armazón con menos
 // secciones: nada de una pantalla distinta que haya que mantener por duplicado.
-export function seccionesPanel({ rol, capacidades = null, permisosEditor = null } = {}) {
+export function seccionesPanel({ rol, capacidades = null, permisosEditor = null, puedeVerCodigos = false } = {}) {
   const dirige = rol === 'admin_escuela' || rol === 'superadmin'
   // El editor es capacidad del plan para el director; un profesor entra solo
   // con un permiso editorial explícito que le concedió su director.
@@ -44,12 +44,11 @@ export function seccionesPanel({ rol, capacidades = null, permisosEditor = null 
     miembros: true, // el profesor la ve en solo lectura
     accesos: true, // el profesor pide aquí ver los códigos
     grupos: dirige,
-    // Invitaciones POR ROL: SOLO director y super-admin. Un profesor no las ve
-    // ni de lejos — repartir la de 'admin_escuela' es repartir el mando de la
-    // academia, y ni siquiera tiene sentido enseñarle una lista que no puede
-    // usar. La barrera real está en firestore.rules; esto es no ofrecer una
-    // puerta que va a estar cerrada.
-    invitaciones: dirige,
+    // Centro de invitaciones: director y super-admin siempre. Y el PROFESOR
+    // con el permiso de códigos aprobado, porque desde ahí invita alumnos a su
+    // grupo — no puede repartir roles, ni ver las invitaciones de su director;
+    // eso lo impone firestore.rules, y esta pantalla solo le enseña lo suyo.
+    invitaciones: dirige || (rol === 'instructor' && Boolean(puedeVerCodigos)),
     // El profesor SI la ve: es quien evalua a su grupo. Es la unica seccion de
     // escritura que un profesor tiene sin permisos editoriales, y es a proposito.
     calificaciones: true,

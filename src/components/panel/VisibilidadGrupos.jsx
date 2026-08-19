@@ -33,7 +33,7 @@ function SemaforoEditorial({ temaId }) {
 //    · «Ocultar todo / Mostrar todo» del grupo entero
 //    · Ojo por MÓDULO (módulo): oculta/muestra el módulo completo
 //    · Ojo por TEMA: oculta/muestra ese tema individual
-//  Lo oculto desaparece de las listas del alumno y sale censurado en el Atlas.
+//  Lo oculto desaparece de las listas del alumno y sale censurado en Logros.
 //
 //  Vivía dentro de `/temario`, un nombre que no dice lo que hace: quien
 //  buscaba «qué ve mi grupo» no lo encontraba. Ahora es una sección del panel

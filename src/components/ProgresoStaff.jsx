@@ -76,7 +76,7 @@ export default function ProgresoStaff({ conCabecera = true }) {
 
       <p className="panel-nota">
         ¿Quieres estudiar el temario tú mismo? Está entero en{' '}
-        <Link to="/temario">Temario</Link> y en el <Link to="/atlas">Atlas</Link>: lo ves completo,
+        <Link to="/temario">Temario</Link> y en <Link to="/logros">Logros</Link>: lo ves completo,
         sin restricciones de grupo. Tu propio avance está en la pestaña{' '}
         <Link to="/progreso?vista=mio">Mi progreso</Link>.
       </p>

@@ -26,7 +26,12 @@ export function usePanel() {
 }
 
 export default function PanelShell() {
-  const { cargando, esStaff, esSuperadmin, academiaId, academia, rol, user, perfil, capacidades } = useAuth()
+  const {
+    cargando, esStaff, esSuperadmin, academiaId, academia, rol, user, perfil, capacidades,
+    // Permiso que su director le aprueba: abre los códigos y, con ellos, la
+    // emisión de invitaciones de ALUMNO desde el centro de invitaciones.
+    puedeVerCodigos,
+  } = useAuth()
   const datos = useDatosAcademia(academiaId)
   const { modulos } = useIndiceAcademia(academiaId)
 
@@ -44,8 +49,10 @@ export default function PanelShell() {
   const staff = useMemo(() => datos.miembros.filter((m) => m.rol !== 'alumno'), [datos.miembros])
 
   const secciones = useMemo(
-    () => seccionesPanel({ rol, capacidades, permisosEditor: perfil?.permisosEditor }),
-    [rol, capacidades, perfil?.permisosEditor]
+    () => seccionesPanel({
+      rol, capacidades, permisosEditor: perfil?.permisosEditor, puedeVerCodigos,
+    }),
+    [rol, capacidades, perfil?.permisosEditor, puedeVerCodigos]
   )
 
   const contexto = useMemo(
@@ -55,6 +62,9 @@ export default function PanelShell() {
       academia,
       academiaNombre: academia?.nombre || '',
       gestion: esDirector ? 'director' : null,
+      // Quién es, para el centro de invitaciones: qué roles puede repartir y
+      // qué lista puede leer lo decide invitacionesCentro.js con esto.
+      quienEmite: { rol, esSuperadmin: rol === 'superadmin', puedeVerCodigos, uid: user?.uid || null },
       miUid: user?.uid || null,
       soloGrupo,
       grupoFiltro: filtroEfectivo,
@@ -64,7 +74,7 @@ export default function PanelShell() {
       modulos,
       nombreGrupo: (id) => datos.grupos.find((g) => g.id === id)?.nombre || id,
     }),
-    [datos, academiaId, academia, esDirector, user, soloGrupo, filtroEfectivo, alumnos, staff, modulos]
+    [datos, academiaId, academia, esDirector, user, soloGrupo, filtroEfectivo, alumnos, staff, modulos, rol, puedeVerCodigos]
   )
 
   if (cargando) {

@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 520" role="img" aria-labelledby="t d" width="860" height="520">
+  <title id="t">Equilibrio ácido-base: los cuatro trastornos</title>
+  <desc id="d">Cuadro de doble entrada con acidosis y alcalosis, respiratoria y metabólica, indicando en cada una qué le pasa al pH, a la PaCO2 y al bicarbonato, y cómo compensa el organismo.</desc>
+
+  <rect width="860" height="520" rx="14" fill="#ffffff" stroke="#dbe3ee"/>
+  <text x="32" y="46" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="21" font-weight="700" fill="#0b1220">Equilibrio ácido-base</text>
+  <text x="32" y="70" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="14" fill="#6b7280">pH normal 7,35–7,45 · PaCO₂ 35–45 mmHg · HCO₃⁻ 22–26 mEq/L</text>
+
+  <!-- Cabeceras -->
+  <g font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="700" fill="#0b1220">
+    <text x="300" y="118" text-anchor="middle">ACIDOSIS · pH &lt; 7,35</text>
+    <text x="640" y="118" text-anchor="middle">ALCALOSIS · pH &gt; 7,45</text>
+  </g>
+  <g font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="700" fill="#0b1220">
+    <text x="52" y="212" >RESPIRATORIA</text>
+    <text x="52" y="236" font-size="12" font-weight="400" fill="#6b7280">manda la PaCO₂</text>
+    <text x="52" y="372">METABÓLICA</text>
+    <text x="52" y="396" font-size="12" font-weight="400" fill="#6b7280">manda el HCO₃⁻</text>
+  </g>
+
+  <g font-family="system-ui, 'Segoe UI', Roboto, sans-serif">
+    <!-- Respiratoria / acidosis -->
+    <rect x="176" y="136" width="288" height="140" rx="12" fill="#fdf3f3" stroke="#e6a6a6"/>
+    <text x="196" y="164" font-size="16" font-weight="700" fill="#b91c1c">Acidosis respiratoria</text>
+    <text x="196" y="190" font-size="14" fill="#0b1220">pH ↓ · PaCO₂ ↑ · HCO₃⁻ normal</text>
+    <text x="196" y="214" font-size="13" fill="#334155">No ventila bien: retiene CO₂</text>
+    <text x="196" y="236" font-size="13" fill="#334155">Depresión del centro respiratorio,</text>
+    <text x="196" y="254" font-size="13" fill="#334155">EPOC, obstrucción, tórax inestable</text>
+    <text x="196" y="272" font-size="12" font-weight="700" fill="#6b7280">Compensa el riñón: retiene HCO₃⁻ (días)</text>
+
+    <!-- Respiratoria / alcalosis -->
+    <rect x="488" y="136" width="288" height="140" rx="12" fill="#f2f7fd" stroke="#93b7e6"/>
+    <text x="508" y="164" font-size="16" font-weight="700" fill="#0c5fc4">Alcalosis respiratoria</text>
+    <text x="508" y="190" font-size="14" fill="#0b1220">pH ↑ · PaCO₂ ↓ · HCO₃⁻ normal</text>
+    <text x="508" y="214" font-size="13" fill="#334155">Hiperventila: lava el CO₂</text>
+    <text x="508" y="236" font-size="13" fill="#334155">Ansiedad, dolor, fiebre, altura,</text>
+    <text x="508" y="254" font-size="13" fill="#334155">ventilación mecánica excesiva</text>
+    <text x="508" y="272" font-size="12" font-weight="700" fill="#6b7280">Compensa el riñón: elimina HCO₃⁻</text>
+
+    <!-- Metabólica / acidosis -->
+    <rect x="176" y="296" width="288" height="140" rx="12" fill="#fdf6ec" stroke="#e6bd7f"/>
+    <text x="196" y="324" font-size="16" font-weight="700" fill="#a16207">Acidosis metabólica</text>
+    <text x="196" y="350" font-size="14" fill="#0b1220">pH ↓ · HCO₃⁻ ↓ · PaCO₂ normal</text>
+    <text x="196" y="374" font-size="13" fill="#334155">Se acumula ácido o se pierde base</text>
+    <text x="196" y="396" font-size="13" fill="#334155">Shock (láctico), cetoacidosis,</text>
+    <text x="196" y="414" font-size="13" fill="#334155">insuficiencia renal, diarrea</text>
+    <text x="196" y="432" font-size="12" font-weight="700" fill="#6b7280">Compensa el pulmón: hiperventila (minutos)</text>
+
+    <!-- Metabólica / alcalosis -->
+    <rect x="488" y="296" width="288" height="140" rx="12" fill="#f6fbf8" stroke="#7fc0a0"/>
+    <text x="508" y="324" font-size="16" font-weight="700" fill="#10804a">Alcalosis metabólica</text>
+    <text x="508" y="350" font-size="14" fill="#0b1220">pH ↑ · HCO₃⁻ ↑ · PaCO₂ normal</text>
+    <text x="508" y="374" font-size="13" fill="#334155">Se pierde ácido o sobra base</text>
+    <text x="508" y="396" font-size="13" fill="#334155">Vómito prolongado, aspiración</text>
+    <text x="508" y="414" font-size="13" fill="#334155">gástrica, diuréticos</text>
+    <text x="508" y="432" font-size="12" font-weight="700" fill="#6b7280">Compensa el pulmón: hipoventila</text>
+  </g>
+
+  <text x="32" y="472" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#0b1220" font-weight="700">Regla de lectura</text>
+  <text x="32" y="494" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#334155">Mira el pH para saber de qué lado está; luego busca si el que se movió en la misma dirección es la PaCO₂ (respiratorio) o el HCO₃⁻ (metabólico).</text>
+</svg>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { agruparPorGeneracion } from '../../lib/invitacionesCentro.js'
 import { mensajeError } from '../../lib/panelModelo.js'
 import Icon from '../Icon.jsx'
 import CompartirCodigo from '../CompartirCodigo.jsx'
@@ -145,8 +146,14 @@ export default function CodigosPrueba({ academiaId = null, academiaNombre = '', 
             Grupo (se integra al canjear)
             <select value={grupoSel} onChange={(e) => setGrupoSel(e.target.value)}>
               <option value="">— Sin grupo —</option>
-              {gruposDisponibles.map((g) => (
-                <option key={g.id} value={g.id}>{g.nombre}</option>
+              {/* Por GENERACIÓN, igual que en las invitaciones: con varios
+                  ciclos abiertos, una lista plana obliga a saberse los nombres. */}
+              {agruparPorGeneracion(gruposDisponibles).map((bloque) => (
+                <optgroup key={bloque.clave} label={bloque.etiqueta}>
+                  {bloque.grupos.map((g) => (
+                    <option key={g.id} value={g.id}>{g.nombre}</option>
+                  ))}
+                </optgroup>
               ))}
             </select>
           </label>

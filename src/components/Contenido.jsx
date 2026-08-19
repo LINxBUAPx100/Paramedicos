@@ -1,6 +1,7 @@
 // Renderiza los bloques de contenido de un tema según su tipo.
 import Imagen from './Imagen.jsx'
 import Icon from './Icon.jsx'
+import TextoGlosario from './TextoGlosario.jsx'
 import { ATLAS_TEMAS } from '../data/imagenes.js'
 import { hrefSeguro } from '../lib/enlaceSeguro.js'
 
@@ -8,10 +9,14 @@ import { hrefSeguro } from '../lib/enlaceSeguro.js'
 // dibujados) reutilizan las mismas imágenes reales del Atlas vía su `clave`.
 const ATLAS_SRC = Object.fromEntries(ATLAS_TEMAS.map((t) => [t.clave, t.src]))
 
+// `T` enlaza al glosario cada tecnicismo del texto (TextoGlosario). Sin estado
+// compartido entre bloques: el resultado de un bloque no depende de cuáles se
+// hayan pintado antes.
 function Bloque({ bloque }) {
+  const T = (texto) => <TextoGlosario texto={texto} />
   switch (bloque.tipo) {
     case 'p':
-      return <p className="c-parrafo">{bloque.texto}</p>
+      return <p className="c-parrafo">{T(bloque.texto)}</p>
 
     // Antes era un SVG dibujado por la app; ahora es un hueco para imagen real
     // (pega el enlace de Drive en `src`). El título queda como pie y permite buscar referencia.
@@ -37,7 +42,7 @@ function Bloque({ bloque }) {
           {bloque.titulo && <h4 className="c-lista-titulo">{bloque.titulo}</h4>}
           <ul className="c-lista">
             {bloque.items.map((it, i) => (
-              <li key={i}>{it}</li>
+              <li key={i}>{T(it)}</li>
             ))}
           </ul>
         </div>
@@ -51,7 +56,7 @@ function Bloque({ bloque }) {
             {bloque.items.map((it, i) => (
               <li key={i}>
                 <span className="c-paso-num">{i + 1}</span>
-                <span>{it}</span>
+                <span>{T(it)}</span>
               </li>
             ))}
           </ol>
@@ -90,7 +95,7 @@ function Bloque({ bloque }) {
           <div className="c-callout-ico"><Icon name={iconos[bloque.variante] || 'pin'} size={20} /></div>
           <div>
             {bloque.titulo && <strong className="c-callout-titulo">{bloque.titulo}</strong>}
-            <p>{bloque.texto}</p>
+            <p>{T(bloque.texto)}</p>
           </div>
         </div>
       )

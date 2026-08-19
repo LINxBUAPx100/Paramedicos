@@ -25,6 +25,7 @@ import {
 } from '../contenidoApi.js'
 import { huellaTema } from '../replicacionModelo.js'
 import { programasVisibles, programasDeGrupo } from '../programasModelo.js'
+import { cursosDelUsuario, cursoAServir } from '../cursosDelUsuario.js'
 import { obtenerPlantilla, temasDePlantilla } from './plantillas.js'
 
 // --- Estado de migración de la academia (academias/{id}.contenido) ---------
@@ -235,7 +236,11 @@ function claveAlcance(acceso) {
   return ids.length ? [...ids].sort().join(',') : '∅'
 }
 
-const claveContenido = (academiaId, acceso) => `${academiaId}||${claveAlcance(acceso)}`
+// El CURSO entra en la clave: dos cursos de la misma academia y el mismo
+// alcance son contenidos distintos, y sin esto el segundo se serviría desde
+// la caché del primero.
+const claveContenido = (academiaId, acceso, cursoPreferido = null) =>
+  `${academiaId}||${claveAlcance(acceso)}||${cursoPreferido || "auto"}`
 
 // Cursos de la academia que ESTA persona puede ver. Es el filtro de
 // aislamiento por programa en el cliente; la barrera real son las reglas
@@ -259,7 +264,7 @@ function contenidoLegacy() {
   return cacheContenido.get(CLAVE_LEGACY)
 }
 
-async function cargarDeFirestore(academiaId, acceso) {
+async function cargarDeFirestore(academiaId, acceso, cursoPreferido = null) {
   const todos = await cursosDeAcademia(academiaId)
   if (!todos.length) throw new Error(`La academia ${academiaId} no tiene cursos publicados.`)
   const cursos = cursosPermitidos(todos, acceso)
@@ -269,7 +274,13 @@ async function cargarDeFirestore(academiaId, acceso) {
     // ya habrá bloqueado antes a quien no tiene programa (programasModelo).
     throw new Error(`Sin programas visibles en ${academiaId} para este usuario.`)
   }
-  const curso = cursos[0] // multi-programa real: el primero de SU alcance
+  // El curso que ESTA persona está estudiando. Antes era siempre `cursos[0]`:
+  // con dos programas (una carrera y su especialización, o una academia que
+  // imparte paramédico y enfermería) el segundo era inalcanzable, daba igual
+  // lo que se pulsara. `cursoAServir` respeta la elección PERO nunca sirve un
+  // curso fuera del alcance: el aislamiento no lo decide el cliente.
+  const elegido = cursoAServir(cursosDelUsuario(cursos, acceso || {}), cursoPreferido)
+  const curso = cursos.find((c) => c.id === elegido) || cursos[0]
   if (!curso.clonacion?.completa) {
     throw new Error(`El curso ${curso.id} tiene una clonación incompleta.`)
   }
@@ -289,6 +300,9 @@ async function cargarDeFirestore(academiaId, acceso) {
     fuente: 'firestore',
     academiaId,
     cursoId: curso.id,
+    // Los cursos que esta persona puede estudiar, ya filtrados. Viajan con
+    // el contenido porque la lectura ya está hecha: el Home no paga otra.
+    cursos: cursosDelUsuario(cursos, acceso || {}, curso.id),
   }
 }
 
@@ -301,14 +315,14 @@ async function cargarDeFirestore(academiaId, acceso) {
 //    legacy y se limpia la caché para poder reintentar después.
 //  `acceso` = { rol, esSuperadmin, grupo } de quien pide. Determina QUÉ
 //  programas ve (aislamiento por programa) y forma parte de la clave de caché.
-export async function contenidoDeAcademia(academia, acceso = null) {
+export async function contenidoDeAcademia(academia, acceso = null, cursoPreferido = null) {
   const academiaId = academia?.id
   if (!academiaId || !academiaMigrada(academia)) return contenidoLegacy()
-  const clave = claveContenido(academiaId, acceso)
+  const clave = claveContenido(academiaId, acceso, cursoPreferido)
   if (!cacheContenido.has(clave)) {
     cacheContenido.set(
       clave,
-      cargarDeFirestore(academiaId, acceso).catch((err) => {
+      cargarDeFirestore(academiaId, acceso, cursoPreferido).catch((err) => {
         console.warn(`[contenido] Fallback a legacy para ${academiaId}:`, err?.message || err)
         cacheContenido.delete(clave)
         return contenidoLegacy()
@@ -323,11 +337,11 @@ export async function contenidoDeAcademia(academia, acceso = null) {
 // src/data/navIndice.js. Caché por academiaId, separada del contenido pesado.
 const cacheIndices = new Map()
 
-export async function indiceDeAcademia(academia, acceso = null) {
+export async function indiceDeAcademia(academia, acceso = null, cursoPreferido = null) {
   const academiaId = academia?.id
   // Sin academia o sin migrar: el shell sigue usando el índice del bundle.
   if (!academiaId || !academiaMigrada(academia)) return null
-  const clave = claveContenido(academiaId, acceso)
+  const clave = claveContenido(academiaId, acceso, cursoPreferido)
   if (!cacheIndices.has(clave)) {
     cacheIndices.set(
       clave,
@@ -338,13 +352,17 @@ export async function indiceDeAcademia(academia, acceso = null) {
         // de un programa ajeno, el alumno vería títulos que no puede abrir.
         const cursos = cursosPermitidos(todos, acceso)
         if (!cursos.length) throw new Error(`Sin programas visibles en ${academiaId} para este usuario.`)
-        const curso = cursos[0] // mismo criterio que el resolutor de contenido
+        // Mismo criterio que el resolutor de contenido: el nav y el temario
+        // tienen que hablar del MISMO curso que se está sirviendo.
+        const elegido = cursoAServir(cursosDelUsuario(cursos, acceso || {}), cursoPreferido)
+        const curso = cursos.find((c) => c.id === elegido) || cursos[0]
         if (!curso.clonacion?.completa) throw new Error(`El curso ${curso.id} tiene una clonación incompleta.`)
         return {
           ...indiceDesdeEstructura(curso.estructura),
           fuente: 'firestore',
           academiaId,
           cursoId: curso.id,
+          cursos: cursosDelUsuario(cursos, acceso || {}, curso.id),
         }
       })().catch((err) => {
         console.warn(`[contenido] Índice legacy para ${academiaId}:`, err?.message || err)

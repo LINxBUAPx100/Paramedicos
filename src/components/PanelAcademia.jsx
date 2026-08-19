@@ -111,7 +111,7 @@ export default function PanelAcademia({ academiaId, academiaNombre = '', miUid =
       <section className="panel-visibilidad">
         <h2><Icon name="ojo" size={20} /> Qué contenido ve cada grupo</h2>
         <p className="panel-gestion-sub">
-          Lo oculto desaparece de las listas de esos alumnos y sale bloqueado en el Atlas.
+          Lo oculto desaparece de las listas de esos alumnos y sale bloqueado en Logros.
         </p>
         <VisibilidadGrupos academiaId={academiaId} academiaNombre={academiaNombre} grupos={grupos} />
       </section>

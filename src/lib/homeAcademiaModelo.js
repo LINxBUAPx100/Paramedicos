@@ -37,7 +37,7 @@ export const DESTINOS = [
   { ruta: '/temario', etiqueta: 'Temario', icono: 'temario' },
   { ruta: '/examen', etiqueta: 'Exámenes', icono: 'examen' },
   { ruta: '/flashcards', etiqueta: 'Flashcards', icono: 'flashcards' },
-  { ruta: '/atlas', etiqueta: 'Atlas', icono: 'atlas' },
+  { ruta: '/logros', etiqueta: 'Logros', icono: 'atlas' },
   { ruta: '/progreso', etiqueta: 'Mi progreso', icono: 'progreso' },
   { ruta: '/buscar', etiqueta: 'Buscar', icono: 'buscar' },
   { ruta: '/cuenta', etiqueta: 'Mi cuenta', icono: 'usuario' },
@@ -87,7 +87,12 @@ export function normalizarHomeAcademia(config) {
 
   const vistos = new Set()
   const accesos = (Array.isArray(config.accesos) ? config.accesos : [])
-    .filter((a) => a && typeof a === 'object' && RUTAS_VALIDAS.has(a.ruta) && !vistos.has(a.ruta))
+    .filter((a) => a && typeof a === 'object')
+    // El Atlas pasó a llamarse Logros. Una academia que guardó el acceso rápido
+    // a `/atlas` no puede perderlo por un cambio de nombre nuestro: se traduce
+    // aquí, al leer, y la próxima vez que guarde quedará ya con la ruta nueva.
+    .map((a) => (a.ruta === '/atlas' ? { ...a, ruta: '/logros', etiqueta: '' } : a))
+    .filter((a) => RUTAS_VALIDAS.has(a.ruta) && !vistos.has(a.ruta))
     .map((a) => {
       vistos.add(a.ruta)
       return {

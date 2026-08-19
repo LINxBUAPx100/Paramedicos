@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { normalizarGeneracion, etiquetaGeneracion } from '../../lib/invitacionesCentro.js'
 import { mensajeError } from '../../lib/panelModelo.js'
 import { metaDePrograma } from '../../lib/programasModelo.js'
 import Icon from '../Icon.jsx'
@@ -14,6 +15,12 @@ import ConfirmacionReforzada from '../ConfirmacionReforzada.jsx'
 
 export default function GruposAcademia({ academiaId, academiaNombre = '', grupos, miembros, miUid, onCambio }) {
   const [nombre, setNombre] = useState('')
+  // GENERACIÓN del grupo. Los ciclos empiezan en fechas distintas y la
+  // academia los nombra así («generación 1», «la del 26»); sin el dato, las
+  // listas y los selectores de grupo son un montón plano. El año se propone
+  // solo: casi siempre es el corriente y nadie quiere teclearlo.
+  const [gen, setGen] = useState('')
+  const [anio, setAnio] = useState(String(new Date().getFullYear()))
   const [nuevo, setNuevo] = useState(null) // último código creado
   const [editandoId, setEditandoId] = useState(null)
   const [nombreEdit, setNombreEdit] = useState('')
@@ -86,9 +93,15 @@ export default function GruposAcademia({ academiaId, academiaNombre = '', grupos
     e.preventDefault()
     correr(async () => {
       const { crearGrupo } = await import('../../lib/firebase/grupos.js')
-      const g = await crearGrupo({ academiaId, nombre, creadoPor: miUid })
+      const g = await crearGrupo({
+        academiaId, nombre, creadoPor: miUid,
+        // Sin número no hay generación: el grupo se queda sin etiquetar, que
+        // es exactamente lo que les pasa a los que ya existen.
+        generacion: gen ? { numero: Number(gen), anio: Number(anio) } : null,
+      })
       setNuevo(g.id)
       setNombre('')
+      setGen('')
     })
   }
 
@@ -154,9 +167,30 @@ export default function GruposAcademia({ academiaId, academiaNombre = '', grupos
             type="text"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
-            placeholder="p. ej. Generación 2026-A"
+            placeholder="p. ej. Grupo A · matutino"
             maxLength={50}
             required
+          />
+        </label>
+        <label>
+          Generación
+          <input
+            type="number"
+            value={gen}
+            onChange={(e) => setGen(e.target.value)}
+            placeholder="1"
+            min={1}
+            max={99}
+          />
+        </label>
+        <label>
+          Año
+          <input
+            type="number"
+            value={anio}
+            onChange={(e) => setAnio(e.target.value)}
+            min={2000}
+            max={2100}
           />
         </label>
         <button className="btn btn--primario" type="submit" disabled={ocupado}>
@@ -194,7 +228,12 @@ export default function GruposAcademia({ academiaId, academiaNombre = '', grupos
                     <button className="pc-copiar" onClick={() => setEditandoId(null)}>×</button>
                   </span>
                 ) : (
-                  <strong className="pg-nombre">{g.nombre}</strong>
+                  <>
+                    <strong className="pg-nombre">{g.nombre}</strong>
+                    {normalizarGeneracion(g.generacion) && (
+                      <span className="pg-generacion">{etiquetaGeneracion(g.generacion)}</span>
+                    )}
+                  </>
                 )}
                 <code className="pc-codigo">{g.id}</code>
                 <span className="pc-detalle">

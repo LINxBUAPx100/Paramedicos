@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useProgress } from '../context/ProgressContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
-import { useIndiceContenido } from '../context/ContenidoContext.jsx'
+import { useIndiceContenido, useCursos } from '../context/ContenidoContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
 import { idsVisiblesDeHome } from '../lib/homeModelo.js'
 import Icon from '../components/Icon.jsx'
@@ -11,6 +11,7 @@ import Imagen from '../components/Imagen.jsx'
 import Contador from '../components/Contador.jsx'
 import ModulosCarrusel from '../components/ModulosCarrusel.jsx'
 import BloqueAcademia from '../components/BloqueAcademia.jsx'
+import CursosDisponibles from '../components/CursosDisponibles.jsx'
 import IconoEstrella from '../components/marca/IconoEstrella.jsx'
 import { IMG } from '../data/imagenes.js'
 import marcoUrl from '../assets/marco-paramedico.svg'
@@ -59,6 +60,7 @@ export default function Home() {
     progreso: temasLeidos > 0 ? (
       <SeccionProgreso temasLeidos={temasLeidos} total={stats.temas} pct={progresoGlobal} />
     ) : null,
+    cursos: <CursosDisponibles />,
     modulos: <SeccionModulos modulos={modulosVisibles} leidos={leidos} />,
     prueba: <SeccionPrueba />,
     atlas: <SeccionAtlas />,
@@ -90,6 +92,17 @@ export default function Home() {
 // a reemplazar por el oficial de R.E.S.C.A.T.E. y cada academia puede tener el
 // suyo, así que ningún id de contenido debe vivir incrustado en el código.
 function SeccionHero({ stats, primerModulo }) {
+  // El subtítulo hablaba de Técnico en Urgencias Médicas en duro, porque
+  // cuando se escribió no había otra cosa. Ahora lo dice el contenido:
+  // varios cursos → se anuncian; uno solo → se nombra ese; sin academia
+  // migrada (visitante o temario del paquete) → el texto de siempre, que
+  // describe exactamente lo que esa persona va a encontrar.
+  const { cursos } = useCursos()
+  const sub = cursos.length > 1
+    ? `${cursos.length} programas en una sola plataforma: ${cursos.map((c) => c.etiquetaCorta).join(', ')}.`
+    : cursos.length === 1
+      ? `${cursos[0].etiqueta}.`
+      : 'Técnico en Urgencias Médicas.'
   return (
     <section className="ph-hero">
       <IconoEstrella size={680} className="ph-hero-marca" />
@@ -127,7 +140,7 @@ function SeccionHero({ stats, primerModulo }) {
             ))}
           </h1>
           <p className="ph-hero-sub reveal" style={{ '--d': '320ms' }}>
-            Técnico en Urgencias Médicas. Aprende a <strong>comprender el porqué</strong>, no solo a
+            {sub} Aprende a <strong>comprender el porqué</strong>, no solo a
             memorizar: teoría, fisiología, farmacología y correlación clínica de verdad.
           </p>
           <div className="ph-hero-cta reveal" style={{ '--d': '420ms' }}>
@@ -222,25 +235,27 @@ function SeccionPrueba() {
   )
 }
 
-// ===== CONSULTA EL ATLAS =====
+// ===== LOGROS =====
+// Antes «Consulta nuestro Atlas». Cambió con la pantalla: lo que se ofrece no
+// es una referencia abierta, es material que se va destapando.
 function SeccionAtlas() {
   return (
     <Reveal as="section" className="ph-banda ph-atlas">
       <div className="ph-wrap ph-banda-in ph-banda-in--rev">
         <div className="ph-banda-texto">
           <h2 className="ph-titular">
-            Consulta nuestro <span className="ac">Atlas</span>
+            Descubre tus <span className="ac">Logros</span>
           </h2>
           <p>
-            Mapas anatómicos y fisiológicos con imágenes reales: corazón, circulación, vía aérea,
-            nefrona, sistema nervioso y más, como referencia rápida mientras estudias.
+            Las imágenes del temario y el glosario con cada palabra que hay que dominar. Se
+            desbloquean conforme avanzas: lo que tu profesor libera, lo descubres.
           </p>
-          <Link to="/atlas" className="btn btn--pildora btn--fantasma btn--lg">
-            Consultar <Icon name="chevronDer" size={18} />
+          <Link to="/logros" className="btn btn--pildora btn--fantasma btn--lg">
+            Ver mis logros <Icon name="chevronDer" size={18} />
           </Link>
         </div>
         <div className="ph-banda-img">
-          <Imagen src={IMG.atlas} ratio="4 / 3" figura busqueda="atlas anatomía libros medicina" />
+          <Imagen src={IMG.atlas} ratio="4 / 3" figura busqueda="logros medicina estudio" />
         </div>
       </div>
     </Reveal>

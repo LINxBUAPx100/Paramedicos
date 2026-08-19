@@ -20,7 +20,7 @@ const ExamenUnidadPage = lazy(() => import('./pages/ExamenUnidadPage.jsx'))
 const FlashcardsPage = lazy(() => import('./pages/FlashcardsPage.jsx'))
 const ProgresoPage = lazy(() => import('./pages/ProgresoPage.jsx'))
 const BuscarPage = lazy(() => import('./pages/BuscarPage.jsx'))
-const AtlasPage = lazy(() => import('./pages/AtlasPage.jsx'))
+const LogrosPage = lazy(() => import('./pages/LogrosPage.jsx'))
 const TemarioPage = lazy(() => import('./pages/TemarioPage.jsx'))
 const Cuenta = lazy(() => import('./pages/Cuenta.jsx'))
 const PanelShell = lazy(() => import('./components/panel/PanelShell.jsx'))
@@ -39,6 +39,16 @@ const AdminFacturacion = lazy(() => import('./pages/admin/Facturacion.jsx'))
 const AdminIncidencias = lazy(() => import('./pages/admin/Incidencias.jsx'))
 const AdminLogs = lazy(() => import('./pages/admin/Logs.jsx'))
 const AcademiaAdminPage = lazy(() => import('./pages/AcademiaAdminPage.jsx'))
+// Armazón y secciones de UNA academia dentro de la consola. Antes todo esto era
+// una sola página con once bloques apilados.
+const AcademiaShell = lazy(() => import('./components/admin/AcademiaShell.jsx'))
+const AcaResumen = lazy(() => import('./pages/admin/academia/Resumen.jsx'))
+const AcaAlumnos = lazy(() => import('./pages/admin/academia/Alumnos.jsx'))
+const AcaGrupos = lazy(() => import('./pages/admin/academia/Grupos.jsx'))
+const AcaInvitaciones = lazy(() => import('./pages/admin/academia/Invitaciones.jsx'))
+const AcaContenido = lazy(() => import('./pages/admin/academia/Contenido.jsx'))
+const AcaRevision = lazy(() => import('./pages/admin/academia/Revision.jsx'))
+const AcaAjustes = lazy(() => import('./pages/admin/academia/Ajustes.jsx'))
 const EditorPage = lazy(() => import('./pages/EditorPage.jsx'))
 const ReplicacionPage = lazy(() => import('./pages/ReplicacionPage.jsx'))
 
@@ -108,7 +118,11 @@ export default function App() {
             <Route path="/examen" element={<RutaProtegida><ExamenPage /></RutaProtegida>} />
             <Route path="/flashcards" element={<RutaProtegida><FlashcardsPage /></RutaProtegida>} />
             <Route path="/flashcards/:temaId" element={<RutaProtegida><FlashcardsPage /></RutaProtegida>} />
-            <Route path="/atlas" element={<RutaProtegida><AtlasPage /></RutaProtegida>} />
+            <Route path="/logros" element={<RutaProtegida><LogrosPage /></RutaProtegida>} />
+            {/* El Atlas pasó a llamarse Logros. La ruta vieja sigue viva porque
+                está en enlaces compartidos, en el historial de los alumnos y en
+                los accesos rápidos que alguna academia haya guardado. */}
+            <Route path="/atlas" element={<Navigate to="/logros" replace />} />
             <Route path="/temario" element={<RutaProtegida><TemarioPage /></RutaProtegida>} />
             <Route path="/progreso" element={<RutaProtegida><ProgresoPage /></RutaProtegida>} />
             <Route path="/buscar" element={<RutaProtegida><BuscarPage /></RutaProtegida>} />
@@ -150,8 +164,22 @@ export default function App() {
               <Route path="facturacion" element={<AdminFacturacion />} />
               <Route path="incidencias" element={<AdminIncidencias />} />
               <Route path="logs" element={<AdminLogs />} />
+              {/* UNA ACADEMIA, por secciones. El contexto vive en la URL para que
+                  el enlace se pueda compartir, el botón Atrás deshaga el cambio de
+                  academia y una recarga no te devuelva a la plataforma. */}
+              <Route path="aca/:academiaId" element={<AcademiaShell />}>
+                <Route index element={<AcaResumen />} />
+                <Route path="alumnos" element={<AcaAlumnos />} />
+                <Route path="grupos" element={<AcaGrupos />} />
+                <Route path="invitaciones" element={<AcaInvitaciones />} />
+                <Route path="contenido" element={<AcaContenido />} />
+                <Route path="revision" element={<AcaRevision />} />
+                <Route path="ajustes" element={<AcaAjustes />} />
+              </Route>
+              {/* La ficha de plataforma de una academia (código, plan, suspender,
+                  dar de baja) sigue en su sitio: son operaciones globales. */}
               <Route path="academia/:academiaId" element={<AcademiaAdminPage />} />
-              {/* La ruta vieja seguía enlazada desde fuera y en marcadores. */}
+              {/* Las rutas viejas seguían enlazadas desde fuera y en marcadores. */}
               <Route path="replicacion" element={<Navigate to="/admin/contenido" replace />} />
             </Route>
 

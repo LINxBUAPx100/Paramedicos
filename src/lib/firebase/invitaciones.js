@@ -77,9 +77,26 @@ export async function crearInvitacion({
 // Invitaciones de una academia, más recientes primero. El filtro por academiaId
 // es el que la regla `list` necesita para poder evaluarse: sin él, Firestore
 // deniega la consulta entera (misma lección que `listarCodigos`).
-export async function listarInvitaciones(academiaId) {
+/**
+ * Invitaciones de una academia. `filtro` acota lo que se pide:
+ *
+ *   · director/super  → { academiaId }            (todas)
+ *   · profesor        → { academiaId, creadoPor } (solo las suyas)
+ *
+ * El filtro NO es cosmético: las reglas exigen que TODOS los documentos que
+ * devuelve la consulta sean legibles, así que un profesor que pidiera la lista
+ * entera se llevaría un rechazo completo. `filtroDeInvitaciones`
+ * (invitacionesCentro.js) construye el filtro que toca a cada quien.
+ */
+export async function listarInvitaciones(academiaId, filtro = null) {
   if (!academiaId) return []
-  const q = query(collection(db, 'invitaciones'), where('academiaId', '==', academiaId))
+  const condiciones = [where('academiaId', '==', academiaId)]
+  if (filtro?.creadoPor) {
+    // Mismo par que exige la regla: sus invitaciones, y solo las de alumno.
+    condiciones.push(where('rol', '==', 'alumno'))
+    condiciones.push(where('creadoPor', '==', filtro.creadoPor))
+  }
+  const q = query(collection(db, 'invitaciones'), ...condiciones)
   const snap = await getDocs(q)
   return snap.docs
     .map((d) => ({ id: d.id, ...d.data() }))

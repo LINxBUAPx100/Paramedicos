@@ -159,9 +159,17 @@
      daría un contraste pésimo. Estos dos aguantan blanco en ambos temas. */
   --exito-solido: #15803d;
   --peligro-solido: #b91c1c;
+  /* Marcador del glosario: el trazo de plumón que señala un tecnicismo.
+     Azul claro translúcido para que el texto siga leyéndose encima. */
+  --marcador: rgba(56, 189, 248, 0.42);
+  --marcador-fuerte: rgba(56, 189, 248, 0.72);
 }
 
 html[data-tema='oscuro'] {
+  /* Sobre fondo oscuro el mismo azul se apaga: se sube la carga y se aclara
+     el texto marcado en la regla de .glosario-termino. */
+  --marcador: rgba(56, 189, 248, 0.30);
+  --marcador-fuerte: rgba(56, 189, 248, 0.55);
   --bg: #070b14;
   --bg-2: #0f1726;
   --bg-3: #0b1322;
@@ -3897,6 +3905,139 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
 /* Atlas: galería de imágenes reales (anatomía / fisiología) */
 .atlas-header { margin-bottom: var(--e-24); }
 .atlas-header p { color: var(--texto-2); max-width: 760px; margin-top: var(--e-8); }
+
+/* ============================================================
+   GLOSARIO  ·  el final de Logros
+   ------------------------------------------------------------
+   Las palabras se descubren al liberarse su tema, así que hay dos estados
+   que tienen que distinguirse de un vistazo: descubierta (definición legible)
+   y bloqueada (la palabra sí, la definición no).
+   ============================================================ */
+.logros-ir-glosario {
+  display: inline-flex; align-items: center; gap: var(--e-8);
+  margin-top: var(--e-12); padding: var(--e-4) 0;
+  border: none; background: none; font: inherit; font-weight: 600;
+  color: var(--primario); cursor: pointer;
+}
+.logros-ir-glosario:hover { text-decoration: underline; }
+.glosario { margin-top: var(--e-48); scroll-margin-top: calc(var(--topbar-h) + var(--e-16)); }
+.glo-header { margin-bottom: var(--e-24); }
+.glo-header p { color: var(--texto-2); max-width: 76ch; margin-top: var(--e-8); }
+.glo-progreso { display: flex; align-items: center; gap: var(--e-12); flex-wrap: wrap; margin-top: var(--e-16); }
+.glo-progreso strong { font-size: var(--t-sm); color: var(--texto-2); }
+.glo-progreso-barra {
+  flex: 1; min-width: 180px; height: 8px; border-radius: 999px;
+  background: var(--bg-3); overflow: hidden;
+}
+.glo-progreso-barra span { display: block; height: 100%; border-radius: 999px; background: var(--primario); }
+.glo-buscar {
+  display: flex; align-items: center; gap: var(--e-8); margin-top: var(--e-16);
+  padding: var(--e-8) var(--e-12); max-width: 420px;
+  border: 1px solid var(--borde); border-radius: var(--radio-sm); background: var(--bg-2);
+  color: var(--texto-3);
+}
+.glo-buscar input { flex: 1; border: none; background: none; color: var(--texto); font: inherit; min-height: 32px; }
+.glo-buscar input:focus { outline: none; }
+.glo-limpiar {
+  margin-top: var(--e-8); border: none; background: none; padding: 0;
+  color: var(--texto-3); font: inherit; font-size: var(--t-xs); cursor: pointer; text-decoration: underline;
+}
+.glo-modulo { margin-bottom: var(--e-32); }
+.glo-modulo-titulo {
+  display: flex; align-items: baseline; gap: var(--e-12); flex-wrap: wrap;
+  padding-bottom: var(--e-8); margin-bottom: var(--e-16);
+  border-bottom: 2px solid var(--modulo-color, var(--borde));
+  font-size: var(--t-md);
+}
+.glo-modulo-num {
+  font-family: var(--fuente-sub); font-size: var(--t-xs);
+  text-transform: uppercase; letter-spacing: 0.08em; color: var(--modulo-color, var(--texto-3));
+}
+.glo-modulo-titulo small { margin-left: auto; color: var(--texto-3); font-size: var(--t-xs); font-weight: 400; }
+.glo-lista { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--e-12); }
+.glo-entrada {
+  padding: var(--e-12) var(--e-16);
+  border: 1px solid var(--borde); border-radius: var(--radio-sm); background: var(--bg-2);
+  scroll-margin-top: calc(var(--topbar-h) + var(--e-32));
+  transition: box-shadow var(--dur-media) var(--ease-out), border-color var(--dur-media) var(--ease-out);
+}
+.glo-entrada dt { font-weight: 700; display: flex; align-items: center; gap: var(--e-8); }
+.glo-entrada dd { margin: var(--e-4) 0 0; color: var(--texto-2); font-size: var(--t-sm); line-height: 1.55; }
+.glo-fuente { display: block; margin-top: var(--e-8); font-size: var(--t-xs); color: var(--texto-3); }
+.glo-fuente:hover { color: var(--primario); }
+.glo-candado { color: var(--texto-3); display: inline-flex; }
+.glo-entrada--bloqueada { background: var(--bg-3); border-style: dashed; }
+.glo-entrada--bloqueada dt { color: var(--texto-3); }
+.glo-oculta { font-style: italic; color: var(--texto-3); }
+/* Resaltado al llegar desde un tecnicismo de una lección. */
+.glo-destacada {
+  border-color: var(--primario);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primario) 28%, transparent);
+}
+
+/* Tecnicismo dentro de una lección: va MARCADO, como con un plumón.
+   El subrayado punteado que había antes se perdía dentro del párrafo y no se
+   distinguía de una errata; el trazo de color sí se ve de un vistazo, que es
+   lo que hace que el alumno sepa que ahí hay una palabra que puede consultar.
+   El trazo no cubre la línea entera: arranca bajo la altura de las mayúsculas
+   y muere justo debajo de la base, como el paso real de un marcador. */
+.glosario-termino,
+.glo-marca {
+  color: inherit;
+  text-decoration: none;
+  background-image: linear-gradient(
+    to bottom,
+    transparent 12%,
+    var(--marcador) 12%,
+    var(--marcador) 92%,
+    transparent 92%
+  );
+  /* Sin esto, un término que parte a la línea siguiente pierde el trazo en el
+     trozo de abajo: el degradado se calcularía sobre la caja entera. */
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  padding: 0 0.14em;
+  border-radius: 0.15em;
+  cursor: help;
+  transition: background-color var(--dur-rapida) var(--ease-out);
+}
+.glosario-termino:hover, .glosario-termino:focus-visible {
+  background-image: linear-gradient(
+    to bottom,
+    transparent 12%,
+    var(--marcador-fuerte) 12%,
+    var(--marcador-fuerte) 92%,
+    transparent 92%
+  );
+}
+/* En el tema oscuro el texto marcado se aclara un punto: el azul cargado le
+   come contraste al gris de lectura. */
+html[data-tema='oscuro'] .glosario-termino { color: var(--texto); }
+
+/* El título de cada ficha del glosario lleva el MISMO trazo que el tecnicismo
+   dentro de la lección: así se reconoce que son la misma cosa, la palabra que
+   se marcó al leer y la palabra que se viene a repasar. */
+.glo-marca {
+  cursor: inherit;
+  /* `dt` es flex, así que la marca va en su propio <span>: sobre la caja del
+     dt el degradado se estiraría hasta el final de la fila. */
+  display: inline;
+}
+/* Palabra todavía sin descubrir: el trazo se apaga a gris. Marcarla en azul
+   la anunciaría como disponible, que es justo lo contrario de lo que pasa. */
+.glo-entrada--bloqueada .glo-marca {
+  background-image: linear-gradient(
+    to bottom,
+    transparent 12%,
+    color-mix(in srgb, var(--texto-3) 22%, transparent) 12%,
+    color-mix(in srgb, var(--texto-3) 22%, transparent) 92%,
+    transparent 92%
+  );
+}
+
+@media (max-width: 640px) {
+  .glo-lista { grid-template-columns: 1fr; }
+}
 .atlas-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -5138,6 +5279,162 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   font-size: clamp(0.84rem, 1.4vw, 0.98rem);
   color: var(--texto);
 }
+
+
+/* ============================================================
+   TUS CURSOS  ·  sección del Home cuando hay más de un programa
+   ------------------------------------------------------------
+   Cada tarjeta lleva el color de su tipo de programa (paramédico, enfermería,
+   TSU…) para que se distingan de un vistazo, y la que se está estudiando se
+   marca: es la que decide qué temario, qué exámenes y qué logros se ven.
+   ============================================================ */
+.cursos { padding: var(--e-32) 0; }
+.cursos-cab { margin-bottom: var(--e-24); }
+.cursos-cab p { color: var(--texto-2); max-width: 70ch; margin-top: var(--e-8); }
+.cursos-lista {
+  list-style: none; display: grid; gap: var(--e-16);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+.curso-tarjeta {
+  height: 100%;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--e-8) var(--e-16);
+  align-items: start;
+  padding: var(--e-20);
+  border: 1px solid var(--borde);
+  border-top: 4px solid var(--curso-color, var(--primario));
+  border-radius: var(--radio);
+  background: var(--bg-2);
+}
+.curso-tarjeta--activa {
+  border-color: color-mix(in srgb, var(--curso-color, var(--primario)) 45%, var(--borde));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--curso-color, var(--primario)) 14%, transparent);
+}
+.curso-tarjeta--pendiente { opacity: 0.72; }
+.curso-ico {
+  display: grid; place-items: center; width: 46px; height: 46px;
+  border-radius: var(--radio-sm);
+  background: color-mix(in srgb, var(--curso-color, var(--primario)) 14%, transparent);
+  color: var(--curso-color, var(--primario));
+}
+.curso-datos h3 { font-size: var(--t-lg); line-height: 1.2; }
+.curso-tipo { color: var(--texto-2); font-size: var(--t-sm); margin-top: var(--e-4); }
+.curso-conteos { color: var(--texto-3); font-size: var(--t-xs); margin-top: var(--e-4); }
+.curso-marca {
+  grid-column: 2; display: inline-flex; align-items: center; gap: var(--e-4);
+  color: var(--curso-color, var(--primario)); font-size: var(--t-xs); font-weight: 700;
+}
+.curso-tarjeta .btn { grid-column: 2; justify-self: start; margin-top: var(--e-8); }
+.curso-pendiente {
+  grid-column: 2; display: inline-flex; align-items: center; gap: var(--e-4);
+  margin-top: var(--e-8); color: var(--texto-3); font-size: var(--t-xs);
+}
+
+
+/* Centro de invitaciones: la guía de qué puerta usar y la etiqueta de
+   generación de cada grupo. */
+.inv-guia {
+  display: grid; gap: var(--e-12); margin-bottom: var(--e-24);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+.inv-guia article {
+  display: flex; gap: var(--e-12); align-items: flex-start;
+  padding: var(--e-12) var(--e-16);
+  border: 1px solid var(--borde); border-radius: var(--radio-sm); background: var(--bg-2);
+}
+.inv-guia strong { display: block; font-size: var(--t-sm); }
+.inv-guia p { color: var(--texto-2); font-size: var(--t-xs); line-height: 1.5; margin-top: var(--e-4); }
+.inv-guia-ico {
+  display: grid; place-items: center; width: 34px; height: 34px; flex-shrink: 0;
+  border-radius: var(--radio-sm);
+  background: color-mix(in srgb, var(--primario) 12%, transparent); color: var(--primario);
+}
+.pg-generacion {
+  margin-left: var(--e-8); padding: 2px var(--e-8);
+  border-radius: 999px; background: var(--bg-3);
+  color: var(--texto-3); font-size: var(--t-xs); font-weight: 600;
+}
+.pc-fijo { color: var(--texto-2); font-size: var(--t-sm); align-self: center; }
+
+
+/* Tarjeta de invitación (PNG que se comparte por WhatsApp). El lienzo real es
+   1080×1350; aquí solo se muestra escalado como vista previa. */
+.tarjeta-inv { margin: var(--e-12) 0; }
+.tarjeta-inv-lienzo {
+  display: block; width: 100%; max-width: 240px; height: auto; margin: 0 auto;
+  border-radius: var(--radio-sm); border: 1px solid var(--borde);
+  background: var(--bg-3);
+}
+.tarjeta-inv-acciones {
+  display: flex; gap: var(--e-8); flex-wrap: wrap; justify-content: center;
+  margin-top: var(--e-12);
+}
+.tarjeta-inv-falta {
+  display: flex; gap: var(--e-8); align-items: flex-start;
+  padding: var(--e-12); border: 1px dashed var(--borde); border-radius: var(--radio-sm);
+  color: var(--texto-2); font-size: var(--t-xs); line-height: 1.5; background: var(--bg-3);
+}
+.tarjeta-inv-falta code { font-size: var(--t-xs); }
+.tarjeta-inv-aviso {
+  min-height: 1.2em; margin-top: var(--e-4); text-align: center;
+  color: var(--exito-solido); font-size: var(--t-xs); font-weight: 600;
+}
+.tarjeta-inv-nota {
+  margin-top: var(--e-8); text-align: center;
+  color: var(--texto-3); font-size: var(--t-xs); line-height: 1.45;
+}
+
+
+/* ============================================================
+   CONSOLA: elegir dónde trabajar (plataforma o una academia)
+   ------------------------------------------------------------
+   La consola tiene dos contextos y el riel cambia con ellos, así que la
+   elección tiene que verse como lo primero del Resumen, no escondida en una
+   tabla de otra sección.
+   ============================================================ */
+.cs-elegir { margin-bottom: var(--e-32); }
+.cs-elegir-cab p { color: var(--texto-2); font-size: var(--t-sm); max-width: 72ch; margin-top: var(--e-4); }
+.cs-elegir-lista {
+  list-style: none; display: grid; gap: var(--e-12); margin-top: var(--e-16);
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+}
+.cs-aca {
+  display: flex; align-items: center; gap: var(--e-12); height: 100%;
+  padding: var(--e-16);
+  border: 1px solid var(--borde); border-radius: var(--radio); background: var(--bg-2);
+  color: var(--texto); text-decoration: none;
+  transition: border-color var(--dur-media) var(--ease-out), transform var(--dur-media) var(--ease-out);
+}
+.cs-aca:hover { border-color: var(--primario); transform: translateY(-2px); text-decoration: none; }
+.cs-aca--suspendida { opacity: 0.72; }
+.cs-aca-ico {
+  display: grid; place-items: center; width: 40px; height: 40px; flex-shrink: 0;
+  border-radius: var(--radio-sm);
+  background: color-mix(in srgb, var(--primario) 12%, transparent); color: var(--primario);
+}
+.cs-aca-datos { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.cs-aca-datos small { color: var(--texto-3); font-size: var(--t-xs); }
+.cs-aca-cifras { color: var(--texto-2) !important; }
+.cs-aca-aviso { color: var(--peligro-solido) !important; font-weight: 600; }
+
+/* Salida del contexto de academia, arriba del riel. */
+.consola-link--salir { color: var(--texto-3); border-bottom: 1px solid var(--borde); border-radius: 0; margin-bottom: var(--e-8); }
+
+/* Cabecera de la academia abierta: responde «¿dónde estoy?» sin leer la URL. */
+.aca-admin-cab {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: var(--e-16);
+  flex-wrap: wrap; margin-bottom: var(--e-24);
+  padding-bottom: var(--e-16); border-bottom: 1px solid var(--borde);
+}
+.aca-admin-etiqueta {
+  font-family: var(--fuente-sub); font-size: var(--t-xs); letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--texto-3);
+}
+.aca-admin-id h1 { font-size: var(--t-2xl); line-height: 1.15; }
+.aca-admin-id p { display: flex; align-items: center; gap: var(--e-8); flex-wrap: wrap; margin-top: var(--e-8); }
+.aca-admin-plan { color: var(--texto-3); font-size: var(--t-xs); }
+.aca-admin-pie { margin-top: var(--e-32); color: var(--texto-3); font-size: var(--t-xs); }
 
 /* ---- Progreso ---- */
 .ph-progreso {

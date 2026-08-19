@@ -4,6 +4,7 @@ import { useAdmin } from '../../components/admin/AdminShell.jsx'
 import { planEfectivo, ETIQUETA_PLAN } from '../../lib/capacidades.js'
 import { ETIQUETA_ROL } from '../../lib/roles.js'
 import Icon from '../../components/Icon.jsx'
+import ElegirAcademia from '../../components/admin/ElegirAcademia.jsx'
 
 // ============================================================
 //  Consola del super-admin · RESUMEN (Bloque N)
@@ -90,8 +91,14 @@ export default function AdminResumen() {
     <div className="cs-resumen">
       <header className="cs-cabecera">
         <h1>Resumen de la plataforma</h1>
-        <p>Lo que pide atención hoy, y el retrato general debajo.</p>
+        <p>
+          Elige dónde trabajar, atiende lo que pide atención y, bajando, mira el retrato general.
+        </p>
       </header>
+
+      {/* Lo PRIMERO es elegir contexto. Antes había que adivinar que para
+          administrar una academia se entraba por una tabla de otra sección. */}
+      <ElegirAcademia academias={academias} usuarios={usuarios} intentos={intentos} />
 
       <section aria-label="Avisos">
         {alertas.length === 0 ? (

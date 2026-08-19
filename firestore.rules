@@ -77,6 +77,17 @@ service cloud.firestore {
     //
     // Coste: Firestore CACHEA los get() dentro de una misma petición, así que
     // listar los temas de un programa cuesta miDoc()+miGrupo() UNA vez, no N.
+    // Profesor de ESTA academia con el permiso de códigos aprobado por su
+    // director (usuarios/{uid}.puedeVerCodigos). Es lo que le habilita a
+    // repartir acceso de ALUMNO: ya podía dar el código de su grupo, que hace
+    // lo mismo para siempre y sin tope, así que una invitación —que caduca y
+    // se agota— es más estrecha, no más ancha.
+    function profesorConCodigos(academiaId) {
+      return esStaffDe(academiaId)
+        && miDoc().get('rol', '') == 'instructor'
+        && miDoc().get('puedeVerCodigos', false) == true;
+    }
+
     function miGrupoId() { return miDoc().get('grupoId', null); }
     function tengoGrupo() {
       return miGrupoId() != null
@@ -643,16 +654,40 @@ service cloud.firestore {
       // el mundo como alumno; una invitación por rol reparte el rol, y entre
       // ellas está la de 'admin_escuela'. Poder LEER la lista es poder copiar
       // el enlace de director aunque no pueda crearlo.
-      allow list: if esSuper() || esAdminDe(resource.data.academiaId);
+      // El profesor con permiso ve SOLO las que él emitió: la consulta debe
+      // filtrar por `creadoPor`, porque si un solo documento de los devueltos
+      // no cumple, Firestore rechaza la consulta entera. Así no puede leer —ni
+      // copiar— el enlace de director que emitió su jefe.
+      allow list: if esSuper()
+        || esAdminDe(resource.data.academiaId)
+        || (
+          profesorConCodigos(resource.data.academiaId)
+          && resource.data.rol == 'alumno'
+          && resource.data.creadoPor == request.auth.uid
+        );
 
-      // Crear: super-admin, o el DIRECTOR de SU academia. Un profesor no emite
-      // invitaciones: podría fabricarse una de director y ascender solo.
+      // Crear: super-admin y DIRECTOR, cualquier rol. Y el PROFESOR con el
+      // permiso de códigos aprobado, SOLO invitaciones de alumno.
+      //
+      // Por qué el profesor sí puede ya: con `puedeVerCodigos` reparte el
+      // código de su grupo, que mete a quien sea como alumno de forma
+      // permanente y sin tope de usos. Una invitación de alumno hace lo mismo
+      // pero caduca y se agota: es la versión estrecha de lo que ya tenía.
+      // Lo que sigue sin poder es repartir ROLES —instructor o admin_escuela—,
+      // porque ahí sí se estaría fabricando un ascenso.
       //
       // El rol sale del catálogo CERRADO. 'superadmin' no está y no puede
       // estar: no es un rol de academia, y una invitación es un enlace que
       // circula por WhatsApp.
       allow create: if request.resource.data.academiaId is string
-        && (esSuper() || esAdminDe(request.resource.data.academiaId))
+        && (
+          esSuper()
+          || esAdminDe(request.resource.data.academiaId)
+          || (
+            profesorConCodigos(request.resource.data.academiaId)
+            && request.resource.data.rol == 'alumno'
+          )
+        )
         && request.resource.data.creadoPor == request.auth.uid
         && request.resource.data.rol in ['alumno', 'instructor', 'admin_escuela']
         && request.resource.data.estado == 'activo'
@@ -675,7 +710,16 @@ service cloud.firestore {
       // editarse, un enlace ya repartido como "alumno" se convertiría en uno de
       // "director" en manos de quien ya lo tiene. Para cambiar el rol se emite
       // otra invitación.
-      allow update: if esAdminDe(resource.data.academiaId)
+      // El profesor puede desactivar o retocar LAS SUYAS: quien puede emitir
+      // un enlace tiene que poder apagarlo sin ir a pedírselo al director.
+      allow update: if (
+          esAdminDe(resource.data.academiaId)
+          || (
+            profesorConCodigos(resource.data.academiaId)
+            && resource.data.rol == 'alumno'
+            && resource.data.creadoPor == request.auth.uid
+          )
+        )
         && request.resource.data.diff(resource.data).affectedKeys()
              .hasOnly(['estado', 'nota', 'maxUsos'])
         && request.resource.data.estado in ['activo', 'inactivo']

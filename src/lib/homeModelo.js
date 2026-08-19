@@ -36,6 +36,13 @@ export const SECCIONES_HOME = [
     descripcion: 'Barra con los temas leídos del alumno (solo aparece si ya empezó).',
   },
   {
+    // Solo se pinta cuando la persona tiene MÁS DE UN curso a su alcance.
+    // Con uno solo sería pedir que elija entre una única opción.
+    id: 'cursos',
+    etiqueta: 'Tus cursos',
+    descripcion: 'Los programas que imparte la academia (paramédico, enfermería…) y cuál se estudia. Aparece solo si hay más de uno.',
+  },
+  {
     id: 'modulos',
     etiqueta: 'Carrusel de modulos',
     descripcion: 'El recorrido del temario, modulo por módulo.',
@@ -46,9 +53,11 @@ export const SECCIONES_HOME = [
     descripcion: 'Invitación al examen general y a los quizzes.',
   },
   {
+    // El id sigue siendo 'atlas' porque es lo que las academias ya tienen
+    // guardado en su configuración del Home: renombrarlo se la borraría.
     id: 'atlas',
-    etiqueta: 'Atlas',
-    descripcion: 'Invitación al atlas anatómico y fisiológico.',
+    etiqueta: 'Logros',
+    descripcion: 'Invitación a Logros: galería de imágenes y glosario del temario.',
   },
   {
     id: 'flashcards',

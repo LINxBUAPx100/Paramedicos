@@ -16,7 +16,7 @@ const TOPNAV = [
   { to: '/temario', label: 'Temas', soloStaff: true },
   { to: '/examen', label: 'Examen' },
   { to: '/progreso', label: 'Progreso' },
-  { to: '/atlas', label: 'Atlas' },
+  { to: '/logros', label: 'Logros' },
 ]
 
 // Navegación completa del drawer (incluye accesos que no caben en el header).
@@ -25,7 +25,7 @@ const NAV = [
   { to: '/temario', icon: 'temario', label: 'Temario (staff)', soloStaff: true },
   { to: '/examen', icon: 'examen', label: 'Examen general' },
   { to: '/flashcards', icon: 'flashcards', label: 'Flashcards' },
-  { to: '/atlas', icon: 'atlas', label: 'Atlas' },
+  { to: '/logros', icon: 'atlas', label: 'Logros' },
   { to: '/progreso', icon: 'progreso', label: 'Mi progreso' },
   { to: '/buscar', icon: 'buscar', label: 'Buscar' },
 ]
@@ -273,7 +273,7 @@ export default function Layout({ children }) {
             {esStaff && <Link to="/temario">Temario (staff)</Link>}
             <Link to="/examen">Examen</Link>
             <Link to="/flashcards">Flashcards</Link>
-            <Link to="/atlas">Atlas</Link>
+            <Link to="/logros">Logros</Link>
           </div>
           <div className="footer-col">
             <h4>Avanza</h4>
@@ -285,7 +285,7 @@ export default function Layout({ children }) {
           <div className="footer-col">
             <h4>Materiales</h4>
             {esStaff && <Link to="/temario">Guías descargables</Link>}
-            <Link to="/atlas">Atlas de imágenes</Link>
+            <Link to="/logros">Logros y glosario</Link>
             <Link to="/cuenta">Mi cuenta</Link>
           </div>
         </div>

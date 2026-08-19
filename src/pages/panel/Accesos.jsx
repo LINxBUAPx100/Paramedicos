@@ -1,15 +1,18 @@
 import { usePanel } from '../../components/panel/PanelShell.jsx'
 import SolicitudesInternas from '../../components/panel/SolicitudesInternas.jsx'
 import SolicitudesDeAcceso from '../../components/panel/SolicitudesDeAcceso.jsx'
-import CodigosPrueba from '../../components/panel/CodigosPrueba.jsx'
-import AccesoCodigos from '../../components/panel/AccesoCodigos.jsx'
+import { Link } from 'react-router-dom'
 
 // ============================================================
 //  Panel del director · ACCESOS (Bloque O)
 // ------------------------------------------------------------
-//  Todo lo que decide QUIÉN ENTRA y a qué: solicitudes de dentro (siguiente
-//  módulo, ver los códigos), solicitudes de fuera vía directorio (Bloque K) y
-//  códigos de prueba. Estaban repartidas por tres zonas del panel viejo.
+//  Lo que se RESPONDE, no lo que se emite: las solicitudes de dentro
+//  (siguiente módulo, ver los códigos) y las de fuera vía directorio.
+//
+//  Los códigos —de academia, de grupo, de prueba— y las invitaciones por rol
+//  se fueron al centro de invitaciones (/panel/invitaciones). Aquí convivían
+//  dos cosas distintas: pedir acceso y repartirlo, y eso obligaba a recorrer
+//  media pantalla para saber cuál de las cinco puertas tocaba usar.
 // ============================================================
 
 export default function PanelAccesos() {
@@ -22,7 +25,10 @@ export default function PanelAccesos() {
     <div className="cs-seccion">
       <header className="cs-cabecera">
         <h1>Accesos</h1>
-        <p>Quién entra a tu academia, quién pide avanzar y qué códigos están vivos.</p>
+        <p>
+        Quién pide entrar a tu academia y quién pide avanzar. Para repartir acceso —códigos,
+        invitaciones y pruebas— ve a <Link to="/panel/invitaciones">Invitaciones</Link>.
+      </p>
       </header>
 
       <SolicitudesInternas
@@ -45,20 +51,7 @@ export default function PanelAccesos() {
         />
       )}
 
-      {/* Las invitaciones POR ROL tienen su propia sección (/panel/invitaciones):
-          dar de alta a un profesor no es un trámite que deba quedar al fondo de
-          esta pantalla, y además solo la ve quien dirige. */}
-      {gestion ? (
-        <CodigosPrueba
-          academiaId={academiaId}
-          academiaNombre={academiaNombre}
-          miUid={miUid}
-          grupos={grupos}
-        />
-      ) : (
-        // Profesor: los códigos requieren aprobación del director.
-        <AccesoCodigos academiaId={academiaId} academiaNombre={academiaNombre} grupos={grupos} />
-      )}
+
     </div>
   )
 }

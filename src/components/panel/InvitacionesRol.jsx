@@ -5,6 +5,9 @@ import {
 } from '../../lib/invitacionesModelo.js'
 import Icon from '../Icon.jsx'
 import CompartirCodigo from '../CompartirCodigo.jsx'
+import {
+  rolesQuePuedeInvitar, filtroDeInvitaciones, agruparPorGeneracion,
+} from '../../lib/invitacionesCentro.js'
 
 // ============================================================
 //  Invitaciones POR ROL — crear, compartir, desactivar, borrar
@@ -14,17 +17,27 @@ import CompartirCodigo from '../CompartirCodigo.jsx'
 //  que promoverlo a mano en Miembros. Aquí se emite el enlace ya con el rol
 //  dentro: alumno, profesor o director.
 //
-//  SOLO lo monta quien dirige: la sección /panel/invitaciones (director) y el
-//  dashboard de academia del super-admin. Un profesor no lo ve ni en solo
-//  lectura — repartir la invitación de 'admin_escuela' es repartir el mando de
-//  la academia. La barrera real la ponen las reglas, que no le dejan ni listar.
+//  QUIÉN puede emitir qué (invitacionesCentro.js, y lo mismo en las reglas):
+//    · director y super-admin → cualquier rol, y ven todas las de su academia;
+//    · profesor CON el permiso de códigos aprobado → SOLO alumnos, y ve solo
+//      las que él emitió. Repartir el rol de profesor o de director sigue
+//      siendo del director: ese enlace entrega el mando de la academia.
+//
+//  El profesor no pierde nada por el camino: ya podía dar el código de su
+//  grupo, que mete a cualquiera como alumno para siempre. Una invitación es
+//  lo mismo, pero con caducidad y tope de usos.
 // ============================================================
 
 export default function InvitacionesRol({
   academiaId, academiaNombre = '', miUid, grupos = [],
+  // Quién mira: { rol, esSuperadmin, puedeVerCodigos, uid }. Sin él se asume
+  // dirección, que es como se usaba desde el dashboard del super-admin.
+  quienEmite = { rol: 'admin_escuela' },
 }) {
+  const rolesPosibles = rolesQuePuedeInvitar(quienEmite)
+  const puedeElegirRol = rolesPosibles.length > 1
   const [lista, setLista] = useState(null)
-  const [rol, setRol] = useState('alumno')
+  const [rol, setRol] = useState(rolesPosibles[0] || 'alumno')
   const [grupoSel, setGrupoSel] = useState('')
   const [dias, setDias] = useState(14)
   const [maxUsos, setMaxUsos] = useState(maxUsosPorDefecto('alumno'))
@@ -36,7 +49,11 @@ export default function InvitacionesRol({
   const cargar = async () => {
     try {
       const { listarInvitaciones } = await import('../../lib/firebase/invitaciones.js')
-      setLista(await listarInvitaciones(academiaId))
+      // El filtro no es cosmético: las reglas exigen que TODO lo que devuelva
+      // la consulta sea legible, así que un profesor que pidiera la lista
+      // entera se llevaría un rechazo completo.
+      const filtro = filtroDeInvitaciones(quienEmite, academiaId)
+      setLista(filtro ? await listarInvitaciones(academiaId, filtro) : [])
     } catch (err) {
       setLista([])
       setError(mensajeError(err, 'No se pudieron cargar las invitaciones', 'invitaciones'))
@@ -137,21 +154,34 @@ export default function InvitacionesRol({
       </p>
 
       <form className="pc-form" onSubmit={crear}>
-          <label>
-            Entra como
-            <select value={rol} onChange={(e) => cambiarRol(e.target.value)}>
-              {ROLES_INVITACION.map((r) => (
-                <option key={r.rol} value={r.rol}>{r.etiqueta}</option>
-              ))}
-            </select>
-          </label>
+          {/* Con un solo rol posible (el profesor) no se ofrece un desplegable
+              de una opción: se dice lo que va a pasar y ya. */}
+          {puedeElegirRol ? (
+            <label>
+              Entra como
+              <select value={rol} onChange={(e) => cambiarRol(e.target.value)}>
+                {ROLES_INVITACION.filter((r) => rolesPosibles.includes(r.rol)).map((r) => (
+                  <option key={r.rol} value={r.rol}>{r.etiqueta}</option>
+                ))}
+              </select>
+            </label>
+          ) : (
+            <p className="pc-fijo">Entra como <strong>alumno</strong></p>
+          )}
           {grupos.length > 0 && (
             <label>
               Grupo (se integra al canjear)
+              {/* Agrupados por GENERACIÓN: los grupos empiezan en fechas
+                  distintas y en una academia con varios ciclos la lista plana
+                  obliga a saberse los nombres de memoria. */}
               <select value={grupoSel} onChange={(e) => setGrupoSel(e.target.value)}>
                 <option value="">— Sin grupo —</option>
-                {grupos.map((g) => (
-                  <option key={g.id} value={g.id}>{g.nombre}</option>
+                {agruparPorGeneracion(grupos).map((bloque) => (
+                  <optgroup key={bloque.clave} label={bloque.etiqueta}>
+                    {bloque.grupos.map((g) => (
+                      <option key={g.id} value={g.id}>{g.nombre}</option>
+                    ))}
+                  </optgroup>
                 ))}
               </select>
             </label>

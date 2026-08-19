@@ -12,6 +12,7 @@ import {
   getDocs, serverTimestamp,
 } from 'firebase/firestore'
 import { normalizarGrupo, normalizarGrupos } from '../compatNombres.js'
+import { normalizarGeneracion } from '../invitacionesCentro.js'
 
 // Código legible tipo GRP-7K3M (sin caracteres confusos).
 function generarCodigoGrupo() {
@@ -28,7 +29,9 @@ function generarCodigoGrupo() {
 // Enfermería. Puede quedar en null al crear (el director lo asigna después),
 // pero mientras esté vacío sus alumnos no verán contenido — la ruta protegida
 // se lo dice con todas sus letras (programasModelo.motivoSinPrograma).
-export async function crearGrupo({ academiaId, nombre, creadoPor, programaId = null, tipoPrograma = null }) {
+export async function crearGrupo({
+  academiaId, nombre, creadoPor, programaId = null, tipoPrograma = null, generacion = null,
+}) {
   if (!nombre?.trim()) throw new Error('Escribe el nombre del grupo.')
   if (!academiaId) throw new Error('El grupo necesita una academia.')
   for (let intento = 0; intento < 5; intento++) {
@@ -44,6 +47,11 @@ export async function crearGrupo({ academiaId, nombre, creadoPor, programaId = n
       programaId,
       tipoPrograma,
       programasExtra: [],
+      // GENERACIÓN del grupo ({ numero, anio }). Los grupos empiezan en fechas
+      // distintas y la academia los nombra por generación; sin este dato, las
+      // listas de grupos son un montón plano en cuanto hay más de un ciclo.
+      // Es una etiqueta, no una llave: no decide acceso a nada.
+      generacion: normalizarGeneracion(generacion),
       creado: serverTimestamp(),
     })
     return { id }

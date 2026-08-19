@@ -40,10 +40,19 @@ test('los accesos SOLO admiten rutas del catálogo', () => {
       { ruta: 'javascript:alert(1)', etiqueta: 'Pulsa' },
       { ruta: 'https://evil.example', etiqueta: 'Premio' },
       { ruta: '/admin', etiqueta: 'Panel' },
-      { ruta: '/atlas', etiqueta: 'Atlas' },
+      { ruta: '/logros', etiqueta: 'Logros' },
     ],
   })
-  assert.deepEqual(c.accesos.map((a) => a.ruta), ['/atlas'])
+  assert.deepEqual(c.accesos.map((a) => a.ruta), ['/logros'])
+})
+
+test('un acceso guardado como /atlas sigue funcionando: ahora apunta a Logros', () => {
+  // El Atlas pasó a llamarse Logros. Una academia que ya tenía ese acceso rápido
+  // guardado no puede perderlo por un cambio de nombre nuestro: se traduce al
+  // leer, con la etiqueta del catálogo nuevo.
+  const c = normalizarHomeAcademia({ accesos: [{ ruta: '/atlas', etiqueta: 'Atlas' }] })
+  assert.deepEqual(c.accesos.map((a) => a.ruta), ['/logros'])
+  assert.equal(c.accesos[0].etiqueta, 'Logros')
 })
 
 test('los accesos no se duplican y respetan el tope', () => {
@@ -113,9 +122,9 @@ test('homeAcademiaDe no revienta sin academia', () => {
 
 test('alternarAcceso añade, quita y respeta el tope', () => {
   let c = homeAcademiaDefault()
-  c = alternarAcceso(c, '/atlas')
-  assert.deepEqual(c.accesos.map((a) => a.ruta), ['/atlas'])
-  c = alternarAcceso(c, '/atlas')
+  c = alternarAcceso(c, '/logros')
+  assert.deepEqual(c.accesos.map((a) => a.ruta), ['/logros'])
+  c = alternarAcceso(c, '/logros')
   assert.deepEqual(c.accesos, [])
   for (const d of DESTINOS) c = alternarAcceso(c, d.ruta)
   assert.equal(c.accesos.length, MAX_ACCESOS)

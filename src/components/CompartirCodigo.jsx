@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { etiquetaRol } from '../lib/invitacionesModelo.js'
 import Icon from './Icon.jsx'
+import TarjetaInvitacion from './TarjetaInvitacion.jsx'
 
 // Construye el enlace de invitación: lleva a /cuenta con el código pre-llenado.
 // Se arma desde la URL actual SIN el hash (robusto con base relativa './' y
@@ -145,16 +146,24 @@ export default function CompartirCodigo({ codigo, nombre, contexto = '', tipo = 
   }
 
   const compartir = async () => {
-    // Hoja nativa (móvil): el enlace YA va dentro de `texto`, así que NO lo
-    // pasamos también en `url` (WhatsApp lo anexaría al final y saldría dos
-    // veces). Si el usuario cancela, NO abrimos el panel.
+    // Siempre se abre el panel: dentro está la TARJETA, que es lo que se
+    // acaba enviando. Antes el botón disparaba la hoja nativa con solo
+    // texto y no había forma de llegar a la imagen desde el móvil, que es
+    // justo donde se comparte.
+    setAbierto((v) => !v)
+  }
+
+  // Compartir solo el TEXTO (sin imagen), para quien lo prefiera así.
+  const compartirTexto = async () => {
+    // El enlace YA va dentro de `texto`, así que NO se pasa también en
+    // `url`: WhatsApp lo anexaría al final y saldría dos veces.
     if (navigator.share) {
       try {
         await navigator.share({ title: titulo, text: texto })
-      } catch { /* cancelado o error: no hacemos nada */ }
+      } catch { /* cancelado: no hacemos nada */ }
       return
     }
-    setAbierto((v) => !v)
+    copiar('invitacion', texto)
   }
 
   const etiquetaTipo = tipoFinal === 'invitacion'
@@ -221,6 +230,11 @@ export default function CompartirCodigo({ codigo, nombre, contexto = '', tipo = 
             </div>
           </div>
 
+          {/* La IMAGEN. Va antes que los botones de texto porque es lo que
+              de verdad se envía: en WhatsApp una tarjeta se ve en la vista
+              previa y se reenvía entera; un mensaje de texto se pierde. */}
+          <TarjetaInvitacion rol={rol} academia={nombreAcademia} codigo={codigo} />
+
           <div className="compartir-acciones">
             <a
               className="compartir-wa"
@@ -231,8 +245,8 @@ export default function CompartirCodigo({ codigo, nombre, contexto = '', tipo = 
               <Icon name="chispa" size={15} /> Enviar por WhatsApp
             </a>
 
-            <button className="compartir-completa" onClick={() => copiar('invitacion', texto)}>
-              {copiado === 'invitacion' ? '✓ Invitación copiada' : 'Copiar invitación completa'}
+            <button className="compartir-completa" onClick={compartirTexto}>
+              {copiado === 'invitacion' ? '✓ Invitación copiada' : 'Compartir solo el texto'}
             </button>
 
             <div className="compartir-acciones-secundarias">

@@ -29,6 +29,22 @@ const INDICE_BUNDLE = { modulos: modulosNav, stats: statsBundle, fuente: 'legacy
 
 const ContenidoContext = createContext(null)
 
+// Curso elegido por academia. En `localStorage` y no en el perfil porque es
+// una preferencia de lectura, no un permiso: perderla no rompe nada y
+// guardarla en Firestore costaría una escritura por cada cambio de pestaña.
+const CLAVE_CURSO = (academiaId) => `ptem:curso:${academiaId || "sin-academia"}`
+
+function leerCursoGuardado(academiaId) {
+  try { return localStorage.getItem(CLAVE_CURSO(academiaId)) || null } catch { return null }
+}
+
+function guardarCurso(academiaId, cursoId) {
+  try {
+    if (cursoId) localStorage.setItem(CLAVE_CURSO(academiaId), cursoId)
+    else localStorage.removeItem(CLAVE_CURSO(academiaId))
+  } catch { /* almacenamiento bloqueado: la elección dura lo que la sesión */ }
+}
+
 export function ContenidoProvider({ children }) {
   const { academia, rol, grupo, esSuperadmin } = useAuth()
   const academiaId = academia?.id || null
@@ -47,7 +63,23 @@ export function ContenidoProvider({ children }) {
   const claveAcceso = esSuperadmin || rol === 'instructor' || rol === 'admin_escuela'
     ? '*'
     : programasDeGrupo(grupo).sort().join(',') || '∅'
-  const clave = migrada ? `${academiaId}|${claveAcceso}` : `legacy|${claveAcceso}`
+
+  // CURSO ELEGIDO. Una academia puede impartir varios (paramédico,
+  // enfermería…) y un grupo puede cursar su carrera más una especialización.
+  // Se recuerda por academia y por navegador: quien estudia enfermería no
+  // quiere volver a elegirla cada vez que abre la aplicación. La elección
+  // NO es una credencial: el resolutor solo sirve un curso si de verdad
+  // está al alcance de esta persona (cursoAServir), así que escribir otro
+  // id a mano en el almacenamiento no abre ninguna puerta.
+  //
+  // Va ANTES de `clave` a propósito: `clave` lo usa, y leer una `const` antes
+  // de su declaración lanza «Cannot access before initialization». Al estar en
+  // la rama de academia migrada, el fallo no habría aparecido con el temario
+  // del paquete y sí en cuanto una academia real abriera la aplicación.
+  const [cursoElegido, setCursoElegido] = useState(() => leerCursoGuardado(academiaId))
+  useEffect(() => { setCursoElegido(leerCursoGuardado(academiaId)) }, [academiaId])
+
+  const clave = migrada ? `${academiaId}|${claveAcceso}|${cursoElegido || 'auto'}` : `legacy|${claveAcceso}`
 
   const [indice, setIndice] = useState(INDICE_BUNDLE)
   const [contenido, setContenido] = useState(null) // API completa | null
@@ -65,7 +97,7 @@ export function ContenidoProvider({ children }) {
     ;(async () => {
       try {
         const { indiceDeAcademia } = await import('../lib/firebase/contenido.js')
-        const ind = await indiceDeAcademia(academia, acceso)
+        const ind = await indiceDeAcademia(academia, acceso, cursoElegido)
         if (activo && ind) {
           // preguntas/flashcards salen del bundle hasta cargar el contenido
           // completo (la estructura sola no las conoce): solo afinan contadores.
@@ -90,7 +122,7 @@ export function ContenidoProvider({ children }) {
     ;(async () => {
       try {
         const { contenidoDeAcademia } = await import('../lib/firebase/contenido.js')
-        const api = await contenidoDeAcademia(academia, acceso)
+        const api = await contenidoDeAcademia(academia, acceso, cursoElegido)
         if (!activo) return
         setContenido(api)
         setError(null)
@@ -108,14 +140,28 @@ export function ContenidoProvider({ children }) {
   }, [pedido, contenido, clave, reintento])
 
   const pedir = useCallback(() => setPedido(true), [])
+
+  // Cambiar de curso: se guarda y se descarta lo cargado. El contenido se
+  // vuelve a resolver porque `clave` cambia.
+  const elegirCurso = useCallback((cursoId) => {
+    guardarCurso(academiaId, cursoId)
+    setCursoElegido(cursoId || null)
+  }, [academiaId])
   const reintentar = useCallback(() => {
     setError(null)
     setReintento((n) => n + 1)
   }, [])
 
+  // Los cursos que esta persona puede estudiar. Salen de lo ya cargado (el
+  // contenido completo si está, y si no del índice ligero): ninguna lectura
+  // extra. Sin academia migrada no hay cursos y el Home se comporta como
+  // siempre, con el temario del paquete.
+  const cursos = contenido?.cursos || indice?.cursos || []
+  const cursoId = contenido?.cursoId || indice?.cursoId || null
+
   const valor = useMemo(
-    () => ({ indice, contenido, error, pedir, reintentar, academiaId }),
-    [indice, contenido, error, pedir, reintentar, academiaId]
+    () => ({ indice, contenido, error, pedir, reintentar, academiaId, cursos, cursoId, elegirCurso }),
+    [indice, contenido, error, pedir, reintentar, academiaId, cursos, cursoId, elegirCurso]
   )
   return <ContenidoContext.Provider value={valor}>{children}</ContenidoContext.Provider>
 }
@@ -138,6 +184,18 @@ export function useContenido() {
 // Índice LIGERO para el shell (no dispara la carga del contenido completo).
 export function useIndiceContenido() {
   return usarContexto().indice
+}
+
+/**
+ * Los CURSOS que esta persona puede estudiar y cuál tiene abierto.
+ *
+ * Sale de lo que el resolutor ya cargó, así que no cuesta lecturas. Con una
+ * academia sin migrar (o sin sesión) la lista viene vacía: hay un solo temario,
+ * el del paquete, y no hay nada que elegir.
+ */
+export function useCursos() {
+  const { cursos, cursoId, elegirCurso } = usarContexto()
+  return { cursos, cursoId, elegirCurso }
 }
 
 // Índice de UNA academia concreta (superadmin gestionando otra academia desde

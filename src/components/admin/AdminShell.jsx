@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { NavLink, Outlet, useOutletContext } from 'react-router-dom'
+import { NavLink, Outlet, useLocation, useOutletContext } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { registrar } from '../../lib/registro.js'
 import Icon from '../Icon.jsx'
+import { contextoDeRuta, seccionesDeAdmin } from '../../lib/adminModelo.js'
 
 // ============================================================
 //  Consola del super-admin — armazón (Bloque N)
@@ -19,15 +20,10 @@ import Icon from '../Icon.jsx'
 //  Firestore, que es lo que pasaría si cada página cargara lo suyo.
 // ============================================================
 
-const SECCIONES = [
-  { to: '/admin', end: true, icono: 'progreso', etiqueta: 'Resumen' },
-  { to: '/admin/academias', icono: 'temario', etiqueta: 'Academias' },
-  { to: '/admin/usuarios', icono: 'usuario', etiqueta: 'Usuarios' },
-  { to: '/admin/contenido', icono: 'capas', etiqueta: 'Contenido' },
-  { to: '/admin/facturacion', icono: 'pildora', etiqueta: 'Facturación' },
-  { to: '/admin/incidencias', icono: 'alerta', etiqueta: 'Incidencias' },
-  { to: '/admin/logs', icono: 'reloj', etiqueta: 'Actividad' },
-]
+// El riel ya no es una lista fija: hay DOS contextos —plataforma y academia— y
+// se pinta el del sitio donde estás. El catálogo y la lectura de la URL viven en
+// lib/adminModelo.js, probados con `npm test`, para que un enlace del menú no
+// pueda apuntar a una ruta que nadie declara.
 
 export function useAdmin() {
   return useOutletContext()
@@ -35,6 +31,10 @@ export function useAdmin() {
 
 export default function AdminShell() {
   const { cargando, esSuperadmin, user } = useAuth()
+  const { pathname } = useLocation()
+  // Contexto actual: null = toda la plataforma; un id = esa academia.
+  const { academiaId: academiaActiva } = contextoDeRuta(pathname)
+  const secciones = seccionesDeAdmin(academiaActiva)
   const [datos, setDatos] = useState(null) // { academias, usuarios, intentos }
   const [cargandoDatos, setCargandoDatos] = useState(true)
   const [error, setError] = useState('')
@@ -120,9 +120,20 @@ export default function AdminShell() {
   return (
     <div className="consola">
       <nav className="consola-nav" aria-label="Secciones de administración">
-        <span className="consola-marca"><Icon name="capas" size={18} /> Plataforma</span>
-        {SECCIONES.map((s) => (
-          <NavLink key={s.to} to={s.to} end={s.end} className="consola-link">
+        {/* La marca dice en qué contexto estás, porque el resto del riel cambia
+            con él: si no, se lee un menú de academia creyendo que es el global. */}
+        <span className="consola-marca">
+          <Icon name={academiaActiva ? 'temario' : 'capas'} size={18} />{' '}
+          {academiaActiva || 'Plataforma'}
+        </span>
+        {academiaActiva && (
+          <NavLink to="/admin" end className="consola-link consola-link--salir">
+            <Icon name="chevronIzq" size={17} />
+            <span>Toda la plataforma</span>
+          </NavLink>
+        )}
+        {secciones.map((s) => (
+          <NavLink key={s.id} to={s.ruta} end={s.fin} className="consola-link">
             <Icon name={s.icono} size={17} />
             <span>{s.etiqueta}</span>
           </NavLink>

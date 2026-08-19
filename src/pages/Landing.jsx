@@ -83,9 +83,18 @@ function PortadaLanding() {
             <Link to="/cuenta" className="btn btn--pildora btn--carbon btn--lg">
               Entrar a mi academia <Icon name="flecha" size={17} />
             </Link>
-            <a href="#lp-demo" className="btn btn--pildora btn--fantasma btn--lg">
+            {/* Mismo motivo que en Logros: con HashRouter un href="#lp-demo"
+                cambia la RUTA y el visitante acaba en un 404 en vez de bajar a
+                la muestra. El salto se hace a mano. */}
+            <button
+              type="button"
+              className="btn btn--pildora btn--fantasma btn--lg"
+              onClick={() => {
+                document.getElementById('lp-demo')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+              }}
+            >
               Ver el contenido por dentro
-            </a>
+            </button>
           </div>
           <dl className="lp-cifras">
             {[

@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 520" role="img" aria-labelledby="t d" width="820" height="520">
+  <title id="t">Curva de disociación de la oxihemoglobina</title>
+  <desc id="d">Curva sigmoidea de saturación de la hemoglobina frente a la presión parcial de oxígeno, con la P50 en 26,6 mmHg y los factores que la desplazan a la derecha (más CO2, más temperatura, más 2,3-DPG, menos pH) y a la izquierda.</desc>
+
+  <rect width="820" height="520" rx="14" fill="#ffffff" stroke="#dbe3ee"/>
+  <text x="32" y="46" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="21" font-weight="700" fill="#0b1220">Curva de disociación de la oxihemoglobina</text>
+  <text x="32" y="70" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="14" fill="#6b7280">Relación entre la PaO₂ y la saturación de la hemoglobina</text>
+
+  <!-- Ejes -->
+  <g stroke="#9aa7b8" stroke-width="1.5">
+    <path d="M96 420 H770"/>
+    <path d="M96 420 V96"/>
+  </g>
+  <g stroke="#eef2f7" stroke-width="1">
+    <path d="M96 388 H770 M96 356 H770 M96 324 H770 M96 292 H770 M96 260 H770 M96 228 H770 M96 196 H770 M96 164 H770 M96 132 H770"/>
+  </g>
+
+  <!-- Marcas del eje Y (saturación) -->
+  <g font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#6b7280" text-anchor="end">
+    <text x="88" y="425">0</text>
+    <text x="88" y="361">20</text>
+    <text x="88" y="297">40</text>
+    <text x="88" y="233">60</text>
+    <text x="88" y="169">80</text>
+    <text x="88" y="137">90</text>
+    <text x="88" y="105">100</text>
+  </g>
+  <text x="30" y="270" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" fill="#0b1220" transform="rotate(-90 30 270)" text-anchor="middle">Saturación de la Hb (%)</text>
+
+  <!-- Marcas del eje X (PaO2) -->
+  <g font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#6b7280" text-anchor="middle">
+    <text x="96" y="442">0</text>
+    <text x="230" y="442">20</text>
+    <text x="364" y="442">40</text>
+    <text x="498" y="442">60</text>
+    <text x="632" y="442">80</text>
+    <text x="766" y="442">100</text>
+  </g>
+  <text x="433" y="468" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" fill="#0b1220" text-anchor="middle">Presión parcial de oxígeno · PaO₂ (mmHg)</text>
+
+  <!-- Curvas desplazadas (referencia) -->
+  <path d="M96 420 C150 414 176 372 210 300 C244 228 288 168 352 140 C430 116 560 108 770 106"
+        fill="none" stroke="#93b7e6" stroke-width="2" stroke-dasharray="7 6"/>
+  <path d="M96 420 C168 416 210 388 258 322 C306 256 360 190 430 158 C510 124 620 112 770 108"
+        fill="none" stroke="#e6a6a6" stroke-width="2" stroke-dasharray="7 6"/>
+
+  <!-- Curva normal -->
+  <path d="M96 420 C158 416 192 380 232 312 C272 244 320 180 388 150 C468 118 600 110 770 107"
+        fill="none" stroke="#0c5fc4" stroke-width="3.4" stroke-linecap="round"/>
+
+  <!-- P50 -->
+  <g stroke="#e02424" stroke-width="1.8" stroke-dasharray="5 5">
+    <path d="M274 420 V264"/>
+    <path d="M96 264 H274"/>
+  </g>
+  <circle cx="274" cy="264" r="5.5" fill="#e02424"/>
+  <text x="286" y="256" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" fill="#e02424">P50 ≈ 26,6 mmHg (Sat. 50 %)</text>
+
+  <!-- Flechas de desplazamiento -->
+  <g font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#0b1220">
+    <rect x="470" y="196" width="284" height="96" rx="10" fill="#fdf3f3" stroke="#e6a6a6"/>
+    <text x="484" y="218" font-weight="700" fill="#b91c1c">Derecha: suelta más O₂ al tejido</text>
+    <text x="484" y="240">↑ CO₂ · ↑ temperatura</text>
+    <text x="484" y="260">↑ 2,3-DPG · ↓ pH (acidosis)</text>
+    <text x="484" y="282" fill="#6b7280">Efecto Bohr</text>
+
+    <rect x="150" y="120" width="252" height="76" rx="10" fill="#f2f7fd" stroke="#93b7e6"/>
+    <text x="164" y="142" font-weight="700" fill="#0c5fc4">Izquierda: retiene el O₂</text>
+    <text x="164" y="164">↓ CO₂ · ↓ temperatura</text>
+    <text x="164" y="184">↓ 2,3-DPG · ↑ pH (alcalosis)</text>
+  </g>
+</svg>

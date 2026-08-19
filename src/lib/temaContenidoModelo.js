@@ -32,7 +32,7 @@ export const TIPOS_BLOQUE = {
   callout: { etiqueta: 'Recuadro destacado', campos: ['variante', 'titulo', 'texto'] },
   formula: { etiqueta: 'Fórmula', campos: ['texto', 'nota'] },
   imagen: { etiqueta: 'Imagen', campos: ['src', 'alt', 'caption', 'fuente', 'fuenteUrl', 'busqueda', 'ratio'] },
-  diagrama: { etiqueta: 'Diagrama (Atlas)', campos: ['clave', 'src', 'titulo'] },
+  diagrama: { etiqueta: 'Diagrama (galería)', campos: ['clave', 'src', 'titulo'] },
   fuentes: { etiqueta: 'Fuentes y lecturas', campos: ['titulo', 'items'] },
 }
 
@@ -99,7 +99,7 @@ export function validarBloque(bloque) {
       if (bloque.fuenteUrl && !urlSegura(bloque.fuenteUrl)) return 'El enlace de la fuente de la imagen no es válido.'
       return null
     case 'diagrama':
-      if (!bloque.clave && !urlSegura(bloque.src)) return 'El diagrama necesita una clave del Atlas o un enlace http(s).'
+      if (!bloque.clave && !urlSegura(bloque.src)) return 'El diagrama necesita una clave de la galería o un enlace http(s).'
       return null
     case 'fuentes': {
       const items = bloque.items

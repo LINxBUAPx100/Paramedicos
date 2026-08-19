@@ -35,7 +35,7 @@ export default function PanelGrupos() {
         <p className="panel-gestion-sub">
           Este es el 100% del contenido de tu academia. Usa los ojos para decidir qué módulos y temas
           pueden ver los alumnos del grupo elegido: lo oculto desaparece de sus listas y aparece
-          bloqueado en el Atlas hasta que lo liberes.
+          bloqueado en Logros hasta que lo liberes.
         </p>
         <VisibilidadGrupos academiaId={academiaId} academiaNombre={academiaNombre} grupos={grupos} />
       </section>
