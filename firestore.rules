@@ -501,10 +501,30 @@ service cloud.firestore {
           request.resource.data.get('pruebaHasta', null) == resource.data.get('pruebaHasta', null)
           || canjeValido()
         )
+        // Cambiar de GRUPO por cuenta propia solo vale como parte de un ALTA:
+        // se entra a un grupo cuando no se tenía ninguno, al cambiar de
+        // academia, con un canje de código o con una invitación por rol.
+        // Saltar de un grupo a otro DENTRO de la misma academia es del director
+        // (su regla está más abajo): el grupo lleva el `programaId`, es decir el
+        // PLAN DE ESTUDIOS que decide qué cursos y temas se leen, así que un
+        // alumno que se reasignara el grupo se auto-asignaría otro plan y el
+        // aislamiento por programa quedaría decorativo.
+        // Vaciar el grupo tampoco es libre: sin esa condición el salto se haría
+        // en dos escrituras (salir del grupo y volver a entrar donde se quiera).
         && (
           request.resource.data.get('grupoId', null) == resource.data.get('grupoId', null)
-          || request.resource.data.get('grupoId', null) == null
-          || grupoValido()
+          || (
+            (
+              resource.data.get('grupoId', null) == null
+              || request.resource.data.academiaId != resource.data.academiaId
+              || canjeValido()
+              || invitacionValida()
+            )
+            && (
+              request.resource.data.get('grupoId', null) == null
+              || grupoValido()
+            )
+          )
         )
         // La marca de PRUEBA solo cambia con un canje válido o al unirse de
         // verdad (cambio de academia/grupo validado por las cláusulas de arriba,
