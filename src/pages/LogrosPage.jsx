@@ -89,11 +89,15 @@ export default function LogrosPage() {
                 className="atlas-card atlas-card--bloqueada"
               >
                 <div className="atlas-card-censura">
+                  {/* Sin lupa: la censura es visual (desenfoque), así que abrir
+                      el visor sería la vuelta a la esquina para ver la imagen
+                      que el profesor todavía no libera. */}
                   <Imagen
                     src={tema.src}
                     ratio="4 / 3"
                     busqueda={`${tema.titulo} anatomía`}
                     alt=""
+                    zoom={false}
                   />
                   <span className="atlas-card-candado" aria-hidden="true">
                     <Icon name="candado" size={28} />

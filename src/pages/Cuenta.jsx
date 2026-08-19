@@ -4,32 +4,14 @@ import { useAuth } from '../context/AuthContext.jsx'
 import { registrarEmail, entrarEmail, entrarGoogle } from '../lib/firebase/auth.js'
 import { firebaseListo } from '../lib/firebase/init.js'
 import { errores as leerErrores, diagnostico, limpiar as limpiarRegistro } from '../lib/registro.js'
+// El código del enlace (?c=XXX) y su almacén viven en lib/codigoInvitacion.js:
+// esta pantalla ya no es la única que lo necesita (también «Bienvenida»).
+import { codigoInvitacionActual, limpiarCodigoInvitacion } from '../lib/codigoInvitacion.js'
+// Los mensajes de error de Firebase (Auth Y Firestore) se traducen en un solo
+// sitio: lib/mensajeError.js. Antes esta función vivía aquí y «Bienvenida»,
+// que hace los mismos canjes, mostraba el texto en inglés del SDK.
+import { mensajeDeError as traducirError } from '../lib/mensajeError.js'
 import Icon from '../components/Icon.jsx'
-
-// --- Código de invitación (deep-link ?c=XXX): sobrevive al login vía sessionStorage ---
-const SS_CODIGO = 'ptem-codigo-invitacion'
-function leerCodigoInvitacion() {
-  try { return (sessionStorage.getItem(SS_CODIGO) || '').toUpperCase() } catch { return '' }
-}
-function guardarCodigoInvitacion(c) {
-  try {
-    if (c) sessionStorage.setItem(SS_CODIGO, c.toUpperCase())
-    else sessionStorage.removeItem(SS_CODIGO)
-  } catch { /* almacenamiento no disponible */ }
-}
-
-// Traduce los códigos de error de Firebase a mensajes claros en español.
-function traducirError(e) {
-  const c = e?.code || ''
-  if (c.includes('invalid-credential') || c.includes('wrong-password')) return 'Correo o contraseña incorrectos.'
-  if (c.includes('email-already-in-use')) return 'Ese correo ya está registrado. Inicia sesión.'
-  if (c.includes('weak-password')) return 'La contraseña debe tener al menos 6 caracteres.'
-  if (c.includes('invalid-email')) return 'El correo no es válido.'
-  if (c.includes('popup-closed')) return 'Cerraste la ventana de Google antes de terminar.'
-  if (c.includes('requires-recent-login')) return 'Por seguridad, cierra sesión y vuelve a entrar antes de hacer este cambio.'
-  if (c.includes('network')) return 'Sin conexión. Revisa tu internet.'
-  return e?.message || 'Ocurrió un error. Intenta de nuevo.'
-}
 
 // --- Perfiles recordados (solo correo y nombre; NUNCA contraseñas) ---
 const LS_PERFILES = 'ptem-perfiles'
@@ -55,15 +37,16 @@ function olvidarPerfil(email) {
 export default function Cuenta() {
   const { autenticado, cargando, user, perfil, salir } = useAuth()
   const [params, setParams] = useSearchParams()
-  const [codigoInvitacion, setCodigoInvitacion] = useState(leerCodigoInvitacion)
+  // La captura es SÍNCRONA, en el estado inicial: si se hiciera en un efecto,
+  // el primer render pintaría el campo vacío (y con él, el aviso «no tienes
+  // invitación») aunque el enlace sí trajera código.
+  const [codigoInvitacion, setCodigoInvitacion] = useState(codigoInvitacionActual)
 
-  // Captura el código del enlace (?c=XXX), lo persiste y lo limpia de la URL
-  // para que un refresh no lo re-dispare.
+  // Ya guardado: se quita de la URL para que un refresh o un enlace compartido
+  // por error no lo re-dispare.
   useEffect(() => {
-    const c = params.get('c')
-    if (c) {
-      guardarCodigoInvitacion(c)
-      setCodigoInvitacion(c.toUpperCase())
+    if (params.get('c')) {
+      setCodigoInvitacion(codigoInvitacionActual())
       params.delete('c')
       setParams(params, { replace: true })
     }
@@ -74,7 +57,7 @@ export default function Cuenta() {
     if (user?.email) recordarPerfil({ email: user.email, nombre: perfil?.nombre || user.displayName || '' })
   }, [user?.email, perfil?.nombre])
 
-  const limpiarInvitacion = () => { guardarCodigoInvitacion(''); setCodigoInvitacion('') }
+  const limpiarInvitacion = () => { limpiarCodigoInvitacion(); setCodigoInvitacion('') }
 
   if (!firebaseListo) {
     return (
@@ -331,9 +314,14 @@ function Perfil({ user, perfil, salir, codigoInvitacion = '', onConsumir }) {
             <input
               type="text"
               value={codigo}
-              onChange={(e) => setCodigo(e.target.value)}
+              // En mayúsculas al escribir: los códigos lo son, y en un móvil el
+              // teclado ofrece minúsculas. Se sigue pudiendo borrar y reescribir.
+              onChange={(e) => setCodigo(e.target.value.toUpperCase())}
               placeholder="INV-XXX-X-XXXX, AEP-2026 o GRP-XXXX"
               aria-label="Código de invitación, academia, grupo o prueba"
+              autoComplete="off"
+              autoCapitalize="characters"
+              spellCheck="false"
             />
           </label>
           {error && <p className="cuenta-error" role="alert">{error}</p>}

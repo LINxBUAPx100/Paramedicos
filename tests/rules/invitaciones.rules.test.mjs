@@ -117,6 +117,16 @@ async function preparar() {
     await pon('invitaciones/INV-ACA-A-CNT1', { ...base, rol: 'alumno' })
     await pon('invitaciones/INV-ACA-A-CNT2', { ...base, rol: 'alumno' })
     await pon('invitaciones/INV-ACA-A-MIGRA', { ...base, rol: 'alumno' })
+    // PERFILES INCOMPLETOS: el alta que se cortó a medias. Un doc sin `rol`
+    // (o sin `estado`) se lee y se pinta igual, pero antes hacía que TODA
+    // escritura de su dueño reventara: comparar un campo ausente en las reglas
+    // es un error de evaluación, no un `false`. Era el «Missing or insufficient
+    // permissions» que recibía quien abría su invitación y pulsaba «Activar».
+    await pon('usuarios/invSinRol', { nombre: 'Sin rol', academiaId: null, estado: 'activo' })
+    await pon('usuarios/invSinNadaDeNada', { nombre: 'Doc a medias' })
+    await pon('usuarios/invSinRolSube', { nombre: 'Sin rol 2', academiaId: null, estado: 'activo' })
+    await pon('invitaciones/INV-ACA-A-SINROL', { ...base, rol: 'alumno' })
+    await pon('invitaciones/INV-ACA-P-SINROL', { ...base, rol: 'instructor' })
     // Emitida POR EL PROFESOR con permiso: es la única que él puede ver y tocar.
     await pon('invitaciones/INV-ACA-A-PROFE', { ...base, rol: 'alumno', creadoPor: 'invProfCodigos' })
   })
@@ -425,5 +435,51 @@ test('invitaciones: el invitado no toca nada más que el contador', { skip }, as
   // Ni bajar el contador para "desgastar" menos la invitación.
   await assertFails(
     updateDoc(doc(como('invitadoContador2'), 'invitaciones/INV-ACA-A-CNT2'), { usos: increment(-1) })
+  )
+})
+
+// ---------- PERFIL INCOMPLETO: el fallo que dejó a una invitada fuera ----------
+//  Una cuenta cuyo doc de `usuarios` no tenía `rol` no podía canjear NADA: las
+//  reglas comparaban `resource.data.rol` y, al no existir el campo, la
+//  expresión entera fallaba. En pantalla solo se veía «Missing or insufficient
+//  permissions», con el rol como «—» y «Sin academia». Ahora los campos que
+//  pueden faltar se leen con `.get(campo, default)`.
+
+test('perfil incompleto: sin `rol`, la invitación SE PUEDE canjear', { skip }, async () => {
+  await preparar()
+  const { doc, updateDoc } = fsmod
+  const { assertSucceeds } = rut
+  await assertSucceeds(
+    updateDoc(doc(como('invSinRol'), 'usuarios/invSinRol'),
+      canje({ codigo: 'INV-ACA-A-SINROL', academiaId: 'INVACA-A', rol: 'alumno' }))
+  )
+})
+
+test('perfil incompleto: su dueño puede rellenar el `rol` que falta', { skip }, async () => {
+  await preparar()
+  const { doc, updateDoc } = fsmod
+  const { assertSucceeds } = rut
+  // Es la auto-reparación de asegurarPerfil() (lib/firebase/auth.js): completar
+  // el hueco con el rol MÍNIMO. Sin esto, el perfil quedaba muerto para siempre
+  // y solo el super-admin podía arreglarlo a mano.
+  await assertSucceeds(
+    updateDoc(doc(como('invSinNadaDeNada'), 'usuarios/invSinNadaDeNada'),
+      { rol: 'alumno', academiaId: null })
+  )
+})
+
+test('perfil incompleto: seguir sin poder ascenderse sin invitación', { skip }, async () => {
+  await preparar()
+  const { doc, updateDoc } = fsmod
+  const { assertFails, assertSucceeds } = rut
+  // La tolerancia al campo ausente NO es una puerta: un doc sin `rol` cuenta
+  // como alumno, y subir de ahí sigue exigiendo una invitación válida.
+  await assertFails(
+    updateDoc(doc(como('invSinRolSube'), 'usuarios/invSinRolSube'), { rol: 'admin_escuela' })
+  )
+  // Con la invitación de profesor, sí.
+  await assertSucceeds(
+    updateDoc(doc(como('invSinRolSube'), 'usuarios/invSinRolSube'),
+      canje({ codigo: 'INV-ACA-P-SINROL', academiaId: 'INVACA-A', rol: 'instructor' }))
   )
 })

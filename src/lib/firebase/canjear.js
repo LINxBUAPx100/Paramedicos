@@ -29,6 +29,25 @@ export async function canjearCualquierCodigo(uid, codigo) {
   const cod = String(codigo || '').trim()
   if (!cod) throw new Error('Escribe el código que te dieron.')
 
+  // ANTES de intentar cualquier canje: el perfil de Firestore tiene que existir
+  // y estar completo. Los cuatro canjes son un `update` sobre `usuarios/{uid}`,
+  // y las reglas comparan `rol`/`estado`/`academiaId` con lo que ya hay: si el
+  // documento falta o le falta un campo, la escritura se deniega con «Missing
+  // or insufficient permissions», que no dice nada a quien solo quería activar
+  // su invitación. Reparar aquí convierte ese callejón en un canje normal.
+  try {
+    const { asegurarMiPerfil } = await import('./auth.js')
+    await asegurarMiPerfil()
+  } catch (err) {
+    const { registrar } = await import('../registro.js')
+    registrar('canje:asegurarPerfil', err, { uid })
+    throw new Error(
+      'No pudimos preparar tu cuenta para activar el código. ' +
+      'Cierra sesión, vuelve a entrar e inténtalo otra vez; si sigue igual, ' +
+      'avisa a tu academia con este dato: perfil incompleto.'
+    )
+  }
+
   // 1) ¿INVITACIÓN por rol? (academia + grupo opcional + ROL)
   try {
     const { canjearInvitacion } = await import('./invitaciones.js')

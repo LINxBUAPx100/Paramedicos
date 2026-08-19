@@ -139,6 +139,10 @@ const paths = {
   basura: <path d="M4 7h16M9.5 7V5a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 14.5 5v2M6.5 7l1 13a1.5 1.5 0 0 0 1.5 1.3h6a1.5 1.5 0 0 0 1.5-1.3l1-13M10 11v6M14 11v6" />,
   // Editor estructural (Fase 3).
   mas: <path d="M12 5v14M5 12h14" />,
+  // Visor de imagen: reducir, cerrar y «ver completa».
+  menos: <path d="M5 12h14" />,
+  cerrar: <path d="M6 6l12 12M18 6 6 18" />,
+  expandir: <path d="M9 3H3v6M15 3h6v6M15 21h6v-6M9 21H3v-6" />,
   copiar: (
     <>
       <rect x="9" y="9" width="11" height="11" rx="2" />

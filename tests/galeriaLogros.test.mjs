@@ -108,3 +108,86 @@ test('sin contenido o con basura no se rompe', () => {
   assert.deepEqual(galeriaDeLogros([{ id: 'x', secciones: null }], []), [])
   assert.deepEqual(galeriaDeLogros([{ id: 'x', secciones: [{ bloques: [null, { tipo: 'p' }] }] }], []), [])
 })
+
+// ============================================================
+//  COBERTURA TOTAL: nada que se vea en el temario falta en Logros
+// ------------------------------------------------------------
+//  Esta es la garantía que pidió el usuario: «que en Logros estén el 100 % de
+//  las imágenes que se vean en el temario, módulos y subtemas».
+//
+//  El recuento de la derecha se hace APARTE de galeriaDeLogros: recorre el
+//  contenido real y anota toda imagen que el alumno puede llegar a ver, sea de
+//  donde sea (bloque del cuerpo, «Imágenes del tema» de recursos, o galería de
+//  referencia del tema). Si mañana aparece un cuarto sitio con imágenes y nadie
+//  lo añade a la galería, esta prueba lo dice.
+// ============================================================
+import { todosLosTemas } from '../src/data/index.js'
+import { ATLAS_TEMAS, imagenesDeTema } from '../src/data/imagenes.js'
+
+// Toda imagen visible en el temario, contada sin usar galeriaDeLogros.
+function imagenesQueElAlumnoVe() {
+  const catalogo = new Map(ATLAS_TEMAS.map((c) => [c.clave, c]))
+  const srcs = new Set()
+  const apunta = (v) => { const s = String(v || '').trim(); if (s) srcs.add(s) }
+  for (const tema of todosLosTemas) {
+    // 1. cuerpo de la lección (Contenido.jsx)
+    for (const sec of tema.secciones || []) {
+      for (const b of sec.bloques || []) {
+        if (b?.tipo !== 'imagen' && b?.tipo !== 'diagrama') continue
+        apunta(b.src || catalogo.get(b.clave)?.src)
+      }
+    }
+    // 2. «Imágenes del tema» (Recursos.jsx)
+    for (const img of tema.recursos?.imagenes || []) apunta(img?.src)
+    // 3. «Imágenes de referencia» (TemaPage, desde IMAGENES_POR_TEMA)
+    for (const img of imagenesDeTema(tema.id)) apunta(img.src)
+  }
+  return srcs
+}
+
+test('Logros contiene el 100 % de las imágenes visibles del temario', () => {
+  const galeria = galeriaDeLogros(todosLosTemas, ATLAS_TEMAS)
+  const enGaleria = new Set(galeria.map((g) => g.src))
+  const visibles = imagenesQueElAlumnoVe()
+
+  // Guardia de la propia prueba: si el recuento se quedara en cero, todo lo de
+  // abajo pasaría sin comprobar nada (el falso verde clásico).
+  assert.ok(visibles.size >= 20, `solo se contaron ${visibles.size} imágenes visibles`)
+
+  const faltan = [...visibles].filter((s) => !enGaleria.has(s))
+  assert.deepEqual(
+    faltan, [],
+    'Estas imágenes se ven en el temario pero NO aparecen en Logros:\n  ' + faltan.join('\n  ')
+  )
+})
+
+test('y toda tarjeta de Logros lleva a un tema que existe', () => {
+  const galeria = galeriaDeLogros(todosLosTemas, ATLAS_TEMAS)
+  const ids = new Set(todosLosTemas.map((t) => t.id))
+  const rotas = galeria.filter((g) => g.tema && !ids.has(g.tema)).map((g) => `${g.clave} → ${g.tema}`)
+  assert.deepEqual(rotas, [], `Tarjetas con destino inexistente:\n  ${rotas.join('\n  ')}`)
+  // Y ninguna se queda sin imagen ni sin título: una tarjeta vacía no es un logro.
+  assert.deepEqual(galeria.filter((g) => !g.src || !g.titulo), [])
+})
+
+test('las imágenes de `recursos.imagenes` también entran (las sube un editor)', () => {
+  // Este era el hueco real: el panel permite añadir imágenes a un tema por esa
+  // vía, la lección las pinta bajo «Imágenes del tema», y Logros no las veía.
+  const conRecursos = [{
+    id: 'm1-t1', titulo: 'Tema con recursos',
+    secciones: [{ bloques: [{ tipo: 'imagen', src: 'imagenes/cuerpo.webp', caption: 'En el cuerpo' }] }],
+    recursos: {
+      imagenes: [
+        { src: 'imagenes/subida.webp', caption: 'Subida por el profesor' },
+        { src: '  ' },
+        { src: 'imagenes/cuerpo.webp', caption: 'repetida: no duplica' },
+      ],
+    },
+  }]
+  const g = galeriaDeLogros(conRecursos, [])
+  assert.deepEqual(g.map((x) => x.src), ['imagenes/cuerpo.webp', 'imagenes/subida.webp'])
+  const subida = g[1]
+  assert.equal(subida.titulo, 'Subida por el profesor')
+  assert.equal(subida.tema, 'm1-t1', 'con su tema: se bloquea y se descubre con él')
+  assert.equal(subida.ancla, null, 'no vive en una sección, así que no hay punto al que saltar')
+})

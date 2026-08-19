@@ -17,3 +17,9 @@ scripts/plantilla-oficial.json
 # temporales y, en el caso del plan oficial, material de terceros: no se
 # publican en un repositorio que sirve el sitio.
 tmp/
+
+# Registros del emulador de Firebase (npm run test:rules)
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+pubsub-debug.log

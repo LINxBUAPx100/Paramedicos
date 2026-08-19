@@ -3,6 +3,7 @@ import { esCorreoSupremo } from '../lib/firebase/supremos.js'
 import { capacidadesDe, planEfectivo } from '../lib/capacidades.js'
 import { registrar } from '../lib/registro.js'
 import { normalizarGrupo, normalizarPerfil } from '../lib/compatNombres.js'
+import { perfilCompleto } from '../lib/perfilMinimo.js'
 import {
   calcularAcceso, msHastaFinDePrueba, pertenenciaEfectiva, pruebaVigente,
 } from '../lib/accesoModelo.js'
@@ -163,6 +164,38 @@ export function AuthProvider({ children }) {
   const { puede: puedeAcceder, motivo } = calcularAcceso({ user, perfil, perfilListo, academia, rol, esSupremo })
   // Aún resolviendo sesión/perfil/academia: no bloquear todavía.
   const accesoCargando = cargando || motivo === 'cargando'
+
+  // --- AUTO-REPARACIÓN DEL PERFIL ----------------------------------------
+  // Una cuenta de Auth sin su doc en `usuarios` (o con el doc a medias) queda
+  // inservible: las reglas de escritura del propio perfil comparan `rol`,
+  // `estado` y `academiaId` contra lo que ya hay, así que si falta uno de esos
+  // campos toda escritura se deniega — incluido el canje de la invitación, que
+  // es justamente lo que la persona está intentando hacer. Pasa por causas
+  // ordinarias: el `setDoc` del registro se cayó por red, la pestaña se cerró
+  // entre crear la cuenta y crear el perfil, o el doc viene de un esquema
+  // anterior. Aquí se arregla en cuanto se detecta.
+  //
+  // Se intenta UNA vez por uid (`reparados`): si las reglas lo deniegan, no
+  // tiene sentido reintentar en bucle contra Firestore. Queda en el registro de
+  // diagnóstico, que es lo que el usuario puede enviarnos desde «Mi cuenta».
+  const reparados = useRef(new Set())
+  useEffect(() => {
+    if (!user || !perfilListo) return
+    if (perfilCompleto(perfil)) return
+    if (reparados.current.has(user.uid)) return
+    reparados.current.add(user.uid)
+    ;(async () => {
+      try {
+        const { asegurarPerfil } = await import('../lib/firebase/auth.js')
+        // Reparar bien NO se registra: el banner de diagnóstico de «Mi cuenta»
+        // cuenta lo que hay en el registro, y anunciar un problema que la app
+        // acaba de resolver sola solo asusta.
+        await asegurarPerfil(user)
+      } catch (err) {
+        registrar('perfil:reparar', err, { uid: user.uid })
+      }
+    })()
+  }, [user, perfil, perfilListo])
 
   // Auto-promoción del supremo: en su primer acceso su perfil nace como
   // 'alumno'; las reglas le permiten (por su correo) subir su propio doc a

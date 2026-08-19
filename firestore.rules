@@ -15,6 +15,13 @@ service cloud.firestore {
 
     function autenticado() { return request.auth != null; }
     function esDueno(uid) { return autenticado() && request.auth.uid == uid; }
+    // OJO al leer campos de miDoc(): SIEMPRE con .get(campo, default), nunca
+    // con notación de punto. Un campo ausente accedido con punto no vale
+    // false: lanza un error de evaluación que tumba la regla ENTERA donde
+    // aparece. Como esSuper() abre casi todas las reglas, un perfil incompleto
+    // —un alta que se cortó a medias, un doc de un esquema anterior— dejaba a
+    // esa cuenta sin poder leer ni escribir nada en ninguna colección, y el
+    // único síntoma era "Missing or insufficient permissions".
     function miDoc() {
       return get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data;
     }
@@ -39,7 +46,7 @@ service cloud.firestore {
       return esSupremo()
         || (autenticado()
           && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid))
-          && miDoc().rol == 'superadmin');
+          && miDoc().get('rol', '') == 'superadmin');
     }
     function academiaActiva(codigo) {
       return exists(/databases/$(database)/documents/academias/$(codigo))
@@ -61,22 +68,22 @@ service cloud.firestore {
     function pruebaVencida() {
       return miDoc().get('esPrueba', false) == true
         && !(miDoc().get('pruebaHasta', null) is timestamp
-             && miDoc().pruebaHasta > request.time);
+             && miDoc().get('pruebaHasta', null) > request.time);
     }
     // ¿El solicitante es staff (instructor/maestro o admin de escuela) de esa academia?
     function esStaffDe(acaId) {
       return autenticado()
         && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid))
-        && (miDoc().rol == 'instructor' || miDoc().rol == 'admin_escuela')
-        && miDoc().academiaId == acaId
+        && (miDoc().get('rol', '') == 'instructor' || miDoc().get('rol', '') == 'admin_escuela')
+        && miDoc().get('academiaId', null) == acaId
         && !pruebaVencida();
     }
     // ¿El solicitante es el director (admin de escuela) de esa academia?
     function esAdminDe(acaId) {
       return autenticado()
         && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid))
-        && miDoc().rol == 'admin_escuela'
-        && miDoc().academiaId == acaId
+        && miDoc().get('rol', '') == 'admin_escuela'
+        && miDoc().get('academiaId', null) == acaId
         // Igual que esStaffDe: una prueba vencida no dirige nada. Sin esta
         // línea, quien tuviera rol de director y hubiera canjeado un código
         // temporal conservaba el panel de la academia al vencer.
@@ -86,7 +93,7 @@ service cloud.firestore {
     function perteneceA(acaId) {
       return autenticado()
         && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid))
-        && miDoc().academiaId == acaId
+        && miDoc().get('academiaId', null) == acaId
         // Prueba vencida = no pertenece (ver pruebaVencida() arriba).
         && !pruebaVencida();
     }
@@ -178,7 +185,7 @@ service cloud.firestore {
     // `editarContenido` + curso en `cursosPermitidos` no edita nada.
     function profesorPuedeEditar(acaId, cursoId) {
       return esStaffDe(acaId)
-        && miDoc().rol == 'instructor'
+        && miDoc().get('rol', '') == 'instructor'
         && instructorPermite('editarContenido')
         && cursoId in permEditor().get('cursosPermitidos', []);
     }
@@ -325,7 +332,13 @@ service cloud.firestore {
         && invitacionDoc(request.resource.data.invitacionUsada).rol
              in ['alumno', 'instructor', 'admin_escuela']
         && request.resource.data.rol == invitacionDoc(request.resource.data.invitacionUsada).rol
-        && resource.data.rol in ['alumno', 'instructor', 'admin_escuela']
+        // `.get('rol', 'alumno')` y no `resource.data.rol`: un perfil al que
+        // le falte el campo (alta a medias, esquema anterior) haría ERROR de
+        // evaluación aquí, y un error tumba la regla entera — el usuario veía
+        // «Missing or insufficient permissions» al activar su invitación. El
+        // valor por defecto es el rol MÍNIMO, así que no abre nada: 'superadmin'
+        // sigue fuera de la lista por ambos lados.
+        && resource.data.get('rol', 'alumno') in ['alumno', 'instructor', 'admin_escuela']
         && request.resource.data.academiaId
              == invitacionDoc(request.resource.data.invitacionUsada).academiaId
         && academiaActiva(request.resource.data.academiaId)
@@ -509,10 +522,17 @@ service cloud.firestore {
         // pone la igualdad primero para que el caso normal (editar el nombre,
         // unirse por código) no gaste una lectura extra: `||` corta.
         && (
-          request.resource.data.rol == resource.data.rol
+          request.resource.data.get('rol', 'alumno') == resource.data.get('rol', 'alumno')
           || invitacionValida()
         )
-        && request.resource.data.estado == resource.data.estado
+        // Con `.get(campo, default)` en LOS DOS lados: un perfil incompleto
+        // (sin `rol`, sin `estado` o sin `academiaId`) podía leerse y pintarse,
+        // pero no aceptaba NINGUNA escritura de su dueño —ni cambiar el nombre,
+        // ni unirse por código, ni canjear la invitación— porque comparar un
+        // campo ausente es un error de evaluación, no un `false`. Rellenar el
+        // hueco con el valor por defecto del alta no concede nada: 'activo' y
+        // 'alumno' son exactamente lo que `asegurarPerfil` escribe al crearlo.
+        && request.resource.data.get('estado', 'activo') == resource.data.get('estado', 'activo')
         // Unirse a una academia. DOS vías, nunca una tercera:
         //   · por CÓDIGO, solo si la academia NO está en el directorio;
         //   · por APROBACIÓN, si su solicitud ya está aceptada.
@@ -526,7 +546,7 @@ service cloud.firestore {
         //     el directorio: ahí no hay código que adivinar, hay un enlace que
         //     el director emitió a propósito.
         && (
-          request.resource.data.academiaId == resource.data.academiaId
+          request.resource.data.get('academiaId', null) == resource.data.get('academiaId', null)
           || (academiaActiva(request.resource.data.academiaId)
               && !enDirectorio(request.resource.data.academiaId))
           || (academiaActiva(request.resource.data.academiaId)
@@ -552,7 +572,7 @@ service cloud.firestore {
           || (
             (
               resource.data.get('grupoId', null) == null
-              || request.resource.data.academiaId != resource.data.academiaId
+              || request.resource.data.get('academiaId', null) != resource.data.get('academiaId', null)
               || canjeValido()
               || invitacionValida()
             )
@@ -570,7 +590,7 @@ service cloud.firestore {
         && (
           request.resource.data.get('esPrueba', false) == resource.data.get('esPrueba', false)
           || canjeValido()
-          || request.resource.data.academiaId != resource.data.academiaId
+          || request.resource.data.get('academiaId', null) != resource.data.get('academiaId', null)
           || request.resource.data.get('grupoId', null) != resource.data.get('grupoId', null)
           || invitacionValida()
         );

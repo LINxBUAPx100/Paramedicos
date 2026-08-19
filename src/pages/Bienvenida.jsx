@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useAuth } from '../context/AuthContext.jsx'
 import { registrar } from '../lib/registro.js'
+import { codigoInvitacionActual, limpiarCodigoInvitacion } from '../lib/codigoInvitacion.js'
+import { mensajeDeError } from '../lib/mensajeError.js'
 import Icon from '../components/Icon.jsx'
 
 // ============================================================
@@ -22,7 +24,14 @@ const ETIQUETA_ESTADO = {
 
 export default function Bienvenida() {
   const { user, perfil } = useAuth()
-  const [codigo, setCodigo] = useState('')
+  // Prellenado con el código del enlace de invitación. Esta pantalla es donde
+  // aterriza cualquiera con cuenta y sin academia, así que era justo la que
+  // dejaba el campo vacío y obligaba a copiar el código a mano.
+  const [codigo, setCodigo] = useState(codigoInvitacionActual)
+  // Qué código traía el enlace (para explicarle de dónde salió lo que ve
+  // escrito). No se recalcula: si lo corrige a mano, el aviso sigue contando la
+  // verdad de cómo llegó.
+  const [deEnlace] = useState(codigoInvitacionActual)
   const [ocupado, setOcupado] = useState(false)
   const [msg, setMsg] = useState('')
   const [error, setError] = useState('')
@@ -76,7 +85,9 @@ export default function Bienvenida() {
       if (exito) setMsg(exito)
       setRecargar((n) => n + 1)
     } catch (err) {
-      setError(err?.message || 'No se pudo completar la operación.')
+      // Traducido: aquí se mostraba el texto del SDK en inglés («Missing or
+      // insufficient permissions.»), que no dice a nadie qué hacer.
+      setError(mensajeDeError(err))
     } finally {
       setOcupado(false)
     }
@@ -88,6 +99,7 @@ export default function Bienvenida() {
       const { canjearCualquierCodigo } = await import('../lib/firebase/canjear.js')
       const r = await canjearCualquierCodigo(user.uid, codigo)
       setCodigo('')
+      limpiarCodigoInvitacion() // ya se usó: que no vuelva a proponerse
       setMsg(r.mensaje)
     })
   }
@@ -159,6 +171,12 @@ export default function Bienvenida() {
             tu grupo, una invitación personal (empieza por <code>INV-</code>) o uno de prueba
             temporal.
           </p>
+          {deEnlace && (
+            <p className="cuenta-invitacion-nota" role="status">
+              Te invitaron con el código <code>{deEnlace}</code>: ya está escrito abajo.
+              Pulsa «Activar» (o corrígelo si te dieron otro).
+            </p>
+          )}
           <form className="bv-form" onSubmit={usarCodigo}>
             <label className="sr-only" htmlFor="bv-codigo">Código de acceso</label>
             <input

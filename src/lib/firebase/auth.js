@@ -14,27 +14,49 @@ import {
   verifyBeforeUpdateEmail,
 } from 'firebase/auth'
 import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore'
+import { parcheDePerfil, perfilNuevo } from '../perfilMinimo.js'
 
 const googleProvider = new GoogleAuthProvider()
 
-// Crea el perfil en usuarios/{uid} si aún no existe (rol 'alumno' por defecto).
+// ============================================================
+//  Perfil de Firestore: crearlo si falta y REPARARLO si está incompleto
+// ------------------------------------------------------------
+//  Una cuenta de Auth sin su doc en `usuarios` —o con el doc a medias— es una
+//  cuenta que no puede hacer NADA: las reglas de escritura del propio perfil
+//  comparan `rol`, `estado` y `academiaId` contra lo que ya hay, así que si uno
+//  de esos campos no existe la escritura se deniega entera. Eso es lo que veía
+//  quien abría una invitación y recibía «Missing or insufficient permissions»
+//  al pulsar «Activar código»: el canje intentaba un `update` sobre un
+//  documento que no estaba (o que no tenía `rol`).
+//
+//  El alta puede quedar a medias por causas normales: el `setDoc` del registro
+//  falla por red, la pestaña se cierra entre `createUser` y el perfil, o el doc
+//  viene de una versión anterior del esquema. Así que no se confía en que el
+//  registro lo haya dejado bien: se comprueba y se arregla cada vez que hay
+//  sesión (AuthContext) y otra vez antes de canjear un código (canjear.js).
+//
+//  Devuelve 'creado' | 'reparado' | 'ok' para poder registrarlo y probarlo.
+// ============================================================
+
+// Qué falta y con qué se rellena está en lib/perfilMinimo.js (módulo puro).
 export async function asegurarPerfil(user, nombre) {
+  if (!user?.uid) return 'ok'
   const ref = doc(db, 'usuarios', user.uid)
   const snap = await getDoc(ref)
   if (!snap.exists()) {
-    await setDoc(ref, {
-      nombre: nombre || user.displayName || '',
-      email: user.email || '',
-      rol: 'alumno',
-      academiaId: null,
-      estado: 'activo',
-      creado: serverTimestamp(),
-    })
-  } else if (user.email && snap.data().email !== user.email) {
-    // El correo de Auth cambió (p. ej. lo actualizó desde Mi cuenta):
-    // sincroniza el campo informativo del perfil.
-    await updateDoc(ref, { email: user.email })
+    await setDoc(ref, { ...perfilNuevo(user, nombre), creado: serverTimestamp() })
+    return 'creado'
   }
+  const parche = parcheDePerfil(snap.data(), user, nombre)
+  if (Object.keys(parche).length === 0) return 'ok'
+  await updateDoc(ref, parche)
+  return 'reparado'
+}
+
+// Igual que `asegurarPerfil`, para quien solo tiene la sesión a mano.
+export async function asegurarMiPerfil() {
+  if (!auth.currentUser) throw new Error('Necesitas iniciar sesión.')
+  return asegurarPerfil(auth.currentUser)
 }
 
 export async function registrarEmail({ nombre, email, password }) {

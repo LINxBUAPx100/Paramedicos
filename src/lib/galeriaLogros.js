@@ -26,6 +26,49 @@ const TIPOS_CON_IMAGEN = ['imagen', 'diagrama']
 const limpio = (v) => String(v || '').trim()
 
 /**
+ * TODAS las imágenes de UNA lección, en el orden en que el alumno las ve:
+ *
+ *   1. los bloques `imagen` y `diagrama` del cuerpo (Contenido.jsx);
+ *   2. las de `recursos.imagenes`, que la lección pinta al final bajo
+ *      «Imágenes del tema» (Recursos.jsx).
+ *
+ * El segundo grupo faltaba, y con él faltaban en Logros: son imágenes que un
+ * editor sube desde el panel, así que la galería enseñaba menos de lo que el
+ * temario tiene. Si algún día aparece otro sitio con imágenes, se añade AQUÍ y
+ * la galería lo recoge sola.
+ *
+ * Las imágenes de referencia por tema (IMAGENES_POR_TEMA, la galería que
+ * TemaPage arma al final) no hacen falta: salen del catálogo, que se fusiona
+ * después, y son las mismas piezas.
+ */
+export function imagenesDeUnTema(tema, porClave = new Map()) {
+  const piezas = []
+  for (const seccion of tema?.secciones || []) {
+    for (const bloque of seccion?.bloques || []) {
+      if (!TIPOS_CON_IMAGEN.includes(bloque?.tipo)) continue
+      // Un `diagrama` puede traer solo la clave y sacar la imagen del catálogo.
+      const src = limpio(bloque.src) || limpio(porClave.get(bloque.clave)?.src)
+      if (!src) continue
+      piezas.push({
+        src,
+        clave: bloque.clave || null,
+        titulo: limpio(bloque.caption) || limpio(bloque.titulo) || limpio(bloque.alt),
+      })
+    }
+  }
+  for (const img of tema?.recursos?.imagenes || []) {
+    const src = limpio(img?.src)
+    if (!src) continue
+    piezas.push({
+      src,
+      clave: null, // no hay ancla: no vive en una sección concreta
+      titulo: limpio(img?.caption) || limpio(img?.busqueda),
+    })
+  }
+  return piezas
+}
+
+/**
  * @param {Array} todosLosTemas temas del plan, ya aplanados y en orden.
  * @param {Array} catalogo entradas escritas a mano (ATLAS_TEMAS).
  * @returns {Array} { clave, titulo, src, tema, origen, ancla }
@@ -41,26 +84,21 @@ export function galeriaDeLogros(todosLosTemas, catalogo = []) {
   // 1. Lo que hay DENTRO de las lecciones, en orden de plan.
   temas.forEach((tema, iTema) => {
     let nEnTema = 0
-    for (const seccion of tema.secciones || []) {
-      for (const bloque of seccion.bloques || []) {
-        if (!TIPOS_CON_IMAGEN.includes(bloque?.tipo)) continue
-        // Un `diagrama` puede traer solo la clave y sacar la imagen del catálogo.
-        const src = limpio(bloque.src) || limpio(porClave.get(bloque.clave)?.src)
-        if (!src || vistas.has(src)) continue
-        vistas.add(src)
-        nEnTema += 1
-        salida.push({
-          // La clave identifica la tarjeta y, si el bloque la trae, sirve para
-          // saltar al punto exacto de la lección (`?ref=`).
-          clave: bloque.clave || `${tema.id}-img-${nEnTema}`,
-          titulo: limpio(bloque.caption) || limpio(bloque.titulo) || limpio(bloque.alt) || tema.titulo,
-          src,
-          tema: tema.id,
-          origen: 'contenido',
-          ancla: bloque.clave || null,
-          orden: iTema,
-        })
-      }
+    for (const pieza of imagenesDeUnTema(tema, porClave)) {
+      if (vistas.has(pieza.src)) continue
+      vistas.add(pieza.src)
+      nEnTema += 1
+      salida.push({
+        // La clave identifica la tarjeta y, si el bloque la trae, sirve para
+        // saltar al punto exacto de la lección (`?ref=`).
+        clave: pieza.clave || `${tema.id}-img-${nEnTema}`,
+        titulo: pieza.titulo || tema.titulo,
+        src: pieza.src,
+        tema: tema.id,
+        origen: 'contenido',
+        ancla: pieza.clave || null,
+        orden: iTema,
+      })
     }
   })
 

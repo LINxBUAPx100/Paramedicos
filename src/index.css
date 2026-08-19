@@ -5052,6 +5052,159 @@ html[data-tema='oscuro'] .glosario-termino { color: var(--texto); }
 }
 .imagen-ph-btn:hover { text-decoration: none; background: color-mix(in srgb, var(--primario) 22%, transparent); }
 
+/* ---- Ampliar cualquier imagen (visor a pantalla completa) ---- */
+/* Motivo: en la tarjeta de ~380 px un esquema con texto es ilegible, y el
+   recorte 4/3 de la galería además lo cortaba. Toda imagen es ampliable. */
+.imagen--ampliable { cursor: zoom-in; }
+.imagen-lupa {
+  position: absolute;
+  top: var(--e-8);
+  right: var(--e-8);
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(15, 20, 28, 0.55);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity var(--dur-rapida) var(--ease-out), transform var(--dur-rapida) var(--ease-out);
+  cursor: zoom-in;
+}
+.imagen--ampliable:hover .imagen-lupa,
+.imagen-lupa:focus-visible { opacity: 1; transform: none; }
+/* Sin hover (móvil, tableta) el botón se queda visible: si no, no hay ninguna
+   pista de que la imagen se pueda ampliar. */
+@media (hover: none) {
+  .imagen-lupa { opacity: 1; transform: none; }
+}
+
+.visor-fondo {
+  position: fixed;
+  inset: 0;
+  z-index: 1400;          /* por encima de todo: topbar, cajón lateral y diálogos */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--e-12);
+  background: rgba(8, 11, 16, 0.86);
+  backdrop-filter: blur(3px);
+  animation: visorEntra var(--dur-media) var(--ease-out);
+}
+@keyframes visorEntra { from { opacity: 0; } to { opacity: 1; } }
+.visor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-8);
+  width: min(1400px, 100%);
+  /* ALTO FIJO al hueco disponible, no al contenido. Con solo `max-height` el
+     alto lo marcaba la imagen: si no cargaba (altura 0) la ventana quedaba
+     reducida a una franja blanca, y muy ampliada se encogía por el reparto de
+     flex-shrink. Así el lienzo siempre tiene sitio y la barra nunca se aplasta. */
+  height: 100%;
+  min-height: 0;
+}
+.visor-barra { display: flex; align-items: center; gap: var(--e-12); flex-wrap: wrap; flex: 0 0 auto; }
+.visor-titulo {
+  flex: 1 1 12ch;
+  margin: 0;
+  color: #fff;
+  font-weight: 700;
+  font-size: var(--t-md);
+  line-height: 1.25;
+}
+.visor-botones { display: flex; align-items: center; gap: var(--e-6); flex-wrap: wrap; }
+.visor-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e-6);
+  min-height: 36px;
+  padding: 0 var(--e-12);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: var(--t-sm);
+  font-weight: 600;
+  cursor: pointer;
+}
+.visor-btn:hover { background: rgba(255, 255, 255, 0.2); text-decoration: none; color: #fff; }
+.visor-btn:disabled { opacity: 0.4; cursor: default; }
+.visor-btn--cerrar { background: rgba(255, 255, 255, 0.18); }
+.visor-nivel {
+  min-width: 4.5ch;
+  text-align: center;
+  color: #fff;
+  font-family: var(--fuente-mono);
+  font-size: var(--t-xs);
+}
+/* Lienzo: el zoom crece el ANCHO del <img> y el paneo es el scroll nativo de
+   esta caja (dedo, rueda y teclado sin código propio). */
+.visor-lienzo {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radio);
+  overscroll-behavior: contain;
+  touch-action: pan-x pan-y pinch-zoom;
+}
+.visor-lienzo img {
+  display: block;
+  /* El fondo blanco va en la IMAGEN, no en el lienzo: los esquemas con fondo
+     transparente se leen igual y la caja blanca no se estira por toda la
+     pantalla cuando la imagen es pequeña. */
+  background: #fff;
+  border-radius: var(--radio-sm);
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  cursor: zoom-in;
+}
+.visor-lienzo.is-ampliada { place-items: start; }
+.visor-lienzo.is-ampliada img {
+  max-width: none;
+  max-height: none;
+  height: auto;
+  cursor: grab;
+}
+.visor-lienzo.is-ampliada:active img { cursor: grabbing; }
+.visor-pie {
+  flex: 0 0 auto;
+  display: flex;
+  gap: var(--e-12);
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: var(--t-xs);
+}
+.visor-fuente { color: #fff; }
+/* La imagen no cargó (ningún tamaño respondió): se dice, en vez de dejar un
+   hueco blanco que parece un fallo de la aplicación. */
+.visor-roto {
+  display: grid;
+  justify-items: center;
+  gap: var(--e-8);
+  padding: var(--e-32) var(--e-16);
+  max-width: 42ch;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.82);
+}
+.visor-roto strong { color: #fff; font-size: var(--t-md); }
+.visor-roto p { margin: 0; font-size: var(--t-sm); line-height: 1.45; }
+@media (max-width: 560px) {
+  .visor-titulo { flex-basis: 100%; font-size: var(--t-sm); }
+  .visor-ayuda { display: none; }
+}
+
+
 /* ---- HERO ---- */
 .ph-hero {
   position: relative;
