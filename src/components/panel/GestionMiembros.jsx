@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { ETIQUETA_ROL, ROLES, ROLES_DIRECTOR } from '../../lib/roles.js'
+import { etiquetaPrueba } from '../../lib/accesoModelo.js'
 import Icon from '../Icon.jsx'
 
 // ============================================================
@@ -101,6 +102,7 @@ export default function GestionMiembros({ miembros, grupos = [], gestion, miUid,
             {visibles.map((m) => {
               const puede = editable(m)
               const suspendido = m.estado && m.estado !== 'activo'
+              const prueba = etiquetaPrueba(m)
               const quien = m.nombre || m.email || m.id
               const sinNombre = !m.nombre
                 || m.nombre.trim().toLowerCase() === (m.email || '').trim().toLowerCase()
@@ -185,6 +187,15 @@ export default function GestionMiembros({ miembros, grupos = [], gestion, miUid,
                     ) : (
                       <span className={`panel-rol-tag ${suspendido ? 'rol-suspendido' : 'rol-activo'}`}>
                         {suspendido ? 'Suspendido' : 'Activo'}
+                      </span>
+                    )}
+                    {/* Quien entró con un CÓDIGO DE PRUEBA sigue en la lista al
+                        vencer, pero ya no pertenece a la academia ni al grupo:
+                        sin esta etiqueta el director veía un alumno normal que
+                        en realidad no puede entrar (src/lib/accesoModelo.js). */}
+                    {prueba && (
+                      <span className={`panel-rol-tag panel-tag-prueba ${prueba.vigente ? '' : 'rol-suspendido'}`}>
+                        {prueba.texto}
                       </span>
                     )}
                     {/* SIMETRÍA (Bloque M): el acceso a los códigos se podía

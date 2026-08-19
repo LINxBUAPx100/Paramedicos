@@ -45,25 +45,50 @@ service cloud.firestore {
       return exists(/databases/$(database)/documents/academias/$(codigo))
         && get(/databases/$(database)/documents/academias/$(codigo)).data.estado == 'activo';
     }
+    // --- PRUEBA TEMPORAL VENCIDA -------------------------------------------
+    // Un código de `codigos` no inscribe a nadie: da permiso HASTA una fecha.
+    // Al canjearlo el perfil queda marcado `esPrueba: true` y puede recibir
+    // academiaId/grupoId para ver el temario real. Cuando `pruebaHasta` pasa,
+    // esa pertenencia deja de contar aquí mismo: sin esto el bloqueo era solo
+    // de pantalla (AuthContext) y el SDK seguía sirviendo cursos y temas a
+    // quien conservara la sesión.
+    //
+    // Marcado como prueba pero SIN fecha válida = vencido. Un `esPrueba` sin
+    // `pruebaHasta` no puede significar acceso indefinido.
+    //
+    // Espejo de pruebaVencida() en src/lib/accesoModelo.js: si cambias uno,
+    // cambia el otro. No cuesta un get() extra (Firestore cachea miDoc()).
+    function pruebaVencida() {
+      return miDoc().get('esPrueba', false) == true
+        && !(miDoc().get('pruebaHasta', null) is timestamp
+             && miDoc().pruebaHasta > request.time);
+    }
     // ¿El solicitante es staff (instructor/maestro o admin de escuela) de esa academia?
     function esStaffDe(acaId) {
       return autenticado()
         && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid))
         && (miDoc().rol == 'instructor' || miDoc().rol == 'admin_escuela')
-        && miDoc().academiaId == acaId;
+        && miDoc().academiaId == acaId
+        && !pruebaVencida();
     }
     // ¿El solicitante es el director (admin de escuela) de esa academia?
     function esAdminDe(acaId) {
       return autenticado()
         && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid))
         && miDoc().rol == 'admin_escuela'
-        && miDoc().academiaId == acaId;
+        && miDoc().academiaId == acaId
+        // Igual que esStaffDe: una prueba vencida no dirige nada. Sin esta
+        // línea, quien tuviera rol de director y hubiera canjeado un código
+        // temporal conservaba el panel de la academia al vencer.
+        && !pruebaVencida();
     }
     // ¿El solicitante PERTENECE a esa academia (cualquier rol, alumno incluido)?
     function perteneceA(acaId) {
       return autenticado()
         && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid))
-        && miDoc().academiaId == acaId;
+        && miDoc().academiaId == acaId
+        // Prueba vencida = no pertenece (ver pruebaVencida() arriba).
+        && !pruebaVencida();
     }
 
     // --- AISLAMIENTO POR PROGRAMA ------------------------------------------
@@ -753,7 +778,9 @@ service cloud.firestore {
       allow create: if autenticado()
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.estado == 'pendiente'
-        && request.resource.data.academiaId == miDoc().academiaId;
+        // perteneceA() y no una comparación suelta: una PRUEBA VENCIDA deja de
+        // pertenecer a la academia, y con ella se cierra también esta puerta.
+        && perteneceA(request.resource.data.academiaId);
       // Leer: el dueño (consulta el estado de las suyas), el super-admin o
       // el staff de esa academia (las atiende en su panel).
       allow read: if esDueno(resource.data.uid)
@@ -840,7 +867,8 @@ service cloud.firestore {
       // (porcentaje = round(aciertos/total*100), como calcula la app).
       allow create: if autenticado()
         && request.resource.data.uid == request.auth.uid
-        && request.resource.data.academiaId == miDoc().academiaId
+        // perteneceA(): una prueba vencida no registra intentos en la academia.
+        && perteneceA(request.resource.data.academiaId)
         && request.resource.data.total is int
         && request.resource.data.total > 0
         && request.resource.data.total <= 500

@@ -3,41 +3,14 @@ import { esCorreoSupremo } from '../lib/firebase/supremos.js'
 import { capacidadesDe, planEfectivo } from '../lib/capacidades.js'
 import { registrar } from '../lib/registro.js'
 import { normalizarGrupo, normalizarPerfil } from '../lib/compatNombres.js'
+import {
+  calcularAcceso, msHastaFinDePrueba, pertenenciaEfectiva, pruebaVigente,
+} from '../lib/accesoModelo.js'
 
 const AuthContext = createContext(null)
 
 // Roles con acceso al contenido siendo staff de una academia.
 const ROLES_STAFF = ['admin_escuela', 'instructor']
-
-// Calcula si el usuario puede acceder al contenido y, si no, el motivo.
-//   superadmin/supremo   → acceso total (bypass).
-//   sin sesión           → 'no-sesion'
-//   perfil inexistente    → 'sin-perfil' (no se queda cargando para siempre)
-//   usuario no activo     → 'usuario-bloqueado'
-//   sin academia          → 'sin-academia'
-//   academia no activa    → 'academia-inactiva' (no ha pagado / suspendida)
-function calcularAcceso({ user, perfil, perfilListo, academia, rol, esSupremo }) {
-  if (esSupremo || rol === 'superadmin') return { puede: true, motivo: null }
-  if (!user) return { puede: false, motivo: 'no-sesion' }
-  if (!perfilListo) return { puede: false, motivo: 'cargando' }
-  if (!perfil) return { puede: false, motivo: 'sin-perfil' }
-  if (perfil.estado && perfil.estado !== 'activo') return { puede: false, motivo: 'usuario-bloqueado' }
-  // Acceso de prueba (código temporal): entra mientras esté vigente.
-  const enPrueba = Boolean(perfil.pruebaHasta?.seconds && perfil.pruebaHasta.seconds * 1000 > Date.now())
-  // Cuenta MARCADA como prueba (aunque el código la haya integrado a una
-  // academia/grupo): al vencer pierde el acceso hasta meter un código real.
-  if (perfil.esPrueba) {
-    return enPrueba ? { puede: true, motivo: null } : { puede: false, motivo: 'prueba-expirada' }
-  }
-  if (!perfil.academiaId) {
-    return enPrueba ? { puede: true, motivo: null } : { puede: false, motivo: 'sin-academia' }
-  }
-  if (academia === undefined) return { puede: false, motivo: 'cargando' } // academia aún cargando
-  if (!academia || academia.estado !== 'activo') {
-    return enPrueba ? { puede: true, motivo: null } : { puede: false, motivo: 'academia-inactiva' }
-  }
-  return { puede: true, motivo: null }
-}
 
 // Expone usuario de Firebase Auth + perfil de Firestore (rol, academia, estado) +
 // la academia del usuario, y calcula el acceso al contenido. El SDK de Firebase se
@@ -103,10 +76,32 @@ export function AuthProvider({ children }) {
     }
   }, [])
 
+  // --- VENCIMIENTO EN CALIENTE DE LA PRUEBA -------------------------------
+  // Que una prueba venza no cambia ningún documento, así que no llega ningún
+  // snapshot que vuelva a calcular el acceso: sin este temporizador, quien
+  // tuviera la app abierta al dar la hora seguía estudiando hasta recargar la
+  // página. Al disparar, `tick` fuerza un render y el acceso se recalcula con
+  // la hora nueva. El módulo acota la espera (los setTimeout largos desbordan),
+  // por eso el efecto se re-arma con cada `tick` hasta que ya no queda tiempo.
+  const [tick, setTick] = useState(0)
+  useEffect(() => {
+    const ms = msHastaFinDePrueba(perfil)
+    if (ms == null) return
+    const id = setTimeout(() => setTick((n) => n + 1), ms + 1000)
+    return () => clearTimeout(id)
+  }, [perfil, tick])
+
+  // Pertenencia EFECTIVA: una prueba vencida no conserva academia ni grupo
+  // aunque el perfil los siga guardando (ver src/lib/accesoModelo.js). Todo lo
+  // que cuelga del contexto —temario, panel, exámenes— parte de estos valores,
+  // así que al vencer la persona queda como recién registrada. El espejo en el
+  // servidor es `pruebaVencida()` en firestore.rules.
+  const { academiaId, grupoId, vencida: pruebaTerminada } = pertenenciaEfectiva(perfil)
+
   // Grupo del usuario en vivo (visibilidad de contenido para alumnos).
   const [grupo, setGrupo] = useState(null)
   useEffect(() => {
-    const gid = perfil?.grupoId
+    const gid = grupoId
     if (!gid) {
       setGrupo(null)
       return
@@ -129,11 +124,11 @@ export function AuthProvider({ children }) {
       activo = false
       if (unsub) unsub()
     }
-  }, [perfil?.grupoId])
+  }, [grupoId])
 
   // Academia del usuario en vivo (para saber si está activa / ha pagado).
   useEffect(() => {
-    const acaId = perfil?.academiaId
+    const acaId = academiaId
     if (!acaId) {
       // Sin academia: el acceso se resuelve por 'sin-academia' antes de mirar este valor.
       setAcademia(null)
@@ -158,7 +153,7 @@ export function AuthProvider({ children }) {
       activo = false
       if (unsub) unsub()
     }
-  }, [perfil?.academiaId])
+  }, [academiaId])
 
   const rol = perfil?.rol || null
   // El admin supremo se reconoce por su correo (igual que en firestore.rules):
@@ -197,14 +192,21 @@ export function AuthProvider({ children }) {
     salir: (...args) => salirRef.current(...args),
     autenticado: Boolean(user),
     rol,
-    academiaId: perfil?.academiaId || null,
+    // EFECTIVOS: null cuando la prueba venció, aunque el perfil los conserve.
+    academiaId,
     grupo,
-    grupoId: perfil?.grupoId || null,
-    enPrueba: Boolean(perfil?.pruebaHasta?.seconds && perfil.pruebaHasta.seconds * 1000 > Date.now()),
+    grupoId,
+    enPrueba: pruebaVigente(perfil),
+    // true = entró con un código temporal que ya venció. La cuenta existe, pero
+    // no pertenece a nada hasta que canjee un código nuevo o el de su academia.
+    pruebaTerminada,
     pruebaHasta: perfil?.pruebaHasta || null,
     esSupremo,
     esSuperadmin,
-    esStaff: esSuperadmin || ROLES_STAFF.includes(rol),
+    // Una prueba vencida no es staff de nada: si alguien con un rol de academia
+    // canjeó un código temporal, al vencer queda fuera del panel igual que del
+    // temario (las reglas hacen lo mismo con esStaffDe()).
+    esStaff: esSuperadmin || (!pruebaTerminada && ROLES_STAFF.includes(rol)),
     // Plan comercial y capacidades de LA ACADEMIA DEL USUARIO (fuente única:
     // src/lib/capacidades.js). El superadmin opera academias ajenas desde
     // /admin con los datos de cada academia, no con estos.
@@ -213,7 +215,8 @@ export function AuthProvider({ children }) {
     // Ver los CÓDIGOS de academia/grupo: director y super-admin siempre; un
     // profesor solo si un director le aprobó la solicitud (perfil.puedeVerCodigos).
     puedeVerCodigos:
-      esSuperadmin || rol === 'admin_escuela' || Boolean(perfil?.puedeVerCodigos),
+      esSuperadmin
+      || (!pruebaTerminada && (rol === 'admin_escuela' || Boolean(perfil?.puedeVerCodigos))),
     puedeAcceder,
     accesoCargando,
     motivoBloqueo: motivo,

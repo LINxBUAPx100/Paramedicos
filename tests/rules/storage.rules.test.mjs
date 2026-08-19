@@ -72,6 +72,18 @@ async function preparar() {
     })
     await setDoc(doc(db, 'usuarios/alumA'), { rol: 'alumno', academiaId: 'ACA-A', estado: 'activo' })
     await setDoc(doc(db, 'usuarios/alumB'), { rol: 'alumno', academiaId: 'ACA-B', estado: 'activo' })
+    // Acceso de PRUEBA de la academia A, uno vivo y uno vencido. El vencido
+    // es el que importa: sin pruebaVencida() en storage.rules el temario
+    // quedaba cerrado y sus adjuntos se seguían descargando.
+    const enHoras = (h) => fsmod.Timestamp.fromMillis(Date.now() + h * 60 * 60 * 1000)
+    await setDoc(doc(db, 'usuarios/pruebaVivaSt'), {
+      rol: 'alumno', academiaId: 'ACA-A', estado: 'activo',
+      esPrueba: true, codigoPrueba: 'PT-7DAA', pruebaHasta: enHoras(24),
+    })
+    await setDoc(doc(db, 'usuarios/pruebaMuertaSt'), {
+      rol: 'alumno', academiaId: 'ACA-A', estado: 'activo',
+      esPrueba: true, codigoPrueba: 'PT-7DAA', pruebaHasta: enHoras(-1),
+    })
   })
   // Un archivo ya existente en A (sembrado SIN reglas) para probar lecturas.
   await env.withSecurityRulesDisabled(async (ctx) => {
@@ -163,4 +175,15 @@ test('storage: el editor puede borrar adjuntos de SU academia; otros no', { skip
   await uploadBytes(ref(almacenDe('dirA'), 'academias/ACA-A/archivos/borrable.pdf'), PDF, { contentType: 'application/pdf' })
   await assertFails(deleteObject(ref(almacenDe('alumA'), 'academias/ACA-A/archivos/borrable.pdf')))
   await assertSucceeds(deleteObject(ref(almacenDe('dirA'), 'academias/ACA-A/archivos/borrable.pdf')))
+})
+
+test('storage: una prueba VENCIDA deja de descargar los adjuntos de la academia', { skip }, async () => {
+  await preparar()
+  const { ref, getBytes } = st
+  const { assertSucceeds, assertFails } = rut
+  const archivo = 'academias/ACA-A/archivos/existente.pdf'
+  // Mientras el código vive, descarga como cualquier alumno de la academia.
+  await assertSucceeds(getBytes(ref(almacenDe('pruebaVivaSt'), archivo)))
+  // Al vencer deja de pertenecer, y con ello pierde también los archivos.
+  await assertFails(getBytes(ref(almacenDe('pruebaMuertaSt'), archivo)))
 })

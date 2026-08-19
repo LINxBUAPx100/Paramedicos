@@ -738,6 +738,9 @@ textarea:focus-visible,
 }
 .cuenta-diagnostico input { font-family: inherit; }
 .panel-rol-tag.rol-suspendido { color: var(--urgencia); background: color-mix(in srgb, var(--urgencia) 10%, transparent); }
+/* Acceso de PRUEBA en la lista de miembros: vence y, al vencer, la persona
+   deja de pertenecer a la academia aunque siga apareciendo en la tabla. */
+.panel-tag-prueba { display: inline-block; margin-left: var(--e-6); font-size: var(--t-xs); }
 .panel-estado-btn {
   padding: var(--e-6) var(--e-12);
   border-radius: var(--radio-sm);

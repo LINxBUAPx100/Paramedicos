@@ -128,6 +128,11 @@ export default function CodigosPrueba({ academiaId = null, academiaNombre = '', 
         Genera códigos de acceso temporal para que alguien pruebe la plataforma sin inscribirse.
         La persona lo activa en <strong>Mi cuenta → Únete con tu código</strong>.
       </p>
+      <p className="panel-gestion-sub">
+        Al terminar la vigencia el acceso se corta por completo: temario, exámenes, archivos,
+        grupo y academia. Su cuenta sigue existiendo, pero no pertenece a ningún sitio hasta
+        que canjee otro código o el código oficial de la academia.
+      </p>
 
       <form className="pc-form" onSubmit={crear}>
         {academias && (

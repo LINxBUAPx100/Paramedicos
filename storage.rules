@@ -34,10 +34,21 @@ service firebase.storage {
           && firestore.exists(/databases/(default)/documents/usuarios/$(request.auth.uid))
           && miDoc().rol == 'superadmin');
     }
+    // Prueba temporal vencida = no pertenece. MISMO cuerpo que pruebaVencida()
+    // en firestore.rules (y que src/lib/accesoModelo.js): sin esta puerta, el
+    // temario quedaba cerrado pero sus adjuntos —PDF, imágenes, audio— se
+    // seguían descargando con la sesión que ya había vencido. Marcado como
+    // prueba y sin fecha válida = vencido.
+    function pruebaVencida() {
+      return miDoc().get('esPrueba', false) == true
+        && !(miDoc().get('pruebaHasta', null) is timestamp
+             && miDoc().pruebaHasta > request.time);
+    }
     function perteneceA(acaId) {
       return autenticado()
         && firestore.exists(/databases/(default)/documents/usuarios/$(request.auth.uid))
-        && miDoc().academiaId == acaId;
+        && miDoc().academiaId == acaId
+        && !pruebaVencida();
     }
     // --- Capacidades de la academia: MISMO cuerpo que en firestore.rules ---
     // Esta función derivaba el plan por su cuenta y le faltaban DOS cosas que
