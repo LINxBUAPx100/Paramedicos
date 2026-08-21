@@ -96,7 +96,7 @@ const FU = [
 
 export default {
   'm5-que-definicion': {
-    icono: '🔥',
+    icono: 'cp-servier-piel',
     duracion: '13 min',
     resumen: 'Una quemadura es la destrucción de tejido por transferencia de energía térmica, química, '
       + 'eléctrica o por radiación. Su gravedad no depende solo del aspecto de la piel: depende de la '
@@ -221,7 +221,7 @@ export default {
   },
 
   'm5-que-agentes-termicos': {
-    icono: '🧯',
+    icono: 'dg-agentes-quemadura',
     duracion: '14 min',
     resumen: 'El plan pide estudiar los tipos de agentes. La lección desarrolla los térmicos —llama, '
       + 'líquido caliente, contacto con superficie caliente, vapor y frío— y añade los tres grupos '
@@ -337,7 +337,7 @@ export default {
   },
 
   'm5-que-grados': {
-    icono: '📊',
+    icono: 'cp-servier-quemadura-2do',
     duracion: '14 min',
     resumen: 'La profundidad de una quemadura se clasifica por la capa de piel que alcanza, y de ella '
       + 'dependen el aspecto, el dolor y la evolución. La terminología tradicional habla de primer, '
@@ -478,7 +478,7 @@ export default {
   },
 
   'm5-que-regla-9s': {
-    icono: '🖐️',
+    icono: 'cp-servier-mano',
     duracion: '13 min',
     resumen: 'La regla de los nueve divide la superficie corporal en zonas cuyo valor es un múltiplo de '
       + 'nueve, y permite estimar deprisa qué porcentaje del cuerpo está quemado. Es una estimación, no '
@@ -619,7 +619,7 @@ export default {
   },
 
   'm5-que-parkland': {
-    icono: '💧',
+    icono: 'cp-servier-bolsa-infusion',
     duracion: '16 min',
     resumen: 'El plan pide enseñar la fórmula de Parkland. Esta lección la presenta completa y '
       + 'después la contrasta con la recomendación vigente. La fórmula clásica calcula 4 mL de '
@@ -765,7 +765,7 @@ export default {
   },
 
   'm5-que-tratamiento': {
-    icono: '🚑',
+    icono: 'cp-servier-bolsa-infusion',
     duracion: '16 min',
     resumen: 'El tratamiento prehospitalario del quemado se ordena en cuatro bloques: detener la '
       + 'lesión, asegurar la vía aérea y la ventilación, sostener la circulación con la reposición que '
@@ -929,7 +929,7 @@ export default {
   },
 
   'm5-que-curacion': {
-    icono: '🩹',
+    icono: 'cp-cc0-guantes',
     duracion: '13 min',
     resumen: 'El plan pide una lección sobre la curación de una quemadura limitada a una sola '
       + 'extremidad, que es el escenario más frecuente y el que más se maneja mal. La conducta '

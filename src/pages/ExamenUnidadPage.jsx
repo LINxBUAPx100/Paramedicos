@@ -70,7 +70,7 @@ export default function ExamenUnidadPage() {
           <span className="examen-hero-ico"><Icon name="examen" size={46} /></span>
           <h1>{tema.evaluacion?.titulo || tema.titulo}</h1>
           <p>{inactivo.texto}</p>
-          <Link to={`/tema/${tema.id}`} className="btn btn--suave">← Volver a la ficha del examen</Link>
+          <Link to={`/tema/${tema.id}`} className="btn btn--suave"><Icon name="chevronIzq" size={15} /> Volver a la ficha del examen</Link>
         </div>
       ) : !iniciado ? (
         <div className="examen-modulo-intro">
@@ -87,7 +87,7 @@ export default function ExamenUnidadPage() {
           <button className="btn btn--primario btn--lg" onClick={() => setIniciado(true)}>
             Comenzar ({preguntas.length} preguntas)
           </button>
-          <Link to={`/tema/${tema.id}`} className="link-discreto">← Volver a la ficha del examen</Link>
+          <Link to={`/tema/${tema.id}`} className="link-discreto"><Icon name="chevronIzq" size={15} /> Volver a la ficha del examen</Link>
         </div>
       ) : (
         <>
@@ -109,7 +109,7 @@ export default function ExamenUnidadPage() {
 
           <div className="quiz-page-pie">
             <button type="button" className="btn btn--suave" onClick={otroIntento}>Otro intento</button>
-            <Link to={`/modulo/${tema.moduloId}`} className="btn btn--suave">← Volver al módulo</Link>
+            <Link to={`/modulo/${tema.moduloId}`} className="btn btn--suave"><Icon name="chevronIzq" size={15} /> Volver al módulo</Link>
           </div>
         </>
       )}

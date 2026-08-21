@@ -118,7 +118,7 @@ export default {
   // ---------- Introducción a geriatría ----------
 
   'm6-ig-definicion': {
-    icono: '👴',
+    icono: 'cp-servier-adulto-mayor',
     duracion: '13 min',
     resumen: 'La geriatría es la disciplina que atiende la salud de las personas mayores, y su '
       + 'particularidad no es la edad en sí, sino lo que la acompaña: varias enfermedades a la vez, '
@@ -241,7 +241,7 @@ export default {
   },
 
   'm6-ig-comunicacion': {
-    icono: '💬',
+    icono: 'cp-servier-rostro-mayor',
     duracion: '13 min',
     resumen: 'Comunicarse bien con una persona mayor no es una cortesía: es una técnica de obtención '
       + 'de información y una condición para que la valoración sea fiable. Las barreras habituales '
@@ -367,7 +367,7 @@ export default {
   },
 
   'm6-ig-gems': {
-    icono: '💎',
+    icono: 'ic-adultos-mayores',
     duracion: '13 min',
     resumen: 'El diamante GEMS es una estructura para no olvidar lo que hace distinta la atención del '
       + 'paciente mayor. Sus cuatro vértices recuerdan que el paciente es geriátrico y por tanto '
@@ -503,7 +503,7 @@ export default {
   },
 
   'm6-ig-cambios-fisiologicos': {
-    icono: '⚙️',
+    icono: 'cp-servier-adulta-mayor',
     duracion: '16 min',
     resumen: 'Este tema recorre los cambios del envejecimiento sistema por sistema, siempre con la '
       + 'misma estructura: qué cambia y qué consecuencia tiene en la atención urgente. El hilo es '
@@ -642,7 +642,7 @@ export default {
   },
 
   'm6-ig-causas-muerte': {
-    icono: '📉',
+    icono: 'ic-adultos-mayores',
     duracion: '13 min',
     resumen: 'Conocer de qué enferman y mueren las personas mayores orienta la sospecha antes de '
       + 'llegar al domicilio. Los grandes grupos son las enfermedades cardiovasculares, las '
@@ -763,7 +763,7 @@ export default {
   },
 
   'm6-ig-polifarmacia': {
-    icono: '💊',
+    icono: 'cp-servier-blister',
     duracion: '15 min',
     resumen: 'La polifarmacia es el uso simultáneo de varios medicamentos, situación habitual en el '
       + 'paciente mayor y una de las causas más frecuentes de urgencia evitable. Los fármacos '
@@ -911,7 +911,7 @@ export default {
   },
 
   'm6-ig-envejecimiento-trauma': {
-    icono: '🩹',
+    icono: 'cp-servier-adulto-mayor',
     duracion: '15 min',
     resumen: 'El trauma en la persona mayor tiene tres particularidades que cambian el pronóstico: se '
       + 'produce con mecanismos de baja energía, se tolera mucho peor y se infratria con frecuencia '
@@ -1060,7 +1060,7 @@ export default {
   },
 
   'm6-ig-envejecimiento-urgencias': {
-    icono: '🩺',
+    icono: 'cp-servier-adulto-mayor',
     duracion: '15 min',
     resumen: 'En urgencias médicas, el envejecimiento produce un fenómeno constante: los cuadros '
       + 'graves se presentan sin sus signos característicos. El infarto sin dolor, la infección sin '
@@ -1207,7 +1207,7 @@ export default {
   },
 
   'm6-ig-envejecimiento-psiquiatria': {
-    icono: '🧠',
+    icono: 'cp-servier-rostro-mayor',
     duracion: '15 min',
     resumen: 'Este tema aborda la salud mental de la persona mayor desde la única distinción que '
       + 'realmente cambia la conducta prehospitalaria: separar el cuadro confusional agudo, que es una '
@@ -1349,7 +1349,7 @@ export default {
   },
 
   'm6-ig-abuso-mayores': {
-    icono: '🛡️',
+    icono: 'cp-servier-adulta-mayor',
     duracion: '14 min',
     resumen: 'El maltrato a personas mayores incluye el daño físico, el psicológico, el sexual, el '
       + 'abandono, la negligencia en los cuidados y el abuso económico, y ocurre casi siempre en el '
@@ -1477,7 +1477,7 @@ export default {
   // ---------- Manejo geriátrico ----------
 
   'm6-mg-evaluacion': {
-    icono: '📋',
+    icono: 'cp-servier-adulto-mayor',
     duracion: '16 min',
     resumen: 'La evaluación del paciente geriátrico usa la misma secuencia que la de cualquier otro '
       + 'paciente, pero con tres añadidos que no son opcionales: comparar con su línea de base, '
@@ -1625,7 +1625,7 @@ export default {
   },
 
   'm6-mg-traumatismo': {
-    icono: '🚑',
+    icono: 'cp-servier-adulto-mayor',
     duracion: '15 min',
     resumen: 'Este tema traslada a la práctica lo estudiado sobre el trauma geriátrico: cómo se maneja '
       + 'de principio a fin un paciente mayor lesionado. La secuencia es la habitual, pero con el '
@@ -1755,7 +1755,7 @@ export default {
   },
 
   'm6-mg-emergencias-medicas': {
-    icono: '❤️‍🩹',
+    icono: 'cp-servier-adulto-mayor',
     duracion: '16 min',
     resumen: 'Cierre del módulo: cómo se maneja en la práctica una urgencia médica en la persona '
       + 'mayor. La lección integra todo lo anterior en una conducta —partir del cambio, descartar lo '

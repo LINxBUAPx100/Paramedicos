@@ -1,0 +1,2587 @@
+{
+  "_lea_esto": [
+    "COMPOSICIONES: figuras nuevas armadas con activos abiertos + texto accesible.",
+    "",
+    "Por qué existen. Ocho de las figuras del Atlas no eran ilustraciones: eran procesos,",
+    "curvas, clasificaciones y relaciones causales dibujadas a mano en SVG. Sustituir una",
+    "de ellas por un icono aislado destruiría lo que enseñaba. Y cuatro de las imágenes de",
+    "Drive tenían el mismo problema (cascada de la coagulación, receptores adrenérgicos,",
+    "secuencia de intubación, glándulas endocrinas).",
+    "",
+    "Cada figura declara: los activos que la componen —cada uno con su autor y su licencia,",
+    "que viajan al catálogo—, los rótulos en español (texto SVG real, no texto quemado en un",
+    "mapa de bits) y una descripción ampliada para lector de pantalla.",
+    "",
+    "LÍMITE DELIBERADO. Estas composiciones migran material visual; NO introducen contenido",
+    "clínico nuevo. El texto pedagógico de las figuras que sustituyen se conserva íntegro, y",
+    "donde una figura habría exigido inventar una tabla clínica con cifras (Glasgow, niveles",
+    "de PIC, fórmula de Parkland, colores de triage, regla de los 9) NO se ha construido:",
+    "esas cifras tienen que venir de la lección redactada y de su fuente, no de una migración",
+    "de imágenes. Esos temas reciben la figura anatómica que les corresponde.",
+    "",
+    "Una composición solo puede embeber SVG. Los activos de SMART llegan en PNG y",
+    "empotrarlos en base64 dispararía el peso de la figura por encima del presupuesto del",
+    "proyecto (300 KB), así que se sirven como ilustración aparte del mismo tema.",
+    "",
+    "Tonos: tinta, suave, acento, alerta, ok, ambar, violeta, panel, borde."
+  ],
+  "composiciones": [
+    {
+      "id": "dg-celula-organelos",
+      "title": "La célula y sus organelos",
+      "subtitulo": "Qué hay dentro de una célula y para qué sirve cada parte",
+      "ancho": 960,
+      "alto": 600,
+      "tags": [
+        "célula",
+        "organelos",
+        "membrana"
+      ],
+      "descripcion": "Tres figuras en fila: la célula completa con su membrana y su citoplasma, el núcleo con su envoltura y su nucleolo, y la mitocondria en corte con sus crestas. Debajo, cuatro fichas explican la función de la membrana plasmática, el citoplasma, el núcleo y la mitocondria, y una nota final relaciona la falta de oxígeno con la parada de la bomba de sodio y potasio y la muerte celular.",
+      "equivalencia": "Sustituye la imagen de Drive «La célula y sus organelos», que era un esquema rotulado.",
+      "figurasFila": {
+        "x": 60,
+        "y": 100,
+        "w": 840,
+        "h": 180,
+        "gap": 40,
+        "items": [
+          {
+            "assetId": "cp-servier-celula-vacia",
+            "etiqueta": "Célula completa · membrana y citoplasma"
+          },
+          {
+            "assetId": "cp-servier-nucleo",
+            "etiqueta": "Núcleo"
+          },
+          {
+            "assetId": "cp-servier-mitocondria",
+            "etiqueta": "Mitocondria"
+          }
+        ]
+      },
+      "rejilla": {
+        "x": 60,
+        "y": 322,
+        "w": 840,
+        "h": 170,
+        "columnas": 4,
+        "gap": 18,
+        "items": [
+          {
+            "titulo": "Membrana plasmática",
+            "tono": "acento",
+            "lineas": [
+              "Bicapa de lípidos con",
+              "proteínas incrustadas.",
+              "Decide qué entra y qué",
+              "sale de la célula."
+            ]
+          },
+          {
+            "titulo": "Citoplasma",
+            "tono": "suave",
+            "lineas": [
+              "Medio interno donde",
+              "ocurren las reacciones",
+              "y donde se apoyan los",
+              "organelos."
+            ]
+          },
+          {
+            "titulo": "Núcleo",
+            "tono": "violeta",
+            "lineas": [
+              "Guarda el ADN y dirige",
+              "desde ahí la síntesis",
+              "de proteínas."
+            ]
+          },
+          {
+            "titulo": "Mitocondria",
+            "tono": "ambar",
+            "lineas": [
+              "Produce el ATP con",
+              "oxígeno. Si falta O₂ la",
+              "producción cae y la",
+              "célula pasa a anaerobio."
+            ]
+          }
+        ]
+      },
+      "notaPie": "El daño celular prehospitalario casi siempre empieza igual: sin oxígeno no hay ATP, sin ATP la bomba Na⁺/K⁺ se detiene, la célula se llena de sodio y agua, se hincha y muere. Por eso oxigenar y perfundir es tratamiento celular."
+    },
+    {
+      "id": "dg-bomba-sodio-potasio",
+      "title": "Bomba Na⁺/K⁺ ATPasa",
+      "subtitulo": "Transporte activo: gasta ATP para mover iones contra su gradiente",
+      "ancho": 960,
+      "alto": 642,
+      "tags": [
+        "bomba de sodio",
+        "potencial de reposo",
+        "electrofisiología"
+      ],
+      "descripcion": "A la izquierda, un esquema de la membrana celular con la proteína transportadora atravesándola: por encima el compartimento extracelular, rico en sodio; por debajo el interior de la célula, rico en potasio y con proteínas de carga negativa. Tres iones de sodio salen y dos de potasio entran por cada molécula de ATP consumida. A la derecha, un registro de potenciales de acción muestra la consecuencia funcional del gradiente. Debajo, dos fichas explican qué hace la bomba y por qué importa en la atención prehospitalaria.",
+      "equivalencia": "Sustituye public/imagenes/m2/bomba-sodio-potasio.svg, conservando todo su texto.",
+      "trazos": [
+        {
+          "d": "M60 112 H470 V252 H60 Z",
+          "relleno": "alerta",
+          "opacidad": 0.08,
+          "tono": "borde",
+          "grosor": 1
+        },
+        {
+          "d": "M60 252 H470 V296 H60 Z",
+          "relleno": "borde",
+          "tono": "borde",
+          "grosor": 1
+        },
+        {
+          "d": "M60 296 H470 V436 H60 Z",
+          "relleno": "acento",
+          "opacidad": 0.08,
+          "tono": "borde",
+          "grosor": 1
+        },
+        {
+          "d": "M150 240 V160",
+          "tono": "alerta",
+          "grosor": 2.5,
+          "punta": true
+        },
+        {
+          "d": "M380 176 V264",
+          "tono": "acento",
+          "grosor": 2.5,
+          "punta": true
+        }
+      ],
+      "figuras": [
+        {
+          "assetId": "cp-servier-receptor-membrana",
+          "x": 213,
+          "y": 222,
+          "w": 104,
+          "h": 104
+        }
+      ],
+      "textos": [
+        {
+          "x": 72,
+          "y": 136,
+          "texto": "EXTERIOR · mucho Na⁺",
+          "tam": 13,
+          "peso": "700",
+          "tono": "alerta"
+        },
+        {
+          "x": 72,
+          "y": 428,
+          "texto": "INTERIOR · mucho K⁺ y proteínas con carga negativa",
+          "tam": 13,
+          "peso": "700",
+          "tono": "acento"
+        },
+        {
+          "x": 162,
+          "y": 158,
+          "texto": "3 Na⁺ salen",
+          "tam": 12.5,
+          "tono": "alerta"
+        },
+        {
+          "x": 392,
+          "y": 174,
+          "texto": "2 K⁺ entran",
+          "tam": 12.5,
+          "tono": "acento"
+        },
+        {
+          "x": 265,
+          "y": 344,
+          "texto": "Na⁺/K⁺ ATPasa",
+          "tam": 12.5,
+          "peso": "700",
+          "tono": "tinta",
+          "ancla": "middle"
+        },
+        {
+          "x": 265,
+          "y": 366,
+          "texto": "1 ATP → ADP + Pi",
+          "tam": 13,
+          "peso": "700",
+          "tono": "ambar",
+          "ancla": "middle"
+        }
+      ],
+      "figurasFila": {
+        "x": 510,
+        "y": 112,
+        "w": 390,
+        "h": 210,
+        "gap": 0,
+        "items": [
+          {
+            "assetId": "cp-cc0-potencial-accion",
+            "etiqueta": "Para esto sirve el gradiente: el potencial de acción"
+          }
+        ]
+      },
+      "rejilla": {
+        "x": 60,
+        "y": 470,
+        "w": 840,
+        "h": 108,
+        "columnas": 2,
+        "gap": 24,
+        "items": [
+          {
+            "titulo": "Qué hace la bomba",
+            "tono": "acento",
+            "lineas": [
+              "Saca 3 cargas positivas y mete 2: el interior queda",
+              "negativo. De esa diferencia sale el potencial de reposo,",
+              "y de él la posibilidad de despolarizar."
+            ]
+          },
+          {
+            "titulo": "Por qué importa en la calle",
+            "tono": "alerta",
+            "lineas": [
+              "La bomba consume ATP. En hipoxia o hipoperfusión el ATP",
+              "cae, la bomba se frena y el sodio arrastra agua al",
+              "interior: edema celular. Es el daño común del shock."
+            ]
+          }
+        ]
+      },
+      "notaPie": "Saca 3 cargas positivas y mete 2: el interior queda negativo. De ahí sale el potencial de reposo."
+    },
+    {
+      "id": "dg-sistema-conduccion",
+      "title": "Sistema de conducción cardíaca",
+      "subtitulo": "Por dónde viaja el impulso y a qué ritmo late cada marcapasos si manda él",
+      "ancho": 960,
+      "alto": 600,
+      "tags": [
+        "conducción",
+        "nodo sinusal",
+        "marcapasos"
+      ],
+      "descripcion": "A la izquierda, un corte del corazón con el trayecto del tejido de conducción sobre las cuatro cámaras. A la derecha, cuatro fichas numeradas recorren el camino del impulso: nodo sinusal en la aurícula derecha, marcapasos normal a 60 a 100 latidos por minuto; nodo auriculoventricular, que retrasa el impulso para que las aurículas terminen de llenar los ventrículos y que late a 40 a 60 si toma el mando; haz de His con sus ramas derecha e izquierda; y fibras de Purkinje, que producen la contracción ventricular y laten a 20 a 40 si el ritmo nace en ellas. La nota final explica que cuanto más abajo nace el ritmo, más lento late.",
+      "equivalencia": "Sustituye public/imagenes/m2/sistema-conduccion.svg, conservando marcapasos y frecuencias.",
+      "figuras": [
+        {
+          "assetId": "cp-servier-conduccion-cardiaca",
+          "x": 60,
+          "y": 108,
+          "w": 330,
+          "h": 320,
+          "etiqueta": "Trayecto del impulso sobre la anatomía cardíaca"
+        }
+      ],
+      "rejilla": {
+        "x": 430,
+        "y": 108,
+        "w": 470,
+        "h": 350,
+        "columnas": 1,
+        "gap": 12,
+        "items": [
+          {
+            "titulo": "1 · Nodo sinusal (SA)",
+            "tono": "ok",
+            "lineas": [
+              "En la aurícula derecha. Marcapasos normal · 60–100 lpm."
+            ]
+          },
+          {
+            "titulo": "2 · Nodo auriculoventricular (AV)",
+            "tono": "acento",
+            "lineas": [
+              "Retrasa el impulso: deja que las aurículas terminen de",
+              "llenar los ventrículos. Si manda él · 40–60 lpm."
+            ]
+          },
+          {
+            "titulo": "3 · Haz de His y sus ramas",
+            "tono": "violeta",
+            "lineas": [
+              "Baja por el tabique y se divide en rama derecha e izquierda."
+            ]
+          },
+          {
+            "titulo": "4 · Fibras de Purkinje",
+            "tono": "ambar",
+            "lineas": [
+              "Reparten el impulso por el ventrículo y producen la",
+              "contracción. Si mandan ellas · 20–40 lpm."
+            ]
+          }
+        ]
+      },
+      "notaPie": "Cuanto más abajo nace el ritmo, más lento late: por eso un ritmo de escape ventricular es lento y mal tolerado."
+    },
+    {
+      "id": "dg-ecg-onda-normal",
+      "title": "Onda electrocardiográfica normal",
+      "subtitulo": "Papel a 25 mm/s · cuadro grande = 0,20 s · cuadro chico = 0,04 s",
+      "ancho": 960,
+      "alto": 628,
+      "tags": [
+        "ECG",
+        "onda P",
+        "QRS",
+        "intervalos"
+      ],
+      "descripcion": "Arriba, un trazo electrocardiográfico sobre la cuadrícula del papel de registro. Debajo, seis fichas identifican cada elemento del ciclo: onda P como despolarización auricular, complejo QRS como despolarización ventricular con duración menor de 0,12 segundos, onda T como repolarización ventricular, segmento ST como referencia isoeléctrica cuyo desplazamiento orienta a lesión o isquemia, intervalo PR de 0,12 a 0,20 segundos e intervalo QT variable con la frecuencia.",
+      "equivalencia": "Sustituye public/imagenes/m3/ecg-onda-normal.svg, conservando sus intervalos.",
+      "figuras": [
+        {
+          "assetId": "cp-servier-ecg",
+          "x": 60,
+          "y": 100,
+          "w": 840,
+          "h": 190,
+          "etiqueta": "Trazo sobre el papel de registro"
+        }
+      ],
+      "rejilla": {
+        "x": 60,
+        "y": 336,
+        "w": 840,
+        "h": 150,
+        "columnas": 3,
+        "gap": 18,
+        "items": [
+          {
+            "titulo": "Onda P",
+            "tono": "acento",
+            "lineas": [
+              "Despolarización auricular.",
+              "Precede a cada QRS cuando",
+              "el ritmo nace en el nodo SA."
+            ]
+          },
+          {
+            "titulo": "Complejo QRS",
+            "tono": "alerta",
+            "lineas": [
+              "Despolarización ventricular.",
+              "Dura menos de 0,12 s si baja",
+              "por el sistema de conducción."
+            ]
+          },
+          {
+            "titulo": "Onda T",
+            "tono": "violeta",
+            "lineas": [
+              "Repolarización ventricular.",
+              "Cambia de forma con la",
+              "isquemia y con el potasio."
+            ]
+          },
+          {
+            "titulo": "Segmento ST",
+            "tono": "ambar",
+            "lineas": [
+              "Referencia isoeléctrica. Su",
+              "elevación o descenso orienta",
+              "a lesión o isquemia."
+            ]
+          },
+          {
+            "titulo": "Intervalo PR",
+            "tono": "ok",
+            "lineas": [
+              "0,12–0,20 s. Es el retraso",
+              "que introduce el nodo AV."
+            ]
+          },
+          {
+            "titulo": "Intervalo QT",
+            "tono": "suave",
+            "lineas": [
+              "Varía con la frecuencia; se",
+              "corrige antes de interpretarlo."
+            ]
+          }
+        ]
+      },
+      "notaPie": "El trazo se lee siempre en el mismo orden: ¿hay onda P?, ¿cada P lleva su QRS?, ¿el QRS es estrecho?, ¿el intervalo es regular? Solo después se busca la alteración."
+    },
+    {
+      "id": "dg-circulacion-mayor-menor",
+      "title": "Circulación mayor y menor",
+      "subtitulo": "Un corazón, dos circuitos en serie · sangre pobre en O₂ y sangre rica en O₂",
+      "ancho": 960,
+      "alto": 640,
+      "tags": [
+        "circulación",
+        "pulmonar",
+        "sistémica"
+      ],
+      "descripcion": "A la izquierda, el circuito pulmonar: el ventrículo derecho envía sangre por la arteria pulmonar al lecho capilar del pulmón y las venas pulmonares la devuelven a la aurícula izquierda. En el centro, la unidad alveolocapilar donde ocurre el intercambio de oxígeno y dióxido de carbono. A la derecha, el circuito sistémico: el ventrículo izquierdo expulsa por la aorta hacia los tejidos y las venas cavas devuelven la sangre a la aurícula derecha. Debajo, dos fichas comparan los dos circuitos y una nota explica la consecuencia de que estén en serie.",
+      "equivalencia": "Sustituye public/imagenes/m2/circulacion-mayor-menor.svg.",
+      "figurasFila": {
+        "x": 60,
+        "y": 104,
+        "w": 840,
+        "h": 230,
+        "gap": 30,
+        "items": [
+          {
+            "assetId": "cp-servier-circulacion-pulmonar",
+            "etiqueta": "Circulación MENOR (pulmonar)"
+          },
+          {
+            "assetId": "cp-servier-intercambio-gaseoso",
+            "etiqueta": "Donde se hace el trabajo: el alvéolo"
+          },
+          {
+            "assetId": "cp-servier-circulacion-venosa",
+            "etiqueta": "Circulación MAYOR (sistémica)"
+          }
+        ]
+      },
+      "rejilla": {
+        "x": 60,
+        "y": 380,
+        "w": 840,
+        "h": 160,
+        "columnas": 2,
+        "gap": 24,
+        "items": [
+          {
+            "titulo": "Circulación menor · pulmonar",
+            "tono": "acento",
+            "lineas": [
+              "Ventrículo derecho → arteria pulmonar → capilares del",
+              "pulmón → venas pulmonares → aurícula izquierda.",
+              "",
+              "Es la única arteria con sangre pobre en O₂ y las únicas",
+              "venas con sangre rica en O₂. Trabaja a baja presión."
+            ]
+          },
+          {
+            "titulo": "Circulación mayor · sistémica",
+            "tono": "alerta",
+            "lineas": [
+              "Ventrículo izquierdo → aorta → capilares del cuerpo →",
+              "venas cavas → aurícula derecha.",
+              "",
+              "Lleva el oxígeno al tejido y recoge el CO₂. Trabaja a alta",
+              "presión: por eso el ventrículo izquierdo es más grueso."
+            ]
+          }
+        ]
+      },
+      "notaPie": "Los dos circuitos están en serie: todo lo que sale de un ventrículo pasa por el otro. Por eso un fallo del ventrículo izquierdo se refleja como congestión pulmonar, y uno del derecho como congestión sistémica."
+    },
+    {
+      "id": "dg-gasto-cardiaco",
+      "title": "Determinantes del gasto cardíaco",
+      "subtitulo": "Cuánta sangre expulsa el corazón cada minuto, y de qué depende",
+      "ancho": 960,
+      "alto": 580,
+      "tags": [
+        "gasto cardíaco",
+        "precarga",
+        "contractilidad",
+        "poscarga"
+      ],
+      "descripcion": "Una fórmula central establece que el gasto cardíaco es igual a la frecuencia cardíaca multiplicada por el volumen sistólico. Debajo, dos fichas definen cada factor: la frecuencia como latidos por minuto y el volumen sistólico como mililitros expulsados en cada latido. Más abajo, tres fichas descomponen el volumen sistólico en precarga, contractilidad y poscarga. La figura del corazón acompaña la fórmula y una nota final explica cómo se traduce cada determinante en la valoración prehospitalaria.",
+      "equivalencia": "Sustituye public/imagenes/m2/gasto-cardiaco.svg.",
+      "figuras": [
+        {
+          "assetId": "cp-servier-corazon",
+          "x": 70,
+          "y": 112,
+          "w": 180,
+          "h": 180
+        }
+      ],
+      "formula": {
+        "x": 288,
+        "y": 140,
+        "w": 612,
+        "texto": "GC = FC × VS",
+        "nota": "gasto cardíaco = frecuencia cardíaca × volumen sistólico"
+      },
+      "rejilla": {
+        "x": 288,
+        "y": 226,
+        "w": 612,
+        "h": 76,
+        "columnas": 2,
+        "gap": 20,
+        "items": [
+          {
+            "titulo": "Frecuencia cardíaca",
+            "tono": "acento",
+            "lineas": [
+              "Latidos por minuto."
+            ]
+          },
+          {
+            "titulo": "Volumen sistólico",
+            "tono": "violeta",
+            "lineas": [
+              "Mililitros que salen en cada latido."
+            ]
+          }
+        ]
+      },
+      "rejilla2": {
+        "x": 60,
+        "y": 336,
+        "w": 840,
+        "h": 152,
+        "columnas": 3,
+        "gap": 18,
+        "items": [
+          {
+            "titulo": "Precarga",
+            "tono": "ok",
+            "lineas": [
+              "Cuánta sangre llega y estira",
+              "el ventrículo antes de",
+              "contraerse (volumen).",
+              "",
+              "Baja en hemorragia y",
+              "deshidratación."
+            ]
+          },
+          {
+            "titulo": "Contractilidad",
+            "tono": "ambar",
+            "lineas": [
+              "Con cuánta fuerza se contrae",
+              "el músculo cardíaco.",
+              "",
+              "Baja en infarto extenso y",
+              "en acidosis."
+            ]
+          },
+          {
+            "titulo": "Poscarga",
+            "tono": "alerta",
+            "lineas": [
+              "Resistencia contra la que",
+              "tiene que expulsar el",
+              "ventrículo.",
+              "",
+              "Cae en el shock",
+              "distributivo."
+            ]
+          }
+        ]
+      },
+      "notaPie": "En la calle no se mide el gasto cardíaco: se estima su resultado. Piel, llenado capilar, estado de conciencia y diuresis dicen si la perfusión alcanza, y la presión arterial es el último dato que se mueve, no el primero."
+    },
+    {
+      "id": "dg-curva-oxihemoglobina",
+      "title": "Curva de disociación de la oxihemoglobina",
+      "subtitulo": "Relación entre la PaO₂ y la saturación de la hemoglobina",
+      "ancho": 960,
+      "alto": 638,
+      "tags": [
+        "oxihemoglobina",
+        "efecto Bohr",
+        "saturación"
+      ],
+      "descripcion": "Gráfica con la presión parcial de oxígeno en el eje horizontal, de 0 a 100 milímetros de mercurio, y la saturación de la hemoglobina en el eje vertical, de 0 a 100 por ciento. La curva tiene forma de S: sube muy poco entre 0 y 20 milímetros de mercurio, sube con rapidez entre 20 y 60, y se aplana por encima de 60, donde la saturación ya supera el 90 por ciento. El punto P50 está en torno a 26,6 milímetros de mercurio con saturación del 50 por ciento. Dos fichas explican el desplazamiento a la derecha, que suelta más oxígeno al tejido con aumento de dióxido de carbono, de temperatura y de 2,3-DPG y descenso del pH, y el desplazamiento a la izquierda, que retiene el oxígeno en las condiciones opuestas.",
+      "equivalencia": "Sustituye public/imagenes/m3/curva-oxihemoglobina.svg, conservando P50 y los dos desplazamientos.",
+      "trazos": [
+        {
+          "d": "M120 400 H600",
+          "tono": "borde",
+          "grosor": 1.5
+        },
+        {
+          "d": "M120 400 V116",
+          "tono": "borde",
+          "grosor": 1.5
+        },
+        {
+          "d": "M120 148 H600",
+          "tono": "borde",
+          "grosor": 0.8,
+          "discontinuo": true
+        },
+        {
+          "d": "M408 400 V148",
+          "tono": "borde",
+          "grosor": 0.8,
+          "discontinuo": true
+        },
+        {
+          "d": "M120 398 C 168 392, 196 372, 220 330 C 244 288, 264 236, 300 196 C 340 154, 400 138, 456 132 C 512 126, 560 124, 600 123",
+          "tono": "acento",
+          "grosor": 3
+        },
+        {
+          "d": "M120 264 H247",
+          "tono": "borde",
+          "grosor": 0.8,
+          "discontinuo": true
+        },
+        {
+          "d": "M247 400 V264",
+          "tono": "borde",
+          "grosor": 0.8,
+          "discontinuo": true
+        },
+        {
+          "d": "M262 300 h34",
+          "tono": "alerta",
+          "grosor": 2,
+          "punta": true
+        },
+        {
+          "d": "M232 300 h-34",
+          "tono": "violeta",
+          "grosor": 2,
+          "punta": true
+        }
+      ],
+      "textos": [
+        {
+          "x": 112,
+          "y": 404,
+          "texto": "0",
+          "tam": 11.5,
+          "tono": "suave",
+          "ancla": "end"
+        },
+        {
+          "x": 112,
+          "y": 340,
+          "texto": "20",
+          "tam": 11.5,
+          "tono": "suave",
+          "ancla": "end"
+        },
+        {
+          "x": 112,
+          "y": 268,
+          "texto": "50",
+          "tam": 11.5,
+          "tono": "suave",
+          "ancla": "end"
+        },
+        {
+          "x": 112,
+          "y": 196,
+          "texto": "80",
+          "tam": 11.5,
+          "tono": "suave",
+          "ancla": "end"
+        },
+        {
+          "x": 112,
+          "y": 152,
+          "texto": "90",
+          "tam": 11.5,
+          "tono": "suave",
+          "ancla": "end"
+        },
+        {
+          "x": 112,
+          "y": 122,
+          "texto": "100",
+          "tam": 11.5,
+          "tono": "suave",
+          "ancla": "end"
+        },
+        {
+          "x": 74,
+          "y": 268,
+          "texto": "Sat. Hb (%)",
+          "tam": 12,
+          "peso": "700",
+          "tono": "suave",
+          "rotar": -90
+        },
+        {
+          "x": 120,
+          "y": 420,
+          "texto": "0",
+          "tam": 11.5,
+          "tono": "suave",
+          "ancla": "middle"
+        },
+        {
+          "x": 216,
+          "y": 420,
+          "texto": "20",
+          "tam": 11.5,
+          "tono": "suave",
+          "ancla": "middle"
+        },
+        {
+          "x": 312,
+          "y": 420,
+          "texto": "40",
+          "tam": 11.5,
+          "tono": "suave",
+          "ancla": "middle"
+        },
+        {
+          "x": 408,
+          "y": 420,
+          "texto": "60",
+          "tam": 11.5,
+          "tono": "suave",
+          "ancla": "middle"
+        },
+        {
+          "x": 504,
+          "y": 420,
+          "texto": "80",
+          "tam": 11.5,
+          "tono": "suave",
+          "ancla": "middle"
+        },
+        {
+          "x": 600,
+          "y": 420,
+          "texto": "100",
+          "tam": 11.5,
+          "tono": "suave",
+          "ancla": "middle"
+        },
+        {
+          "x": 360,
+          "y": 442,
+          "texto": "Presión parcial de oxígeno · PaO₂ (mmHg)",
+          "tam": 12,
+          "peso": "700",
+          "tono": "suave",
+          "ancla": "middle"
+        },
+        {
+          "x": 256,
+          "y": 258,
+          "texto": "P50 ≈ 26,6 mmHg (Sat. 50 %)",
+          "tam": 11.5,
+          "peso": "700",
+          "tono": "tinta"
+        },
+        {
+          "x": 300,
+          "y": 304,
+          "texto": "derecha",
+          "tam": 11.5,
+          "peso": "700",
+          "tono": "alerta"
+        },
+        {
+          "x": 194,
+          "y": 304,
+          "texto": "izquierda",
+          "tam": 11.5,
+          "peso": "700",
+          "tono": "violeta",
+          "ancla": "end"
+        },
+        {
+          "x": 420,
+          "y": 140,
+          "texto": "Meseta: por encima de 60 mmHg la saturación ya pasa de 90 %",
+          "tam": 11.5,
+          "tono": "suave"
+        },
+        {
+          "x": 250,
+          "y": 210,
+          "texto": "Zona empinada: aquí un cambio pequeño de PaO₂",
+          "tam": 11.5,
+          "tono": "suave"
+        },
+        {
+          "x": 250,
+          "y": 226,
+          "texto": "mueve mucho la saturación",
+          "tam": 11.5,
+          "tono": "suave"
+        }
+      ],
+      "figuras": [
+        {
+          "assetId": "cp-servier-eritrocito",
+          "x": 660,
+          "y": 150,
+          "w": 130,
+          "h": 130,
+          "etiqueta": "La hemoglobina viaja aquí"
+        }
+      ],
+      "rejilla": {
+        "x": 60,
+        "y": 462,
+        "w": 840,
+        "h": 112,
+        "columnas": 2,
+        "gap": 24,
+        "items": [
+          {
+            "titulo": "Derecha · suelta más O₂ al tejido",
+            "tono": "alerta",
+            "lineas": [
+              "↑ CO₂ · ↑ temperatura · ↑ 2,3-DPG · ↓ pH (acidosis).",
+              "Es el efecto Bohr: el tejido que trabaja y se acidifica hace",
+              "que la hemoglobina entregue más oxígeno donde hace falta."
+            ]
+          },
+          {
+            "titulo": "Izquierda · retiene el O₂",
+            "tono": "violeta",
+            "lineas": [
+              "↓ CO₂ · ↓ temperatura · ↓ 2,3-DPG · ↑ pH (alcalosis).",
+              "La capta bien en el pulmón pero la suelta peor en el tejido:",
+              "hipotermia e hiperventilación juegan en contra."
+            ]
+          }
+        ]
+      },
+      "notaPie": "La meseta explica por qué la oximetría engaña: entre 100 y 70 mmHg de PaO₂ la saturación baja poco, así que un 92 % puede corresponder ya a una PaO₂ claramente baja. Por debajo de ese punto la curva cae en picado."
+    },
+    {
+      "id": "dg-clasificacion-shock",
+      "title": "Clasificación del estado de shock",
+      "subtitulo": "Todos terminan igual —hipoperfusión tisular— pero fallan por sitios distintos",
+      "ancho": 960,
+      "alto": 700,
+      "tags": [
+        "shock",
+        "hipovolémico",
+        "cardiogénico",
+        "distributivo",
+        "obstructivo"
+      ],
+      "descripcion": "En el centro superior, la figura del lecho capilar representa el destino común de todos los tipos de shock: el tejido no recibe oxígeno. Debajo, cuatro columnas presentan los cuatro tipos con la figura de su mecanismo. Hipovolémico: falta volumen, por hemorragia interna o externa, quemaduras extensas, vómito y diarrea o tercer espacio; el fallo está en la precarga. Cardiogénico: la bomba falla, por infarto extenso, arritmias graves, miocardiopatías o valvulopatía aguda; el fallo está en la contractilidad. Distributivo: el continente se dilata, en el shock séptico, anafiláctico y neurogénico; el fallo está en la resistencia vascular. Obstructivo: algo obstruye, por neumotórax a tensión, taponamiento cardíaco o tromboembolia pulmonar; el llenado o la salida están bloqueados.",
+      "equivalencia": "Sustituye public/imagenes/m5/clasificacion-shock.svg, conservando todas sus causas.",
+      "figuras": [
+        {
+          "assetId": "cp-servier-capilares",
+          "x": 400,
+          "y": 98,
+          "w": 160,
+          "h": 120,
+          "etiqueta": "Hipoperfusión: el tejido no recibe oxígeno"
+        }
+      ],
+      "figurasFila": {
+        "x": 60,
+        "y": 262,
+        "w": 840,
+        "h": 104,
+        "gap": 18,
+        "items": [
+          {
+            "assetId": "cp-servier-eritrocito",
+            "etiqueta": "Volumen"
+          },
+          {
+            "assetId": "cp-servier-corazon",
+            "etiqueta": "Bomba"
+          },
+          {
+            "assetId": "cp-servier-arteria",
+            "etiqueta": "Continente"
+          },
+          {
+            "assetId": "cp-servier-neumotorax",
+            "etiqueta": "Obstrucción"
+          }
+        ]
+      },
+      "rejilla": {
+        "x": 60,
+        "y": 404,
+        "w": 840,
+        "h": 216,
+        "columnas": 4,
+        "gap": 18,
+        "items": [
+          {
+            "titulo": "Hipovolémico",
+            "tono": "alerta",
+            "lineas": [
+              "Falta volumen.",
+              "",
+              "· Hemorragia interna",
+              "  o externa",
+              "· Quemaduras extensas",
+              "· Vómito y diarrea",
+              "· Tercer espacio",
+              "",
+              "Precarga ↓"
+            ]
+          },
+          {
+            "titulo": "Cardiogénico",
+            "tono": "violeta",
+            "lineas": [
+              "La bomba falla.",
+              "",
+              "· Infarto extenso",
+              "· Arritmias graves",
+              "· Miocardiopatías",
+              "· Valvulopatía aguda",
+              "",
+              "",
+              "Contractilidad ↓"
+            ]
+          },
+          {
+            "titulo": "Distributivo",
+            "tono": "ambar",
+            "lineas": [
+              "El continente se dilata.",
+              "",
+              "· Séptico",
+              "· Anafiláctico",
+              "· Neurogénico",
+              "",
+              "",
+              "",
+              "Resistencia vascular ↓"
+            ]
+          },
+          {
+            "titulo": "Obstructivo",
+            "tono": "acento",
+            "lineas": [
+              "Algo obstruye.",
+              "",
+              "· Neumotórax a tensión",
+              "· Taponamiento",
+              "  cardíaco",
+              "· Tromboembolia",
+              "  pulmonar",
+              "",
+              "Llenado o salida bloqueados"
+            ]
+          }
+        ]
+      },
+      "notaPie": "La presión arterial baja tarde: un paciente compensado puede estar en shock con la presión aún normal."
+    },
+    {
+      "id": "dg-equilibrio-acido-base",
+      "title": "Equilibrio ácido-base",
+      "subtitulo": "pH normal 7,35–7,45 · PaCO₂ 35–45 mmHg · HCO₃⁻ 22–26 mEq/L",
+      "ancho": 960,
+      "alto": 700,
+      "tags": [
+        "ácido-base",
+        "acidosis",
+        "alcalosis",
+        "compensación"
+      ],
+      "descripcion": "La balanza representa el equilibrio entre los dos platillos que fijan el pH: la PaCO₂, que controla el pulmón, y el bicarbonato, que controla el riñón. Debajo, cuatro fichas describen los cuatro trastornos. Acidosis respiratoria: pH bajo, PaCO₂ alta, bicarbonato normal; el paciente no ventila bien y retiene dióxido de carbono, por depresión del centro respiratorio, EPOC, obstrucción o tórax inestable; compensa el riñón reteniendo bicarbonato en días. Alcalosis respiratoria: pH alto, PaCO₂ baja, bicarbonato normal; hiperventila y lava el dióxido de carbono, por ansiedad, dolor, fiebre, altura o ventilación mecánica excesiva; compensa el riñón eliminando bicarbonato. Acidosis metabólica: pH bajo, bicarbonato bajo, PaCO₂ normal; se acumula ácido o se pierde base, en shock por lactato, cetoacidosis, insuficiencia renal o diarrea; compensa el pulmón hiperventilando en minutos. Alcalosis metabólica: pH alto, bicarbonato alto, PaCO₂ normal; se pierde ácido o sobra base, por vómito prolongado, aspiración gástrica o diuréticos; compensa el pulmón hipoventilando.",
+      "equivalencia": "Sustituye public/imagenes/m2/equilibrio-acido-base.svg, conservando los cuatro cuadros y la regla de lectura.",
+      "figuras": [
+        {
+          "assetId": "cp-servier-balanza",
+          "x": 390,
+          "y": 100,
+          "w": 180,
+          "h": 130
+        }
+      ],
+      "textos": [
+        {
+          "x": 344,
+          "y": 132,
+          "texto": "PaCO₂",
+          "tam": 15,
+          "peso": "700",
+          "tono": "acento",
+          "ancla": "end"
+        },
+        {
+          "x": 344,
+          "y": 152,
+          "texto": "manda el pulmón",
+          "tam": 11.5,
+          "tono": "suave",
+          "ancla": "end"
+        },
+        {
+          "x": 616,
+          "y": 132,
+          "texto": "HCO₃⁻",
+          "tam": 15,
+          "peso": "700",
+          "tono": "ok"
+        },
+        {
+          "x": 616,
+          "y": 152,
+          "texto": "manda el riñón",
+          "tam": 11.5,
+          "tono": "suave"
+        },
+        {
+          "x": 300,
+          "y": 268,
+          "texto": "ACIDOSIS · pH < 7,35",
+          "tam": 14.5,
+          "peso": "700",
+          "tono": "alerta",
+          "ancla": "middle"
+        },
+        {
+          "x": 660,
+          "y": 268,
+          "texto": "ALCALOSIS · pH > 7,45",
+          "tam": 14.5,
+          "peso": "700",
+          "tono": "acento",
+          "ancla": "middle"
+        }
+      ],
+      "rejilla": {
+        "x": 60,
+        "y": 292,
+        "w": 840,
+        "h": 330,
+        "columnas": 2,
+        "gap": 22,
+        "items": [
+          {
+            "titulo": "Acidosis respiratoria",
+            "tono": "alerta",
+            "lineas": [
+              "pH ↓ · PaCO₂ ↑ · HCO₃⁻ normal",
+              "",
+              "No ventila bien: retiene CO₂.",
+              "Depresión del centro respiratorio, EPOC,",
+              "obstrucción, tórax inestable.",
+              "",
+              "Compensa el riñón: retiene HCO₃⁻ (días)."
+            ]
+          },
+          {
+            "titulo": "Alcalosis respiratoria",
+            "tono": "acento",
+            "lineas": [
+              "pH ↑ · PaCO₂ ↓ · HCO₃⁻ normal",
+              "",
+              "Hiperventila: lava el CO₂.",
+              "Ansiedad, dolor, fiebre, altura,",
+              "ventilación mecánica excesiva.",
+              "",
+              "Compensa el riñón: elimina HCO₃⁻."
+            ]
+          },
+          {
+            "titulo": "Acidosis metabólica",
+            "tono": "ambar",
+            "lineas": [
+              "pH ↓ · HCO₃⁻ ↓ · PaCO₂ normal",
+              "",
+              "Se acumula ácido o se pierde base.",
+              "Shock (láctico), cetoacidosis,",
+              "insuficiencia renal, diarrea.",
+              "",
+              "Compensa el pulmón: hiperventila (minutos)."
+            ]
+          },
+          {
+            "titulo": "Alcalosis metabólica",
+            "tono": "violeta",
+            "lineas": [
+              "pH ↑ · HCO₃⁻ ↑ · PaCO₂ normal",
+              "",
+              "Se pierde ácido o sobra base.",
+              "Vómito prolongado, aspiración",
+              "gástrica, diuréticos.",
+              "",
+              "Compensa el pulmón: hipoventila."
+            ]
+          }
+        ]
+      },
+      "notaPie": "Regla de lectura: mira el pH para saber de qué lado está; luego busca si el que se movió en la misma dirección es la PaCO₂ (respiratorio) o el HCO₃⁻ (metabólico)."
+    },
+    {
+      "id": "dg-encefalo-regiones",
+      "title": "Regiones del encéfalo",
+      "subtitulo": "Qué hace cada región y qué se pierde cuando falla",
+      "ancho": 960,
+      "alto": 580,
+      "tags": [
+        "encéfalo",
+        "tronco",
+        "cerebelo",
+        "corteza"
+      ],
+      "descripcion": "A la izquierda, un corte sagital del encéfalo. A la derecha, cuatro fichas describen las regiones: hemisferios cerebrales con la corteza, responsables de conciencia, lenguaje, movimiento voluntario y sensibilidad; diencéfalo, con tálamo e hipotálamo, que filtra la información y regula temperatura y equilibrio interno; cerebelo, que coordina el movimiento y el equilibrio; y tronco encefálico, que aloja los centros de respiración y de circulación y el sistema reticular que sostiene el estado de alerta.",
+      "equivalencia": "Sustituye la imagen de Drive «Regiones del encéfalo».",
+      "figuras": [
+        {
+          "assetId": "il-encefalo-corte",
+          "x": 60,
+          "y": 108,
+          "w": 320,
+          "h": 290,
+          "etiqueta": "Corte sagital del encéfalo"
+        }
+      ],
+      "rejilla": {
+        "x": 420,
+        "y": 108,
+        "w": 480,
+        "h": 340,
+        "columnas": 1,
+        "gap": 12,
+        "items": [
+          {
+            "titulo": "Hemisferios cerebrales · corteza",
+            "tono": "acento",
+            "lineas": [
+              "Conciencia, lenguaje, movimiento voluntario y sensibilidad.",
+              "Una lesión aquí da déficit focal: hemiparesia, afasia."
+            ]
+          },
+          {
+            "titulo": "Diencéfalo · tálamo e hipotálamo",
+            "tono": "violeta",
+            "lineas": [
+              "Filtra la información que sube y regula temperatura,",
+              "hormonas y equilibrio interno."
+            ]
+          },
+          {
+            "titulo": "Cerebelo",
+            "tono": "ok",
+            "lineas": [
+              "Coordina el movimiento y el equilibrio. No mueve: afina."
+            ]
+          },
+          {
+            "titulo": "Tronco encefálico",
+            "tono": "alerta",
+            "lineas": [
+              "Centros respiratorio y cardiovascular, pares craneales y",
+              "sistema reticular activador, del que depende estar despierto."
+            ]
+          }
+        ]
+      },
+      "notaPie": "Una lesión cortical puede dejar al paciente despierto con un déficit; una de tronco compromete conciencia, respiración y circulación a la vez. El encéfalo está en una caja que no se estira: la presión empuja el tronco hacia abajo."
+    },
+    {
+      "id": "dg-piel-capas",
+      "title": "Capas de la piel",
+      "subtitulo": "De la superficie a la profundidad, y qué implica cada nivel en una quemadura",
+      "ancho": 960,
+      "alto": 594,
+      "tags": [
+        "piel",
+        "epidermis",
+        "dermis",
+        "hipodermis"
+      ],
+      "descripcion": "A la izquierda, un corte de piel con sus capas superpuestas. A la derecha, cuatro fichas describen la epidermis, sin vasos y con la barrera que impide la pérdida de agua; la dermis, con vasos, nervios, folículos y glándulas, donde está el dolor; la hipodermis, de tejido adiposo, que aísla y amortigua; y la relación entre profundidad y clínica de la quemadura.",
+      "equivalencia": "Sustituye la imagen de Drive «Capas de la piel».",
+      "figuras": [
+        {
+          "assetId": "il-piel-corte",
+          "x": 60,
+          "y": 108,
+          "w": 300,
+          "h": 290,
+          "etiqueta": "Piel en corte"
+        }
+      ],
+      "rejilla": {
+        "x": 400,
+        "y": 108,
+        "w": 500,
+        "h": 336,
+        "columnas": 1,
+        "gap": 12,
+        "items": [
+          {
+            "titulo": "1 · Epidermis",
+            "tono": "acento",
+            "lineas": [
+              "Sin vasos. Es la barrera: impide perder agua y frena la",
+              "entrada de microorganismos. Se regenera desde abajo."
+            ]
+          },
+          {
+            "titulo": "2 · Dermis",
+            "tono": "ambar",
+            "lineas": [
+              "Vasos, nervios, folículos y glándulas. Aquí está el dolor y",
+              "aquí sangra la herida. Da a la piel su resistencia."
+            ]
+          },
+          {
+            "titulo": "3 · Hipodermis",
+            "tono": "ok",
+            "lineas": [
+              "Tejido adiposo. Aísla del frío, amortigua los golpes y",
+              "almacena energía."
+            ]
+          },
+          {
+            "titulo": "Lo que cambia con la profundidad",
+            "tono": "alerta",
+            "lineas": [
+              "Solo epidermis: enrojece y duele, no ampolla. Llega a dermis:",
+              "ampolla y duele mucho, porque el nervio queda expuesto.",
+              "Atraviesa la dermis: NO duele en el centro —el nervio se",
+              "destruyó— y ahí está el riesgo, no el alivio."
+            ]
+          }
+        ]
+      },
+      "notaPie": "La piel es el órgano que se pierde primero en una quemadura extensa, y con ella la barrera contra la infección y el control del agua y del calor. Por eso una quemadura grande es un problema sistémico."
+    },
+    {
+      "id": "dg-grados-quemadura",
+      "title": "Profundidad de la quemadura",
+      "subtitulo": "La misma piel, tres profundidades: qué se destruye en cada una",
+      "ancho": 960,
+      "alto": 560,
+      "tags": [
+        "quemadura",
+        "grados",
+        "profundidad",
+        "flictena"
+      ],
+      "descripcion": "Tres cortes de la misma piel comparados: en el primero la lesión se limita a la epidermis; en el segundo atraviesa la epidermis y llega a la dermis, con despegamiento y ampolla; en el tercero destruye epidermis y dermis completas y alcanza la hipodermis. Debajo, tres fichas describen qué estructura se ha perdido en cada caso y qué se observa clínicamente.",
+      "equivalencia": "Cobertura nueva: el tema de grados de quemadura no tenía figura propia y compartía emoji con el resto de la unidad.",
+      "figurasFila": {
+        "x": 60,
+        "y": 104,
+        "w": 840,
+        "h": 170,
+        "gap": 30,
+        "items": [
+          {
+            "assetId": "cp-servier-quemadura-1er",
+            "etiqueta": "Lesión limitada a la epidermis"
+          },
+          {
+            "assetId": "cp-servier-quemadura-2do",
+            "etiqueta": "Lesión que llega a la dermis"
+          },
+          {
+            "assetId": "cp-servier-quemadura-3er",
+            "etiqueta": "Lesión de espesor total"
+          }
+        ]
+      },
+      "rejilla": {
+        "x": 60,
+        "y": 314,
+        "w": 840,
+        "h": 176,
+        "columnas": 3,
+        "gap": 20,
+        "items": [
+          {
+            "titulo": "Solo epidermis",
+            "tono": "ok",
+            "lineas": [
+              "Se pierde la barrera",
+              "superficial.",
+              "",
+              "Enrojece, duele y no",
+              "ampolla. La piel sigue",
+              "cerrada."
+            ]
+          },
+          {
+            "titulo": "Hasta la dermis",
+            "tono": "ambar",
+            "lineas": [
+              "Se despega la epidermis y",
+              "queda dermis expuesta.",
+              "",
+              "Ampolla y duele mucho:",
+              "las terminaciones",
+              "nerviosas están al aire."
+            ]
+          },
+          {
+            "titulo": "Espesor total",
+            "tono": "alerta",
+            "lineas": [
+              "Se destruyen epidermis,",
+              "dermis, anexos y nervios.",
+              "",
+              "NO duele en el centro. La",
+              "ausencia de dolor es signo",
+              "de gravedad, no de mejoría."
+            ]
+          }
+        ]
+      },
+      "notaPie": "Una quemadura no tiene una sola profundidad: casi siempre es un mosaico, con el centro más profundo que los bordes. Se describe lo que se ve y se reevalúa, porque la lesión térmica sigue evolucionando después del accidente."
+    },
+    {
+      "id": "dg-agentes-quemadura",
+      "title": "Agentes que producen una quemadura",
+      "subtitulo": "El agente cambia la lesión y cambia la seguridad de la escena",
+      "ancho": 960,
+      "alto": 560,
+      "tags": [
+        "quemadura",
+        "agente térmico",
+        "químico",
+        "radiación"
+      ],
+      "descripcion": "Cuatro pictogramas normalizados representan los agentes: llama y superficie caliente para el agente térmico, sustancia corrosiva para el químico, gas comprimido y electricidad para el eléctrico, y radiación ultravioleta para el radiante. Debajo, cuatro fichas describen cómo actúa cada agente y qué obliga a hacer antes de tocar al paciente.",
+      "equivalencia": "Cobertura nueva: el tema de agentes térmicos usaba un emoji de extintor.",
+      "figurasFila": {
+        "x": 60,
+        "y": 104,
+        "w": 840,
+        "h": 140,
+        "gap": 24,
+        "items": [
+          {
+            "assetId": "cp-cc0-inflamable",
+            "etiqueta": "Térmico · llama y calor"
+          },
+          {
+            "assetId": "cp-cc0-corrosivo",
+            "etiqueta": "Químico · corrosivo"
+          },
+          {
+            "assetId": "cp-cc0-gas",
+            "etiqueta": "Gas a presión"
+          },
+          {
+            "assetId": "cp-servier-radiacion-uv",
+            "etiqueta": "Radiación"
+          }
+        ]
+      },
+      "rejilla": {
+        "x": 60,
+        "y": 288,
+        "w": 840,
+        "h": 200,
+        "columnas": 4,
+        "gap": 18,
+        "items": [
+          {
+            "titulo": "Térmico",
+            "tono": "alerta",
+            "lineas": [
+              "Llama, líquido caliente,",
+              "vapor, superficie caliente.",
+              "",
+              "La lesión sigue",
+              "profundizando mientras",
+              "el calor no se retire."
+            ]
+          },
+          {
+            "titulo": "Químico",
+            "tono": "ambar",
+            "lineas": [
+              "Ácido o álcali.",
+              "",
+              "Sigue actuando hasta que",
+              "se retira y se irriga. La",
+              "protección del rescatador",
+              "es parte del tratamiento."
+            ]
+          },
+          {
+            "titulo": "Eléctrico",
+            "tono": "violeta",
+            "lineas": [
+              "La corriente entra y sale:",
+              "hay dos heridas y un",
+              "trayecto entre ellas.",
+              "",
+              "El daño profundo suele ser",
+              "mayor que el visible."
+            ]
+          },
+          {
+            "titulo": "Radiante",
+            "tono": "acento",
+            "lineas": [
+              "Ultravioleta o radiación",
+              "ionizante.",
+              "",
+              "La exposición puede haber",
+              "terminado ya cuando el",
+              "paciente pide ayuda."
+            ]
+          }
+        ]
+      },
+      "notaPie": "Identificar el agente no es un dato académico: decide si la escena es segura, si hay que descontaminar antes de tratar y qué material de protección hace falta. Los pictogramas son los que llevan los envases y los vehículos de transporte."
+    },
+    {
+      "id": "dg-nefrona",
+      "title": "La nefrona",
+      "subtitulo": "La unidad que filtra: por dónde pasa el líquido y qué ocurre en cada tramo",
+      "ancho": 960,
+      "alto": 580,
+      "tags": [
+        "nefrona",
+        "glomérulo",
+        "asa de Henle",
+        "filtración"
+      ],
+      "descripcion": "A la izquierda, el riñón en corte con la corteza, la médula y la pelvis renal. En el centro, el esquema de una nefrona con el glomérulo, el túbulo proximal, el asa de Henle, el túbulo distal y el colector. A la derecha, cuatro fichas describen la función de cada tramo: filtración en el glomérulo, reabsorción de la mayor parte del agua y del sodio en el túbulo proximal, creación del gradiente que concentra la orina en el asa de Henle, y ajuste final del sodio, del potasio y del ácido en el túbulo distal y el colector.",
+      "equivalencia": "Sustituye la imagen de Drive «La nefrona».",
+      "figurasFila": {
+        "x": 60,
+        "y": 108,
+        "w": 410,
+        "h": 250,
+        "gap": 24,
+        "items": [
+          {
+            "assetId": "cp-servier-rinon",
+            "etiqueta": "Riñón en corte"
+          },
+          {
+            "assetId": "cp-cc0-nefrona",
+            "etiqueta": "Nefrona"
+          }
+        ]
+      },
+      "rejilla": {
+        "x": 510,
+        "y": 108,
+        "w": 390,
+        "h": 336,
+        "columnas": 1,
+        "gap": 12,
+        "items": [
+          {
+            "titulo": "1 · Glomérulo",
+            "tono": "alerta",
+            "lineas": [
+              "Filtra el plasma por presión.",
+              "Sin presión de perfusión no hay filtrado."
+            ]
+          },
+          {
+            "titulo": "2 · Túbulo contorneado proximal",
+            "tono": "acento",
+            "lineas": [
+              "Reabsorbe la mayor parte del agua, del",
+              "sodio, de la glucosa y del bicarbonato."
+            ]
+          },
+          {
+            "titulo": "3 · Asa de Henle",
+            "tono": "violeta",
+            "lineas": [
+              "Crea el gradiente que permite",
+              "concentrar la orina."
+            ]
+          },
+          {
+            "titulo": "4 · Túbulo distal y colector",
+            "tono": "ok",
+            "lineas": [
+              "Ajuste final de sodio, potasio y ácido,",
+              "bajo control hormonal."
+            ]
+          }
+        ]
+      },
+      "notaPie": "El riñón filtra por presión: si la perfusión cae, el filtrado cae con ella. Por eso la oliguria es un signo precoz de hipoperfusión y no un problema urinario, y por eso el riñón paga pronto el shock."
+    },
+    {
+      "id": "dg-columna-vertebral",
+      "title": "Columna vertebral",
+      "subtitulo": "Regiones, número de vértebras y qué protege cada tramo",
+      "ancho": 960,
+      "alto": 604,
+      "tags": [
+        "columna",
+        "cervical",
+        "dorsal",
+        "lumbar",
+        "sacro"
+      ],
+      "descripcion": "A la izquierda, un esquema de la columna dividido en sus cinco regiones, de arriba abajo: siete vértebras cervicales, doce dorsales o torácicas, cinco lumbares, el sacro y el cóccix. A la derecha, cinco fichas describen cada región: la cervical es la más móvil y la más expuesta en trauma, y por encima de C5 se compromete el diafragma; la dorsal se articula con las costillas y es la más estable; la lumbar soporta el peso del tronco; el sacro forma parte del anillo pelviano; y el cóccix es el resto vertebral final.",
+      "equivalencia": "Sustituye la imagen de Drive «Columna vertebral». La ilustración de SMART se sirve además como figura aparte del mismo tema.",
+      "trazos": [
+        {
+          "d": "M150 108 H230 V196 H150 Z",
+          "relleno": "alerta",
+          "opacidad": 0.22,
+          "tono": "alerta",
+          "grosor": 1.2
+        },
+        {
+          "d": "M150 196 H230 V336 H150 Z",
+          "relleno": "acento",
+          "opacidad": 0.22,
+          "tono": "acento",
+          "grosor": 1.2
+        },
+        {
+          "d": "M150 336 H230 V420 H150 Z",
+          "relleno": "ambar",
+          "opacidad": 0.22,
+          "tono": "ambar",
+          "grosor": 1.2
+        },
+        {
+          "d": "M150 420 H230 V474 H150 Z",
+          "relleno": "ok",
+          "opacidad": 0.22,
+          "tono": "ok",
+          "grosor": 1.2
+        },
+        {
+          "d": "M150 474 H230 V506 H150 Z",
+          "relleno": "suave",
+          "opacidad": 0.22,
+          "tono": "suave",
+          "grosor": 1.2
+        },
+        {
+          "d": "M190 108 V506",
+          "tono": "borde",
+          "grosor": 0.8,
+          "discontinuo": true
+        },
+        {
+          "d": "M238 152 h34",
+          "tono": "alerta",
+          "grosor": 1.6,
+          "punta": true
+        },
+        {
+          "d": "M238 266 h34",
+          "tono": "acento",
+          "grosor": 1.6,
+          "punta": true
+        },
+        {
+          "d": "M238 378 h34",
+          "tono": "ambar",
+          "grosor": 1.6,
+          "punta": true
+        },
+        {
+          "d": "M238 447 h34",
+          "tono": "ok",
+          "grosor": 1.6,
+          "punta": true
+        },
+        {
+          "d": "M238 490 h34",
+          "tono": "suave",
+          "grosor": 1.6,
+          "punta": true
+        }
+      ],
+      "textos": [
+        {
+          "x": 190,
+          "y": 158,
+          "texto": "C1–C7",
+          "tam": 14,
+          "peso": "700",
+          "tono": "alerta",
+          "ancla": "middle"
+        },
+        {
+          "x": 190,
+          "y": 272,
+          "texto": "T1–T12",
+          "tam": 14,
+          "peso": "700",
+          "tono": "acento",
+          "ancla": "middle"
+        },
+        {
+          "x": 190,
+          "y": 384,
+          "texto": "L1–L5",
+          "tam": 14,
+          "peso": "700",
+          "tono": "ambar",
+          "ancla": "middle"
+        },
+        {
+          "x": 190,
+          "y": 453,
+          "texto": "Sacro",
+          "tam": 13,
+          "peso": "700",
+          "tono": "ok",
+          "ancla": "middle"
+        },
+        {
+          "x": 190,
+          "y": 496,
+          "texto": "Cóccix",
+          "tam": 12,
+          "peso": "700",
+          "tono": "suave",
+          "ancla": "middle"
+        },
+        {
+          "x": 190,
+          "y": 528,
+          "texto": "Esquema por regiones",
+          "tam": 12.5,
+          "tono": "suave",
+          "ancla": "middle"
+        },
+        {
+          "x": 60,
+          "y": 116,
+          "texto": "arriba",
+          "tam": 11.5,
+          "tono": "suave"
+        },
+        {
+          "x": 60,
+          "y": 506,
+          "texto": "abajo",
+          "tam": 11.5,
+          "tono": "suave"
+        }
+      ],
+      "rejilla": {
+        "x": 300,
+        "y": 108,
+        "w": 600,
+        "h": 400,
+        "columnas": 1,
+        "gap": 10,
+        "items": [
+          {
+            "titulo": "Cervical · 7 vértebras (C1–C7)",
+            "tono": "alerta",
+            "lineas": [
+              "La región más móvil y la más expuesta en trauma. Por encima de C5",
+              "se compromete la inervación del diafragma y con ella la respiración."
+            ]
+          },
+          {
+            "titulo": "Dorsal o torácica · 12 vértebras (T1–T12)",
+            "tono": "acento",
+            "lineas": [
+              "Articulada con las costillas: es la más estable, y por eso una",
+              "lesión aquí implica que hubo mucha energía."
+            ]
+          },
+          {
+            "titulo": "Lumbar · 5 vértebras (L1–L5)",
+            "tono": "ambar",
+            "lineas": [
+              "Soporta el peso del tronco; son las vértebras más grandes."
+            ]
+          },
+          {
+            "titulo": "Sacro · 5 vértebras soldadas",
+            "tono": "ok",
+            "lineas": [
+              "Forma parte del anillo pelviano y transmite el peso a la pelvis."
+            ]
+          },
+          {
+            "titulo": "Cóccix",
+            "tono": "suave",
+            "lineas": [
+              "Resto vertebral final, sin función de carga."
+            ]
+          }
+        ]
+      },
+      "notaPie": "La médula termina hacia L1–L2; por debajo el conducto contiene raíces (cauda equina), no médula. Por eso una lesión lumbar baja produce un cuadro de raíces y no una sección medular."
+    },
+    {
+      "id": "dg-glandulas-endocrinas",
+      "title": "Glándulas endocrinas",
+      "subtitulo": "Dónde están, qué producen y qué urgencia aparece cuando se descompensan",
+      "ancho": 960,
+      "alto": 710,
+      "tags": [
+        "endocrino",
+        "tiroides",
+        "suprarrenal",
+        "páncreas"
+      ],
+      "descripcion": "Un esquema del contorno corporal sitúa las glándulas de arriba abajo: hipófisis en la base del cráneo, tiroides en el cuello, suprarrenales sobre los riñones, páncreas en el abdomen y gónadas en la pelvis. Junto a él, las figuras del páncreas y del islote de Langerhans. Debajo, tres fichas indican la hormona principal y la urgencia prehospitalaria de tiroides, suprarrenal y páncreas endocrino.",
+      "equivalencia": "Sustituye la imagen de Drive «Glándulas endocrinas». Las ilustraciones de tiroides y suprarrenal de SMART se sirven además como figuras aparte del mismo tema.",
+      "trazos": [
+        {
+          "d": "M118 118 a26 26 0 1 1 52 0 v18 h18 v70 h-18 v120 h14 v92 h-80 v-92 h14 v-120 h-18 v-70 h18 z",
+          "relleno": "acento",
+          "opacidad": 0.1,
+          "tono": "borde",
+          "grosor": 1.2
+        },
+        {
+          "d": "M138 126 h12 v10 h-12 z",
+          "relleno": "violeta",
+          "tono": "violeta",
+          "grosor": 1
+        },
+        {
+          "d": "M132 148 h24 v10 h-24 z",
+          "relleno": "acento",
+          "tono": "acento",
+          "grosor": 1
+        },
+        {
+          "d": "M126 232 h14 v10 h-14 z",
+          "relleno": "ambar",
+          "tono": "ambar",
+          "grosor": 1
+        },
+        {
+          "d": "M148 232 h14 v10 h-14 z",
+          "relleno": "ambar",
+          "tono": "ambar",
+          "grosor": 1
+        },
+        {
+          "d": "M130 262 h28 v10 h-28 z",
+          "relleno": "ok",
+          "tono": "ok",
+          "grosor": 1
+        },
+        {
+          "d": "M134 330 h20 v10 h-20 z",
+          "relleno": "suave",
+          "tono": "suave",
+          "grosor": 1
+        },
+        {
+          "d": "M158 131 h26",
+          "tono": "violeta",
+          "grosor": 1.4,
+          "punta": true
+        },
+        {
+          "d": "M158 153 h26",
+          "tono": "acento",
+          "grosor": 1.4,
+          "punta": true
+        },
+        {
+          "d": "M164 237 h20",
+          "tono": "ambar",
+          "grosor": 1.4,
+          "punta": true
+        },
+        {
+          "d": "M160 267 h24",
+          "tono": "ok",
+          "grosor": 1.4,
+          "punta": true
+        },
+        {
+          "d": "M156 335 h28",
+          "tono": "suave",
+          "grosor": 1.4,
+          "punta": true
+        }
+      ],
+      "textos": [
+        {
+          "x": 190,
+          "y": 135,
+          "texto": "Hipófisis",
+          "tam": 12,
+          "peso": "700",
+          "tono": "violeta"
+        },
+        {
+          "x": 190,
+          "y": 157,
+          "texto": "Tiroides y paratiroides",
+          "tam": 12,
+          "peso": "700",
+          "tono": "acento"
+        },
+        {
+          "x": 190,
+          "y": 241,
+          "texto": "Suprarrenales",
+          "tam": 12,
+          "peso": "700",
+          "tono": "ambar"
+        },
+        {
+          "x": 190,
+          "y": 271,
+          "texto": "Páncreas endocrino",
+          "tam": 12,
+          "peso": "700",
+          "tono": "ok"
+        },
+        {
+          "x": 190,
+          "y": 339,
+          "texto": "Gónadas",
+          "tam": 12,
+          "peso": "700",
+          "tono": "suave"
+        },
+        {
+          "x": 144,
+          "y": 434,
+          "texto": "Localización",
+          "tam": 12.5,
+          "tono": "suave",
+          "ancla": "middle"
+        }
+      ],
+      "figurasFila": {
+        "x": 400,
+        "y": 108,
+        "w": 500,
+        "h": 200,
+        "gap": 30,
+        "items": [
+          {
+            "assetId": "cp-servier-pancreas",
+            "etiqueta": "Páncreas y duodeno"
+          },
+          {
+            "assetId": "cp-servier-islote-langerhans",
+            "etiqueta": "Islote de Langerhans"
+          }
+        ]
+      },
+      "rejilla": {
+        "x": 400,
+        "y": 358,
+        "w": 500,
+        "h": 190,
+        "columnas": 1,
+        "gap": 12,
+        "items": [
+          {
+            "titulo": "Tiroides",
+            "tono": "acento",
+            "lineas": [
+              "Hormonas tiroideas: fijan el ritmo del metabolismo. Urgencia:",
+              "tormenta tiroidea o coma mixedematoso."
+            ]
+          },
+          {
+            "titulo": "Suprarrenal",
+            "tono": "ambar",
+            "lineas": [
+              "Cortisol y catecolaminas: respuesta al estrés. Urgencia: crisis",
+              "suprarrenal, con hipotensión que responde mal solo a volumen."
+            ]
+          },
+          {
+            "titulo": "Páncreas endocrino",
+            "tono": "ok",
+            "lineas": [
+              "Insulina y glucagón: regulan la glucemia. Urgencia:",
+              "hipoglucemia y cetoacidosis diabética."
+            ]
+          }
+        ]
+      },
+      "notaPie": "En un paciente con alteración del estado de conciencia la glucemia capilar se mide siempre: la hipoglucemia imita un ictus, una intoxicación y una crisis, y es la única de las cuatro que se corrige en minutos."
+    },
+    {
+      "id": "dg-cascada-coagulacion",
+      "title": "Hemostasia: de la lesión al coágulo",
+      "subtitulo": "Las etapas que detienen un sangrado, y dónde actúa cada maniobra",
+      "ancho": 960,
+      "alto": 670,
+      "tags": [
+        "hemostasia",
+        "coagulación",
+        "fibrina",
+        "tríada letal"
+      ],
+      "descripcion": "Cuatro figuras en secuencia representan las etapas de la hemostasia: el eritrocito del vaso lesionado, la plaqueta que se adhiere y agrega formando el tapón primario, la red de fibrina que consolida el tapón, y el coágulo maduro con plaquetas, fibrina y eritrocitos atrapados. Debajo, cuatro fichas describen cada etapa: vasoconstricción inmediata, hemostasia primaria plaquetaria en minutos, hemostasia secundaria o cascada de la coagulación que genera fibrina, y fibrinólisis posterior que reabre el vaso. Una última ficha relaciona cada etapa con la maniobra prehospitalaria correspondiente y con la tríada letal del trauma.",
+      "equivalencia": "Sustituye la imagen de Drive «Cascada de la coagulación».",
+      "figurasFila": {
+        "x": 60,
+        "y": 100,
+        "w": 840,
+        "h": 140,
+        "gap": 22,
+        "items": [
+          {
+            "assetId": "cp-servier-eritrocito",
+            "etiqueta": "1 · Vaso lesionado"
+          },
+          {
+            "assetId": "cp-servier-plaqueta",
+            "etiqueta": "2 · Tapón plaquetario"
+          },
+          {
+            "assetId": "cp-servier-fibrina",
+            "etiqueta": "3 · Red de fibrina"
+          },
+          {
+            "assetId": "cp-servier-coagulo",
+            "etiqueta": "4 · Coágulo maduro"
+          }
+        ]
+      },
+      "rejilla": {
+        "x": 60,
+        "y": 282,
+        "w": 840,
+        "h": 180,
+        "columnas": 4,
+        "gap": 18,
+        "items": [
+          {
+            "titulo": "Vasoconstricción",
+            "tono": "alerta",
+            "lineas": [
+              "Segundos. El vaso reduce",
+              "su calibre y baja el flujo",
+              "hacia la lesión."
+            ]
+          },
+          {
+            "titulo": "Hemostasia primaria",
+            "tono": "ambar",
+            "lineas": [
+              "Minutos. Las plaquetas se",
+              "adhieren al colágeno",
+              "expuesto, se activan y se",
+              "agregan: tapón blando."
+            ]
+          },
+          {
+            "titulo": "Hemostasia secundaria",
+            "tono": "acento",
+            "lineas": [
+              "Es la cascada. Termina",
+              "convirtiendo fibrinógeno",
+              "en fibrina, que teje la",
+              "malla del coágulo firme."
+            ]
+          },
+          {
+            "titulo": "Fibrinólisis",
+            "tono": "ok",
+            "lineas": [
+              "Después. La plasmina",
+              "disuelve la fibrina y",
+              "reabre el vaso cuando",
+              "la pared ya cerró."
+            ]
+          }
+        ]
+      },
+      "cajaAncha": {
+        "x": 60,
+        "y": 484,
+        "w": 840,
+        "h": 122,
+        "tono": "violeta",
+        "titulo": "Dónde actúa lo que hacemos en la calle",
+        "lineas": [
+          "Presión directa y torniquete actúan en las etapas 1 y 2: bajan el flujo y dan tiempo al tapón.",
+          "El calor y la reposición cuidadosa protegen la etapa 3, porque la cascada son enzimas y las",
+          "enzimas no trabajan frías, diluidas ni en acidosis. Eso es la tríada letal: hipotermia,",
+          "acidosis y coagulopatía."
+        ]
+      },
+      "notaPie": "Ninguna etapa funciona sin las otras. Un paciente con plaquetas normales pero hipotérmico y acidótico sigue sangrando: mantener la temperatura es control de hemorragia, no confort."
+    },
+    {
+      "id": "dg-tipos-hemorragia",
+      "title": "Tipos de hemorragia",
+      "subtitulo": "De dónde sale la sangre y qué cambia en el control",
+      "ancho": 960,
+      "alto": 560,
+      "tags": [
+        "hemorragia",
+        "arterial",
+        "venosa",
+        "capilar"
+      ],
+      "descripcion": "Tres figuras comparan los vasos implicados: la pared arterial con su capa muscular gruesa, la vena con su pared delgada y su válvula, y el lecho capilar. Debajo, tres fichas describen el sangrado arterial, pulsátil, rojo brillante y a presión; el venoso, de flujo continuo y color más oscuro; y el capilar, en sábana y de escaso volumen. Una nota advierte que el aspecto del sangrado no mide la gravedad y que la hemorragia interna no se ve.",
+      "equivalencia": "Cobertura nueva: el tema de tipos de hemorragia no tenía figura propia.",
+      "figurasFila": {
+        "x": 60,
+        "y": 104,
+        "w": 840,
+        "h": 150,
+        "gap": 30,
+        "items": [
+          {
+            "assetId": "cp-servier-arteria",
+            "etiqueta": "Arteria · pared muscular gruesa"
+          },
+          {
+            "assetId": "cp-servier-vena",
+            "etiqueta": "Vena · pared delgada, con válvulas"
+          },
+          {
+            "assetId": "cp-servier-capilares",
+            "etiqueta": "Lecho capilar"
+          }
+        ]
+      },
+      "rejilla": {
+        "x": 60,
+        "y": 300,
+        "w": 840,
+        "h": 190,
+        "columnas": 3,
+        "gap": 20,
+        "items": [
+          {
+            "titulo": "Arterial",
+            "tono": "alerta",
+            "lineas": [
+              "Sale a chorros, sincronizado",
+              "con el pulso, rojo brillante",
+              "y a presión.",
+              "",
+              "Es la que agota el volumen",
+              "en menos tiempo."
+            ]
+          },
+          {
+            "titulo": "Venosa",
+            "tono": "acento",
+            "lineas": [
+              "Flujo continuo, sin pulso,",
+              "color más oscuro.",
+              "",
+              "Puede ser masiva si el vaso",
+              "es grande: no se subestima",
+              "por no salir a chorros."
+            ]
+          },
+          {
+            "titulo": "Capilar",
+            "tono": "ok",
+            "lineas": [
+              "En sábana, lento, por toda",
+              "la superficie de la herida.",
+              "",
+              "Volumen pequeño, pero",
+              "puerta de entrada para la",
+              "infección."
+            ]
+          }
+        ]
+      },
+      "notaPie": "El aspecto del sangrado orienta sobre el vaso, no sobre la gravedad: eso lo dicen el volumen perdido y la respuesta del paciente. Y lo más peligroso es la hemorragia que no se ve —tórax, abdomen, pelvis, retroperitoneo y muslo—."
+    },
+    {
+      "id": "dg-soluciones-cristaloides",
+      "title": "Osmolaridad de las soluciones",
+      "subtitulo": "Qué le hace cada tipo de solución a la célula que la recibe",
+      "ancho": 960,
+      "alto": 560,
+      "tags": [
+        "cristaloides",
+        "osmolaridad",
+        "isotónico",
+        "hipotónico",
+        "hipertónico"
+      ],
+      "descripcion": "Tres figuras del mismo eritrocito en tres medios distintos: en medio isotónico conserva su forma; en medio hipotónico ha captado agua y se ha vuelto esférico, próximo a la hemólisis; en medio hipertónico ha perdido agua y muestra la superficie festoneada de la crenación. Debajo, tres fichas explican el movimiento del agua en cada caso y por qué la solución de reposición prehospitalaria es isotónica.",
+      "equivalencia": "Cobertura nueva: el tema de soluciones cristaloides usaba un emoji de matraz.",
+      "figurasFila": {
+        "x": 60,
+        "y": 104,
+        "w": 840,
+        "h": 150,
+        "gap": 30,
+        "items": [
+          {
+            "assetId": "cp-servier-isotonico",
+            "etiqueta": "Isotónico"
+          },
+          {
+            "assetId": "cp-servier-hipotonico",
+            "etiqueta": "Hipotónico"
+          },
+          {
+            "assetId": "cp-servier-hipertonico",
+            "etiqueta": "Hipertónico"
+          }
+        ]
+      },
+      "rejilla": {
+        "x": 60,
+        "y": 300,
+        "w": 840,
+        "h": 190,
+        "columnas": 3,
+        "gap": 20,
+        "items": [
+          {
+            "titulo": "Isotónico",
+            "tono": "ok",
+            "lineas": [
+              "Misma osmolaridad que el",
+              "plasma: el agua no se mueve",
+              "en ningún sentido.",
+              "",
+              "Es lo que se busca cuando",
+              "hay que reponer volumen",
+              "en el espacio vascular."
+            ]
+          },
+          {
+            "titulo": "Hipotónico",
+            "tono": "acento",
+            "lineas": [
+              "Menor osmolaridad: el agua",
+              "entra en la célula.",
+              "",
+              "La célula se hincha y puede",
+              "romperse. En el cerebro,",
+              "eso significa edema."
+            ]
+          },
+          {
+            "titulo": "Hipertónico",
+            "tono": "ambar",
+            "lineas": [
+              "Mayor osmolaridad: el agua",
+              "sale de la célula.",
+              "",
+              "La célula se arruga. Se usa",
+              "en indicaciones concretas y",
+              "bajo protocolo."
+            ]
+          }
+        ]
+      },
+      "notaPie": "Esta figura explica el mecanismo osmótico, no una indicación. Qué solución se administra, a qué volumen y a qué ritmo depende del cuadro, del peso y del protocolo del servicio, no del tipo de solución en abstracto."
+    },
+    {
+      "id": "dg-receptores-adrenergicos",
+      "title": "Receptores adrenérgicos y sus efectos",
+      "subtitulo": "Dónde está cada receptor y qué pasa cuando se estimula",
+      "ancho": 960,
+      "alto": 620,
+      "tags": [
+        "receptores",
+        "adrenérgico",
+        "alfa",
+        "beta",
+        "catecolaminas"
+      ],
+      "descripcion": "A la izquierda, un receptor atravesando la membrana celular representa el punto de unión del fármaco, y unas fibras de músculo liso contraídas representan el efector. A la derecha, cuatro fichas describen los receptores: alfa 1, en el músculo liso vascular, cuya estimulación produce vasoconstricción y aumento de la resistencia; beta 1, predominante en el corazón, cuya estimulación aumenta frecuencia, contractilidad y velocidad de conducción; beta 2, en el músculo liso bronquial y vascular, cuya estimulación produce broncodilatación y vasodilatación; y dopaminérgicos, con efecto dependiente de la dosis.",
+      "equivalencia": "Sustituye la imagen de Drive «Receptores adrenérgicos y sus efectos».",
+      "figurasFila": {
+        "x": 60,
+        "y": 108,
+        "w": 330,
+        "h": 190,
+        "gap": 24,
+        "items": [
+          {
+            "assetId": "cp-servier-receptor-membrana",
+            "etiqueta": "Dónde se une el fármaco"
+          },
+          {
+            "assetId": "cp-servier-musculo-liso",
+            "etiqueta": "Qué se contrae o se relaja"
+          }
+        ]
+      },
+      "figuras": [
+        {
+          "assetId": "cp-servier-corazon",
+          "x": 150,
+          "y": 342,
+          "w": 150,
+          "h": 150,
+          "etiqueta": "El otro efector: el miocardio"
+        }
+      ],
+      "rejilla": {
+        "x": 420,
+        "y": 108,
+        "w": 480,
+        "h": 384,
+        "columnas": 1,
+        "gap": 12,
+        "items": [
+          {
+            "titulo": "α₁ · músculo liso vascular",
+            "tono": "alerta",
+            "lineas": [
+              "Vasoconstricción: sube la resistencia y con ella la presión.",
+              "También midriasis y contracción del esfínter vesical."
+            ]
+          },
+          {
+            "titulo": "β₁ · sobre todo corazón",
+            "tono": "violeta",
+            "lineas": [
+              "Sube la frecuencia (cronotropismo), la fuerza (inotropismo)",
+              "y la velocidad de conducción (dromotropismo). Sube también",
+              "el consumo de oxígeno del miocardio."
+            ]
+          },
+          {
+            "titulo": "β₂ · bronquio y vaso",
+            "tono": "acento",
+            "lineas": [
+              "Broncodilatación y vasodilatación. Es la diana del",
+              "salbutamol y parte del efecto de la adrenalina."
+            ]
+          },
+          {
+            "titulo": "Dopaminérgicos",
+            "tono": "ok",
+            "lineas": [
+              "Efecto dependiente de la dosis; a dosis crecientes se suman",
+              "los efectos β y después los α."
+            ]
+          }
+        ]
+      },
+      "notaPie": "Un fármaco no «hace una cosa»: ocupa unos receptores con más afinidad que otros y el resultado cambia con la dosis. Esta figura explica el mecanismo; ninguna dosis se aplica sin el formulario y el protocolo del servicio."
+    },
+    {
+      "id": "dg-secuencia-intubacion",
+      "title": "Secuencia rápida de intubación: etapas",
+      "subtitulo": "El orden del procedimiento. Los fármacos y las dosis dependen del protocolo del servicio",
+      "ancho": 960,
+      "alto": 785,
+      "tags": [
+        "intubación",
+        "secuencia rápida",
+        "vía aérea",
+        "procedimiento"
+      ],
+      "descripcion": "A la izquierda, tres figuras: la vía aérea superior en corte sagital, que es el trayecto sobre el que se trabaja; el árbol traqueobronquial, que es el destino del tubo; y la jeringa, que representa la administración de fármacos. A la derecha, siete etapas numeradas: preparación de material, aspiración y plan alternativo; preoxigenación; posición y optimización; inducción y bloqueo neuromuscular según protocolo; laringoscopia e inserción del tubo; confirmación por capnografía, auscultación y elevación torácica; y fijación con reevaluación continua.",
+      "equivalencia": "Sustituye la imagen de Drive «Secuencia Rápida de Intubación».",
+      "figurasFila": {
+        "x": 60,
+        "y": 108,
+        "w": 300,
+        "h": 180,
+        "gap": 14,
+        "items": [
+          {
+            "assetId": "cp-servier-via-aerea-superior",
+            "etiqueta": "El trayecto"
+          },
+          {
+            "assetId": "il-arbol-traqueobronquial",
+            "etiqueta": "El destino"
+          },
+          {
+            "assetId": "cp-servier-jeringa",
+            "etiqueta": "Los fármacos"
+          }
+        ]
+      },
+      "rejilla": {
+        "x": 390,
+        "y": 108,
+        "w": 510,
+        "h": 420,
+        "columnas": 1,
+        "gap": 8,
+        "items": [
+          {
+            "titulo": "1 · Preparación",
+            "tono": "acento",
+            "lineas": [
+              "Material comprobado, aspiración lista, monitor, acceso",
+              "vascular y PLAN ALTERNATIVO decidido antes de empezar."
+            ]
+          },
+          {
+            "titulo": "2 · Preoxigenación",
+            "tono": "acento",
+            "lineas": [
+              "Se llena el depósito de oxígeno antes de la apnea."
+            ]
+          },
+          {
+            "titulo": "3 · Posición y optimización",
+            "tono": "violeta",
+            "lineas": [
+              "Alineación, altura de trabajo y, si aplica, ayudante."
+            ]
+          },
+          {
+            "titulo": "4 · Inducción y bloqueo",
+            "tono": "ambar",
+            "lineas": [
+              "Sedación y relajación SEGÚN PROTOCOLO del servicio. Esta",
+              "figura no fija fármaco, dosis ni concentración."
+            ]
+          },
+          {
+            "titulo": "5 · Laringoscopia e inserción",
+            "tono": "alerta",
+            "lineas": [
+              "Visión de la glotis y paso del tubo bajo visión directa."
+            ]
+          },
+          {
+            "titulo": "6 · Confirmación",
+            "tono": "ok",
+            "lineas": [
+              "Capnografía, auscultación y elevación torácica.",
+              "La confirmación no es opcional."
+            ]
+          },
+          {
+            "titulo": "7 · Fijación y reevaluación",
+            "tono": "ok",
+            "lineas": [
+              "Fijar, registrar profundidad y reevaluar tras cada",
+              "movilización del paciente."
+            ]
+          }
+        ]
+      },
+      "notaPie": "Deuda declarada: esta figura enseña la SECUENCIA, no la farmacología. Las dosis dependen del formulario, de las presentaciones, del peso, del alcance profesional y de la dirección médica; el tema sigue parcialmente bloqueado."
+    },
+    {
+      "id": "dg-cuadrantes-abdominales",
+      "title": "Cuadrantes abdominales",
+      "subtitulo": "Qué hay debajo de cada cuadrante, y por qué eso orienta el dolor",
+      "ancho": 960,
+      "alto": 620,
+      "tags": [
+        "abdomen",
+        "cuadrantes",
+        "exploración",
+        "topografía"
+      ],
+      "descripcion": "Un esquema divide el abdomen en cuatro cuadrantes con dos líneas que se cruzan en el ombligo. A su lado, la figura del tracto digestivo completo. Cuatro fichas enumeran las estructuras principales de cada cuadrante: en el superior derecho, hígado, vesícula y ángulo hepático del colon; en el superior izquierdo, estómago, bazo, cola del páncreas y ángulo esplénico; en el inferior derecho, ciego, apéndice, uréter y anexo derecho; en el inferior izquierdo, sigmoides, uréter y anexo izquierdo.",
+      "equivalencia": "Cobertura nueva: el tema de cuadrantes y exploración física usaba un emoji de lupa.",
+      "trazos": [
+        {
+          "d": "M100 116 H340 V356 H100 Z",
+          "relleno": "panel",
+          "tono": "borde",
+          "grosor": 1.2
+        },
+        {
+          "d": "M220 116 V356",
+          "tono": "borde",
+          "grosor": 1.4
+        },
+        {
+          "d": "M100 236 H340",
+          "tono": "borde",
+          "grosor": 1.4
+        },
+        {
+          "d": "M220 236 m-5 0 a5 5 0 1 0 10 0 a5 5 0 1 0 -10 0",
+          "relleno": "tinta",
+          "tono": "tinta",
+          "grosor": 1
+        }
+      ],
+      "textos": [
+        {
+          "x": 160,
+          "y": 178,
+          "texto": "CSD",
+          "tam": 17,
+          "peso": "700",
+          "tono": "alerta",
+          "ancla": "middle"
+        },
+        {
+          "x": 280,
+          "y": 178,
+          "texto": "CSI",
+          "tam": 17,
+          "peso": "700",
+          "tono": "acento",
+          "ancla": "middle"
+        },
+        {
+          "x": 160,
+          "y": 302,
+          "texto": "CID",
+          "tam": 17,
+          "peso": "700",
+          "tono": "ambar",
+          "ancla": "middle"
+        },
+        {
+          "x": 280,
+          "y": 302,
+          "texto": "CII",
+          "tam": 17,
+          "peso": "700",
+          "tono": "violeta",
+          "ancla": "middle"
+        },
+        {
+          "x": 220,
+          "y": 380,
+          "texto": "Ombligo como centro · derecha del PACIENTE a la izquierda del dibujo",
+          "tam": 11.5,
+          "tono": "suave",
+          "ancla": "middle"
+        }
+      ],
+      "figuras": [
+        {
+          "assetId": "il-tracto-digestivo",
+          "x": 380,
+          "y": 110,
+          "w": 190,
+          "h": 250,
+          "etiqueta": "Lo que hay debajo"
+        }
+      ],
+      "rejilla": {
+        "x": 600,
+        "y": 110,
+        "w": 300,
+        "h": 250,
+        "columnas": 1,
+        "gap": 10,
+        "items": [
+          {
+            "titulo": "CSD · superior derecho",
+            "tono": "alerta",
+            "lineas": [
+              "Hígado, vesícula, ángulo",
+              "hepático del colon."
+            ]
+          },
+          {
+            "titulo": "CSI · superior izquierdo",
+            "tono": "acento",
+            "lineas": [
+              "Estómago, bazo, cola del",
+              "páncreas, ángulo esplénico."
+            ]
+          },
+          {
+            "titulo": "CID · inferior derecho",
+            "tono": "ambar",
+            "lineas": [
+              "Ciego, apéndice, uréter,",
+              "anexo derecho."
+            ]
+          },
+          {
+            "titulo": "CII · inferior izquierdo",
+            "tono": "violeta",
+            "lineas": [
+              "Sigmoides, uréter, anexo",
+              "izquierdo."
+            ]
+          }
+        ]
+      },
+      "notaPie": "Los cuadrantes orientan, no diagnostican: el dolor visceral se refiere mal y muchas veces empieza difuso. Se explora en el orden de siempre —inspección, auscultación, palpación— y se palpa el cuadrante doloroso al final."
+    },
+    {
+      "id": "dg-picaduras-mordeduras",
+      "title": "Picaduras y mordeduras",
+      "subtitulo": "Los agentes que el plan enumera, y qué cambia en cada uno",
+      "ancho": 960,
+      "alto": 560,
+      "tags": [
+        "picadura",
+        "mordedura",
+        "anafilaxia",
+        "veneno"
+      ],
+      "descripcion": "Tres figuras muestran los agentes: la abeja, la araña doméstica y una serpiente. Debajo, tres fichas describen qué caracteriza a cada cuadro: en la picadura de himenóptero lo que mata es la reacción alérgica, no el veneno; en la mordedura de araña el cuadro depende del género y puede ser local o sistémico; y en la mordedura de serpiente lo determinante es la identificación del animal y el tiempo hasta el antiveneno.",
+      "equivalencia": "Cobertura nueva: el tema usaba un emoji de alacrán, y ninguno de los dos bancos tiene un alacrán.",
+      "figurasFila": {
+        "x": 60,
+        "y": 104,
+        "w": 840,
+        "h": 140,
+        "gap": 30,
+        "items": [
+          {
+            "assetId": "cp-dbcls-abeja",
+            "etiqueta": "Himenóptero (abeja)"
+          },
+          {
+            "assetId": "cp-dbcls-arana",
+            "etiqueta": "Araña"
+          },
+          {
+            "assetId": "cp-dbcls-serpiente",
+            "etiqueta": "Serpiente"
+          }
+        ]
+      },
+      "rejilla": {
+        "x": 60,
+        "y": 290,
+        "w": 840,
+        "h": 190,
+        "columnas": 3,
+        "gap": 20,
+        "items": [
+          {
+            "titulo": "Himenópteros",
+            "tono": "ambar",
+            "lineas": [
+              "Abeja, avispa.",
+              "",
+              "Lo que amenaza la vida es la",
+              "REACCIÓN ALÉRGICA, no la",
+              "cantidad de veneno: puede",
+              "aparecer en minutos."
+            ]
+          },
+          {
+            "titulo": "Arañas",
+            "tono": "violeta",
+            "lineas": [
+              "El cuadro depende del",
+              "género: puede quedarse",
+              "local o hacerse sistémico.",
+              "",
+              "Se registra la hora y, si es",
+              "posible, el animal."
+            ]
+          },
+          {
+            "titulo": "Serpientes",
+            "tono": "alerta",
+            "lineas": [
+              "Lo determinante es la",
+              "identificación y el tiempo",
+              "hasta el antiveneno.",
+              "",
+              "No se corta, no se succiona",
+              "y no se aplica torniquete."
+            ]
+          }
+        ]
+      },
+      "notaPie": "Deuda declarada: el plan nombra la picadura de alacrán y ninguno de los dos bancos autorizados tiene un alacrán, así que esa figura queda pendiente. El cuadro y su manejo se explican en el texto de la lección."
+    }
+  ]
+}

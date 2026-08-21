@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { stats } from '../data/navIndice.js'
 import { PLANES, ETIQUETA_PLAN, DESCRIPCION_PLAN } from '../lib/capacidades.js'
 import Icon from '../components/Icon.jsx'
+import MedicalIcon from '../components/MedicalIcon.jsx'
 import Reveal from '../components/Reveal.jsx'
 import Contenido from '../components/Contenido.jsx'
 import IconoEstrella from '../components/marca/IconoEstrella.jsx'
@@ -22,7 +23,13 @@ import IconoEstrella from '../components/marca/IconoEstrella.jsx'
 // Tema real que se abre como muestra. Cardiovascular es el que mejor enseña la
 // promesa del producto —comprender el porqué, no memorizar— a una audiencia de
 // urgencias. Si algún día se renombra, el bloque cae con elegancia (ver DemoTema).
-const TEMA_DEMO = 'cardiovascular-profundo'
+// Tema de muestra de la portada. Apuntaba a `cardiovascular-profundo`, un id del
+// temario ANTERIOR: desapareció al adoptar el plan oficial de 287 temas y desde
+// entonces `getTema` devolvía undefined, el estado pasaba a 'error' y la sección
+// entera no se pintaba. Un visitante sin sesión no veía ninguna muestra del
+// contenido y nada fallaba de forma visible. Es el mismo asunto —anatomía y
+// fisiología cardiovascular— en su id vigente.
+const TEMA_DEMO = 'm2-afi-cardiovascular'
 // Secciones que se muestran antes de pedir cuenta. Suficiente para juzgar la
 // profundidad del contenido; no tanto como para regalar el temario.
 const SECCIONES_MUESTRA = 2
@@ -204,8 +211,8 @@ function DemoTema() {
           {estado === 'espera' ? (
             <div className="lp-demo-espera">
               <p>
-                Anatomía y Fisiología Cardiovascular — un tema completo del Módulo 1, con sus
-                secciones, diagramas y conceptos clave.
+                Sistema cardiovascular — un tema completo del Módulo 2, con sus secciones,
+                diagramas y conceptos clave.
               </p>
               <button type="button" className="btn btn--pildora btn--carbon" onClick={cargar}>
                 Ver el tema de muestra <Icon name="flecha" size={16} />
@@ -223,7 +230,7 @@ function DemoTema() {
           ) : (
             <>
               <header className="lp-demo-header" style={{ '--modulo-color': tema.moduloColor }}>
-                <span className="lp-demo-ico">{tema.icono}</span>
+                <span className="lp-demo-ico"><MedicalIcon id={tema.icono} size={30} /></span>
                 <div>
                   <span className="lp-demo-num">Modulo {tema.moduloNumero} · Tema {tema.numero}</span>
                   <h3>{tema.titulo}</h3>

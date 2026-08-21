@@ -39,7 +39,7 @@ export default function BajaAcademia({ academia, academias, usuarios, ocupado, p
             Dar de baja «{academia.nombre || academia.id}»
             <small className="ba-paso">Paso {paso} de 2</small>
           </h2>
-          <button className="rp-cerrar" onClick={onCerrar} disabled={ocupado} aria-label="Cerrar">✕</button>
+          <button className="rp-cerrar" onClick={onCerrar} disabled={ocupado} aria-label="Cerrar"><Icon name="cerrar" size={16} /></button>
         </div>
 
         {paso === 1 && (
@@ -151,7 +151,7 @@ export default function BajaAcademia({ academia, academias, usuarios, ocupado, p
                 {ocupado ? 'Trabajando…' : ACCIONES_ACADEMIA[accion].etiqueta}
               </button>
               <button className="btn btn--suave" onClick={() => setPaso(1)} disabled={ocupado}>
-                ← Volver
+                <Icon name="chevronIzq" size={15} /> Volver
               </button>
               <button className="btn btn--fantasma" onClick={onCerrar} disabled={ocupado}>Cancelar</button>
             </div>

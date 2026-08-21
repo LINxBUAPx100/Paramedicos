@@ -18,20 +18,26 @@ function Bloque({ bloque }) {
     case 'p':
       return <p className="c-parrafo">{T(bloque.texto)}</p>
 
-    // Antes era un SVG dibujado por la app; ahora es un hueco para imagen real
-    // (pega el enlace de Drive en `src`). El título queda como pie y permite buscar referencia.
-    case 'diagrama':
+    // Diagrama del temario. La forma preferente es `assetId`: con él la figura
+    // llega con su texto alternativo escrito a mano, su descripción ampliada y
+    // su panel de créditos, que es lo que exigen las licencias CC BY del
+    // material. `clave` sigue resolviendo contra el Atlas (donde la clave ES el
+    // assetId) y `src` sigue admitiendo una imagen suelta que no esté catalogada.
+    case 'diagrama': {
+      const idActivo = bloque.assetId || (ATLAS_SRC[bloque.clave] ? bloque.clave : '')
       return (
         <div id={bloque.clave ? `diag-${bloque.clave}` : undefined} className="c-diagrama">
           <Imagen
-            src={bloque.src || ATLAS_SRC[bloque.clave]}
+            assetId={idActivo || undefined}
+            src={idActivo ? undefined : bloque.src}
             alt={bloque.titulo}
             caption={bloque.titulo}
-            busqueda={bloque.titulo}
+            busqueda={idActivo ? undefined : bloque.titulo}
             completa
           />
         </div>
       )
+    }
 
     case 'h3':
       return <h3 className="c-subtitulo">{bloque.texto}</h3>
@@ -112,7 +118,8 @@ function Bloque({ bloque }) {
     case 'imagen':
       return (
         <Imagen
-          src={bloque.src}
+          assetId={bloque.assetId || undefined}
+          src={bloque.assetId ? undefined : bloque.src}
           alt={bloque.alt}
           caption={bloque.caption}
           fuente={bloque.fuente}

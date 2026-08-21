@@ -125,7 +125,7 @@ export default {
   //  Exploración neurológica dirigida
   // ============================================================
   'm4-neu-exploracion': {
-    icono: '🧠',
+    icono: 'cp-servier-cerebro',
     duracion: '20 min',
     resumen: 'Un examen neurológico breve, reproducible y comparable, pensado para detectar un deterioro '
       + 'y transmitirlo, no para localizar una lesión.',
@@ -328,7 +328,7 @@ export default {
   //  Cefalea y migraña
   // ============================================================
   'm4-neu-cefalea-migrana': {
-    icono: '🤕',
+    icono: 'cp-servier-senos-paranasales',
     duracion: '18 min',
     resumen: 'Cómo se distingue una cefalea que probablemente sea primaria de las banderas rojas que '
       + 'obligan a pensar en una causa secundaria grave.',
@@ -527,7 +527,7 @@ export default {
   //  Accidente cerebrovascular
   // ============================================================
   'm4-neu-evc': {
-    icono: '⏱️',
+    icono: 'cp-smart-evc-isquemico',
     duracion: '22 min',
     resumen: 'Cómo se reconoce un ictus, por qué no puede saberse en la calle si es isquémico o '
       + 'hemorrágico y qué convierte al equipo prehospitalario en parte del tratamiento.',
@@ -745,7 +745,7 @@ export default {
   //  Crisis convulsivas y estado epiléptico
   // ============================================================
   'm4-neu-crisis-convulsivas': {
-    icono: '⚡',
+    icono: 'cp-servier-cerebro',
     duracion: '20 min',
     resumen: 'Cómo se protege a una persona durante una convulsión, cuándo una crisis deja de ser '
       + 'autolimitada y qué causas reversibles conviene buscar siempre.',
@@ -952,7 +952,7 @@ export default {
   //  Síncope
   // ============================================================
   'm4-neu-sincope': {
-    icono: '💫',
+    icono: 'cp-servier-cerebro',
     duracion: '18 min',
     resumen: 'Qué es exactamente un síncope, cómo se diferencia de otras pérdidas de conciencia y qué '
       + 'datos separan al paciente que puede esperar del que no.',

@@ -238,7 +238,7 @@ export default function VisibilidadGrupos({ academiaId, academiaNombre = '', gru
           {grupo && (
             <p className="tv-espacios-estado" role="status">
               {aplicado
-                ? '✓ Aplicado a todos los grupos.'
+                ? 'Aplicado a todos los grupos.'
                 : temasOcultosTotal === 0
                   ? 'Este grupo ve todo el contenido.'
                   : `${temasOcultosTotal} de ${TOTAL_TEMAS} temas ocultos para este grupo.`}

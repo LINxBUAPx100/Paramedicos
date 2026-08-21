@@ -102,7 +102,7 @@ const FU = [
 
 export default {
   'm6-tp-introduccion': {
-    icono: '🚸',
+    icono: 'ic-nino',
     duracion: '14 min',
     resumen: 'El trauma es la principal causa de muerte y de discapacidad en la infancia, y el niño '
       + 'traumatizado se comporta de forma distinta al adulto por tres razones: recibe la energía '
@@ -231,7 +231,7 @@ export default {
   },
 
   'm6-tp-sistemas-corporales': {
-    icono: '🧩',
+    icono: 'cp-smart-esqueleto-nino',
     duracion: '15 min',
     resumen: 'Este tema recorre, sistema por sistema, qué cambia en el niño respecto al adulto ya '
       + 'estudiado en el Módulo 5. La cabeza domina el pronóstico; el cuello se lesiona en niveles más '
@@ -356,7 +356,7 @@ export default {
   },
 
   'm6-tp-inmovilizacion': {
-    icono: '🛏️',
+    icono: 'ic-collarin',
     duracion: '14 min',
     resumen: 'La restricción del movimiento espinal en el niño sigue los mismos principios que en el '
       + 'adulto, con tres diferencias que cambian la técnica: el occipucio prominente obliga a '
@@ -482,7 +482,7 @@ export default {
   },
 
   'm6-tp-manejo-lesiones': {
-    icono: '🧰',
+    icono: 'ic-fractura',
     duracion: '15 min',
     resumen: 'El manejo del niño traumatizado sigue la secuencia XABCDE, pero cada letra tiene un '
       + 'matiz pediátrico que decide el resultado: la vía aérea se abre en posición neutra, la '
@@ -623,7 +623,7 @@ export default {
   },
 
   'm6-tp-osteolisis': {
-    icono: '🦴',
+    icono: 'ic-hueso',
     duracion: '14 min',
     resumen: 'Cuando un niño grave necesita acceso vascular y las venas no se consiguen, la vía '
       + 'intraósea permite llegar a la circulación a través de la cavidad medular del hueso. Esta '

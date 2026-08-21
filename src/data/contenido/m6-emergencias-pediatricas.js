@@ -101,7 +101,7 @@ const FU = [
 
 export default {
   'm6-emp-ivr': {
-    icono: '🤧',
+    icono: 'cp-servier-cavidad-nasal',
     duracion: '15 min',
     resumen: 'Las infecciones respiratorias son el motivo más frecuente de consulta urgente en la '
       + 'infancia y la causa habitual del deterioro que acaba en paro. Lo que importa en la escena no '
@@ -239,7 +239,7 @@ export default {
   },
 
   'm6-emp-sufrimiento-fetal': {
-    icono: '🤰',
+    icono: 'cp-smart-placenta',
     duracion: '12 min',
     resumen: 'Este es un tema obstétrico ubicado en la unidad de emergencias pediátricas, y la propia '
       + 'ubicación está pendiente de revisión por la academia. El desarrollo clínico del sufrimiento '
@@ -361,7 +361,7 @@ export default {
   },
 
   'm6-emp-patologia-respiratoria-rn': {
-    icono: '🫁',
+    icono: 'ic-recien-nacido',
     duracion: '13 min',
     resumen: 'El recién nacido con dificultad respiratoria plantea un problema distinto al del lactante '
       + 'mayor: sus signos son pocos e inespecíficos, y las causas van desde la transición pulmonar '
@@ -500,7 +500,7 @@ export default {
   },
 
   'm6-emp-rn-sano-asfixia': {
-    icono: '🍼',
+    icono: 'ic-recien-nacido',
     duracion: '15 min',
     resumen: 'Tras un parto extrahospitalario, el equipo debe decidir en segundos si el recién nacido '
       + 'necesita solo cuidados de rutina o si requiere asistencia. Esa decisión se apoya en muy pocos '
@@ -656,7 +656,7 @@ export default {
   },
 
   'm6-emp-asma': {
-    icono: '💨',
+    icono: 'cp-servier-bronquio-inflamado',
     duracion: '14 min',
     resumen: 'La crisis asmática infantil se reconoce por el esfuerzo respiratorio y por la capacidad '
       + 'del niño de hablar, comer y moverse, más que por el ruido que hace. La lección se centra en '
@@ -783,7 +783,7 @@ export default {
   },
 
   'm6-emp-deshidratacion': {
-    icono: '💧',
+    icono: 'cp-servier-agua',
     duracion: '14 min',
     resumen: 'La deshidratación es una de las causas más frecuentes de deterioro evitable en la '
       + 'infancia, y el niño llega antes a ella que el adulto: tiene más agua corporal en proporción, '
@@ -922,7 +922,7 @@ export default {
   },
 
   'm6-emp-apendicitis': {
-    icono: '🩺',
+    icono: 'cp-servier-colon',
     duracion: '13 min',
     resumen: 'La apendicitis del niño se comporta peor que la del adulto por dos motivos: se presenta '
       + 'de forma menos característica cuanto más pequeño es el paciente, y su apéndice se perfora '
@@ -1061,7 +1061,7 @@ export default {
   },
 
   'm6-emp-oclusion-intestinal': {
-    icono: '🌀',
+    icono: 'cp-servier-intestino-delgado',
     duracion: '14 min',
     resumen: 'La oclusión intestinal del niño tiene causas propias de la edad que no existen en el '
       + 'adulto, y dos de ellas son tiempo-dependientes porque comprometen la irrigación del '
@@ -1191,7 +1191,7 @@ export default {
   },
 
   'm6-emp-sx-febril': {
-    icono: '🌡️',
+    icono: 'cp-cc0-termometro',
     duracion: '15 min',
     resumen: 'La fiebre es el motivo de consulta más frecuente en pediatría y, casi siempre, la '
       + 'manifestación de una infección banal. Lo que importa en la escena no es la cifra del '
@@ -1337,7 +1337,7 @@ export default {
   },
 
   'm6-emp-meningitis': {
-    icono: '🧠',
+    icono: 'cp-servier-cerebro',
     duracion: '14 min',
     resumen: 'La meningitis es poco frecuente y muy grave, y su reconocimiento precoz cambia el '
       + 'desenlace. El problema es que en el lactante no se parece a lo que se espera: no hay rigidez '
@@ -1466,7 +1466,7 @@ export default {
   },
 
   'm6-emp-cardiopatias': {
-    icono: '❤️',
+    icono: 'cp-servier-corazon-interior',
     duracion: '15 min',
     resumen: 'Las cardiopatías congénitas son alteraciones estructurales del corazón presentes desde el '
       + 'nacimiento. En el ámbito prehospitalario no se identifican ni se clasifican: lo que se hace '

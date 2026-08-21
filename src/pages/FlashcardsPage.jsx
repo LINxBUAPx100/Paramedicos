@@ -137,20 +137,20 @@ function Flashcards({ contenido }) {
 
       <div className="flashcards-nav">
         <button className="btn btn--suave" onClick={() => avanzar(-1)}>
-          ← Anterior
+          <Icon name="chevronIzq" size={15} /> Anterior
         </button>
         <button className="btn btn--primario" onClick={() => setVolteada((v) => !v)}>
           {volteada ? 'Ocultar' : 'Voltear'}
         </button>
         <button className="btn btn--suave" onClick={() => avanzar(1)}>
-          Siguiente →
+          Siguiente <Icon name="chevronDer" size={15} />
         </button>
       </div>
 
       {tema && (
         <div className="quiz-page-pie">
           <Link to={`/tema/${tema.id}`} className="link-discreto">
-            ← Volver al tema
+            <Icon name="chevronIzq" size={15} /> Volver al tema
           </Link>
         </div>
       )}

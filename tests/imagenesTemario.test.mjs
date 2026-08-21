@@ -18,6 +18,7 @@ import path from 'node:path'
 import { ATLAS_TEMAS, IMAGENES_POR_TEMA, imagenesDeTema } from '../src/data/imagenes.js'
 import { todosLosTemas } from '../src/data/index.js'
 import { esImagenPropia } from '../src/lib/img.js'
+import { galeriaDeLogros } from '../src/lib/galeriaLogros.js'
 
 const IDS = new Set(todosLosTemas.map((t) => t.id))
 const PUBLICO = new URL('../public/', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1')
@@ -151,4 +152,97 @@ test('el juego responsivo se arma con el formato que espera el navegador', () =>
   // navegador no entiende srcset, tampoco debería tragarse la imagen mayor.
   assert.match(j.src, /home\/logros-800\.webp$/)
   assert.match(juegoResponsivo('x', { anchos: [480] }).src, /x-480\.webp$/)
+})
+
+
+// ============================================================
+//  El Atlas ya no vive en Google Drive
+// ------------------------------------------------------------
+//  Las trece imágenes médicas que se servían desde Drive se sustituyeron por
+//  archivos del repositorio, importados de BioIcons y Servier Medical Art y
+//  catalogados con su autor y su licencia. Estas pruebas impiden la regresión,
+//  que es concreta y fácil de cometer: volver a pegar un enlace.
+//
+//  Drive fallaba por tres motivos, no por uno: no garantiza el hotlink (cambia
+//  de dominio y limita el tráfico automatizado), obliga a compartir cada
+//  archivo a mano, y un enlace de Drive no dice quién hizo el dibujo ni bajo
+//  qué licencia se puede publicar, así que impedía atribuir.
+// ============================================================
+import { ACTIVOS_MEDICOS, ACTIVOS_POR_TEMA } from '../src/data/activosMedicos.js'
+
+const CATALOGO = new Map(ACTIVOS_MEDICOS.map((a) => [a.id, a]))
+
+test('ninguna imagen del Atlas apunta a Drive ni a un dominio externo', () => {
+  const fuera = ATLAS_TEMAS
+    .filter((t) => /drive\.google|googleusercontent|wsrv\.nl|^https?:/i.test(String(t.src || '')))
+    .map((t) => `${t.clave} → ${t.src}`)
+  assert.deepEqual(fuera, [], `Imágenes servidas desde fuera:\n  ${fuera.join('\n  ')}`)
+
+  // Y tampoco por el mapa de referencia de cada tema.
+  const enMapa = Object.entries(IMAGENES_POR_TEMA)
+    .flatMap(([id, lista]) => lista.filter((v) => /^https?:|drive\.google/i.test(String(v))).map((v) => `${id} → ${v}`))
+  assert.deepEqual(enMapa, [], `Referencias externas en el mapa por tema: ${enMapa.join(', ')}`)
+})
+
+test('cada entrada del Atlas declara un assetId que existe en el catálogo', () => {
+  const rotas = ATLAS_TEMAS
+    .filter((t) => !t.assetId || !CATALOGO.has(t.assetId))
+    .map((t) => `${t.clave} → ${t.assetId || '(sin assetId)'}`)
+  assert.deepEqual(rotas, [], `Entradas sin activo:\n  ${rotas.join('\n  ')}`)
+
+  // La clave del Atlas ES el assetId: es lo que permite que un bloque
+  // `diagrama` siga refiriéndose a una figura por su clave.
+  const desalineadas = ATLAS_TEMAS.filter((t) => t.clave !== t.assetId).map((t) => t.clave)
+  assert.deepEqual(desalineadas, [], `Clave y assetId distintos: ${desalineadas.join(', ')}`)
+})
+
+test('todos los temas del plan tienen imagen de referencia', () => {
+  // Es el requisito que motivó la ampliación del catálogo: 21 imágenes para
+  // 287 temas dejaban a la mayoría de las lecciones sin ningún apoyo visual.
+  const sin = [...IDS].filter((id) => imagenesDeTema(id).length === 0)
+  assert.deepEqual(sin, [], `Temas sin imagen de referencia (${sin.length}): ${sin.slice(0, 20).join(', ')}`)
+})
+
+test('la galería de un tema no repite la misma imagen dos veces', () => {
+  const mal = []
+  for (const id of IDS) {
+    const claves = imagenesDeTema(id).map((i) => i.clave)
+    if (new Set(claves).size !== claves.length) mal.push(id)
+  }
+  assert.deepEqual(mal, [], `Temas con imágenes duplicadas: ${mal.join(', ')}`)
+})
+
+test('los ocho SVG generados que se sustituyeron quedan archivados y sin uso', () => {
+  // CLAUDE.md §4 prohíbe borrar material: los diagramas anteriores se conservan
+  // en public/imagenes/archivo/ por si hubiera que revertir. Lo que no puede
+  // pasar es que sigan sirviéndose como si nada hubiera cambiado.
+  const ARCHIVADOS = [
+    'imagenes/archivo/m2/bomba-sodio-potasio.svg',
+    'imagenes/archivo/m2/circulacion-mayor-menor.svg',
+    'imagenes/archivo/m2/equilibrio-acido-base.svg',
+    'imagenes/archivo/m2/gasto-cardiaco.svg',
+    'imagenes/archivo/m2/sistema-conduccion.svg',
+    'imagenes/archivo/m3/curva-oxihemoglobina.svg',
+    'imagenes/archivo/m3/ecg-onda-normal.svg',
+    'imagenes/archivo/m5/clasificacion-shock.svg',
+  ]
+  const faltan = ARCHIVADOS.filter((r) => !fs.existsSync(path.join(PUBLICO, r)))
+  assert.deepEqual(faltan, [], `Archivos de reversión que faltan:\n  ${faltan.join('\n  ')}`)
+
+  const enUso = ATLAS_TEMAS.filter((t) => String(t.src).includes('/imagenes/archivo/')).map((t) => t.clave)
+  assert.deepEqual(enUso, [], `El Atlas sigue usando material archivado: ${enUso.join(', ')}`)
+})
+
+test('la galería de Logros se arma y cada tarjeta lleva a un tema real', () => {
+  // Lo que protege: que el Atlas siga siendo utilizable después de pasar de una
+  // lista escrita a mano a una derivada del catálogo. Si la derivación se
+  // rompiera, `galeriaDeLogros` devolvería una lista vacía y Logros saldría en
+  // blanco sin que nada fallara.
+  const galeria = galeriaDeLogros(todosLosTemas, ATLAS_TEMAS)
+  assert.ok(galeria.length >= 150, `la galería solo trae ${galeria.length} tarjetas`)
+  const rotas = galeria.filter((g) => g.tema && !IDS.has(g.tema)).map((g) => `${g.clave} → ${g.tema}`)
+  assert.deepEqual(rotas, [], `Tarjetas que llevan a un tema inexistente: ${rotas.join(', ')}`)
+  // Y sin duplicados: la misma imagen dos veces en la galería es ruido.
+  const src = galeria.map((g) => g.src)
+  assert.equal(new Set(src).size, src.length, 'la galería repite imágenes')
 })

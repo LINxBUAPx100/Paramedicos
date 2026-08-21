@@ -48,7 +48,7 @@ export default {
   //  Dispositivos de oxigenoterapia
   // ============================================================
   'm3-va-dispositivos-o2': {
-    icono: '💨',
+    icono: 'cp-servier-ventilador',
     duracion: '16 min',
     resumen: 'Cómo se administra oxígeno y cómo se ventila cuando el paciente no lo hace por sí mismo: '
       + 'de las puntas nasales a la bolsa-válvula-mascarilla, y la diferencia que separa a unas de otra.',
@@ -195,7 +195,7 @@ export default {
   //  Tipos de tanques de oxígeno
   // ============================================================
   'm3-va-tanques-o2': {
-    icono: '🛢️',
+    icono: 'cp-cc0-gas',
     duracion: '14 min',
     resumen: 'El oxígeno como el recurso agotable que es: qué cilindros existen, cómo se manejan con '
       + 'seguridad y cómo se estima cuánto queda antes de quedarse sin él a mitad de un traslado.',
@@ -361,7 +361,7 @@ export default {
   //  Intubación de secuencia rápida o asistida farmacológicamente
   // ============================================================
   'm3-va-isr': {
-    icono: '💉',
+    icono: 'dg-secuencia-intubacion',
     duracion: '18 min',
     resumen: 'Qué es la secuencia rápida, por qué su seguridad depende de la preparación y no de los '
       + 'fármacos, y por qué su protocolo farmacológico concreto solo puede darlo la dirección médica.',

@@ -29,7 +29,7 @@ const FUENTE = {
 
 export default {
   'm5-tcc-lesiones-difusas': {
-    icono: '🧠',
+    icono: 'cp-servier-cerebro',
     duracion: '12 min',
     resumen: 'Lesiones difusas: el daño no está en un punto sino repartido por todo el encéfalo. Desde la concusión hasta la lesión axonal difusa.',
     objetivos: [
@@ -115,7 +115,7 @@ export default {
   },
 
   'm5-tcc-signos-sintomas': {
-    icono: '👁️',
+    icono: 'cp-servier-ojo',
     duracion: '14 min',
     resumen: 'Signos y síntomas del traumatismo craneoencefálico: qué se vigila, en qué orden y cuáles anuncian herniación.',
     objetivos: [
@@ -247,7 +247,7 @@ export default {
   },
 
   'm5-tcc-tratamiento': {
-    icono: '🚑',
+    icono: 'ic-ambulancia',
     duracion: '15 min',
     resumen: 'Tratamiento prehospitalario del TCE: la lesión primaria ya ocurrió. Todo lo que se hace aquí es contra la secundaria.',
     objetivos: [
@@ -363,7 +363,7 @@ export default {
   },
 
   'm5-tcc-medular-posterior': {
-    icono: '⬇️',
+    icono: 'cp-smart-medula-espinal',
     duracion: '10 min',
     resumen: 'Síndrome medular posterior: se pierde la posición y la vibración, se conserva la fuerza. Raro y fácil de pasar por alto.',
     objetivos: [
@@ -439,7 +439,7 @@ export default {
   },
 
   'm5-tcc-brown-sequard': {
-    icono: '↔️',
+    icono: 'cp-smart-medula-espinal',
     duracion: '11 min',
     resumen: 'Síndrome de Brown-Séquard: media médula lesionada. Parálisis de un lado y pérdida de dolor del otro — el cuadro cruzado.',
     objetivos: [
@@ -526,7 +526,7 @@ export default {
   },
 
   'm5-tcc-exploracion-fisica': {
-    icono: '🖐️',
+    icono: 'cp-servier-mano',
     duracion: '13 min',
     resumen: 'Exploración física de la columna: cómo se valora sin mover al paciente y qué se documenta.',
     objetivos: [
@@ -614,7 +614,7 @@ export default {
   },
 
   'm5-tcc-signos-tratamiento-columna': {
-    icono: '🦴',
+    icono: 'ic-collarin',
     duracion: '12 min',
     resumen: 'Signos y tratamiento prehospitalario del traumatismo espinal: qué se sospecha por mecanismo y qué se hace con ello.',
     objetivos: [
@@ -701,7 +701,7 @@ export default {
   },
 
   'm5-tcc-inmovilizacion-espinal': {
-    icono: '🛏️',
+    icono: 'ic-collarin',
     duracion: '16 min',
     resumen: 'Restricción del movimiento espinal: por qué la tabla rígida dejó de ser el estándar de transporte y cómo se decide hoy.',
     objetivos: [

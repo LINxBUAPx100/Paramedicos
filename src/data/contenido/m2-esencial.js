@@ -74,7 +74,7 @@ export default {
   //  Célula: función y organelos
   // ============================================================
   'm2-afe-celula': {
-    icono: '🔬',
+    icono: 'cp-servier-celula-vacia',
     duracion: '20 min',
     resumen: 'Qué hace cada parte de la célula y por qué la membrana, que decide qué entra y qué sale, '
       + 'explica buena parte de la fisiología que se estudia después.',
@@ -257,7 +257,7 @@ export default {
   //  Líquidos y electrolitos
   // ============================================================
   'm2-afe-liquidos-electrolitos': {
-    icono: '💧',
+    icono: 'cp-servier-agua',
     duracion: '20 min',
     resumen: 'Dónde está el agua del cuerpo, qué la mantiene en su sitio y qué papel cumplen los '
       + 'principales electrolitos.',
@@ -434,7 +434,7 @@ export default {
   //  Electrofisiología
   // ============================================================
   'm2-afe-electrofisiologia': {
-    icono: '⚡',
+    icono: 'cp-cc0-potencial-accion',
     duracion: '20 min',
     resumen: 'Cómo una célula mantiene una diferencia eléctrica a través de su membrana y cómo la '
       + 'invierte durante un instante para generar una señal.',
@@ -593,7 +593,7 @@ export default {
   //  Equilibrio ácido-base
   // ============================================================
   'm2-afe-acido-base': {
-    icono: '⚖️',
+    icono: 'dg-equilibrio-acido-base',
     duracion: '18 min',
     resumen: 'Por qué el organismo mantiene su acidez dentro de un margen estrecho y con qué tres '
       + 'sistemas lo consigue.',
@@ -749,7 +749,7 @@ export default {
   //  Metabolismo
   // ============================================================
   'm2-afe-metabolismo': {
-    icono: '🔥',
+    icono: 'cp-servier-mitocondria',
     duracion: '18 min',
     resumen: 'Cómo obtiene el cuerpo la energía que gasta, qué diferencia hay entre hacerlo con oxígeno '
       + 'o sin él, y por qué esa diferencia se nota tan rápido.',
@@ -922,7 +922,7 @@ export default {
   //  Sistema tegumentario
   // ============================================================
   'm2-afe-tegumentario': {
-    icono: '🧴',
+    icono: 'cp-servier-piel',
     duracion: '18 min',
     resumen: 'Cómo está construida la piel, qué funciones cumple además de cubrir y por qué es el '
       + 'órgano que más información ofrece a simple vista.',

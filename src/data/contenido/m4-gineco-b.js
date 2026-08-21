@@ -113,7 +113,7 @@ export default {
   //  Aborto
   // ============================================================
   'm4-gyn-aborto': {
-    icono: '🕊️',
+    icono: 'cp-smart-utero',
     duracion: '20 min',
     resumen: 'Cómo se atiende clínicamente a una paciente con pérdida gestacional o tras un aborto, qué '
       + 'complicaciones se reconocen y por qué el trato y la confidencialidad forman parte de la '
@@ -339,7 +339,7 @@ export default {
   //  Embarazo ectópico
   // ============================================================
   'm4-gyn-ectopico': {
-    icono: '🚑',
+    icono: 'cp-smart-utero',
     duracion: '18 min',
     resumen: 'Por qué un embarazo implantado fuera del útero puede matar en poco tiempo, cómo se sospecha '
       + 'y por qué la ausencia de factores de riesgo no lo descarta.',
@@ -535,7 +535,7 @@ export default {
   //  Torsión ovárica
   // ============================================================
   'm4-gyn-torsion-ovarica': {
-    icono: '🌀',
+    icono: 'cp-smart-utero',
     duracion: '16 min',
     resumen: 'Qué ocurre cuando un ovario gira sobre su propio pedículo, por qué es una urgencia '
       + 'quirúrgica y por qué la mejoría transitoria del dolor no permite descartarla.',
@@ -728,7 +728,7 @@ export default {
   //  Hemorragia posparto
   // ============================================================
   'm4-gyn-hemorragia-postparto': {
-    icono: '🚨',
+    icono: 'cp-servier-eritrocito',
     duracion: '20 min',
     resumen: 'Cómo se reconoce pronto una hemorragia posparto, qué cuatro causas la explican y qué puede '
       + 'hacer el prestador mientras llega el recurso que la resuelve.',
@@ -910,7 +910,7 @@ export default {
   //  Preeclampsia y eclampsia
   // ============================================================
   'm4-gyn-eclampsia': {
-    icono: '⚡',
+    icono: 'ic-tension-arterial',
     duracion: '20 min',
     resumen: 'Qué es la preeclampsia, qué síntomas anuncian que se está agravando y cómo se sostiene a una '
       + 'paciente durante una convulsión obstétrica.',

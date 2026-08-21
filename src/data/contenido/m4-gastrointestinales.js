@@ -132,7 +132,7 @@ export default {
   //  Exploración abdominal y abdomen agudo
   // ============================================================
   'm4-gi-exploracion-abdominal': {
-    icono: '🫃',
+    icono: 'cp-servier-hepatomegalia',
     duracion: '20 min',
     resumen: 'Cómo se explora el abdomen en la calle, por qué su orden es distinto al del tórax y qué '
       + 'signos de alarma convierten un dolor abdominal en un paciente tiempo-dependiente.',
@@ -328,7 +328,7 @@ export default {
   //  Apendicitis
   // ============================================================
   'm4-gi-apendicitis': {
-    icono: '🔺',
+    icono: 'cp-servier-colon',
     duracion: '16 min',
     resumen: 'Cómo evoluciona una apendicitis, por qué su presentación típica falta en la mitad de los '
       + 'casos y qué debe hacer el prestador con una sospecha que no puede confirmar.',
@@ -486,7 +486,7 @@ export default {
   //  Pancreatitis
   // ============================================================
   'm4-gi-pancreatitis': {
-    icono: '🥞',
+    icono: 'cp-servier-pancreas',
     duracion: '16 min',
     resumen: 'Qué es una pancreatitis aguda, por qué su gravedad no se juzga por la intensidad del dolor '
       + 'y qué vigila el prestador durante el traslado.',
@@ -640,7 +640,7 @@ export default {
   //  Gastritis y colitis
   // ============================================================
   'm4-gi-gastritis-colitis': {
-    icono: '🔥',
+    icono: 'cp-servier-ulcera-gastrica',
     duracion: '16 min',
     resumen: 'Qué son la gastritis y las colitis, cómo se distingue un cuadro banal de uno que no lo es y '
       + 'por qué la colitis isquémica merece una mención aparte.',
@@ -790,7 +790,7 @@ export default {
   //  Colelitiasis y colecistitis
   // ============================================================
   'm4-gi-colelitiasis': {
-    icono: '🟡',
+    icono: 'cp-servier-colelitiasis',
     duracion: '16 min',
     resumen: 'Qué distingue un cólico biliar de una colecistitis y de una colangitis, y por qué esa '
       + 'diferencia cambia la prioridad del traslado.',
@@ -946,7 +946,7 @@ export default {
   //  Deshidratación
   // ============================================================
   'm4-gi-deshidratacion': {
-    icono: '💧',
+    icono: 'cp-servier-agua',
     duracion: '18 min',
     resumen: 'Cómo se reconoce y se gradúa la deshidratación sin laboratorio, qué poblaciones se '
       + 'descompensan antes y qué puede hacerse por vía oral.',
@@ -1116,7 +1116,7 @@ export default {
   //  Oclusión intestinal
   // ============================================================
   'm4-gi-oclusion-intestinal': {
-    icono: '⛔',
+    icono: 'cp-servier-intestino-delgado',
     duracion: '16 min',
     resumen: 'Qué es una oclusión intestinal, por qué la cirugía abdominal previa es el antecedente que '
       + 'más orienta y qué signos indican que el intestino está sufriendo.',
@@ -1262,7 +1262,7 @@ export default {
   //  Sangrado de tubo digestivo
   // ============================================================
   'm4-gi-sangrado-tubo': {
-    icono: '🩸',
+    icono: 'cp-servier-ulcera-gastrica',
     duracion: '18 min',
     resumen: 'Cómo se reconoce un sangrado digestivo por su forma de exteriorizarse, cómo se localiza el '
       + 'nivel y por qué la valoración circulatoria manda sobre la cantidad referida.',
@@ -1425,7 +1425,7 @@ export default {
   //  Cirrosis y hepatitis
   // ============================================================
   'm4-gi-cirrosis-hepatitis': {
-    icono: '🫀',
+    icono: 'cp-servier-cirrosis',
     duracion: '18 min',
     resumen: 'Qué son la hepatitis aguda y la cirrosis, cuáles son las complicaciones que llevan a llamar '
       + 'a una ambulancia y qué protege al prestador y al paciente durante el traslado.',

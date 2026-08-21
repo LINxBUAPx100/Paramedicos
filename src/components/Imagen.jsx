@@ -1,14 +1,22 @@
 import { useState } from 'react'
 import Icon from './Icon.jsx'
 import VisorImagen from './VisorImagen.jsx'
+import CreditosActivo from './CreditosActivo.jsx'
 import { driveSrc, driveSrcSet } from '../lib/img.js'
 import { hrefSeguro } from '../lib/enlaceSeguro.js'
+import { activo, srcDeActivo, requiereCreditoVisible } from '../lib/activosMedicos.js'
 
 function googleImagesUrl(termino) {
   return `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(termino || '')}`
 }
 
 export default function Imagen({
+  // ACTIVO DEL CATÁLOGO. Es la forma preferente de pedir una imagen médica:
+  // con el assetId llegan de una vez la ruta local, el texto alternativo, el
+  // pie y —lo que no se puede reconstruir después— el crédito obligatorio.
+  // `src`, `alt` y `fuente` siguen aceptándose para el material que todavía no
+  // está en el catálogo, y lo que se pase a mano manda sobre el catálogo.
+  assetId,
   src,
   alt = '',
   caption,
@@ -50,7 +58,18 @@ export default function Imagen({
   // tarjeta y la pantalla. El visor necesita ESA, y no una reconstruida, para
   // reutilizar la imagen que ya está en la caché (ver VisorImagen.jsx).
   const [srcCargada, setSrcCargada] = useState('')
-  const tieneSrc = src && String(src).trim().length > 0
+
+  // Resolución del activo. Lo explícito gana: si alguien pasa `alt`, es porque
+  // ese alt dice algo que el catálogo no sabe (por ejemplo, qué se está
+  // señalando en esta lección concreta).
+  const fichaActivo = assetId ? activo(assetId) : null
+  const srcFinal = src || (assetId ? srcDeActivo(assetId) : '')
+  const altFinal = alt || fichaActivo?.accesibilidad?.alt || ''
+  const captionFinal = caption ?? (fichaActivo ? fichaActivo.title : undefined)
+  const descripcionAmpliada = fichaActivo?.accesibilidad?.descripcion || ''
+  const conCredito = Boolean(assetId) && requiereCreditoVisible(assetId)
+
+  const tieneSrc = srcFinal && String(srcFinal).trim().length > 0
 
   const forma = completa
     ? 'imagen--completa'
@@ -67,7 +86,7 @@ export default function Imagen({
         <div className="imagen-ph-in">
           <span className="imagen-ph-ico"><Icon name="estrella" size={26} /></span>
           <strong>Imagen no disponible por el momento</strong>
-          {caption && <p className="imagen-ph-cap">{caption}</p>}
+          {captionFinal && <p className="imagen-ph-cap">{captionFinal}</p>}
           {busqueda && (
             <a
               className="imagen-ph-btn"
@@ -95,10 +114,10 @@ export default function Imagen({
   const propio = Boolean(srcSetPropio || srcSetAvif)
   const elImg = (
     <img
-      src={propio ? src : driveSrc(src, ancho)}
-      srcSet={propio ? srcSetPropio : driveSrcSet(src)}
+      src={propio ? srcFinal : driveSrc(srcFinal, ancho)}
+      srcSet={propio ? srcSetPropio : driveSrcSet(srcFinal)}
       sizes={sizes}
-      alt={alt || caption || ''}
+      alt={altFinal || captionFinal || ''}
       loading={eager ? 'eager' : 'lazy'}
       fetchpriority={eager ? 'high' : 'auto'}
       decoding="async"
@@ -130,16 +149,16 @@ export default function Imagen({
           type="button"
           className="imagen-lupa"
           onClick={() => setAbierta(true)}
-          aria-label={caption ? `Ampliar la imagen: ${caption}` : 'Ampliar la imagen'}
+          aria-label={captionFinal ? `Ampliar la imagen: ${captionFinal}` : 'Ampliar la imagen'}
           title="Ampliar la imagen"
         >
           <Icon name="expandir" size={17} />
         </button>
       )}
       {elMedio}
-      {(caption || fuente) && (
+      {(captionFinal || fuente || conCredito || descripcionAmpliada) && (
         <figcaption>
-          {caption}
+          {captionFinal}
           {fuente &&
             (urlFuente ? (
               <>
@@ -151,6 +170,17 @@ export default function Imagen({
             ) : (
               <span className="imagen-fuente"> Fuente: {fuente}</span>
             ))}
+          {/* DESCRIPCIÓN AMPLIADA. Un `alt` de una línea no alcanza para un
+              diagrama que comunica relaciones: quien no ve la figura necesita
+              el recorrido completo. Va en un <details> para no repetir en
+              pantalla lo que el dibujo ya dice, pero está en el DOM y se lee. */}
+          {descripcionAmpliada && (
+            <details className="imagen-descripcion">
+              <summary>Describir la figura</summary>
+              <p>{descripcionAmpliada}</p>
+            </details>
+          )}
+          {conCredito && <CreditosActivo assetId={assetId} />}
         </figcaption>
       )}
     </figure>
@@ -168,9 +198,9 @@ export default function Imagen({
       {laFigura}
       {abierta && (
         <VisorImagen
-          src={src}
-          alt={alt}
-          caption={caption}
+          src={srcFinal}
+          alt={altFinal}
+          caption={captionFinal}
           fuente={fuente}
           // La imagen que ESTA miniatura ya tiene cargada: el visor la reutiliza
           // tal cual (cero peticiones nuevas) y solo pide una más nítida si se

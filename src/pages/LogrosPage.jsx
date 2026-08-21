@@ -93,10 +93,11 @@ export default function LogrosPage() {
                       el visor sería la vuelta a la esquina para ver la imagen
                       que el profesor todavía no libera. */}
                   <Imagen
-                    src={tema.src}
+                    assetId={tema.assetId}
+                    src={tema.assetId ? undefined : tema.src}
                     ratio="4 / 3"
-                    busqueda={`${tema.titulo} anatomía`}
                     alt=""
+                    caption={null}
                     zoom={false}
                   />
                   <span className="atlas-card-candado" aria-hidden="true">
@@ -117,12 +118,17 @@ export default function LogrosPage() {
               delay={(i % 3) * 70}
               className={`atlas-card${temaId ? ' atlas-card--link' : ''}`}
             >
+              {/* La tarjeta pasa el `assetId`: con él la figura llega con su
+                  texto alternativo escrito a mano, su descripción ampliada y su
+                  panel «Créditos», que es lo que exigen las licencias CC BY del
+                  material. `src` queda solo para lo que aún no esté catalogado
+                  (una imagen que un editor pegue en una lección). */}
               <Imagen
-                src={tema.src}
+                assetId={tema.assetId}
+                src={tema.assetId ? undefined : tema.src}
                 ratio="4 / 3"
                 caption={tema.titulo}
-                busqueda={`${tema.titulo} anatomía`}
-                alt={tema.titulo}
+                alt={tema.alt || tema.titulo}
               />
               <h3 className="atlas-card-titulo">
                 {tema.titulo}

@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 520" role="img" aria-labelledby="t d" width="860" height="520">
+  <title id="t">Clasificación del estado de shock</title>
+  <desc id="d">Los cuatro grandes tipos de shock —hipovolémico, cardiogénico, distributivo y obstructivo— con el mecanismo que falla en cada uno y sus causas más frecuentes.</desc>
+
+  <rect width="860" height="520" rx="14" fill="#ffffff" stroke="#dbe3ee"/>
+  <text x="32" y="46" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="21" font-weight="700" fill="#0b1220">Clasificación del estado de shock</text>
+  <text x="32" y="70" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="14" fill="#6b7280">Todos terminan igual —hipoperfusión tisular— pero fallan por sitios distintos</text>
+
+  <rect x="230" y="88" width="400" height="52" rx="12" fill="#0b1220"/>
+  <text x="430" y="121" text-anchor="middle" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="17" font-weight="700" fill="#ffffff">Hipoperfusión: el tejido no recibe oxígeno</text>
+
+  <g stroke="#9aa7b8" stroke-width="2" fill="none">
+    <path d="M430 140 V162"/>
+    <path d="M140 162 H720"/>
+    <path d="M140 162 V190 M333 162 V190 M527 162 V190 M720 162 V190"/>
+  </g>
+
+  <g font-family="system-ui, 'Segoe UI', Roboto, sans-serif">
+    <!-- Hipovolémico -->
+    <rect x="32" y="190" width="216" height="290" rx="12" fill="#fdf3f3" stroke="#e6a6a6"/>
+    <text x="140" y="220" text-anchor="middle" font-size="17" font-weight="700" fill="#b91c1c">Hipovolémico</text>
+    <text x="140" y="248" text-anchor="middle" font-size="13" font-weight="700" fill="#0b1220">Falta volumen</text>
+    <line x1="56" y1="264" x2="224" y2="264" stroke="#e6a6a6"/>
+    <text x="56" y="292" font-size="13" fill="#334155">· Hemorragia (interna</text>
+    <text x="56" y="312" font-size="13" fill="#334155">  o externa)</text>
+    <text x="56" y="336" font-size="13" fill="#334155">· Quemaduras extensas</text>
+    <text x="56" y="360" font-size="13" fill="#334155">· Vómito y diarrea</text>
+    <text x="56" y="384" font-size="13" fill="#334155">· Tercer espacio</text>
+    <text x="56" y="424" font-size="12" font-weight="700" fill="#b91c1c">Precarga ↓</text>
+
+    <!-- Cardiogénico -->
+    <rect x="264" y="190" width="216" height="290" rx="12" fill="#fdf6ec" stroke="#e6bd7f"/>
+    <text x="372" y="220" text-anchor="middle" font-size="17" font-weight="700" fill="#a16207">Cardiogénico</text>
+    <text x="372" y="248" text-anchor="middle" font-size="13" font-weight="700" fill="#0b1220">La bomba falla</text>
+    <line x1="288" y1="264" x2="456" y2="264" stroke="#e6bd7f"/>
+    <text x="288" y="292" font-size="13" fill="#334155">· Infarto extenso</text>
+    <text x="288" y="316" font-size="13" fill="#334155">· Arritmias graves</text>
+    <text x="288" y="340" font-size="13" fill="#334155">· Miocardiopatías</text>
+    <text x="288" y="364" font-size="13" fill="#334155">· Valvulopatía aguda</text>
+    <text x="288" y="424" font-size="12" font-weight="700" fill="#a16207">Contractilidad ↓</text>
+
+    <!-- Distributivo -->
+    <rect x="496" y="190" width="216" height="290" rx="12" fill="#f2f7fd" stroke="#93b7e6"/>
+    <text x="604" y="220" text-anchor="middle" font-size="17" font-weight="700" fill="#0c5fc4">Distributivo</text>
+    <text x="604" y="248" text-anchor="middle" font-size="13" font-weight="700" fill="#0b1220">El continente se dilata</text>
+    <line x1="520" y1="264" x2="688" y2="264" stroke="#93b7e6"/>
+    <text x="520" y="292" font-size="13" fill="#334155">· Séptico</text>
+    <text x="520" y="316" font-size="13" fill="#334155">· Anafiláctico</text>
+    <text x="520" y="340" font-size="13" fill="#334155">· Neurogénico</text>
+    <text x="520" y="424" font-size="12" font-weight="700" fill="#0c5fc4">Resistencia vascular ↓</text>
+
+    <!-- Obstructivo -->
+    <rect x="728" y="190" width="100" height="290" rx="12" fill="#f6fbf8" stroke="#7fc0a0"/>
+    <text x="778" y="220" text-anchor="middle" font-size="15" font-weight="700" fill="#10804a">Obstructivo</text>
+    <text x="778" y="244" text-anchor="middle" font-size="12" font-weight="700" fill="#0b1220">Algo obstruye</text>
+    <line x1="748" y1="258" x2="808" y2="258" stroke="#7fc0a0"/>
+    <text x="748" y="284" font-size="12" fill="#334155">· Neumotórax</text>
+    <text x="748" y="302" font-size="12" fill="#334155">  a tensión</text>
+    <text x="748" y="326" font-size="12" fill="#334155">· Taponamiento</text>
+    <text x="748" y="344" font-size="12" fill="#334155">  cardíaco</text>
+    <text x="748" y="368" font-size="12" fill="#334155">· Tromboembolia</text>
+    <text x="748" y="386" font-size="12" fill="#334155">  pulmonar</text>
+    <text x="748" y="424" font-size="11" font-weight="700" fill="#10804a">Llenado o salida</text>
+    <text x="748" y="440" font-size="11" font-weight="700" fill="#10804a">bloqueados</text>
+  </g>
+
+  <text x="32" y="504" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#6b7280">La presión arterial baja tarde: un paciente compensado puede estar en shock con la presión aún normal.</text>
+</svg>

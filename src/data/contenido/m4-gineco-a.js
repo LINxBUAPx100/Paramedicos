@@ -119,7 +119,7 @@ export default {
   //  Exploración ginecológica dirigida
   // ============================================================
   'm4-gyn-exploracion': {
-    icono: '🩺',
+    icono: 'cp-smart-utero',
     duracion: '20 min',
     resumen: 'Cómo se entrevista y se explora a una paciente con un motivo ginecológico u obstétrico de '
       + 'forma respetuosa, y qué banderas rojas hay que detectar sin recurrir a maniobras invasivas.',
@@ -344,7 +344,7 @@ export default {
   //  Cambios fisiológicos en el embarazo
   // ============================================================
   'm4-gyn-cambios-embarazo': {
-    icono: '🤰',
+    icono: 'ic-feto-utero',
     duracion: '20 min',
     resumen: 'Qué cambia en el organismo durante el embarazo y qué consecuencia tiene cada uno de esos '
       + 'cambios sobre la forma de evaluar y de trasladar a una paciente.',
@@ -529,7 +529,7 @@ export default {
   //  Atención al trabajo de parto
   // ============================================================
   'm4-gyn-trabajo-parto': {
-    icono: '👶',
+    icono: 'ic-feto-utero',
     duracion: '22 min',
     resumen: 'Cómo se reconoce que un nacimiento es inminente, qué se prepara, cómo se acompaña el '
       + 'nacimiento sin intervenir de más y qué necesitan la madre y el recién nacido en los primeros '
@@ -756,7 +756,7 @@ export default {
   //  Atención a parto distócico
   // ============================================================
   'm4-gyn-parto-distocico': {
-    icono: '⚠️',
+    icono: 'ic-feto-utero',
     duracion: '20 min',
     resumen: 'Qué significa que un parto no progrese con normalidad, cómo se reconocen las cuatro '
       + 'situaciones que el prestador debe identificar y por qué la conducta es pedir ayuda y minimizar '
@@ -948,7 +948,7 @@ export default {
   //  Sufrimiento fetal agudo
   // ============================================================
   'm4-gyn-sufrimiento-fetal': {
-    icono: '📉',
+    icono: 'cp-smart-placenta',
     duracion: '18 min',
     resumen: 'Por qué se prefiere hablar de estado fetal no tranquilizador, qué puede observar realmente '
       + 'el prestador y qué causas maternas reversibles conviene buscar.',
@@ -1162,7 +1162,7 @@ export default {
   //  Hemorragia del segundo y tercer trimestre
   // ============================================================
   'm4-gyn-hemorragia-2do-3er': {
-    icono: '🩸',
+    icono: 'ic-feto-utero',
     duracion: '20 min',
     resumen: 'Cómo se reconoce una hemorragia obstétrica avanzada, en qué se diferencian los dos patrones '
       + 'clásicos y por qué lo que se ve nunca mide toda la pérdida.',

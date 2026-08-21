@@ -75,7 +75,7 @@ export default {
   //  Técnica de intubación
   // ============================================================
   'm3-va-tecnica-intubacion': {
-    icono: '🔦',
+    icono: 'cp-smart-laringe-corte',
     duracion: '20 min',
     resumen: 'La secuencia de la intubación orotraqueal y, sobre todo, las dos cosas que la vuelven '
       + 'segura: preparar antes de intentar y confirmar después de colocar.',
@@ -255,7 +255,7 @@ export default {
   //  Tipos de hojas y tamaños de tubo endotraqueal
   // ============================================================
   'm3-va-hojas-tubos': {
-    icono: '📏',
+    icono: 'cp-smart-laringe-corte',
     duracion: '14 min',
     resumen: 'Cómo se elige la hoja del laringoscopio y el calibre del tubo, y por qué la elección se hace '
       + 'sobre el paciente y sobre el inventario real de la unidad, no sobre una tabla memorizada.',
@@ -383,7 +383,7 @@ export default {
   //  Mascarilla laríngea
   // ============================================================
   'm3-va-mascarilla-laringea': {
-    icono: '🎭',
+    icono: 'cp-servier-via-aerea-superior',
     duracion: '14 min',
     resumen: 'Un dispositivo supraglótico que se coloca a ciegas y sella sobre la entrada de la laringe: '
       + 'más rápido que intubar, sin laringoscopia, y con menos protección frente a la aspiración.',
@@ -530,7 +530,7 @@ export default {
   //  Obturador esofágico
   // ============================================================
   'm3-va-obturador-esofagico': {
-    icono: '🏛️',
+    icono: 'cp-smart-esofago',
     duracion: '12 min',
     resumen: 'Un dispositivo que el plan de estudios conserva y que hoy se estudia como antecedente '
       + 'histórico: por qué se diseñó, por qué se abandonó y qué ocupó su lugar.',
@@ -646,7 +646,7 @@ export default {
   //  Cricotirotomía con aguja
   // ============================================================
   'm3-va-cricotirotomia': {
-    icono: '⚠️',
+    icono: 'cp-servier-laringe',
     duracion: '16 min',
     resumen: 'El acceso transtraqueal de rescate: qué situación lo justifica, dónde está el punto de '
       + 'punción y por qué es la última opción de la escalera de la vía aérea.',

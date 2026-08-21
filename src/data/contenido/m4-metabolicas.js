@@ -101,7 +101,7 @@ export default {
   //  Diabetes mellitus
   // ============================================================
   'm4-met-diabetes': {
-    icono: '🩸',
+    icono: 'cp-servier-islote-langerhans',
     duracion: '20 min',
     resumen: 'Cómo regula el organismo su glucosa, en qué se diferencian funcionalmente los dos tipos de '
       + 'diabetes y qué información necesita recoger el prestador de un paciente diabético.',
@@ -303,7 +303,7 @@ export default {
   //  Complicaciones diabéticas
   // ============================================================
   'm4-met-complicaciones': {
-    icono: '⚠️',
+    icono: 'cp-servier-islote-langerhans',
     duracion: '22 min',
     resumen: 'Cómo se distinguen en la calle la hipoglucemia, la cetoacidosis y el estado hiperosmolar, y '
       + 'por qué la primera es la que no admite espera.',
@@ -522,7 +522,7 @@ export default {
   //  Desequilibrio ácido-base
   // ============================================================
   'm4-met-acido-base': {
-    icono: '⚖️',
+    icono: 'dg-equilibrio-acido-base',
     duracion: '20 min',
     resumen: 'Cómo se produce cada uno de los cuatro trastornos ácido-base, qué hace el organismo para '
       + 'compensarlos y hasta dónde puede llegar el razonamiento sin una gasometría.',

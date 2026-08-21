@@ -1,4 +1,4 @@
-// ⚠️ ARCHIVO GENERADO por scripts/gen-plan-rescate.mjs — NO editar a mano.
+// ARCHIVO GENERADO por scripts/gen-plan-rescate.mjs — NO editar a mano.
 // Temario oficial de la academia R.E.S.C.A.T.E., transcrito del PDF
 // «PLAN DE ESTUDIOS PARAMÉDICO R.E.S.C.A.T.E. — DERECHOS RESERVADOS R.E.S.C.A.T.E. © 2024».
 // Fuente única: scripts/seed/plan-rescate.json. Para cambiar el temario se
@@ -15,7 +15,7 @@ export const planRescate = [
     "subtitulo": "PRIMEROS AUXILIOS BASICOS E INTERMEDIOS",
     "descripcion": "MÓDULO 1: PROPEDÉUTICO (PRIMEROS AUXILIOS BASICOS E INTERMEDIOS) — 4 semanas · 20 horas.",
     "color": "#0ea5e9",
-    "icono": "🩹",
+    "icono": "ic-botiquin",
     "encabezadoOficial": "MÓDULO 1: PROPEDÉUTICO (PRIMEROS AUXILIOS BASICOS E INTERMEDIOS)",
     "numeroOficial": 1,
     "totales": {
@@ -111,7 +111,7 @@ export const planRescate = [
             "2024 AHA and American Red Cross Guidelines for First Aid. Circulation, 2024. DOI 10.1161/CIR.0000000000001281."
           ]
         },
-        "icono": "🚑",
+        "icono": "ic-ambulancia",
         "duracion": "12 min",
         "resumen": "Qué son los primeros auxilios, hasta dónde llegan y por qué el primer respondiente cambia el pronóstico de una emergencia.",
         "objetivos": [
@@ -333,7 +333,7 @@ export const planRescate = [
             "2024 AHA and American Red Cross Guidelines for First Aid. Circulation, 2024."
           ]
         },
-        "icono": "🧠",
+        "icono": "cp-servier-cerebro",
         "duracion": "12 min",
         "resumen": "AVDI: la valoración rápida del estado de conciencia y el momento exacto en que se activa el Sistema Médico de Urgencias.",
         "objetivos": [
@@ -583,7 +583,7 @@ export const planRescate = [
             "2024 AHA and American Red Cross Guidelines for First Aid. Circulation, 2024."
           ]
         },
-        "icono": "❤️",
+        "icono": "ic-rcp",
         "duracion": "18 min",
         "resumen": "RCP de alta calidad en el adulto para un reanimador lego: cómo se reconoce el paro, cómo se comprime y por qué la calidad importa más que la técnica elegante.",
         "objetivos": [
@@ -814,7 +814,7 @@ export const planRescate = [
             "2024 AHA and American Red Cross Guidelines for First Aid. Circulation, 2024."
           ]
         },
-        "icono": "⚡",
+        "icono": "ic-desfibrilador",
         "duracion": "14 min",
         "resumen": "El desfibrilador externo automático: qué hace, cuándo se usa y por qué cada minuto de retraso cuesta supervivencia.",
         "objetivos": [
@@ -1025,7 +1025,7 @@ export const planRescate = [
             "American Heart Association. 2025 Guidelines: Adult Basic Life Support."
           ]
         },
-        "icono": "🫁",
+        "icono": "cp-servier-via-aerea-superior",
         "duracion": "14 min",
         "resumen": "Obstrucción de la vía aérea por cuerpo extraño en el adulto: cómo distinguir la obstrucción leve de la grave y qué hacer en cada caso.",
         "objetivos": [
@@ -1300,7 +1300,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan)."
           ]
         },
-        "icono": "🩸",
+        "icono": "cp-servier-eritrocito",
         "duracion": "16 min",
         "resumen": "Control de hemorragias externas: presión directa, empaquetamiento y torniquete, en el orden y con los criterios que salvan vidas.",
         "objetivos": [
@@ -1529,7 +1529,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan)."
           ]
         },
-        "icono": "🦴",
+        "icono": "ic-fractura",
         "duracion": "14 min",
         "resumen": "Reconocimiento e inmovilización básica de fracturas: qué se busca, qué se inmoviliza y qué nunca se hace.",
         "objetivos": [
@@ -1713,7 +1713,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "🔥",
+        "icono": "cp-servier-quemadura-2do",
         "duracion": "15 min",
         "resumen": "Atención inicial de las quemaduras: detener la lesión, valorar profundidad y extensión, y evitar los errores que agravan.",
         "objetivos": [
@@ -1949,7 +1949,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "🧰",
+        "icono": "ic-botiquin",
         "duracion": "10 min",
         "resumen": "Qué debe contener un botiquín útil, cómo se organiza y por qué revisarlo es parte de tenerlo.",
         "objetivos": [
@@ -2129,7 +2129,7 @@ export const planRescate = [
             "2024 AHA and American Red Cross Guidelines for First Aid. Circulation, 2024."
           ]
         },
-        "icono": "🔤",
+        "icono": "cp-cc0-paciente",
         "duracion": "16 min",
         "resumen": "XABCDE: la secuencia que ordena la atención al paciente traumatizado, y por qué la X va delante de todo.",
         "objetivos": [
@@ -2387,7 +2387,7 @@ export const planRescate = [
             "NOM-034-SSA3-2013, DOF."
           ]
         },
-        "icono": "🌡️",
+        "icono": "ic-tension-arterial",
         "duracion": "18 min",
         "resumen": "Cómo se toman los signos vitales en el ámbito prehospitalario y, sobre todo, cómo se interpretan: una cifra aislada no dice casi nada; la tendencia entre dos tomas lo dice casi todo.",
         "objetivos": [
@@ -2702,7 +2702,7 @@ export const planRescate = [
             "PENDIENTE: la academia debe declarar la edición y el año de su Manual de Formación Profesional del Paramédico para poder citarlo."
           ]
         },
-        "icono": "🩹",
+        "icono": "cp-servier-piel",
         "duracion": "18 min",
         "resumen": "Evisceración, herida por arma de fuego y amputación: tres lesiones cuyo manejo básico se equivoca con frecuencia por reflejos bienintencionados que empeoran el pronóstico.",
         "objetivos": [
@@ -2975,7 +2975,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "👶",
+        "icono": "ic-rcp",
         "duracion": "16 min",
         "resumen": "RCP en lactante y en niño: qué cambia respecto del adulto y por qué la causa del paro obliga a invertir prioridades.",
         "objetivos": [
@@ -3209,7 +3209,7 @@ export const planRescate = [
             "American Academy of Pediatrics. Pediatric life support, resuscitation guideline updates developed by AAP, AHA. AAP News, 2025."
           ]
         },
-        "icono": "🧒",
+        "icono": "ic-nino",
         "duracion": "14 min",
         "resumen": "Obstrucción de la vía aérea por cuerpo extraño en lactante y niño: por qué la maniobra cambia con la edad y qué no debe hacerse nunca.",
         "objetivos": [
@@ -3411,7 +3411,7 @@ export const planRescate = [
             "Secretaría de Salud. Manual de Procedimientos Estandarizados para la Vigilancia Epidemiológica de las Intoxicaciones por Animales Ponzoñosos, 2024."
           ]
         },
-        "icono": "☠️",
+        "icono": "cp-cc0-toxico",
         "duracion": "16 min",
         "resumen": "Intoxicaciones en el ámbito prehospitalario: vías de entrada, abordaje inicial y las particularidades de la fauna venenosa de México.",
         "objetivos": [
@@ -3724,7 +3724,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan)."
           ]
         },
-        "icono": "🩹",
+        "icono": "ic-fractura",
         "duracion": "14 min",
         "resumen": "Taller de férulas y vendajes: tipos, técnica y las comprobaciones que evitan convertir una inmovilización en una lesión.",
         "objetivos": [
@@ -3916,7 +3916,7 @@ export const planRescate = [
             "NOM-034-SSA3-2013, DOF."
           ]
         },
-        "icono": "🧘",
+        "icono": "cp-servier-traslado-carga",
         "duracion": "13 min",
         "resumen": "El bienestar del TUM como parte del trabajo: riesgos reales del oficio, estrés agudo y acumulado, y prácticas que sostienen una carrera larga.",
         "objetivos": [
@@ -4153,7 +4153,7 @@ export const planRescate = [
             "NOM-034-SSA3-2013, DOF."
           ]
         },
-        "icono": "⚖️",
+        "icono": "cp-servier-balanza-desequilibrada",
         "duracion": "18 min",
         "resumen": "Consentimiento, negativa, confidencialidad, documentación y preservación de indicios: el marco que convierte una atención correcta en una atención además defendible.",
         "objetivos": [
@@ -4520,7 +4520,7 @@ export const planRescate = [
             "AAOS (Elling, Elling y Rothenberg). Anatomía y fisiología prehospitalaria, cap. 1, p. 19."
           ]
         },
-        "icono": "📖",
+        "icono": "cp-servier-libro",
         "duracion": "12 min",
         "resumen": "Terminología médica: cómo se construye una palabra clínica y por qué descomponerla permite entender términos que nunca se han visto.",
         "objetivos": [
@@ -4783,7 +4783,7 @@ export const planRescate = [
             "Conde C. Semiología y fisiopatología, 2015 (catálogo de la academia)."
           ]
         },
-        "icono": "🧭",
+        "icono": "cp-cc0-paciente",
         "duracion": "15 min",
         "resumen": "El lenguaje con el que se describe una localización en el cuerpo. Sin él, «una herida arriba del lado izquierdo» puede significar cinco cosas distintas para cinco personas.",
         "objetivos": [
@@ -5179,7 +5179,7 @@ export const planRescate = [
             "Este nodo tenía prosa y dos preguntas sobre el funcionamiento de la plataforma; se retiraron por no pertenecer al plan de estudios."
           ]
         },
-        "icono": "📝",
+        "icono": "cp-servier-libreta",
         "duracion": "",
         "resumen": "",
         "objetivos": [],
@@ -5203,7 +5203,7 @@ export const planRescate = [
     "subtitulo": "PRINCIPIOS DE ANATOMÍA Y FISIOLOGÍA.",
     "descripcion": "MÓDULO 2: EL CUERPO HUMANO; (PRINCIPIOS DE ANATOMÍA Y FISIOLOGÍA.) — 19 semanas · 95 horas.",
     "color": "#10b981",
-    "icono": "🫀",
+    "icono": "cp-servier-celula-vacia",
     "encabezadoOficial": "MÓDULO 2: EL CUERPO HUMANO; (PRINCIPIOS DE ANATOMÍA Y FISIOLOGÍA.)",
     "numeroOficial": 2,
     "totales": {
@@ -5336,7 +5336,7 @@ export const planRescate = [
             "Guyton y Hall. Compendio de Fisiología Médica, 13.ª ed., cap. 2, p. 9 y cap. 4, p. 31."
           ]
         },
-        "icono": "🔬",
+        "icono": "cp-servier-celula-vacia",
         "duracion": "20 min",
         "resumen": "Qué hace cada parte de la célula y por qué la membrana, que decide qué entra y qué sale, explica buena parte de la fisiología que se estudia después.",
         "objetivos": [
@@ -5692,7 +5692,7 @@ export const planRescate = [
             "AAOS (Elling, Elling y Rothenberg). Anatomía y fisiología prehospitalaria, cap. 5, p. 135 (apartado de electrólitos)."
           ]
         },
-        "icono": "💧",
+        "icono": "cp-servier-agua",
         "duracion": "20 min",
         "resumen": "Dónde está el agua del cuerpo, qué la mantiene en su sitio y qué papel cumplen los principales electrolitos.",
         "objetivos": [
@@ -6024,7 +6024,7 @@ export const planRescate = [
             "AAOS (Elling, Elling y Rothenberg). Anatomía y fisiología prehospitalaria, cap. 8, p. 207."
           ]
         },
-        "icono": "⚡",
+        "icono": "cp-cc0-potencial-accion",
         "duracion": "20 min",
         "resumen": "Cómo una célula mantiene una diferencia eléctrica a través de su membrana y cómo la invierte durante un instante para generar una señal.",
         "objetivos": [
@@ -6290,7 +6290,7 @@ export const planRescate = [
             "AAOS (Elling, Elling y Rothenberg). Anatomía y fisiología prehospitalaria, cap. 7, p. 193."
           ]
         },
-        "icono": "⚖️",
+        "icono": "dg-equilibrio-acido-base",
         "duracion": "18 min",
         "resumen": "Por qué el organismo mantiene su acidez dentro de un margen estrecho y con qué tres sistemas lo consigue.",
         "objetivos": [
@@ -6566,7 +6566,7 @@ export const planRescate = [
             "AAOS (Elling, Elling y Rothenberg). Anatomía y fisiología prehospitalaria, cap. 10, apartado 10.1, p. 256."
           ]
         },
-        "icono": "🔥",
+        "icono": "cp-servier-mitocondria",
         "duracion": "18 min",
         "resumen": "Cómo obtiene el cuerpo la energía que gasta, qué diferencia hay entre hacerlo con oxígeno o sin él, y por qué esa diferencia se nota tan rápido.",
         "objetivos": [
@@ -6890,7 +6890,7 @@ export const planRescate = [
             "Guyton y Hall. Compendio de Fisiología Médica, 13.ª ed., cap. 74, p. 529."
           ]
         },
-        "icono": "🧴",
+        "icono": "cp-servier-piel",
         "duracion": "18 min",
         "resumen": "Cómo está construida la piel, qué funciones cumple además de cubrir y por qué es el órgano que más información ofrece a simple vista.",
         "objetivos": [
@@ -7226,7 +7226,7 @@ export const planRescate = [
             "El número de reactivos y de intentos permitidos también es decisión académica; mientras tanto la plataforma dimensiona el examen según el tamaño del banco."
           ]
         },
-        "icono": "",
+        "icono": "cp-servier-libreta",
         "duracion": "",
         "resumen": "",
         "objetivos": [],
@@ -7265,7 +7265,7 @@ export const planRescate = [
             "Moore K. L. Anatomía con orientación clínica, 7.ª ed., caps. 4 y 6 (página PENDIENTE)."
           ]
         },
-        "icono": "🦴",
+        "icono": "cp-smart-esqueleto",
         "duracion": "20 min",
         "resumen": "Cómo está organizado el esqueleto, de qué está hecho el hueso y por qué es un tejido vivo que además cumple funciones que no tienen que ver con el soporte.",
         "objetivos": [
@@ -7613,7 +7613,7 @@ export const planRescate = [
             "Guyton y Hall. Compendio de Fisiología Médica, 13.ª ed., cap. 6, p. 44 y cap. 8, p. 55."
           ]
         },
-        "icono": "💪",
+        "icono": "cp-servier-musculo",
         "duracion": "20 min",
         "resumen": "Los tres tipos de músculo, en qué se diferencian por su control y su aspecto, y cómo se produce realmente una contracción.",
         "objetivos": [
@@ -7887,7 +7887,7 @@ export const planRescate = [
             "Guyton y Hall. Compendio de Fisiología Médica, 13.ª ed., cap. 9, p. 63 y cap. 14, p. 91."
           ]
         },
-        "icono": "❤️",
+        "icono": "il-corazon-vascularizacion",
         "duracion": "22 min",
         "resumen": "Cómo está construido el corazón, por dónde circula la sangre y qué determina que llegue a los tejidos en cantidad suficiente.",
         "objetivos": [
@@ -8248,7 +8248,7 @@ export const planRescate = [
             "Guyton y Hall. Compendio de Fisiología Médica, 13.ª ed., cap. 46, p. 333 y cap. 62, p. 450."
           ]
         },
-        "icono": "🧠",
+        "icono": "cp-servier-cerebro",
         "duracion": "22 min",
         "resumen": "Cómo se divide el sistema nervioso, qué hace cada parte y por qué una sola célula, la neurona, explica todo su funcionamiento.",
         "objetivos": [
@@ -8653,7 +8653,7 @@ export const planRescate = [
             "Guyton y Hall. Compendio de Fisiología Médica, 13.ª ed., cap. 66, p. 478 y cap. 71, p. 510."
           ]
         },
-        "icono": "🍽️",
+        "icono": "cp-servier-estomago",
         "duracion": "20 min",
         "resumen": "El recorrido del alimento por el tubo digestivo, qué aporta cada tramo y qué hacen los órganos que no forman parte del tubo pero trabajan para él.",
         "objetivos": [
@@ -8973,7 +8973,7 @@ export const planRescate = [
             "Guyton y Hall. Compendio de Fisiología Médica, 13.ª ed., cap. 26, p. 185 y cap. 31, p. 230."
           ]
         },
-        "icono": "🚰",
+        "icono": "dg-nefrona",
         "duracion": "20 min",
         "resumen": "Cómo el riñón fabrica la orina en tres pasos y por qué ese proceso regula mucho más que la eliminación de desechos.",
         "objetivos": [
@@ -9310,7 +9310,7 @@ export const planRescate = [
             "El número de reactivos y de intentos permitidos también es decisión académica; mientras tanto la plataforma dimensiona el examen según el tamaño del banco."
           ]
         },
-        "icono": "",
+        "icono": "cp-servier-libreta",
         "duracion": "",
         "resumen": "",
         "objetivos": [],
@@ -9350,7 +9350,7 @@ export const planRescate = [
             "Guyton y Hall. Compendio de Fisiología Médica, 13.ª ed., cap. 33, p. 251 y cap. 37, p. 273."
           ]
         },
-        "icono": "🩸",
+        "icono": "cp-servier-eritrocito",
         "duracion": "20 min",
         "resumen": "De qué está hecha la sangre, qué hace cada uno de sus componentes y dónde se producen.",
         "objetivos": [
@@ -9649,7 +9649,7 @@ export const planRescate = [
             "Guyton y Hall. Compendio de Fisiología Médica, 13.ª ed., cap. 16, p. 103 y cap. 35, p. 262."
           ]
         },
-        "icono": "🛡️",
+        "icono": "cp-servier-linfatico",
         "duracion": "20 min",
         "resumen": "Por qué existe una segunda red de vasos además de la sanguínea, y en qué se diferencian las dos formas que tiene el cuerpo de defenderse.",
         "objetivos": [
@@ -9973,7 +9973,7 @@ export const planRescate = [
             "Guyton y Hall. Compendio de Fisiología Médica, 13.ª ed., cap. 81, p. 588 y cap. 82, p. 593."
           ]
         },
-        "icono": "⚕️",
+        "icono": "cp-smart-utero",
         "duracion": "20 min",
         "resumen": "Los órganos reproductores masculinos y femeninos, la función de cada uno y el ciclo que prepara al organismo femenino para un posible embarazo.",
         "objetivos": [
@@ -10330,7 +10330,7 @@ export const planRescate = [
             "Guyton y Hall. Compendio de Fisiología Médica, 13.ª ed., cap. 50, p. 361; cap. 53, p. 381; cap. 49, p. 352."
           ]
         },
-        "icono": "👁️",
+        "icono": "cp-servier-ojo",
         "duracion": "20 min",
         "resumen": "Cómo convierten los órganos de los sentidos un estímulo físico en una señal nerviosa, y qué estructura se encarga de cada tipo de estímulo.",
         "objetivos": [
@@ -10693,7 +10693,7 @@ export const planRescate = [
             "Guyton y Hall. Compendio de Fisiología Médica, 13.ª ed., cap. 75, p. 537 y cap. 80, p. 579."
           ]
         },
-        "icono": "🧪",
+        "icono": "dg-glandulas-endocrinas",
         "duracion": "20 min",
         "resumen": "Cómo el cuerpo se comunica por mensajeros químicos, en qué se diferencia esa comunicación de la nerviosa y cómo se autorregula.",
         "objetivos": [
@@ -11093,7 +11093,7 @@ export const planRescate = [
             "Debe confirmarse de qué material anatómico dispone el aula: la lista de cotejo asume modelo, láminas o compañero voluntario, y las estaciones cambian según lo disponible."
           ]
         },
-        "icono": "",
+        "icono": "ic-estetoscopio",
         "duracion": "",
         "resumen": "",
         "objetivos": [],
@@ -11172,7 +11172,7 @@ export const planRescate = [
             "El número de reactivos y de intentos permitidos también es decisión académica; mientras tanto la plataforma dimensiona el examen según el tamaño del banco."
           ]
         },
-        "icono": "",
+        "icono": "cp-servier-libreta",
         "duracion": "",
         "resumen": "",
         "objetivos": [],
@@ -11198,7 +11198,7 @@ export const planRescate = [
     "subtitulo": "",
     "descripcion": "MODULO 3: EVALUACIÓN INCIAL Y SOPORTE VITAL. — 9 semanas · 45 horas.",
     "color": "#f59e0b",
-    "icono": "🚑",
+    "icono": "ic-estetoscopio",
     "encabezadoOficial": "MODULO 3: EVALUACIÓN INCIAL Y SOPORTE VITAL.",
     "numeroOficial": 3,
     "totales": {
@@ -11346,7 +11346,7 @@ export const planRescate = [
             "American Heart Association. 2025 Guidelines: Adult Basic Life Support."
           ]
         },
-        "icono": "🛡️",
+        "icono": "cp-cc0-riesgo-biologico",
         "duracion": "14 min",
         "resumen": "Lo que se hace ANTES de tocar al paciente: comprobar que la escena no va a producir una víctima más, entender qué pasó y calcular qué recursos harán falta.",
         "objetivos": [
@@ -11586,7 +11586,7 @@ export const planRescate = [
             "American Heart Association. 2025 Guidelines: Adult Basic Life Support."
           ]
         },
-        "icono": "🧠",
+        "icono": "cp-servier-cerebro",
         "duracion": "12 min",
         "resumen": "La escala más rápida del arsenal prehospitalario: cuatro categorías que sitúan el estado de conciencia en segundos y sirven para detectar deterioro antes de que sea evidente.",
         "objetivos": [
@@ -11843,7 +11843,7 @@ export const planRescate = [
             "American Heart Association. 2025 Guidelines: Adult Basic Life Support."
           ]
         },
-        "icono": "🫁",
+        "icono": "cp-servier-via-aerea-superior",
         "duracion": "16 min",
         "resumen": "Cómo se abre una vía aérea con las manos y cómo se protege la columna cervical al hacerlo, sin recurrir a ningún dispositivo ni fármaco.",
         "objetivos": [
@@ -12082,7 +12082,7 @@ export const planRescate = [
             "American Heart Association. 2025 Guidelines: Adult Basic Life Support."
           ]
         },
-        "icono": "💨",
+        "icono": "cp-servier-pulmon",
         "duracion": "14 min",
         "resumen": "La B de la evaluación primaria: comprobar que además de una vía aérea abierta hay ventilación eficaz, y reconocer cuándo hay que asistirla.",
         "objetivos": [
@@ -12343,7 +12343,7 @@ export const planRescate = [
             "American Heart Association. 2025 Guidelines: Adult Basic Life Support."
           ]
         },
-        "icono": "🩸",
+        "icono": "cp-servier-capilares",
         "duracion": "15 min",
         "resumen": "La C de la evaluación primaria: encontrar la hemorragia y reconocer la hipoperfusión antes de que la presión arterial se entere.",
         "objetivos": [
@@ -12583,7 +12583,7 @@ export const planRescate = [
             "American Heart Association. 2025 Guidelines: Adult Basic Life Support."
           ]
         },
-        "icono": "🔦",
+        "icono": "cp-servier-cerebro",
         "duracion": "14 min",
         "resumen": "La D de la evaluación primaria: un examen breve que detecta el déficit neurológico y, sobre todo, su cambio en el tiempo.",
         "objetivos": [
@@ -12831,7 +12831,7 @@ export const planRescate = [
             "American Heart Association. 2025 Guidelines: Adult Basic Life Support."
           ]
         },
-        "icono": "🔎",
+        "icono": "cp-cc0-lupa",
         "duracion": "14 min",
         "resumen": "La exploración corta y orientada al problema que se hace dentro de la evaluación primaria, sin convertirla en una revisión de cabeza a pies.",
         "objetivos": [
@@ -13088,7 +13088,7 @@ export const planRescate = [
             "American Heart Association. 2025 Guidelines: Adult Basic Life Support."
           ]
         },
-        "icono": "🔤",
+        "icono": "cp-cc0-paciente",
         "duracion": "13 min",
         "resumen": "Qué añade la evaluación secundaria a la primaria y por qué la nemotecnia se repite: no es el mismo examen otra vez, sino el mismo orden aplicado con más profundidad.",
         "objetivos": [
@@ -13347,7 +13347,7 @@ export const planRescate = [
             "American Heart Association. 2025 Guidelines: Adult Basic Life Support."
           ]
         },
-        "icono": "📋",
+        "icono": "cp-servier-libreta",
         "duracion": "13 min",
         "resumen": "Seis letras para obtener, en pocos minutos y sin olvidar nada, la historia clínica que el hospital necesitará y que nadie más podrá recoger.",
         "objetivos": [
@@ -13591,7 +13591,7 @@ export const planRescate = [
             "American Heart Association. 2025 Guidelines: Adult Basic Life Support."
           ]
         },
-        "icono": "🫱",
+        "icono": "ic-estetoscopio",
         "duracion": "16 min",
         "resumen": "La revisión de cabeza a pies de la evaluación secundaria: qué se busca en cada región y por qué el orden importa tanto como el contenido.",
         "objetivos": [
@@ -13862,7 +13862,7 @@ export const planRescate = [
             "El número de reactivos y de intentos permitidos también es decisión académica; mientras tanto la plataforma dimensiona el examen según el tamaño del banco."
           ]
         },
-        "icono": "",
+        "icono": "cp-servier-libreta",
         "duracion": "",
         "resumen": "",
         "objetivos": [],
@@ -13899,7 +13899,7 @@ export const planRescate = [
             "Fisiología respiratoria: lo esencial en la práctica clínica, 3.ª ed. (catálogo de la academia)."
           ]
         },
-        "icono": "🫁",
+        "icono": "il-arbol-traqueobronquial",
         "duracion": "18 min",
         "resumen": "El recorrido del aire y el intercambio gaseoso, contados desde lo que después habrá que decidir en la vía aérea: dónde se obstruye, dónde se ventila y por qué respirar más deprisa no siempre significa oxigenar mejor.",
         "objetivos": [
@@ -14234,7 +14234,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (catálogo de la academia)."
           ]
         },
-        "icono": "🤚",
+        "icono": "cp-servier-via-aerea-superior",
         "duracion": "12 min",
         "resumen": "La maniobra manual más sencilla y la que más veces se ejecuta mal: elevar el mentón para separar la lengua de la pared posterior de la faringe.",
         "objetivos": [
@@ -14469,7 +14469,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (catálogo de la academia)."
           ]
         },
-        "icono": "🧑‍🚒",
+        "icono": "cp-servier-via-aerea-superior",
         "duracion": "13 min",
         "resumen": "La maniobra de elección cuando hay sospecha de lesión cervical: abrir la vía aérea desplazando la mandíbula sin extender el cuello.",
         "objetivos": [
@@ -14685,7 +14685,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (catálogo de la academia)."
           ]
         },
-        "icono": "↗️",
+        "icono": "cp-servier-via-aerea-superior",
         "duracion": "12 min",
         "resumen": "La maniobra frente-mentón completa: combinar la inclinación de la cabeza con la elevación del mentón, y saber en qué pacientes está descartada.",
         "objetivos": [
@@ -14928,7 +14928,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (catálogo de la academia)."
           ]
         },
-        "icono": "🔧",
+        "icono": "cp-servier-cavidad-oral",
         "duracion": "15 min",
         "resumen": "El dispositivo básico que releva a la mano: una cánula rígida que sostiene la lengua separada de la faringe, y que solo tolera el paciente sin reflejo nauseoso.",
         "objetivos": [
@@ -15177,7 +15177,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (catálogo de la academia)."
           ]
         },
-        "icono": "👃",
+        "icono": "cp-servier-cavidad-nasal",
         "duracion": "15 min",
         "resumen": "La alternativa cuando la boca no es una opción: un tubo blando que llega a la nasofaringe y que un paciente con reflejo nauseoso conservado suele tolerar.",
         "objetivos": [
@@ -15415,7 +15415,7 @@ export const planRescate = [
             "NOM-034-SSA3-2013, DOF."
           ]
         },
-        "icono": "🔦",
+        "icono": "cp-smart-laringe-corte",
         "duracion": "20 min",
         "resumen": "La secuencia de la intubación orotraqueal y, sobre todo, las dos cosas que la vuelven segura: preparar antes de intentar y confirmar después de colocar.",
         "objetivos": [
@@ -15709,7 +15709,7 @@ export const planRescate = [
             "NOM-034-SSA3-2013, DOF."
           ]
         },
-        "icono": "📏",
+        "icono": "cp-smart-laringe-corte",
         "duracion": "14 min",
         "resumen": "Cómo se elige la hoja del laringoscopio y el calibre del tubo, y por qué la elección se hace sobre el paciente y sobre el inventario real de la unidad, no sobre una tabla memorizada.",
         "objetivos": [
@@ -16005,7 +16005,7 @@ export const planRescate = [
             "NOM-034-SSA3-2013, DOF."
           ]
         },
-        "icono": "🎭",
+        "icono": "cp-servier-via-aerea-superior",
         "duracion": "14 min",
         "resumen": "Un dispositivo supraglótico que se coloca a ciegas y sella sobre la entrada de la laringe: más rápido que intubar, sin laringoscopia, y con menos protección frente a la aspiración.",
         "objetivos": [
@@ -16318,7 +16318,7 @@ export const planRescate = [
             "NOM-034-SSA3-2013, DOF."
           ]
         },
-        "icono": "🏛️",
+        "icono": "cp-smart-esofago",
         "duracion": "12 min",
         "resumen": "Un dispositivo que el plan de estudios conserva y que hoy se estudia como antecedente histórico: por qué se diseñó, por qué se abandonó y qué ocupó su lugar.",
         "objetivos": [
@@ -16542,7 +16542,7 @@ export const planRescate = [
             "NOM-034-SSA3-2013, DOF."
           ]
         },
-        "icono": "⚠️",
+        "icono": "cp-servier-laringe",
         "duracion": "16 min",
         "resumen": "El acceso transtraqueal de rescate: qué situación lo justifica, dónde está el punto de punción y por qué es la última opción de la escalera de la vía aérea.",
         "objetivos": [
@@ -16804,7 +16804,7 @@ export const planRescate = [
             "NOM-034-SSA3-2013, DOF."
           ]
         },
-        "icono": "💨",
+        "icono": "cp-servier-ventilador",
         "duracion": "16 min",
         "resumen": "Cómo se administra oxígeno y cómo se ventila cuando el paciente no lo hace por sí mismo: de las puntas nasales a la bolsa-válvula-mascarilla, y la diferencia que separa a unas de otra.",
         "objetivos": [
@@ -17113,7 +17113,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (catálogo de la academia)."
           ]
         },
-        "icono": "🛢️",
+        "icono": "cp-cc0-gas",
         "duracion": "14 min",
         "resumen": "El oxígeno como el recurso agotable que es: qué cilindros existen, cómo se manejan con seguridad y cómo se estima cuánto queda antes de quedarse sin él a mitad de un traslado.",
         "objetivos": [
@@ -17372,7 +17372,7 @@ export const planRescate = [
             "NOM-034-SSA3-2013, DOF."
           ]
         },
-        "icono": "💉",
+        "icono": "dg-secuencia-intubacion",
         "duracion": "18 min",
         "resumen": "Qué es la secuencia rápida, por qué su seguridad depende de la preparación y no de los fármacos, y por qué su protocolo farmacológico concreto solo puede darlo la dirección médica.",
         "objetivos": [
@@ -17651,7 +17651,7 @@ export const planRescate = [
             "NOM-034-SSA3-2013, DOF."
           ]
         },
-        "icono": "💧",
+        "icono": "cp-servier-bolsa-infusion",
         "duracion": "15 min",
         "resumen": "Qué gana y qué arriesga un paciente cuando se le canaliza una vena, y por qué la pregunta correcta no es «¿puedo?» sino «¿qué va a cambiar si lo hago?».",
         "objetivos": [
@@ -17944,7 +17944,7 @@ export const planRescate = [
             "NOM-034-SSA3-2013, DOF."
           ]
         },
-        "icono": "🎯",
+        "icono": "cp-servier-vena",
         "duracion": "15 min",
         "resumen": "Dónde se busca una vena en el paciente prehospitalario, en qué orden y qué sitios se evitan aunque la vena se vea bien.",
         "objetivos": [
@@ -18203,7 +18203,7 @@ export const planRescate = [
             "NOM-034-SSA3-2013, DOF."
           ]
         },
-        "icono": "🧪",
+        "icono": "dg-soluciones-cristaloides",
         "duracion": "16 min",
         "resumen": "Qué es un cristaloide, en qué se distingue de un coloide y por qué la tonicidad de la solución decide adónde va el líquido que se administra.",
         "objetivos": [
@@ -18508,7 +18508,7 @@ export const planRescate = [
             "NOM-034-SSA3-2013, DOF."
           ]
         },
-        "icono": "🩹",
+        "icono": "cp-servier-vena",
         "duracion": "18 min",
         "resumen": "La secuencia completa de una venoclisis periférica, desde la preparación aséptica hasta la vigilancia posterior, y los errores que convierten un acceso en una complicación.",
         "objetivos": [
@@ -18802,7 +18802,7 @@ export const planRescate = [
             "NOM-034-SSA3-2013, DOF."
           ]
         },
-        "icono": "🦴",
+        "icono": "ic-hueso",
         "duracion": "16 min",
         "resumen": "El acceso a la circulación a través de la cavidad medular del hueso: cuándo sustituye a la vía intravenosa, dónde se coloca y por qué el término del plan es una errata.",
         "objetivos": [
@@ -19138,7 +19138,7 @@ export const planRescate = [
             "PENDIENTE: manual del fabricante del monitor desfibrilador de la academia."
           ]
         },
-        "icono": "📈",
+        "icono": "dg-ecg-onda-normal",
         "duracion": "18 min",
         "resumen": "Qué representa el trazo del monitor, cómo se lee de forma ordenada y por qué lo que se interpreta es el paciente y no la pantalla.",
         "objetivos": [
@@ -19446,7 +19446,7 @@ export const planRescate = [
             "PENDIENTE: manual del fabricante del monitor desfibrilador de la academia."
           ]
         },
-        "icono": "⚡",
+        "icono": "cp-smart-holter",
         "duracion": "18 min",
         "resumen": "Las tres funciones que un mismo aparato puede cumplir —desfibrilar, cardiovertir y estimular— y por qué confundirlas es el error con más consecuencias de esta unidad.",
         "objetivos": [
@@ -19745,7 +19745,7 @@ export const planRescate = [
             "PENDIENTE: manual del fabricante del monitor desfibrilador de la academia."
           ]
         },
-        "icono": "💔",
+        "icono": "ic-desfibrilador",
         "duracion": "16 min",
         "resumen": "Los cuatro ritmos del paro cardiaco y la única clasificación que cambia la conducta en el momento: desfibrilable o no desfibrilable.",
         "objetivos": [
@@ -20047,7 +20047,7 @@ export const planRescate = [
             "PENDIENTE: manual del fabricante del monitor desfibrilador de la academia."
           ]
         },
-        "icono": "🎯",
+        "icono": "ic-rcp",
         "duracion": "20 min",
         "resumen": "La estación en que todo lo del módulo se ejecuta junto y bajo presión: qué se integra, cómo se reparten las funciones del equipo y con qué criterios se evalúa el desempeño.",
         "objetivos": [
@@ -20468,7 +20468,7 @@ export const planRescate = [
             "El número de reactivos y de intentos permitidos también es decisión académica; mientras tanto la plataforma dimensiona el examen según el tamaño del banco."
           ]
         },
-        "icono": "",
+        "icono": "cp-servier-libreta",
         "duracion": "",
         "resumen": "",
         "objetivos": [],
@@ -20493,7 +20493,7 @@ export const planRescate = [
     "subtitulo": "",
     "descripcion": "MÓDULO 4: MANEJO DE URGENCIAS MÉDICO QUIRÚRGICAS. — 23 semanas · 115 horas.",
     "color": "#ef4444",
-    "icono": "💊",
+    "icono": "cp-servier-tableta",
     "encabezadoOficial": "MÓDULO 4: MANEJO DE URGENCIAS MÉDICO QUIRÚRGICAS.",
     "numeroOficial": 4,
     "totales": {
@@ -20762,7 +20762,7 @@ export const planRescate = [
             "NOM-034-SSA3-2013, DOF."
           ]
         },
-        "icono": "📊",
+        "icono": "cp-servier-curva-gauss",
         "duracion": "16 min",
         "resumen": "Qué mide la epidemiología, para qué le sirve a quien atiende urgencias y por qué una cifra sin fuente y sin fecha es peor que ninguna cifra.",
         "objetivos": [
@@ -21061,7 +21061,7 @@ export const planRescate = [
             "NOM-034-SSA3-2013, DOF."
           ]
         },
-        "icono": "⏱️",
+        "icono": "cp-servier-cronometro",
         "duracion": "15 min",
         "resumen": "Qué define exactamente el artículo 72 cuando dice «urgencia», qué otras disposiciones —y no ese artículo— fijan el ámbito y el sujeto obligado en el medio prehospitalario, y por qué «emergencia» y «urgencia sentida» no son categorías normativas.",
         "objetivos": [
@@ -21425,7 +21425,7 @@ export const planRescate = [
             "NOM-034-SSA3-2013, DOF."
           ]
         },
-        "icono": "🗂️",
+        "icono": "cp-servier-curva-gauss",
         "duracion": "16 min",
         "resumen": "Los cuatro ejes con que el plan pide clasificar las enfermedades —curso, frecuencia, origen y sistema— y la advertencia que los acompaña: son ejes de estudio, no diagnósticos ni prioridades.",
         "objetivos": [
@@ -21754,7 +21754,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "💊",
+        "icono": "cp-servier-descenso-exponencial",
         "duracion": "20 min",
         "resumen": "Qué le hace el cuerpo al medicamento y qué le hace el medicamento al cuerpo, y por qué esas dos preguntas explican casi todos los errores de administración.",
         "objetivos": [
@@ -22172,7 +22172,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "📋",
+        "icono": "cp-servier-libreta",
         "duracion": "16 min",
         "resumen": "Qué regula realmente la NOM-034 en materia de medicamentos, qué NO regula, y por qué una lista de dotación obligatoria no es un protocolo de tratamiento.",
         "objetivos": [
@@ -22756,7 +22756,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "🧮",
+        "icono": "cp-servier-dosis-efecto",
         "duracion": "18 min",
         "resumen": "Cómo se verifica una dosis antes de administrarla y por qué este tema no puede publicar una tabla de dosis mientras la academia no entregue su formulario.",
         "objetivos": [
@@ -23069,7 +23069,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "⏳",
+        "icono": "cp-servier-grafica-perfusion",
         "duracion": "18 min",
         "resumen": "Qué distingue una infusión continua de un bolo, de qué depende la cantidad que realmente recibe el paciente y por qué las recetas de aminas no se memorizan.",
         "objetivos": [
@@ -23365,7 +23365,7 @@ export const planRescate = [
             "En cuanto la academia entregue su protocolo, el taller es redactable como práctica de cálculo con lista de cotejo y verificación por pares."
           ]
         },
-        "icono": "",
+        "icono": "cp-servier-portasueros",
         "duracion": "",
         "resumen": "",
         "objetivos": [],
@@ -23405,7 +23405,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "🩺",
+        "icono": "ic-estetoscopio",
         "duracion": "18 min",
         "resumen": "Cómo se explora el tórax en la calle para responder preguntas concretas de la evaluación, qué aporta cada maniobra y qué no puede concluirse con ella.",
         "objetivos": [
@@ -23752,7 +23752,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "🫁",
+        "icono": "cp-servier-via-intrapulmonar",
         "duracion": "20 min",
         "resumen": "Cómo se reconoce que la respiración de un paciente ha dejado de ser suficiente, qué signos anuncian que va a claudicar y qué sostiene el prestador mientras traslada.",
         "objetivos": [
@@ -24113,7 +24113,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "💨",
+        "icono": "cp-servier-enfisema",
         "duracion": "20 min",
         "resumen": "Qué es una exacerbación de EPOC, cómo se reconoce su gravedad en la calle y por qué la oxigenoterapia de estos pacientes se administra de forma controlada.",
         "objetivos": [
@@ -24468,7 +24468,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "🌊",
+        "icono": "cp-servier-edema-pulmonar",
         "duracion": "20 min",
         "resumen": "Cómo se reconoce el edema agudo de pulmón de origen cardiogénico, qué lo distingue de otras causas de ocupación alveolar y qué puede hacerse por el paciente durante el traslado.",
         "objetivos": [
@@ -24773,7 +24773,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "🎈",
+        "icono": "cp-servier-neumotorax",
         "duracion": "18 min",
         "resumen": "Qué es un neumotórax espontáneo, cómo se sospecha en la calle y cómo se reconoce la forma que compromete la vida y no admite espera.",
         "objetivos": [
@@ -25099,7 +25099,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "🩸",
+        "icono": "cp-servier-tep",
         "duracion": "18 min",
         "resumen": "Por qué la tromboembolia pulmonar es difícil de reconocer en la calle, qué debe hacer sospecharla y qué distingue al paciente de alto riesgo.",
         "objetivos": [
@@ -25427,7 +25427,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "🦠",
+        "icono": "cp-servier-bronquitis-cronica",
         "duracion": "18 min",
         "resumen": "Qué distingue una neumonía de una bronquitis aguda, cómo se reconoce al paciente que está grave y por qué el antibiótico no es una decisión prehospitalaria.",
         "objetivos": [
@@ -25765,7 +25765,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "🌬️",
+        "icono": "cp-servier-bronquio-inflamado",
         "duracion": "20 min",
         "resumen": "Qué es una crisis asmática, qué signos la identifican como potencialmente mortal y qué sostiene el prestador mientras traslada.",
         "objetivos": [
@@ -26095,7 +26095,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "🫃",
+        "icono": "cp-servier-hepatomegalia",
         "duracion": "20 min",
         "resumen": "Cómo se explora el abdomen en la calle, por qué su orden es distinto al del tórax y qué signos de alarma convierten un dolor abdominal en un paciente tiempo-dependiente.",
         "objetivos": [
@@ -26435,7 +26435,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "🔺",
+        "icono": "cp-servier-colon",
         "duracion": "16 min",
         "resumen": "Cómo evoluciona una apendicitis, por qué su presentación típica falta en la mitad de los casos y qué debe hacer el prestador con una sospecha que no puede confirmar.",
         "objetivos": [
@@ -26740,7 +26740,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "🥞",
+        "icono": "cp-servier-pancreas",
         "duracion": "16 min",
         "resumen": "Qué es una pancreatitis aguda, por qué su gravedad no se juzga por la intensidad del dolor y qué vigila el prestador durante el traslado.",
         "objetivos": [
@@ -27035,7 +27035,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "🔥",
+        "icono": "cp-servier-ulcera-gastrica",
         "duracion": "16 min",
         "resumen": "Qué son la gastritis y las colitis, cómo se distingue un cuadro banal de uno que no lo es y por qué la colitis isquémica merece una mención aparte.",
         "objetivos": [
@@ -27345,7 +27345,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "🟡",
+        "icono": "cp-servier-colelitiasis",
         "duracion": "16 min",
         "resumen": "Qué distingue un cólico biliar de una colecistitis y de una colangitis, y por qué esa diferencia cambia la prioridad del traslado.",
         "objetivos": [
@@ -27663,7 +27663,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "💧",
+        "icono": "cp-servier-agua",
         "duracion": "18 min",
         "resumen": "Cómo se reconoce y se gradúa la deshidratación sin laboratorio, qué poblaciones se descompensan antes y qué puede hacerse por vía oral.",
         "objetivos": [
@@ -28021,7 +28021,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "⛔",
+        "icono": "cp-servier-intestino-delgado",
         "duracion": "16 min",
         "resumen": "Qué es una oclusión intestinal, por qué la cirugía abdominal previa es el antecedente que más orienta y qué signos indican que el intestino está sufriendo.",
         "objetivos": [
@@ -28325,7 +28325,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "🩸",
+        "icono": "cp-servier-ulcera-gastrica",
         "duracion": "18 min",
         "resumen": "Cómo se reconoce un sangrado digestivo por su forma de exteriorizarse, cómo se localiza el nivel y por qué la valoración circulatoria manda sobre la cantidad referida.",
         "objetivos": [
@@ -28652,7 +28652,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "🫀",
+        "icono": "cp-servier-cirrosis",
         "duracion": "18 min",
         "resumen": "Qué son la hepatitis aguda y la cirrosis, cuáles son las complicaciones que llevan a llamar a una ambulancia y qué protege al prestador y al paciente durante el traslado.",
         "objetivos": [
@@ -29013,7 +29013,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "🫀",
+        "icono": "cp-servier-corazon-interior",
         "duracion": "20 min",
         "resumen": "Cómo se explora a un paciente con motivo cardiovascular en la calle, conectando síntomas, perfusión y hallazgos cardiopulmonares sin pretender confirmar una causa.",
         "objetivos": [
@@ -29420,7 +29420,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "📈",
+        "icono": "dg-ecg-onda-normal",
         "duracion": "22 min",
         "resumen": "Un método ordenado para leer un trazo en la calle y, sobre todo, para reconocer cuándo un trazo no es interpretable y no debe asignársele un ritmo.",
         "objetivos": [
@@ -29788,7 +29788,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "💔",
+        "icono": "il-corazon-vascularizacion",
         "duracion": "22 min",
         "resumen": "Cómo se sospecha un síndrome coronario agudo, por qué el registro eléctrico temprano cambia el desenlace y qué se hace mientras no hay confirmación posible.",
         "objetivos": [
@@ -30119,7 +30119,7 @@ export const planRescate = [
             "Bibiano Guillén C. y cols. Manual de urgencias, 3.ª ed., 2018, cap. 29, p. 261."
           ]
         },
-        "icono": "🚨",
+        "icono": "ic-rcp",
         "duracion": "25 min",
         "resumen": "Cómo se organiza un equipo alrededor de un paro cardiorrespiratorio para que las compresiones no se interrumpan y las decisiones se tomen en voz alta.",
         "objetivos": [
@@ -30504,7 +30504,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "〰️",
+        "icono": "cp-servier-ecg",
         "duracion": "20 min",
         "resumen": "Cómo se decide si una frecuencia anormal es un hallazgo tolerado o una arritmia que está causando inestabilidad, y qué se busca antes de tratar el número.",
         "objetivos": [
@@ -30860,7 +30860,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "🫁",
+        "icono": "cp-servier-edema-miembros",
         "duracion": "20 min",
         "resumen": "Qué significa que el corazón falle como bomba, cómo se distingue la congestión del bajo gasto y qué reconoce el prestador cuando una insuficiencia crónica se descompensa.",
         "objetivos": [
@@ -31190,7 +31190,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "🩺",
+        "icono": "ic-tension-arterial",
         "duracion": "20 min",
         "resumen": "Por qué una cifra alta de presión no es por sí sola una urgencia, y qué distingue una medición elevada de un daño agudo de órgano que sí lo es.",
         "objetivos": [
@@ -31552,7 +31552,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "🩸",
+        "icono": "cp-servier-islote-langerhans",
         "duracion": "20 min",
         "resumen": "Cómo regula el organismo su glucosa, en qué se diferencian funcionalmente los dos tipos de diabetes y qué información necesita recoger el prestador de un paciente diabético.",
         "objetivos": [
@@ -31882,7 +31882,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "⚠️",
+        "icono": "cp-servier-islote-langerhans",
         "duracion": "22 min",
         "resumen": "Cómo se distinguen en la calle la hipoglucemia, la cetoacidosis y el estado hiperosmolar, y por qué la primera es la que no admite espera.",
         "objetivos": [
@@ -32276,7 +32276,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "⚖️",
+        "icono": "dg-equilibrio-acido-base",
         "duracion": "20 min",
         "resumen": "Cómo se produce cada uno de los cuatro trastornos ácido-base, qué hace el organismo para compensarlos y hasta dónde puede llegar el razonamiento sin una gasometría.",
         "objetivos": [
@@ -32670,7 +32670,7 @@ export const planRescate = [
             "El número de reactivos y de intentos permitidos también es decisión académica; mientras tanto la plataforma dimensiona el examen según el tamaño del banco."
           ]
         },
-        "icono": "",
+        "icono": "cp-servier-libreta",
         "duracion": "",
         "resumen": "",
         "objetivos": [],
@@ -32711,7 +32711,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "🦠",
+        "icono": "cp-servier-vejiga",
         "duracion": "18 min",
         "resumen": "Cómo se distinguen los síntomas urinarios bajos de una infección que ha ascendido o se ha complicado, y qué convierte a un paciente con disuria en un traslado prioritario.",
         "objetivos": [
@@ -33025,7 +33025,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "🪨",
+        "icono": "cp-servier-calculos",
         "duracion": "18 min",
         "resumen": "Cómo se reconoce un cólico renal probable y, sobre todo, cómo se detecta al paciente cuyo dolor en el flanco no es un cólico o se ha complicado.",
         "objetivos": [
@@ -33351,7 +33351,7 @@ export const planRescate = [
             "Bibiano Guillén C. y cols. Manual de urgencias, 3.ª ed., 2018, cap. 76, p. 667 y cap. 75, p. 659."
           ]
         },
-        "icono": "⚡",
+        "icono": "cp-servier-balanza-desequilibrada",
         "duracion": "20 min",
         "resumen": "Qué produce en el organismo la alteración de los principales electrolitos, por qué el potasio manda sobre los demás y hasta dónde puede llegar la sospecha sin una medición.",
         "objetivos": [
@@ -33697,7 +33697,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "🫘",
+        "icono": "cp-servier-grafica-renal",
         "duracion": "20 min",
         "resumen": "Qué distingue una lesión renal aguda de una enfermedad renal crónica, qué complicaciones hacen que un paciente renal llame a una ambulancia y por qué no todos necesitan líquidos.",
         "objetivos": [
@@ -34106,7 +34106,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "🧠",
+        "icono": "cp-servier-cerebro",
         "duracion": "20 min",
         "resumen": "Un examen neurológico breve, reproducible y comparable, pensado para detectar un deterioro y transmitirlo, no para localizar una lesión.",
         "objetivos": [
@@ -34434,7 +34434,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "🤕",
+        "icono": "cp-servier-senos-paranasales",
         "duracion": "18 min",
         "resumen": "Cómo se distingue una cefalea que probablemente sea primaria de las banderas rojas que obligan a pensar en una causa secundaria grave.",
         "objetivos": [
@@ -34766,7 +34766,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "⏱️",
+        "icono": "cp-smart-evc-isquemico",
         "duracion": "22 min",
         "resumen": "Cómo se reconoce un ictus, por qué no puede saberse en la calle si es isquémico o hemorrágico y qué convierte al equipo prehospitalario en parte del tratamiento.",
         "objetivos": [
@@ -35127,7 +35127,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "⚡",
+        "icono": "cp-servier-cerebro",
         "duracion": "20 min",
         "resumen": "Cómo se protege a una persona durante una convulsión, cuándo una crisis deja de ser autolimitada y qué causas reversibles conviene buscar siempre.",
         "objetivos": [
@@ -35454,7 +35454,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "💫",
+        "icono": "cp-servier-cerebro",
         "duracion": "18 min",
         "resumen": "Qué es exactamente un síncope, cómo se diferencia de otras pérdidas de conciencia y qué datos separan al paciente que puede esperar del que no.",
         "objetivos": [
@@ -35803,7 +35803,7 @@ export const planRescate = [
             "Bibiano Guillén C. y cols. Manual de urgencias, 3.ª ed., 2018, cap. 118, p. 1050."
           ]
         },
-        "icono": "🩺",
+        "icono": "cp-smart-utero",
         "duracion": "20 min",
         "resumen": "Cómo se entrevista y se explora a una paciente con un motivo ginecológico u obstétrico de forma respetuosa, y qué banderas rojas hay que detectar sin recurrir a maniobras invasivas.",
         "objetivos": [
@@ -36124,7 +36124,7 @@ export const planRescate = [
             "Bibiano Guillén C. y cols. Manual de urgencias, 3.ª ed., 2018, cap. 119, p. 1060."
           ]
         },
-        "icono": "🤰",
+        "icono": "ic-feto-utero",
         "duracion": "20 min",
         "resumen": "Qué cambia en el organismo durante el embarazo y qué consecuencia tiene cada uno de esos cambios sobre la forma de evaluar y de trasladar a una paciente.",
         "objetivos": [
@@ -36458,7 +36458,7 @@ export const planRescate = [
             "Bibiano Guillén C. y cols. Manual de urgencias, 3.ª ed., 2018, cap. 117, p. 1042."
           ]
         },
-        "icono": "👶",
+        "icono": "ic-feto-utero",
         "duracion": "22 min",
         "resumen": "Cómo se reconoce que un nacimiento es inminente, qué se prepara, cómo se acompaña el nacimiento sin intervenir de más y qué necesitan la madre y el recién nacido en los primeros minutos.",
         "objetivos": [
@@ -36797,7 +36797,7 @@ export const planRescate = [
             "Bibiano Guillén C. y cols. Manual de urgencias, 3.ª ed., 2018, cap. 117, p. 1042."
           ]
         },
-        "icono": "⚠️",
+        "icono": "ic-feto-utero",
         "duracion": "20 min",
         "resumen": "Qué significa que un parto no progrese con normalidad, cómo se reconocen las cuatro situaciones que el prestador debe identificar y por qué la conducta es pedir ayuda y minimizar la manipulación.",
         "objetivos": [
@@ -37101,7 +37101,7 @@ export const planRescate = [
             "WHO. Recommendations on Maternal Health, 2.ª ed., 2025 (sección pendiente)."
           ]
         },
-        "icono": "📉",
+        "icono": "cp-smart-placenta",
         "duracion": "18 min",
         "resumen": "Por qué se prefiere hablar de estado fetal no tranquilizador, qué puede observar realmente el prestador y qué causas maternas reversibles conviene buscar.",
         "objetivos": [
@@ -37437,7 +37437,7 @@ export const planRescate = [
             "Bibiano Guillén C. y cols. Manual de urgencias, 3.ª ed., 2018, cap. 119, p. 1060."
           ]
         },
-        "icono": "🩸",
+        "icono": "ic-feto-utero",
         "duracion": "20 min",
         "resumen": "Cómo se reconoce una hemorragia obstétrica avanzada, en qué se diferencian los dos patrones clásicos y por qué lo que se ve nunca mide toda la pérdida.",
         "objetivos": [
@@ -37748,7 +37748,7 @@ export const planRescate = [
             "Bibiano Guillén C. y cols. Manual de urgencias, 3.ª ed., 2018, cap. 118, p. 1050."
           ]
         },
-        "icono": "🕊️",
+        "icono": "cp-smart-utero",
         "duracion": "20 min",
         "resumen": "Cómo se atiende clínicamente a una paciente con pérdida gestacional o tras un aborto, qué complicaciones se reconocen y por qué el trato y la confidencialidad forman parte de la atención.",
         "objetivos": [
@@ -38086,7 +38086,7 @@ export const planRescate = [
             "WHO. Managing Complications in Pregnancy and Childbirth, 2.ª ed. (sección pendiente)."
           ]
         },
-        "icono": "🚑",
+        "icono": "cp-smart-utero",
         "duracion": "18 min",
         "resumen": "Por qué un embarazo implantado fuera del útero puede matar en poco tiempo, cómo se sospecha y por qué la ausencia de factores de riesgo no lo descarta.",
         "objetivos": [
@@ -38382,7 +38382,7 @@ export const planRescate = [
             "Bibiano Guillén C. y cols. Manual de urgencias, 3.ª ed., 2018, cap. 118, p. 1050."
           ]
         },
-        "icono": "🌀",
+        "icono": "cp-smart-utero",
         "duracion": "16 min",
         "resumen": "Qué ocurre cuando un ovario gira sobre su propio pedículo, por qué es una urgencia quirúrgica y por qué la mejoría transitoria del dolor no permite descartarla.",
         "objetivos": [
@@ -38690,7 +38690,7 @@ export const planRescate = [
             "Bibiano Guillén C. y cols. Manual de urgencias, 3.ª ed., 2018, cap. 117, p. 1042."
           ]
         },
-        "icono": "🚨",
+        "icono": "cp-servier-eritrocito",
         "duracion": "20 min",
         "resumen": "Cómo se reconoce pronto una hemorragia posparto, qué cuatro causas la explican y qué puede hacer el prestador mientras llega el recurso que la resuelve.",
         "objetivos": [
@@ -38989,7 +38989,7 @@ export const planRescate = [
             "Bibiano Guillén C. y cols. Manual de urgencias, 3.ª ed., 2018, cap. 119, p. 1060."
           ]
         },
-        "icono": "⚡",
+        "icono": "ic-tension-arterial",
         "duracion": "20 min",
         "resumen": "Qué es la preeclampsia, qué síntomas anuncian que se está agravando y cómo se sostiene a una paciente durante una convulsión obstétrica.",
         "objetivos": [
@@ -39328,7 +39328,7 @@ export const planRescate = [
             "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
           ]
         },
-        "icono": "☠️",
+        "icono": "cp-cc0-toxico",
         "duracion": "22 min",
         "resumen": "Cómo se usan los patrones de signos para orientar la atención de un paciente intoxicado cuando no se sabe qué tomó, y qué se hace mientras tanto.",
         "objetivos": [
@@ -39690,7 +39690,7 @@ export const planRescate = [
             "Bibiano Guillén C. y cols. Manual de urgencias, 3.ª ed., 2018, cap. 151, p. 1324 y cap. 150, p. 1318."
           ]
         },
-        "icono": "🥃",
+        "icono": "cp-servier-alcohol",
         "duracion": "18 min",
         "resumen": "Qué ocurre cuando el organismo adaptado a una sustancia deja de recibirla, por qué la abstinencia de alcohol y sedantes puede matar y qué otras causas hay que descartar antes.",
         "objetivos": [
@@ -40067,7 +40067,7 @@ export const planRescate = [
             "Bibiano Guillén C. y cols. Manual de urgencias, 3.ª ed., 2018, cap. 156, p. 1363."
           ]
         },
-        "icono": "🦂",
+        "icono": "cp-dbcls-abeja",
         "duracion": "20 min",
         "resumen": "Qué se hace y sobre todo qué no se hace ante una mordedura o picadura, y cómo se reconoce la progresión que convierte una lesión local en un cuadro sistémico.",
         "objetivos": [
@@ -40457,7 +40457,7 @@ export const planRescate = [
             "Bibiano Guillén C. y cols. Manual de urgencias, 3.ª ed., 2018, cap. 163, p. 1424."
           ]
         },
-        "icono": "🚨",
+        "icono": "cp-servier-anticuerpo",
         "duracion": "20 min",
         "resumen": "Cómo se reconoce una anafilaxia —incluso cuando no hay ninguna lesión en la piel— y por qué la adrenalina intramuscular es la primera línea que nada sustituye.",
         "objetivos": [
@@ -40874,7 +40874,7 @@ export const planRescate = [
             "El número de reactivos y de intentos permitidos también es decisión académica; mientras tanto la plataforma dimensiona el examen según el tamaño del banco."
           ]
         },
-        "icono": "",
+        "icono": "cp-servier-libreta",
         "duracion": "",
         "resumen": "",
         "objetivos": [],
@@ -40899,7 +40899,7 @@ export const planRescate = [
     "subtitulo": "",
     "descripcion": "MÓDULO 5: EMERGENCIAS TRAUMATOLÓGICAS — 20 semanas · 100 horas.",
     "color": "#8b5cf6",
-    "icono": "🦴",
+    "icono": "ic-fractura",
     "encabezadoOficial": "MÓDULO 5: EMERGENCIAS TRAUMATOLÓGICAS",
     "numeroOficial": 5,
     "totales": {
@@ -41173,7 +41173,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "💥",
+        "icono": "cp-servier-corredor",
         "duracion": "14 min",
         "resumen": "El trauma es una transferencia de energía capaz de lesionar tejidos, y la cinemática es la lectura razonada de cómo ocurrió esa transferencia. Esta lección organiza esa lectura en tres momentos —preevento, evento y posevento— y fija el límite que gobierna toda la unidad: la cinemática sirve para saber qué buscar y con qué prioridad, no para declarar qué se rompió. Mecanismo, fisiología, anatomía y exploración se integran; ninguno de los cuatro sustituye a los demás.",
         "objetivos": [
@@ -41434,7 +41434,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "🚗",
+        "icono": "cp-servier-ciclista",
         "duracion": "14 min",
         "resumen": "La energía cinética de un cuerpo en movimiento depende de su masa y del cuadrado de su velocidad. De ahí sale la observación más útil de la unidad: duplicar la velocidad multiplica por cuatro la energía disponible, mientras que duplicar la masa solo la duplica. La lección explica además por qué el daño no depende solo de cuánta energía había, sino de en cuánto tiempo y sobre cuánta superficie se disipó. La fórmula sirve para comprender relaciones, no para calcular gravedad en la calle.",
         "objetivos": [
@@ -41653,7 +41653,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "🪜",
+        "icono": "cp-servier-corredor",
         "duracion": "13 min",
         "resumen": "La energía potencial gravitatoria es la que un cuerpo acumula por su altura y que se convierte en cinética al caer. Esta lección relaciona altura, masa, superficie de recepción, región corporal del primer contacto y características del paciente, y explica por qué no existe una altura universal que separe el trauma leve del grave. Cuando se usan alturas como criterio, son criterios de TRIAJE atribuibles a la guía de campo, no fronteras diagnósticas.",
         "objetivos": [
@@ -41869,7 +41869,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "🔀",
+        "icono": "cp-smart-esqueleto",
         "duracion": "12 min",
         "resumen": "La primera clasificación del trauma distingue si la superficie corporal se mantuvo íntegra o si fue atravesada. Trauma cerrado o contuso transfiere energía sin abrir la pared; abierto o penetrante crea una solución de continuidad y lesiona lo que encuentra a su paso. La lección insiste en dos advertencias simétricas: una herida pequeña no excluye lesión interna, y la ausencia de herida no implica que el paciente esté bien. Muchos incidentes reales son mixtos.",
         "objetivos": [
@@ -42116,7 +42116,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "🕳️",
+        "icono": "cp-servier-fibra-muscular",
         "duracion": "13 min",
         "resumen": "Cuando un objeto atraviesa un tejido, aparta las partículas de su camino y abre una cavidad. Parte de esa cavidad permanece y parte se cierra tras el paso del objeto: son la cavidad permanente y la temporal. Cuánto daño deja depende de la densidad y de la elasticidad del tejido y de si el objeto se deforma, se fragmenta o se desvía. La lección enseña ese razonamiento y prohíbe deducir calibre, arma o trayectoria a partir de los orificios externos.",
         "objetivos": [
@@ -42364,7 +42364,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "🔪",
+        "icono": "cp-cc0-explosivo",
         "duracion": "14 min",
         "resumen": "El objeto cortopunzante lesiona lo que su trayecto encuentra y su energía es la del brazo que lo empuja; el proyectil añade la transferencia balística y su cavitación. La lección contrasta ambos mecanismos y fija tres conductas que no dependen del protocolo: no se explora la herida con instrumentos ni con los dedos, no se retira un objeto empalado y no se etiquetan con certeza entrada y salida. La preservación de indicios se hace sin retrasar la atención.",
         "objetivos": [
@@ -42620,7 +42620,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "🚸",
+        "icono": "ic-nino",
         "duracion": "12 min",
         "resumen": "El atropello se lee como una secuencia de impactos: el vehículo golpea al peatón, el peatón golpea el vehículo y después golpea el suelo. Esa secuencia, conocida como tríada de Waddell, es una heurística de búsqueda para el paciente pediátrico y no un diagnóstico. La lección explica cómo la estatura del peatón y la altura del frontal del vehículo cambian dónde impacta cada golpe, y registra que el plan de estudios escribe «Wadell» con una sola d.",
         "objetivos": [
@@ -42870,7 +42870,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "🛑",
+        "icono": "cp-servier-aorta",
         "duracion": "13 min",
         "resumen": "Cuando un cuerpo pasa de moverse a detenerse en muy poco tiempo, sus partes no se detienen a la vez. Las estructuras fijas frenan con la pared y las móviles siguen avanzando hasta que su anclaje las retiene. De ahí salen tres fuerzas —compresión, tracción y cizallamiento— que explican por qué la desaceleración lesiona sin abrir la piel. La lección aplica ese razonamiento a los impactos frontal, lateral, posterior y rotacional sin convertir cada patrón en una lesión segura.",
         "objetivos": [
@@ -43109,7 +43109,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "🚙",
+        "icono": "cp-servier-ciclista",
         "duracion": "15 min",
         "resumen": "Una colisión de vehículo no es un choque, sino tres sucesivos: el vehículo contra el objeto, el ocupante contra el interior o contra su sistema de retención, y los órganos contra las paredes del propio cuerpo. La lección desarrolla esa secuencia y revisa la información que la escena aporta —intrusión, cinturón, bolsa de aire, volante, parabrisas, eyección y estado de los demás ocupantes— y la conecta con la decisión de triaje, evitando toda fórmula determinista del tipo «volante deformado igual a lesión X».",
         "objetivos": [
@@ -43341,7 +43341,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "🏍️",
+        "icono": "cp-servier-ciclista",
         "duracion": "13 min",
         "resumen": "El motociclista carece de compartimento protector: entre él y el objeto contra el que choca solo hay equipo de protección personal. La lección revisa los patrones de impacto frontal, lateral, la expulsión y el deslizamiento, además de los impactos secundarios contra otros vehículos u obstáculos. Explica que el casco reduce el riesgo pero no descarta lesión craneal ni cervical, y remite su retirada a la necesidad de vía aérea y al entrenamiento y protocolo del servicio.",
         "objetivos": [
@@ -43595,7 +43595,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "💣",
+        "icono": "cp-cc0-explosivo",
         "duracion": "15 min",
         "resumen": "Una explosión lesiona por varias vías a la vez, y por eso su clasificación se organiza en categorías: primaria por la onda de presión, secundaria por los fragmentos proyectados, terciaria por el desplazamiento del cuerpo y cuaternaria por todo lo demás —quemaduras, inhalación, aplastamiento y descompensación de enfermedades previas—. La lección explica por qué el espacio cerrado agrava la lesión primaria y sitúa la seguridad de la escena como condición previa a cualquier atención.",
         "objetivos": [
@@ -43862,7 +43862,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "🩸",
+        "icono": "cp-servier-eritrocito",
         "duracion": "12 min",
         "resumen": "Qué es el shock realmente: no es «presión baja», sino un fallo de la entrega de oxígeno a la célula.",
         "objetivos": [
@@ -44075,7 +44075,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "🩸",
+        "icono": "cp-servier-eritrocito",
         "duracion": "14 min",
         "resumen": "Las hemorragias se clasifican por dónde se acumula la sangre —externa, interna y de unión— y por si pueden o no comprimirse desde fuera. Esa segunda distinción es la que decide la conducta: lo compresible se controla en la escena, lo no compresible se controla en el quirófano y lo que hace el equipo es acortar el tiempo hasta él. La lección enseña además a buscar los sitios donde la sangre se esconde sin verse por fuera.",
         "objetivos": [
@@ -44330,7 +44330,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "🧤",
+        "icono": "cp-cc0-guantes",
         "duracion": "16 min",
         "resumen": "El control de una hemorragia externa sigue una secuencia con un orden que importa: seguridad y protección personal, exposición de la herida, presión manual directa y, si el sangrado no cede, empaquetamiento de la herida o torniquete cuando la localización lo permite. Cada paso se reevalúa. La lección delimita además dónde NO se empaqueta y recuerda que la hemorragia interna no tiene «control externo»: exige reconocimiento y traslado.",
         "objetivos": [
@@ -44577,7 +44577,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "🩹",
+        "icono": "cp-servier-arteria",
         "duracion": "15 min",
         "resumen": "El torniquete está indicado ante una hemorragia de extremidad potencialmente mortal o que no se controla con las medidas previas. Se prefiere un dispositivo comercial, se aprieta hasta que el sangrado se detiene, se registra la hora de colocación y se reevalúa. Esta lección retira dos enseñanzas tradicionales que hoy no se sostienen: aflojarlo periódicamente y manejar un tiempo máximo universal. Tampoco se usa en la mordedura de serpiente.",
         "objetivos": [
@@ -44830,7 +44830,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "📉",
+        "icono": "cp-servier-capilares",
         "duracion": "15 min",
         "resumen": "Shock es la incapacidad de entregar o de utilizar oxígeno suficiente en la célula. No es una cifra de presión arterial: un paciente puede estar en shock con la presión todavía normal y otro puede tener la presión baja sin estarlo. La lección clasifica los cuatro grandes tipos —hipovolémico, distributivo, cardiogénico y obstructivo— por el fallo que los origina, y mantiene el foco en el paciente traumatizado sin repetir las urgencias médicas del Módulo 4.",
         "objetivos": [
@@ -45080,7 +45080,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "🫀",
+        "icono": "cp-servier-capilares",
         "duracion": "17 min",
         "resumen": "Esta lección explica la cadena que va de la pérdida de volumen al daño celular: cae la precarga, cae el gasto cardiaco, cae la entrega de oxígeno y la célula pasa al metabolismo anaerobio, con acidosis. El organismo compensa con taquicardia y vasoconstricción, y esa compensación es la que produce los signos que se observan antes de que la presión caiga. Cierra con la tríada de hipotermia, acidosis y coagulopatía, que se retroalimenta.",
         "objetivos": [
@@ -45386,7 +45386,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "💧",
+        "icono": "cp-servier-eritrocito",
         "duracion": "15 min",
         "resumen": "Shock hipovolémico: el más frecuente en trauma. Cómo se reconoce por etapas y por qué el control de la hemorragia manda sobre todo lo demás.",
         "objetivos": [
@@ -45629,7 +45629,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "💔",
+        "icono": "cp-servier-corazon-interior",
         "duracion": "12 min",
         "resumen": "Shock cardiogénico: falla la bomba. Por qué aquí los líquidos pueden matar y qué causas hay que buscar en trauma.",
         "objetivos": [
@@ -45809,7 +45809,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "🧠",
+        "icono": "cp-smart-medula-espinal",
         "duracion": "12 min",
         "resumen": "Shock neurogénico: la lesión medular desconecta el control de los vasos. El único shock que cursa sin taquicardia.",
         "objetivos": [
@@ -46016,7 +46016,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "🐝",
+        "icono": "cp-servier-anticuerpo",
         "duracion": "13 min",
         "resumen": "Shock anafiláctico: reacción alérgica que compromete la vía aérea y la circulación a la vez. El tiempo hasta la adrenalina es lo que decide.",
         "objetivos": [
@@ -46230,7 +46230,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "🦠",
+        "icono": "cp-servier-neutrofilo",
         "duracion": "12 min",
         "resumen": "Shock séptico: la infección desborda al organismo. El menos «traumático» de los shocks, pero el TUM lo encuentra a menudo.",
         "objetivos": [
@@ -46418,7 +46418,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "🚑",
+        "icono": "cp-servier-capilares",
         "duracion": "14 min",
         "resumen": "Síntesis operativa: cómo se reconoce cualquier shock en la escena, cómo se distingue el tipo y qué se hace en los primeros minutos.",
         "objetivos": [
@@ -46648,7 +46648,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "🫁",
+        "icono": "cp-smart-caja-toracica",
         "duracion": "12 min",
         "resumen": "Qué es el trauma de tórax, por qué mata y por qué la mayoría de las muertes se evitan con maniobras sencillas.",
         "objetivos": [
@@ -46836,7 +46836,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "🗂️",
+        "icono": "cp-smart-caja-toracica",
         "duracion": "13 min",
         "resumen": "El trauma torácico se clasifica primero por la integridad de la pared —abierto o cerrado— y después por el problema fisiológico que produce: fallo de la ventilación, fallo de la oxigenación o fallo de la perfusión. La segunda clasificación es la que organiza la atención dentro del ABCDE, porque dice qué corregir primero. Varias lesiones pueden coexistir en el mismo paciente, y la clasificación mecánica nunca sustituye a la evaluación fisiológica.",
         "objetivos": [
@@ -47099,7 +47099,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "🦴",
+        "icono": "cp-smart-fractura-clavicula",
         "duracion": "10 min",
         "resumen": "Fractura de clavícula: la más frecuente del cinturón escapular, casi siempre benigna, con dos complicaciones que hay que descartar.",
         "objetivos": [
@@ -47258,7 +47258,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "🛡️",
+        "icono": "cp-smart-fractura-hombro",
         "duracion": "10 min",
         "resumen": "Fractura de escápula: poco frecuente, pero su presencia avisa de que la energía fue enorme.",
         "objetivos": [
@@ -47413,7 +47413,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "⚠️",
+        "icono": "cp-smart-esofago",
         "duracion": "10 min",
         "resumen": "Lesión esofágica: rara, difícil de sospechar y muy letal si se retrasa el diagnóstico.",
         "objetivos": [
@@ -47602,7 +47602,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "🗣️",
+        "icono": "cp-servier-laringe",
         "duracion": "13 min",
         "resumen": "La lesión de la vía aérea superior es poco frecuente y muy peligrosa, porque la vía por la que respira el paciente es la que está dañada. Se sospecha por disfonía, estridor, enfisema subcutáneo cervical, herida en el cuello, hemoptisis y por un deterioro que progresa con el tiempo. La conducta prehospitalaria es reconocer pronto, manipular lo mínimo imprescindible, apoyar la oxigenación y avisar temprano al centro receptor.",
         "objetivos": [
@@ -47807,7 +47807,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "🦴",
+        "icono": "cp-smart-fractura-costal",
         "duracion": "13 min",
         "resumen": "La fractura costal es la lesión torácica más común y su importancia real está en dos cosas: el dolor limita la ventilación y favorece complicaciones respiratorias, y la fractura avisa de lo que puede haber debajo. En personas mayores o frágiles, una fractura costal tiene más peso del que aparenta. La lección retira el vendaje circunferencial del tórax y remite la analgesia, el oxígeno y el apoyo ventilatorio al protocolo del servicio.",
         "objetivos": [
@@ -48046,7 +48046,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "↕️",
+        "icono": "cp-smart-fractura-costal",
         "duracion": "14 min",
         "resumen": "El tórax inestable es un segmento de la pared que ha perdido continuidad con el resto porque varias costillas contiguas están fracturadas en más de un punto. Ese segmento se mueve al revés que el resto del tórax, aunque el movimiento paradójico puede ser sutil o quedar oculto por la contractura muscular. Lo que más deteriora al paciente no es el movimiento en sí, sino la contusión pulmonar que suele acompañarlo. No se inmoviliza con cinta ni con sacos.",
         "objetivos": [
@@ -48270,7 +48270,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "🫧",
+        "icono": "cp-servier-neumotorax",
         "duracion": "13 min",
         "resumen": "En el neumotórax simple entra aire al espacio pleural sin comunicación abierta con el exterior y sin mecanismo de válvula: el pulmón pierde parte de su expansión, pero la presión no se acumula de forma progresiva. Cursa con dolor, disnea y posible disminución unilateral de los ruidos respiratorios, aunque los hallazgos rara vez están completos. Lo que exige es vigilancia, porque puede progresar; el neumotórax simple no se descomprime.",
         "objetivos": [
@@ -48533,7 +48533,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "🌬️",
+        "icono": "cp-servier-neumotorax",
         "duracion": "16 min",
         "resumen": "En el neumotórax abierto una herida comunica el espacio pleural con el exterior y el aire entra por la pared en lugar de por la vía aérea. La conducta ha cambiado: la guía de primeros auxilios AHA/Cruz Roja Americana de 2024 considera razonable dejar la herida expuesta, usar un apósito limpio y seco no oclusivo, o un sello torácico ventilado si se dispone de él, y aflojar o retirar cualquier apósito que empeore la respiración. El apósito de tres lados deja de enseñarse como regla universal.",
         "objetivos": [
@@ -48783,7 +48783,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "🚨",
+        "icono": "cp-servier-neumotorax",
         "duracion": "16 min",
         "resumen": "Neumotórax a tensión: la emergencia torácica por excelencia. Se diagnostica clínicamente y se trata en la escena.",
         "objetivos": [
@@ -49006,7 +49006,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "🩸",
+        "icono": "cp-servier-eritrocito",
         "duracion": "14 min",
         "resumen": "El hemotórax es sangre acumulada en el espacio pleural, y produce dos problemas a la vez: ocupa el espacio del pulmón y resta volumen circulante. Por eso puede presentarse como insuficiencia respiratoria, como shock hemorrágico o como ambas cosas. Los hallazgos clásicos —ruidos disminuidos y matidez a la percusión— pueden faltar o ser difíciles de apreciar en la escena. El ámbito prehospitalario sospecha, sostiene y traslada; no confirma ni trata de forma definitiva.",
         "objetivos": [
@@ -49239,7 +49239,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "🩸",
+        "icono": "cp-servier-neumotorax",
         "duracion": "11 min",
         "resumen": "Hemoneumotórax: aire y sangre en el mismo espacio pleural. Suma el problema ventilatorio al hemorrágico.",
         "objetivos": [
@@ -49452,7 +49452,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "💧",
+        "icono": "cp-servier-linfatico",
         "duracion": "9 min",
         "resumen": "Quilotórax: linfa en el espacio pleural por lesión del conducto torácico. Raro, de aparición tardía y con repercusión nutricional e inmunitaria.",
         "objetivos": [
@@ -49634,7 +49634,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "🫁",
+        "icono": "cp-servier-via-intrapulmonar",
         "duracion": "13 min",
         "resumen": "Contusión pulmonar: el pulmón golpeado se inflama y deja de intercambiar. Empeora con las horas y con los líquidos.",
         "objetivos": [
@@ -49800,7 +49800,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "🌲",
+        "icono": "il-arbol-traqueobronquial",
         "duracion": "12 min",
         "resumen": "La lesión del árbol traqueobronquial intratorácico es rara y grave: hay una fuga de aire desde una vía aérea grande hacia el mediastino o hacia el espacio pleural. Se sospecha por enfisema subcutáneo extenso, hemoptisis y dificultad respiratoria en un mecanismo de alta energía o penetrante, y sobre todo por una fuga aérea que persiste. El diagnóstico es hospitalario; el manejo prehospitalario es de soporte, vigilancia y traslado con prealerta.",
         "objetivos": [
@@ -50017,7 +50017,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "⚡",
+        "icono": "cp-servier-aorta",
         "duracion": "13 min",
         "resumen": "La disrupción traumática de la aorta se asocia a desaceleraciones de alta energía: la aorta tiene porciones fijas y porciones móviles, y el cizallamiento se concentra en la transición. Los pacientes que llegan vivos suelen tener el sangrado contenido por estructuras vecinas, y por eso pueden presentarse sin un cuadro llamativo. Ningún signo prehospitalario la confirma ni la descarta: el mecanismo eleva la sospecha y la prioridad de destino, y la imagen la diagnostica.",
         "objetivos": [
@@ -50237,7 +50237,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "💔",
+        "icono": "cp-servier-corazon-interior",
         "duracion": "14 min",
         "resumen": "En el taponamiento cardiaco se acumula sangre dentro del pericardio, que es poco distensible: la presión sube y el corazón no puede llenarse. El resultado es un shock obstructivo. La tríada de Beck —hipotensión, ingurgitación yugular y ruidos cardiacos apagados— se enseña como referencia clásica, no como requisito: rara vez está completa y sus tres componentes son difíciles de valorar en la escena. La conducta prehospitalaria es sospechar y trasladar rápido.",
         "objetivos": [
@@ -50491,7 +50491,7 @@ export const planRescate = [
             "ACS. Trauma Quality Programs, Best Practices Guidelines."
           ]
         },
-        "icono": "🫀",
+        "icono": "cp-servier-corazon",
         "duracion": "13 min",
         "resumen": "El término contemporáneo es lesión cardiaca contusa, y describe el daño del músculo cardiaco tras un impacto sobre la pared torácica anterior. Sus manifestaciones —dolor torácico, alteraciones del ritmo, hipotensión— son inespecíficas y se confunden con las de otras lesiones del tórax. No se diagnostica por una equimosis esternal ni por el aspecto del volante: se sospecha por el mecanismo, se monitoriza si el equipo y el protocolo lo permiten y se evalúa en el hospital.",
         "objetivos": [
@@ -50713,7 +50713,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "😰",
+        "icono": "cp-servier-capilares",
         "duracion": "10 min",
         "resumen": "Asfixia traumática: compresión brusca del tórax que invierte el flujo venoso. Aparatosa de ver, y marcador de un aplastamiento grave.",
         "objetivos": [
@@ -50906,7 +50906,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "↕️",
+        "icono": "cp-servier-hernia-hiatal",
         "duracion": "11 min",
         "resumen": "Ruptura diafragmática: el abdomen invade el tórax. Difícil de diagnosticar y fácil de empeorar con ventilación a presión positiva.",
         "objetivos": [
@@ -51105,7 +51105,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "🩻",
+        "icono": "cp-servier-intestino",
         "duracion": "12 min",
         "resumen": "Qué es el trauma abdominal y por qué se le llama «la cavidad que miente»: puede alojar una hemorragia mortal sin apenas signos externos.",
         "objetivos": [
@@ -51326,7 +51326,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "🚨",
+        "icono": "cp-servier-peristalsis",
         "duracion": "15 min",
         "resumen": "En esta unidad, abdomen agudo designa la emergencia abdominal de origen traumático: un abdomen que duele, se defiende o se distiende porque hay sangre o contenido vertido dentro. El problema práctico es que esos signos pueden ser tardíos, escasos o faltar por completo, y que la exploración pierde fiabilidad justo en los pacientes más graves. La conducta combina lectura del mecanismo, exploraciones seriadas y vigilancia del shock, sin nombrar el órgano lesionado en el campo.",
         "objetivos": [
@@ -51589,7 +51589,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "🔍",
+        "icono": "cp-cc0-lupa",
         "duracion": "13 min",
         "resumen": "Cuadrantes y exploración física: cómo se divide el abdomen, qué hay en cada zona y cómo se explora sin hacer daño.",
         "objetivos": [
@@ -51787,7 +51787,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "🍽️",
+        "icono": "cp-servier-estomago",
         "duracion": "9 min",
         "resumen": "Lesión gástrica: poco frecuente en trauma cerrado, más habitual en penetrante. Su contenido ácido irrita el peritoneo de inmediato.",
         "objetivos": [
@@ -51975,7 +51975,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "🧪",
+        "icono": "cp-servier-pancreas",
         "duracion": "10 min",
         "resumen": "Lesión pancreática: retroperitoneal, silenciosa al principio y de diagnóstico difícil. El clásico «manillar en el epigastrio».",
         "objetivos": [
@@ -52162,7 +52162,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "🩸",
+        "icono": "cp-servier-bazo",
         "duracion": "11 min",
         "resumen": "Lesión de bazo: el órgano más frecuentemente lesionado en trauma abdominal cerrado, y una causa clásica de shock.",
         "objetivos": [
@@ -52356,7 +52356,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "🫀",
+        "icono": "cp-servier-higado",
         "duracion": "11 min",
         "resumen": "Lesión hepática: el órgano abdominal más grande y una de las principales fuentes de hemorragia masiva en trauma.",
         "objetivos": [
@@ -52536,7 +52536,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "🌀",
+        "icono": "cp-servier-intestino",
         "duracion": "11 min",
         "resumen": "Lesión intestinal: perforación que vierte contenido séptico. Se manifiesta tarde y es la trampa del paciente que «estaba bien».",
         "objetivos": [
@@ -52694,7 +52694,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "🚻",
+        "icono": "cp-servier-vejiga",
         "duracion": "12 min",
         "resumen": "Lesión genitourinaria: riñón, vejiga y uretra. Incluye la contraindicación prehospitalaria más citada del trauma pélvico.",
         "objetivos": [
@@ -52963,7 +52963,7 @@ export const planRescate = [
             "El número de reactivos y de intentos permitidos también es decisión académica; mientras tanto la plataforma dimensiona el examen según el tamaño del banco."
           ]
         },
-        "icono": "",
+        "icono": "cp-servier-libreta",
         "duracion": "",
         "resumen": "",
         "objetivos": [],
@@ -53002,7 +53002,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "🧠",
+        "icono": "cp-smart-craneo",
         "duracion": "14 min",
         "resumen": "El traumatismo craneoencefálico es la alteración de la función cerebral producida por una fuerza externa. La distinción que organiza todo el tema es la de lesión primaria, ocurrida en el instante del impacto e irreversible, frente a lesión secundaria, que se añade después y sí puede evitarse. De ahí sale la aportación real del ámbito prehospitalario. La lección introduce además la valoración neurológica seriada y advierte de que un examen inicial normal no excluye lesión.",
         "objetivos": [
@@ -53272,7 +53272,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "⚖️",
+        "icono": "cp-smart-craneo",
         "duracion": "13 min",
         "resumen": "La doctrina de Monro–Kellie explica por qué el cráneo tolera tan mal cualquier cosa que ocupe espacio: es una caja rígida que contiene encéfalo, sangre y líquido cefalorraquídeo, y la suma de los tres es prácticamente constante. Si uno aumenta, otro debe disminuir. Esa compensación funciona un tiempo y después se agota, momento en el que la presión intracraneal sube con rapidez. La lección explica también, de forma conceptual, qué es la perfusión cerebral.",
         "objetivos": [
@@ -53526,7 +53526,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "💀",
+        "icono": "cp-smart-craneo",
         "duracion": "14 min",
         "resumen": "Las fracturas de cráneo se describen como lineales, deprimidas, de la base y abiertas, y su importancia real está en lo que indican: energía elevada y posible lesión del encéfalo subyacente. Los signos clásicos de la fractura de la base —equimosis periorbitaria, equimosis retroauricular y salida de líquido por nariz u oído— pueden faltar o aparecer horas después. La lección fija tres prohibiciones: no palpar agresivamente, no explorar la herida y no ocluir el drenaje.",
         "objetivos": [
@@ -53797,7 +53797,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "🩹",
+        "icono": "cp-smart-craneo",
         "duracion": "12 min",
         "resumen": "El cuero cabelludo está muy vascularizado y sus vasos se retraen mal, de modo que una herida o una avulsión pueden sangrar de forma abundante y llegar a producir shock, sobre todo en niños y en pacientes anticoagulados. El control se hace con presión directa, aplicada con cautela si se sospecha fractura abierta o deprimida debajo. La lección insiste en buscar heridas ocultas entre el pelo y remite la conservación del tejido avulsionado al protocolo.",
         "objetivos": [
@@ -54027,7 +54027,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "🧠",
+        "icono": "cp-servier-cerebro",
         "duracion": "12 min",
         "resumen": "Lesiones difusas: el daño no está en un punto sino repartido por todo el encéfalo. Desde la concusión hasta la lesión axonal difusa.",
         "objetivos": [
@@ -54274,7 +54274,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "🎯",
+        "icono": "cp-smart-evc-hemorragico",
         "duracion": "15 min",
         "resumen": "Las lesiones focales del encéfalo son las que ocupan un lugar concreto: hematoma epidural, hematoma subdural, contusión cerebral y hematoma intraparenquimatoso. Pueden producir déficit neurológico focal y deterioro progresivo, pero no se distinguen entre sí con fiabilidad en el ámbito prehospitalario. La lección desmonta el uso del intervalo lúcido como marca segura del hematoma epidural y sitúa la prioridad donde corresponde: valoración seriada y prevención de hipoxia e hipotensión.",
         "objetivos": [
@@ -54554,7 +54554,7 @@ export const planRescate = [
             "ACS. Best Practices Guidelines: The Management of TBI, 2024."
           ]
         },
-        "icono": "🧩",
+        "icono": "cp-smart-evc-hemorragico",
         "duracion": "13 min",
         "resumen": "Este tema ordena el conjunto: qué lesiones pueden producirse dentro del cráneo y cómo se agrupan. Por un lado, las difusas y las focales, que tienen tema propio en esta unidad. Por otro, dos procesos que las acompañan y que explican buena parte del deterioro: la hemorragia subaracnoidea traumática y el edema cerebral. El hilo común es que ninguna se distingue en la calle y que todas comparten el mismo objetivo prehospitalario: evitar la lesión secundaria.",
         "objetivos": [
@@ -54799,7 +54799,7 @@ export const planRescate = [
             "Protocolo local (pendiente de entrega) para umbrales de decisión."
           ]
         },
-        "icono": "🔢",
+        "icono": "cp-servier-cerebro",
         "duracion": "15 min",
         "resumen": "La escala de coma de Glasgow puntúa tres respuestas —apertura ocular, respuesta verbal y respuesta motora— y las suma en un valor de 3 a 15. Su utilidad real no está en el número total, sino en desglosar los tres componentes y en repetir la valoración para ver hacia dónde va el paciente. La lección enseña a puntuarla, a registrar lo que la invalida —sedación, intubación, intoxicación, barrera idiomática— y a comunicarla de forma que sirva.",
         "objetivos": [
@@ -55121,7 +55121,7 @@ export const planRescate = [
             "Protocolo local (pendiente de entrega)."
           ]
         },
-        "icono": "📈",
+        "icono": "cp-smart-craneo",
         "duracion": "14 min",
         "resumen": "La presión intracraneal sube cuando algo ocupa espacio dentro del cráneo y la compensación se agota. Esta lección describe cómo progresa ese aumento, qué signos aparecen en cada momento y cómo se organiza su tratamiento en escalones sucesivos. La distinción importante es de ámbito: el primer escalón incluye medidas que sí pertenecen al terreno prehospitalario, mientras que los siguientes son hospitalarios y de cuidados críticos, y aquí se identifican como tales.",
         "objetivos": [
@@ -55390,7 +55390,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "👁️",
+        "icono": "cp-servier-ojo",
         "duracion": "14 min",
         "resumen": "Signos y síntomas del traumatismo craneoencefálico: qué se vigila, en qué orden y cuáles anuncian herniación.",
         "objetivos": [
@@ -55616,7 +55616,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "🚑",
+        "icono": "ic-ambulancia",
         "duracion": "15 min",
         "resumen": "Tratamiento prehospitalario del TCE: la lesión primaria ya ocurrió. Todo lo que se hace aquí es contra la secundaria.",
         "objetivos": [
@@ -55814,7 +55814,7 @@ export const planRescate = [
             "Protocolo local (pendiente de entrega)."
           ]
         },
-        "icono": "💉",
+        "icono": "cp-servier-inyectable",
         "duracion": "15 min",
         "resumen": "Tres intervenciones que el plan agrupa y que comparten una característica: ninguna es automática y todas dependen del alcance autorizado y del protocolo. El manitol y los agentes osmóticos actúan sobre el edema pero pueden empeorar a un paciente hipotenso; los anticonvulsivantes tratan la convulsión, que es un agresor secundario; y la intubación puede proteger o dañar según cómo se haga. La lección explica el razonamiento y bloquea las cifras.",
         "objetivos": [
@@ -56060,7 +56060,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "🦴",
+        "icono": "dg-columna-vertebral",
         "duracion": "13 min",
         "resumen": "Una vértebra puede fracturarse por compresión axial, por flexión, por extensión, por rotación o por distracción, y cada mecanismo produce un patrón distinto. Lo que interesa en la calle no es clasificar la fractura —eso lo hace la imagen— sino reconocer que existe y evitar que se convierta en una lesión medular. La lección insiste en que una fractura puede no dar déficit neurológico y en que el paciente mayor se fractura con mecanismos leves.",
         "objetivos": [
@@ -56312,7 +56312,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "⬆️",
+        "icono": "cp-smart-medula-espinal",
         "duracion": "11 min",
         "resumen": "El síndrome medular anterior afecta a los dos tercios anteriores de la médula y produce el patrón inverso al posterior: se pierden la fuerza, el dolor y la temperatura por debajo de la lesión, mientras se conservan la propiocepción, la vibración y el tacto fino. Suele deberse a compresión anterior o a compromiso del flujo sanguíneo de esa zona, y es el síndrome medular incompleto de peor pronóstico funcional.",
         "objetivos": [
@@ -56575,7 +56575,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "⬇️",
+        "icono": "cp-smart-medula-espinal",
         "duracion": "10 min",
         "resumen": "Síndrome medular posterior: se pierde la posición y la vibración, se conserva la fuerza. Raro y fácil de pasar por alto.",
         "objetivos": [
@@ -56802,7 +56802,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "🐴",
+        "icono": "cp-smart-medula-espinal",
         "duracion": "12 min",
         "resumen": "Por debajo del final de la médula, el canal contiene un haz de raíces nerviosas que recibe el nombre de cola de caballo o cauda equina. Su compresión produce un cuadro reconocible: dolor lumbar, debilidad de las piernas, alteración de la sensibilidad en la zona que contacta con una silla de montar y pérdida del control de esfínteres. Es una urgencia quirúrgica dependiente del tiempo, y el plan la registra con la errata «causa equina».",
         "objetivos": [
@@ -57021,7 +57021,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "↔️",
+        "icono": "cp-smart-medula-espinal",
         "duracion": "11 min",
         "resumen": "Síndrome de Brown-Séquard: media médula lesionada. Parálisis de un lado y pérdida de dolor del otro — el cuadro cruzado.",
         "objetivos": [
@@ -57205,7 +57205,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "🖐️",
+        "icono": "cp-servier-mano",
         "duracion": "13 min",
         "resumen": "Exploración física de la columna: cómo se valora sin mover al paciente y qué se documenta.",
         "objetivos": [
@@ -57396,7 +57396,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "🦴",
+        "icono": "ic-collarin",
         "duracion": "12 min",
         "resumen": "Signos y tratamiento prehospitalario del traumatismo espinal: qué se sospecha por mecanismo y qué se hace con ello.",
         "objetivos": [
@@ -57596,7 +57596,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed. (edición declarada por el plan; página pendiente)."
           ]
         },
-        "icono": "🛏️",
+        "icono": "ic-collarin",
         "duracion": "16 min",
         "resumen": "Restricción del movimiento espinal: por qué la tabla rígida dejó de ser el estándar de transporte y cómo se decide hoy.",
         "objetivos": [
@@ -57805,7 +57805,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "🦷",
+        "icono": "cp-servier-senos-paranasales",
         "duracion": "13 min",
         "resumen": "Le Fort describió tres patrones de fractura del macizo facial según por dónde se separa la cara del cráneo: I afecta al maxilar por encima de los dientes, II tiene forma piramidal e incluye la nariz, y III separa por completo el macizo facial de la base craneal. El ámbito prehospitalario no clasifica el patrón: reconoce que la cara está inestable, protege la vía aérea y traslada, sabiendo que hizo falta mucha energía para producirlo.",
         "objetivos": [
@@ -58054,7 +58054,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "😷",
+        "icono": "cp-servier-senos-paranasales",
         "duracion": "13 min",
         "resumen": "El trauma facial impresiona y sangra mucho, y por eso desvía la atención con facilidad. Esta lección ordena la valoración: primero la vía aérea y la ventilación, después la hemorragia, después la búsqueda de lesión craneal y cervical, y solo entonces el detalle de la cara. Repasa los signos de fractura de mandíbula, de órbita y de nariz, y explica por qué una cara destrozada rara vez es la lesión que mata.",
         "objetivos": [
@@ -58259,7 +58259,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "📌",
+        "icono": "cp-servier-ojo-corte",
         "duracion": "11 min",
         "resumen": "Un objeto clavado en el ojo o en la órbita no se retira nunca en la escena: puede estar conteniendo el contenido del globo y sujetando estructuras cuya salida es irreversible. La conducta es estabilizarlo sin apoyarse en el ojo, proteger ambos ojos porque se mueven juntos, evitar todo lo que aumente la presión dentro del globo y trasladar. Es una de las situaciones en que hacer menos protege más.",
         "objetivos": [
@@ -58474,7 +58474,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "👁️",
+        "icono": "cp-servier-ojo-corte",
         "duracion": "11 min",
         "resumen": "Dos hallazgos rojos en el ojo que se confunden con facilidad y no significan lo mismo. La hemorragia subconjuntival es sangre bajo la conjuntiva: aparatosa, indolora y casi siempre banal por sí sola. El hifema es sangre dentro de la cámara anterior, delante del iris, y sí es una lesión ocular seria con riesgo de resangrado y de aumento de la presión intraocular. La lección enseña a distinguirlos y a no tranquilizarse con el primero.",
         "objetivos": [
@@ -58715,7 +58715,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "🔄",
+        "icono": "cp-servier-musculos-ojo",
         "duracion": "11 min",
         "resumen": "Seis músculos mueven cada ojo, y trabajan de forma coordinada con los del otro para que veamos una sola imagen. Cuando uno se lesiona o queda atrapado en el trazo de una fractura de la órbita, el ojo deja de moverse en esa dirección y el paciente ve doble. El hallazgo más característico es la fractura por estallido del suelo orbitario con atrapamiento del músculo que eleva el ojo, y en el niño puede acompañarse de náusea y bradicardia.",
         "objetivos": [
@@ -58953,7 +58953,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "🔦",
+        "icono": "cp-servier-ojo",
         "duracion": "13 min",
         "resumen": "La exploración ocular prehospitalaria se apoya en cinco comprobaciones sencillas: qué ve el paciente, cómo están las pupilas, cómo se mueven los ojos, qué aspecto tiene el globo y qué refiere. Con eso basta para separar lo que puede esperar de lo que no. La lección explica además la única situación ocular en que el tiempo apremia de verdad —la exposición química— y delimita lo que no se hace nunca en la escena.",
         "objetivos": [
@@ -59162,7 +59162,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "🩸",
+        "icono": "cp-smart-arterias-cuello",
         "duracion": "13 min",
         "resumen": "El cuello concentra en muy poco espacio vasos de gran calibre, la vía aérea y estructuras nerviosas, y no ofrece un plano óseo contra el que comprimir con comodidad. Por eso su hemorragia se controla con presión directa localizada y nunca con un vendaje que rodee el cuello ni con empaquetamiento. La lección añade dos problemas propios de esta región: el hematoma que comprime la vía aérea y la entrada de aire por una vena abierta.",
         "objetivos": [
@@ -59385,7 +59385,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "🔎",
+        "icono": "cp-smart-arterias-cuello",
         "duracion": "12 min",
         "resumen": "Explorar el cuello de un traumatizado es buscar problemas en tres sistemas a la vez: la vía aérea, los vasos y la columna cervical. La lección organiza esa búsqueda con una regla nemotécnica sencilla y explica por qué el hallazgo más valioso no es lo que se ve en la primera mirada, sino lo que cambia entre valoraciones. También delimita lo que no se hace: sondar heridas, retirar coágulos o explorar trayectos.",
         "objetivos": [
@@ -59613,7 +59613,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "🗡️",
+        "icono": "cp-smart-arterias-cuello",
         "duracion": "11 min",
         "resumen": "Un objeto empalado en el cuello suma todos los problemas de la región: puede estar taponando un vaso grande, puede desplazar o abrir la vía aérea y puede moverse con cada gesto del paciente. No se retira, no se moviliza y no se explora su trayecto. La conducta consiste en estabilizarlo tal como está, controlar el sangrado alrededor sin comprimir el cuello, proteger la vía aérea y trasladar avisando antes.",
         "objetivos": [
@@ -59834,7 +59834,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "🦴",
+        "icono": "ic-fractura",
         "duracion": "15 min",
         "resumen": "Una fractura es una solución de continuidad del hueso, y se llama abierta cuando existe una herida que comunica el foco con el exterior. En la escena no se clasifica ni se diagnostica: se reconoce, se inmoviliza y se comprueba el estado neurovascular antes y después. La lección repasa los tipos de férula, la regla de inmovilizar la articulación de arriba y la de abajo, y las tres situaciones en que sí se alinea una extremidad deformada.",
         "objetivos": [
@@ -60094,7 +60094,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "🤕",
+        "icono": "ic-esguince",
         "duracion": "13 min",
         "resumen": "Tres lesiones de partes blandas que se confunden entre sí y con la fractura. El esguince daña un ligamento, la luxación saca el hueso de la articulación y el desgarro rompe fibras musculares o tendinosas. En la escena no se distingue con seguridad un esguince de una fractura sin imagen, así que se tratan igual: inmovilizar como se encuentra y comprobar el estado neurovascular. La luxación tiene además una urgencia propia cuando compromete el pulso.",
         "objetivos": [
@@ -60339,7 +60339,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "🦵",
+        "icono": "cp-smart-pelvis",
         "duracion": "14 min",
         "resumen": "Bajo el título de «lesión de cadera» conviven dos situaciones muy distintas: la fractura de la persona mayor tras una caída banal, con la pierna acortada y rotada hacia fuera, y la luxación del adulto joven en una colisión, con la cadera flexionada y la rodilla girada hacia dentro. La primera es un problema de fragilidad con alto riesgo de complicaciones; la segunda, una urgencia que amenaza la irrigación de la cabeza del fémur.",
         "objetivos": [
@@ -60567,7 +60567,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "⏱️",
+        "icono": "cp-servier-fibra-muscular",
         "duracion": "14 min",
         "resumen": "Los músculos de una extremidad están agrupados en compartimentos rodeados por una envoltura que no cede. Si el contenido aumenta —por sangrado o por edema—, la presión sube y llega un punto en que la sangre deja de perfundir el músculo dentro de esa envoltura. El dolor desproporcionado y el dolor al estirar pasivamente los dedos son los signos precoces; la ausencia de pulso es tardía. Esperar a que falte el pulso es esperar demasiado.",
         "objetivos": [
@@ -60841,7 +60841,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "🧱",
+        "icono": "cp-servier-fibra-muscular",
         "duracion": "15 min",
         "resumen": "Cuando una masa muscular permanece comprimida durante un tiempo prolongado, las células se destruyen y liberan su contenido. Mientras la compresión se mantiene, ese contenido queda confinado; al liberar al paciente, entra de golpe en la circulación. Por eso el momento más peligroso de un atrapamiento no es cuando se encuentra a la víctima, sino cuando se la libera. La preparación antes de retirar el peso es la esencia de este tema.",
         "objetivos": [
@@ -61078,7 +61078,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "🔧",
+        "icono": "ic-fractura",
         "duracion": "14 min",
         "resumen": "La férula de tracción tiene una indicación estrecha y muy concreta: la fractura de la diáfisis del fémur, aislada y cerrada. Aplica una tracción sostenida que alinea el hueso, reduce el espasmo muscular y disminuye el espacio donde se acumula la sangre. La Hare tracciona apoyándose en el isquion con un anillo, y la Sager lo hace desde la cara interna del muslo. Las contraindicaciones son tan importantes como la técnica.",
         "objetivos": [
@@ -61305,7 +61305,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "💊",
+        "icono": "cp-servier-tableta",
         "duracion": "14 min",
         "resumen": "El plan pide estudiar los fármacos usados en el trauma aislado de extremidades en un paciente estable: antiinflamatorios no esteroideos, opioides y cloruro de etilo. Esta lección enseña para qué sirve cada grupo, qué lo limita y qué hay que vigilar, y declara un bloqueo explícito sobre las cifras. Ninguna dosis, concentración ni pauta se publica aquí: dependen del producto registrado, del formulario del servicio y de la dirección médica.",
         "objetivos": [
@@ -61561,7 +61561,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed., 2020 (capítulo y página pendientes)."
           ]
         },
-        "icono": "❄️",
+        "icono": "cp-servier-frio",
         "duracion": "15 min",
         "resumen": "La hipotermia aparece cuando el cuerpo pierde calor más deprisa de lo que lo produce, y no necesita un entorno de montaña: basta con estar mojado, inmóvil y expuesto. Su gravedad se reconoce por la clínica —si el paciente tirita, si está lúcido, si responde— más que por una cifra. Dos ideas gobiernan el manejo: manipular con extremo cuidado, porque el corazón frío es irritable, y detener la pérdida de calor antes que intentar devolverlo.",
         "objetivos": [
@@ -61837,7 +61837,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed., 2020 (capítulo y página pendientes)."
           ]
         },
-        "icono": "🔥",
+        "icono": "cp-servier-calor",
         "duracion": "14 min",
         "resumen": "El golpe de calor es el extremo grave de los trastornos por calor y se reconoce por un dato que no admite discusión: la alteración del estado mental en un paciente que ha estado expuesto a calor o haciendo esfuerzo. Es una urgencia con riesgo vital en la que el tratamiento es el enfriamiento inmediato, y en la que cada minuto por encima de la temperatura crítica cuenta. Enfriar primero y trasladar enfriando es la regla del tema.",
         "objetivos": [
@@ -62084,7 +62084,7 @@ export const planRescate = [
             "NAEMT. PHTLS, 9.ª ed., 2020 (capítulo y página pendientes)."
           ]
         },
-        "icono": "☀️",
+        "icono": "cp-servier-sol",
         "duracion": "12 min",
         "resumen": "El plan dedica un tema propio a la insolación. El término se usa en español con dos sentidos —el cuadro por exposición directa al sol y, en algunas fuentes, el propio golpe de calor—, así que la lección aclara esa ambigüedad antes que nada. Después desarrolla lo que sí es específico de la exposición solar: el cuadro leve o moderado con estado mental conservado, la quemadura solar que lo acompaña y la prevención.",
         "objetivos": [
@@ -62313,7 +62313,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "🔥",
+        "icono": "cp-servier-piel",
         "duracion": "13 min",
         "resumen": "Una quemadura es la destrucción de tejido por transferencia de energía térmica, química, eléctrica o por radiación. Su gravedad no depende solo del aspecto de la piel: depende de la extensión, de la profundidad, de la localización, de la edad del paciente y, sobre todo, de si hay compromiso de la vía aérea. La lección explica por qué la piel quemada deja de cumplir sus funciones y por qué un paciente quemado se enfría con tanta facilidad.",
         "objetivos": [
@@ -62542,7 +62542,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "🧯",
+        "icono": "dg-agentes-quemadura",
         "duracion": "14 min",
         "resumen": "El plan pide estudiar los tipos de agentes. La lección desarrolla los térmicos —llama, líquido caliente, contacto con superficie caliente, vapor y frío— y añade los tres grupos restantes que el equipo va a encontrar: químicos, eléctricos y por radiación. Cada agente impone una forma distinta de detener la lesión y, en varios de ellos, una precaución para el propio equipo que precede a cualquier atención.",
         "objetivos": [
@@ -62791,7 +62791,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "📊",
+        "icono": "cp-servier-quemadura-2do",
         "duracion": "14 min",
         "resumen": "La profundidad de una quemadura se clasifica por la capa de piel que alcanza, y de ella dependen el aspecto, el dolor y la evolución. La terminología tradicional habla de primer, segundo y tercer grado; la actual prefiere describir la profundidad —superficial, de espesor parcial y de espesor total—, porque es más precisa. La lección enseña ambas, explica cómo se reconoce cada una y advierte de que la profundidad definitiva no se establece en la escena.",
         "objetivos": [
@@ -63087,7 +63087,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "🖐️",
+        "icono": "cp-servier-mano",
         "duracion": "13 min",
         "resumen": "La regla de los nueve divide la superficie corporal en zonas cuyo valor es un múltiplo de nueve, y permite estimar deprisa qué porcentaje del cuerpo está quemado. Es una estimación, no una medición: sirve para orientar la gravedad, la derivación y el cálculo inicial de líquidos. En el niño las proporciones cambian, porque la cabeza es proporcionalmente mucho mayor, y para superficies pequeñas o dispersas resulta más útil la regla de la palma.",
         "objetivos": [
@@ -63361,7 +63361,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "💧",
+        "icono": "cp-servier-bolsa-infusion",
         "duracion": "16 min",
         "resumen": "El plan pide enseñar la fórmula de Parkland. Esta lección la presenta completa y después la contrasta con la recomendación vigente. La fórmula clásica calcula 4 mL de cristaloide por kilogramo y por porcentaje de superficie quemada en 24 horas; la American Burn Association recomienda desde 2024 iniciar en 2 mL/kg/%SCQ en el adulto y ajustar después según la respuesta del paciente. La idea central es que ninguna fórmula es una dosis fija: son un punto de partida que se titula.",
         "objetivos": [
@@ -63647,7 +63647,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "🚑",
+        "icono": "cp-servier-bolsa-infusion",
         "duracion": "16 min",
         "resumen": "El tratamiento prehospitalario del quemado se ordena en cuatro bloques: detener la lesión, asegurar la vía aérea y la ventilación, sostener la circulación con la reposición que indique el protocolo, y proteger al paciente del frío y del dolor. La lección desarrolla cada uno, explica por qué la hipotermia es el enemigo silencioso de esta unidad y sitúa la sonda vesical —que el plan menciona— en el ámbito que le corresponde.",
         "objetivos": [
@@ -63913,7 +63913,7 @@ export const planRescate = [
             "WHO/ICRC. Basic Emergency Care, 2018."
           ]
         },
-        "icono": "🩹",
+        "icono": "cp-cc0-guantes",
         "duracion": "13 min",
         "resumen": "El plan pide una lección sobre la curación de una quemadura limitada a una sola extremidad, que es el escenario más frecuente y el que más se maneja mal. La conducta prehospitalaria es deliberadamente sencilla: enfriar lo justo, limpiar con suavidad, no aplicar nada que no esté indicado, cubrir sin apretar y comprobar la circulación. Todo lo que se añada de más complica la valoración posterior sin beneficio.",
         "objetivos": [
@@ -64193,7 +64193,7 @@ export const planRescate = [
             "Debe confirmarse qué procedimientos entran en el alcance del alumno en esta etapa del plan."
           ]
         },
-        "icono": "",
+        "icono": "ic-estetoscopio",
         "duracion": "",
         "resumen": "",
         "objetivos": [],
@@ -64360,7 +64360,7 @@ export const planRescate = [
             "El número de reactivos y de intentos permitidos también es decisión académica; mientras tanto la plataforma dimensiona el examen según el tamaño del banco."
           ]
         },
-        "icono": "",
+        "icono": "cp-servier-libreta",
         "duracion": "",
         "resumen": "",
         "objetivos": [],
@@ -64385,7 +64385,7 @@ export const planRescate = [
     "subtitulo": "URGENCIAS PEDIATRICAS Y GERIÁTRICAS.",
     "descripcion": "MÓDULO 6: POBLACIONES ESPECIALES (URGENCIAS PEDIATRICAS Y GERIÁTRICAS.) — 9 semanas · 45 horas.",
     "color": "#14b8a6",
-    "icono": "👶",
+    "icono": "cp-smart-esqueleto-nino",
     "encabezadoOficial": "MÓDULO 6: POBLACIONES ESPECIALES (URGENCIAS PEDIATRICAS Y GERIÁTRICAS.)",
     "numeroOficial": 6,
     "totales": {
@@ -64564,7 +64564,7 @@ export const planRescate = [
             "PALS, edición pendiente de identificar por la academia."
           ]
         },
-        "icono": "🧒",
+        "icono": "ic-nino",
         "duracion": "13 min",
         "resumen": "La atención pediátrica no es la atención del adulto en tamaño reducido. Cambian las proporciones del cuerpo, la forma de compensar, las causas más frecuentes de deterioro y la manera de comunicarse con el paciente y con su familia. Esta lección abre el módulo fijando esas diferencias y una idea que se repetirá en todas las siguientes: en el niño, el paro cardiaco casi nunca es el primer problema, sino el final de un deterioro respiratorio o circulatorio que pudo reconocerse antes.",
         "objetivos": [
@@ -64807,7 +64807,7 @@ export const planRescate = [
             "PALS, edición pendiente de identificar por la academia."
           ]
         },
-        "icono": "🫀",
+        "icono": "cp-smart-esqueleto-nino",
         "duracion": "15 min",
         "resumen": "Las diferencias anatómicas y fisiológicas del niño no son curiosidades académicas: cada una tiene una consecuencia práctica inmediata. La cabeza grande explica por qué hay que acolchar bajo los hombros al inmovilizarlo; la vía aérea estrecha, por qué un edema pequeño la obstruye; el tórax elástico, por qué puede haber lesión pulmonar sin costillas rotas; y la superficie corporal relativa, por qué se enfría tan deprisa.",
         "objetivos": [
@@ -65079,7 +65079,7 @@ export const planRescate = [
             "PALS, edición pendiente de identificar por la academia."
           ]
         },
-        "icono": "📏",
+        "icono": "cp-smart-esqueleto-nino",
         "duracion": "13 min",
         "resumen": "Conocer el desarrollo sirve para dos cosas muy concretas en la atención de urgencia: saber cómo abordar a un paciente según su etapa, y detectar cuando algo no encaja. Un niño que ha perdido habilidades que ya tenía, o cuyo relato de lesión no corresponde a lo que a su edad puede hacer, plantea preguntas que un adulto no plantearía. La lección recorre las etapas desde ese punto de vista práctico.",
         "objetivos": [
@@ -65317,7 +65317,7 @@ export const planRescate = [
             "PALS, edición pendiente de identificar por la academia."
           ]
         },
-        "icono": "👀",
+        "icono": "cp-dbcls-examen-nino",
         "duracion": "12 min",
         "resumen": "La impresión general es lo que se decide en los primeros segundos, desde la puerta y sin tocar al paciente: si este niño está bien, está enfermo o está crítico. No es una intuición: se apoya en lo que se ve y se oye —cómo se comporta, cómo respira, qué color tiene— y determina el ritmo de toda la atención. En pediatría vale especialmente, porque los signos vitales pueden ser normales en un niño que está a punto de deteriorarse.",
         "objetivos": [
@@ -65553,7 +65553,7 @@ export const planRescate = [
             "PALS, edición pendiente de identificar por la academia."
           ]
         },
-        "icono": "🔺",
+        "icono": "cp-dbcls-examen-nino",
         "duracion": "14 min",
         "resumen": "El triángulo de evaluación pediátrica ordena la impresión general en tres lados observables sin tocar al paciente: apariencia, trabajo respiratorio y circulación cutánea. Su valor no está en cada lado por separado, sino en qué combinación aparece alterada, porque esa combinación orienta si el problema es respiratorio, circulatorio, neurológico o de varios sistemas a la vez. Es la herramienta más práctica del módulo y no requiere ningún material.",
         "objetivos": [
@@ -65804,7 +65804,7 @@ export const planRescate = [
             "PALS, edición pendiente de identificar por la academia."
           ]
         },
-        "icono": "🔤",
+        "icono": "ic-nino",
         "duracion": "15 min",
         "resumen": "Tras la impresión general viene la evaluación ordenada. La secuencia XABCDE antepone la X de hemorragia exanguinante, porque un sangrado masivo mata antes que una vía aérea comprometida, y después recorre vía aérea, ventilación, circulación, estado neurológico y exposición. La lección desarrolla cada letra con lo que cambia en el niño y mantiene la regla que la hace útil: no se avanza dejando atrás un problema sin resolver.",
         "objetivos": [
@@ -66070,7 +66070,7 @@ export const planRescate = [
             "Ley General de Salud, texto vigente (artículos pendientes de verificar)."
           ]
         },
-        "icono": "👨‍👩‍👧",
+        "icono": "cp-dbcls-examen-nino",
         "duracion": "13 min",
         "resumen": "En pediatría se atiende a un paciente y, a la vez, a una familia. La forma en que el equipo trata a quien cuida al niño condiciona la calidad de la información, la colaboración durante los procedimientos y el recuerdo que quedará del episodio. Esta lección aborda la comunicación con la familia, su presencia durante la atención, el consentimiento cuando el paciente es menor y la situación en que la familia se convierte en un obstáculo.",
         "objetivos": [
@@ -66285,7 +66285,7 @@ export const planRescate = [
             "Ley General de Salud, texto vigente (artículos pendientes de verificar)."
           ]
         },
-        "icono": "🛡️",
+        "icono": "ic-nino",
         "duracion": "15 min",
         "resumen": "El maltrato infantil incluye el daño físico, la agresión sexual, el daño emocional y la negligencia en los cuidados. El papel del equipo prehospitalario es concreto y limitado: atender al niño, garantizar su seguridad, observar y documentar con precisión lo que ve y lo que oye, y comunicarlo por el cauce que fije el procedimiento. No es investigar, no es confrontar y no es decidir si hubo maltrato: es dejar constancia de lo que solo el primer equipo puede ver.",
         "objetivos": [
@@ -66534,7 +66534,7 @@ export const planRescate = [
             "Ley General de Salud, texto vigente (artículos pendientes de verificar)."
           ]
         },
-        "icono": "🕯️",
+        "icono": "ic-recien-nacido",
         "duracion": "14 min",
         "resumen": "El síndrome de muerte súbita del lactante es la muerte inesperada de un lactante que no se explica tras una investigación completa. En la escena, el equipo se encuentra con dos tareas simultáneas y difíciles: aplicar el protocolo de reanimación que corresponda y acompañar a una familia en el peor momento de su vida. Esta lección trata ambas, y explica por qué documentar el entorno sin insinuar culpa es parte del cuidado.",
         "objetivos": [
@@ -66749,7 +66749,7 @@ export const planRescate = [
             "PALS, edición pendiente de identificar por la academia."
           ]
         },
-        "icono": "♿",
+        "icono": "cp-servier-atomizador",
         "duracion": "15 min",
         "resumen": "Cada vez más niños viven en casa con enfermedades crónicas complejas y con dispositivos que antes solo existían en el hospital: traqueostomías, sondas de alimentación, catéteres, derivaciones de líquido cefalorraquídeo o ventilación domiciliaria. Atenderlos exige dos cambios de método: preguntar a quien mejor los conoce, que casi siempre es su cuidador, y redefinir qué es «normal» para ese paciente concreto en lugar de compararlo con la media.",
         "objetivos": [
@@ -67034,7 +67034,7 @@ export const planRescate = [
             "Protocolo local (pendiente de entrega)."
           ]
         },
-        "icono": "👶",
+        "icono": "ic-rcp",
         "duracion": "16 min",
         "resumen": "La reanimación del recién nacido y la del niño comparten el objetivo pero no el punto de partida. En el recién nacido el problema es casi siempre la transición respiratoria al nacer, de modo que la ventilación eficaz es la intervención que resuelve la mayoría de los casos. En el niño mayor, el paro suele ser el final de un deterioro respiratorio o circulatorio. La lección explica qué cambia en cada caso y por qué el calor y la ventilación mandan.",
         "objetivos": [
@@ -67313,7 +67313,7 @@ export const planRescate = [
             "Protocolo local (pendiente de entrega)."
           ]
         },
-        "icono": "🫁",
+        "icono": "ic-nino",
         "duracion": "15 min",
         "resumen": "La obstrucción de la vía aérea por cuerpo extraño es una de las pocas urgencias en que una maniobra inmediata puede resolverlo todo. El algoritmo pediátrico distingue tres situaciones: el lactante, el niño que sigue respondiendo y el paciente que pierde la respuesta. La diferencia más importante es que al lactante no se le aplican compresiones abdominales, y la regla que gobierna todo el tema es no intervenir mientras la obstrucción sea leve y el paciente tosa con eficacia.",
         "objetivos": [
@@ -67642,7 +67642,7 @@ export const planRescate = [
             "El número de reactivos y de intentos permitidos también es decisión académica; mientras tanto la plataforma dimensiona el examen según el tamaño del banco."
           ]
         },
-        "icono": "",
+        "icono": "cp-servier-libreta",
         "duracion": "",
         "resumen": "",
         "objetivos": [],
@@ -67681,7 +67681,7 @@ export const planRescate = [
             "Protocolo local (pendiente de entrega)."
           ]
         },
-        "icono": "🤧",
+        "icono": "cp-servier-cavidad-nasal",
         "duracion": "15 min",
         "resumen": "Las infecciones respiratorias son el motivo más frecuente de consulta urgente en la infancia y la causa habitual del deterioro que acaba en paro. Lo que importa en la escena no es identificar el agente ni etiquetar el cuadro, sino responder a dos preguntas: dónde está la obstrucción —arriba o abajo— y cuánto está trabajando el niño para respirar. La lección organiza los cuadros por esa lógica y fija los signos de alarma.",
         "objetivos": [
@@ -67943,7 +67943,7 @@ export const planRescate = [
             "Protocolo local (pendiente de entrega)."
           ]
         },
-        "icono": "🤰",
+        "icono": "cp-smart-placenta",
         "duracion": "12 min",
         "resumen": "Este es un tema obstétrico ubicado en la unidad de emergencias pediátricas, y la propia ubicación está pendiente de revisión por la academia. El desarrollo clínico del sufrimiento fetal agudo corresponde al tema del Módulo 4, que es su lugar canónico. Aquí se aborda solo lo que compete al equipo desde la perspectiva del recién nacido: qué significa para el niño que va a nacer, qué hay que preparar y qué información debe transmitirse.",
         "objetivos": [
@@ -68146,7 +68146,7 @@ export const planRescate = [
             "AHA/AAP 2025 Neonatal Resuscitation."
           ]
         },
-        "icono": "🫁",
+        "icono": "ic-recien-nacido",
         "duracion": "13 min",
         "resumen": "El recién nacido con dificultad respiratoria plantea un problema distinto al del lactante mayor: sus signos son pocos e inespecíficos, y las causas van desde la transición pulmonar incompleta hasta la infección, la cardiopatía o una malformación. La lección enseña a reconocer la dificultad respiratoria neonatal, a no quedarse con la primera explicación y a aplicar una conducta de soporte que es la misma sea cual sea la causa.",
         "objetivos": [
@@ -68402,7 +68402,7 @@ export const planRescate = [
             "Protocolo local (pendiente de entrega)."
           ]
         },
-        "icono": "🍼",
+        "icono": "ic-recien-nacido",
         "duracion": "15 min",
         "resumen": "Tras un parto extrahospitalario, el equipo debe decidir en segundos si el recién nacido necesita solo cuidados de rutina o si requiere asistencia. Esa decisión se apoya en muy pocos datos: si respira o llora, si tiene buen tono y si su frecuencia cardiaca es adecuada. La lección desarrolla la atención al recién nacido vigoroso y la secuencia cuando no lo está, con el calor y la ventilación como intervenciones centrales.",
         "objetivos": [
@@ -68653,7 +68653,7 @@ export const planRescate = [
             "Protocolo local (pendiente de entrega)."
           ]
         },
-        "icono": "💨",
+        "icono": "cp-servier-bronquio-inflamado",
         "duracion": "14 min",
         "resumen": "La crisis asmática infantil se reconoce por el esfuerzo respiratorio y por la capacidad del niño de hablar, comer y moverse, más que por el ruido que hace. La lección se centra en lo que cambia en pediatría —la fatiga aparece antes, el silencio auscultatorio es una alarma y la agitación puede ser hipoxia— y remite la enfermedad y su tratamiento farmacológico al tema canónico del Módulo 4 y a la guía GINA vigente.",
         "objetivos": [
@@ -68902,7 +68902,7 @@ export const planRescate = [
             "Protocolo local (pendiente de entrega)."
           ]
         },
-        "icono": "💧",
+        "icono": "cp-servier-agua",
         "duracion": "14 min",
         "resumen": "La deshidratación es una de las causas más frecuentes de deterioro evitable en la infancia, y el niño llega antes a ella que el adulto: tiene más agua corporal en proporción, la recambia más deprisa y depende de otra persona para beber. La lección enseña a estimar la gravedad con signos clínicos observables, a reconocer el shock hipovolémico pediátrico y a aplicar la conducta según el alcance autorizado.",
         "objetivos": [
@@ -69169,7 +69169,7 @@ export const planRescate = [
             "Protocolo local (pendiente de entrega)."
           ]
         },
-        "icono": "🩺",
+        "icono": "cp-servier-colon",
         "duracion": "13 min",
         "resumen": "La apendicitis del niño se comporta peor que la del adulto por dos motivos: se presenta de forma menos característica cuanto más pequeño es el paciente, y su apéndice se perfora antes. La lección se centra en el reconocimiento pediátrico —qué preguntar, qué observar, qué confunde— y remite la enfermedad y su manejo general al tema canónico del Módulo 4, sin duplicar contenido.",
         "objetivos": [
@@ -69396,7 +69396,7 @@ export const planRescate = [
             "Protocolo local (pendiente de entrega)."
           ]
         },
-        "icono": "🌀",
+        "icono": "cp-servier-intestino-delgado",
         "duracion": "14 min",
         "resumen": "La oclusión intestinal del niño tiene causas propias de la edad que no existen en el adulto, y dos de ellas son tiempo-dependientes porque comprometen la irrigación del intestino. La lección enseña a reconocer el patrón general —dolor, vómito, distensión y falta de deposición— y a identificar dos cuadros que exigen traslado urgente: el lactante con episodios de dolor y decaimiento, y el recién nacido con vómito de contenido bilioso.",
         "objetivos": [
@@ -69627,7 +69627,7 @@ export const planRescate = [
             "Protocolo local (pendiente de entrega)."
           ]
         },
-        "icono": "🌡️",
+        "icono": "cp-cc0-termometro",
         "duracion": "15 min",
         "resumen": "La fiebre es el motivo de consulta más frecuente en pediatría y, casi siempre, la manifestación de una infección banal. Lo que importa en la escena no es la cifra del termómetro, sino el aspecto del niño y la existencia de signos de alarma. La lección aborda también la convulsión asociada a la fiebre, que asusta muchísimo a la familia y que exige del equipo dos cosas: proteger al niño durante el episodio y descartar lo que no es banal.",
         "objetivos": [
@@ -69864,7 +69864,7 @@ export const planRescate = [
             "Protocolo local (pendiente de entrega)."
           ]
         },
-        "icono": "🧠",
+        "icono": "cp-servier-cerebro",
         "duracion": "14 min",
         "resumen": "La meningitis es poco frecuente y muy grave, y su reconocimiento precoz cambia el desenlace. El problema es que en el lactante no se parece a lo que se espera: no hay rigidez de nuca ni cefalea, y lo que hay es un niño que come mal, está irritable o apagado y no termina de estar bien. La lección enseña esa presentación por edades, la comprobación de las manchas que no palidecen y la conducta, incluida la protección del equipo.",
         "objetivos": [
@@ -70104,7 +70104,7 @@ export const planRescate = [
             "AHA/AAP 2025 Neonatal Resuscitation."
           ]
         },
-        "icono": "❤️",
+        "icono": "cp-servier-corazon-interior",
         "duracion": "15 min",
         "resumen": "Las cardiopatías congénitas son alteraciones estructurales del corazón presentes desde el nacimiento. En el ámbito prehospitalario no se identifican ni se clasifican: lo que se hace es reconocer dos patrones —el niño que se pone azul y el niño que falla como una bomba— y saber que un lactante con mala alimentación, sudoración al comer y respiración rápida puede estar en insuficiencia cardiaca sin que nadie lo haya pensado.",
         "objetivos": [
@@ -70350,7 +70350,7 @@ export const planRescate = [
             "Protocolo local (pendiente de entrega)."
           ]
         },
-        "icono": "🚸",
+        "icono": "ic-nino",
         "duracion": "14 min",
         "resumen": "El trauma es la principal causa de muerte y de discapacidad en la infancia, y el niño traumatizado se comporta de forma distinta al adulto por tres razones: recibe la energía concentrada en un cuerpo pequeño, tiene los órganos menos protegidos y compensa el shock hasta muy tarde. La lección fija esas diferencias, sitúa el mecanismo como estimador de riesgo y recuerda dos enemigos que en pediatría pesan más: la hipotermia y la hipoglucemia.",
         "objetivos": [
@@ -70593,7 +70593,7 @@ export const planRescate = [
             "Protocolo local (pendiente de entrega)."
           ]
         },
-        "icono": "🧩",
+        "icono": "cp-smart-esqueleto-nino",
         "duracion": "15 min",
         "resumen": "Este tema recorre, sistema por sistema, qué cambia en el niño respecto al adulto ya estudiado en el Módulo 5. La cabeza domina el pronóstico; el cuello se lesiona en niveles más altos; el tórax transmite energía sin romperse; el abdomen deja hígado y bazo más expuestos; la pelvis y las extremidades tienen lesiones propias del hueso en crecimiento. No se reescriben aquí las lesiones del adulto: se señala lo que es distinto.",
         "objetivos": [
@@ -70848,7 +70848,7 @@ export const planRescate = [
             "Protocolo local (pendiente de entrega)."
           ]
         },
-        "icono": "🛏️",
+        "icono": "ic-collarin",
         "duracion": "14 min",
         "resumen": "La restricción del movimiento espinal en el niño sigue los mismos principios que en el adulto, con tres diferencias que cambian la técnica: el occipucio prominente obliga a acolchar bajo los hombros, el material adulto casi nunca ajusta bien, y la lucha del niño asustado puede producir más movimiento que la ausencia de dispositivo. La lección explica cómo decidir, cómo ajustar y cuándo el mejor dispositivo es el que el niño tolera.",
         "objetivos": [
@@ -71078,7 +71078,7 @@ export const planRescate = [
             "Protocolo local (pendiente de entrega)."
           ]
         },
-        "icono": "🧰",
+        "icono": "ic-fractura",
         "duracion": "15 min",
         "resumen": "El manejo del niño traumatizado sigue la secuencia XABCDE, pero cada letra tiene un matiz pediátrico que decide el resultado: la vía aérea se abre en posición neutra, la ventilación se vigila por el esfuerzo más que por la cifra, el shock se reconoce antes de la hipotensión, la glucemia forma parte de la valoración neurológica y la exposición se hace contra reloj para no enfriar al paciente. La lección ordena todo eso en una conducta aplicable.",
         "objetivos": [
@@ -71337,7 +71337,7 @@ export const planRescate = [
             "Protocolo local (pendiente de entrega)."
           ]
         },
-        "icono": "🦴",
+        "icono": "ic-hueso",
         "duracion": "14 min",
         "resumen": "Cuando un niño grave necesita acceso vascular y las venas no se consiguen, la vía intraósea permite llegar a la circulación a través de la cavidad medular del hueso. Esta lección explica el fundamento —la médula ósea es una red vascular que no se colapsa—, cuándo se plantea, qué la contraindica y cómo se confirma y se vigila. No enseña la técnica ni autoriza el procedimiento: eso depende del alcance, del dispositivo real y de la dirección médica.",
         "objetivos": [
@@ -71613,7 +71613,7 @@ export const planRescate = [
             "EMPACT, 1.ª ed., 2012 (referencia histórica, no usada para recomendaciones actuales)."
           ]
         },
-        "icono": "👴",
+        "icono": "cp-servier-adulto-mayor",
         "duracion": "13 min",
         "resumen": "La geriatría es la disciplina que atiende la salud de las personas mayores, y su particularidad no es la edad en sí, sino lo que la acompaña: varias enfermedades a la vez, varios medicamentos, menos reserva funcional y una presentación atenuada de los cuadros graves. La lección introduce esos conceptos, distingue envejecimiento de enfermedad y explica por qué la edad cronológica dice mucho menos que la situación funcional del paciente.",
         "objetivos": [
@@ -71842,7 +71842,7 @@ export const planRescate = [
             "Protocolo local (pendiente de entrega)."
           ]
         },
-        "icono": "💬",
+        "icono": "cp-servier-rostro-mayor",
         "duracion": "13 min",
         "resumen": "Comunicarse bien con una persona mayor no es una cortesía: es una técnica de obtención de información y una condición para que la valoración sea fiable. Las barreras habituales —pérdida auditiva o visual, lentitud de procesamiento, deterioro cognitivo, miedo, prótesis retiradas— tienen soluciones concretas. La lección las enumera y advierte de los tres errores que más daño hacen: infantilizar, hablar por encima del paciente y confundir sordera con demencia.",
         "objetivos": [
@@ -72083,7 +72083,7 @@ export const planRescate = [
             "Protocolo local (pendiente de entrega)."
           ]
         },
-        "icono": "💎",
+        "icono": "ic-adultos-mayores",
         "duracion": "13 min",
         "resumen": "El diamante GEMS es una estructura para no olvidar lo que hace distinta la atención del paciente mayor. Sus cuatro vértices recuerdan que el paciente es geriátrico y por tanto atípico, que el entorno donde vive aporta información clínica, que la valoración médica debe contar con su medicación y su comorbilidad, y que lo social —quién le cuida, cómo vive, cómo se alimenta— condiciona el resultado tanto como lo clínico.",
         "objetivos": [
@@ -72337,7 +72337,7 @@ export const planRescate = [
             "EMPACT, 1.ª ed., 2012 (referencia histórica)."
           ]
         },
-        "icono": "⚙️",
+        "icono": "cp-servier-adulta-mayor",
         "duracion": "16 min",
         "resumen": "Este tema recorre los cambios del envejecimiento sistema por sistema, siempre con la misma estructura: qué cambia y qué consecuencia tiene en la atención urgente. El hilo es constante: menos reserva, respuesta más lenta y signos atenuados. Al terminar debe quedar claro por qué una persona mayor puede estar gravemente enferma con unas constantes que en un joven parecerían aceptables.",
         "objetivos": [
@@ -72622,7 +72622,7 @@ export const planRescate = [
             "Protocolo local (pendiente de entrega)."
           ]
         },
-        "icono": "📉",
+        "icono": "ic-adultos-mayores",
         "duracion": "13 min",
         "resumen": "Conocer de qué enferman y mueren las personas mayores orienta la sospecha antes de llegar al domicilio. Los grandes grupos son las enfermedades cardiovasculares, las respiratorias, las cerebrovasculares, el cáncer, la diabetes y sus complicaciones, y las infecciones; entre las causas externas destacan las caídas. Esta lección enseña esos grupos y su lógica clínica, y declara expresamente que no publica cifras porque no se dispone de la fuente oficial mexicana.",
         "objetivos": [
@@ -72862,7 +72862,7 @@ export const planRescate = [
             "COFEPRIS. Información para Prescribir (fichas pendientes)."
           ]
         },
-        "icono": "💊",
+        "icono": "cp-servier-blister",
         "duracion": "15 min",
         "resumen": "La polifarmacia es el uso simultáneo de varios medicamentos, situación habitual en el paciente mayor y una de las causas más frecuentes de urgencia evitable. Los fármacos interaccionan entre sí, se acumulan porque el organismo los elimina peor y enmascaran los signos que el equipo busca. La lección enseña a recoger la medicación real, a reconocer los cuadros que produce y a comunicarla, sin publicar ninguna dosis.",
         "objetivos": [
@@ -73122,7 +73122,7 @@ export const planRescate = [
             "ACS. Best Practices Guidelines."
           ]
         },
-        "icono": "🩹",
+        "icono": "cp-servier-adulto-mayor",
         "duracion": "15 min",
         "resumen": "El trauma en la persona mayor tiene tres particularidades que cambian el pronóstico: se produce con mecanismos de baja energía, se tolera mucho peor y se infratria con frecuencia porque los signos de gravedad están atenuados. La lección desarrolla las tres, insiste en que la caída desde la propia altura es un mecanismo serio en este paciente y explica por qué la anticoagulación cambia la valoración de un traumatismo craneal leve.",
         "objetivos": [
@@ -73373,7 +73373,7 @@ export const planRescate = [
             "Protocolo local (pendiente de entrega)."
           ]
         },
-        "icono": "🩺",
+        "icono": "cp-servier-adulto-mayor",
         "duracion": "15 min",
         "resumen": "En urgencias médicas, el envejecimiento produce un fenómeno constante: los cuadros graves se presentan sin sus signos característicos. El infarto sin dolor, la infección sin fiebre, el abdomen agudo sin defensa y la confusión como única manifestación de casi cualquier cosa. La lección recorre esas presentaciones atípicas y propone una estrategia práctica: partir del cambio referido y descartar primero lo tratable.",
         "objetivos": [
@@ -73645,7 +73645,7 @@ export const planRescate = [
             "Ley General de Salud, texto vigente (artículos pendientes de verificar)."
           ]
         },
-        "icono": "🧠",
+        "icono": "cp-servier-rostro-mayor",
         "duracion": "15 min",
         "resumen": "Este tema aborda la salud mental de la persona mayor desde la única distinción que realmente cambia la conducta prehospitalaria: separar el cuadro confusional agudo, que es una urgencia médica con causa tratable, de la demencia, que es crónica y progresiva. Añade la depresión, con frecuencia infradiagnosticada y con riesgo real de suicidio, y las pautas de manejo de la agitación sin recurrir a la fuerza.",
         "objetivos": [
@@ -73932,7 +73932,7 @@ export const planRescate = [
             "Ley General de Salud, texto vigente (artículos pendientes de verificar)."
           ]
         },
-        "icono": "🛡️",
+        "icono": "cp-servier-adulta-mayor",
         "duracion": "14 min",
         "resumen": "El maltrato a personas mayores incluye el daño físico, el psicológico, el sexual, el abandono, la negligencia en los cuidados y el abuso económico, y ocurre casi siempre en el entorno de confianza del paciente. El papel del equipo es el mismo que en el maltrato infantil: atender, observar, documentar con objetividad y comunicar por el cauce establecido. La diferencia es que aquí el paciente puede ser plenamente capaz y decidir no denunciar.",
         "objetivos": [
@@ -74165,7 +74165,7 @@ export const planRescate = [
             "Protocolo local (pendiente de entrega)."
           ]
         },
-        "icono": "📋",
+        "icono": "cp-servier-adulto-mayor",
         "duracion": "16 min",
         "resumen": "La evaluación del paciente geriátrico usa la misma secuencia que la de cualquier otro paciente, pero con tres añadidos que no son opcionales: comparar con su línea de base, recoger la medicación real y valorar el entorno y el apoyo. La lección integra el diamante GEMS en la práctica, ordena la exploración teniendo en cuenta la fragilidad y explica qué debe contener una entrega útil.",
         "objetivos": [
@@ -74413,7 +74413,7 @@ export const planRescate = [
             "ACS. Best Practices Guidelines."
           ]
         },
-        "icono": "🚑",
+        "icono": "cp-servier-adulto-mayor",
         "duracion": "15 min",
         "resumen": "Este tema traslada a la práctica lo estudiado sobre el trauma geriátrico: cómo se maneja de principio a fin un paciente mayor lesionado. La secuencia es la habitual, pero con el umbral de alarma bajado, la inmovilización adaptada a una columna rígida y una piel frágil, la anticoagulación como dato prioritario y la búsqueda sistemática de la causa de la caída, que suele ser el verdadero motivo de la llamada.",
         "objetivos": [
@@ -74630,7 +74630,7 @@ export const planRescate = [
             "Ley General de Salud, texto vigente (artículos pendientes de verificar)."
           ]
         },
-        "icono": "❤️‍🩹",
+        "icono": "cp-servier-adulto-mayor",
         "duracion": "16 min",
         "resumen": "Cierre del módulo: cómo se maneja en la práctica una urgencia médica en la persona mayor. La lección integra todo lo anterior en una conducta —partir del cambio, descartar lo tratable, interpretar contra la línea de base y contar con la medicación— y añade dos cuestiones que el equipo encontrará y que no puede improvisar: las voluntades anticipadas y la decisión sobre el destino cuando lo social pesa tanto como lo clínico.",
         "objetivos": [
@@ -74948,7 +74948,7 @@ export const planRescate = [
             "El número de reactivos y de intentos permitidos también es decisión académica; mientras tanto la plataforma dimensiona el examen según el tamaño del banco."
           ]
         },
-        "icono": "",
+        "icono": "cp-servier-libreta",
         "duracion": "",
         "resumen": "",
         "objetivos": [],
@@ -74973,7 +74973,7 @@ export const planRescate = [
     "subtitulo": "",
     "descripcion": "MÓDULO 7: OPERACIONES ESPECIALES. — 4 semanas · 20 horas.",
     "color": "#0891b2",
-    "icono": "📻",
+    "icono": "ic-ambulancia",
     "encabezadoOficial": "MÓDULO 7: OPERACIONES ESPECIALES.",
     "numeroOficial": 7,
     "totales": {
@@ -75046,7 +75046,7 @@ export const planRescate = [
             "La NOM-034-SSA3-2013 permitiría redactar tipos de ambulancia y equipamiento mínimo sin inventar alcance, pero no cubre el resto de la unidad."
           ]
         },
-        "icono": "",
+        "icono": "ic-ambulancia",
         "duracion": "",
         "resumen": "",
         "objetivos": [],
@@ -75077,7 +75077,7 @@ export const planRescate = [
             "La respuesta condiciona el equipo de protección personal y las prácticas evaluables."
           ]
         },
-        "icono": "",
+        "icono": "cp-servier-llave",
         "duracion": "",
         "resumen": "",
         "objetivos": [],
@@ -75107,7 +75107,7 @@ export const planRescate = [
             "La auditoría desaconseja expresamente redactar este tema sin alcance oficial: mezclaría cursos de especialización distintos (módulos 9, 13 y 18)."
           ]
         },
-        "icono": "",
+        "icono": "cp-servier-candado",
         "duracion": "",
         "resumen": "",
         "objetivos": [],
@@ -75138,7 +75138,7 @@ export const planRescate = [
             "Una vez elegido el sistema, el tema es redactable con fuente primaria y no necesita más decisiones."
           ]
         },
-        "icono": "",
+        "icono": "cp-servier-semaforo",
         "duracion": "",
         "resumen": "",
         "objetivos": [],

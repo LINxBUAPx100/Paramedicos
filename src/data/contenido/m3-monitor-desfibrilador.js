@@ -103,7 +103,7 @@ export default {
   //  Electrocardiografía básica
   // ============================================================
   'm3-md-ecg-basica': {
-    icono: '📈',
+    icono: 'dg-ecg-onda-normal',
     duracion: '18 min',
     resumen: 'Qué representa el trazo del monitor, cómo se lee de forma ordenada y por qué lo que se '
       + 'interpreta es el paciente y no la pantalla.',
@@ -259,7 +259,7 @@ export default {
   //  Uso del monitor desfibrilador
   // ============================================================
   'm3-md-uso-monitor': {
-    icono: '⚡',
+    icono: 'cp-smart-holter',
     duracion: '18 min',
     resumen: 'Las tres funciones que un mismo aparato puede cumplir —desfibrilar, cardiovertir y '
       + 'estimular— y por qué confundirlas es el error con más consecuencias de esta unidad.',
@@ -428,7 +428,7 @@ export default {
   //  Arritmias letales
   // ============================================================
   'm3-md-arritmias-letales': {
-    icono: '💔',
+    icono: 'ic-desfibrilador',
     duracion: '16 min',
     resumen: 'Los cuatro ritmos del paro cardiaco y la única clasificación que cambia la conducta en el '
       + 'momento: desfibrilable o no desfibrilable.',
@@ -578,7 +578,7 @@ export default {
   //  Código mega y práctica
   // ============================================================
   'm3-md-codigo-mega': {
-    icono: '🎯',
+    icono: 'ic-rcp',
     duracion: '20 min',
     resumen: 'La estación en que todo lo del módulo se ejecuta junto y bajo presión: qué se integra, cómo '
       + 'se reparten las funciones del equipo y con qué criterios se evalúa el desempeño.',

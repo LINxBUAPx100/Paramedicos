@@ -70,7 +70,7 @@ export default function QuizPage() {
 
       <div className="quiz-page-pie">
         <Link to={`/tema/${temaId}`} className="btn btn--suave">
-          ← Volver al tema
+          <Icon name="chevronIzq" size={15} /> Volver al tema
         </Link>
       </div>
     </div>

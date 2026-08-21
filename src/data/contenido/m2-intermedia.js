@@ -76,7 +76,7 @@ export default {
   //  Sistema óseo
   // ============================================================
   'm2-afi-oseo': {
-    icono: '🦴',
+    icono: 'cp-smart-esqueleto',
     duracion: '20 min',
     resumen: 'Cómo está organizado el esqueleto, de qué está hecho el hueso y por qué es un tejido vivo '
       + 'que además cumple funciones que no tienen que ver con el soporte.',
@@ -265,7 +265,7 @@ export default {
   //  Sistema muscular
   // ============================================================
   'm2-afi-muscular': {
-    icono: '💪',
+    icono: 'cp-servier-musculo',
     duracion: '20 min',
     resumen: 'Los tres tipos de músculo, en qué se diferencian por su control y su aspecto, y cómo se '
       + 'produce realmente una contracción.',
@@ -426,7 +426,7 @@ export default {
   //  Sistema cardiovascular
   // ============================================================
   'm2-afi-cardiovascular': {
-    icono: '❤️',
+    icono: 'il-corazon-vascularizacion',
     duracion: '22 min',
     resumen: 'Cómo está construido el corazón, por dónde circula la sangre y qué determina que llegue a '
       + 'los tejidos en cantidad suficiente.',
@@ -619,7 +619,7 @@ export default {
   //  Sistema nervioso
   // ============================================================
   'm2-afi-nervioso': {
-    icono: '🧠',
+    icono: 'cp-servier-cerebro',
     duracion: '22 min',
     resumen: 'Cómo se divide el sistema nervioso, qué hace cada parte y por qué una sola célula, la '
       + 'neurona, explica todo su funcionamiento.',
@@ -823,7 +823,7 @@ export default {
   //  Sistema digestivo
   // ============================================================
   'm2-afi-digestivo': {
-    icono: '🍽️',
+    icono: 'cp-servier-estomago',
     duracion: '20 min',
     resumen: 'El recorrido del alimento por el tubo digestivo, qué aporta cada tramo y qué hacen los '
       + 'órganos que no forman parte del tubo pero trabajan para él.',
@@ -1000,7 +1000,7 @@ export default {
   //  Sistema urinario
   // ============================================================
   'm2-afi-urinario': {
-    icono: '🚰',
+    icono: 'dg-nefrona',
     duracion: '20 min',
     resumen: 'Cómo el riñón fabrica la orina en tres pasos y por qué ese proceso regula mucho más que la '
       + 'eliminación de desechos.',

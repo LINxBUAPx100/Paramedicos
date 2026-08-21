@@ -139,7 +139,7 @@ export default {
   //  Exploración cardiaca
   // ============================================================
   'm4-card-exploracion': {
-    icono: '🫀',
+    icono: 'cp-servier-corazon-interior',
     duracion: '20 min',
     resumen: 'Cómo se explora a un paciente con motivo cardiovascular en la calle, conectando síntomas, '
       + 'perfusión y hallazgos cardiopulmonares sin pretender confirmar una causa.',
@@ -386,7 +386,7 @@ export default {
   //  Electrocardiografía básica
   // ============================================================
   'm4-card-ecg-basica': {
-    icono: '📈',
+    icono: 'dg-ecg-onda-normal',
     duracion: '22 min',
     resumen: 'Un método ordenado para leer un trazo en la calle y, sobre todo, para reconocer cuándo un '
       + 'trazo no es interpretable y no debe asignársele un ritmo.',
@@ -600,7 +600,7 @@ export default {
   //  Síndrome coronario agudo
   // ============================================================
   'm4-card-sca': {
-    icono: '💔',
+    icono: 'il-corazon-vascularizacion',
     duracion: '22 min',
     resumen: 'Cómo se sospecha un síndrome coronario agudo, por qué el registro eléctrico temprano cambia '
       + 'el desenlace y qué se hace mientras no hay confirmación posible.',
@@ -818,7 +818,7 @@ export default {
   //  Paro cardiorrespiratorio y RCP avanzada
   // ============================================================
   'm4-card-pcr-megacode': {
-    icono: '🚨',
+    icono: 'ic-rcp',
     duracion: '25 min',
     resumen: 'Cómo se organiza un equipo alrededor de un paro cardiorrespiratorio para que las '
       + 'compresiones no se interrumpan y las decisiones se tomen en voz alta.',
@@ -1050,7 +1050,7 @@ export default {
   //  Bradiarritmias y taquiarritmias
   // ============================================================
   'm4-card-arritmias': {
-    icono: '〰️',
+    icono: 'cp-servier-ecg',
     duracion: '20 min',
     resumen: 'Cómo se decide si una frecuencia anormal es un hallazgo tolerado o una arritmia que está '
       + 'causando inestabilidad, y qué se busca antes de tratar el número.',
@@ -1270,7 +1270,7 @@ export default {
   //  Insuficiencia cardiaca
   // ============================================================
   'm4-card-insuficiencia': {
-    icono: '🫁',
+    icono: 'cp-servier-edema-miembros',
     duracion: '20 min',
     resumen: 'Qué significa que el corazón falle como bomba, cómo se distingue la congestión del bajo '
       + 'gasto y qué reconoce el prestador cuando una insuficiencia crónica se descompensa.',
@@ -1488,7 +1488,7 @@ export default {
   //  Hipertensión arterial
   // ============================================================
   'm4-card-hipertension': {
-    icono: '🩺',
+    icono: 'ic-tension-arterial',
     duracion: '20 min',
     resumen: 'Por qué una cifra alta de presión no es por sí sola una urgencia, y qué distingue una '
       + 'medición elevada de un daño agudo de órgano que sí lo es.',

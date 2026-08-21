@@ -118,7 +118,7 @@ export default function AcademiaAdminPage() {
         <span className="acceso-ico"><Icon name="alerta" size={30} /></span>
         <h1>Academia no encontrada</h1>
         <p>No existe una academia con el código <strong>{academiaId}</strong>.</p>
-        <Link to="/admin" className="btn btn--pildora btn--carbon">← Volver al dashboard</Link>
+        <Link to="/admin" className="btn btn--pildora btn--carbon"><Icon name="chevronIzq" size={15} /> Volver al dashboard</Link>
       </div>
     )
   }

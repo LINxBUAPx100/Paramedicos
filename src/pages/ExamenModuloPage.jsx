@@ -140,7 +140,7 @@ export default function ExamenModuloPage() {
           <button className="btn btn--primario btn--lg" onClick={() => setIniciado(true)}>
             Comenzar ({preguntas.length} preguntas)
           </button>
-          <Link to={`/modulo/${modulo.id}`} className="link-discreto">← Volver al módulo</Link>
+          <Link to={`/modulo/${modulo.id}`} className="link-discreto"><Icon name="chevronIzq" size={15} /> Volver al módulo</Link>
         </div>
       ) : (
         <>
@@ -174,7 +174,7 @@ export default function ExamenModuloPage() {
               Otro intento
             </button>
             <Link to={`/modulo/${modulo.id}`} className="btn btn--suave">
-              ← Volver al módulo
+              <Icon name="chevronIzq" size={15} /> Volver al módulo
             </Link>
           </div>
 
@@ -417,7 +417,7 @@ function ModuloCompletado({ modulo, modulos, pct, onCerrar }) {
             </>
           ) : (
             <Link to={`/modulo/${siguiente.id}`} className="btn btn--primario btn--lg">
-              Continuar con el Módulo {siguiente.numero} →
+              Continuar con el Módulo {siguiente.numero} <Icon name="chevronDer" size={15} />
             </Link>
           )}
         </div>

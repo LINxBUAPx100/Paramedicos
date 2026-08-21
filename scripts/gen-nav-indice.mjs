@@ -11,7 +11,12 @@ import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 
 const raiz = path.dirname(fileURLToPath(import.meta.url)) + '/..'
-const destino = path.join(raiz, 'src', 'data', 'navIndice.js')
+// `--salida=<ruta>` redirige el archivo generado; lo usan las pruebas para
+// comprobar que el del repositorio está al día sin reescribirlo.
+const argSalida = process.argv.find((a) => a.startsWith('--salida='))
+const destino = argSalida
+  ? path.resolve(process.cwd(), argSalida.slice(9))
+  : path.join(raiz, 'src', 'data', 'navIndice.js')
 
 // Solo lo que el shell necesita para navegar (sin secciones/bloques/quiz/etc.).
 const modulosNav = modulos.map((f) => ({
@@ -36,7 +41,7 @@ const estadosEditoriales = Object.fromEntries(
   modulos.flatMap((m) => m.temas.map((t) => [t.id, t.estadoEditorial])),
 )
 
-const cuerpo = `// ⚠️ ARCHIVO GENERADO por scripts/gen-nav-indice.mjs — NO editar a mano.
+const cuerpo = `// ARCHIVO GENERADO por scripts/gen-nav-indice.mjs — NO editar a mano.
 // Índice ligero de navegación (metadatos) para el shell, sin el contenido pesado.
 export const modulosNav = ${JSON.stringify(modulosNav, null, 2)}
 

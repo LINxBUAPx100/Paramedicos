@@ -78,7 +78,7 @@ export default {
   //  Terapia intravenosa: ventajas y desventajas
   // ============================================================
   'm3-vi-ventajas-desventajas': {
-    icono: '💧',
+    icono: 'cp-servier-bolsa-infusion',
     duracion: '15 min',
     resumen: 'Qué gana y qué arriesga un paciente cuando se le canaliza una vena, y por qué la pregunta '
       + 'correcta no es «¿puedo?» sino «¿qué va a cambiar si lo hago?».',
@@ -211,7 +211,7 @@ export default {
   //  Sitios de punción
   // ============================================================
   'm3-vi-sitios-puncion': {
-    icono: '🎯',
+    icono: 'cp-servier-vena',
     duracion: '15 min',
     resumen: 'Dónde se busca una vena en el paciente prehospitalario, en qué orden y qué sitios se evitan '
       + 'aunque la vena se vea bien.',
@@ -356,7 +356,7 @@ export default {
   //  Soluciones cristaloides
   // ============================================================
   'm3-vi-cristaloides': {
-    icono: '🧪',
+    icono: 'dg-soluciones-cristaloides',
     duracion: '16 min',
     resumen: 'Qué es un cristaloide, en qué se distingue de un coloide y por qué la tonicidad de la '
       + 'solución decide adónde va el líquido que se administra.',
@@ -484,7 +484,7 @@ export default {
   //  Técnica de canalización
   // ============================================================
   'm3-vi-canalizacion': {
-    icono: '🩹',
+    icono: 'cp-servier-vena',
     duracion: '18 min',
     resumen: 'La secuencia completa de una venoclisis periférica, desde la preparación aséptica hasta la '
       + 'vigilancia posterior, y los errores que convierten un acceso en una complicación.',
@@ -658,7 +658,7 @@ export default {
   //  Acceso intraóseo (el plan lo titula «Osteólisis»)
   // ============================================================
   'm3-vi-osteolisis': {
-    icono: '🦴',
+    icono: 'ic-hueso',
     duracion: '16 min',
     resumen: 'El acceso a la circulación a través de la cavidad medular del hueso: cuándo sustituye a la '
       + 'vía intravenosa, dónde se coloca y por qué el término del plan es una errata.',

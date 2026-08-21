@@ -86,7 +86,7 @@ const ficha = ({ estado = 'borrador', extra = [], fuentes }) => ({
 
 export default {
   'm6-svp-rcp-neonatal': {
-    icono: '👶',
+    icono: 'ic-rcp',
     duracion: '16 min',
     resumen: 'La reanimación del recién nacido y la del niño comparten el objetivo pero no el punto de '
       + 'partida. En el recién nacido el problema es casi siempre la transición respiratoria al nacer, '
@@ -247,7 +247,7 @@ export default {
   },
 
   'm6-svp-ovace': {
-    icono: '🫁',
+    icono: 'ic-nino',
     duracion: '15 min',
     resumen: 'La obstrucción de la vía aérea por cuerpo extraño es una de las pocas urgencias en que '
       + 'una maniobra inmediata puede resolverlo todo. El algoritmo pediátrico distingue tres '

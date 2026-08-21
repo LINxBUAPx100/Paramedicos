@@ -36,7 +36,7 @@ const FUENTE_TRAUMA = {
 
 export default {
   'm5-hs-definicion': {
-    icono: '🩸',
+    icono: 'cp-servier-eritrocito',
     duracion: '12 min',
     resumen: 'Qué es el shock realmente: no es «presión baja», sino un fallo de la entrega de oxígeno a la célula.',
     objetivos: [
@@ -133,7 +133,7 @@ export default {
   },
 
   'm5-hs-hipovolemico': {
-    icono: '💧',
+    icono: 'cp-servier-eritrocito',
     duracion: '15 min',
     resumen: 'Shock hipovolémico: el más frecuente en trauma. Cómo se reconoce por etapas y por qué el control de la hemorragia manda sobre todo lo demás.',
     objetivos: [
@@ -259,7 +259,7 @@ export default {
   },
 
   'm5-hs-cardiogenico': {
-    icono: '💔',
+    icono: 'cp-servier-corazon-interior',
     duracion: '12 min',
     resumen: 'Shock cardiogénico: falla la bomba. Por qué aquí los líquidos pueden matar y qué causas hay que buscar en trauma.',
     objetivos: [
@@ -362,7 +362,7 @@ export default {
   },
 
   'm5-hs-neurogenico': {
-    icono: '🧠',
+    icono: 'cp-smart-medula-espinal',
     duracion: '12 min',
     resumen: 'Shock neurogénico: la lesión medular desconecta el control de los vasos. El único shock que cursa sin taquicardia.',
     objetivos: [
@@ -473,7 +473,7 @@ export default {
   },
 
   'm5-hs-anafilactico': {
-    icono: '🐝',
+    icono: 'cp-servier-anticuerpo',
     duracion: '13 min',
     resumen: 'Shock anafiláctico: reacción alérgica que compromete la vía aérea y la circulación a la vez. El tiempo hasta la adrenalina es lo que decide.',
     objetivos: [
@@ -589,7 +589,7 @@ export default {
   },
 
   'm5-hs-septico': {
-    icono: '🦠',
+    icono: 'cp-servier-neutrofilo',
     duracion: '12 min',
     resumen: 'Shock séptico: la infección desborda al organismo. El menos «traumático» de los shocks, pero el TUM lo encuentra a menudo.',
     objetivos: [
@@ -698,7 +698,7 @@ export default {
   },
 
   'm5-hs-signos-tratamiento': {
-    icono: '🚑',
+    icono: 'cp-servier-capilares',
     duracion: '14 min',
     resumen: 'Síntesis operativa: cómo se reconoce cualquier shock en la escena, cómo se distingue el tipo y qué se hace en los primeros minutos.',
     objetivos: [

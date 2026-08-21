@@ -95,7 +95,7 @@ const FU = [
 
 export default {
   'm5-tme-fracturas-inmovilizacion': {
-    icono: '🦴',
+    icono: 'ic-fractura',
     duracion: '15 min',
     resumen: 'Una fractura es una solución de continuidad del hueso, y se llama abierta cuando existe '
       + 'una herida que comunica el foco con el exterior. En la escena no se clasifica ni se '
@@ -238,7 +238,7 @@ export default {
   },
 
   'm5-tme-esguinces-luxaciones': {
-    icono: '🤕',
+    icono: 'ic-esguince',
     duracion: '13 min',
     resumen: 'Tres lesiones de partes blandas que se confunden entre sí y con la fractura. El esguince '
       + 'daña un ligamento, la luxación saca el hueso de la articulación y el desgarro rompe fibras '
@@ -366,7 +366,7 @@ export default {
   },
 
   'm5-tme-cadera': {
-    icono: '🦵',
+    icono: 'cp-smart-pelvis',
     duracion: '14 min',
     resumen: 'Bajo el título de «lesión de cadera» conviven dos situaciones muy distintas: la fractura '
       + 'de la persona mayor tras una caída banal, con la pierna acortada y rotada hacia fuera, y la '
@@ -493,7 +493,7 @@ export default {
   },
 
   'm5-tme-compartimental': {
-    icono: '⏱️',
+    icono: 'cp-servier-fibra-muscular',
     duracion: '14 min',
     resumen: 'Los músculos de una extremidad están agrupados en compartimentos rodeados por una '
       + 'envoltura que no cede. Si el contenido aumenta —por sangrado o por edema—, la presión sube y '
@@ -642,7 +642,7 @@ export default {
   },
 
   'm5-tme-aplastamiento': {
-    icono: '🧱',
+    icono: 'cp-servier-fibra-muscular',
     duracion: '15 min',
     resumen: 'Cuando una masa muscular permanece comprimida durante un tiempo prolongado, las células '
       + 'se destruyen y liberan su contenido. Mientras la compresión se mantiene, ese contenido queda '
@@ -778,7 +778,7 @@ export default {
   },
 
   'm5-tme-ferulas-sager-hare': {
-    icono: '🔧',
+    icono: 'ic-fractura',
     duracion: '14 min',
     resumen: 'La férula de tracción tiene una indicación estrecha y muy concreta: la fractura de la '
       + 'diáfisis del fémur, aislada y cerrada. Aplica una tracción sostenida que alinea el hueso, '
@@ -903,7 +903,7 @@ export default {
   },
 
   'm5-tme-farmacos': {
-    icono: '💊',
+    icono: 'cp-servier-tableta',
     duracion: '14 min',
     resumen: 'El plan pide estudiar los fármacos usados en el trauma aislado de extremidades en un '
       + 'paciente estable: antiinflamatorios no esteroideos, opioides y cloruro de etilo. Esta lección '

@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 480" role="img" aria-labelledby="t d" width="820" height="480">
+  <title id="t">Bomba de sodio y potasio (Na⁺/K⁺ ATPasa)</title>
+  <desc id="d">Esquema de la membrana celular con la bomba Na+/K+ ATPasa: por cada molécula de ATP saca tres iones de sodio al exterior e introduce dos de potasio, lo que mantiene el potencial de reposo de la célula.</desc>
+
+  <rect width="820" height="480" rx="14" fill="#ffffff" stroke="#dbe3ee"/>
+  <text x="32" y="46" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="21" font-weight="700" fill="#0b1220">Bomba Na⁺/K⁺ ATPasa</text>
+  <text x="32" y="70" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="14" fill="#6b7280">Transporte activo: gasta ATP para mover iones contra su gradiente</text>
+
+  <!-- Compartimentos -->
+  <rect x="32" y="92" width="756" height="118" rx="10" fill="#eef5fd"/>
+  <rect x="32" y="286" width="756" height="160" rx="10" fill="#fdf7ee"/>
+  <text x="52" y="120" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="700" fill="#0c5fc4">EXTERIOR · mucho Na⁺</text>
+  <text x="52" y="314" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="700" fill="#a16207">INTERIOR · mucho K⁺, proteínas con carga negativa</text>
+
+  <!-- Bicapa lipídica -->
+  <g>
+    <rect x="32" y="210" width="756" height="76" fill="#fde9c8"/>
+    <g fill="#e6a23c">
+      <g id="cabezas">
+        <circle cx="48" cy="222" r="9"/><circle cx="76" cy="222" r="9"/><circle cx="104" cy="222" r="9"/>
+        <circle cx="132" cy="222" r="9"/><circle cx="160" cy="222" r="9"/><circle cx="188" cy="222" r="9"/>
+        <circle cx="216" cy="222" r="9"/><circle cx="244" cy="222" r="9"/><circle cx="272" cy="222" r="9"/>
+      </g>
+      <use href="#cabezas" x="252"/>
+      <use href="#cabezas" x="504"/>
+      <g>
+        <circle cx="48" cy="274" r="9"/><circle cx="76" cy="274" r="9"/><circle cx="104" cy="274" r="9"/>
+        <circle cx="132" cy="274" r="9"/><circle cx="160" cy="274" r="9"/><circle cx="188" cy="274" r="9"/>
+        <circle cx="216" cy="274" r="9"/><circle cx="244" cy="274" r="9"/><circle cx="272" cy="274" r="9"/>
+        <circle cx="300" cy="274" r="9"/><circle cx="328" cy="274" r="9"/><circle cx="356" cy="274" r="9"/>
+        <circle cx="384" cy="274" r="9"/><circle cx="412" cy="274" r="9"/><circle cx="440" cy="274" r="9"/>
+        <circle cx="468" cy="274" r="9"/><circle cx="496" cy="274" r="9"/><circle cx="524" cy="274" r="9"/>
+        <circle cx="552" cy="274" r="9"/><circle cx="580" cy="274" r="9"/><circle cx="608" cy="274" r="9"/>
+        <circle cx="636" cy="274" r="9"/><circle cx="664" cy="274" r="9"/><circle cx="692" cy="274" r="9"/>
+        <circle cx="720" cy="274" r="9"/><circle cx="748" cy="274" r="9"/><circle cx="772" cy="274" r="9"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- La bomba -->
+  <rect x="352" y="196" width="120" height="104" rx="16" fill="#0c5fc4"/>
+  <text x="412" y="238" text-anchor="middle" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="700" fill="#ffffff">Na⁺/K⁺</text>
+  <text x="412" y="262" text-anchor="middle" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="700" fill="#ffffff">ATPasa</text>
+
+  <!-- Sodio: sale (3) -->
+  <g stroke="#e02424" stroke-width="3" fill="none" stroke-linecap="round">
+    <path d="M372 300 V150"/>
+  </g>
+  <path d="M372 138 l9 18 h-18 z" fill="#e02424"/>
+  <g font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="700" fill="#e02424">
+    <text x="300" y="150" text-anchor="middle">3 Na⁺ salen</text>
+  </g>
+  <g fill="#e02424">
+    <circle cx="248" cy="176" r="13"/><circle cx="282" cy="176" r="13"/><circle cx="316" cy="176" r="13"/>
+  </g>
+  <g font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">
+    <text x="248" y="181">Na</text><text x="282" y="181">Na</text><text x="316" y="181">Na</text>
+  </g>
+
+  <!-- Potasio: entra (2) -->
+  <g stroke="#10804a" stroke-width="3" fill="none" stroke-linecap="round">
+    <path d="M452 196 V352"/>
+  </g>
+  <path d="M452 364 l9 -18 h-18 z" fill="#10804a"/>
+  <text x="556" y="352" text-anchor="middle" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="700" fill="#10804a">2 K⁺ entran</text>
+  <g fill="#10804a">
+    <circle cx="512" cy="382" r="13"/><circle cx="546" cy="382" r="13"/>
+  </g>
+  <g font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">
+    <text x="512" y="387">K</text><text x="546" y="387">K</text>
+  </g>
+
+  <!-- ATP -->
+  <rect x="196" y="330" width="150" height="46" rx="10" fill="#f3e8ff" stroke="#a855f7"/>
+  <text x="271" y="359" text-anchor="middle" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="700" fill="#7e22ce">1 ATP → ADP + Pi</text>
+  <path d="M346 352 H392 V300" stroke="#a855f7" stroke-width="2.4" fill="none"/>
+  <path d="M392 292 l7 14 h-14 z" fill="#a855f7"/>
+
+  <text x="32" y="466" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#6b7280">Saca 3 cargas positivas y mete 2: el interior queda negativo. De ahí sale el potencial de reposo.</text>
+</svg>

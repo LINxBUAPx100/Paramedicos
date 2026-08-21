@@ -80,7 +80,7 @@ const FU = [
 
 export default {
   'm5-la-hipotermia': {
-    icono: '❄️',
+    icono: 'cp-servier-frio',
     duracion: '15 min',
     resumen: 'La hipotermia aparece cuando el cuerpo pierde calor más deprisa de lo que lo produce, y '
       + 'no necesita un entorno de montaña: basta con estar mojado, inmóvil y expuesto. Su gravedad se '
@@ -238,7 +238,7 @@ export default {
   },
 
   'm5-la-golpe-calor': {
-    icono: '🔥',
+    icono: 'cp-servier-calor',
     duracion: '14 min',
     resumen: 'El golpe de calor es el extremo grave de los trastornos por calor y se reconoce por un '
       + 'dato que no admite discusión: la alteración del estado mental en un paciente que ha estado '
@@ -377,7 +377,7 @@ export default {
   },
 
   'm5-la-insolacion': {
-    icono: '☀️',
+    icono: 'cp-servier-sol',
     duracion: '12 min',
     resumen: 'El plan dedica un tema propio a la insolación. El término se usa en español con dos '
       + 'sentidos —el cuadro por exposición directa al sol y, en algunas fuentes, el propio golpe de '

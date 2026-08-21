@@ -1,0 +1,60 @@
+{
+  "_lea_esto": [
+    "Icono de cada uno de los siete módulos. Sustituye a los emojis que estaban",
+    "escritos a mano en scripts/gen-plan-rescate.mjs (ESTILO[].icono).",
+    "",
+    "Cada uno tiene que ser un activo del catálogo con `kind: medical_icon`, es decir",
+    "uno que entre en el presupuesto de peso para el papel de icono. El pipeline lo",
+    "comprueba y aborta si alguno se pasa: un módulo no puede pedir 400 KB para",
+    "pintar 26 píxeles en la cabecera.",
+    "",
+    "Además es el icono que HEREDAN los temas cuyos activos son todos ilustraciones",
+    "pesadas, así que la elección tiene que valer para el módulo entero."
+  ],
+  "modulos": {
+    "m1-propedeutico": "ic-botiquin",
+    "m2-cuerpo-humano": "cp-servier-celula-vacia",
+    "m3-evaluacion-soporte-vital": "ic-estetoscopio",
+    "m4-urgencias-medico-quirurgicas": "cp-servier-tableta",
+    "m5-emergencias-traumatologicas": "ic-fractura",
+    "m6-poblaciones-especiales": "cp-smart-esqueleto-nino",
+    "m7-operaciones-especiales": "ic-ambulancia"
+  },
+  "_temas": [
+    "EXCEPCIONES por tema. El icono de un tema se elige solo: es el primero de sus",
+    "activos que entra en el presupuesto de peso. Cuando TODOS los activos de un tema",
+    "son ilustraciones pesadas —una composición grande, un dibujo de mil trazos—, el",
+    "automatismo lo haría heredar el icono de su módulo, y eso pierde información: el",
+    "tema de tipos de shock no debería llevar el icono de una fractura.",
+    "",
+    "Aquí se declara, tema por tema, un activo ligero que sí representa su asunto. No",
+    "entra en la galería del tema: solo hace de icono."
+  ],
+  "temas": {
+    "m1-pai-heridas-especiales": "cp-servier-piel",
+    "m1-smu-posiciones-lineas": "cp-cc0-paciente",
+    "m2-afi-nervioso": "cp-servier-cerebro",
+    "m2-afi-digestivo": "cp-servier-estomago",
+    "m2-ao-hematopoyetico": "cp-servier-eritrocito",
+    "m3-ep-respiracion": "cp-servier-pulmon",
+    "m4-gyn-hemorragia-2do-3er": "ic-feto-utero",
+    "m4-tox-picaduras": "cp-dbcls-abeja",
+    "m5-hs-tipos-hemorragias": "cp-servier-eritrocito",
+    "m5-hs-definicion-tipos-shock": "cp-servier-capilares",
+    "m5-ta-definicion": "cp-servier-intestino",
+    "m5-ta-cuadrantes": "cp-cc0-lupa",
+    "m5-tcc-lesiones-difusas": "cp-servier-cerebro",
+    "m5-que-grados": "cp-servier-quemadura-2do",
+    "m6-emp-meningitis": "cp-servier-cerebro"
+  },
+
+  "razones": {
+    "m1-propedeutico": "El módulo es primeros auxilios y la introducción al SMU: el botiquín es el objeto que lo representa sin adelantar ningún sistema del cuerpo.",
+    "m2-cuerpo-humano": "Anatomía y fisiología: la célula es la unidad con la que abre el módulo.",
+    "m3-evaluacion-soporte-vital": "Evaluación inicial y soporte vital: el estetoscopio es el instrumento del acto que da nombre al módulo.",
+    "m4-urgencias-medico-quirurgicas": "Urgencias médicas y farmacología: la forma farmacéutica es el hilo común de la mitad de sus unidades.",
+    "m5-emergencias-traumatologicas": "Trauma: la fractura es la lesión que atraviesa todo el módulo.",
+    "m6-poblaciones-especiales": "Pediatría y geriatría: el esqueleto del niño muestra de un vistazo la proporción que cambia el patrón de lesión, que es la idea que abre el módulo.",
+    "m7-operaciones-especiales": "Operaciones de ambulancias, extracción y triage: la unidad es el sujeto del módulo."
+  }
+}

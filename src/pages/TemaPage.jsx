@@ -4,6 +4,7 @@ import { useContenido, CargandoContenido, ErrorContenido } from '../context/Cont
 import { getRecursos } from '../data/recursosDescarga.js'
 import { imagenesDeTema } from '../data/imagenes.js'
 import Imagen from '../components/Imagen.jsx'
+import MedicalIcon from '../components/MedicalIcon.jsx'
 import { useProgress } from '../context/ProgressContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
@@ -101,7 +102,7 @@ export default function TemaPage() {
       <RevisionDocente tema={tema} />
 
       <header className="tema-header">
-        <span className="tema-header-ico">{tema.icono}</span>
+        <span className="tema-header-ico"><MedicalIcon id={tema.icono} size={34} /></span>
         <div className="tema-header-info">
           <span className="tema-header-num">Tema {tema.numero}</span>
           <h1>{tituloVisibleDe(tema)}</h1>
@@ -170,11 +171,11 @@ export default function TemaPage() {
             {galeria.map((img) => (
               <Imagen
                 key={img.clave}
-                src={img.src}
+                assetId={img.assetId}
+                src={img.assetId ? undefined : img.src}
                 ratio="4 / 3"
                 caption={img.titulo}
-                busqueda={`${img.titulo} anatomía`}
-                alt={img.titulo}
+                alt={img.alt || img.titulo}
               />
             ))}
           </div>
@@ -221,7 +222,7 @@ export default function TemaPage() {
             className="tema-nav-btn"
             onClick={() => navigate(`/tema/${vecinos.anterior.id}`)}
           >
-            <span>← Anterior</span>
+            <span><Icon name="chevronIzq" size={15} /> Anterior</span>
             <strong>{vecinos.anterior.numero} {vecinos.anterior.titulo}</strong>
           </button>
         ) : (
@@ -240,7 +241,7 @@ export default function TemaPage() {
             className="tema-nav-btn derecha"
             onClick={() => navigate(`/tema/${vecinos.siguiente.id}`)}
           >
-            <span>Siguiente →</span>
+            <span>Siguiente <Icon name="chevronDer" size={15} /></span>
             <strong>{vecinos.siguiente.numero} {vecinos.siguiente.titulo}</strong>
           </button>
         )}

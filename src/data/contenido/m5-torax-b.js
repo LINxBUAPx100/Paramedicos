@@ -104,7 +104,7 @@ export default {
   //  1. Clasificación de abierto o cerrado
   // ============================================================
   'm5-tt-clasificacion': {
-    icono: '🗂️',
+    icono: 'cp-smart-caja-toracica',
     duracion: '13 min',
     resumen: 'El trauma torácico se clasifica primero por la integridad de la pared —abierto o '
       + 'cerrado— y después por el problema fisiológico que produce: fallo de la ventilación, fallo '
@@ -240,7 +240,7 @@ export default {
   //  2. Lesión de tráquea y laringe
   // ============================================================
   'm5-tt-traquea-laringe': {
-    icono: '🗣️',
+    icono: 'cp-servier-laringe',
     duracion: '13 min',
     resumen: 'La lesión de la vía aérea superior es poco frecuente y muy peligrosa, porque la vía por '
       + 'la que respira el paciente es la que está dañada. Se sospecha por disfonía, estridor, '
@@ -368,7 +368,7 @@ export default {
   //  3. Lesión de costilla
   // ============================================================
   'm5-tt-costilla': {
-    icono: '🦴',
+    icono: 'cp-smart-fractura-costal',
     duracion: '13 min',
     resumen: 'La fractura costal es la lesión torácica más común y su importancia real está en dos '
       + 'cosas: el dolor limita la ventilación y favorece complicaciones respiratorias, y la fractura '
@@ -516,7 +516,7 @@ export default {
   //  4. Tórax inestable o batiente
   // ============================================================
   'm5-tt-torax-inestable': {
-    icono: '↕️',
+    icono: 'cp-smart-fractura-costal',
     duracion: '14 min',
     resumen: 'El tórax inestable es un segmento de la pared que ha perdido continuidad con el resto '
       + 'porque varias costillas contiguas están fracturadas en más de un punto. Ese segmento se mueve '
@@ -658,7 +658,7 @@ export default {
   //  5. Neumotórax simple
   // ============================================================
   'm5-tt-neumotorax-simple': {
-    icono: '🫧',
+    icono: 'cp-servier-neumotorax',
     duracion: '13 min',
     resumen: 'En el neumotórax simple entra aire al espacio pleural sin comunicación abierta con el '
       + 'exterior y sin mecanismo de válvula: el pulmón pierde parte de su expansión, pero la presión '
@@ -808,7 +808,7 @@ export default {
   //  6. Neumotórax abierto
   // ============================================================
   'm5-tt-neumotorax-abierto': {
-    icono: '🌬️',
+    icono: 'cp-servier-neumotorax',
     duracion: '16 min',
     resumen: 'En el neumotórax abierto una herida comunica el espacio pleural con el exterior y el aire '
       + 'entra por la pared en lugar de por la vía aérea. La conducta ha cambiado: la guía de primeros '
@@ -977,7 +977,7 @@ export default {
   //  7. Hemotórax
   // ============================================================
   'm5-tt-hemotorax': {
-    icono: '🩸',
+    icono: 'cp-servier-eritrocito',
     duracion: '14 min',
     resumen: 'El hemotórax es sangre acumulada en el espacio pleural, y produce dos problemas a la vez: '
       + 'ocupa el espacio del pulmón y resta volumen circulante. Por eso puede presentarse como '
@@ -1117,7 +1117,7 @@ export default {
   //  8. Trauma traqueobronquial
   // ============================================================
   'm5-tt-traqueo-bronquial': {
-    icono: '🌲',
+    icono: 'il-arbol-traqueobronquial',
     duracion: '12 min',
     resumen: 'La lesión del árbol traqueobronquial intratorácico es rara y grave: hay una fuga de aire '
       + 'desde una vía aérea grande hacia el mediastino o hacia el espacio pleural. Se sospecha por '
@@ -1252,7 +1252,7 @@ export default {
   //  9. Desgarro o disrupción aórtica
   // ============================================================
   'm5-tt-disrupcion-aortica': {
-    icono: '⚡',
+    icono: 'cp-servier-aorta',
     duracion: '13 min',
     resumen: 'La disrupción traumática de la aorta se asocia a desaceleraciones de alta energía: la '
       + 'aorta tiene porciones fijas y porciones móviles, y el cizallamiento se concentra en la '
@@ -1393,7 +1393,7 @@ export default {
   //  10. Taponamiento cardiaco
   // ============================================================
   'm5-tt-taponamiento': {
-    icono: '💔',
+    icono: 'cp-servier-corazon-interior',
     duracion: '14 min',
     resumen: 'En el taponamiento cardiaco se acumula sangre dentro del pericardio, que es poco '
       + 'distensible: la presión sube y el corazón no puede llenarse. El resultado es un shock '
@@ -1543,7 +1543,7 @@ export default {
   //  11. Contusión miocárdica
   // ============================================================
   'm5-tt-contusion-miocardica': {
-    icono: '🫀',
+    icono: 'cp-servier-corazon',
     duracion: '13 min',
     resumen: 'El término contemporáneo es lesión cardiaca contusa, y describe el daño del músculo '
       + 'cardiaco tras un impacto sobre la pared torácica anterior. Sus manifestaciones —dolor '

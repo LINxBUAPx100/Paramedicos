@@ -94,7 +94,7 @@ export default {
   //  1. Tipos de hemorragias
   // ============================================================
   'm5-hs-tipos-hemorragias': {
-    icono: '🩸',
+    icono: 'cp-servier-eritrocito',
     duracion: '14 min',
     resumen: 'Las hemorragias se clasifican por dónde se acumula la sangre —externa, interna y de '
       + 'unión— y por si pueden o no comprimirse desde fuera. Esa segunda distinción es la que decide '
@@ -244,7 +244,7 @@ export default {
   //  2. Control de hemorragias
   // ============================================================
   'm5-hs-control-hemorragias': {
-    icono: '🧤',
+    icono: 'cp-cc0-guantes',
     duracion: '16 min',
     resumen: 'El control de una hemorragia externa sigue una secuencia con un orden que importa: '
       + 'seguridad y protección personal, exposición de la herida, presión manual directa y, si el '
@@ -402,7 +402,7 @@ export default {
   //  3. Uso del torniquete
   // ============================================================
   'm5-hs-torniquete': {
-    icono: '🩹',
+    icono: 'cp-servier-arteria',
     duracion: '15 min',
     resumen: 'El torniquete está indicado ante una hemorragia de extremidad potencialmente mortal o que '
       + 'no se controla con las medidas previas. Se prefiere un dispositivo comercial, se aprieta hasta '
@@ -563,7 +563,7 @@ export default {
   //  4. Definición y tipos de shock
   // ============================================================
   'm5-hs-definicion-tipos-shock': {
-    icono: '📉',
+    icono: 'cp-servier-capilares',
     duracion: '15 min',
     resumen: 'Shock es la incapacidad de entregar o de utilizar oxígeno suficiente en la célula. No es '
       + 'una cifra de presión arterial: un paciente puede estar en shock con la presión todavía normal '
@@ -696,7 +696,7 @@ export default {
   //  5. Fisiopatología del estado de shock
   // ============================================================
   'm5-hs-fisiopatologia': {
-    icono: '🫀',
+    icono: 'cp-servier-capilares',
     duracion: '17 min',
     resumen: 'Esta lección explica la cadena que va de la pérdida de volumen al daño celular: cae la '
       + 'precarga, cae el gasto cardiaco, cae la entrega de oxígeno y la célula pasa al metabolismo '

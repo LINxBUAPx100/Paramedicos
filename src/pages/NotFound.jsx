@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import IconoEstrella from '../components/marca/IconoEstrella.jsx'
+import Icon from '../components/Icon.jsx'
 
 export default function NotFound() {
   return (
@@ -11,7 +12,7 @@ export default function NotFound() {
           clase de pantalla (callejón sin salida con una vía de escape) y hasta
           ahora cada una usaba un lenguaje visual distinto. */}
       <Link to="/" className="btn btn--pildora btn--carbon">
-        ← Volver al inicio
+        <Icon name="chevronIzq" size={15} /> Volver al inicio
       </Link>
     </div>
   )

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 520" role="img" aria-labelledby="t d" width="820" height="520">
+  <title id="t">Sistema de conducción cardíaca</title>
+  <desc id="d">Recorrido del impulso eléctrico del corazón: nodo sinusal, nodo auriculoventricular, haz de His, ramas derecha e izquierda y fibras de Purkinje, con las frecuencias propias de cada marcapasos.</desc>
+
+  <rect width="820" height="520" rx="14" fill="#ffffff" stroke="#dbe3ee"/>
+  <text x="32" y="46" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="21" font-weight="700" fill="#0b1220">Sistema de conducción cardíaca</text>
+  <text x="32" y="70" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="14" fill="#6b7280">Por dónde viaja el impulso y a qué ritmo late cada marcapasos si manda él</text>
+
+  <!-- Silueta esquemática del corazón -->
+  <path d="M250 118 C210 118 186 148 186 186 L186 300 C186 372 236 430 300 452 L330 462 L360 452 C424 430 474 372 474 300 L474 186 C474 148 450 118 410 118 Z"
+        fill="#fdf5f5" stroke="#e6a6a6" stroke-width="2"/>
+  <line x1="330" y1="118" x2="330" y2="452" stroke="#e6a6a6" stroke-width="2"/>
+  <line x1="186" y1="248" x2="474" y2="248" stroke="#e6a6a6" stroke-width="2" stroke-dasharray="6 6"/>
+
+  <g font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#a08383">
+    <text x="252" y="150" text-anchor="middle">Aurícula derecha</text>
+    <text x="408" y="150" text-anchor="middle">Aurícula izquierda</text>
+    <text x="252" y="286" text-anchor="middle">Ventrículo derecho</text>
+    <text x="408" y="286" text-anchor="middle">Ventrículo izquierdo</text>
+  </g>
+
+  <!-- Vía de conducción -->
+  <path d="M272 168 C300 188 314 208 322 234" fill="none" stroke="#0c5fc4" stroke-width="3.4"/>
+  <path d="M322 248 V300" fill="none" stroke="#0c5fc4" stroke-width="3.4"/>
+  <path d="M322 300 C300 330 280 360 268 404" fill="none" stroke="#0c5fc4" stroke-width="3.4"/>
+  <path d="M322 300 C348 330 372 360 388 404" fill="none" stroke="#0c5fc4" stroke-width="3.4"/>
+  <g stroke="#0c5fc4" stroke-width="2.2" fill="none" stroke-linecap="round">
+    <path d="M268 404 L246 424 M268 404 L268 430 M268 404 L292 424"/>
+    <path d="M388 404 L366 424 M388 404 L390 430 M388 404 L412 424"/>
+  </g>
+
+  <!-- Nodos -->
+  <circle cx="272" cy="166" r="12" fill="#e02424"/>
+  <circle cx="322" cy="240" r="11" fill="#a16207"/>
+  <rect x="314" y="266" width="16" height="26" rx="5" fill="#0c5fc4"/>
+
+  <!-- Etiquetas con frecuencias -->
+  <g font-family="system-ui, 'Segoe UI', Roboto, sans-serif">
+    <path d="M284 160 H556" stroke="#cbd5e1" stroke-width="1.4"/>
+    <text x="566" y="152" font-size="15" font-weight="700" fill="#e02424">1. Nodo sinusal (SA)</text>
+    <text x="566" y="174" font-size="13" fill="#334155">Marcapasos normal · 60–100 lpm</text>
+
+    <path d="M334 240 H556" stroke="#cbd5e1" stroke-width="1.4"/>
+    <text x="566" y="232" font-size="15" font-weight="700" fill="#a16207">2. Nodo AV</text>
+    <text x="566" y="254" font-size="13" fill="#334155">Retrasa el impulso: deja que</text>
+    <text x="566" y="272" font-size="13" fill="#334155">las aurículas terminen de llenar</text>
+    <text x="566" y="292" font-size="13" fill="#334155">Si manda él · 40–60 lpm</text>
+
+    <path d="M340 292 H556" stroke="#cbd5e1" stroke-width="1.4"/>
+    <text x="566" y="326" font-size="15" font-weight="700" fill="#0c5fc4">3. Haz de His y ramas</text>
+    <text x="566" y="348" font-size="13" fill="#334155">Derecha e izquierda</text>
+
+    <path d="M400 420 H556" stroke="#cbd5e1" stroke-width="1.4"/>
+    <text x="566" y="392" font-size="15" font-weight="700" fill="#0c5fc4">4. Fibras de Purkinje</text>
+    <text x="566" y="414" font-size="13" fill="#334155">Contracción ventricular</text>
+    <text x="566" y="434" font-size="13" fill="#334155">Si mandan ellas · 20–40 lpm</text>
+  </g>
+
+  <text x="32" y="496" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#6b7280">Cuanto más abajo nace el ritmo, más lento late: por eso un ritmo de escape ventricular es lento y mal tolerado.</text>
+</svg>

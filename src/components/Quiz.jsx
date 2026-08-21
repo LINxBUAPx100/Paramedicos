@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { barajarPreguntas } from '../lib/baraja.js'
+import Icon from './Icon.jsx'
 
 // Quiz interactivo reutilizable.
 // props: preguntas [{ pregunta, opciones, correcta, explicacion }], onComplete(aciertos, total), titulo
@@ -77,7 +78,9 @@ export default function Quiz({ preguntas, onComplete, titulo, semilla = null, on
         <div className="quiz-repaso">
           {respuestas.map((r, i) => (
             <div key={i} className={`quiz-repaso-item ${r.correcto ? 'ok' : 'mal'}`}>
-              <span className="quiz-repaso-ico">{r.correcto ? '✓' : '✗'}</span>
+              <span className="quiz-repaso-ico" aria-hidden="true">
+                <Icon name={r.correcto ? 'check' : 'cerrar'} size={16} />
+              </span>
               <div>
                 <div className="quiz-repaso-preg">{r.pregunta.pregunta}</div>
                 {!r.correcto && (
@@ -133,9 +136,11 @@ export default function Quiz({ preguntas, onComplete, titulo, semilla = null, on
             >
               <span className="quiz-opcion-letra">{String.fromCharCode(65 + i)}</span>
               <span>{op}</span>
-              {confirmado && esCorrecta(i) && <span className="quiz-opcion-marca">✓</span>}
+              {confirmado && esCorrecta(i) && (
+                <span className="quiz-opcion-marca" aria-hidden="true"><Icon name="check" size={15} /></span>
+              )}
               {confirmado && i === seleccion && !esCorrecta(i) && (
-                <span className="quiz-opcion-marca">✗</span>
+                <span className="quiz-opcion-marca" aria-hidden="true"><Icon name="cerrar" size={15} /></span>
               )}
             </button>
           )
@@ -144,7 +149,10 @@ export default function Quiz({ preguntas, onComplete, titulo, semilla = null, on
 
       {confirmado && (
         <div className={`quiz-explicacion ${esCorrecta(seleccion) ? 'ok' : 'mal'}`}>
-          <strong>{esCorrecta(seleccion) ? '✓ Correcto. ' : '✗ Incorrecto. '}</strong>
+          <strong>
+            <Icon name={esCorrecta(seleccion) ? 'check' : 'cerrar'} size={15} />{' '}
+            {esCorrecta(seleccion) ? 'Correcto.' : 'Incorrecto.'}{' '}
+          </strong>
           {pregunta.explicacion}
         </div>
       )}
@@ -160,7 +168,7 @@ export default function Quiz({ preguntas, onComplete, titulo, semilla = null, on
           </button>
         ) : (
           <button className="btn btn--primario" onClick={siguiente}>
-            {indice + 1 >= total ? 'Ver resultados' : 'Siguiente →'}
+            {indice + 1 >= total ? 'Ver resultados' : <>Siguiente <Icon name="chevronDer" size={15} /></>}
           </button>
         )}
       </div>

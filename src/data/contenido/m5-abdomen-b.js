@@ -45,7 +45,7 @@ const WHO_BEC = {
 
 export default {
   'm5-ta-abdomen-agudo': {
-    icono: '🚨',
+    icono: 'cp-servier-peristalsis',
     duracion: '15 min',
     resumen: 'En esta unidad, abdomen agudo designa la emergencia abdominal de origen traumático: un '
       + 'abdomen que duele, se defiende o se distiende porque hay sangre o contenido vertido dentro. '

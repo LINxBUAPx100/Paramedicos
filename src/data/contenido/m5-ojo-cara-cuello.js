@@ -91,7 +91,7 @@ export default {
   // ---------- Cara ----------
 
   'm5-tocc-lefort': {
-    icono: '🦷',
+    icono: 'cp-servier-senos-paranasales',
     duracion: '13 min',
     resumen: 'Le Fort describió tres patrones de fractura del macizo facial según por dónde se separa '
       + 'la cara del cráneo: I afecta al maxilar por encima de los dientes, II tiene forma piramidal e '
@@ -223,7 +223,7 @@ export default {
   },
 
   'm5-tocc-facial-signos': {
-    icono: '😷',
+    icono: 'cp-servier-senos-paranasales',
     duracion: '13 min',
     resumen: 'El trauma facial impresiona y sangra mucho, y por eso desvía la atención con facilidad. '
       + 'Esta lección ordena la valoración: primero la vía aérea y la ventilación, después la '
@@ -342,7 +342,7 @@ export default {
   // ---------- Ojo ----------
 
   'm5-tocc-ocular-empalado': {
-    icono: '📌',
+    icono: 'cp-servier-ojo-corte',
     duracion: '11 min',
     resumen: 'Un objeto clavado en el ojo o en la órbita no se retira nunca en la escena: puede estar '
       + 'conteniendo el contenido del globo y sujetando estructuras cuya salida es irreversible. La '
@@ -457,7 +457,7 @@ export default {
   },
 
   'm5-tocc-hemorragia-conjuntival': {
-    icono: '👁️',
+    icono: 'cp-servier-ojo-corte',
     duracion: '11 min',
     resumen: 'Dos hallazgos rojos en el ojo que se confunden con facilidad y no significan lo mismo. '
       + 'La hemorragia subconjuntival es sangre bajo la conjuntiva: aparatosa, indolora y casi siempre '
@@ -576,7 +576,7 @@ export default {
   },
 
   'm5-tocc-lesion-muscular-ojo': {
-    icono: '🔄',
+    icono: 'cp-servier-musculos-ojo',
     duracion: '11 min',
     resumen: 'Seis músculos mueven cada ojo, y trabajan de forma coordinada con los del otro para que '
       + 'veamos una sola imagen. Cuando uno se lesiona o queda atrapado en el trazo de una fractura de '
@@ -713,7 +713,7 @@ export default {
   },
 
   'm5-tocc-ocular-exploracion': {
-    icono: '🔦',
+    icono: 'cp-servier-ojo',
     duracion: '13 min',
     resumen: 'La exploración ocular prehospitalaria se apoya en cinco comprobaciones sencillas: qué ve '
       + 'el paciente, cómo están las pupilas, cómo se mueven los ojos, qué aspecto tiene el globo y '
@@ -836,7 +836,7 @@ export default {
   // ---------- Cuello ----------
 
   'm5-tocc-cuello-hemorragias': {
-    icono: '🩸',
+    icono: 'cp-smart-arterias-cuello',
     duracion: '13 min',
     resumen: 'El cuello concentra en muy poco espacio vasos de gran calibre, la vía aérea y estructuras '
       + 'nerviosas, y no ofrece un plano óseo contra el que comprimir con comodidad. Por eso su '
@@ -964,7 +964,7 @@ export default {
   },
 
   'm5-tocc-cuello-exploracion': {
-    icono: '🔎',
+    icono: 'cp-smart-arterias-cuello',
     duracion: '12 min',
     resumen: 'Explorar el cuello de un traumatizado es buscar problemas en tres sistemas a la vez: la '
       + 'vía aérea, los vasos y la columna cervical. La lección organiza esa búsqueda con una regla '
@@ -1081,7 +1081,7 @@ export default {
   },
 
   'm5-tocc-cuello-empalado': {
-    icono: '🗡️',
+    icono: 'cp-smart-arterias-cuello',
     duracion: '11 min',
     resumen: 'Un objeto empalado en el cuello suma todos los problemas de la región: puede estar '
       + 'taponando un vaso grande, puede desplazar o abrir la vía aérea y puede moverse con cada gesto '

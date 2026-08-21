@@ -76,7 +76,7 @@ const FUENTES_ORGANIZACION = F([OMS_BEC, NOM_034, AHA_PRIMEROS_AUXILIOS])
 export default {
   // ---------- 1. PRIMEROS AUXILIOS BÁSICOS ----------
   'm1-pab-introduccion': {
-    icono: '🚑',
+    icono: 'ic-ambulancia',
     duracion: '12 min',
     resumen: 'Qué son los primeros auxilios, hasta dónde llegan y por qué el primer respondiente cambia el pronóstico de una emergencia.',
     objetivos: [
@@ -199,7 +199,7 @@ export default {
   },
 
   'm1-pab-avdi': {
-    icono: '🧠',
+    icono: 'cp-servier-cerebro',
     duracion: '12 min',
     resumen: 'AVDI: la valoración rápida del estado de conciencia y el momento exacto en que se activa el Sistema Médico de Urgencias.',
     objetivos: [
@@ -329,7 +329,7 @@ export default {
   },
 
   'm1-pab-rcp-legos-adulto': {
-    icono: '❤️',
+    icono: 'ic-rcp',
     duracion: '18 min',
     resumen: 'RCP de alta calidad en el adulto para un reanimador lego: cómo se reconoce el paro, cómo se comprime y por qué la calidad importa más que la técnica elegante.',
     objetivos: [
@@ -452,7 +452,7 @@ export default {
   },
 
   'm1-pab-dea': {
-    icono: '⚡',
+    icono: 'ic-desfibrilador',
     duracion: '14 min',
     resumen: 'El desfibrilador externo automático: qué hace, cuándo se usa y por qué cada minuto de retraso cuesta supervivencia.',
     objetivos: [
@@ -570,7 +570,7 @@ export default {
   },
 
   'm1-pab-ovace-adultos': {
-    icono: '🫁',
+    icono: 'cp-servier-via-aerea-superior',
     duracion: '14 min',
     resumen: 'Obstrucción de la vía aérea por cuerpo extraño en el adulto: cómo distinguir la obstrucción leve de la grave y qué hacer en cada caso.',
     objetivos: [
@@ -733,7 +733,7 @@ export default {
   },
 
   'm1-pab-hemorragias': {
-    icono: '🩸',
+    icono: 'cp-servier-eritrocito',
     duracion: '16 min',
     resumen: 'Control de hemorragias externas: presión directa, empaquetamiento y torniquete, en el orden y con los criterios que salvan vidas.',
     objetivos: [
@@ -859,7 +859,7 @@ export default {
   },
 
   'm1-pab-fracturas': {
-    icono: '🦴',
+    icono: 'ic-fractura',
     duracion: '14 min',
     resumen: 'Reconocimiento e inmovilización básica de fracturas: qué se busca, qué se inmoviliza y qué nunca se hace.',
     objetivos: [
@@ -964,7 +964,7 @@ export default {
   },
 
   'm1-pab-quemaduras': {
-    icono: '🔥',
+    icono: 'cp-servier-quemadura-2do',
     duracion: '15 min',
     resumen: 'Atención inicial de las quemaduras: detener la lesión, valorar profundidad y extensión, y evitar los errores que agravan.',
     objetivos: [
@@ -1081,7 +1081,7 @@ export default {
   },
 
   'm1-pab-botiquin': {
-    icono: '🧰',
+    icono: 'ic-botiquin',
     duracion: '10 min',
     resumen: 'Qué debe contener un botiquín útil, cómo se organiza y por qué revisarlo es parte de tenerlo.',
     objetivos: [

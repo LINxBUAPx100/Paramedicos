@@ -33,7 +33,7 @@ function construirInvitacion({ tipo, nombreAcademia, nombreGrupo, codigo, url, r
     const quien = etiquetaRol(rol).toLowerCase()
     const titulo = `${nombreAcademia} te invita como ${quien}`
     const lineas = [
-      `🎓 ${nombreAcademia} te invita como ${quien}`,
+      `${nombreAcademia} te invita como ${quien}`,
       nombreGrupo ? `\nGrupo: ${nombreGrupo}` : null,
       '',
       'Ingresa aquí:',
@@ -49,7 +49,7 @@ function construirInvitacion({ tipo, nombreAcademia, nombreGrupo, codigo, url, r
   if (tipo === 'prueba') {
     const titulo = `Acceso de prueba a ${nombreAcademia}`
     const lineas = [
-      `🧪 Acceso de prueba a ${nombreAcademia}`,
+      `Acceso de prueba a ${nombreAcademia}`,
       '',
       'Usa este enlace para conocer la plataforma:',
       url,
@@ -64,7 +64,7 @@ function construirInvitacion({ tipo, nombreAcademia, nombreGrupo, codigo, url, r
   if (tipo === 'grupo') {
     const titulo = `${nombreAcademia} te ha enviado una invitación`
     const lineas = [
-      `🎓 ${nombreAcademia} te ha enviado una invitación`,
+      `${nombreAcademia} te ha enviado una invitación`,
       nombreGrupo ? `\nGrupo: ${nombreGrupo}` : null,
       '',
       'Ingresa aquí:',
@@ -80,7 +80,7 @@ function construirInvitacion({ tipo, nombreAcademia, nombreGrupo, codigo, url, r
   // Academia
   const titulo = `Invitación de ${nombreAcademia}`
   const lineas = [
-    `🎓 Invitación de ${nombreAcademia}`,
+    `Invitación de ${nombreAcademia}`,
     '',
     'Has sido invitado a ingresar a su plataforma educativa.',
     '',
@@ -246,15 +246,15 @@ export default function CompartirCodigo({ codigo, nombre, contexto = '', tipo = 
             </a>
 
             <button className="compartir-completa" onClick={compartirTexto}>
-              {copiado === 'invitacion' ? '✓ Invitación copiada' : 'Compartir solo el texto'}
+              {copiado === 'invitacion' ? 'Invitación copiada' : 'Compartir solo el texto'}
             </button>
 
             <div className="compartir-acciones-secundarias">
               <button onClick={() => copiar('enlace', url)}>
-                {copiado === 'enlace' ? '✓ Enlace' : 'Copiar enlace'}
+                {copiado === 'enlace' ? 'Enlace copiado' : 'Copiar enlace'}
               </button>
               <button onClick={() => copiar('codigo', codigo)}>
-                {copiado === 'codigo' ? '✓ Código' : 'Copiar código'}
+                {copiado === 'codigo' ? 'Código copiado' : 'Copiar código'}
               </button>
             </div>
           </div>

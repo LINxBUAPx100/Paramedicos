@@ -1,0 +1,55 @@
+{
+  "_lea_esto": [
+    "Fuentes AUTORIZADAS de activos médicos y su versión FIJADA.",
+    "El pipeline (scripts/importar-activos-medicos.mjs) no descarga nada que no esté aquí.",
+    "Fijar el commit no es una formalidad: sin él, el mismo `npm run activos:importar` de",
+    "mañana traería un archivo distinto —o ninguno— si el repositorio remoto cambia, y el",
+    "catálogo de créditos quedaría afirmando una autoría que ya no corresponde al archivo.",
+    "Para actualizar: cambiar `commit`, ejecutar con --dry-run, revisar el informe de hashes",
+    "y solo entonces ejecutar en firme. Ver docs/PLAN-IMAGENES-PTEM.md §Actualización."
+  ],
+  "bioicons": {
+    "proveedor": "bioicons",
+    "nombre": "BioIcons",
+    "repositorio": "https://github.com/duerrsimon/bioicons",
+    "paginaProyecto": "https://bioicons.com/",
+    "commit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
+    "rutaIconos": "static/icons",
+    "rutaAutores": "static/icons/authors.json",
+    "urlCrudo": "https://raw.githubusercontent.com/duerrsimon/bioicons/{commit}/{ruta}",
+    "urlNavegable": "https://github.com/duerrsimon/bioicons/blob/{commit}/{ruta}",
+    "nota": [
+      "El repositorio se publica bajo MIT, pero eso cubre el CÓDIGO del sitio, no los",
+      "dibujos: cada archivo vive en static/icons/<licencia>/<categoría>/<autor>/ y esa",
+      "ruta es la única fuente fiable de su licencia y su autoría. El pipeline la lee de",
+      "ahí y aborta si la carpeta de licencia no está en el registro de licencias.",
+      "Los 362 archivos de static/icons/cc-by-3.0/.../Servier/ son copias HISTÓRICAS de",
+      "Servier Medical Art bajo CC BY 3.0. NO son lo mismo que una descarga actual de",
+      "smart.servier.com (CC BY 4.0) y no se pueden registrar con esa licencia."
+    ]
+  },
+  "servier_smart": {
+    "proveedor": "servier_smart",
+    "nombre": "Servier Medical Art (SMART)",
+    "paginaProyecto": "https://smart.servier.com/",
+    "licenciaDeclarada": "CC-BY-4.0",
+    "urlLicencia": "https://creativecommons.org/licenses/by/4.0/",
+    "creador": "Servier",
+    "creadorUrl": "https://smart.servier.com/",
+    "apiBusqueda": "https://smart.servier.com/wp-json/wp/v2/search?search={consulta}&per_page=10",
+    "paginaActivo": "https://smart.servier.com/smart_image/{slug}/",
+    "recuperadoEl": "2026-08-20",
+    "nota": [
+      "La biblioteca no publica un paquete único descargable ni un repositorio git.",
+      "El acceso automatizable es el que el propio sitio expone: la ficha pública de cada",
+      "ilustración (/smart_image/<slug>/) declara su archivo canónico en la etiqueta",
+      "og:image y su licencia CC BY 4.0 en la propia página. El pipeline lee ESO: no",
+      "recorre el sitio, no descarga catálogos completos y no toca ninguna ruta protegida.",
+      "El endpoint /wp-json/wp/v2/icons responde 401 (requiere sesión): no se usa.",
+      "Los activos llegan en PNG; SMART no ofrece SVG para este material.",
+      "BLOQUEO REGISTRADO: sin paquete oficial ni commit remoto, la reproducibilidad se",
+      "sostiene en el sha256 de cada archivo y en la fecha de recuperación, no en una",
+      "versión del proveedor. Si un hash cambia, el pipeline avisa y no sobrescribe."
+    ]
+  }
+}

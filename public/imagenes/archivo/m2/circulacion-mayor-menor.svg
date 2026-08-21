@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 520" role="img" aria-labelledby="t d" width="860" height="520">
+  <title id="t">Circulación mayor y menor</title>
+  <desc id="d">Esquema del doble circuito: la circulación menor lleva la sangre del ventrículo derecho al pulmón y la devuelve oxigenada a la aurícula izquierda; la mayor sale del ventrículo izquierdo a todo el cuerpo y regresa por las cavas a la aurícula derecha.</desc>
+
+  <rect width="860" height="520" rx="14" fill="#ffffff" stroke="#dbe3ee"/>
+  <text x="32" y="46" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="21" font-weight="700" fill="#0b1220">Circulación mayor y menor</text>
+  <text x="32" y="70" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="14" fill="#6b7280">Un corazón, dos circuitos en serie · azul: sangre pobre en O₂ · rojo: rica en O₂</text>
+
+  <!-- Pulmones -->
+  <rect x="300" y="96" width="260" height="86" rx="18" fill="#eef5fd" stroke="#93b7e6" stroke-width="2"/>
+  <text x="430" y="134" text-anchor="middle" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="17" font-weight="700" fill="#0c5fc4">PULMONES</text>
+  <text x="430" y="158" text-anchor="middle" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#334155">intercambio gaseoso (alvéolo)</text>
+
+  <!-- Corazón -->
+  <rect x="300" y="238" width="260" height="150" rx="18" fill="#fdf3f3" stroke="#e6a6a6" stroke-width="2"/>
+  <line x1="430" y1="238" x2="430" y2="388" stroke="#e6a6a6" stroke-width="2"/>
+  <text x="365" y="266" text-anchor="middle" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" fill="#0c5fc4">Aurícula der.</text>
+  <text x="365" y="330" text-anchor="middle" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" fill="#0c5fc4">Ventrículo der.</text>
+  <text x="495" y="266" text-anchor="middle" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" fill="#b91c1c">Aurícula izq.</text>
+  <text x="495" y="330" text-anchor="middle" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" fill="#b91c1c">Ventrículo izq.</text>
+  <text x="430" y="376" text-anchor="middle" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#6b7280">CORAZÓN</text>
+
+  <!-- Cuerpo -->
+  <rect x="300" y="428" width="260" height="66" rx="18" fill="#f6fbf8" stroke="#7fc0a0" stroke-width="2"/>
+  <text x="430" y="468" text-anchor="middle" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="17" font-weight="700" fill="#10804a">CUERPO · tejidos</text>
+
+  <defs>
+    <marker id="fa" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#0c5fc4"/>
+    </marker>
+    <marker id="fr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#e02424"/>
+    </marker>
+  </defs>
+
+  <!-- Circulación menor: VD → pulmón (azul) -->
+  <path d="M300 312 H210 V139 H296" fill="none" stroke="#0c5fc4" stroke-width="4" marker-end="url(#fa)"/>
+  <text x="152" y="230" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" fill="#0c5fc4">Arteria</text>
+  <text x="152" y="248" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" fill="#0c5fc4">pulmonar</text>
+
+  <!-- Pulmón → AI (rojo) -->
+  <path d="M560 139 H650 V262 H564" fill="none" stroke="#e02424" stroke-width="4" marker-end="url(#fr)"/>
+  <text x="662" y="196" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" fill="#e02424">Venas</text>
+  <text x="662" y="214" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" fill="#e02424">pulmonares</text>
+
+  <!-- Circulación mayor: VI → cuerpo (rojo) -->
+  <path d="M560 340 H760 V460 H564" fill="none" stroke="#e02424" stroke-width="4" marker-end="url(#fr)"/>
+  <text x="700" y="400" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" fill="#e02424">Aorta</text>
+
+  <!-- Cuerpo → AD (azul) -->
+  <path d="M300 460 H110 V262 H296" fill="none" stroke="#0c5fc4" stroke-width="4" marker-end="url(#fa)"/>
+  <text x="40" y="384" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="13" font-weight="700" fill="#0c5fc4">Venas cavas</text>
+
+  <!-- Etiquetas de circuito -->
+  <text x="430" y="212" text-anchor="middle" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="700" fill="#0c5fc4">CIRCULACIÓN MENOR (pulmonar)</text>
+  <text x="430" y="414" text-anchor="middle" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="14" font-weight="700" fill="#10804a">CIRCULACIÓN MAYOR (sistémica)</text>
+</svg>

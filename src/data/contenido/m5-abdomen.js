@@ -29,7 +29,7 @@ const FUENTE = {
 
 export default {
   'm5-ta-definicion': {
-    icono: '🩻',
+    icono: 'cp-servier-intestino',
     duracion: '12 min',
     resumen: 'Qué es el trauma abdominal y por qué se le llama «la cavidad que miente»: puede alojar una hemorragia mortal sin apenas signos externos.',
     objetivos: [
@@ -111,7 +111,7 @@ export default {
   },
 
   'm5-ta-cuadrantes': {
-    icono: '🔍',
+    icono: 'cp-cc0-lupa',
     duracion: '13 min',
     resumen: 'Cuadrantes y exploración física: cómo se divide el abdomen, qué hay en cada zona y cómo se explora sin hacer daño.',
     objetivos: [
@@ -222,7 +222,7 @@ export default {
   },
 
   'm5-ta-bazo': {
-    icono: '🩸',
+    icono: 'cp-servier-bazo',
     duracion: '11 min',
     resumen: 'Lesión de bazo: el órgano más frecuentemente lesionado en trauma abdominal cerrado, y una causa clásica de shock.',
     objetivos: [
@@ -305,7 +305,7 @@ export default {
   },
 
   'm5-ta-higado': {
-    icono: '🫀',
+    icono: 'cp-servier-higado',
     duracion: '11 min',
     resumen: 'Lesión hepática: el órgano abdominal más grande y una de las principales fuentes de hemorragia masiva en trauma.',
     objetivos: [
@@ -386,7 +386,7 @@ export default {
   },
 
   'm5-ta-estomago': {
-    icono: '🍽️',
+    icono: 'cp-servier-estomago',
     duracion: '9 min',
     resumen: 'Lesión gástrica: poco frecuente en trauma cerrado, más habitual en penetrante. Su contenido ácido irrita el peritoneo de inmediato.',
     objetivos: [
@@ -466,7 +466,7 @@ export default {
   },
 
   'm5-ta-pancreas': {
-    icono: '🧪',
+    icono: 'cp-servier-pancreas',
     duracion: '10 min',
     resumen: 'Lesión pancreática: retroperitoneal, silenciosa al principio y de diagnóstico difícil. El clásico «manillar en el epigastrio».',
     objetivos: [
@@ -547,7 +547,7 @@ export default {
   },
 
   'm5-ta-intestino': {
-    icono: '🌀',
+    icono: 'cp-servier-intestino',
     duracion: '11 min',
     resumen: 'Lesión intestinal: perforación que vierte contenido séptico. Se manifiesta tarde y es la trampa del paciente que «estaba bien».',
     objetivos: [
@@ -645,7 +645,7 @@ export default {
   },
 
   'm5-ta-genitourinaria': {
-    icono: '🚻',
+    icono: 'cp-servier-vejiga',
     duracion: '12 min',
     resumen: 'Lesión genitourinaria: riñón, vejiga y uretra. Incluye la contraindicación prehospitalaria más citada del trauma pélvico.',
     objetivos: [

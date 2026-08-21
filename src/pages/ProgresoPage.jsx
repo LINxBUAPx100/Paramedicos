@@ -4,6 +4,8 @@ import { useContenido, CargandoContenido, ErrorContenido } from '../context/Cont
 import { useProgress } from '../context/ProgressContext.jsx'
 import MisCalificaciones from '../components/MisCalificaciones.jsx'
 import ProgresoStaff from '../components/ProgresoStaff.jsx'
+import MedicalIcon from '../components/MedicalIcon.jsx'
+import Icon from '../components/Icon.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 
 function formatoFecha(ts) {
@@ -173,7 +175,7 @@ function MiProgreso({ conCabecera = true }) {
             <div className="progreso-modulo" key={modulo.id} style={{ '--modulo-color': modulo.color }}>
               <div className="progreso-modulo-cab">
                 <span>
-                  {modulo.icono} <strong>Modulo {modulo.numero}:</strong> {modulo.titulo}
+                  <MedicalIcon id={modulo.icono} size={20} /> <strong>Modulo {modulo.numero}:</strong> {modulo.titulo}
                 </span>
                 <span className="pf-derecha">
                   {nota !== undefined && (
@@ -209,7 +211,7 @@ function MiProgreso({ conCabecera = true }) {
                 <span className="progreso-tema-num">{tema.numero}</span>
                 <span className="progreso-tema-titulo">{tema.titulo}</span>
                 <span className={`chip ${leido ? 'chip-ok' : 'chip-pendiente'}`}>
-                  {leido ? '✓ Leído' : 'Pendiente'}
+                  {leido ? <><Icon name="check" size={13} /> Leído</> : 'Pendiente'}
                 </span>
                 <span className="progreso-tema-quiz">
                   {quiz ? `${Math.round((quiz.aciertos / quiz.total) * 100)}%` : '—'}

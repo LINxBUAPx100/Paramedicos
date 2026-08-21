@@ -78,7 +78,7 @@ export default function RutaProtegida({ children }) {
           {bloqueo.codigo === 'sin-grupo' ? 'Ingresar mi código de grupo' : 'Volver al inicio'}
         </Link>
         {bloqueo.destino !== '/' && (
-          <Link to="/" className="link-discreto">← Volver al inicio</Link>
+          <Link to="/" className="link-discreto"><Icon name="chevronIzq" size={15} /> Volver al inicio</Link>
         )}
       </div>
     )
@@ -95,7 +95,7 @@ export default function RutaProtegida({ children }) {
           {info.cta.label}
         </Link>
       )}
-      <Link to="/" className="link-discreto">← Volver al inicio</Link>
+      <Link to="/" className="link-discreto"><Icon name="chevronIzq" size={15} /> Volver al inicio</Link>
     </div>
   )
 }

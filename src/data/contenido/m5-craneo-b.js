@@ -103,7 +103,7 @@ export default {
   //  1. Definición de TCE
   // ============================================================
   'm5-tcc-definicion': {
-    icono: '🧠',
+    icono: 'cp-smart-craneo',
     duracion: '14 min',
     resumen: 'El traumatismo craneoencefálico es la alteración de la función cerebral producida por '
       + 'una fuerza externa. La distinción que organiza todo el tema es la de lesión primaria, '
@@ -251,7 +251,7 @@ export default {
   //  2. Doctrina de Monro–Kellie
   // ============================================================
   'm5-tcc-kellie-monroe': {
-    icono: '⚖️',
+    icono: 'cp-smart-craneo',
     duracion: '13 min',
     resumen: 'La doctrina de Monro–Kellie explica por qué el cráneo tolera tan mal cualquier cosa que '
       + 'ocupe espacio: es una caja rígida que contiene encéfalo, sangre y líquido cefalorraquídeo, y '
@@ -383,7 +383,7 @@ export default {
   //  3. Fractura de cráneo
   // ============================================================
   'm5-tcc-fractura-craneo': {
-    icono: '💀',
+    icono: 'cp-smart-craneo',
     duracion: '14 min',
     resumen: 'Las fracturas de cráneo se describen como lineales, deprimidas, de la base y abiertas, y '
       + 'su importancia real está en lo que indican: energía elevada y posible lesión del encéfalo '
@@ -540,7 +540,7 @@ export default {
   //  4. Escalpe o avulsión de cuero cabelludo
   // ============================================================
   'm5-tcc-escalpe': {
-    icono: '🩹',
+    icono: 'cp-smart-craneo',
     duracion: '12 min',
     resumen: 'El cuero cabelludo está muy vascularizado y sus vasos se retraen mal, de modo que una '
       + 'herida o una avulsión pueden sangrar de forma abundante y llegar a producir shock, sobre todo '
@@ -678,7 +678,7 @@ export default {
   //  5. Lesiones focales
   // ============================================================
   'm5-tcc-lesiones-focales': {
-    icono: '🎯',
+    icono: 'cp-smart-evc-hemorragico',
     duracion: '15 min',
     resumen: 'Las lesiones focales del encéfalo son las que ocupan un lugar concreto: hematoma '
       + 'epidural, hematoma subdural, contusión cerebral y hematoma intraparenquimatoso. Pueden '

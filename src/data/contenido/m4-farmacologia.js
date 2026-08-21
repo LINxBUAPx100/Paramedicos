@@ -105,7 +105,7 @@ export default {
   //  Generalidades de farmacología
   // ============================================================
   'm4-far-generalidades': {
-    icono: '💊',
+    icono: 'cp-servier-descenso-exponencial',
     duracion: '20 min',
     resumen: 'Qué le hace el cuerpo al medicamento y qué le hace el medicamento al cuerpo, y por qué esas '
       + 'dos preguntas explican casi todos los errores de administración.',
@@ -316,7 +316,7 @@ export default {
   //  Fármacos usados en el SMU según la NOM-034
   // ============================================================
   'm4-far-nom-034': {
-    icono: '📋',
+    icono: 'cp-servier-libreta',
     duracion: '16 min',
     resumen: 'Qué regula realmente la NOM-034 en materia de medicamentos, qué NO regula, y por qué una '
       + 'lista de dotación obligatoria no es un protocolo de tratamiento.',
@@ -593,7 +593,7 @@ export default {
   //  Medicamentos y sus dosis en la urgencia
   // ============================================================
   'm4-far-dosis-urgencia': {
-    icono: '🧮',
+    icono: 'cp-servier-dosis-efecto',
     duracion: '18 min',
     resumen: 'Cómo se verifica una dosis antes de administrarla y por qué este tema no puede publicar una '
       + 'tabla de dosis mientras la academia no entregue su formulario.',
@@ -778,7 +778,7 @@ export default {
   //  Manejo de infusiones y aminas
   // ============================================================
   'm4-far-infusiones-aminas': {
-    icono: '⏳',
+    icono: 'cp-servier-grafica-perfusion',
     duracion: '18 min',
     resumen: 'Qué distingue una infusión continua de un bolo, de qué depende la cantidad que realmente '
       + 'recibe el paciente y por qué las recetas de aminas no se memorizan.',

@@ -90,7 +90,7 @@ export default {
   //  1. Definición de trauma y cinemática
   // ============================================================
   'm5-cin-definicion': {
-    icono: '💥',
+    icono: 'cp-servier-corredor',
     duracion: '14 min',
     resumen: 'El trauma es una transferencia de energía capaz de lesionar tejidos, y la cinemática es la '
       + 'lectura razonada de cómo ocurrió esa transferencia. Esta lección organiza esa lectura en tres '
@@ -243,7 +243,7 @@ export default {
   //  2. Energía cinética
   // ============================================================
   'm5-cin-energia-cinetica': {
-    icono: '🚗',
+    icono: 'cp-servier-ciclista',
     duracion: '14 min',
     resumen: 'La energía cinética de un cuerpo en movimiento depende de su masa y del cuadrado de su '
       + 'velocidad. De ahí sale la observación más útil de la unidad: duplicar la velocidad multiplica '
@@ -377,7 +377,7 @@ export default {
   //  3. Energía potencial
   // ============================================================
   'm5-cin-energia-potencial': {
-    icono: '🪜',
+    icono: 'cp-servier-corredor',
     duracion: '13 min',
     resumen: 'La energía potencial gravitatoria es la que un cuerpo acumula por su altura y que se '
       + 'convierte en cinética al caer. Esta lección relaciona altura, masa, superficie de recepción, '
@@ -510,7 +510,7 @@ export default {
   //  4. Trauma abierto o cerrado
   // ============================================================
   'm5-cin-abierto-cerrado': {
-    icono: '🔀',
+    icono: 'cp-smart-esqueleto',
     duracion: '12 min',
     resumen: 'La primera clasificación del trauma distingue si la superficie corporal se mantuvo íntegra '
       + 'o si fue atravesada. Trauma cerrado o contuso transfiere energía sin abrir la pared; abierto o '
@@ -650,7 +650,7 @@ export default {
   //  5. Cavitación
   // ============================================================
   'm5-cin-cavitacion': {
-    icono: '🕳️',
+    icono: 'cp-servier-fibra-muscular',
     duracion: '13 min',
     resumen: 'Cuando un objeto atraviesa un tejido, aparta las partículas de su camino y abre una '
       + 'cavidad. Parte de esa cavidad permanece y parte se cierra tras el paso del objeto: son la '
@@ -799,7 +799,7 @@ export default {
   //  6. Impacto por arma blanca y arma de fuego
   // ============================================================
   'm5-cin-arma-blanca-fuego': {
-    icono: '🔪',
+    icono: 'cp-cc0-explosivo',
     duracion: '14 min',
     resumen: 'El objeto cortopunzante lesiona lo que su trayecto encuentra y su energía es la del brazo '
       + 'que lo empuja; el proyectil añade la transferencia balística y su cavitación. La lección '
@@ -945,7 +945,7 @@ export default {
   //  7. Tríada de Waddell
   // ============================================================
   'm5-cin-triada-wadell': {
-    icono: '🚸',
+    icono: 'ic-nino',
     duracion: '12 min',
     resumen: 'El atropello se lee como una secuencia de impactos: el vehículo golpea al peatón, el '
       + 'peatón golpea el vehículo y después golpea el suelo. Esa secuencia, conocida como tríada de '
@@ -1096,7 +1096,7 @@ export default {
   //  8. Tipos de impacto en desaceleración
   // ============================================================
   'm5-cin-desaceleracion': {
-    icono: '🛑',
+    icono: 'cp-servier-aorta',
     duracion: '13 min',
     resumen: 'Cuando un cuerpo pasa de moverse a detenerse en muy poco tiempo, sus partes no se detienen '
       + 'a la vez. Las estructuras fijas frenan con la pared y las móviles siguen avanzando hasta que su '
@@ -1224,7 +1224,7 @@ export default {
   //  9. Tipos de impacto en vehículo automotor
   // ============================================================
   'm5-cin-vehiculo-automotor': {
-    icono: '🚙',
+    icono: 'cp-servier-ciclista',
     duracion: '15 min',
     resumen: 'Una colisión de vehículo no es un choque, sino tres sucesivos: el vehículo contra el '
       + 'objeto, el ocupante contra el interior o contra su sistema de retención, y los órganos contra '
@@ -1375,7 +1375,7 @@ export default {
   //  10. Lesiones en motocicleta
   // ============================================================
   'm5-cin-motocicleta': {
-    icono: '🏍️',
+    icono: 'cp-servier-ciclista',
     duracion: '13 min',
     resumen: 'El motociclista carece de compartimento protector: entre él y el objeto contra el que '
       + 'choca solo hay equipo de protección personal. La lección revisa los patrones de impacto '
@@ -1520,7 +1520,7 @@ export default {
   //  11. Tipos de impactos en explosiones
   // ============================================================
   'm5-cin-explosiones': {
-    icono: '💣',
+    icono: 'cp-cc0-explosivo',
     duracion: '15 min',
     resumen: 'Una explosión lesiona por varias vías a la vez, y por eso su clasificación se organiza en '
       + 'categorías: primaria por la onda de presión, secundaria por los fragmentos proyectados, '

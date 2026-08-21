@@ -31,8 +31,11 @@ export const TIPOS_BLOQUE = {
   tabla: { etiqueta: 'Tabla', campos: ['titulo', 'headers', 'filas'] },
   callout: { etiqueta: 'Recuadro destacado', campos: ['variante', 'titulo', 'texto'] },
   formula: { etiqueta: 'Fórmula', campos: ['texto', 'nota'] },
-  imagen: { etiqueta: 'Imagen', campos: ['src', 'alt', 'caption', 'fuente', 'fuenteUrl', 'busqueda', 'ratio'] },
-  diagrama: { etiqueta: 'Diagrama (galería)', campos: ['clave', 'src', 'titulo'] },
+  // `assetId` es la forma PREFERENTE de referirse a una imagen médica: con el
+  // identificador del catálogo llegan solos la ruta local, el texto alternativo
+  // y el crédito obligatorio, y no hay que pegar una URL a mano.
+  imagen: { etiqueta: 'Imagen', campos: ['assetId', 'src', 'alt', 'caption', 'fuente', 'fuenteUrl', 'busqueda', 'ratio'] },
+  diagrama: { etiqueta: 'Diagrama (galería)', campos: ['assetId', 'clave', 'src', 'titulo'] },
   fuentes: { etiqueta: 'Fuentes y lecturas', campos: ['titulo', 'items'] },
 }
 
@@ -49,6 +52,68 @@ export const LIMITE_DOC_TEMA = 900 * 1024 // límite práctico de Firestore (1 M
 export function urlSegura(url) {
   const u = String(url || '').trim()
   return /^https?:\/\/[^\s]+$/i.test(u)
+}
+
+// ---------- rutas de imagen PROPIAS ----------
+//
+// La arquitectura de imágenes exige rutas locales («imagenes/medical/…»), no
+// URLs: el contenido guarda la ruta y `lib/img.js` decide en un solo punto de
+// dónde se sirve. Pero `urlSegura` solo aceptaba http(s), así que el validador
+// rechazaba exactamente lo que la arquitectura pide, y un editor no podía
+// guardar una imagen del propio sitio.
+//
+// Esto lo arregla sin abrir la puerta: se aceptan rutas RELATIVAS confinadas a
+// los directorios de imágenes del proyecto, y se rechaza cualquier cosa que
+// intente salir de ahí. Lo que queda fuera, y por qué:
+//
+//   · `../`, `..\`   → traversal, en cualquier posición, incluida la codificada
+//                      (%2e%2e) y la de barra invertida de Windows;
+//   · `/` inicial     → una ruta absoluta se rompería bajo el BASE_URL de
+//                      GitHub Pages (/Paramedicos/), y ya hay un caso así;
+//   · `//host`        → es una URL sin esquema, no una ruta;
+//   · `:`             → cierra el paso a `data:`, `javascript:` y compañía;
+//   · extensión que no sea de imagen → un `.html` servido como imagen no es
+//                      una imagen, es una página.
+const DIRECTORIOS_IMAGEN = [
+  'imagenes/medical/',
+  'imagenes/m1/', 'imagenes/m2/', 'imagenes/m3/', 'imagenes/m4/',
+  'imagenes/m5/', 'imagenes/m6/', 'imagenes/m7/',
+  'imagenes/archivo/',
+  'home/', 'hero/',
+]
+
+const EXT_IMAGEN = /\.(svg|webp|avif|png|jpe?g)$/i
+
+export function rutaImagenSegura(ruta) {
+  const s = String(ruta || '').trim()
+  if (!s || s.length > 300) return false
+  if (s.includes(':')) return false
+  if (s.startsWith('/') || s.startsWith('\\')) return false
+  // Traversal en claro, codificado o con barra invertida.
+  const decodificada = (() => {
+    try { return decodeURIComponent(s) } catch { return s }
+  })()
+  for (const cand of [s, decodificada]) {
+    if (cand.includes('..')) return false
+    if (cand.includes('\\')) return false
+    if (/%2e%2e/i.test(cand)) return false
+  }
+  if (!EXT_IMAGEN.test(s)) return false
+  return DIRECTORIOS_IMAGEN.some((d) => s.startsWith(d))
+}
+
+// Origen admisible para el `src` de una imagen del contenido: una URL http(s)
+// (material que todavía vive fuera) o una ruta propia del sitio.
+export function origenImagenValido(valor) {
+  return urlSegura(valor) || rutaImagenSegura(valor)
+}
+
+// Forma de un identificador del catálogo de activos médicos. Aquí solo se
+// comprueba la FORMA: que el identificador exista es cosa de las pruebas y del
+// pipeline, que tienen el catálogo delante. Este módulo es puro y no debe
+// arrastrar 500 KB de catálogo a cada validación del editor.
+export function idActivoValido(id) {
+  return /^[a-z0-9][a-z0-9-]{2,63}$/.test(String(id || '').trim())
 }
 
 // ---------- validaciones de bloques ----------
@@ -90,16 +155,28 @@ export function validarBloque(bloque) {
       if (!textoValido(bloque.texto)) return 'La fórmula necesita texto.'
       return null
     case 'imagen':
+      if (bloque.assetId && !idActivoValido(bloque.assetId)) {
+        return 'El identificador de activo no tiene una forma válida (minúsculas, dígitos y guiones).'
+      }
+      if (bloque.assetId) return null
       // El componente Imagen admite huecos SIN src (placeholder con pie y
       // término de búsqueda) — patrón usado por el temario actual.
-      if (bloque.src && !urlSegura(bloque.src)) return 'El enlace de la imagen debe ser http(s).'
+      if (bloque.src && !origenImagenValido(bloque.src)) {
+        return 'La imagen necesita un enlace http(s) o una ruta del propio sitio (por ejemplo imagenes/medical/…).'
+      }
       if (!bloque.src && !textoValido(bloque.alt || bloque.caption || bloque.busqueda || '', 300)) {
         return 'La imagen necesita un enlace o al menos un pie/término de búsqueda.'
       }
       if (bloque.fuenteUrl && !urlSegura(bloque.fuenteUrl)) return 'El enlace de la fuente de la imagen no es válido.'
       return null
     case 'diagrama':
-      if (!bloque.clave && !urlSegura(bloque.src)) return 'El diagrama necesita una clave de la galería o un enlace http(s).'
+      if (bloque.assetId && !idActivoValido(bloque.assetId)) {
+        return 'El identificador de activo del diagrama no tiene una forma válida.'
+      }
+      if (bloque.assetId) return null
+      if (!bloque.clave && !origenImagenValido(bloque.src)) {
+        return 'El diagrama necesita una clave del catálogo de activos o una ruta/enlace de imagen válido.'
+      }
       return null
     case 'fuentes': {
       const items = bloque.items
@@ -216,7 +293,7 @@ export function validarRecursos(recursos) {
     if (!urlSegura(f.url)) return `El enlace de la fuente "${f.titulo}" debe ser http(s).`
   }
   for (const img of recursos.imagenes || []) {
-    if (img?.src && !urlSegura(img.src)) return 'Hay una imagen de recursos con enlace inválido.'
+    if (img?.src && !origenImagenValido(img.src)) return 'Hay una imagen de recursos con enlace o ruta inválida.'
     if (!img?.src && !textoValido(img?.busqueda || img?.caption, 300)) {
       return 'Cada imagen de recursos necesita enlace o una descripción de búsqueda.'
     }
@@ -398,7 +475,7 @@ export function bloqueNuevo(tipo) {
     case 'tabla': return { tipo: 'tabla', titulo: '', headers: ['Columna 1', 'Columna 2'], filas: [['', '']] }
     case 'callout': return { tipo: 'callout', variante: 'clave', titulo: '', texto: '' }
     case 'formula': return { tipo: 'formula', texto: '', nota: '' }
-    case 'imagen': return { tipo: 'imagen', src: '', alt: '', caption: '' }
+    case 'imagen': return { tipo: 'imagen', assetId: '', src: '', alt: '', caption: '' }
     case 'fuentes': return { tipo: 'fuentes', titulo: '', items: [{ nombre: '', url: '' }] }
     default: throw new Error(`Tipo de bloque desconocido: "${tipo}".`)
   }

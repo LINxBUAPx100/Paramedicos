@@ -68,7 +68,7 @@ export default {
   //  Repaso de anatomía y fisiología pulmonar
   // ============================================================
   'm3-va-repaso-anatomia': {
-    icono: '🫁',
+    icono: 'il-arbol-traqueobronquial',
     duracion: '18 min',
     resumen: 'El recorrido del aire y el intercambio gaseoso, contados desde lo que después habrá que '
       + 'decidir en la vía aérea: dónde se obstruye, dónde se ventila y por qué respirar más deprisa no '
@@ -246,7 +246,7 @@ export default {
   //  Levantamiento del mentón
   // ============================================================
   'm3-va-levantamiento-menton': {
-    icono: '🤚',
+    icono: 'cp-servier-via-aerea-superior',
     duracion: '12 min',
     resumen: 'La maniobra manual más sencilla y la que más veces se ejecuta mal: elevar el mentón para '
       + 'separar la lengua de la pared posterior de la faringe.',
@@ -361,7 +361,7 @@ export default {
   //  Triple maniobra modificada (tracción mandibular)
   // ============================================================
   'm3-va-triple-maniobra': {
-    icono: '🧑‍🚒',
+    icono: 'cp-servier-via-aerea-superior',
     duracion: '13 min',
     resumen: 'La maniobra de elección cuando hay sospecha de lesión cervical: abrir la vía aérea '
       + 'desplazando la mandíbula sin extender el cuello.',
@@ -490,7 +490,7 @@ export default {
   //  Levantamiento del mentón e inclinación de cervicales
   // ============================================================
   'm3-va-menton-inclinacion': {
-    icono: '↗️',
+    icono: 'cp-servier-via-aerea-superior',
     duracion: '12 min',
     resumen: 'La maniobra frente-mentón completa: combinar la inclinación de la cabeza con la elevación '
       + 'del mentón, y saber en qué pacientes está descartada.',
@@ -605,7 +605,7 @@ export default {
   //  Cánulas orofaríngeas
   // ============================================================
   'm3-va-canulas-orofaringeas': {
-    icono: '🔧',
+    icono: 'cp-servier-cavidad-oral',
     duracion: '15 min',
     resumen: 'El dispositivo básico que releva a la mano: una cánula rígida que sostiene la lengua '
       + 'separada de la faringe, y que solo tolera el paciente sin reflejo nauseoso.',
@@ -758,7 +758,7 @@ export default {
   //  Cánulas nasofaríngeas
   // ============================================================
   'm3-va-canulas-nasofaringeas': {
-    icono: '👃',
+    icono: 'cp-servier-cavidad-nasal',
     duracion: '15 min',
     resumen: 'La alternativa cuando la boca no es una opción: un tubo blando que llega a la nasofaringe y '
       + 'que un paciente con reflejo nauseoso conservado suele tolerar.',

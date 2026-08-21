@@ -87,7 +87,7 @@ export default {
   //  Toma de signos vitales
   // ============================================================
   'm1-pai-signos-vitales': {
-    icono: '🌡️',
+    icono: 'ic-tension-arterial',
     duracion: '18 min',
     resumen: 'Cómo se toman los signos vitales en el ámbito prehospitalario y, sobre todo, cómo se '
       + 'interpretan: una cifra aislada no dice casi nada; la tendencia entre dos tomas lo dice casi todo.',
@@ -289,7 +289,7 @@ export default {
   //  Heridas especiales
   // ============================================================
   'm1-pai-heridas-especiales': {
-    icono: '🩹',
+    icono: 'cp-servier-piel',
     duracion: '18 min',
     resumen: 'Evisceración, herida por arma de fuego y amputación: tres lesiones cuyo manejo básico se '
       + 'equivoca con frecuencia por reflejos bienintencionados que empeoran el pronóstico.',
@@ -476,7 +476,7 @@ export default {
   //  Aspectos médico-legales
   // ============================================================
   'm1-smu-medico-legales': {
-    icono: '⚖️',
+    icono: 'cp-servier-balanza-desequilibrada',
     duracion: '18 min',
     resumen: 'Consentimiento, negativa, confidencialidad, documentación y preservación de indicios: el marco '
       + 'que convierte una atención correcta en una atención además defendible.',
@@ -716,7 +716,7 @@ export default {
   //  Posiciones, líneas anatómicas y cuadrantes
   // ============================================================
   'm1-smu-posiciones-lineas': {
-    icono: '🧭',
+    icono: 'cp-cc0-paciente',
     duracion: '15 min',
     resumen: 'El lenguaje con el que se describe una localización en el cuerpo. Sin él, «una herida arriba '
       + 'del lado izquierdo» puede significar cinco cosas distintas para cinco personas.',

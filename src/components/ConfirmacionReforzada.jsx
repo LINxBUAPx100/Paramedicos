@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import Icon from './Icon.jsx'
 
 // ============================================================
 //  Diálogo de confirmación REFORZADA (por frase)
@@ -36,7 +37,7 @@ export function Dialogo({ titulo, onCerrar, children }) {
       <div className="rp-dialogo" role="dialog" aria-modal="true" aria-label={titulo} ref={ref}>
         <div className="rp-dialogo-cab">
           <h2>{titulo}</h2>
-          <button className="rp-cerrar" onClick={onCerrar} aria-label="Cerrar diálogo">✕</button>
+          <button className="rp-cerrar" onClick={onCerrar} aria-label="Cerrar diálogo"><Icon name="cerrar" size={16} /></button>
         </div>
         {children}
       </div>

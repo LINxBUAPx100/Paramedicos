@@ -4,6 +4,7 @@ import { useProgress } from '../context/ProgressContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
 import NotFound from './NotFound.jsx'
 import Icon from '../components/Icon.jsx'
+import MedicalIcon from '../components/MedicalIcon.jsx'
 import { estadoEditorialDe, estaAvalado, ETIQUETA_ESTADO } from '../lib/estadoEditorial.js'
 import { tituloVisibleDe } from '../data/contenido/titulosVisibles.js'
 
@@ -39,7 +40,7 @@ export default function ModuloPage() {
       </nav>
 
       <header className="modulo-header">
-        <span className="modulo-header-ico">{modulo.icono}</span>
+        <span className="modulo-header-ico"><MedicalIcon id={modulo.icono} size={34} /></span>
         <div>
           <span className="modulo-header-num">Modulo {modulo.numero}</span>
           <h1>{modulo.tituloVisible || modulo.titulo}</h1>
@@ -58,7 +59,7 @@ export default function ModuloPage() {
           const estadoEd = estadoEditorialDe(tema)
           return (
             <Link to={`/tema/${tema.id}`} key={tema.id} className="tema-fila">
-              <span className="tema-fila-ico">{tema.icono}</span>
+              <span className="tema-fila-ico"><MedicalIcon id={tema.icono} size={26} /></span>
               <div className="tema-fila-info">
                 <div className="tema-fila-titulo">
                   <span className="tema-fila-num">{tema.numero}</span>
@@ -68,7 +69,7 @@ export default function ModuloPage() {
                       {ETIQUETA_ESTADO[estadoEd]}
                     </span>
                   )}
-                  {leido && <span className="chip chip-ok">✓ Leído</span>}
+                  {leido && <span className="chip chip-ok"><Icon name="check" size={13} /> Leído</span>}
                   {quiz && (
                     <span className="chip chip-quiz">
                       Quiz: {Math.round((quiz.aciertos / quiz.total) * 100)}%
@@ -82,7 +83,7 @@ export default function ModuloPage() {
                   <span><Icon name="flashcards" size={14} /> {tema.flashcards.length} flashcards</span>
                 </div>
               </div>
-              <span className="tema-fila-flecha">→</span>
+              <span className="tema-fila-flecha" aria-hidden="true"><Icon name="chevronDer" size={18} /></span>
             </Link>
           )
         })}

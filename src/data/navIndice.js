@@ -1,4 +1,4 @@
-// ⚠️ ARCHIVO GENERADO por scripts/gen-nav-indice.mjs — NO editar a mano.
+// ARCHIVO GENERADO por scripts/gen-nav-indice.mjs — NO editar a mano.
 // Índice ligero de navegación (metadatos) para el shell, sin el contenido pesado.
 export const modulosNav = [
   {

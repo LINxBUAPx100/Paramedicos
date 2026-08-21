@@ -96,7 +96,7 @@ export default {
   // ---------- Introducción a pediatría ----------
 
   'm6-ip-pediatria': {
-    icono: '🧒',
+    icono: 'ic-nino',
     duracion: '13 min',
     resumen: 'La atención pediátrica no es la atención del adulto en tamaño reducido. Cambian las '
       + 'proporciones del cuerpo, la forma de compensar, las causas más frecuentes de deterioro y la '
@@ -232,7 +232,7 @@ export default {
   },
 
   'm6-ip-anatomia-fisiologia': {
-    icono: '🫀',
+    icono: 'cp-smart-esqueleto-nino',
     duracion: '15 min',
     resumen: 'Las diferencias anatómicas y fisiológicas del niño no son curiosidades académicas: cada '
       + 'una tiene una consecuencia práctica inmediata. La cabeza grande explica por qué hay que '
@@ -371,7 +371,7 @@ export default {
   },
 
   'm6-ip-crecimiento': {
-    icono: '📏',
+    icono: 'cp-smart-esqueleto-nino',
     duracion: '13 min',
     resumen: 'Conocer el desarrollo sirve para dos cosas muy concretas en la atención de urgencia: '
       + 'saber cómo abordar a un paciente según su etapa, y detectar cuando algo no encaja. Un niño '
@@ -497,7 +497,7 @@ export default {
   },
 
   'm6-ip-impresion-general': {
-    icono: '👀',
+    icono: 'cp-dbcls-examen-nino',
     duracion: '12 min',
     resumen: 'La impresión general es lo que se decide en los primeros segundos, desde la puerta y sin '
       + 'tocar al paciente: si este niño está bien, está enfermo o está crítico. No es una intuición: '
@@ -628,7 +628,7 @@ export default {
   },
 
   'm6-ip-triangulo': {
-    icono: '🔺',
+    icono: 'cp-dbcls-examen-nino',
     duracion: '14 min',
     resumen: 'El triángulo de evaluación pediátrica ordena la impresión general en tres lados '
       + 'observables sin tocar al paciente: apariencia, trabajo respiratorio y circulación cutánea. '
@@ -757,7 +757,7 @@ export default {
   },
 
   'm6-ip-xabcde': {
-    icono: '🔤',
+    icono: 'ic-nino',
     duracion: '15 min',
     resumen: 'Tras la impresión general viene la evaluación ordenada. La secuencia XABCDE antepone la '
       + 'X de hemorragia exanguinante, porque un sangrado masivo mata antes que una vía aérea '
@@ -897,7 +897,7 @@ export default {
   // ---------- Situaciones especiales ----------
 
   'm6-se-asuntos-familiares': {
-    icono: '👨‍👩‍👧',
+    icono: 'cp-dbcls-examen-nino',
     duracion: '13 min',
     resumen: 'En pediatría se atiende a un paciente y, a la vez, a una familia. La forma en que el '
       + 'equipo trata a quien cuida al niño condiciona la calidad de la información, la colaboración '
@@ -1022,7 +1022,7 @@ export default {
   },
 
   'm6-se-abuso-infantil': {
-    icono: '🛡️',
+    icono: 'ic-nino',
     duracion: '15 min',
     resumen: 'El maltrato infantil incluye el daño físico, la agresión sexual, el daño emocional y la '
       + 'negligencia en los cuidados. El papel del equipo prehospitalario es concreto y limitado: '
@@ -1170,7 +1170,7 @@ export default {
   },
 
   'm6-se-muerte-subita': {
-    icono: '🕯️',
+    icono: 'ic-recien-nacido',
     duracion: '14 min',
     resumen: 'El síndrome de muerte súbita del lactante es la muerte inesperada de un lactante que no '
       + 'se explica tras una investigación completa. En la escena, el equipo se encuentra con dos '
@@ -1295,7 +1295,7 @@ export default {
   },
 
   'm6-se-necesidades-especiales': {
-    icono: '♿',
+    icono: 'cp-servier-atomizador',
     duracion: '15 min',
     resumen: 'Cada vez más niños viven en casa con enfermedades crónicas complejas y con dispositivos '
       + 'que antes solo existían en el hospital: traqueostomías, sondas de alimentación, catéteres, '

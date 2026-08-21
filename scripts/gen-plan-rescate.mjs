@@ -13,6 +13,8 @@
 //  Uso:  node scripts/gen-plan-rescate.mjs   (o `npm run gen:plan`)
 // ============================================================
 import { readFileSync, writeFileSync, existsSync } from 'node:fs'
+import path from 'node:path'
+import { pathToFileURL } from 'node:url'
 
 import {
   estadoEditorialDe, validarRevision, esEstadoEditorial, esNodoDeEvaluacion, tieneMaterial,
@@ -47,7 +49,15 @@ for (const [temaId, rev] of Object.entries(REVISIONES)) {
 }
 
 const SEMILLA = new URL('./seed/plan-rescate.json', import.meta.url)
-const DESTINO = new URL('../src/data/planRescate.js', import.meta.url)
+// Destino del archivo generado. `--salida=<ruta>` lo redirige: lo usan las
+// pruebas para comprobar que el archivo del repositorio está al día SIN
+// escribir en el árbol de trabajo. Una prueba que reescribe el repositorio
+// compite con las demás —el ejecutor corre los archivos en paralelo— y deja el
+// árbol distinto de como lo encontró.
+const argSalida = process.argv.find((a) => a.startsWith('--salida='))
+const DESTINO = argSalida
+  ? pathToFileURL(path.resolve(process.cwd(), argSalida.slice(9)))
+  : new URL('../src/data/planRescate.js', import.meta.url)
 
 const semilla = JSON.parse(readFileSync(SEMILLA, 'utf8'))
 const programa = semilla.programas.find((p) => p.id === 'tum-rescate')
@@ -56,17 +66,29 @@ if (!programa) {
   process.exit(1)
 }
 
-// Paleta e iconos por módulo. Es lo ÚNICO que no sale del PDF (el documento no
-// define color ni icono); nada de esto altera títulos, orden ni contenido.
-const ESTILO = [
-  { color: '#0ea5e9', icono: '🩹' }, // 1 Propedéutico
-  { color: '#10b981', icono: '🫀' }, // 2 El cuerpo humano
-  { color: '#f59e0b', icono: '🚑' }, // 3 Evaluación y soporte vital
-  { color: '#ef4444', icono: '💊' }, // 4 Urgencias médico quirúrgicas
-  { color: '#8b5cf6', icono: '🦴' }, // 5 Emergencias traumatológicas
-  { color: '#14b8a6', icono: '👶' }, // 6 Poblaciones especiales
-  { color: '#0891b2', icono: '📻' }, // 7 Operaciones especiales
+// Paleta por módulo. Es lo ÚNICO que no sale del PDF (el documento no define
+// color); no altera títulos, orden ni contenido.
+const COLORES = [
+  '#0ea5e9', // 1 Propedéutico
+  '#10b981', // 2 El cuerpo humano
+  '#f59e0b', // 3 Evaluación y soporte vital
+  '#ef4444', // 4 Urgencias médico quirúrgicas
+  '#8b5cf6', // 5 Emergencias traumatológicas
+  '#14b8a6', // 6 Poblaciones especiales
+  '#0891b2', // 7 Operaciones especiales
 ]
+
+// Los iconos ya NO se escriben aquí. Antes eran emojis (🩹, 🫀, 🚑…) y eso
+// costaba tres cosas: los dibujaba la fuente del sistema —el mismo módulo se
+// veía distinto en cada plataforma y a veces no se veía—, no respondían al tema
+// claro/oscuro, y un lector de pantalla los leía en medio del título.
+//
+// Ahora cada módulo y cada tema declaran el IDENTIFICADOR de un activo médico
+// del catálogo, que es un archivo del repositorio con su autor y su licencia
+// registrados. La fuente es src/data/activosMedicos.js, que genera
+// `npm run activos:importar`; aquí solo se lee.
+const { ICONO_POR_MODULO, ICONO_POR_TEMA } = await import('../src/data/activosMedicos.js')
+  .catch(() => ({ ICONO_POR_MODULO: {}, ICONO_POR_TEMA: {} }))
 
 // ---------- alcance de los exámenes del plan ----------
 //
@@ -101,7 +123,8 @@ function alcanceDelExamen(modulo, indice) {
 }
 
 const modulos = programa.modulos.map((m, i) => {
-  const estilo = ESTILO[i] || { color: '#64748b', icono: '📘' }
+  const color = COLORES[i] || '#64748b'
+  const iconoModulo = ICONO_POR_MODULO[m.id] || ''
   // temaId → alcance, para colgarlo del tema homónimo de la unidad de examen.
   const alcances = {}
   m.unidades.forEach((u, k) => {
@@ -160,7 +183,8 @@ const modulos = programa.modulos.map((m, i) => {
     revision: rev,
     ...(alcances[t.id] ? { alcanceExamen: alcances[t.id] } : {}),
     ...(EVALUACIONES[t.id] ? { evaluacion: EVALUACIONES[t.id] } : {}),
-    icono: mat.icono || '',
+    // El icono sale del catálogo de activos; el contenido puede sobrescribirlo.
+    icono: mat.icono || ICONO_POR_TEMA[t.id] || '',
     duracion: mat.duracion || '',
     resumen: mat.resumen || '',
     objetivos: mat.objetivos || [],
@@ -185,8 +209,8 @@ const modulos = programa.modulos.map((m, i) => {
     ...(TITULOS_VISIBLES_MODULO[m.id] ? { tituloVisible: TITULOS_VISIBLES_MODULO[m.id] } : {}),
     subtitulo: m.subtitulo || '',
     descripcion: `${m.encabezadoOficial} — ${m.totales.semanas} semanas · ${m.totales.horas} horas.`,
-    color: estilo.color,
-    icono: estilo.icono,
+    color,
+    icono: iconoModulo,
     encabezadoOficial: m.encabezadoOficial,
     numeroOficial: m.numeroOficial,
     totales: m.totales,
@@ -195,7 +219,7 @@ const modulos = programa.modulos.map((m, i) => {
   }
 })
 
-const cab = `// ⚠️ ARCHIVO GENERADO por scripts/gen-plan-rescate.mjs — NO editar a mano.
+const cab = `// ARCHIVO GENERADO por scripts/gen-plan-rescate.mjs — NO editar a mano.
 // Temario oficial de la academia R.E.S.C.A.T.E., transcrito del PDF
 // «${semilla.fuente}».
 // Fuente única: scripts/seed/plan-rescate.json. Para cambiar el temario se

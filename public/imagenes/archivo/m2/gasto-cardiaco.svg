@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 470" role="img" aria-labelledby="t d" width="900" height="470">
+  <title id="t">Determinantes del gasto cardíaco</title>
+  <desc id="d">Esquema: el gasto cardíaco es el producto de la frecuencia cardíaca por el volumen sistólico; el volumen sistólico depende de precarga, contractilidad y poscarga.</desc>
+
+  <rect width="900" height="470" rx="14" fill="#ffffff" stroke="#dbe3ee"/>
+  <text x="32" y="46" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="21" font-weight="700" fill="#0b1220">Determinantes del gasto cardíaco</text>
+  <text x="32" y="70" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="14" fill="#6b7280">Cuánta sangre expulsa el corazón cada minuto, y de qué depende</text>
+
+  <!-- Fórmula -->
+  <rect x="256" y="98" width="388" height="66" rx="12" fill="#0c5fc4"/>
+  <text x="450" y="140" text-anchor="middle" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="700" fill="#ffffff">GC = FC × VS</text>
+
+  <!-- Ramas -->
+  <g stroke="#9aa7b8" stroke-width="2" fill="none">
+    <path d="M450 164 V190"/>
+    <path d="M268 190 H632"/>
+    <path d="M268 190 V222"/>
+    <path d="M632 190 V222"/>
+  </g>
+
+  <rect x="152" y="222" width="232" height="72" rx="12" fill="#eef5fd" stroke="#93b7e6"/>
+  <text x="268" y="250" text-anchor="middle" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="700" fill="#0c5fc4">Frecuencia cardíaca</text>
+  <text x="268" y="274" text-anchor="middle" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#334155">latidos por minuto</text>
+
+  <rect x="516" y="222" width="232" height="72" rx="12" fill="#eef5fd" stroke="#93b7e6"/>
+  <text x="632" y="250" text-anchor="middle" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="700" fill="#0c5fc4">Volumen sistólico</text>
+  <text x="632" y="274" text-anchor="middle" font-family="system-ui, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#334155">mL que salen en cada latido</text>
+
+  <!-- Sub-ramas del volumen sistólico -->
+  <g stroke="#9aa7b8" stroke-width="2" fill="none">
+    <path d="M632 294 V320"/>
+    <path d="M180 320 H756"/>
+    <path d="M180 320 V352 M468 320 V352 M756 320 V352"/>
+  </g>
+
+  <g font-family="system-ui, 'Segoe UI', Roboto, sans-serif">
+    <rect x="64" y="352" width="232" height="86" rx="12" fill="#f6fbf8" stroke="#7fc0a0"/>
+    <text x="180" y="380" text-anchor="middle" font-size="16" font-weight="700" fill="#10804a">Precarga</text>
+    <text x="180" y="404" text-anchor="middle" font-size="13" fill="#334155">Cuánta sangre llega y estira</text>
+    <text x="180" y="424" text-anchor="middle" font-size="13" fill="#334155">el ventrículo (volumen)</text>
+
+    <rect x="352" y="352" width="232" height="86" rx="12" fill="#f6fbf8" stroke="#7fc0a0"/>
+    <text x="468" y="380" text-anchor="middle" font-size="16" font-weight="700" fill="#10804a">Contractilidad</text>
+    <text x="468" y="404" text-anchor="middle" font-size="13" fill="#334155">Con cuánta fuerza se contrae</text>
+    <text x="468" y="424" text-anchor="middle" font-size="13" fill="#334155">el músculo cardíaco</text>
+
+    <rect x="640" y="352" width="232" height="86" rx="12" fill="#fdf3f3" stroke="#e6a6a6"/>
+    <text x="756" y="380" text-anchor="middle" font-size="16" font-weight="700" fill="#b91c1c">Poscarga</text>
+    <text x="756" y="404" text-anchor="middle" font-size="13" fill="#334155">Resistencia contra la que</text>
+    <text x="756" y="424" text-anchor="middle" font-size="13" fill="#334155">tiene que expulsar</text>
+  </g>
+</svg>

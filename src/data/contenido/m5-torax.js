@@ -29,7 +29,7 @@ const FUENTE = {
 
 export default {
   'm5-tt-definicion': {
-    icono: '🫁',
+    icono: 'cp-smart-caja-toracica',
     duracion: '12 min',
     resumen: 'Qué es el trauma de tórax, por qué mata y por qué la mayoría de las muertes se evitan con maniobras sencillas.',
     objetivos: [
@@ -96,7 +96,7 @@ export default {
   },
 
   'm5-tt-clavicula': {
-    icono: '🦴',
+    icono: 'cp-smart-fractura-clavicula',
     duracion: '10 min',
     resumen: 'Fractura de clavícula: la más frecuente del cinturón escapular, casi siempre benigna, con dos complicaciones que hay que descartar.',
     objetivos: [
@@ -171,7 +171,7 @@ export default {
   },
 
   'm5-tt-escapula': {
-    icono: '🛡️',
+    icono: 'cp-smart-fractura-hombro',
     duracion: '10 min',
     resumen: 'Fractura de escápula: poco frecuente, pero su presencia avisa de que la energía fue enorme.',
     objetivos: [
@@ -237,7 +237,7 @@ export default {
   },
 
   'm5-tt-esofago': {
-    icono: '⚠️',
+    icono: 'cp-smart-esofago',
     duracion: '10 min',
     resumen: 'Lesión esofágica: rara, difícil de sospechar y muy letal si se retrasa el diagnóstico.',
     objetivos: [
@@ -318,7 +318,7 @@ export default {
   },
 
   'm5-tt-neumotorax-tension': {
-    icono: '🚨',
+    icono: 'cp-servier-neumotorax',
     duracion: '16 min',
     resumen: 'Neumotórax a tensión: la emergencia torácica por excelencia. Se diagnostica clínicamente y se trata en la escena.',
     objetivos: [
@@ -435,7 +435,7 @@ export default {
   },
 
   'm5-tt-hemoneumotorax': {
-    icono: '🩸',
+    icono: 'cp-servier-neumotorax',
     duracion: '11 min',
     resumen: 'Hemoneumotórax: aire y sangre en el mismo espacio pleural. Suma el problema ventilatorio al hemorrágico.',
     objetivos: [
@@ -519,7 +519,7 @@ export default {
   },
 
   'm5-tt-quilotorax': {
-    icono: '💧',
+    icono: 'cp-servier-linfatico',
     duracion: '9 min',
     resumen: 'Quilotórax: linfa en el espacio pleural por lesión del conducto torácico. Raro, de aparición tardía y con repercusión nutricional e inmunitaria.',
     objetivos: [
@@ -585,7 +585,7 @@ export default {
   },
 
   'm5-tt-contusion-pulmonar': {
-    icono: '🫁',
+    icono: 'cp-servier-via-intrapulmonar',
     duracion: '13 min',
     resumen: 'Contusión pulmonar: el pulmón golpeado se inflama y deja de intercambiar. Empeora con las horas y con los líquidos.',
     objetivos: [
@@ -678,7 +678,7 @@ export default {
   },
 
   'm5-tt-asfixia-traumatica': {
-    icono: '😰',
+    icono: 'cp-servier-capilares',
     duracion: '10 min',
     resumen: 'Asfixia traumática: compresión brusca del tórax que invierte el flujo venoso. Aparatosa de ver, y marcador de un aplastamiento grave.',
     objetivos: [
@@ -761,7 +761,7 @@ export default {
   },
 
   'm5-tt-ruptura-diafragmatica': {
-    icono: '↕️',
+    icono: 'cp-servier-hernia-hiatal',
     duracion: '11 min',
     resumen: 'Ruptura diafragmática: el abdomen invade el tórax. Difícil de diagnosticar y fácil de empeorar con ventilación a presión positiva.',
     objetivos: [

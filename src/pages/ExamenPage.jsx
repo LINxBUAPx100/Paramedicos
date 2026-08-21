@@ -93,7 +93,7 @@ export default function ExamenPage() {
         />
         <div className="quiz-page-pie">
           <button className="btn btn--suave" onClick={() => setConfig(null)}>
-            ← Configurar otro examen
+            <Icon name="chevronIzq" size={15} /> Configurar otro examen
           </button>
         </div>
       </div>
@@ -185,7 +185,7 @@ export default function ExamenPage() {
         </div>
       </section>
 
-      <Link to="/" className="link-discreto">← Volver al inicio</Link>
+      <Link to="/" className="link-discreto"><Icon name="chevronIzq" size={15} /> Volver al inicio</Link>
     </div>
   )
 }

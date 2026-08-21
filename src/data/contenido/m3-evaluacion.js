@@ -58,7 +58,7 @@ export default {
   //  SSS — Seguridad, Escena, Situación
   // ============================================================
   'm3-ep-sss': {
-    icono: '🛡️',
+    icono: 'cp-cc0-riesgo-biologico',
     duracion: '14 min',
     resumen: 'Lo que se hace ANTES de tocar al paciente: comprobar que la escena no va a producir una '
       + 'víctima más, entender qué pasó y calcular qué recursos harán falta.',
@@ -167,7 +167,7 @@ export default {
   //  AVDI
   // ============================================================
   'm3-ep-avdi': {
-    icono: '🧠',
+    icono: 'cp-servier-cerebro',
     duracion: '12 min',
     resumen: 'La escala más rápida del arsenal prehospitalario: cuatro categorías que sitúan el estado de '
       + 'conciencia en segundos y sirven para detectar deterioro antes de que sea evidente.',
@@ -267,7 +267,7 @@ export default {
   //  Apertura de vía aérea y control de cervicales
   // ============================================================
   'm3-ep-via-aerea-cervicales': {
-    icono: '🫁',
+    icono: 'cp-servier-via-aerea-superior',
     duracion: '16 min',
     resumen: 'Cómo se abre una vía aérea con las manos y cómo se protege la columna cervical al hacerlo, '
       + 'sin recurrir a ningún dispositivo ni fármaco.',
@@ -413,7 +413,7 @@ export default {
   //  Evaluación de la respiración
   // ============================================================
   'm3-ep-respiracion': {
-    icono: '💨',
+    icono: 'cp-servier-pulmon',
     duracion: '14 min',
     resumen: 'La B de la evaluación primaria: comprobar que además de una vía aérea abierta hay ventilación '
       + 'eficaz, y reconocer cuándo hay que asistirla.',
@@ -536,7 +536,7 @@ export default {
   //  Evaluación de la circulación
   // ============================================================
   'm3-ep-circulacion': {
-    icono: '🩸',
+    icono: 'cp-servier-capilares',
     duracion: '15 min',
     resumen: 'La C de la evaluación primaria: encontrar la hemorragia y reconocer la hipoperfusión antes de '
       + 'que la presión arterial se entere.',
@@ -646,7 +646,7 @@ export default {
   //  Evaluación neurológica
   // ============================================================
   'm3-ep-neurologica': {
-    icono: '🔦',
+    icono: 'cp-servier-cerebro',
     duracion: '14 min',
     resumen: 'La D de la evaluación primaria: un examen breve que detecta el déficit neurológico y, sobre '
       + 'todo, su cambio en el tiempo.',
@@ -758,7 +758,7 @@ export default {
   //  Exploración dirigida
   // ============================================================
   'm3-ep-exploracion-dirigida': {
-    icono: '🔎',
+    icono: 'cp-cc0-lupa',
     duracion: '14 min',
     resumen: 'La exploración corta y orientada al problema que se hace dentro de la evaluación primaria, '
       + 'sin convertirla en una revisión de cabeza a pies.',
@@ -879,7 +879,7 @@ export default {
   //  ABCDE (evaluación secundaria)
   // ============================================================
   'm3-es-abcde': {
-    icono: '🔤',
+    icono: 'cp-cc0-paciente',
     duracion: '13 min',
     resumen: 'Qué añade la evaluación secundaria a la primaria y por qué la nemotecnia se repite: no es el '
       + 'mismo examen otra vez, sino el mismo orden aplicado con más profundidad.',
@@ -990,7 +990,7 @@ export default {
   //  SAMPLE
   // ============================================================
   'm3-es-sample': {
-    icono: '📋',
+    icono: 'cp-servier-libreta',
     duracion: '13 min',
     resumen: 'Seis letras para obtener, en pocos minutos y sin olvidar nada, la historia clínica que el '
       + 'hospital necesitará y que nadie más podrá recoger.',
@@ -1122,7 +1122,7 @@ export default {
   //  Exploración física detallada
   // ============================================================
   'm3-es-exploracion-detallada': {
-    icono: '🫱',
+    icono: 'ic-estetoscopio',
     duracion: '16 min',
     resumen: 'La revisión de cabeza a pies de la evaluación secundaria: qué se busca en cada región y por qué '
       + 'el orden importa tanto como el contenido.',

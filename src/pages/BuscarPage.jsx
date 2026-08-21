@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useContenido, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
 import Icon from '../components/Icon.jsx'
+import MedicalIcon from '../components/MedicalIcon.jsx'
 
 export default function BuscarPage() {
   const { contenido, error, reintentar } = useContenido()
@@ -45,7 +46,7 @@ export default function BuscarPage() {
           <div className="buscar-card" key={tema.id} style={{ '--modulo-color': tema.moduloColor }}>
             <Link to={`/tema/${tema.id}`} className="buscar-card-titulo">
               <span className="tema-fila-num">{tema.numero}</span>
-              {tema.icono} {tema.titulo}
+              <MedicalIcon id={tema.icono} size={20} /> {tema.titulo}
             </Link>
             <p className="buscar-card-resumen">{tema.resumen}</p>
             {conceptos.length > 0 && (

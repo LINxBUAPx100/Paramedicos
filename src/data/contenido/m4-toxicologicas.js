@@ -131,7 +131,7 @@ export default {
   //  Toxíndromes e intoxicación por medicamentos
   // ============================================================
   'm4-tox-toxindromes': {
-    icono: '☠️',
+    icono: 'cp-cc0-toxico',
     duracion: '22 min',
     resumen: 'Cómo se usan los patrones de signos para orientar la atención de un paciente intoxicado '
       + 'cuando no se sabe qué tomó, y qué se hace mientras tanto.',
@@ -353,7 +353,7 @@ export default {
   //  Síndrome de abstinencia
   // ============================================================
   'm4-tox-abstinencia': {
-    icono: '🥃',
+    icono: 'cp-servier-alcohol',
     duracion: '18 min',
     resumen: 'Qué ocurre cuando el organismo adaptado a una sustancia deja de recibirla, por qué la '
       + 'abstinencia de alcohol y sedantes puede matar y qué otras causas hay que descartar antes.',
@@ -583,7 +583,7 @@ export default {
   //  Picadura de alacrán y mordedura de araña, serpientes y abejas
   // ============================================================
   'm4-tox-picaduras': {
-    icono: '🦂',
+    icono: 'cp-dbcls-abeja',
     duracion: '20 min',
     resumen: 'Qué se hace y sobre todo qué no se hace ante una mordedura o picadura, y cómo se reconoce '
       + 'la progresión que convierte una lesión local en un cuadro sistémico.',
@@ -814,7 +814,7 @@ export default {
   //  Reacciones anafilácticas
   // ============================================================
   'm4-tox-anafilaxia': {
-    icono: '🚨',
+    icono: 'cp-servier-anticuerpo',
     duracion: '20 min',
     resumen: 'Cómo se reconoce una anafilaxia —incluso cuando no hay ninguna lesión en la piel— y por qué '
       + 'la adrenalina intramuscular es la primera línea que nada sustituye.',

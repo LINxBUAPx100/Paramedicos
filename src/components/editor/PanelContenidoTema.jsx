@@ -7,6 +7,7 @@ import {
   duplicarSeccion, correctasDe, normalizarContenido, validarContenidoTema,
 } from '../../lib/temaContenidoModelo.js'
 import { EXTENSIONES_PERMITIDAS, STORAGE_ACTIVO } from '../../lib/archivosModelo.js'
+import SelectorActivo from './SelectorActivo.jsx'
 
 // ============================================================
 //  Editor del CONTENIDO interno de un tema (Fase 4)
@@ -178,9 +179,14 @@ function EditorBloque({ bloque, uid, disabled, onCambio }) {
     case 'diagrama':
       return (
         <>
-          <CampoTexto id={`${uid}-s`} etiqueta="Enlace de la imagen (https)" valor={bloque.src}
+          {/* Primero el catálogo, después la URL: es el orden en el que se
+              debería elegir. Con un activo del catálogo la figura llega con
+              autoría y crédito; con una URL pegada a mano, no. */}
+          <SelectorActivo id={`${uid}-act`} valor={bloque.assetId}
+            onCambio={(v) => set('assetId', v)} disabled={disabled} />
+          <CampoTexto id={`${uid}-s`} etiqueta="O una ruta/enlace propio" valor={bloque.src}
             onCambio={(v) => set('src', v)} disabled={disabled}
-            pista="Puedes dejarlo vacío y llenar el pie/búsqueda: quedará un hueco para conseguir la imagen." />
+            pista="Ruta del sitio («imagenes/medical/…») o enlace https. Si ya elegiste una imagen del catálogo, esto se ignora. Vacío y con pie/búsqueda queda un hueco para conseguir la imagen." />
           <CampoTexto id={`${uid}-c`} etiqueta={bloque.tipo === 'diagrama' ? 'Título / pie' : 'Pie de imagen'}
             valor={bloque.tipo === 'diagrama' ? bloque.titulo : bloque.caption}
             onCambio={(v) => set(bloque.tipo === 'diagrama' ? 'titulo' : 'caption', v)} disabled={disabled} />

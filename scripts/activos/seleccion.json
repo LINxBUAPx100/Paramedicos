@@ -1,0 +1,3058 @@
+{
+  "_lea_esto": [
+    "SELECCIÓN CURADA de activos médicos. Es una decisión editorial, no un volcado:",
+    "el pipeline importa SOLO lo que está aquí, nunca los 2 830 dibujos del repositorio.",
+    "",
+    "Cada entrada declara por qué se eligió (`motivo`) y qué se comprobó frente al material",
+    "que sustituye o cubre (`equivalencia`). El criterio NO es coincidencia de palabras: un",
+    "activo entra si representa la misma estructura o el mismo proceso que la figura",
+    "original, al nivel prehospitalario del plan. Cuando la figura comunica una RELACIÓN",
+    "—proceso, curva, clasificación— no se sustituye por un icono aislado: se construye una",
+    "composición en composiciones.json.",
+    "",
+    "`alt` y `descripcion` son texto de accesibilidad en español, escrito a mano. El nombre",
+    "del archivo nunca es el texto alternativo.",
+    "",
+    "Licencias: la de BioIcons se LEE de la ruta del archivo, no se declara aquí (ver",
+    "src/lib/licenciasActivos.js). La de SMART es CC BY 4.0 declarada por el propio sitio.",
+    "",
+    "Rótulos quemados: 15 de los archivos importados traen texto DENTRO del dibujo, casi",
+    "siempre en inglés. La decisión es POR ACTIVO, con `quitarTexto`: `true` borra todo el texto,",
+    "una lista borra solo esos rótulos, y su ausencia lo conserva. Se conserva cuando el texto ES",
+    "el dibujo (los números de la esfera de un cronómetro) o cuando no es inglés (O₂, CO₂, P/QRS/T),",
+    "y también en seis figuras densas de líneas guía donde borrarlo las dejaría apuntando al aire:",
+    "esas seis declaran la deuda en su `motivo`."
+  ],
+  "bioicons": [
+    {
+      "id": "il-corazon-vascularizacion",
+      "title": "Corazón y arterias coronarias",
+      "kind": "illustration",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/heart-vascularization.svg",
+      "tags": [
+        "corazón",
+        "coronarias",
+        "cardiovascular"
+      ],
+      "alt": "Corazón visto de frente con las arterias coronarias recorriendo su superficie.",
+      "descripcion": "Vista anterior del corazón. Sobre los ventrículos se dibuja el trayecto de las arterias coronarias, que nacen de la raíz aórtica y bajan por los surcos interventricular y auriculoventricular.",
+      "motivo": "Única ilustración del catálogo que muestra a la vez la silueta cardíaca y la vascularización coronaria, que es lo que pedía la tarjeta del Atlas.",
+      "equivalencia": "Sustituye la imagen de Drive «Anatomía del corazón y arterias coronarias». Conserva cámaras y trayecto coronario; no añade oclusiones que el tema no pide."
+    },
+    {
+      "id": "cp-servier-corazon",
+      "title": "Corazón",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/heart.svg",
+      "tags": [
+        "corazón",
+        "cardiovascular"
+      ],
+      "alt": "Corazón humano visto de frente.",
+      "descripcion": "Silueta anterior del corazón con los grandes vasos que entran y salen.",
+      "motivo": "Icono anatómico del corazón: el emoji dibujaba un corazón simbólico, no el órgano.",
+      "equivalencia": "Reemplaza 🫀 y ❤️ en los temas cardiovasculares."
+    },
+    {
+      "id": "cp-servier-corazon-interior",
+      "title": "Corazón por dentro",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/heart-interior-1.svg",
+      "tags": [
+        "corazón",
+        "cámaras",
+        "válvulas"
+      ],
+      "alt": "Corazón abierto con sus cuatro cámaras y sus válvulas.",
+      "descripcion": "Corte del corazón que deja ver aurículas, ventrículos, tabique y válvulas auriculoventriculares y semilunares.",
+      "motivo": "Necesario para exploración cardíaca e insuficiencia: el flujo dentro del corazón no se ve desde fuera.",
+      "equivalencia": "Cobertura nueva para los temas de exploración cardíaca e insuficiencia."
+    },
+    {
+      "id": "cp-servier-conduccion-cardiaca",
+      "title": "Sistema de conducción del corazón",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/heart-conduction-1.svg",
+      "tags": [
+        "conducción",
+        "nodo sinusal",
+        "nodo AV",
+        "Purkinje"
+      ],
+      "alt": "Corazón abierto con el trayecto del sistema de conducción marcado.",
+      "descripcion": "Corte cardíaco con el recorrido del tejido de conducción: nodo sinusal, nodo auriculoventricular, haz de His con sus ramas y red de Purkinje.",
+      "motivo": "Representa el recorrido del impulso sobre la anatomía real, que es lo que el SVG generado esquematizaba con cajas.",
+      "equivalencia": "Base del sustituto de public/imagenes/m2/sistema-conduccion.svg; la composición conserva marcapasos y frecuencias de escape."
+    },
+    {
+      "id": "cp-servier-ecg",
+      "title": "Trazo electrocardiográfico",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/electrocardiogram-ecg.svg",
+      "tags": [
+        "ECG",
+        "electrocardiograma"
+      ],
+      "alt": "Trazo de electrocardiograma sobre papel cuadriculado.",
+      "descripcion": "Varios ciclos electrocardiográficos consecutivos sobre la cuadrícula del papel de registro.",
+      "motivo": "Aporta el trazo y la cuadrícula reales; los rótulos de onda e intervalo los pone la composición en español.",
+      "equivalencia": "Base del sustituto de public/imagenes/m3/ecg-onda-normal.svg.",
+      "quitarTexto": [
+        "Wave",
+        "Space"
+      ]
+    },
+    {
+      "id": "cp-servier-aorta",
+      "title": "Aorta",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/aorta.svg",
+      "tags": [
+        "aorta",
+        "grandes vasos",
+        "disrupción"
+      ],
+      "alt": "Aorta con su cayado y sus ramas.",
+      "descripcion": "Aorta desde la raíz, con el cayado y el origen de los troncos hacia cabeza y brazos, continuándose como aorta descendente.",
+      "motivo": "La disrupción aórtica traumática ocurre en un punto concreto del cayado: sin la figura, el tema queda sin referencia anatómica.",
+      "equivalencia": "Cobertura nueva para disrupción aórtica e hipertensión."
+    },
+    {
+      "id": "cp-servier-vena",
+      "title": "Vena",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/vein.svg",
+      "tags": [
+        "vena",
+        "acceso vascular"
+      ],
+      "alt": "Segmento de vena con su válvula.",
+      "descripcion": "Vena en corte longitudinal, con pared delgada y una válvula que impide el reflujo.",
+      "motivo": "Icono del acceso venoso periférico y del sistema venoso.",
+      "equivalencia": "Reemplaza 🎯 en sitios de punción, donde la diana no señalaba nada anatómico."
+    },
+    {
+      "id": "cp-servier-arteria",
+      "title": "Pared arterial",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/vascular-tunic-artery.svg",
+      "tags": [
+        "arteria",
+        "túnicas",
+        "resistencia"
+      ],
+      "alt": "Arteria en corte con sus tres túnicas.",
+      "descripcion": "Corte de arteria con íntima, media muscular gruesa y adventicia.",
+      "motivo": "Explica por qué la arteria soporta presión y la vena no: base de hipertensión y de hemorragia arterial.",
+      "equivalencia": "Componente de las composiciones vasculares y del shock distributivo."
+    },
+    {
+      "id": "cp-servier-capilares",
+      "title": "Red capilar",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/capillaries.svg",
+      "tags": [
+        "capilar",
+        "perfusión",
+        "intercambio"
+      ],
+      "alt": "Red de capilares entre una arteriola y una vénula.",
+      "descripcion": "Lecho capilar: la arteriola se ramifica en capilares que rodean el tejido y confluyen en una vénula.",
+      "motivo": "Es el lugar donde ocurre la hipoperfusión del shock; sin este nivel el shock se explica solo con presiones.",
+      "equivalencia": "Componente de las composiciones de circulación y de clasificación del shock."
+    },
+    {
+      "id": "cp-servier-circulacion-venosa",
+      "title": "Circulación de retorno",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/venous-circulation-body.svg",
+      "tags": [
+        "retorno venoso",
+        "cavas",
+        "circulación mayor"
+      ],
+      "alt": "Silueta corporal con el retorno venoso hacia el corazón.",
+      "descripcion": "Contorno del cuerpo con el sistema venoso confluyendo en las cavas superior e inferior hasta la aurícula derecha.",
+      "motivo": "Aporta el circuito sistémico completo para la composición de circulación mayor y menor.",
+      "equivalencia": "Componente del sustituto de public/imagenes/m2/circulacion-mayor-menor.svg."
+    },
+    {
+      "id": "cp-servier-circulacion-pulmonar",
+      "title": "Circulación pulmonar",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/pulmonary-circulation.svg",
+      "tags": [
+        "circulación menor",
+        "arteria pulmonar"
+      ],
+      "alt": "Corazón y pulmones con el circuito pulmonar.",
+      "descripcion": "Ventrículo derecho, arteria pulmonar, lecho capilar pulmonar y venas pulmonares que regresan a la aurícula izquierda.",
+      "motivo": "Es el otro medio circuito que la composición necesita para enseñar los dos en serie.",
+      "equivalencia": "Componente del sustituto de public/imagenes/m2/circulacion-mayor-menor.svg."
+    },
+    {
+      "id": "cp-servier-intercambio-gaseoso",
+      "title": "Intercambio gaseoso alveolar",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/gas-exchange-pulmonary.svg",
+      "tags": [
+        "alvéolo",
+        "difusión",
+        "oxígeno"
+      ],
+      "alt": "Alvéolo y capilar con el paso de oxígeno y dióxido de carbono.",
+      "descripcion": "Unidad alveolocapilar: el oxígeno pasa del alvéolo al capilar y el dióxido de carbono en sentido contrario.",
+      "motivo": "Es el punto exacto donde la circulación menor cumple su función.",
+      "equivalencia": "Componente de los sustitutos de circulacion-mayor-menor.svg y curva-oxihemoglobina.svg."
+    },
+    {
+      "id": "cp-servier-pulmon",
+      "title": "Pulmones",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/lung.svg",
+      "tags": [
+        "pulmón",
+        "respiratorio"
+      ],
+      "alt": "Los dos pulmones con la tráquea entre ellos.",
+      "descripcion": "Pulmón derecho de tres lóbulos y pulmón izquierdo de dos, unidos por tráquea y bronquios principales.",
+      "motivo": "Icono anatómico del pulmón para los temas respiratorios.",
+      "equivalencia": "Reemplaza 🫁."
+    },
+    {
+      "id": "cp-servier-lobulos-pulmonares",
+      "title": "Lóbulos pulmonares",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/lung-lobes..svg",
+      "tags": [
+        "lóbulos",
+        "pulmón",
+        "auscultación"
+      ],
+      "alt": "Pulmones con sus lóbulos diferenciados por color.",
+      "descripcion": "Los cinco lóbulos pulmonares diferenciados: superior, medio e inferior derechos, superior e inferior izquierdos.",
+      "motivo": "La exploración de tórax se organiza por campos; sin los lóbulos, auscultar «por campos» no tiene mapa.",
+      "equivalencia": "Cobertura nueva para exploración de tórax y contusión pulmonar."
+    },
+    {
+      "id": "il-arbol-traqueobronquial",
+      "title": "Árbol traqueobronquial y pulmones",
+      "kind": "illustration",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/trachea-bronchi.svg",
+      "tags": [
+        "tráquea",
+        "bronquios",
+        "vía aérea"
+      ],
+      "alt": "Tráquea que se bifurca en los bronquios principales y se ramifica dentro de los dos pulmones.",
+      "descripcion": "Tráquea en la línea media que se divide en la carina en bronquio principal derecho e izquierdo, y se ramifica en bronquios lobares y segmentarios. El derecho es más vertical y más ancho.",
+      "motivo": "Muestra el árbol completo y la asimetría derecha/izquierda, que es lo que importa clínicamente en aspiración y en colocación del tubo.",
+      "equivalencia": "Sustituye la imagen de Drive «Árbol traqueobronquial y pulmones», sin texto quemado."
+    },
+    {
+      "id": "cp-servier-via-aerea-superior",
+      "title": "Vía aérea superior",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/upper-respiartory-tract.svg",
+      "tags": [
+        "vía aérea",
+        "faringe",
+        "laringe"
+      ],
+      "alt": "Corte de cabeza y cuello con el trayecto de la vía aérea superior.",
+      "descripcion": "Corte sagital de cabeza y cuello: fosas nasales, cavidad oral, faringe, epiglotis, laringe y comienzo de la tráquea, con el esófago por detrás.",
+      "motivo": "Figura de referencia de toda la unidad de vía aérea: apertura manual, cánulas, supraglóticos e intubación ocurren sobre este trayecto. DEUDA DECLARADA: el dibujo trae rótulos quemados en inglés (Tongue, Oral cavity, Pharynx, Nasal cavity, Mandible, Palate). Se conservan porque ninguno de los dos bancos autorizados tiene una versión sin rótulos y borrarlos dejaría las líneas guía apuntando al aire. El pie y el texto alternativo nombran las estructuras en español.",
+      "equivalencia": "Reemplaza 🤚, ↗️, 🧑‍🚒, 👃, 🎭 y 🏛️, que eran símbolos de maniobras sin relación anatómica."
+    },
+    {
+      "id": "cp-servier-laringe",
+      "title": "Laringe",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/larynx.svg",
+      "tags": [
+        "laringe",
+        "cricotiroidea"
+      ],
+      "alt": "Laringe con sus cartílagos vista de frente.",
+      "descripcion": "Laringe de frente: cartílago tiroides, membrana cricotiroidea, cricoides y primeros anillos traqueales.",
+      "motivo": "Es el punto anatómico exacto de la cricotirotomía y del trauma laringotraqueal.",
+      "equivalencia": "Reemplaza ⚠️ y 🗣️ en cricotirotomía y trauma de laringe."
+    },
+    {
+      "id": "cp-servier-cavidad-nasal",
+      "title": "Cavidad nasal",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/nasal-cavity.svg",
+      "tags": [
+        "nariz",
+        "cornetes",
+        "cánula nasofaríngea"
+      ],
+      "alt": "Corte de la cavidad nasal con los cornetes.",
+      "descripcion": "Corte sagital de la fosa nasal con los cornetes superior, medio e inferior y el suelo de la fosa.",
+      "motivo": "Una cánula nasofaríngea se introduce paralela al suelo de la fosa, no hacia arriba: la figura enseña por qué.",
+      "equivalencia": "Reemplaza 👃 en el tema de cánulas nasofaríngeas."
+    },
+    {
+      "id": "cp-servier-cavidad-oral",
+      "title": "Cavidad oral",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/oral-cavity.svg",
+      "tags": [
+        "boca",
+        "orofaringe",
+        "cánula orofaríngea"
+      ],
+      "alt": "Cavidad oral abierta con la lengua y la orofaringe.",
+      "descripcion": "Boca abierta vista de frente: labios, dientes, lengua, paladar, úvula y pared posterior de la faringe.",
+      "motivo": "Es el espacio donde se mide y se coloca la cánula orofaríngea. DEUDA DECLARADA: el dibujo trae rótulos quemados en inglés (Upper lip, Lower lip, Uvula, Palatine tonsil, Tongue, Palate). Se conservan porque ninguno de los dos bancos autorizados tiene una versión sin rótulos y borrarlos dejaría las líneas guía apuntando al aire. El pie y el texto alternativo nombran las estructuras en español.",
+      "equivalencia": "Reemplaza 🔧 en el tema de cánulas orofaríngeas."
+    },
+    {
+      "id": "cp-servier-respiracion",
+      "title": "Inspiración",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/breathing-inspiration.svg",
+      "tags": [
+        "respiración",
+        "diafragma",
+        "ventilación"
+      ],
+      "alt": "Tórax en inspiración, con el diafragma descendido y los pulmones expandidos.",
+      "descripcion": "Caja torácica en inspiración: el diafragma se contrae y baja, las costillas se elevan y el volumen pulmonar aumenta.",
+      "motivo": "Icono de ventilación basado en la mecánica real, no en el emoji del soplo.",
+      "equivalencia": "Reemplaza 💨 y 🌬️.",
+      "quitarTexto": true
+    },
+    {
+      "id": "cp-servier-via-intrapulmonar",
+      "title": "Vía aérea intrapulmonar",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/intrapulmonary-airway.svg",
+      "tags": [
+        "bronquiolo",
+        "alvéolo",
+        "vía aérea distal"
+      ],
+      "alt": "Bronquiolo terminal con su racimo de alvéolos.",
+      "descripcion": "Bronquiolo que termina en conductos alveolares y sacos alveolares, envueltos por la red capilar.",
+      "motivo": "Es el nivel donde actúan el asma y la insuficiencia respiratoria; el pulmón entero no lo muestra.",
+      "equivalencia": "Cobertura nueva para insuficiencia respiratoria y asma."
+    },
+    {
+      "id": "cp-servier-neumotorax",
+      "title": "Neumotórax",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/pneumothorax.svg",
+      "tags": [
+        "neumotórax",
+        "pleura",
+        "colapso"
+      ],
+      "alt": "Tórax con aire en la cavidad pleural y el pulmón colapsado.",
+      "descripcion": "Cavidad torácica con aire entre pleura parietal y visceral de un lado; ese pulmón ha perdido volumen y se retrae hacia el hilio.",
+      "motivo": "El plan trata el neumotórax en varios temas; la figura muestra el mecanismo.",
+      "equivalencia": "Reemplaza 🫧 y 🎈, y es componente del shock obstructivo."
+    },
+    {
+      "id": "cp-servier-edema-pulmonar",
+      "title": "Edema pulmonar",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/pulmonary-edema.svg",
+      "tags": [
+        "edema pulmonar",
+        "congestión"
+      ],
+      "alt": "Alvéolos con líquido en su interior.",
+      "descripcion": "Unidad alveolocapilar con líquido que ha pasado del capilar al intersticio y al alvéolo, ocupando el espacio del aire.",
+      "motivo": "Muestra el mecanismo del edema en el sitio donde ocurre, sin salirse del nivel del tema.",
+      "equivalencia": "Reemplaza 🌊 en edema agudo de pulmón."
+    },
+    {
+      "id": "cp-servier-tep",
+      "title": "Tromboembolia pulmonar",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/pulmonary-embolism.svg",
+      "tags": [
+        "TEP",
+        "émbolo",
+        "arteria pulmonar"
+      ],
+      "alt": "Arteria pulmonar obstruida por un émbolo.",
+      "descripcion": "Rama de la arteria pulmonar ocupada por un trombo que impide el paso de sangre hacia el territorio distal.",
+      "motivo": "El TEP es un problema de obstrucción, no de vía aérea; la figura lo deja claro de un vistazo.",
+      "equivalencia": "Cobertura nueva para TEP y shock obstructivo."
+    },
+    {
+      "id": "cp-servier-enfisema",
+      "title": "Enfisema",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/emphysema.svg",
+      "tags": [
+        "EPOC",
+        "enfisema",
+        "alvéolo"
+      ],
+      "alt": "Alvéolos destruidos y confluentes propios del enfisema.",
+      "descripcion": "Alvéolos con las paredes destruidas que se han fusionado en espacios grandes, con menos superficie de intercambio.",
+      "motivo": "Explica por qué el paciente con EPOC atrapa aire y desatura: es pérdida de superficie, no falta de esfuerzo.",
+      "equivalencia": "Reemplaza 💨 en el tema de EPOC agudizado."
+    },
+    {
+      "id": "cp-servier-bronquitis-cronica",
+      "title": "Bronquitis crónica",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/chronic-bronchitis.svg",
+      "tags": [
+        "bronquitis",
+        "moco",
+        "EPOC"
+      ],
+      "alt": "Bronquio con la mucosa engrosada y moco en la luz.",
+      "descripcion": "Corte de bronquio con mucosa engrosada, glándulas hipertrofiadas y moco ocupando la luz.",
+      "motivo": "Es el otro componente del EPOC y la base de la bronquitis aguda.",
+      "equivalencia": "Cobertura nueva para neumonía y bronquitis."
+    },
+    {
+      "id": "cp-servier-bronquio-inflamado",
+      "title": "Bronquio inflamado",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/inflamed-bronchus-crossection.svg",
+      "tags": [
+        "asma",
+        "broncoespasmo",
+        "obstrucción"
+      ],
+      "alt": "Corte de bronquio con la pared inflamada y la luz estrechada.",
+      "descripcion": "Bronquio en corte transversal con edema de la pared, contracción del músculo liso y luz reducida.",
+      "motivo": "Es exactamente el mecanismo del asma: la vía aérea se estrecha por dentro.",
+      "equivalencia": "Reemplaza 🌬️ en el tema de asma."
+    },
+    {
+      "id": "cp-servier-cerebro",
+      "title": "Encéfalo",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/brain-1.svg",
+      "tags": [
+        "encéfalo",
+        "neurológico"
+      ],
+      "alt": "Encéfalo visto de perfil.",
+      "descripcion": "Encéfalo de perfil con hemisferio cerebral, cerebelo y tronco.",
+      "motivo": "Icono anatómico del encéfalo para los temas neurológicos y de trauma craneal.",
+      "equivalencia": "Reemplaza 🧠."
+    },
+    {
+      "id": "il-encefalo-corte",
+      "title": "Encéfalo en corte sagital",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/brain-2.svg",
+      "tags": [
+        "encéfalo",
+        "tronco",
+        "cerebelo"
+      ],
+      "alt": "Corte sagital del encéfalo con hemisferio cerebral, cerebelo y tronco encefálico.",
+      "descripcion": "Corte medio del encéfalo: hemisferio cerebral arriba y adelante, cerebelo atrás y abajo, tronco encefálico continuándose hacia el agujero magno.",
+      "motivo": "Base de la composición «Regiones del encéfalo»: las tres regiones a rotular quedan visibles y separadas.",
+      "equivalencia": "Base del sustituto de la imagen de Drive «Regiones del encéfalo»."
+    },
+    {
+      "id": "cp-servier-bulbo-olfatorio",
+      "title": "Bulbo olfatorio",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/olfactory-bulb.svg",
+      "tags": [
+        "olfato",
+        "sentidos",
+        "par craneal"
+      ],
+      "alt": "Bulbo olfatorio sobre la lámina cribosa.",
+      "descripcion": "Bulbo olfatorio apoyado en la lámina cribosa del etmoides, con los filetes nerviosos que la atraviesan desde la mucosa nasal.",
+      "motivo": "Completa el tema de órganos de los sentidos y explica por qué una fractura de base de cráneo puede dar rinorraquia.",
+      "equivalencia": "Cobertura nueva para órganos de los sentidos."
+    },
+    {
+      "id": "cp-servier-ojo",
+      "title": "Ojo",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/eye.svg",
+      "tags": [
+        "ojo",
+        "ocular"
+      ],
+      "alt": "Ojo visto de frente.",
+      "descripcion": "Ojo de frente con esclerótica, iris, pupila y párpados.",
+      "motivo": "Icono anatómico para los temas oculares y de exploración de sentidos.",
+      "equivalencia": "Reemplaza 👁️, 👀 y 📌 en los temas oculares."
+    },
+    {
+      "id": "cp-servier-ojo-corte",
+      "title": "Ojo en corte",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/eye-crosssection.svg",
+      "tags": [
+        "ojo",
+        "cámara anterior",
+        "hifema"
+      ],
+      "alt": "Corte del globo ocular con sus cámaras y su retina.",
+      "descripcion": "Corte anteroposterior del ojo: córnea, cámara anterior, iris, cristalino, humor vítreo, retina y nervio óptico.",
+      "motivo": "El hifema es sangre en la cámara anterior: sin el corte no se puede señalar dónde está.",
+      "equivalencia": "Cobertura nueva para hemorragia conjuntival e hifema y para objeto empalado ocular."
+    },
+    {
+      "id": "cp-servier-musculos-ojo",
+      "title": "Músculos del ojo",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/eye-muscles.svg",
+      "tags": [
+        "músculos extraoculares",
+        "motilidad"
+      ],
+      "alt": "Globo ocular con los músculos que lo mueven.",
+      "descripcion": "Globo ocular con los músculos rectos y oblicuos insertados en la esclerótica.",
+      "motivo": "La lesión muscular del ojo se explora por la limitación del movimiento; esta es la figura del tema.",
+      "equivalencia": "Reemplaza 🔄 en el tema de lesión muscular de ojo."
+    },
+    {
+      "id": "cp-servier-oido",
+      "title": "Oído",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/ear.svg",
+      "tags": [
+        "oído",
+        "audición",
+        "sentidos"
+      ],
+      "alt": "Oído en corte, con sus tres porciones.",
+      "descripcion": "Corte del oído: pabellón y conducto externo, membrana timpánica y cadena de huesecillos, y laberinto en el oído interno.",
+      "motivo": "Completa el tema de órganos de los sentidos y da referencia a la otorragia del trauma craneal.",
+      "equivalencia": "Cobertura nueva para órganos de los sentidos."
+    },
+    {
+      "id": "cp-servier-lengua",
+      "title": "Lengua",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/tongue.svg",
+      "tags": [
+        "lengua",
+        "obstrucción",
+        "gusto"
+      ],
+      "alt": "Lengua vista desde arriba.",
+      "descripcion": "Lengua vista por su dorso, con las papilas y la V lingual.",
+      "motivo": "En el paciente inconsciente la lengua es la primera causa de obstrucción; también sirve al tema del gusto.",
+      "equivalencia": "Cobertura nueva para apertura de vía aérea y sentidos.",
+      "quitarTexto": true
+    },
+    {
+      "id": "cp-servier-diente",
+      "title": "Diente",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/tooth.svg",
+      "tags": [
+        "diente",
+        "dental"
+      ],
+      "alt": "Diente en corte, con corona y raíz.",
+      "descripcion": "Diente en corte: esmalte, dentina, cámara pulpar y raíz con su ligamento.",
+      "motivo": "Icono para el trauma dentofacial. DEUDA DECLARADA: el dibujo trae rótulos quemados en inglés (Enamel, Dentin, Gum, Pulp cavity, Nerves and blood vessels, Maxillary bone, Cementum). Se conservan porque ninguno de los dos bancos autorizados tiene una versión sin rótulos y borrarlos dejaría las líneas guía apuntando al aire. El pie y el texto alternativo nombran las estructuras en español.",
+      "equivalencia": "Reemplaza 🦷 junto con la figura del macizo facial."
+    },
+    {
+      "id": "cp-servier-dentadura",
+      "title": "Dentadura del adulto",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/teeth-adult.svg",
+      "tags": [
+        "dentadura",
+        "oclusión",
+        "Le Fort"
+      ],
+      "alt": "Arcada dentaria completa del adulto.",
+      "descripcion": "Arcadas superior e inferior con la dentadura permanente completa.",
+      "motivo": "La alteración de la oclusión dentaria es un signo clave de fractura de Le Fort y de mandíbula.",
+      "equivalencia": "Cobertura nueva para fracturas de Le Fort."
+    },
+    {
+      "id": "cp-servier-senos-paranasales",
+      "title": "Senos paranasales",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/paranasal-sinus-head.svg",
+      "tags": [
+        "senos paranasales",
+        "macizo facial"
+      ],
+      "alt": "Cabeza de frente con los senos paranasales marcados.",
+      "descripcion": "Proyección frontal de la cabeza con los senos frontal, etmoidal y maxilar dibujados sobre el macizo facial.",
+      "motivo": "Da el mapa del macizo facial que necesitan el trauma facial y la exploración de la cara.",
+      "equivalencia": "Reemplaza 🦷 y 😷 en fracturas faciales."
+    },
+    {
+      "id": "il-piel-corte",
+      "title": "Piel en corte",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/skin.svg",
+      "tags": [
+        "piel",
+        "epidermis",
+        "dermis"
+      ],
+      "alt": "Corte de la piel con sus capas superpuestas y los anexos cutáneos.",
+      "descripcion": "Bloque de piel en corte: epidermis, dermis con vasos, folículos y glándulas, e hipodermis con tejido adiposo.",
+      "motivo": "Corte limpio con las tres capas diferenciadas, que es lo que el tema necesita para explicar profundidad de quemadura.",
+      "equivalencia": "Base del sustituto de la imagen de Drive «Capas de la piel»."
+    },
+    {
+      "id": "cp-servier-piel",
+      "title": "Piel sana",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/skin-normal.svg",
+      "tags": [
+        "piel",
+        "tegumentario"
+      ],
+      "alt": "Fragmento de piel sana en corte.",
+      "descripcion": "Bloque de piel sana visto en corte, con la epidermis intacta sobre la dermis.",
+      "motivo": "Icono del tegumentario y referencia de «piel sana» frente a las variantes de quemadura.",
+      "equivalencia": "Reemplaza 🧴 en el tema del sistema tegumentario."
+    },
+    {
+      "id": "cp-servier-quemadura-1er",
+      "title": "Quemadura de primer grado",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/skin-first-degree-burn.svg",
+      "tags": [
+        "quemadura",
+        "primer grado",
+        "epidermis"
+      ],
+      "alt": "Corte de piel con lesión limitada a la epidermis.",
+      "descripcion": "Piel en corte con daño confinado a la epidermis: enrojecimiento sin despegamiento ni ampolla.",
+      "motivo": "La clasificación por grados solo se entiende comparando las tres profundidades en el mismo corte.",
+      "equivalencia": "Componente de la composición de grados de quemadura."
+    },
+    {
+      "id": "cp-servier-quemadura-2do",
+      "title": "Quemadura de segundo grado",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/skin-second-degree-burn.svg",
+      "tags": [
+        "quemadura",
+        "segundo grado",
+        "flictena"
+      ],
+      "alt": "Corte de piel con una quemadura que alcanza la dermis y levanta una flictena.",
+      "descripcion": "Piel en corte con lesión que atraviesa la epidermis y llega a la dermis superficial, con despegamiento y ampolla.",
+      "motivo": "El plan exige distinguir profundidad; este corte lo muestra sobre la misma piel del icono anterior.",
+      "equivalencia": "Reemplaza 🔥 y 🧯 en los temas de quemaduras. No se usa en metabolismo ni gastritis, donde el fuego no representaba nada anatómico."
+    },
+    {
+      "id": "cp-servier-quemadura-3er",
+      "title": "Quemadura de tercer grado",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/skin-third-degree-burn.svg",
+      "tags": [
+        "quemadura",
+        "tercer grado",
+        "espesor total"
+      ],
+      "alt": "Corte de piel con lesión que atraviesa toda la dermis.",
+      "descripcion": "Piel en corte con destrucción de epidermis y dermis completas, alcanzando la hipodermis; los anexos y las terminaciones nerviosas han desaparecido.",
+      "motivo": "Es la que explica el dato contraintuitivo del tema: no duele en el centro porque el nervio se destruyó.",
+      "equivalencia": "Componente de la composición de grados de quemadura."
+    },
+    {
+      "id": "cp-servier-musculo",
+      "title": "Músculo",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/muscle-1.svg",
+      "tags": [
+        "músculo",
+        "esquelético"
+      ],
+      "alt": "Músculo esquelético con sus tendones.",
+      "descripcion": "Músculo fusiforme con su vientre y los tendones en los extremos.",
+      "motivo": "Icono anatómico del sistema muscular.",
+      "equivalencia": "Reemplaza 💪, que representaba un gesto y no el tejido."
+    },
+    {
+      "id": "cp-servier-fibra-muscular",
+      "title": "Fibra muscular",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/muscle-fiber.svg",
+      "tags": [
+        "fibra muscular",
+        "miofibrilla",
+        "rabdomiólisis"
+      ],
+      "alt": "Fibra muscular con sus miofibrillas.",
+      "descripcion": "Fibra muscular esquelética abierta, con las miofibrillas y su patrón de bandas.",
+      "motivo": "El síndrome de aplastamiento libera el contenido de esta fibra a la sangre: sin la célula, la rabdomiólisis es una palabra.",
+      "equivalencia": "Cobertura nueva para síndrome de aplastamiento y compartimental."
+    },
+    {
+      "id": "cp-servier-tendon",
+      "title": "Unión musculotendinosa",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/muscle-tendon.svg",
+      "tags": [
+        "tendón",
+        "desgarro",
+        "esguince"
+      ],
+      "alt": "Músculo y tendón unidos.",
+      "descripcion": "Transición entre el vientre muscular y el tendón que lo ancla al hueso.",
+      "motivo": "Los desgarros ocurren en esta unión; es la figura del tema de esguinces y desgarros. DEUDA DECLARADA: el dibujo trae rótulos quemados en inglés (Tendon, Epimysium, Fascicle, Fiber, Fibril, Collagen, Microfibril, Perimysium). Se conservan porque ninguno de los dos bancos autorizados tiene una versión sin rótulos y borrarlos dejaría las líneas guía apuntando al aire. El pie y el texto alternativo nombran las estructuras en español.",
+      "equivalencia": "Reemplaza 🤕 en el tema de esguinces, luxaciones y desgarros."
+    },
+    {
+      "id": "cp-servier-musculo-liso",
+      "title": "Músculo liso",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/smooth-muscle-contracted.svg",
+      "tags": [
+        "músculo liso",
+        "vasoconstricción",
+        "broncoconstricción"
+      ],
+      "alt": "Fibras de músculo liso contraídas.",
+      "descripcion": "Células fusiformes de músculo liso en estado de contracción, acortadas y engrosadas.",
+      "motivo": "Es el efector de los receptores adrenérgicos: lo que se contrae en el vaso y en el bronquio.",
+      "equivalencia": "Componente de la composición de receptores adrenérgicos."
+    },
+    {
+      "id": "cp-servier-musculatura",
+      "title": "Musculatura corporal",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/musculature-front.svg",
+      "tags": [
+        "musculatura",
+        "posición anatómica"
+      ],
+      "alt": "Cuerpo de frente con la musculatura superficial.",
+      "descripcion": "Silueta corporal de frente en posición anatómica, con los grupos musculares superficiales dibujados.",
+      "motivo": "Es la figura en posición anatómica: sirve al tema de posiciones y líneas de referencia.",
+      "equivalencia": "Reemplaza 🧭 en posiciones anatómicas, líneas y cuadrantes."
+    },
+    {
+      "id": "cp-servier-mano",
+      "title": "Mano",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/hand.svg",
+      "tags": [
+        "mano",
+        "regla de la palma"
+      ],
+      "alt": "Mano abierta vista por la palma.",
+      "descripcion": "Mano abierta con los cinco dedos extendidos, vista palmar.",
+      "motivo": "Es la referencia de la regla de la palma para estimar superficie quemada y el icono de exploración manual.",
+      "equivalencia": "Reemplaza 🖐️ y 🫱."
+    },
+    {
+      "id": "cp-servier-pierna",
+      "title": "Extremidad inferior",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/leg.svg",
+      "tags": [
+        "extremidad",
+        "pierna"
+      ],
+      "alt": "Extremidad inferior completa.",
+      "descripcion": "Pierna vista de frente, desde la cadera hasta el pie.",
+      "motivo": "Icono de trauma de extremidad inferior y síndrome compartimental.",
+      "equivalencia": "Reemplaza 🦵."
+    },
+    {
+      "id": "cp-servier-estomago",
+      "title": "Estómago",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/stomach.svg",
+      "tags": [
+        "estómago",
+        "digestivo"
+      ],
+      "alt": "Estómago con el esófago y el duodeno.",
+      "descripcion": "Estómago de frente: cardias, fondo, cuerpo, antro y píloro continuándose con el duodeno.",
+      "motivo": "Icono anatómico para los temas gástricos.",
+      "equivalencia": "Reemplaza 🍽️ y 🥞 por la estructura correspondiente."
+    },
+    {
+      "id": "cp-servier-ulcera-gastrica",
+      "title": "Úlcera gástrica",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/stomach-ulcer.svg",
+      "tags": [
+        "úlcera",
+        "gastritis",
+        "sangrado digestivo"
+      ],
+      "alt": "Pared del estómago con una úlcera que la erosiona.",
+      "descripcion": "Corte de la pared gástrica con una pérdida de sustancia que atraviesa la mucosa y llega a capas más profundas.",
+      "motivo": "Es la lesión que explica a la vez la gastritis grave y el sangrado de tubo digestivo alto.",
+      "equivalencia": "Reemplaza 🔥 en gastritis y 🩸 en sangrado de tubo digestivo, que no distinguían la lesión."
+    },
+    {
+      "id": "cp-servier-intestino",
+      "title": "Intestino",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/intestine.svg",
+      "tags": [
+        "intestino",
+        "asas"
+      ],
+      "alt": "Asas intestinales.",
+      "descripcion": "Asas de intestino delgado y su continuidad con el colon.",
+      "motivo": "Icono anatómico para oclusión intestinal, trauma de intestino y dolor abdominal.",
+      "equivalencia": "Reemplaza 🌀 y ⛔ en los temas intestinales."
+    },
+    {
+      "id": "cp-servier-intestino-delgado",
+      "title": "Intestino delgado",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/small-intestine.svg",
+      "tags": [
+        "intestino delgado",
+        "duodeno",
+        "yeyuno"
+      ],
+      "alt": "Intestino delgado con sus tramos.",
+      "descripcion": "Duodeno, yeyuno e íleon con su mesenterio y sus vasos.",
+      "motivo": "Distingue el delgado del colon, que es lo que cambia el cuadro en una oclusión.",
+      "equivalencia": "Cobertura nueva para oclusión intestinal y lesión de intestino."
+    },
+    {
+      "id": "cp-servier-vellosidades",
+      "title": "Vellosidades intestinales",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/intestinal-villi.svg",
+      "tags": [
+        "vellosidades",
+        "absorción",
+        "deshidratación"
+      ],
+      "alt": "Vellosidades del intestino con su red capilar.",
+      "descripcion": "Vellosidades intestinales en corte, cada una con su capilar y su vaso linfático central.",
+      "motivo": "Es la superficie de absorción de agua: explica por qué una diarrea deshidrata. DEUDA DECLARADA: el dibujo trae rótulos quemados en inglés (Arteriole, Venule, Mucus cell, Epithelial cell, Lacteal, Blood/Lymphatic circulation). Se conservan porque ninguno de los dos bancos autorizados tiene una versión sin rótulos y borrarlos dejaría las líneas guía apuntando al aire. El pie y el texto alternativo nombran las estructuras en español.",
+      "equivalencia": "Cobertura nueva para deshidratación."
+    },
+    {
+      "id": "cp-servier-colon",
+      "title": "Colon",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/colon.svg",
+      "tags": [
+        "colon",
+        "intestino grueso"
+      ],
+      "alt": "Colon con sus tramos.",
+      "descripcion": "Colon ascendente, transverso, descendente y sigmoides, con el ciego y el apéndice.",
+      "motivo": "Referencia anatómica de apendicitis, colitis y oclusión baja. DEUDA DECLARADA: el dibujo trae rótulos quemados en inglés (Rectum, Sigmoid, Descendant colon, Transverse, Ascending, Caecum, Appendix). Se conservan porque ninguno de los dos bancos autorizados tiene una versión sin rótulos y borrarlos dejaría las líneas guía apuntando al aire. El pie y el texto alternativo nombran las estructuras en español.",
+      "equivalencia": "Reemplaza 🔺 en apendicitis por la estructura donde está el apéndice."
+    },
+    {
+      "id": "cp-servier-colitis",
+      "title": "Inflamación intestinal",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/crohns-disease.svg",
+      "tags": [
+        "colitis",
+        "inflamación",
+        "mucosa"
+      ],
+      "alt": "Segmento intestinal con la pared inflamada y engrosada.",
+      "descripcion": "Asa intestinal con pared engrosada, mucosa ulcerada y luz estrechada por la inflamación.",
+      "motivo": "Es la figura de la colitis: pared inflamada, no un símbolo de dolor.",
+      "equivalencia": "Reemplaza 🔥 en el tema de gastritis y colitis."
+    },
+    {
+      "id": "cp-servier-recto",
+      "title": "Recto",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/rectum.svg",
+      "tags": [
+        "recto",
+        "sangrado bajo"
+      ],
+      "alt": "Recto y canal anal.",
+      "descripcion": "Recto con el canal anal y los esfínteres.",
+      "motivo": "Extremo distal del tubo digestivo, referencia del sangrado bajo.",
+      "equivalencia": "Cobertura nueva para sangrado de tubo digestivo."
+    },
+    {
+      "id": "cp-servier-higado",
+      "title": "Hígado",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/liver.svg",
+      "tags": [
+        "hígado",
+        "hepático"
+      ],
+      "alt": "Hígado visto de frente.",
+      "descripcion": "Hígado con sus lóbulos derecho e izquierdo y la vesícula biliar en su cara inferior.",
+      "motivo": "Icono anatómico para hepatitis, cirrosis y trauma hepático.",
+      "equivalencia": "Reemplaza 🫀 en temas hepáticos, donde el emoji del corazón era el órgano equivocado."
+    },
+    {
+      "id": "cp-servier-cirrosis",
+      "title": "Cirrosis",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/cirrhosis.svg",
+      "tags": [
+        "cirrosis",
+        "hígado",
+        "fibrosis"
+      ],
+      "alt": "Hígado con superficie nodular propia de la cirrosis.",
+      "descripcion": "Hígado retraído y de superficie irregular por nódulos de regeneración separados por fibrosis.",
+      "motivo": "Distingue el hígado enfermo del sano, que es lo que el tema compara.",
+      "equivalencia": "Reemplaza 🫀 en el tema de cirrosis y hepatitis."
+    },
+    {
+      "id": "cp-servier-hepatomegalia",
+      "title": "Hepatomegalia",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/hepatomegaly.svg",
+      "tags": [
+        "hepatomegalia",
+        "exploración abdominal"
+      ],
+      "alt": "Hígado aumentado de tamaño rebasando el borde costal.",
+      "descripcion": "Hígado agrandado que sobrepasa el reborde costal derecho y se hace palpable.",
+      "motivo": "Es un hallazgo de la exploración abdominal que se puede palpar en la calle.",
+      "equivalencia": "Cobertura nueva para exploración abdominal e insuficiencia cardíaca derecha."
+    },
+    {
+      "id": "cp-servier-pancreas",
+      "title": "Páncreas",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/pancreas.svg",
+      "tags": [
+        "páncreas",
+        "pancreatitis"
+      ],
+      "alt": "Páncreas con el duodeno.",
+      "descripcion": "Páncreas con cabeza, cuerpo y cola, apoyado en la curva del duodeno.",
+      "motivo": "Sirve a pancreatitis y a la composición de glándulas endocrinas.",
+      "equivalencia": "Reemplaza 🥞 en pancreatitis."
+    },
+    {
+      "id": "cp-servier-islote-langerhans",
+      "title": "Islote de Langerhans",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/langerhans-islet-pancreas.svg",
+      "tags": [
+        "islote",
+        "insulina",
+        "diabetes"
+      ],
+      "alt": "Islote pancreático rodeado de tejido exocrino.",
+      "descripcion": "Islote de Langerhans con sus células productoras de insulina y glucagón, rodeado por acinos del páncreas exocrino.",
+      "motivo": "Es el lugar exacto donde falla la diabetes; el páncreas entero no lo distingue.",
+      "equivalencia": "Cobertura nueva para diabetes mellitus y complicaciones diabéticas."
+    },
+    {
+      "id": "cp-servier-bazo",
+      "title": "Bazo",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/spleen-1.svg",
+      "tags": [
+        "bazo",
+        "trauma abdominal"
+      ],
+      "alt": "Bazo.",
+      "descripcion": "Bazo visto por su cara diafragmática, con su hilio.",
+      "motivo": "Órgano de sangrado abdominal por excelencia en trauma cerrado.",
+      "equivalencia": "Cobertura nueva para lesión de bazo."
+    },
+    {
+      "id": "cp-servier-colelitiasis",
+      "title": "Litiasis biliar",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/bile-lithiasis-small-calculi.svg",
+      "tags": [
+        "colelitiasis",
+        "vesícula",
+        "cálculos"
+      ],
+      "alt": "Vesícula biliar con cálculos en su interior.",
+      "descripcion": "Vesícula biliar abierta con varios cálculos pequeños en su luz y el conducto cístico.",
+      "motivo": "Muestra a la vez el órgano y la causa, que es lo que el tema explica.",
+      "equivalencia": "Reemplaza 🟡 en colelitiasis y colecistitis."
+    },
+    {
+      "id": "cp-servier-calculos",
+      "title": "Cálculos",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/small-calculi.svg",
+      "tags": [
+        "cálculo",
+        "litiasis",
+        "urolitiasis"
+      ],
+      "alt": "Varios cálculos pequeños.",
+      "descripcion": "Grupo de cálculos de superficie irregular, del tamaño de los que producen cólico.",
+      "motivo": "Representa el objeto que causa la enfermedad en la urolitiasis.",
+      "equivalencia": "Reemplaza 🪨 en urolitiasis."
+    },
+    {
+      "id": "cp-servier-rinon",
+      "title": "Riñón",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/kidney-1.svg",
+      "tags": [
+        "riñón",
+        "renal",
+        "urinario"
+      ],
+      "alt": "Riñón en corte con la pelvis renal y el uréter.",
+      "descripcion": "Riñón en corte frontal: corteza, médula con las pirámides, cálices, pelvis renal y uréter.",
+      "motivo": "Icono anatómico para insuficiencia renal, urolitiasis y aparato urinario.",
+      "equivalencia": "Reemplaza 🫘 y 🚰 en los temas urinarios."
+    },
+    {
+      "id": "cp-servier-vejiga",
+      "title": "Vejiga",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/bladder.svg",
+      "tags": [
+        "vejiga",
+        "urinario"
+      ],
+      "alt": "Vejiga urinaria con los uréteres y la uretra.",
+      "descripcion": "Vejiga con la entrada de los dos uréteres y la salida de la uretra.",
+      "motivo": "Icono anatómico para infección urinaria y trauma genitourinario.",
+      "equivalencia": "Reemplaza 🚻 y 🦠 en el tema urinario, separándolo del icono de infección general."
+    },
+    {
+      "id": "cp-servier-linfatico",
+      "title": "Sistema linfático",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/lymphatic-system.svg",
+      "tags": [
+        "linfático",
+        "ganglios"
+      ],
+      "alt": "Silueta corporal con la red linfática y los grupos ganglionares.",
+      "descripcion": "Contorno del cuerpo con los conductos linfáticos y los principales grupos de ganglios: cervicales, axilares, mediastínicos, mesentéricos e inguinales.",
+      "motivo": "Icono del tema linfático que muestra la distribución real del sistema.",
+      "equivalencia": "Reemplaza 🛡️ en el tema linfático e inmunitario."
+    },
+    {
+      "id": "il-tracto-digestivo",
+      "title": "Tracto digestivo",
+      "kind": "illustration",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/digestive-system.svg",
+      "tags": [
+        "digestivo",
+        "estómago",
+        "intestino"
+      ],
+      "alt": "Tracto digestivo completo: esófago, estómago, intestino delgado, colon y recto.",
+      "descripcion": "Recorrido continuo del tubo digestivo, desde el esófago hasta el recto, con el hígado y el páncreas como glándulas anexas.",
+      "motivo": "Versión sin rótulos del esquema digestivo: los nombres se escriben en español en el pie en lugar de quedar quemados en inglés.",
+      "equivalencia": "Sustituye la imagen de Drive «Tracto digestivo». Se descartó `digestive-system-labeled` por traer los rótulos incrustados."
+    },
+    {
+      "id": "cp-servier-edema-miembros",
+      "title": "Edema de miembros inferiores",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/oedema-legs.svg",
+      "tags": [
+        "edema",
+        "insuficiencia cardíaca",
+        "congestión"
+      ],
+      "alt": "Piernas con edema.",
+      "descripcion": "Miembros inferiores aumentados de volumen por acumulación de líquido en el tejido subcutáneo.",
+      "motivo": "Es el signo visible de la insuficiencia cardíaca derecha, y se busca en la exploración.",
+      "equivalencia": "Reemplaza 💔 en el tema de insuficiencia cardíaca por el signo que se explora."
+    },
+    {
+      "id": "cp-servier-peristalsis",
+      "title": "Peristalsis",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/peristalsis.svg",
+      "tags": [
+        "peristalsis",
+        "motilidad",
+        "oclusión"
+      ],
+      "alt": "Onda peristáltica avanzando por un segmento intestinal.",
+      "descripcion": "Segmento de tubo digestivo con una onda de contracción que empuja el contenido en un sentido.",
+      "motivo": "La oclusión y el íleo son problemas de esta onda; el tema los explica por ausencia o por lucha.",
+      "equivalencia": "Cobertura nueva para oclusión intestinal y abdomen agudo."
+    },
+    {
+      "id": "cp-servier-hernia-hiatal",
+      "title": "Hernia hiatal",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/hiatal-hernia.svg",
+      "tags": [
+        "hernia hiatal",
+        "reflujo",
+        "diafragma"
+      ],
+      "alt": "Estómago que asciende al tórax a través del hiato del diafragma.",
+      "descripcion": "Parte del estómago desplazada por encima del diafragma a través del hiato esofágico.",
+      "motivo": "Sirve de referencia al hiato diafragmático, que es también la vía de la ruptura diafragmática traumática.",
+      "equivalencia": "Cobertura nueva para ruptura diafragmática y reflujo."
+    },
+    {
+      "id": "cp-servier-hernia-paraesofagica",
+      "title": "Unión esofagogástrica",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/paraesophagal-hernia.svg",
+      "tags": [
+        "esófago",
+        "hiato",
+        "unión"
+      ],
+      "alt": "Unión del esófago con el estómago a través del diafragma.",
+      "descripcion": "Esófago distal atravesando el diafragma y desembocando en el estómago.",
+      "motivo": "Referencia anatómica para lesión de esófago torácico.",
+      "equivalencia": "Cobertura nueva para lesión de esófago."
+    },
+    {
+      "id": "cp-servier-trombosis",
+      "title": "Trombosis venosa",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/venous-thrombosis-1.svg",
+      "tags": [
+        "trombosis",
+        "trombo",
+        "TEP"
+      ],
+      "alt": "Vena ocupada por un trombo.",
+      "descripcion": "Segmento venoso con un trombo adherido a la pared que ocupa parte de la luz.",
+      "motivo": "Es el origen del TEP: el tema encadena trombosis y embolia.",
+      "equivalencia": "Cobertura nueva para TEP."
+    },
+    {
+      "id": "cp-servier-adulto-mayor",
+      "title": "Persona adulta mayor",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/old-man.svg",
+      "tags": [
+        "geriatría",
+        "adulto mayor"
+      ],
+      "alt": "Persona adulta mayor de pie, con bastón.",
+      "descripcion": "Figura de una persona mayor de pie, apoyada en un bastón.",
+      "motivo": "Icono de la unidad de geriatría.",
+      "equivalencia": "Reemplaza 👴 y los emojis genéricos de los temas geriátricos."
+    },
+    {
+      "id": "cp-servier-adulta-mayor",
+      "title": "Mujer adulta mayor",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/old-women.svg",
+      "tags": [
+        "geriatría",
+        "adulta mayor"
+      ],
+      "alt": "Mujer adulta mayor de pie.",
+      "descripcion": "Figura de una mujer mayor de pie.",
+      "motivo": "Segunda figura geriátrica, para que la unidad no represente a toda la población mayor con una sola persona.",
+      "equivalencia": "Cobertura nueva para los temas geriátricos."
+    },
+    {
+      "id": "cp-servier-rostro-mayor",
+      "title": "Rostro de persona mayor",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/old-man-face.svg",
+      "tags": [
+        "comunicación",
+        "geriatría",
+        "rostro"
+      ],
+      "alt": "Rostro de una persona mayor.",
+      "descripcion": "Cara de una persona mayor vista de frente.",
+      "motivo": "El tema de comunicación con el adulto mayor trata de mirar a la cara, hablar despacio y comprobar audición: la figura es el rostro.",
+      "equivalencia": "Reemplaza 💬 en el tema de comunicación con el adulto mayor."
+    },
+    {
+      "id": "cp-servier-traslado-carga",
+      "title": "Levantamiento y traslado",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/People-Other/Servier/carrying.svg",
+      "tags": [
+        "traslado",
+        "levantamiento",
+        "ergonomía"
+      ],
+      "alt": "Persona levantando una carga.",
+      "descripcion": "Figura levantando un peso, con la espalda y las rodillas en la posición del gesto.",
+      "motivo": "El bienestar del TUM trata en buena parte de mecánica corporal: esta es la figura del gesto que se corrige.",
+      "equivalencia": "Reemplaza 🧘 en el tema de bienestar del TUM."
+    },
+    {
+      "id": "cp-servier-ciclista",
+      "title": "Ciclista",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/cyclist.svg",
+      "tags": [
+        "cinemática",
+        "velocidad",
+        "mecanismo"
+      ],
+      "alt": "Persona en bicicleta en movimiento.",
+      "descripcion": "Ciclista pedaleando, en movimiento hacia adelante.",
+      "motivo": "La cinemática necesita cuerpos en movimiento con masa y velocidad; es el material más cercano que ofrecen los bancos autorizados.",
+      "equivalencia": "Componente de las composiciones de cinemática. Deuda declarada: ninguno de los dos bancos tiene vehículos accidentados."
+    },
+    {
+      "id": "cp-servier-corredor",
+      "title": "Persona corriendo",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/runner.svg",
+      "tags": [
+        "cinemática",
+        "energía",
+        "movimiento"
+      ],
+      "alt": "Persona corriendo.",
+      "descripcion": "Figura en carrera, con el gesto del paso.",
+      "motivo": "Segundo cuerpo en movimiento para las composiciones de energía cinética y desaceleración.",
+      "equivalencia": "Componente de las composiciones de cinemática."
+    },
+    {
+      "id": "cp-servier-tos",
+      "title": "Tos",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/cough-1.svg",
+      "tags": [
+        "tos",
+        "OVACE",
+        "vía aérea"
+      ],
+      "alt": "Persona tosiendo.",
+      "descripcion": "Figura tosiendo, con la mano frente a la boca.",
+      "motivo": "En la OVACE la tos eficaz es el criterio que decide no intervenir: es el signo del tema.",
+      "equivalencia": "Reemplaza 🫁 en los temas de OVACE, donde el pulmón no señalaba el signo clínico."
+    },
+    {
+      "id": "cp-servier-jeringa",
+      "title": "Jeringa",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/syringe.svg",
+      "tags": [
+        "jeringa",
+        "inyección"
+      ],
+      "alt": "Jeringa con aguja.",
+      "descripcion": "Jeringa cargada con su aguja montada.",
+      "motivo": "Icono de administración parenteral y de secuencia de intubación.",
+      "equivalencia": "Reemplaza 💉."
+    },
+    {
+      "id": "cp-servier-bolsa-infusion",
+      "title": "Bolsa de infusión",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/infusion-bag-blue.svg",
+      "tags": [
+        "infusión",
+        "cristaloide",
+        "venoclisis"
+      ],
+      "alt": "Bolsa de solución para infusión con su equipo.",
+      "descripcion": "Bolsa de solución intravenosa colgada, con la línea de infusión saliendo por su parte inferior.",
+      "motivo": "Icono de la unidad de vía intravenosa y de las soluciones cristaloides.",
+      "equivalencia": "Reemplaza 💧 y 🧪 en acceso vascular y soluciones."
+    },
+    {
+      "id": "cp-servier-portasueros",
+      "title": "Portasueros",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/perfusion-stand.svg",
+      "tags": [
+        "infusión",
+        "aminas",
+        "goteo"
+      ],
+      "alt": "Portasueros con la bolsa colgada.",
+      "descripcion": "Soporte de infusión con la bolsa y la línea montadas para administrar por goteo.",
+      "motivo": "Icono del manejo de infusiones y aminas, donde el asunto es el ritmo de administración.",
+      "equivalencia": "Reemplaza ⏳ en el tema de infusiones y aminas."
+    },
+    {
+      "id": "cp-servier-tableta",
+      "title": "Tableta",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/drug-tablet-1.svg",
+      "tags": [
+        "fármaco",
+        "tableta"
+      ],
+      "alt": "Tableta de medicamento.",
+      "descripcion": "Comprimido redondo con su ranura de fraccionamiento.",
+      "motivo": "Icono de farmacología general y de polifarmacia.",
+      "equivalencia": "Reemplaza 💊."
+    },
+    {
+      "id": "cp-servier-capsula",
+      "title": "Cápsula",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/drug-capsule-1.svg",
+      "tags": [
+        "fármaco",
+        "cápsula",
+        "presentación"
+      ],
+      "alt": "Cápsula de medicamento.",
+      "descripcion": "Cápsula de dos mitades con su contenido.",
+      "motivo": "La presentación cambia la dosis disponible: el tema de dosis necesita ver formas distintas.",
+      "equivalencia": "Cobertura nueva para medicamentos y sus dosis."
+    },
+    {
+      "id": "cp-servier-blister",
+      "title": "Blíster de medicamento",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/drug-blister.svg",
+      "tags": [
+        "blíster",
+        "polifarmacia",
+        "intoxicación"
+      ],
+      "alt": "Blíster con varias tabletas.",
+      "descripcion": "Lámina de blíster con comprimidos, algunos ya retirados.",
+      "motivo": "Es el objeto que se recoge en la escena de una intoxicación por medicamentos y el que se cuenta en polifarmacia.",
+      "equivalencia": "Cobertura nueva para toxíndromes y polifarmacia."
+    },
+    {
+      "id": "cp-servier-inhalador",
+      "title": "Inhalador",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/inhaler.svg",
+      "tags": [
+        "inhalador",
+        "asma",
+        "broncodilatador"
+      ],
+      "alt": "Inhalador presurizado de dosis medida.",
+      "descripcion": "Inhalador de cartucho presurizado con su carcasa y boquilla.",
+      "motivo": "Icono de asma y EPOC, donde el tratamiento es inhalado.",
+      "equivalencia": "Reemplaza 🌬️ en asma y 💨 en EPOC por el dispositivo real."
+    },
+    {
+      "id": "cp-servier-inyectable",
+      "title": "Ampolleta inyectable",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/injectable.svg",
+      "tags": [
+        "ampolleta",
+        "concentración",
+        "dosis"
+      ],
+      "alt": "Ampolleta de solución inyectable.",
+      "descripcion": "Ampolleta de vidrio con solución para inyección.",
+      "motivo": "La concentración va en la ampolleta: es el objeto que hay que leer antes de calcular una dosis.",
+      "equivalencia": "Cobertura nueva para dosis en la urgencia y farmacología."
+    },
+    {
+      "id": "cp-servier-atomizador",
+      "title": "Atomizador nasal",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Human_physiology/Servier/atomizer.svg",
+      "tags": [
+        "intranasal",
+        "atomizador",
+        "vía alterna"
+      ],
+      "alt": "Dispositivo atomizador para administración nasal.",
+      "descripcion": "Frasco con atomizador para aplicar un medicamento en la mucosa nasal.",
+      "motivo": "La vía intranasal aparece en el plan como alternativa cuando no hay acceso vascular.",
+      "equivalencia": "Cobertura nueva para crisis convulsivas y niños con necesidades especiales."
+    },
+    {
+      "id": "cp-servier-eritrocito",
+      "title": "Eritrocito",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Blood_Immunology/Servier/erythrocyte.svg",
+      "tags": [
+        "eritrocito",
+        "sangre",
+        "hemorragia"
+      ],
+      "alt": "Glóbulo rojo con su forma de disco bicóncavo.",
+      "descripcion": "Eritrocito visto en tres cuartos, con la depresión central del disco bicóncavo.",
+      "motivo": "Icono de «sangre» que sí representa sangre: la célula que transporta el oxígeno, no una gota de tinta.",
+      "equivalencia": "Reemplaza 🩸 en hemorragia, hematología y transporte de oxígeno."
+    },
+    {
+      "id": "cp-servier-plaqueta",
+      "title": "Plaqueta",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Blood_Immunology/Servier/platetelet-1.svg",
+      "tags": [
+        "plaqueta",
+        "hemostasia"
+      ],
+      "alt": "Plaqueta sanguínea.",
+      "descripcion": "Trombocito con su contorno irregular y sus gránulos internos.",
+      "motivo": "Componente de la composición de hemostasia: la fase plaquetaria necesita su protagonista.",
+      "equivalencia": "Componente del sustituto de la imagen de Drive «Cascada de la coagulación»."
+    },
+    {
+      "id": "cp-servier-fibrina",
+      "title": "Red de fibrina",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Blood_Immunology/Servier/fibrin-1.svg",
+      "tags": [
+        "fibrina",
+        "coágulo"
+      ],
+      "alt": "Malla de hebras de fibrina.",
+      "descripcion": "Hebras de fibrina entrecruzadas formando la malla que sostiene el coágulo.",
+      "motivo": "Es el producto final de la cascada; sin él la composición explicaría el proceso sin su resultado.",
+      "equivalencia": "Componente del sustituto de «Cascada de la coagulación»."
+    },
+    {
+      "id": "cp-servier-coagulo",
+      "title": "Coágulo con plaquetas y fibrina",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Blood_Immunology/Servier/coagulation.svg",
+      "tags": [
+        "coagulación",
+        "coágulo"
+      ],
+      "alt": "Coágulo formado por plaquetas, eritrocitos atrapados y hebras de fibrina.",
+      "descripcion": "Coágulo maduro: plaquetas agregadas, red de fibrina y eritrocitos atrapados en la malla.",
+      "motivo": "Cierra la secuencia de la composición mostrando el tapón definitivo.",
+      "equivalencia": "Componente del sustituto de «Cascada de la coagulación»."
+    },
+    {
+      "id": "cp-servier-hematopoyesis",
+      "title": "Hematopoyesis",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Blood_Immunology/Servier/hematopoesis.svg",
+      "tags": [
+        "hematopoyesis",
+        "médula ósea"
+      ],
+      "alt": "Esquema de la hematopoyesis desde la célula madre hasta las estirpes sanguíneas.",
+      "descripcion": "Célula madre hematopoyética de la que derivan las líneas mieloide y linfoide y, de ellas, los elementos formes de la sangre.",
+      "motivo": "Icono del tema hematopoyético: representa la función del sistema, no un símbolo genérico.",
+      "equivalencia": "Reemplaza 🩸 en el tema hematopoyético, que repetía el de hemorragia."
+    },
+    {
+      "id": "cp-servier-anticuerpo",
+      "title": "Anticuerpo",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Blood_Immunology/Servier/antibody.svg",
+      "tags": [
+        "anticuerpo",
+        "inmunidad",
+        "anafilaxia"
+      ],
+      "alt": "Anticuerpo con su forma de Y.",
+      "descripcion": "Inmunoglobulina en forma de Y: dos cadenas pesadas y dos ligeras, con los sitios de unión al antígeno en los brazos.",
+      "motivo": "Icono del sistema inmunitario y de la reacción anafiláctica.",
+      "equivalencia": "Reemplaza 🛡️ y 🚨 en inmunidad y anafilaxia, donde el escudo y la sirena eran metáforas."
+    },
+    {
+      "id": "cp-servier-linfocito",
+      "title": "Linfocito",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Blood_Immunology/Servier/lymphocytes-1.svg",
+      "tags": [
+        "linfocito",
+        "inmunidad"
+      ],
+      "alt": "Linfocito con su núcleo grande.",
+      "descripcion": "Linfocito redondeado con núcleo voluminoso y escaso citoplasma.",
+      "motivo": "Célula de la inmunidad específica, complemento del anticuerpo en el tema inmunitario.",
+      "equivalencia": "Cobertura nueva para el sistema linfático e inmunitario."
+    },
+    {
+      "id": "cp-servier-neutrofilo",
+      "title": "Neutrófilo",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Blood_Immunology/Servier/neutrophil-granulocyte.svg",
+      "tags": [
+        "neutrófilo",
+        "infección",
+        "inflamación"
+      ],
+      "alt": "Neutrófilo con su núcleo lobulado.",
+      "descripcion": "Granulocito neutrófilo con núcleo segmentado en lóbulos y gránulos en el citoplasma.",
+      "motivo": "Es la célula que responde primero a la infección bacteriana: sostiene los temas infecciosos y la sepsis.",
+      "equivalencia": "Cobertura nueva para infecciones y shock séptico."
+    },
+    {
+      "id": "cp-servier-macrofago",
+      "title": "Macrófago",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Blood_Immunology/Servier/macrophage.svg",
+      "tags": [
+        "macrófago",
+        "inflamación",
+        "cicatrización"
+      ],
+      "alt": "Macrófago con prolongaciones.",
+      "descripcion": "Macrófago con emisión de prolongaciones para fagocitar.",
+      "motivo": "Interviene en la limpieza de la herida y en la respuesta inflamatoria.",
+      "equivalencia": "Componente de la composición de hemostasia y cicatrización."
+    },
+    {
+      "id": "cp-servier-herida",
+      "title": "Cicatrización de una herida",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Blood_Immunology/Servier/wound-healing.svg",
+      "tags": [
+        "herida",
+        "cicatrización"
+      ],
+      "alt": "Herida cutánea en proceso de cierre.",
+      "descripcion": "Corte de piel con una solución de continuidad y las células que intervienen en su cierre.",
+      "motivo": "Icono de heridas y vendajes basado en la lesión real, no en una tirita.",
+      "equivalencia": "Reemplaza 🩹."
+    },
+    {
+      "id": "cp-servier-isotonico",
+      "title": "Eritrocito en medio isotónico",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Blood_Immunology/Servier/isotonic.svg",
+      "tags": [
+        "isotónico",
+        "osmolaridad",
+        "cristaloide"
+      ],
+      "alt": "Glóbulo rojo con su forma normal en medio isotónico.",
+      "descripcion": "Eritrocito de forma y volumen normales, en equilibrio con un medio de la misma osmolaridad.",
+      "motivo": "Es la referencia con la que se comparan hipo e hipertónico: la razón de que la solución de elección sea isotónica.",
+      "equivalencia": "Componente de la composición de soluciones cristaloides."
+    },
+    {
+      "id": "cp-servier-hipotonico",
+      "title": "Eritrocito en medio hipotónico",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Blood_Immunology/Servier/hypotonic-erythrocyte.svg",
+      "tags": [
+        "hipotónico",
+        "hemólisis",
+        "osmolaridad"
+      ],
+      "alt": "Glóbulo rojo hinchado en medio hipotónico.",
+      "descripcion": "Eritrocito que ha captado agua y se ha vuelto esférico, próximo a la hemólisis.",
+      "motivo": "Muestra la consecuencia de administrar una solución de menor osmolaridad.",
+      "equivalencia": "Componente de la composición de soluciones cristaloides."
+    },
+    {
+      "id": "cp-servier-hipertonico",
+      "title": "Eritrocito en medio hipertónico",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Blood_Immunology/Servier/hypertonic-erythrocyte.svg",
+      "tags": [
+        "hipertónico",
+        "crenación",
+        "osmolaridad"
+      ],
+      "alt": "Glóbulo rojo arrugado en medio hipertónico.",
+      "descripcion": "Eritrocito que ha perdido agua y muestra la superficie festoneada de la crenación.",
+      "motivo": "Completa la comparación osmolar de las tres situaciones.",
+      "equivalencia": "Componente de la composición de soluciones cristaloides."
+    },
+    {
+      "id": "cp-servier-celula-vacia",
+      "title": "Célula (contorno y membrana)",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Cell_membrane/Servier/emptycell-1.svg",
+      "tags": [
+        "célula",
+        "membrana",
+        "citoplasma"
+      ],
+      "alt": "Contorno de una célula con su membrana y el citoplasma vacío.",
+      "descripcion": "Célula vista completa, con la membrana plasmática delimitando un citoplasma sin organelos.",
+      "motivo": "Sirve de continente para la composición de la célula y sus organelos.",
+      "equivalencia": "Componente del sustituto de la imagen de Drive «La célula y sus organelos»."
+    },
+    {
+      "id": "cp-servier-nucleo",
+      "title": "Núcleo celular",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Intracellular_components/Servier/nucleus.svg",
+      "tags": [
+        "núcleo",
+        "organelo"
+      ],
+      "alt": "Núcleo celular con su envoltura y el nucleolo.",
+      "descripcion": "Núcleo con doble membrana, poros nucleares y nucleolo en su interior.",
+      "motivo": "Organelo obligado en la composición de la célula.",
+      "equivalencia": "Componente del sustituto de «La célula y sus organelos»."
+    },
+    {
+      "id": "cp-servier-mitocondria",
+      "title": "Mitocondria",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Intracellular_components/Servier/mitochondrium-1.svg",
+      "tags": [
+        "mitocondria",
+        "metabolismo",
+        "ATP"
+      ],
+      "alt": "Mitocondria en corte, con sus crestas internas.",
+      "descripcion": "Mitocondria con membrana externa lisa y membrana interna plegada en crestas, donde ocurre la fosforilación oxidativa.",
+      "motivo": "Icono del metabolismo celular y componente de la composición de la célula: donde se produce el ATP.",
+      "equivalencia": "Reemplaza 🔥 en el tema de metabolismo, que era una metáfora del gasto energético."
+    },
+    {
+      "id": "cp-servier-receptor-membrana",
+      "title": "Receptor de membrana",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/Receptors_channels/Servier/receptor-membrane-2.svg",
+      "tags": [
+        "receptor",
+        "membrana",
+        "farmacología"
+      ],
+      "alt": "Receptor atravesando la membrana celular.",
+      "descripcion": "Fragmento de bicapa lipídica con una proteína receptora que la atraviesa, con su porción extracelular expuesta al ligando.",
+      "motivo": "Es la estructura que la farmacología del plan necesita: dónde se une el fármaco.",
+      "equivalencia": "Componente del sustituto de «Receptores adrenérgicos y sus efectos»."
+    },
+    {
+      "id": "cp-servier-bacteria",
+      "title": "Bacteria",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Microbiology/Servier/bacterium.svg",
+      "tags": [
+        "bacteria",
+        "infección",
+        "sepsis"
+      ],
+      "alt": "Bacteria con forma de bastón y flagelos.",
+      "descripcion": "Bacilo con pared celular y flagelos.",
+      "motivo": "Icono de infección: neumonía, infección urinaria y shock séptico.",
+      "equivalencia": "Reemplaza 🦠 y 🤧 en los temas infecciosos."
+    },
+    {
+      "id": "cp-servier-virus-hepatitis",
+      "title": "Virus de la hepatitis",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Viruses/Servier/hepatits-virus.svg",
+      "tags": [
+        "hepatitis",
+        "virus"
+      ],
+      "alt": "Partícula del virus de la hepatitis.",
+      "descripcion": "Virión con su cápside y su envoltura.",
+      "motivo": "Identifica el agente de la hepatitis, distinguiéndola de la cirrosis con la que comparte tema.",
+      "equivalencia": "Cobertura nueva para cirrosis y hepatitis."
+    },
+    {
+      "id": "cp-servier-virus",
+      "title": "Virus",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Viruses/Servier/adeno-virus.svg",
+      "tags": [
+        "virus",
+        "infección respiratoria"
+      ],
+      "alt": "Partícula viral con su cápside icosaédrica.",
+      "descripcion": "Virión con cápside de caras poligonales y fibras en los vértices.",
+      "motivo": "Agente de las infecciones respiratorias altas, que en pediatría son casi siempre virales.",
+      "equivalencia": "Reemplaza 🤧 en infección de vías respiratorias."
+    },
+    {
+      "id": "cp-servier-balanza",
+      "title": "Balanza en equilibrio",
+      "kind": "diagram_component",
+      "ruta": "cc-by-3.0/General_items/Servier/scale-balanced.svg",
+      "tags": [
+        "equilibrio",
+        "ácido-base"
+      ],
+      "alt": "Balanza de dos platillos en equilibrio.",
+      "descripcion": "Balanza de brazos iguales con los dos platillos a la misma altura.",
+      "motivo": "Continente del esquema ácido-base: el pH como resultado del equilibrio entre PaCO₂ y HCO₃⁻.",
+      "equivalencia": "Componente del sustituto de public/imagenes/m2/equilibrio-acido-base.svg."
+    },
+    {
+      "id": "cp-servier-balanza-desequilibrada",
+      "title": "Balanza desequilibrada",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/General_items/Servier/scale-imbalanced-left-1.svg",
+      "tags": [
+        "desequilibrio",
+        "electrolitos",
+        "médico-legal"
+      ],
+      "alt": "Balanza con un platillo más bajo que el otro.",
+      "descripcion": "Balanza de brazos iguales con uno de los platillos descendido por exceso de peso.",
+      "motivo": "Representa el desequilibrio, que es el asunto del tema de electrolitos, y sirve al tema médico-legal como símbolo de la ley.",
+      "equivalencia": "Reemplaza ⚖️ en desequilibrio electrolítico y aspectos médico-legales."
+    },
+    {
+      "id": "cp-servier-agua",
+      "title": "Vaso de agua",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/General_items/Servier/glass-water.svg",
+      "tags": [
+        "agua",
+        "líquidos",
+        "hidratación"
+      ],
+      "alt": "Vaso con agua.",
+      "descripcion": "Vaso transparente lleno de agua.",
+      "motivo": "Icono de líquidos corporales e hidratación, donde el asunto es el agua y no una vía de administración.",
+      "equivalencia": "Reemplaza 💧 en líquidos, electrolitos y deshidratación."
+    },
+    {
+      "id": "cp-servier-grifo",
+      "title": "Grifo",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/General_items/Servier/faucet.svg",
+      "tags": [
+        "agua",
+        "diuresis",
+        "aporte"
+      ],
+      "alt": "Grifo abierto con agua cayendo.",
+      "descripcion": "Llave de agua abierta.",
+      "motivo": "Icono de entrada y salida de agua del organismo, que es el marco del balance hídrico.",
+      "equivalencia": "Reemplaza 🚰 en el tema urinario junto con la figura del riñón."
+    },
+    {
+      "id": "cp-servier-sanitario",
+      "title": "Sanitario",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/General_items/Servier/toilet.svg",
+      "tags": [
+        "diuresis",
+        "urinario",
+        "síntoma"
+      ],
+      "alt": "Inodoro.",
+      "descripcion": "Sanitario visto de frente.",
+      "motivo": "Los síntomas urinarios se cuentan en episodios de micción: disuria, polaquiuria, tenesmo.",
+      "equivalencia": "Reemplaza 🚻 en infección de vías urinarias."
+    },
+    {
+      "id": "cp-servier-ventilador",
+      "title": "Ventilador",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/General_items/Servier/ventilator.svg",
+      "tags": [
+        "ventilador",
+        "oxígeno"
+      ],
+      "alt": "Ventilador mecánico.",
+      "descripcion": "Equipo de ventilación con su pantalla y su circuito.",
+      "motivo": "Icono de soporte ventilatorio y de dispositivos y tanques de oxígeno.",
+      "equivalencia": "Reemplaza 🛢️ en tanques de oxígeno."
+    },
+    {
+      "id": "cp-servier-calor",
+      "title": "Calor",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/General_items/Servier/heat.svg",
+      "tags": [
+        "calor",
+        "golpe de calor",
+        "temperatura"
+      ],
+      "alt": "Símbolo de calor con ondas ascendentes.",
+      "descripcion": "Representación del calor, con ondas que suben desde una superficie caliente.",
+      "motivo": "Es el agente del golpe de calor, que es un problema de carga térmica, no de sol directo.",
+      "equivalencia": "Cobertura nueva para golpe de calor."
+    },
+    {
+      "id": "cp-servier-sol",
+      "title": "Sol",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/General_items/Servier/sun.svg",
+      "tags": [
+        "sol",
+        "insolación",
+        "exposición"
+      ],
+      "alt": "Sol.",
+      "descripcion": "Disco solar con sus rayos.",
+      "motivo": "Es el agente de la insolación, que el plan distingue del golpe de calor.",
+      "equivalencia": "Reemplaza ☀️ en insolación."
+    },
+    {
+      "id": "cp-servier-radiacion-uv",
+      "title": "Radiación ultravioleta",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/General_items/Servier/uv-radition.svg",
+      "tags": [
+        "ultravioleta",
+        "quemadura",
+        "radiación"
+      ],
+      "alt": "Símbolo de radiación ultravioleta.",
+      "descripcion": "Rayos ultravioleta incidiendo sobre una superficie.",
+      "motivo": "La radiación es uno de los agentes de quemadura que el plan enumera.",
+      "equivalencia": "Componente de la composición de agentes de quemadura."
+    },
+    {
+      "id": "cp-servier-frio",
+      "title": "Frío",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/General_items/Servier/winter.svg",
+      "tags": [
+        "frío",
+        "hipotermia"
+      ],
+      "alt": "Símbolo de frío con un copo de nieve.",
+      "descripcion": "Representación del invierno, con un copo de nieve.",
+      "motivo": "Es el agente de la hipotermia y del componente térmico de la tríada letal.",
+      "equivalencia": "Reemplaza ❄️ en hipotermia."
+    },
+    {
+      "id": "cp-servier-cronometro",
+      "title": "Cronómetro",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/General_items/Servier/stopwatch.svg",
+      "tags": [
+        "tiempo",
+        "ventana terapéutica"
+      ],
+      "alt": "Cronómetro.",
+      "descripcion": "Cronómetro con su esfera y su pulsador.",
+      "motivo": "Varios temas del plan son problemas de tiempo: ventana del ictus, tiempo de isquemia, tiempo de escena.",
+      "equivalencia": "Reemplaza ⏱️ y ⏳ en los temas donde el tiempo es el criterio."
+    },
+    {
+      "id": "cp-servier-semaforo",
+      "title": "Semáforo",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/General_items/Servier/traffic-light-all.svg",
+      "tags": [
+        "clasificación",
+        "prioridad",
+        "triage"
+      ],
+      "alt": "Semáforo con sus tres luces.",
+      "descripcion": "Semáforo con las luces roja, ámbar y verde.",
+      "motivo": "El triage se decide por color de prioridad; el semáforo es el objeto que la cultura ya asocia a esa decisión.",
+      "equivalencia": "Cobertura nueva para triage y clasificación por prioridad."
+    },
+    {
+      "id": "cp-servier-libro",
+      "title": "Libro",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/General_items/Servier/book.svg",
+      "tags": [
+        "terminología",
+        "estudio",
+        "referencia"
+      ],
+      "alt": "Libro abierto.",
+      "descripcion": "Libro abierto por la mitad.",
+      "motivo": "Icono de terminología médica y de los temas de definición y marco conceptual.",
+      "equivalencia": "Reemplaza 📖 en terminología médica."
+    },
+    {
+      "id": "cp-servier-libreta",
+      "title": "Libreta de registro",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/General_items/Servier/notepad.svg",
+      "tags": [
+        "registro",
+        "SAMPLE",
+        "documentación"
+      ],
+      "alt": "Libreta con anotaciones.",
+      "descripcion": "Libreta abierta con líneas escritas.",
+      "motivo": "SAMPLE, el informe y la documentación médico-legal son actos de registro.",
+      "equivalencia": "Reemplaza 📋 y 📝 en SAMPLE, evaluación y documentación."
+    },
+    {
+      "id": "cp-servier-cigarrillo",
+      "title": "Cigarrillo",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/General_items/Servier/cigarette.svg",
+      "tags": [
+        "tabaco",
+        "factor de riesgo",
+        "EPOC"
+      ],
+      "alt": "Cigarrillo encendido.",
+      "descripcion": "Cigarrillo con humo.",
+      "motivo": "Es el factor de riesgo que encabeza la epidemiología del EPOC y de la cardiopatía isquémica.",
+      "equivalencia": "Cobertura nueva para epidemiología y clasificación de enfermedades."
+    },
+    {
+      "id": "cp-servier-alcohol",
+      "title": "Bebida alcohólica",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/General_items/Servier/wine.svg",
+      "tags": [
+        "alcohol",
+        "abstinencia",
+        "intoxicación"
+      ],
+      "alt": "Copa de bebida alcohólica.",
+      "descripcion": "Copa con bebida.",
+      "motivo": "El síndrome de abstinencia del plan es sobre todo alcohólico: el agente es la sustancia.",
+      "equivalencia": "Reemplaza 🥃 en síndrome de abstinencia."
+    },
+    {
+      "id": "cp-servier-lentes",
+      "title": "Lentes",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/General_items/Servier/glasses.svg",
+      "tags": [
+        "visión",
+        "geriatría",
+        "déficit sensorial"
+      ],
+      "alt": "Par de lentes.",
+      "descripcion": "Anteojos con sus dos lentes y sus patillas.",
+      "motivo": "El déficit visual y auditivo cambia la comunicación con el paciente geriátrico y su riesgo de caída.",
+      "equivalencia": "Cobertura nueva para cambios fisiológicos del paciente geriátrico."
+    },
+    {
+      "id": "cp-servier-llave",
+      "title": "Llave",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/General_items/Servier/key.svg",
+      "tags": [
+        "acceso",
+        "extracción",
+        "apertura"
+      ],
+      "alt": "Llave.",
+      "descripcion": "Llave con su cabeza y su vástago.",
+      "motivo": "El tema de obtención de acceso trata de abrir un espacio para llegar al paciente.",
+      "equivalencia": "Cobertura nueva para obtención de acceso y extracción."
+    },
+    {
+      "id": "cp-servier-candado",
+      "title": "Candado cerrado",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/General_items/Servier/padlock-closed.svg",
+      "tags": [
+        "bloqueo",
+        "seguridad",
+        "confidencialidad"
+      ],
+      "alt": "Candado cerrado.",
+      "descripcion": "Candado con el arco cerrado.",
+      "motivo": "Icono de los temas bloqueados por decisión académica y de la confidencialidad del expediente.",
+      "equivalencia": "Cobertura nueva para los temas del módulo 7 pendientes de definición y para aspectos médico-legales."
+    },
+    {
+      "id": "cp-servier-curva-gauss",
+      "title": "Curva de distribución normal",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Scientific_graphs/Servier/gauss-curve.svg",
+      "tags": [
+        "epidemiología",
+        "distribución",
+        "estadística"
+      ],
+      "alt": "Curva de campana de una distribución normal.",
+      "descripcion": "Curva simétrica con su máximo en el centro y colas descendentes a los lados.",
+      "motivo": "Es la figura de los conceptos básicos de epidemiología: frecuencia y dispersión.",
+      "equivalencia": "Reemplaza 📊 en conceptos básicos de epidemiología."
+    },
+    {
+      "id": "cp-servier-descenso-exponencial",
+      "title": "Descenso exponencial",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Scientific_graphs/Servier/exponential-decrease.svg",
+      "tags": [
+        "vida media",
+        "eliminación",
+        "farmacocinética"
+      ],
+      "alt": "Curva de descenso exponencial en el tiempo.",
+      "descripcion": "Curva que cae rápido al principio y se aplana después, propia de la eliminación de un fármaco.",
+      "motivo": "Es la vida media: por qué una dosis se repite a intervalos y no cuando el paciente lo pide.",
+      "equivalencia": "Cobertura nueva para generalidades de farmacología.",
+      "quitarTexto": true
+    },
+    {
+      "id": "cp-servier-dosis-efecto",
+      "title": "Relación dosis-efecto",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Scientific_graphs/Servier/dose-effect-link.svg",
+      "tags": [
+        "dosis",
+        "efecto",
+        "ventana terapéutica"
+      ],
+      "alt": "Curva que relaciona la dosis administrada con el efecto obtenido.",
+      "descripcion": "Curva creciente que relaciona dosis y efecto, con una zona de aumento y una meseta.",
+      "motivo": "Es la figura de la ventana terapéutica: más dosis no es más efecto indefinidamente.",
+      "equivalencia": "Cobertura nueva para dosis en la urgencia.",
+      "quitarTexto": true
+    },
+    {
+      "id": "cp-servier-grafica-perfusion",
+      "title": "Concentración en perfusión continua",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Scientific_graphs/Servier/iv-administration-perfusion.svg",
+      "tags": [
+        "perfusión",
+        "aminas",
+        "concentración"
+      ],
+      "alt": "Curva de concentración plasmática durante una perfusión continua.",
+      "descripcion": "Curva que sube hasta una concentración estable y se mantiene mientras la perfusión continúa.",
+      "motivo": "Explica por qué las aminas se administran en perfusión y no en bolo: el objetivo es una concentración estable.",
+      "equivalencia": "Cobertura nueva para manejo de infusiones y aminas.",
+      "quitarTexto": true
+    },
+    {
+      "id": "cp-servier-grafica-renal",
+      "title": "Función renal normal y reducida",
+      "kind": "medical_icon",
+      "ruta": "cc-by-3.0/Scientific_graphs/Servier/renal-insufficeny-vs-normal.svg",
+      "tags": [
+        "insuficiencia renal",
+        "depuración"
+      ],
+      "alt": "Comparación gráfica entre función renal normal y reducida.",
+      "descripcion": "Dos curvas comparadas: la eliminación con función renal normal y la eliminación más lenta con insuficiencia.",
+      "motivo": "Es la consecuencia práctica de la insuficiencia renal: el fármaco se acumula.",
+      "equivalencia": "Cobertura nueva para insuficiencia renal.",
+      "quitarTexto": true
+    },
+    {
+      "id": "cp-cc0-termometro",
+      "title": "Termómetro",
+      "kind": "medical_icon",
+      "ruta": "cc-0/General_items/kehan/thermometer.svg",
+      "tags": [
+        "temperatura",
+        "fiebre",
+        "signos vitales"
+      ],
+      "alt": "Termómetro clínico.",
+      "descripcion": "Termómetro con su columna y su escala.",
+      "motivo": "Icono de temperatura y signos vitales. Fuente CC0, preferida por la política de licencias.",
+      "equivalencia": "Reemplaza 🌡️."
+    },
+    {
+      "id": "cp-cc0-guantes",
+      "title": "Guantes",
+      "kind": "medical_icon",
+      "ruta": "cc-0/General_items/Riccardo-Iacovelli/nitrile-gloves.svg",
+      "tags": [
+        "guantes",
+        "bioseguridad"
+      ],
+      "alt": "Par de guantes de exploración.",
+      "descripcion": "Dos guantes de nitrilo.",
+      "motivo": "Icono de seguridad de la escena y de control de hemorragia con protección. Fuente CC0.",
+      "equivalencia": "Reemplaza 🧤."
+    },
+    {
+      "id": "cp-cc0-lupa",
+      "title": "Lupa",
+      "kind": "medical_icon",
+      "ruta": "cc-0/General_items/Marcel_Tisch/magnifying-glass.svg",
+      "tags": [
+        "exploración",
+        "valoración"
+      ],
+      "alt": "Lupa.",
+      "descripcion": "Lente con su mango.",
+      "motivo": "Icono de exploración dirigida y de valoración por regiones. Fuente CC0.",
+      "equivalencia": "Reemplaza 🔎 y 🔍."
+    },
+    {
+      "id": "cp-cc0-toxico",
+      "title": "Señal de sustancia tóxica",
+      "kind": "medical_icon",
+      "ruta": "cc-0/Safety_symbols/David-Eccles--gringer-/toxic.svg",
+      "tags": [
+        "tóxico",
+        "intoxicación"
+      ],
+      "alt": "Pictograma de sustancia tóxica.",
+      "descripcion": "Rombo con el pictograma normalizado de toxicidad aguda.",
+      "motivo": "En toxicología el pictograma normalizado es información real: es lo que el alumno verá en el envase de la escena. Fuente CC0.",
+      "equivalencia": "Reemplaza ☠️ en intoxicaciones y toxíndromes."
+    },
+    {
+      "id": "cp-cc0-inflamable",
+      "title": "Señal de sustancia inflamable",
+      "kind": "medical_icon",
+      "ruta": "cc-0/Safety_symbols/David-Eccles--gringer-/flammable.svg",
+      "tags": [
+        "inflamable",
+        "agente térmico"
+      ],
+      "alt": "Pictograma de sustancia inflamable.",
+      "descripcion": "Rombo con el pictograma normalizado de inflamabilidad.",
+      "motivo": "Identifica el agente causal en el tema de agentes térmicos. Fuente CC0.",
+      "equivalencia": "Reemplaza 🧯 en agentes de quemadura."
+    },
+    {
+      "id": "cp-cc0-corrosivo",
+      "title": "Señal de sustancia corrosiva",
+      "kind": "diagram_component",
+      "ruta": "cc-0/Safety_symbols/David-Eccles--gringer-/corrosive.svg",
+      "tags": [
+        "corrosivo",
+        "quemadura química"
+      ],
+      "alt": "Pictograma de sustancia corrosiva.",
+      "descripcion": "Rombo con el pictograma normalizado de corrosividad.",
+      "motivo": "La quemadura química es uno de los agentes del plan, y el pictograma es lo que identifica el producto en la escena. Fuente CC0.",
+      "equivalencia": "Componente de la composición de agentes de quemadura."
+    },
+    {
+      "id": "cp-cc0-explosivo",
+      "title": "Señal de material explosivo",
+      "kind": "diagram_component",
+      "ruta": "cc-0/Safety_symbols/David-Eccles--gringer-/explosive.svg",
+      "tags": [
+        "explosión",
+        "onda expansiva"
+      ],
+      "alt": "Pictograma de material explosivo.",
+      "descripcion": "Rombo con el pictograma normalizado de explosividad.",
+      "motivo": "El tema de impactos en explosiones necesita identificar el agente; el pictograma es el que aparece en el transporte de mercancías. Fuente CC0.",
+      "equivalencia": "Componente de la composición de explosiones."
+    },
+    {
+      "id": "cp-cc0-gas",
+      "title": "Señal de gas a presión",
+      "kind": "diagram_component",
+      "ruta": "cc-0/Safety_symbols/David-Eccles--gringer-/gas.svg",
+      "tags": [
+        "gas",
+        "tanque",
+        "presión"
+      ],
+      "alt": "Pictograma de gas a presión.",
+      "descripcion": "Rombo con el pictograma normalizado de gas comprimido.",
+      "motivo": "Es el pictograma del tanque de oxígeno, que el plan trata como material y como riesgo. Fuente CC0.",
+      "equivalencia": "Cobertura nueva para tipos de tanques de oxígeno."
+    },
+    {
+      "id": "cp-cc0-nocivo",
+      "title": "Señal de sustancia nociva",
+      "kind": "diagram_component",
+      "ruta": "cc-0/Safety_symbols/David-Eccles--gringer-/harmful.svg",
+      "tags": [
+        "nocivo",
+        "irritante",
+        "toxicología"
+      ],
+      "alt": "Pictograma de sustancia nociva.",
+      "descripcion": "Rombo con el pictograma normalizado de daño para la salud.",
+      "motivo": "Completa el juego de pictogramas del tema toxicológico. Fuente CC0.",
+      "equivalencia": "Componente de la composición de toxíndromes."
+    },
+    {
+      "id": "cp-cc0-riesgo-biologico",
+      "title": "Señal de riesgo biológico",
+      "kind": "medical_icon",
+      "ruta": "cc-0/Safety_symbols/Erick-Hernández-López/Riesgo_biologico_diseño_propio.svg",
+      "tags": [
+        "riesgo biológico",
+        "bioseguridad",
+        "SSS"
+      ],
+      "alt": "Símbolo de riesgo biológico.",
+      "descripcion": "Símbolo internacional de riesgo biológico.",
+      "motivo": "La seguridad de la escena incluye el riesgo biológico; es el símbolo que se busca en el entorno. Fuente CC0.",
+      "equivalencia": "Reemplaza 🛡️ en el tema de SSS."
+    },
+    {
+      "id": "cp-cc0-paciente",
+      "title": "Paciente",
+      "kind": "medical_icon",
+      "ruta": "cc-0/Human_physiology/Marcel_Tisch/patient.svg",
+      "tags": [
+        "paciente",
+        "valoración"
+      ],
+      "alt": "Figura de una persona atendida.",
+      "descripcion": "Silueta de una persona en posición de ser valorada.",
+      "motivo": "Icono neutro de «el paciente» para los temas de evaluación e impresión general. Fuente CC0.",
+      "equivalencia": "Reemplaza 🚑 y 👀 en los temas de evaluación, donde el objeto es la persona y no el vehículo."
+    },
+    {
+      "id": "cp-cc0-potencial-accion",
+      "title": "Potenciales de acción",
+      "kind": "diagram_component",
+      "ruta": "cc-0/Scientific_graphs/Marcel_Tisch/Action_potentials.svg",
+      "tags": [
+        "potencial de acción",
+        "electrofisiología"
+      ],
+      "alt": "Registro de potenciales de acción a lo largo del tiempo.",
+      "descripcion": "Trazo de voltaje en el tiempo con varios potenciales de acción: despolarización rápida, repolarización y retorno al reposo.",
+      "motivo": "Es la consecuencia funcional de la bomba Na⁺/K⁺: la composición necesita mostrar para qué sirve el gradiente. Fuente CC0.",
+      "equivalencia": "Componente del sustituto de public/imagenes/m2/bomba-sodio-potasio.svg."
+    },
+    {
+      "id": "cp-cc0-tubo-muestra",
+      "title": "Tubo de muestra",
+      "kind": "medical_icon",
+      "ruta": "cc-0/Blood_Immunology/Marcel_Tisch/blood_sample_tube.svg",
+      "tags": [
+        "muestra",
+        "laboratorio",
+        "glucemia"
+      ],
+      "alt": "Tubo de muestra de sangre.",
+      "descripcion": "Tubo de recolección con sangre y su tapón.",
+      "motivo": "Referencia de los datos que el prehospitalario no tiene: distingue lo que se mide en la calle de lo que se mide en el hospital. Fuente CC0.",
+      "equivalencia": "Cobertura nueva para desequilibrio ácido-base y electrolítico."
+    },
+    {
+      "id": "cp-cc0-bacteria",
+      "title": "Bacteria (esquema)",
+      "kind": "diagram_component",
+      "ruta": "cc-0/Microbiology/Pauline_Franz/generic-bacterium.svg",
+      "tags": [
+        "bacteria",
+        "infección"
+      ],
+      "alt": "Esquema de una bacteria genérica.",
+      "descripcion": "Bacteria esquemática con su pared, su membrana y su material genético.",
+      "motivo": "Segunda figura bacteriana, para composiciones donde la de Servier ya está usada. Fuente CC0.",
+      "equivalencia": "Componente de la composición de sepsis."
+    },
+    {
+      "id": "cp-cc0-virus",
+      "title": "Virus (esquema)",
+      "kind": "diagram_component",
+      "ruta": "cc-0/Viruses/Marcel_Tisch/virus-sketch.svg",
+      "tags": [
+        "virus",
+        "infección"
+      ],
+      "alt": "Esquema de una partícula viral.",
+      "descripcion": "Virión esquemático con su cápside y sus espículas.",
+      "motivo": "Figura viral de respaldo para composiciones pediátricas. Fuente CC0.",
+      "equivalencia": "Componente de la composición de infección respiratoria pediátrica."
+    },
+    {
+      "id": "cp-cc0-nefrona",
+      "title": "Nefrona (esquema vectorial)",
+      "kind": "diagram_component",
+      "ruta": "cc-0/Tissues/EmilyADaniel/nephron_2d.svg",
+      "tags": [
+        "nefrona",
+        "glomérulo",
+        "asa de Henle"
+      ],
+      "alt": "Esquema de una nefrona con el glomérulo, el asa y el colector.",
+      "descripcion": "Esquema plano de la nefrona: corpúsculo renal, túbulo proximal, asa de Henle descendiendo, túbulo distal y colector.",
+      "motivo": "Es la única nefrona VECTORIAL de los dos bancos, y una composición solo puede embeber SVG. La versión de SMART, más detallada, se sirve además como ilustración aparte del mismo tema. Fuente CC0.",
+      "equivalencia": "Componente del sustituto de la imagen de Drive «La nefrona»."
+    },
+    {
+      "id": "cp-dbcls-neurona",
+      "title": "Neurona",
+      "kind": "medical_icon",
+      "ruta": "cc-by-4.0/Human_physiology/DBCLS/Motor_neuron.svg",
+      "tags": [
+        "neurona",
+        "axón",
+        "sinapsis"
+      ],
+      "alt": "Neurona con su cuerpo celular, dendritas y axón mielinizado.",
+      "descripcion": "Neurona motora: cuerpo celular con dendritas ramificadas, axón largo cubierto por vainas de mielina separadas por nodos, y terminaciones en el extremo.",
+      "motivo": "Es la neurona completa —con axón mielinizado y terminaciones— que el tema «Neurona y sinapsis» necesita. Se prefirió sobre las variantes CC0 porque ninguna dibuja la mielina.",
+      "equivalencia": "Sustituye la imagen de Drive «Neurona y sinapsis». Deuda declarada: la sinapsis se rotula en el pie, porque el dibujo llega a las terminaciones y no amplía la hendidura."
+    },
+    {
+      "id": "cp-dbcls-tipos-neurona",
+      "title": "Tipos de neurona",
+      "kind": "diagram_component",
+      "ruta": "cc-by-4.0/Human_physiology/DBCLS/Three_types_of_neurons.svg",
+      "tags": [
+        "neurona",
+        "sensitiva",
+        "motora",
+        "interneurona"
+      ],
+      "alt": "Tres tipos de neurona comparados.",
+      "descripcion": "Neurona sensitiva, interneurona y neurona motora dibujadas juntas para comparar su forma.",
+      "motivo": "El arco reflejo y la exploración neurológica se explican con los tres tipos, no con uno.",
+      "equivalencia": "Cobertura nueva para el sistema nervioso y la exploración neurológica."
+    },
+    {
+      "id": "cp-dbcls-examen-nino",
+      "title": "Exploración de un niño",
+      "kind": "medical_icon",
+      "ruta": "cc-by-4.0/People-Other/DBCLS/Examination_child.svg",
+      "tags": [
+        "pediatría",
+        "exploración",
+        "acompañante"
+      ],
+      "alt": "Niño siendo explorado por una persona adulta.",
+      "descripcion": "Escena de exploración: una persona adulta valora a un niño que permanece acompañado.",
+      "motivo": "El plan insiste en que al niño se le explora sin separarlo de su acompañante; la figura muestra esa relación.",
+      "equivalencia": "Reemplaza 👨‍👩‍👧 en asuntos familiares y cubre la evaluación pediátrica."
+    },
+    {
+      "id": "cp-dbcls-abeja",
+      "title": "Abeja",
+      "kind": "medical_icon",
+      "ruta": "cc-by-4.0/Animals/DBCLS/European_honey_bee_adult.svg",
+      "tags": [
+        "abeja",
+        "picadura",
+        "anafilaxia"
+      ],
+      "alt": "Abeja adulta.",
+      "descripcion": "Abeja melífera vista desde arriba.",
+      "motivo": "Es el agente más frecuente de anafilaxia por picadura en el plan.",
+      "equivalencia": "Reemplaza 🐝 en shock anafiláctico y es componente de la composición de picaduras."
+    },
+    {
+      "id": "cp-dbcls-arana",
+      "title": "Araña",
+      "kind": "diagram_component",
+      "ruta": "cc-by-4.0/Animals/DBCLS/Common_house_spider.svg",
+      "tags": [
+        "araña",
+        "mordedura",
+        "toxicología"
+      ],
+      "alt": "Araña doméstica.",
+      "descripcion": "Araña vista desde arriba, con sus ocho patas.",
+      "motivo": "El tema enumera mordedura de araña como cuadro propio.",
+      "equivalencia": "Componente de la composición de picaduras y mordeduras."
+    },
+    {
+      "id": "cp-dbcls-serpiente",
+      "title": "Serpiente",
+      "kind": "diagram_component",
+      "ruta": "cc-by-4.0/Animals/DBCLS/Japanese_striped_snake.svg",
+      "tags": [
+        "serpiente",
+        "mordedura",
+        "veneno"
+      ],
+      "alt": "Serpiente.",
+      "descripcion": "Serpiente en posición extendida.",
+      "motivo": "El tema enumera mordedura de serpiente. Deuda declarada: la especie del dibujo no es una de las de importancia médica en México, así que la figura ilustra el mecanismo, no la identificación de especie.",
+      "equivalencia": "Componente de la composición de picaduras y mordeduras."
+    }
+  ],
+  "servier_smart": [
+    {
+      "id": "ic-ambulancia",
+      "title": "Ambulancia",
+      "kind": "medical_icon",
+      "slug": "ambulance",
+      "tags": [
+        "ambulancia",
+        "SMU",
+        "traslado"
+      ],
+      "alt": "Ambulancia de urgencias vista de lado.",
+      "descripcion": "Unidad de traslado sanitario vista de perfil.",
+      "motivo": "Icono del sistema médico de urgencias y del traslado. BioIcons no tiene ningún vehículo sanitario.",
+      "equivalencia": "Reemplaza 🚑 en los temas sobre el SMU y el traslado, no en los de valoración."
+    },
+    {
+      "id": "ic-camilla",
+      "title": "Camilla",
+      "kind": "medical_icon",
+      "slug": "stretcher",
+      "tags": [
+        "camilla",
+        "traslado",
+        "movilización"
+      ],
+      "alt": "Camilla de traslado.",
+      "descripcion": "Camilla rodante con su colchoneta y sus barandales.",
+      "motivo": "Es el equipo del traslado y de la movilización, que el módulo 7 trata como operación.",
+      "equivalencia": "Cobertura nueva para operaciones de ambulancias e inmovilización."
+    },
+    {
+      "id": "ic-botiquin",
+      "title": "Botiquín de urgencias",
+      "kind": "medical_icon",
+      "slug": "emergency-kit-bag",
+      "tags": [
+        "botiquín",
+        "material",
+        "primeros auxilios"
+      ],
+      "alt": "Botiquín de urgencias abierto con su material.",
+      "descripcion": "Maletín de urgencias con compartimentos y material sanitario ordenado.",
+      "motivo": "El tema «Botiquín ideal» trata precisamente de este objeto y de su contenido.",
+      "equivalencia": "Reemplaza 🧰 en el tema de botiquín ideal."
+    },
+    {
+      "id": "ic-estetoscopio",
+      "title": "Estetoscopio",
+      "kind": "medical_icon",
+      "slug": "stethoscope",
+      "tags": [
+        "estetoscopio",
+        "auscultación"
+      ],
+      "alt": "Estetoscopio.",
+      "descripcion": "Estetoscopio biauricular con su campana y sus olivas.",
+      "motivo": "Icono de exploración física y auscultación.",
+      "equivalencia": "Reemplaza 🩺."
+    },
+    {
+      "id": "ic-desfibrilador",
+      "title": "Desfibrilador",
+      "kind": "medical_icon",
+      "slug": "defibrillator",
+      "tags": [
+        "desfibrilador",
+        "DEA",
+        "paro"
+      ],
+      "alt": "Palas de desfibrilador con su equipo.",
+      "descripcion": "Desfibrilador con sus dos palas y el cable que las une al equipo.",
+      "motivo": "Icono del DEA, del paro y de las arritmias letales: el dispositivo que define la conducta en esos temas.",
+      "equivalencia": "Reemplaza ⚡ en DEA y monitor, y 💔 en arritmias letales, SCA y shock cardiogénico."
+    },
+    {
+      "id": "ic-rcp",
+      "title": "Compresiones torácicas",
+      "kind": "medical_icon",
+      "slug": "heart-massage",
+      "tags": [
+        "RCP",
+        "compresiones",
+        "paro"
+      ],
+      "alt": "Manos realizando compresiones torácicas sobre el esternón.",
+      "descripcion": "Manos entrelazadas apoyadas en el centro del tórax, con los brazos extendidos, durante las compresiones.",
+      "motivo": "El tema de RCP trata de este gesto; ningún icono de corazón lo representa.",
+      "equivalencia": "Reemplaza ❤️ en RCP de legos y cubre RCP pediátrico, neonatal y megacode."
+    },
+    {
+      "id": "ic-tension-arterial",
+      "title": "Toma de presión arterial",
+      "kind": "medical_icon",
+      "slug": "blood-pressure",
+      "tags": [
+        "presión arterial",
+        "signos vitales"
+      ],
+      "alt": "Brazo con brazalete de esfigmomanómetro durante la toma de presión.",
+      "descripcion": "Brazo con el brazalete colocado y el manómetro conectado, en el momento de la medición.",
+      "motivo": "Icono de signos vitales y de hipertensión: muestra el procedimiento, no un número.",
+      "equivalencia": "Reemplaza 🌡️ en signos vitales y 🩺 en hipertensión."
+    },
+    {
+      "id": "cp-smart-holter",
+      "title": "Registro electrocardiográfico continuo",
+      "kind": "medical_icon",
+      "slug": "holter-equipment",
+      "tags": [
+        "monitor",
+        "electrodos",
+        "registro"
+      ],
+      "alt": "Equipo de registro electrocardiográfico con sus electrodos colocados en el tórax.",
+      "descripcion": "Equipo de registro conectado por cables a electrodos adheridos al tórax.",
+      "motivo": "Es la colocación de electrodos, que es lo que el tema «Uso del monitor desfibrilador» enseña antes de interpretar.",
+      "equivalencia": "Reemplaza ⚡ en uso del monitor desfibrilador."
+    },
+    {
+      "id": "il-columna-vertebral",
+      "title": "Columna vertebral",
+      "kind": "diagram_component",
+      "slug": "smart-vertebral-column",
+      "tags": [
+        "columna",
+        "vértebras",
+        "raquis"
+      ],
+      "alt": "Columna vertebral completa vista de perfil, con sus curvaturas.",
+      "descripcion": "Columna vertebral de perfil, de la primera cervical al cóccix, con lordosis cervical, cifosis dorsal, lordosis lumbar y sacro.",
+      "motivo": "Es la columna completa y de perfil, la vista en la que se distinguen regiones y curvaturas. BioIcons no tiene ninguna columna.",
+      "equivalencia": "Base del sustituto de la imagen de Drive «Columna vertebral»."
+    },
+    {
+      "id": "cp-smart-medula-espinal",
+      "title": "Médula espinal en corte",
+      "kind": "medical_icon",
+      "slug": "spinal-cord-ov",
+      "tags": [
+        "médula espinal",
+        "cordones",
+        "lesión medular"
+      ],
+      "alt": "Corte transversal de la médula espinal dentro del conducto vertebral.",
+      "descripcion": "Corte axial de la médula: sustancia gris central en forma de H con astas anteriores y posteriores, sustancia blanca en cordones, y raíces que salen a cada lado.",
+      "motivo": "Los síndromes medulares del plan (anterior, posterior, Brown-Séquard, cauda equina) solo se entienden sobre el corte transversal.",
+      "equivalencia": "Reemplaza ⬆️, ⬇️, ↔️ y 🐴, que eran flechas sin anatomía."
+    },
+    {
+      "id": "cp-smart-hernia-discal",
+      "title": "Hernia discal",
+      "kind": "medical_icon",
+      "slug": "disc-herniation",
+      "tags": [
+        "disco",
+        "raíz",
+        "compresión"
+      ],
+      "alt": "Disco intervertebral herniado comprimiendo una raíz nerviosa.",
+      "descripcion": "Dos vértebras con el disco entre ellas; el núcleo del disco se ha desplazado hacia atrás y contacta con la raíz que emerge.",
+      "motivo": "Es la referencia de compresión radicular, que el plan usa para explicar el dolor irradiado y el cuadro de cauda equina.",
+      "equivalencia": "Cobertura nueva para fracturas de cuerpo vertebral y síndrome de cauda equina."
+    },
+    {
+      "id": "cp-smart-suprarrenal",
+      "title": "Glándula suprarrenal",
+      "kind": "diagram_component",
+      "slug": "adrenal-gland-overview",
+      "tags": [
+        "suprarrenal",
+        "endocrino",
+        "catecolaminas"
+      ],
+      "alt": "Glándula suprarrenal sobre el polo superior del riñón.",
+      "descripcion": "Glándula suprarrenal apoyada en el polo superior del riñón, con sus vasos.",
+      "motivo": "Produce las catecolaminas, así que enlaza el tema endocrino con el de receptores adrenérgicos.",
+      "equivalencia": "Componente del sustituto de «Glándulas endocrinas»."
+    },
+    {
+      "id": "cp-smart-tiroides",
+      "title": "Tiroides",
+      "kind": "diagram_component",
+      "slug": "thyroid",
+      "tags": [
+        "tiroides",
+        "endocrino",
+        "cuello"
+      ],
+      "alt": "Glándula tiroides vista de frente, delante de la tráquea.",
+      "descripcion": "Tiroides con sus dos lóbulos unidos por el istmo, por delante de los primeros anillos traqueales.",
+      "motivo": "Glándula obligada del tema endocrino y referencia anatómica del cuello.",
+      "equivalencia": "Componente del sustituto de «Glándulas endocrinas»."
+    },
+    {
+      "id": "cp-smart-nefrona",
+      "title": "Nefrona",
+      "kind": "diagram_component",
+      "slug": "nephron",
+      "tags": [
+        "nefrona",
+        "glomérulo",
+        "túbulo"
+      ],
+      "alt": "Nefrona con el glomérulo, el asa de Henle y el túbulo colector.",
+      "descripcion": "Nefrona completa: corpúsculo renal con glomérulo y cápsula, túbulo contorneado proximal, asa de Henle, túbulo distal y colector.",
+      "motivo": "Es la nefrona con todos los segmentos que el tema nombra. Se prefirió sobre la variante CC0 de BioIcons, que es un esquema plano sin diferenciar el asa.",
+      "equivalencia": "Base del sustituto de la imagen de Drive «La nefrona»."
+    },
+    {
+      "id": "ic-recien-nacido",
+      "title": "Recién nacido",
+      "kind": "medical_icon",
+      "slug": "newborn",
+      "tags": [
+        "recién nacido",
+        "neonato"
+      ],
+      "alt": "Recién nacido.",
+      "descripcion": "Neonato en decúbito, con la proporción corporal característica de la edad.",
+      "motivo": "Icono de los temas neonatales, donde la conducta es distinta a la del lactante.",
+      "equivalencia": "Reemplaza 🍼 y 👶 en recién nacido y reanimación neonatal."
+    },
+    {
+      "id": "ic-nino",
+      "title": "Paciente pediátrico",
+      "kind": "medical_icon",
+      "slug": "man-boy",
+      "tags": [
+        "pediatría",
+        "niño"
+      ],
+      "alt": "Figura de un niño de pie.",
+      "descripcion": "Silueta de un niño de pie, con la proporción cabeza-cuerpo propia de la edad pediátrica.",
+      "motivo": "Icono de la unidad pediátrica. La proporción del dibujo sostiene una idea del plan: la cabeza pesa proporcionalmente más, y eso cambia el patrón de lesión.",
+      "equivalencia": "Reemplaza 🧒, 👶 y 🚸 en los temas pediátricos."
+    },
+    {
+      "id": "cp-smart-esqueleto-nino",
+      "title": "Esqueleto del niño",
+      "kind": "diagram_component",
+      "slug": "child-skeleton",
+      "tags": [
+        "esqueleto",
+        "pediatría",
+        "crecimiento"
+      ],
+      "alt": "Esqueleto de un niño.",
+      "descripcion": "Esqueleto infantil completo, con los cartílagos de crecimiento aún abiertos y la proporción craneal propia de la edad.",
+      "motivo": "Explica de un vistazo por qué el hueso del niño se deforma antes de romperse y por qué la cabeza recibe más energía.",
+      "equivalencia": "Cobertura nueva para anatomía y fisiología pediátrica, crecimiento y trauma pediátrico."
+    },
+    {
+      "id": "ic-feto-utero",
+      "title": "Feto en el útero",
+      "kind": "medical_icon",
+      "slug": "fetus-in-utero",
+      "tags": [
+        "embarazo",
+        "feto",
+        "obstetricia"
+      ],
+      "alt": "Feto dentro del útero al final del embarazo.",
+      "descripcion": "Útero grávido en corte, con el feto en presentación cefálica, la placenta y el cordón umbilical.",
+      "motivo": "Icono de la unidad obstétrica: muestra a la vez gestación y presentación, que es lo que el plan evalúa.",
+      "equivalencia": "Reemplaza 🤰, 🫃 y 📉 en los temas obstétricos."
+    },
+    {
+      "id": "cp-smart-utero",
+      "title": "Útero",
+      "kind": "medical_icon",
+      "slug": "uterus",
+      "tags": [
+        "útero",
+        "ginecología",
+        "anexos"
+      ],
+      "alt": "Útero con las trompas y los ovarios.",
+      "descripcion": "Útero de frente con el cuerpo, el cuello, las dos trompas y los ovarios a cada lado.",
+      "motivo": "Es la anatomía que la exploración ginecológica y la torsión ovárica necesitan.",
+      "equivalencia": "Reemplaza 🌀 en torsión ovárica y cubre exploración ginecológica y sistema reproductor."
+    },
+    {
+      "id": "cp-smart-placenta",
+      "title": "Placenta",
+      "kind": "diagram_component",
+      "slug": "placenta",
+      "tags": [
+        "placenta",
+        "intercambio",
+        "sufrimiento fetal"
+      ],
+      "alt": "Placenta con el intercambio entre la circulación materna y la fetal.",
+      "descripcion": "Corte de placenta con las vellosidades coriales bañadas por sangre materna y los vasos fetales en su interior.",
+      "motivo": "El sufrimiento fetal es un problema de este intercambio; la figura lo localiza.",
+      "equivalencia": "Reemplaza 📉 en sufrimiento fetal agudo."
+    },
+    {
+      "id": "cp-smart-placenta-previa",
+      "title": "Placenta previa",
+      "kind": "medical_icon",
+      "slug": "placenta-previa",
+      "tags": [
+        "placenta previa",
+        "hemorragia",
+        "tercer trimestre"
+      ],
+      "alt": "Útero con la placenta implantada sobre el orificio cervical.",
+      "descripcion": "Útero grávido en corte con la placenta insertada en el segmento inferior, cubriendo el orificio cervical interno.",
+      "motivo": "Es una de las dos causas mayores de hemorragia del tercer trimestre y la que contraindica el tacto.",
+      "equivalencia": "Cobertura nueva para hemorragia del segundo y tercer trimestre."
+    },
+    {
+      "id": "cp-smart-craneo",
+      "title": "Cráneo",
+      "kind": "medical_icon",
+      "slug": "smart-skull",
+      "tags": [
+        "cráneo",
+        "TCE",
+        "fractura"
+      ],
+      "alt": "Cráneo visto de perfil.",
+      "descripcion": "Cráneo de perfil con la bóveda, el hueso temporal, el macizo facial y la mandíbula.",
+      "motivo": "Icono de trauma craneal y fractura de cráneo.",
+      "equivalencia": "Reemplaza 💀 y 🤕 en los temas de trauma craneal."
+    },
+    {
+      "id": "cp-smart-arterias-cerebrales",
+      "title": "Arterias cerebrales",
+      "kind": "diagram_component",
+      "slug": "smart-brain-arteries",
+      "tags": [
+        "arterias cerebrales",
+        "polígono de Willis",
+        "ictus"
+      ],
+      "alt": "Base del encéfalo con el círculo arterial cerebral.",
+      "descripcion": "Vista inferior del encéfalo con las arterias carótidas internas, vertebrales y el círculo arterial que forman en la base.",
+      "motivo": "El territorio de la arteria ocluida decide el déficit del ictus: sin el mapa vascular, la focalidad no se explica.",
+      "equivalencia": "Componente de la composición de accidente cerebrovascular."
+    },
+    {
+      "id": "cp-smart-evc-isquemico",
+      "title": "Ictus isquémico",
+      "kind": "diagram_component",
+      "slug": "stroke-overview",
+      "tags": [
+        "ictus",
+        "isquemia",
+        "trombo"
+      ],
+      "alt": "Arteria cerebral ocluida por un trombo, con el territorio isquémico.",
+      "descripcion": "Arteria del encéfalo obstruida por un trombo; el territorio que dependía de ella queda sin flujo.",
+      "motivo": "Es el 80 % de los ictus y el que define la ventana de reperfusión.",
+      "equivalencia": "Componente del sustituto del emoji ⏱️ en accidente cerebrovascular."
+    },
+    {
+      "id": "cp-smart-evc-hemorragico",
+      "title": "Ictus hemorrágico",
+      "kind": "diagram_component",
+      "slug": "stroke",
+      "tags": [
+        "ictus",
+        "hemorragia",
+        "hematoma"
+      ],
+      "alt": "Encéfalo con una hemorragia intraparenquimatosa.",
+      "descripcion": "Corte del encéfalo con una colección de sangre en el parénquima que desplaza el tejido vecino.",
+      "motivo": "Es la otra mitad del tema; distinguirlo del isquémico cambia por completo la conducta.",
+      "equivalencia": "Componente de la composición de accidente cerebrovascular y de lesiones intracraneales."
+    },
+    {
+      "id": "cp-smart-meningitis",
+      "title": "Meningitis",
+      "kind": "medical_icon",
+      "slug": "meningitis",
+      "tags": [
+        "meningitis",
+        "meninges",
+        "infección"
+      ],
+      "alt": "Meninges inflamadas alrededor del encéfalo.",
+      "descripcion": "Cubiertas meníngeas del encéfalo con signos de inflamación y exudado en el espacio subaracnoideo.",
+      "motivo": "Localiza la infección en la cubierta y no en el parénquima, que es lo que explica la rigidez de nuca.",
+      "equivalencia": "Cobertura nueva para meningitis pediátrica."
+    },
+    {
+      "id": "cp-smart-arterias-cuello",
+      "title": "Arterias de cabeza y cuello",
+      "kind": "diagram_component",
+      "slug": "head-and-neck-arteries",
+      "tags": [
+        "carótida",
+        "cuello",
+        "hemorragia"
+      ],
+      "alt": "Arterias de la cabeza y el cuello.",
+      "descripcion": "Carótidas común, interna y externa con sus ramas, y arteria vertebral, sobre el contorno de cabeza y cuello.",
+      "motivo": "El control de hemorragia del cuello y el objeto empalado cervical exigen saber qué hay debajo.",
+      "equivalencia": "Cobertura nueva para exploración del cuello, control de hemorragias cervicales y objeto empalado."
+    },
+    {
+      "id": "cp-smart-laringe-corte",
+      "title": "Laringe en corte",
+      "kind": "diagram_component",
+      "slug": "larynx-front-cut",
+      "tags": [
+        "laringe",
+        "cuerdas vocales",
+        "glotis"
+      ],
+      "alt": "Laringe abierta con las cuerdas vocales.",
+      "descripcion": "Laringe en corte frontal: cuerdas vocales delimitando la glotis, con el vestíbulo por arriba y la subglotis por debajo.",
+      "motivo": "Es la vista que se busca en la laringoscopia; la laringe cerrada no muestra la glotis.",
+      "equivalencia": "Componente de la composición de secuencia de intubación y del tema de técnica de intubación."
+    },
+    {
+      "id": "ic-collarin",
+      "title": "Collarín cervical",
+      "kind": "medical_icon",
+      "slug": "neck-brace",
+      "tags": [
+        "collarín",
+        "inmovilización",
+        "cervical"
+      ],
+      "alt": "Collarín cervical colocado en el cuello.",
+      "descripcion": "Collarín rígido ajustado al cuello, apoyado en mentón y tórax.",
+      "motivo": "Es el dispositivo del tema de inmovilización espinal y de control de cervicales.",
+      "equivalencia": "Reemplaza 🛏️ en inmovilización espinal e inmovilización pediátrica."
+    },
+    {
+      "id": "ic-hueso",
+      "title": "Estructura del hueso",
+      "kind": "medical_icon",
+      "slug": "smart-bone-structure-medical-illustration",
+      "tags": [
+        "hueso",
+        "óseo",
+        "trabéculas",
+        "intraósea"
+      ],
+      "alt": "Hueso en corte, con la cortical y el hueso esponjoso.",
+      "descripcion": "Corte de hueso: cortical compacta por fuera y trabéculas del hueso esponjoso por dentro, con la médula entre ellas.",
+      "motivo": "Icono anatómico del sistema óseo que además explica por qué el hueso sangra al fracturarse y por qué el acceso intraóseo funciona.",
+      "equivalencia": "Reemplaza 🦴, incluido el tema de acceso intraóseo, donde el emoji no mostraba la cavidad medular."
+    },
+    {
+      "id": "cp-smart-esqueleto",
+      "title": "Esqueleto",
+      "kind": "medical_icon",
+      "slug": "skeleton-back",
+      "tags": [
+        "esqueleto",
+        "óseo",
+        "referencia"
+      ],
+      "alt": "Esqueleto humano completo visto por detrás.",
+      "descripcion": "Esqueleto completo de espaldas: cráneo, columna, caja torácica, cinturas escapular y pelviana, y extremidades.",
+      "motivo": "Es el mapa general del sistema óseo y la referencia para localizar cada lesión del módulo de trauma.",
+      "equivalencia": "Cobertura nueva para el sistema óseo y para el módulo de trauma musculoesquelético."
+    },
+    {
+      "id": "ic-fractura",
+      "title": "Fractura de fémur",
+      "kind": "medical_icon",
+      "slug": "fracture-of-femur",
+      "tags": [
+        "fractura",
+        "fémur",
+        "trauma"
+      ],
+      "alt": "Fémur con una fractura en su diáfisis.",
+      "descripcion": "Fémur con una solución de continuidad en la diáfisis y los fragmentos desplazados.",
+      "motivo": "Icono de fractura y de férulas: muestra la lesión, no el hueso sano.",
+      "equivalencia": "Reemplaza 🦴 en fracturas y 🔧 en férulas de tracción."
+    },
+    {
+      "id": "cp-smart-fractura-clavicula",
+      "title": "Fractura de clavícula",
+      "kind": "medical_icon",
+      "slug": "bone-fracture-clavicle",
+      "tags": [
+        "clavícula",
+        "fractura",
+        "tórax"
+      ],
+      "alt": "Clavícula fracturada.",
+      "descripcion": "Clavícula con una fractura en su tercio medio y los fragmentos desplazados.",
+      "motivo": "El plan dedica un tema propio a la lesión de clavícula.",
+      "equivalencia": "Cobertura nueva para lesión de clavícula."
+    },
+    {
+      "id": "cp-smart-fractura-hombro",
+      "title": "Fractura del hombro",
+      "kind": "medical_icon",
+      "slug": "shoulder-fracture",
+      "tags": [
+        "hombro",
+        "escápula",
+        "fractura"
+      ],
+      "alt": "Hombro con fractura.",
+      "descripcion": "Cintura escapular con una fractura en la región del hombro y los fragmentos desplazados.",
+      "motivo": "Es la figura más próxima a la lesión de escápula, que requiere gran energía y obliga a buscar lesiones asociadas.",
+      "equivalencia": "Reemplaza 🛡️ en lesión de escápula. Deuda declarada: ninguno de los dos bancos tiene una escápula aislada."
+    },
+    {
+      "id": "cp-smart-caja-toracica",
+      "title": "Caja torácica",
+      "kind": "diagram_component",
+      "slug": "rib-cage",
+      "tags": [
+        "costillas",
+        "esternón",
+        "tórax"
+      ],
+      "alt": "Caja torácica con las costillas y el esternón.",
+      "descripcion": "Parrilla costal completa: esternón por delante, costillas verdaderas, falsas y flotantes, y su articulación con la columna por detrás.",
+      "motivo": "Es el continente de todo el módulo de trauma de tórax y el mapa de la auscultación.",
+      "equivalencia": "Cobertura nueva para definición y clasificación del trauma de tórax."
+    },
+    {
+      "id": "cp-smart-fractura-costal",
+      "title": "Fractura costal",
+      "kind": "medical_icon",
+      "slug": "rib-fracture",
+      "tags": [
+        "costilla",
+        "fractura",
+        "tórax inestable"
+      ],
+      "alt": "Costillas fracturadas.",
+      "descripcion": "Varias costillas contiguas con trazos de fractura y desplazamiento de los fragmentos.",
+      "motivo": "Es la lesión de costilla y la base del tórax inestable, que es la misma lesión repetida en varios arcos.",
+      "equivalencia": "Reemplaza ↕️ en tórax inestable y cubre lesión de costilla."
+    },
+    {
+      "id": "cp-smart-pelvis",
+      "title": "Pelvis",
+      "kind": "medical_icon",
+      "slug": "pelvis-overview",
+      "tags": [
+        "pelvis",
+        "cadera",
+        "anillo"
+      ],
+      "alt": "Anillo pelviano visto de frente.",
+      "descripcion": "Pelvis de frente: los dos coxales, el sacro y las ramas del pubis formando el anillo, con las cabezas femorales en los acetábulos.",
+      "motivo": "Es el anillo pelviano, que en trauma importa por su capacidad de sangrado y por la lesión de cadera.",
+      "equivalencia": "Reemplaza 🦵 en el tema de cadera, donde el emoji de la pierna no señalaba la articulación."
+    },
+    {
+      "id": "cp-smart-rodilla",
+      "title": "Rodilla",
+      "kind": "medical_icon",
+      "slug": "knee-frontal-view",
+      "tags": [
+        "rodilla",
+        "articulación",
+        "luxación"
+      ],
+      "alt": "Rodilla vista de frente.",
+      "descripcion": "Articulación de la rodilla de frente: fémur, tibia, rótula y ligamentos colaterales.",
+      "motivo": "Referencia articular para luxaciones y esguinces de miembro inferior.",
+      "equivalencia": "Cobertura nueva para esguinces, luxaciones y desgarros."
+    },
+    {
+      "id": "ic-esguince",
+      "title": "Esguince de tobillo",
+      "kind": "medical_icon",
+      "slug": "sprain",
+      "tags": [
+        "esguince",
+        "ligamento",
+        "tobillo"
+      ],
+      "alt": "Tobillo con esguince y ligamento distendido.",
+      "descripcion": "Tobillo con el ligamento lateral distendido y edema en la región del maléolo.",
+      "motivo": "Es el esguince más frecuente y la figura del tema.",
+      "equivalencia": "Reemplaza 🤕 en esguinces, luxaciones y desgarros."
+    },
+    {
+      "id": "ic-silla-ruedas",
+      "title": "Silla de ruedas",
+      "kind": "medical_icon",
+      "slug": "wheelchair",
+      "tags": [
+        "discapacidad",
+        "movilidad",
+        "necesidades especiales"
+      ],
+      "alt": "Silla de ruedas.",
+      "descripcion": "Silla de ruedas manual vista de perfil.",
+      "motivo": "Los temas de necesidades especiales y de movilidad del adulto mayor tratan de dependencia funcional; es el objeto que la representa.",
+      "equivalencia": "Reemplaza ♿ en niños con necesidades especiales."
+    },
+    {
+      "id": "ic-higiene-manos",
+      "title": "Higiene de manos",
+      "kind": "medical_icon",
+      "slug": "hand-washing",
+      "tags": [
+        "higiene",
+        "bioseguridad",
+        "prevención"
+      ],
+      "alt": "Manos lavándose bajo el agua.",
+      "descripcion": "Dos manos frotándose bajo un chorro de agua.",
+      "motivo": "Es la medida de bioseguridad de mayor rendimiento y parte del bienestar del TUM.",
+      "equivalencia": "Cobertura nueva para bienestar del TUM y prevención."
+    },
+    {
+      "id": "cp-smart-esofago",
+      "title": "Esófago en corte",
+      "kind": "medical_icon",
+      "slug": "smart-esophagus",
+      "tags": [
+        "esófago",
+        "corte",
+        "mediastino"
+      ],
+      "alt": "Corte del esófago con sus capas.",
+      "descripcion": "Corte transversal del esófago: mucosa, submucosa, capa muscular y adventicia.",
+      "motivo": "El esófago no tiene serosa, y eso explica por qué su lesión se contamina hacia el mediastino.",
+      "equivalencia": "Cobertura nueva para lesión de esófago y obturador esofágico."
+    },
+    {
+      "id": "cp-smart-deglucion",
+      "title": "Deglución",
+      "kind": "diagram_component",
+      "slug": "swallowing-system",
+      "tags": [
+        "deglución",
+        "aspiración",
+        "vía aérea"
+      ],
+      "alt": "Corte de faringe y laringe durante la deglución.",
+      "descripcion": "Corte sagital de faringe y laringe con el bolo pasando hacia el esófago y la epiglotis cerrando la entrada laríngea.",
+      "motivo": "Es el mecanismo que protege la vía aérea; su fallo es la broncoaspiración.",
+      "equivalencia": "Cobertura nueva para OVACE y protección de la vía aérea."
+    },
+    {
+      "id": "cp-smart-colon",
+      "title": "Colon en corte",
+      "kind": "diagram_component",
+      "slug": "colon-overview",
+      "tags": [
+        "colon",
+        "pared",
+        "corte"
+      ],
+      "alt": "Corte de la pared del colon.",
+      "descripcion": "Corte transversal del colon con mucosa, submucosa, capa muscular y serosa.",
+      "motivo": "Complementa la figura del colon completo cuando el tema habla de la pared.",
+      "equivalencia": "Cobertura nueva para lesión de intestino y colitis."
+    },
+    {
+      "id": "cp-smart-vesicula",
+      "title": "Vesícula biliar y duodeno",
+      "kind": "diagram_component",
+      "slug": "smart-gallbladder",
+      "tags": [
+        "vesícula",
+        "vía biliar",
+        "duodeno"
+      ],
+      "alt": "Vesícula biliar con la vía biliar y el duodeno.",
+      "descripcion": "Vesícula biliar, conducto cístico, colédoco y su desembocadura en el duodeno.",
+      "motivo": "Explica el trayecto que obstruye un cálculo y por qué el dolor se localiza donde se localiza.",
+      "equivalencia": "Cobertura nueva para colelitiasis y colecistitis."
+    },
+    {
+      "id": "cp-smart-testiculo",
+      "title": "Testículo",
+      "kind": "diagram_component",
+      "slug": "testicle",
+      "tags": [
+        "testículo",
+        "reproductor masculino"
+      ],
+      "alt": "Testículo con el epidídimo y el cordón.",
+      "descripcion": "Testículo en corte con los túbulos seminíferos, el epidídimo y el cordón espermático.",
+      "motivo": "Componente del tema de sistema reproductor masculino y referencia de la torsión testicular.",
+      "equivalencia": "Componente de la composición de sistema reproductor."
+    },
+    {
+      "id": "cp-smart-mama",
+      "title": "Mama",
+      "kind": "diagram_component",
+      "slug": "breast",
+      "tags": [
+        "mama",
+        "reproductor femenino",
+        "lactancia"
+      ],
+      "alt": "Mama en corte con los lobulillos y los conductos.",
+      "descripcion": "Corte de mama con lobulillos glandulares, conductos galactóforos y tejido adiposo.",
+      "motivo": "Componente del tema de sistema reproductor femenino y de la atención al recién nacido sano.",
+      "equivalencia": "Componente de la composición de sistema reproductor."
+    },
+    {
+      "id": "ic-adultos-mayores",
+      "title": "Personas mayores",
+      "kind": "medical_icon",
+      "slug": "old",
+      "tags": [
+        "geriatría",
+        "población",
+        "envejecimiento"
+      ],
+      "alt": "Dos personas mayores.",
+      "descripcion": "Dos figuras de personas mayores de pie, una junto a otra.",
+      "motivo": "Icono de la unidad de geriatría cuando el tema trata de la población y no de un paciente.",
+      "equivalencia": "Reemplaza 📉 en causas principales de muerte y 💎 en el diamante GEMS."
+    }
+  ]
+}

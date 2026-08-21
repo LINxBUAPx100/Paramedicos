@@ -187,7 +187,7 @@ export default {
   //  Exploración de tórax dirigida
   // ============================================================
   'm4-resp-exploracion-torax': {
-    icono: '🩺',
+    icono: 'ic-estetoscopio',
     duracion: '18 min',
     resumen: 'Cómo se explora el tórax en la calle para responder preguntas concretas de la evaluación, '
       + 'qué aporta cada maniobra y qué no puede concluirse con ella.',
@@ -384,7 +384,7 @@ export default {
   //  Síndrome de insuficiencia respiratoria
   // ============================================================
   'm4-resp-insuficiencia': {
-    icono: '🫁',
+    icono: 'cp-servier-via-intrapulmonar',
     duracion: '20 min',
     resumen: 'Cómo se reconoce que la respiración de un paciente ha dejado de ser suficiente, qué signos '
       + 'anuncian que va a claudicar y qué sostiene el prestador mientras traslada.',
@@ -576,7 +576,7 @@ export default {
   //  EPOC agudizado
   // ============================================================
   'm4-resp-epoc': {
-    icono: '💨',
+    icono: 'cp-servier-enfisema',
     duracion: '20 min',
     resumen: 'Qué es una exacerbación de EPOC, cómo se reconoce su gravedad en la calle y por qué la '
       + 'oxigenoterapia de estos pacientes se administra de forma controlada.',
@@ -758,7 +758,7 @@ export default {
   //  Edema agudo de pulmón
   // ============================================================
   'm4-resp-edema-pulmon': {
-    icono: '🌊',
+    icono: 'cp-servier-edema-pulmonar',
     duracion: '20 min',
     resumen: 'Cómo se reconoce el edema agudo de pulmón de origen cardiogénico, qué lo distingue de otras '
       + 'causas de ocupación alveolar y qué puede hacerse por el paciente durante el traslado.',
@@ -920,7 +920,7 @@ export default {
   //  Neumotórax espontáneo
   // ============================================================
   'm4-resp-neumotorax-espontaneo': {
-    icono: '🎈',
+    icono: 'cp-servier-neumotorax',
     duracion: '18 min',
     resumen: 'Qué es un neumotórax espontáneo, cómo se sospecha en la calle y cómo se reconoce la forma '
       + 'que compromete la vida y no admite espera.',
@@ -1087,7 +1087,7 @@ export default {
   //  Tromboembolia pulmonar
   // ============================================================
   'm4-resp-tep': {
-    icono: '🩸',
+    icono: 'cp-servier-tep',
     duracion: '18 min',
     resumen: 'Por qué la tromboembolia pulmonar es difícil de reconocer en la calle, qué debe hacer '
       + 'sospecharla y qué distingue al paciente de alto riesgo.',
@@ -1266,7 +1266,7 @@ export default {
   //  Neumonía y bronquitis
   // ============================================================
   'm4-resp-neumonia-bronquitis': {
-    icono: '🦠',
+    icono: 'cp-servier-bronquitis-cronica',
     duracion: '18 min',
     resumen: 'Qué distingue una neumonía de una bronquitis aguda, cómo se reconoce al paciente que está '
       + 'grave y por qué el antibiótico no es una decisión prehospitalaria.',
@@ -1426,7 +1426,7 @@ export default {
   //  Asma
   // ============================================================
   'm4-resp-asma': {
-    icono: '🌬️',
+    icono: 'cp-servier-bronquio-inflamado',
     duracion: '20 min',
     resumen: 'Qué es una crisis asmática, qué signos la identifican como potencialmente mortal y qué '
       + 'sostiene el prestador mientras traslada.',

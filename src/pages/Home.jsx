@@ -393,7 +393,9 @@ function SelectorGrupoProfesor() {
                   disabled={guardando}
                 >
                   {g.nombre}
-                  {activo === g.id && <span className="prof-grupo-check">✓</span>}
+                  {activo === g.id && (
+                    <span className="prof-grupo-check" aria-hidden="true"><Icon name="check" size={14} /></span>
+                  )}
                 </button>
               ))}
             </div>

@@ -286,12 +286,19 @@ export default function Layout({ children }) {
             <h4>Materiales</h4>
             {esStaff && <Link to="/temario">Guías descargables</Link>}
             <Link to="/logros">Logros y glosario</Link>
+            {/* Las licencias CC BY del material visual del temario obligan a que
+                la atribución esté accesible. Este es el enlace estable a ella. */}
+            <Link to="/creditos">Créditos del material visual</Link>
             <Link to="/cuenta">Mi cuenta</Link>
           </div>
         </div>
         <div className="footer-pie">
           <span><strong>PTEM</strong></span>
           <span>Desarrollado por Riders.Media · 2026 · Todos los derechos reservados</span>
+          <span>
+            Ilustraciones médicas de <Link to="/creditos">BioIcons y Servier Medical Art</Link>,
+            bajo licencias abiertas.
+          </span>
         </div>
       </footer>
     </div>

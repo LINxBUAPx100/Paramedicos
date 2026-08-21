@@ -67,7 +67,7 @@ export default {
   //  Sistema hematopoyético
   // ============================================================
   'm2-ao-hematopoyetico': {
-    icono: '🩸',
+    icono: 'cp-servier-eritrocito',
     duracion: '20 min',
     resumen: 'De qué está hecha la sangre, qué hace cada uno de sus componentes y dónde se producen.',
     objetivos: [
@@ -241,7 +241,7 @@ export default {
   //  Sistema linfático e inmunitario
   // ============================================================
   'm2-ao-linfatico-inmunitario': {
-    icono: '🛡️',
+    icono: 'cp-servier-linfatico',
     duracion: '20 min',
     resumen: 'Por qué existe una segunda red de vasos además de la sanguínea, y en qué se diferencian las '
       + 'dos formas que tiene el cuerpo de defenderse.',
@@ -416,7 +416,7 @@ export default {
   //  Sistema reproductor masculino y femenino
   // ============================================================
   'm2-ao-reproductor': {
-    icono: '⚕️',
+    icono: 'cp-smart-utero',
     duracion: '20 min',
     resumen: 'Los órganos reproductores masculinos y femeninos, la función de cada uno y el ciclo que '
       + 'prepara al organismo femenino para un posible embarazo.',
@@ -611,7 +611,7 @@ export default {
   //  Órganos de los sentidos
   // ============================================================
   'm2-ao-sentidos': {
-    icono: '👁️',
+    icono: 'cp-servier-ojo',
     duracion: '20 min',
     resumen: 'Cómo convierten los órganos de los sentidos un estímulo físico en una señal nerviosa, y qué '
       + 'estructura se encarga de cada tipo de estímulo.',
@@ -801,7 +801,7 @@ export default {
   //  Sistema endocrino
   // ============================================================
   'm2-ao-endocrino': {
-    icono: '🧪',
+    icono: 'dg-glandulas-endocrinas',
     duracion: '20 min',
     resumen: 'Cómo el cuerpo se comunica por mensajeros químicos, en qué se diferencia esa comunicación '
       + 'de la nerviosa y cómo se autorregula.',

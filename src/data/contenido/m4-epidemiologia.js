@@ -112,7 +112,7 @@ export default {
   //  Conceptos básicos de epidemiología
   // ============================================================
   'm4-epi-conceptos': {
-    icono: '📊',
+    icono: 'cp-servier-curva-gauss',
     duracion: '16 min',
     resumen: 'Qué mide la epidemiología, para qué le sirve a quien atiende urgencias y por qué una cifra '
       + 'sin fuente y sin fecha es peor que ninguna cifra.',
@@ -260,7 +260,7 @@ export default {
   //  Urgencia y emergencia
   // ============================================================
   'm4-epi-urgencia-emergencia': {
-    icono: '⏱️',
+    icono: 'cp-servier-cronometro',
     duracion: '15 min',
     resumen: 'Qué define exactamente el artículo 72 cuando dice «urgencia», qué otras disposiciones —y no '
       + 'ese artículo— fijan el ámbito y el sujeto obligado en el medio prehospitalario, y por qué «emergencia» '
@@ -447,7 +447,7 @@ export default {
   //  Clasificación de las enfermedades
   // ============================================================
   'm4-epi-clasificacion': {
-    icono: '🗂️',
+    icono: 'cp-servier-curva-gauss',
     duracion: '16 min',
     resumen: 'Los cuatro ejes con que el plan pide clasificar las enfermedades —curso, frecuencia, origen '
       + 'y sistema— y la advertencia que los acompaña: son ejes de estudio, no diagnósticos ni prioridades.',

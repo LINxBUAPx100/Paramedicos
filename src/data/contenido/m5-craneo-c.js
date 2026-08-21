@@ -123,7 +123,7 @@ export default {
   //  Lesiones intracraneales
   // ============================================================
   'm5-tcc-lesiones-intracraneales': {
-    icono: '🧩',
+    icono: 'cp-smart-evc-hemorragico',
     duracion: '13 min',
     resumen: 'Este tema ordena el conjunto: qué lesiones pueden producirse dentro del cráneo y cómo se '
       + 'agrupan. Por un lado, las difusas y las focales, que tienen tema propio en esta unidad. Por '
@@ -259,7 +259,7 @@ export default {
   //  Escala de coma de Glasgow
   // ============================================================
   'm5-tcc-glasgow': {
-    icono: '🔢',
+    icono: 'cp-servier-cerebro',
     duracion: '15 min',
     resumen: 'La escala de coma de Glasgow puntúa tres respuestas —apertura ocular, respuesta verbal y '
       + 'respuesta motora— y las suma en un valor de 3 a 15. Su utilidad real no está en el número '
@@ -412,7 +412,7 @@ export default {
   //  Aumentos de la PIC
   // ============================================================
   'm5-tcc-pic': {
-    icono: '📈',
+    icono: 'cp-smart-craneo',
     duracion: '14 min',
     resumen: 'La presión intracraneal sube cuando algo ocupa espacio dentro del cráneo y la '
       + 'compensación se agota. Esta lección describe cómo progresa ese aumento, qué signos aparecen '
@@ -552,7 +552,7 @@ export default {
   //  Manitol, anticonvulsivantes e intubación endotraqueal
   // ============================================================
   'm5-tcc-manitol': {
-    icono: '💉',
+    icono: 'cp-servier-inyectable',
     duracion: '15 min',
     resumen: 'Tres intervenciones que el plan agrupa y que comparten una característica: ninguna es '
       + 'automática y todas dependen del alcance autorizado y del protocolo. El manitol y los agentes '
@@ -708,7 +708,7 @@ export default {
   //  Fracturas de cuerpo vertebral
   // ============================================================
   'm5-tcc-fracturas-vertebrales': {
-    icono: '🦴',
+    icono: 'dg-columna-vertebral',
     duracion: '13 min',
     resumen: 'Una vértebra puede fracturarse por compresión axial, por flexión, por extensión, por '
       + 'rotación o por distracción, y cada mecanismo produce un patrón distinto. Lo que interesa en '
@@ -855,7 +855,7 @@ export default {
   //  Lesión medular anterior
   // ============================================================
   'm5-tcc-medular-anterior': {
-    icono: '⬆️',
+    icono: 'cp-smart-medula-espinal',
     duracion: '11 min',
     resumen: 'El síndrome medular anterior afecta a los dos tercios anteriores de la médula y produce '
       + 'el patrón inverso al posterior: se pierden la fuerza, el dolor y la temperatura por debajo de '
@@ -991,7 +991,7 @@ export default {
   //  Síndrome de cauda equina
   // ============================================================
   'm5-tcc-cauda-equina': {
-    icono: '🐴',
+    icono: 'cp-smart-medula-espinal',
     duracion: '12 min',
     resumen: 'Por debajo del final de la médula, el canal contiene un haz de raíces nerviosas que '
       + 'recibe el nombre de cola de caballo o cauda equina. Su compresión produce un cuadro '

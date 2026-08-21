@@ -130,7 +130,7 @@ export default {
   //  Infección de vías urinarias
   // ============================================================
   'm4-uri-ivu': {
-    icono: '🦠',
+    icono: 'cp-servier-vejiga',
     duracion: '18 min',
     resumen: 'Cómo se distinguen los síntomas urinarios bajos de una infección que ha ascendido o se ha '
       + 'complicado, y qué convierte a un paciente con disuria en un traslado prioritario.',
@@ -333,7 +333,7 @@ export default {
   //  Urolitiasis
   // ============================================================
   'm4-uri-urolitiasis': {
-    icono: '🪨',
+    icono: 'cp-servier-calculos',
     duracion: '18 min',
     resumen: 'Cómo se reconoce un cólico renal probable y, sobre todo, cómo se detecta al paciente cuyo '
       + 'dolor en el flanco no es un cólico o se ha complicado.',
@@ -539,7 +539,7 @@ export default {
   //  Desequilibrio electrolítico
   // ============================================================
   'm4-uri-desequilibrio-electrolitico': {
-    icono: '⚡',
+    icono: 'cp-servier-balanza-desequilibrada',
     duracion: '20 min',
     resumen: 'Qué produce en el organismo la alteración de los principales electrolitos, por qué el '
       + 'potasio manda sobre los demás y hasta dónde puede llegar la sospecha sin una medición.',
@@ -751,7 +751,7 @@ export default {
   //  Insuficiencia renal
   // ============================================================
   'm4-uri-insuficiencia-renal': {
-    icono: '🫘',
+    icono: 'cp-servier-grafica-renal',
     duracion: '20 min',
     resumen: 'Qué distingue una lesión renal aguda de una enfermedad renal crónica, qué complicaciones '
       + 'hacen que un paciente renal llame a una ambulancia y por qué no todos necesitan líquidos.',

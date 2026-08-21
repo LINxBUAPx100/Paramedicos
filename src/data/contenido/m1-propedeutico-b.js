@@ -97,7 +97,7 @@ const FUENTES_TERMINOLOGIA = F([AAOS_DEFINICIONES])
 export default {
   // ---------- completa los ESCASOS ----------
   'm1-pai-rcp-pediatrico': {
-    icono: '👶',
+    icono: 'ic-rcp',
     duracion: '16 min',
     resumen: 'RCP en lactante y en niño: qué cambia respecto del adulto y por qué la causa del paro obliga a invertir prioridades.',
     objetivos: [
@@ -203,7 +203,7 @@ export default {
   },
 
   'm1-pai-ferulas-vendajes': {
-    icono: '🩹',
+    icono: 'ic-fractura',
     duracion: '14 min',
     resumen: 'Taller de férulas y vendajes: tipos, técnica y las comprobaciones que evitan convertir una inmovilización en una lesión.',
     objetivos: [
@@ -296,7 +296,7 @@ export default {
   // un protocolo de reperfusión coronaria. Es un tema núcleo del módulo: no
   // debe depender de la redistribución.
   'm1-pai-evaluacion-xabcde': {
-    icono: '🔤',
+    icono: 'cp-cc0-paciente',
     duracion: '16 min',
     resumen: 'XABCDE: la secuencia que ordena la atención al paciente traumatizado, y por qué la X va delante de todo.',
     objetivos: [
@@ -418,7 +418,7 @@ export default {
 
   // ---------- temas VACÍOS ----------
   'm1-pai-ovace-pediatrico': {
-    icono: '🧒',
+    icono: 'ic-nino',
     duracion: '14 min',
     resumen: 'Obstrucción de la vía aérea por cuerpo extraño en lactante y niño: por qué la maniobra cambia con la edad y qué no debe hacerse nunca.',
     objetivos: [
@@ -551,7 +551,7 @@ export default {
   },
 
   'm1-pai-intoxicaciones': {
-    icono: '☠️',
+    icono: 'cp-cc0-toxico',
     duracion: '16 min',
     resumen: 'Intoxicaciones en el ámbito prehospitalario: vías de entrada, abordaje inicial y las particularidades de la fauna venenosa de México.',
     objetivos: [
@@ -703,7 +703,7 @@ export default {
   },
 
   'm1-smu-bienestar-tum': {
-    icono: '🧘',
+    icono: 'cp-servier-traslado-carga',
     duracion: '13 min',
     resumen: 'El bienestar del TUM como parte del trabajo: riesgos reales del oficio, estrés agudo y acumulado, y prácticas que sostienen una carrera larga.',
     objetivos: [
@@ -839,7 +839,7 @@ export default {
   },
 
   'm1-smu-terminologia': {
-    icono: '📖',
+    icono: 'cp-servier-libro',
     duracion: '12 min',
     resumen: 'Terminología médica: cómo se construye una palabra clínica y por qué descomponerla permite entender términos que nunca se han visto.',
     objetivos: [
@@ -954,6 +954,6 @@ export default {
   // retroalimentación y pendientes— vive en `evaluaciones.js`, junto a la de
   // los otros diez exámenes del plan.
   'm1-examen-aplicacion': {
-    icono: '📝',
+    icono: 'cp-servier-libreta',
   },
 }

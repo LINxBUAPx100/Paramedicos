@@ -8290,3 +8290,272 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   border: 1px solid var(--borde);
   border-radius: 8px;
 }
+
+/* ============================================================
+   ACTIVOS MÉDICOS: iconos, créditos y catálogo
+   ------------------------------------------------------------
+   Los iconos de tema y de módulo ya no son emojis: son archivos SVG del
+   repositorio (ver src/components/MedicalIcon.jsx). Eso cambia dos cosas
+   respecto a lo que había:
+
+     · el tamaño ya no lo fija `font-size`, lo fijan width/height del <img>,
+       así que los contenedores que centraban un glifo ahora centran una caja;
+     · son ILUSTRACIONES a color, no glifos de una tipografía. No se recolorean
+       con `currentColor` —un riñón verde no ayuda a nadie— y por eso llevan
+       `object-fit: contain`: se adaptan a la caja sin deformarse.
+
+   El respaldo (`.micono--respaldo`) sí es de trazo y sí toma el color del
+   texto: es un icono de `Icon.jsx`, y aparece cuando el activo no existe o su
+   archivo falla. Nunca un emoji.
+   ============================================================ */
+.micono {
+  display: block;
+  object-fit: contain;
+  max-width: 100%;
+  max-height: 100%;
+}
+.micono--respaldo {
+  display: grid;
+  place-items: center;
+  color: var(--texto-3);
+}
+.tema-fila-ico .micono, .lp-demo-ico .micono { margin: 0 auto; }
+.buscar-card-titulo .micono { display: inline-block; vertical-align: -0.2em; }
+
+/* --- Créditos junto a la figura ---------------------------------------- */
+/* La licencia CC BY no pide un agradecimiento: pide que la atribución se pueda
+   leer. Un atributo `title` no cumple (no se ve con teclado ni en móvil), así
+   que esto es un botón real con su panel. */
+.creditos { margin-top: var(--e-8); }
+.creditos-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font-size: var(--t-xs);
+  font-weight: 600;
+  color: var(--texto-2);
+  background: transparent;
+  border: 1px solid var(--borde-fuerte);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.creditos-btn:hover { color: var(--texto); border-color: var(--texto-3); }
+.creditos-btn:focus-visible { outline: 2px solid var(--primario); outline-offset: 2px; }
+.creditos-panel {
+  margin-top: var(--e-8);
+  padding: var(--e-12);
+  background: var(--bg-2);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+  font-size: var(--t-xs);
+  color: var(--texto-2);
+  text-align: left;
+}
+.creditos-lista {
+  display: grid;
+  grid-template-columns: minmax(90px, auto) 1fr;
+  gap: 4px var(--e-12);
+  margin: 0;
+}
+.creditos-lista dt { font-weight: 700; color: var(--texto-3); }
+.creditos-lista dd { margin: 0; color: var(--texto); }
+.creditos-cambios { margin: 0; padding-left: 1.1em; }
+.creditos-aviso { color: var(--texto-3); }
+.creditos-componentes { margin-top: var(--e-12); }
+.creditos-componentes h4 { margin: 0 0 4px; font-size: var(--t-xs); color: var(--texto-3); }
+.creditos-componentes ul { margin: 0; padding-left: 1.1em; }
+.creditos-copiar { margin-top: var(--e-12); }
+.creditos-texto {
+  margin: 0 0 6px;
+  padding: var(--e-8);
+  background: var(--bg-3);
+  border: 1px dashed var(--borde-fuerte);
+  border-radius: var(--radio-sm);
+  color: var(--texto);
+  /* Seleccionable a mano si el portapapeles está bloqueado. */
+  user-select: all;
+}
+.creditos-copiar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font-size: var(--t-xs);
+  font-weight: 600;
+  color: var(--texto);
+  background: var(--bg-3);
+  border: 1px solid var(--borde-fuerte);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.creditos-nota { margin: var(--e-12) 0 0; color: var(--texto-3); }
+
+/* La descripción ampliada de una figura: está en el DOM —la lee un lector de
+   pantalla y la encuentra el buscador del navegador— sin repetir en pantalla lo
+   que el dibujo ya dice. */
+.imagen-descripcion { margin-top: 6px; }
+.imagen-descripcion summary { cursor: pointer; font-size: var(--t-xs); color: var(--texto-3); }
+.imagen-descripcion p { margin: 6px 0 0; font-size: var(--t-xs); color: var(--texto-2); }
+
+/* --- Página /creditos --------------------------------------------------- */
+.creditos-page { max-width: 900px; margin: 0 auto; padding: var(--e-16); }
+.creditos-page-header p { color: var(--texto-2); }
+.creditos-page-aviso {
+  padding: var(--e-12);
+  background: color-mix(in srgb, var(--texto-3) 8%, transparent);
+  border-left: 3px solid var(--borde-fuerte);
+  border-radius: var(--radio-sm);
+}
+.creditos-resumen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-16);
+  align-items: flex-start;
+  justify-content: space-between;
+  margin: var(--e-16) 0;
+  padding: var(--e-16);
+  background: var(--bg-2);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+}
+.creditos-cifras { display: flex; gap: var(--e-16); }
+.creditos-cifras div { display: grid; }
+.creditos-cifras strong { font-size: var(--t-2xl); }
+.creditos-cifras span { font-size: var(--t-xs); color: var(--texto-3); }
+.creditos-trazabilidad {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px var(--e-12);
+  margin: 0;
+  font-size: var(--t-xs);
+}
+.creditos-trazabilidad dt { font-weight: 700; color: var(--texto-3); }
+.creditos-trazabilidad dd { margin: 0; color: var(--texto-2); }
+.creditos-sa, .creditos-mit {
+  margin: var(--e-16) 0;
+  padding: var(--e-16);
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio);
+  font-size: var(--t-sm);
+}
+.creditos-autores-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 4px var(--e-16);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--t-sm);
+}
+.creditos-autor-meta { display: block; font-size: var(--t-xs); color: var(--texto-3); }
+.creditos-buscar { margin: var(--e-16) 0; }
+.creditos-buscar label { display: block; font-size: var(--t-xs); color: var(--texto-3); }
+.creditos-buscar input {
+  width: 100%;
+  padding: var(--e-8) var(--e-12);
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio-sm);
+  background: var(--bg-2);
+  color: var(--texto);
+}
+.creditos-grupo { margin: var(--e-16) 0; }
+.creditos-grupo h2 { display: flex; align-items: center; gap: var(--e-8); font-size: var(--t-lg); }
+.creditos-grupo-n {
+  padding: 1px 8px;
+  font-size: var(--t-xs);
+  color: var(--texto-3);
+  border: 1px solid var(--borde);
+  border-radius: 999px;
+}
+.creditos-grupo-nota { margin: 0 0 var(--e-8); font-size: var(--t-xs); color: var(--texto-3); }
+.creditos-tabla { margin: 0; padding: 0; list-style: none; }
+.creditos-tabla li {
+  display: grid;
+  grid-template-columns: 34px 1fr auto;
+  gap: var(--e-12);
+  align-items: center;
+  padding: var(--e-8) 0;
+  border-bottom: 1px solid var(--borde);
+  font-size: var(--t-sm);
+}
+.creditos-tabla-ico { display: grid; place-items: center; }
+.creditos-tabla-txt { display: grid; gap: 1px; min-width: 0; }
+.creditos-tabla-autor, .creditos-tabla-cambios, .creditos-tabla-usos {
+  font-size: var(--t-xs);
+  color: var(--texto-3);
+}
+.creditos-tabla-id { font-size: var(--t-xs); color: var(--texto-3); white-space: nowrap; }
+.creditos-page-pie { margin-top: var(--e-16); font-size: var(--t-sm); color: var(--texto-2); }
+
+@media (max-width: 620px) {
+  .creditos-tabla li { grid-template-columns: 30px 1fr; }
+  .creditos-tabla-id { grid-column: 2; }
+  .creditos-resumen { flex-direction: column; }
+}
+
+/* --- Selector de activos del editor ------------------------------------ */
+.sel-activo-elegido {
+  display: flex;
+  gap: var(--e-12);
+  align-items: center;
+  padding: var(--e-8);
+  background: var(--bg-2);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+}
+.sel-activo-elegido-txt { display: grid; gap: 1px; min-width: 0; font-size: var(--t-sm); }
+.sel-activo-cred, .sel-activo-elegido-txt code { font-size: var(--t-xs); color: var(--texto-3); }
+.sel-activo-quitar, .sel-activo-abrir {
+  padding: 4px 10px;
+  font-size: var(--t-xs);
+  font-weight: 600;
+  color: var(--texto-2);
+  background: transparent;
+  border: 1px solid var(--borde-fuerte);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.sel-activo-quitar { margin-left: auto; }
+.sel-activo-abrir { margin: var(--e-8) 0 0; }
+.sel-activo-panel {
+  margin-top: var(--e-8);
+  padding: var(--e-12);
+  background: var(--bg-2);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+}
+.sel-activo-panel input[type="search"] {
+  width: 100%;
+  padding: 6px var(--e-12);
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio-sm);
+  background: var(--bg-3);
+  color: var(--texto);
+}
+.sel-activo-rejilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: var(--e-8);
+  margin: var(--e-8) 0 0;
+  padding: 0;
+  list-style: none;
+  max-height: 340px;
+  overflow-y: auto;
+}
+.sel-activo-item {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  width: 100%;
+  padding: var(--e-8);
+  background: transparent;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+  cursor: pointer;
+  text-align: center;
+}
+.sel-activo-item:hover { border-color: var(--primario); }
+.sel-activo-item.es-actual { border-color: var(--primario); border-width: 2px; }
+.sel-activo-item-tit { font-size: var(--t-xs); color: var(--texto); line-height: 1.25; }
+.sel-activo-item-lic { font-size: 0.68rem; color: var(--texto-3); }
