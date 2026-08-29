@@ -1,5 +1,19 @@
 # PLAN-LMS — Auditoría y planeación: PTEM como LMS multiacademia
 
+> **EL CALENDARIO YA NO VIVE AQUÍ.** Desde el 29 de agosto de 2026 la hoja de
+> ruta única es **`docs/PLAN-TECNICO-FASES.md`**: existía un segundo plan de 7
+> fases técnicas (con las 3 primeras ya construidas) que este documento
+> desconocía, y los dos se pisaban en la clase en vivo, en el peso del bundle y
+> en los certificados. Este archivo conserva el **detalle** —arquitectura,
+> modelos de datos, reglas, decisiones y su porqué—; el orden de trabajo se
+> consulta allí.
+>
+> Correspondencias tras la unificación: la **Fase 13** de aquí es el trabajo
+> **A**; la **14**, el **B**; la **15**, el **D**; la **16 quedó absorbida** por
+> el trabajo **C** (clase en vivo), que ya tenía un modelo de datos mejor
+> decidido —se descartan `sesionesEscena` y `recorridos`—; y la **Fase 8**
+> (certificados) quedó absorbida por el trabajo **H** (certificados con QR).
+>
 > **AMPLIACIÓN VIGENTE: 2026-08-29 — ver §21-§33 al final del documento.**
 > Incluye el diagnóstico del incidente que dejó la web sin actualizarse (§33):
 > el push de imágenes optimizadas sí subió, lo que falló fue CI, y como el
@@ -1615,6 +1629,10 @@ crea colecciones nuevas, y borrarlas no toca ni progreso, ni intentos, ni el
 libro de calificaciones.
 
 ## 30. Roadmap actualizado
+
+> **Superado el 29-08-2026.** Esta tabla se conserva como registro de lo que se
+> planeó ese día. El calendario vigente, ya unificado con las 7 fases técnicas
+> y con lo terminado tachado, está en `docs/PLAN-TECNICO-FASES.md`.
 
 | Fase | Contenido | Estado |
 |---|---|---|

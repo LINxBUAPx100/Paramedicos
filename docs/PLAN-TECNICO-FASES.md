@@ -1,28 +1,82 @@
-# Plan técnico por fases — estado y pendientes
+# Plan por fases de PTEM — hoja de ruta única
 
-> **Para quien retome esto.** Este documento es el registro vivo del trabajo
-> TÉCNICO (software). No sustituye a `CLAUDE.md`, que gobierna el trabajo
-> EDITORIAL (redactar el temario). Son dos proyectos distintos y avanzan por
-> separado: el software funciona sin que exista una línea de temario nuevo.
+> **Este es el ÚNICO calendario del proyecto.** Antes había dos: este (7 fases
+> técnicas) y la ampliación de `PLAN-LMS.md` §21-§33 (calidad editorial,
+> botiquín, entrenador de farmacología y simulador de escenas). Se escribieron
+> por separado, no se conocían entre sí y se pisaban en tres puntos. El 29 de
+> agosto de 2026 se fundieron aquí.
 >
-> Última actualización: **29 de agosto de 2026**.
-> Rama con las fases 1–3: `claude/fases-1-3-lectura-multigrupo-andamio`.
+> **Reparto de trabajo entre documentos.** Este archivo dice **qué se hace y en
+> qué orden**. `PLAN-LMS.md` conserva el **detalle** de arquitectura, modelos de
+> datos, reglas y decisiones (§1-§20 lo ya construido; §21-§33 la ampliación
+> editorial y el incidente de imágenes). `CLAUDE.md` gobierna el trabajo
+> EDITORIAL —redactar el temario— y es otro proyecto: el software avanza sin él.
+>
+> Última actualización: **29 de agosto de 2026**, con las fases 1-3 ya
+> integradas en `main` (commit de fusión `ebfc963`).
 
 ---
 
 ## Estado en una tabla
 
-| # | Fase | Estado | Dónde |
-|---|------|--------|-------|
-| 1 | Lectura por tema (287 → 3 lecturas) | **Hecha** | Vite actual |
-| 2 | Un profesor, varios grupos | **Hecha** | Vite actual |
-| 3 | Programas nuevos con lecciones de andamio | **Hecha** | Vite actual |
-| 4 | Clase en vivo con actividades calificables | Pendiente | Vite actual |
-| 5 | Hosting propio + plan Blaze | Pendiente | Infraestructura |
-| 6 | Migración a Next.js | Pendiente | — |
-| 7 | Certificados con QR verificable | Pendiente | Necesita 5 y 6 |
+Diez trabajos terminados y once pendientes. Los tachados no se vuelven a tocar
+salvo regresión demostrada.
 
-Pendientes sueltos de fases ya cerradas: ver «Deuda abierta» al final.
+### Terminado
+
+| Trabajo | De dónde venía |
+|---|---|
+| ~~Planes comerciales y capacidades centralizadas~~ | PLAN-LMS F1 |
+| ~~Aislamiento de contenido por academia + plantillas~~ | PLAN-LMS F2 |
+| ~~Editor estructural de contenido~~ | PLAN-LMS F3 |
+| ~~Cableado del resolutor a las páginas de estudio~~ | PLAN-LMS F4 |
+| ~~Permisos editoriales granulares del profesor~~ | PLAN-LMS F6 |
+| ~~Página de inicio por secciones configurables~~ | PLAN-LMS F7 |
+| ~~Plantillas versionadas, clonación y replicación~~ | PLAN-LMS F9 |
+| ~~**Fase 1** — Lectura por tema (287 → 3 lecturas)~~ | técnico F1 |
+| ~~**Fase 2** — Un profesor, varios grupos~~ | técnico F2 |
+| ~~**Fase 3** — Programas de andamio~~ | técnico F3 |
+
+### Pendiente, en orden de ejecución
+
+| # | Trabajo | Duración | Depende de |
+|---|---|---|---|
+| **A** | Calidad editorial v2 + partir el bundle | larga, por lotes | — |
+| **B** | Mi Botiquín | corta | tu lista de artículos |
+| **C** | Clase en vivo con actividades calificables **(incluye el simulador de escenas)** | 2-3 semanas | A, para que las escenas exijan lo que el temario enseña |
+| **D** | Entrenador de farmacología | media | tu catálogo de fármacos |
+| **E** | Editor de temas (bloques, quiz, flashcards, actividades) | media | — |
+| **F** | Hosting propio + plan Blaze | 2-3 días | C, para contratar sabiendo el consumo real |
+| **G** | Migración a Next.js | 3-5 semanas | F |
+| **H** | Certificados con QR verificable | 2-3 semanas | F y G |
+| **I** | Plan CURSO + directorio de capacitadores | media | — |
+| **J** | Auditoría, paginación de `/admin`, validar `intentos` | media | — |
+| **K** | Tipo MEDICINA (convocatorias) | larga | — |
+
+## Los tres choques que había, y cómo quedaron
+
+| Se pisaban | Resolución |
+|---|---|
+| Fase técnica 4 (clase en vivo, modelo `sesionesVivas` + `participantes`) **vs** PLAN-LMS Fase 16 (simulador de escenas, modelo `sesionesEscena` + `recorridos`) | **Gana el modelo técnico**, que estaba mucho más decidido: un documento por alumno para evitar contención de Firestore, presencia en Realtime Database porque Firestore no avisa cuando alguien cierra la laptop, y política de `sin_responder`. El simulador de escenas **no es una función aparte**: es un TIPO de actividad dentro de la clase en vivo, más un modo de repaso individual. Se descartan `sesionesEscena` y `recorridos`. |
+| Fase técnica 1 (agregados, hecha) **vs** PLAN-LMS Fase 13 (partir `planRescate.js`) | **No eran lo mismo y las dos hacen falta.** Los agregados ya arreglaron la lectura de una academia MIGRADA (3 lecturas por lección). Partir el bundle arregla a la academia SIN migrar, que descarga el temario entero como JavaScript: medido hoy, un trozo de 3,037 kB (700 kB gzip). Ya figuraba como deuda abierta de la Fase 1; ahora es el requisito previo del trabajo **A**. |
+| Fase técnica 7 (certificados con QR) **vs** PLAN-LMS Fase 8 (certificados digitales) | **Gana la versión con QR**, que es la misma función mejor pensada: página pública de verificación, folio imposible de adivinar y revocación. PLAN-LMS F8 queda absorbida. |
+
+## La tensión que hay que decidir pronto
+
+La migración a Next.js **reescribe todas las pantallas**, y este plan tiene una
+regla propia que dice «no migrar y construir funciones nuevas a la vez». Eso
+deja dos caminos, y hay que elegir a sabiendas:
+
+- **Construir ahora en Vite y portar después** (el orden de la tabla). Ves
+  botiquín, clase en vivo y entrenador funcionando en semanas, y pagas su
+  reescritura durante la migración. El botiquín y el entrenador son baratos de
+  portar (son datos y pantallas simples); la clase en vivo no.
+- **Migrar primero y construir una sola vez.** Son entre 4 y 6 semanas de
+  hosting más migración sin nada nuevo que enseñar a nadie, y después todo se
+  construye una vez.
+
+La tabla asume el primer camino porque el segundo deja mes y medio sin nada
+visible. **No está decidido.**
 
 ---
 
@@ -182,10 +236,29 @@ o `--produccion` con credenciales. `--retirar --apply` lo borra.
 
 ---
 
-## Fase 4 — Clase en vivo con actividades calificables · PENDIENTE
+## Trabajo C (antes «Fase 4») — Clase en vivo con actividades calificables · PENDIENTE
 
 La fase grande. **2–3 semanas.** Todo lo anterior existe para que esta se pueda
 hacer bien.
+
+> **Absorbe el simulador de escenas** que PLAN-LMS §28 planeaba aparte. Una
+> escena simulada pasa a ser un TIPO de actividad de esta clase en vivo, no un
+> sistema paralelo: la maestra abre la sesión, pone una escena como checkpoint,
+> ve el avance y califica con las reglas de aquí abajo. Se descartan las
+> colecciones `sesionesEscena` y `recorridos` que proponía aquel documento;
+> mandan `sesionesVivas` y `participantes`.
+>
+> De PLAN-LMS §28 **sí se conserva**: el esquema de la escena como grafo con
+> finales distintos y sus topes (12 nodos, 3 opciones por nodo, 4 finales, 6
+> decisiones de profundidad); los tres orígenes (lote curado, 3 variantes por
+> módulo generadas, y editor para la maestra); el modo de **repaso individual**
+> fuera de clase; y la regla de que una escena solo califica si está `validado`
+> o `publicado`.
+>
+> Dos decisiones de PLAN-LMS quedan **revocadas** por las de esta fase, que son
+> mejores: «cancelar sin efecto» se cubre con los estados de `participantes`, y
+> la calificación no es libre sino que sigue la tabla de `sin_responder` /
+> `pendiente` / `evaluado` de más abajo.
 
 ### Modelo de datos acordado
 
@@ -269,7 +342,7 @@ eso ya está arreglado.
 
 ---
 
-## Fase 5 — Hosting propio + Blaze · PENDIENTE
+## Trabajo F (antes «Fase 5») — Hosting propio + Blaze · PENDIENTE
 
 Se hace **después** de que la clase en vivo funcione, para contratar sabiendo
 cuánto consume de verdad. **2–3 días.**
@@ -282,7 +355,7 @@ cuánto consume de verdad. **2–3 días.**
 
 ---
 
-## Fase 6 — Migración a Next.js · PENDIENTE
+## Trabajo G (antes «Fase 6») — Migración a Next.js · PENDIENTE
 
 Conviene **solo cuando ya haya servidor**. La razón principal no es la moda:
 Next.js puede armar la lección en el servidor y mandar el texto ya listo, lo que
@@ -302,9 +375,10 @@ hace *desaparecer* el problema del temario pesado en vez de mitigarlo.
 
 ---
 
-## Fase 7 — Certificados con QR verificable · PENDIENTE
+## Trabajo H (antes «Fase 7») — Certificados con QR verificable · PENDIENTE
 
-Necesita las fases 5 y 6. **2–3 semanas.**
+Necesita los trabajos F y G. **2–3 semanas.** Absorbe la «Fase 8 — certificados
+digitales» de PLAN-LMS: es la misma función, mejor pensada.
 
 El QR no vale por el QR: vale porque lleva a una página **pública, en el dominio
 de la academia**, que confirma que el certificado existe y sigue vigente, sin
@@ -329,15 +403,107 @@ certificado sigue descargable y su QR funciona para siempre.
 
 ---
 
+## Trabajo A — Calidad editorial v2 + partir el bundle · PENDIENTE · **va primero**
+
+Detalle completo en `PLAN-LMS.md` §25. Resumen y lo que cambió al unificar:
+
+**Primero la infraestructura, que además salda una deuda de la Fase 1.** El
+bundle sirve el temario entero como un trozo de 3,037 kB (700 kB gzip, medido
+el 29 de agosto). Los agregados de la Fase 1 no lo tocan: solo ayudan a una
+academia migrada. Se parte el generador en estructura ligera + un archivo por
+módulo + índice de búsqueda + banco de preguntas por módulo, y `src/data/index.js`
+gana `getTemaCompleto()` asíncrono. Sin esto, enriquecer el temario lo llevaría
+a 12-16 MB.
+
+**Después el contenido, un lote por entrega.** Lote 0 cierra lo que falta de
+verdad: 4 patologías, 1 procedimiento, 3 prácticas y el cableado de
+`alcanceDeExamen` de 12 nodos de examen. Luego, módulo por módulo, en este
+orden: M3 y M5 (vía aérea, soporte vital, trauma), M4, M6, M2, M1. A cada
+lección se le añaden tabla comparativa, algoritmo, mnemotecnias, «Lo que más se
+pregunta», «Errores frecuentes», «Repaso rápido» y preguntas de repaso oral,
+**con los bloques que ya existen** y sin tocar el esquema.
+
+**Corrección importante de la línea base.** `CLAUDE.md` §0 dice 161 lecciones
+con material y 107 temas vacíos. Medido con `npm run inventario` el 29 de
+agosto: **268 de 273 lecciones con material y 19 vacíos**, de los cuales 12 son
+nodos de examen que no llevan prosa. El temario está casi escrito; esto es una
+pasada de calidad, no de relleno. `docs/PLAN-TECNICO-FASES.md` heredó la cifra
+vieja al describir la Fase 1 («107 de los 287 temas siguen vacíos»): esa frase
+describe el momento en que se midieron los agregados, no el estado de hoy.
+
+---
+
+## Trabajo B — Mi Botiquín · PENDIENTE
+
+Detalle en `PLAN-LMS.md` §26. La función más barata y la que menos depende del
+temario.
+
+Catálogo curado por compartimento, ficha por artículo (para qué sirve, cuándo
+se usa, cuándo no, cómo se revisa antes del turno, errores frecuentes, con qué
+se confunde) y tres estados —«en tu botiquín», «próximo a desbloquear» y
+«bloqueado» en silueta— **derivados del progreso que la app ya carga: cero
+lecturas y cero escrituras nuevas**. Ruta `/botiquin`.
+
+Las fotografías del equipo entran por el pipeline de activos médicos, con
+licencia, crédito, saneado y hash sellado, **no copiadas a mano en `public/`**
+(ver `PLAN-LMS.md` §33.6 y el incidente que lo motivó).
+
+**Hace falta de la academia:** lista de artículos por compartimento, qué módulo
+desbloquea cada uno, tipo de unidad y las fotos.
+
+---
+
+## Trabajo D — Entrenador de farmacología · PENDIENTE · bloqueado
+
+Detalle en `PLAN-LMS.md` §27. **No empieza hasta que llegue el catálogo de
+fármacos de la academia**, con presentaciones y concentraciones.
+
+Ficha propia por fármaco con enlace bidireccional a los temas de M4 derivado
+del catálogo (no se edita ninguna lección). Cuatro modos: ficha, tarjetas,
+«dosis relámpago» y casos.
+
+**Regla dura:** ninguna dosis sin fuente completa —documento, edición, año y
+capítulo o página— y una prueba automática que rechaza la ficha que no la
+traiga, más el aviso permanente de que la cifra sale de la guía citada y no del
+cuadro básico de la unidad. Es lo que hace defendible la autorización expresa
+del dueño para enseñar dosis (`PLAN-LMS.md` §23.1), que levanta de forma
+condicionada el bloqueo de `CLAUDE.md` §6 y §11.
+
+---
+
+## Trabajo E — Editor de temas · PENDIENTE
+
+Era la Fase 5 de PLAN-LMS. Que el staff edite bloques, quiz, flashcards y
+actividades desde la interfaz, con borradores y vista previa. La capa de datos
+y las reglas ya existen desde la Fase 2 de aquel plan; falta la pantalla.
+
+---
+
+## Trabajos I, J y K — PENDIENTES, sin urgencia
+
+Vienen de PLAN-LMS F10, F11 y F12. Ninguno bloquea a los demás.
+
+- **I — Plan CURSO + directorio de capacitadores.** Academia de un solo curso
+  (RCP, ACLS, PHTLS) y su directorio, si la academia lo activa.
+- **J — Auditoría y coste de `/admin`.** Historial append-only; paginación y
+  contadores de `/admin`, que hoy lee `usuarios` e `intentos` completos sin
+  límite y puede agotar la cuota; y validación de los campos numéricos de
+  `intentos`, que hoy permite inyectar un 100 % falso.
+- **K — Tipo MEDICINA.** Organización por convocatoria e importación de
+  temarios oficiales, nunca inventados.
+
+---
+
 ## Deuda abierta
 
 | Qué | De qué fase | Nota |
 |---|---|---|
 | Caché en IndexedDB | 1 | Refrescar la pestaña vuelve a pagar 3 lecturas |
-| Partir el chunk de 3 MB del bundle | 1 | Solo afecta a academias sin migrar |
 | Ver los flujos de profesor en navegador | 2 | Necesita un usuario de prueba |
 | Sembrar el andamio en producción | 3 | Decisión de la academia |
-| 2 pruebas en rojo por SVG modificados a mano | — | **Preexistente, no es de estas fases.** `public/imagenes/medical/bioicons/*` están modificados en el árbol de trabajo y `generadoAlDia.test.mjs` lo detecta |
+| ~~2 pruebas en rojo por SVG modificados a mano~~ | — | **RESUELTO el 29 de agosto** (commit `09176cd`). Era el mismo fallo que tuvo `main` en rojo 11 horas y bloqueó el despliegue: los SVG se optimizaron sin regenerar el catálogo que sella su hash. El minificado es ahora parte del pipeline. Ver `PLAN-LMS.md` §33 |
+| Verificar el pipeline de activos con red a `smart.servier.com` | — | El minificado se integró, pero la reproducibilidad byte a byte **no está verificada**: desde el entorno de trabajo esa fuente da 403 y sin ella el importador deja fuera 48 activos. Correr una vez `npm i --no-save svgo && npm run activos:importar` |
+| Partir el chunk de 3 MB del bundle | 1 | Promovido: es el requisito previo del **trabajo A** |
 
 ### Decisiones que faltan (ninguna bloquea)
 
