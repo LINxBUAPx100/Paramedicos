@@ -20,9 +20,12 @@ import {
   cursoIdDe, lotes, cursoDesdePlantilla, docsClonadosParaAcademia,
 } from '../contenidoModelo.js'
 import {
-  academiaMigrada, ensamblarModulos, construirApi,
-  indiceDesdeEstructura, indiceDesdeModulos,
+  academiaMigrada, ensamblarModulos, construirApi, construirApiBajoDemanda,
+  indiceDesdeEstructura, indiceDesdeModulos, temaDesdeDoc,
 } from '../contenidoApi.js'
+import {
+  leerAgregado, escribirAgregadosDeCurso, selloDeAgregados, agregadosUtilizables,
+} from './agregados.js'
 import { huellaTema } from '../replicacionModelo.js'
 import { programasVisibles, programasDeGrupo } from '../programasModelo.js'
 import { cursosDelUsuario, cursoAServir } from '../cursosDelUsuario.js'
@@ -136,6 +139,25 @@ export async function clonarPlantillaAAcademia({ academiaId, plantillaId, onProg
       await batch.commit()
       hechos += grupo.length
       onProgreso?.({ hechos, total: temas.length })
+    }
+
+    // AGREGADOS antes de dar la clonación por completa. Se generan desde los
+    // mismos temas que se acaban de escribir, no releyéndolos de Firestore:
+    // serían 287 lecturas para producir lo que ya está en memoria.
+    //
+    // Un fallo aquí NO invalida la clonación: los temas ya están y el curso
+    // funciona por el camino completo. Se registra y se sigue; el sello que
+    // escribe `escribirAgregadosDeCurso` es lo que activa el camino barato, y
+    // sin él el resolutor no lo intenta.
+    try {
+      const temasPorId = new Map(temas.map((t) => [t.temaId, t]))
+      const { modulos } = ensamblarModulos(curso.estructura, temasPorId, { incluirBorradores: true })
+      await escribirAgregadosDeCurso({
+        academiaId, cursoId, version,
+        modulos: construirApi(modulos).modulos,
+      })
+    } catch (err) {
+      console.warn(`[contenido] Agregados no generados para ${cursoId}:`, err?.message || err)
     }
 
     await updateDoc(doc(db, 'cursos', cursoId), {
@@ -363,6 +385,10 @@ export async function indiceDeAcademia(academia, acceso = null, cursoPreferido =
           academiaId,
           cursoId: curso.id,
           cursos: cursosDelUsuario(cursos, acceso || {}, curso.id),
+          // Sello de agregados del curso. Viaja con el índice porque el doc del
+          // curso ya se leyó aquí: así el resolutor bajo demanda sabe si puede
+          // usar el camino barato sin gastar otra lectura para averiguarlo.
+          agregados: curso.agregados || null,
         }
       })().catch((err) => {
         console.warn(`[contenido] Índice legacy para ${academiaId}:`, err?.message || err)
@@ -402,4 +428,178 @@ export function limpiarCacheContenido(academiaId) {
     cacheContenido.clear()
     cacheIndices.clear()
   }
+}
+
+
+// ============================================================
+//  RESOLUTOR BAJO DEMANDA (Fase 1)
+// ------------------------------------------------------------
+//  `contenidoDeAcademia` sigue existiendo y sigue siendo correcto: baja el
+//  curso entero y responde todo en memoria. El problema es el precio —287
+//  lecturas y ~3 MB por alumno y sesión, 57 400 lecturas cuando 200 alumnos
+//  abren clase a la vez—, no el resultado.
+//
+//  Esta puerta devuelve la MISMA información pidiendo solo lo que hace falta:
+//  el índice ya está cargado por el shell, la lección es una lectura y cada
+//  vista derivada lee su agregado. Abrir una lección pasa de 287 a 3.
+//
+//  Tres caminos, y el orden importa:
+//
+//   1. Academia migrada CON agregados al día → lectura por tema. El objetivo.
+//   2. Academia migrada SIN agregados (curso clonado antes de esta fase, o
+//      recién editado) → carga completa de SU Firestore, envuelta en la misma
+//      interfaz. Cuesta lo de antes y es correcta.
+//   3. Academia sin migrar → bundle, también envuelto.
+//
+//  El caso 2 NO puede caer al bundle, y por eso está separado del 3: el bundle
+//  es el temario genérico, y servírselo a una academia migrada le enseñaría
+//  contenido que no es el suyo creyendo que sí lo es. Es el mismo fallo que ya
+//  destapó el CI en `temasDeCurso`, y aquí sería silencioso.
+// ============================================================
+
+const cacheBajoDemanda = new Map()
+
+/**
+ * Envuelve una API COMPLETA (la de siempre) en la interfaz bajo demanda.
+ *
+ * No ahorra nada: el contenido ya está entero en memoria. Existe para que las
+ * pantallas hablen una sola interfaz y no tengan que preguntar de dónde viene
+ * lo que reciben, que es la regla de este archivo desde el principio.
+ */
+async function envolverApiCompleta(api) {
+  const { construirAgregados } = await import('../agregadosModelo.js')
+  const { porModulo, globales } = construirAgregados(api.modulos)
+  const porId = new Map(porModulo.map((m) => [m.moduloId, m]))
+  const temas = new Map(api.todosLosTemas.map((t) => [t.id, t]))
+  return construirApiBajoDemanda({
+    indice: api.indice || { ...indiceDesdeModulos(api.modulos), stats: api.stats },
+    fuente: api.fuente,
+    academiaId: api.academiaId || null,
+    cursoId: api.cursoId || null,
+    cursos: api.cursos || [],
+    cargarTema: async (temaId) => temas.get(temaId) || null,
+    cargarAgregado: async (tipo, moduloId) =>
+      (moduloId ? porId.get(moduloId)?.[tipo] : globales[tipo]) ?? null,
+  })
+}
+
+// Camino 1: lectura por tema. Devuelve null si este curso todavía no puede
+// servirse así, para que el llamante elija el camino correcto.
+async function bajoDemandaDeFirestore(academia, acceso, cursoPreferido) {
+  const indice = await indiceDeAcademia(academia, acceso, cursoPreferido)
+  if (!indice?.cursoId) return null
+  const { cursoId, academiaId } = indice
+  // Una lectura para saber si los agregados están completos y al día.
+  if (!agregadosUtilizables(await selloDeAgregados(cursoId))) return null
+  return construirApiBajoDemanda({
+    indice,
+    fuente: 'firestore',
+    academiaId,
+    cursoId,
+    cursos: indice.cursos || [],
+    cargarTema: async (temaId) => {
+      const docTema = await temaDeCurso(cursoId, temaId)
+      return docTema ? temaDesdeDoc(docTema) : null
+    },
+    cargarAgregado: (tipo, moduloId) => leerAgregado(cursoId, tipo, moduloId),
+  })
+}
+
+/**
+ * Contenido del curso servido POR TEMA. Misma información que
+ * `contenidoDeAcademia`, sin bajar las 287 lecciones.
+ *
+ * @param {Object} academia doc de la academia (como lo expone AuthContext).
+ * @param {Object} acceso   { rol, esSuperadmin, grupo } de quien pide.
+ * @param {string} cursoPreferido curso elegido en el selector, si lo hay.
+ */
+export async function contenidoBajoDemandaDeAcademia(academia, acceso = null, cursoPreferido = null) {
+  const academiaId = academia?.id
+  const clave = claveContenido(academiaId || 'legacy', acceso, cursoPreferido)
+  if (!cacheBajoDemanda.has(clave)) {
+    cacheBajoDemanda.set(
+      clave,
+      (async () => {
+        if (academiaId && academiaMigrada(academia)) {
+          const barato = await bajoDemandaDeFirestore(academia, acceso, cursoPreferido)
+          if (barato) return barato
+        }
+        // Camino 2 o 3 según la academia. `contenidoDeAcademia` ya decide entre
+        // su Firestore y el bundle, y ya cae a legacy solo si de verdad falla;
+        // aquí solo hay que envolver lo que devuelva.
+        return envolverApiCompleta(await contenidoDeAcademia(academia, acceso, cursoPreferido))
+      })().catch((err) => {
+        console.warn(`[contenido] Bajo demanda no disponible para ${academiaId}:`, err?.message || err)
+        cacheBajoDemanda.delete(clave)
+        return null
+      })
+    )
+  }
+  return cacheBajoDemanda.get(clave)
+}
+
+/**
+ * Regenera los agregados de un curso tras editar su contenido.
+ *
+ * Sin esto, quien edita una lección ve su cambio en la lección pero NO en el
+ * examen, el buscador ni el glosario: esas pantallas leen el agregado, que
+ * seguiría con el texto anterior.
+ *
+ * Relee los temas del curso a propósito. Son 287 lecturas, pero las paga UNA
+ * persona al editar y no doscientos alumnos al entrar a clase, y es la única
+ * forma de que el agregado refleje el curso entero y no solo la lección que se
+ * acaba de tocar. Si el coste llegara a molestar, el paso siguiente es
+ * reconstruir solo el módulo afectado y rehacer los globales desde los
+ * agregados por módulo, sin volver a leer ningún tema.
+ */
+export async function regenerarAgregados(academiaId, cursoId) {
+  if (!academiaId || !cursoId) throw new Error('regenerarAgregados: faltan academiaId o cursoId.')
+  const curso = await obtenerCurso(cursoId)
+  if (!curso) throw new Error(`No existe el curso ${cursoId}.`)
+  const sello = await selloDeAgregados(cursoId)
+  const temas = await temasDeCurso(cursoId, { academiaId, soloPublicados: false })
+  const temasPorId = new Map(temas.map((t) => [t.temaId, t]))
+  const { modulos } = ensamblarModulos(curso.estructura, temasPorId, { incluirBorradores: true })
+  const resultado = await escribirAgregadosDeCurso({
+    academiaId,
+    cursoId,
+    modulos: construirApi(modulos).modulos,
+    version: (sello?.version || 0) + 1,
+  })
+  limpiarCacheContenido(academiaId)
+  cacheBajoDemanda.clear()
+  return resultado
+}
+
+// Temporizadores de regeneración por curso.
+const regeneracionPendiente = new Map()
+
+/**
+ * Programa la regeneración de agregados tras editar, agrupando ráfagas.
+ *
+ * Un editor no guarda una lección: guarda quince seguidas. Regenerar en cada
+ * guardado serían quince pasadas completas sobre el curso para un resultado que
+ * solo importa al final. Se espera a que la ráfaga pare.
+ *
+ * Mientras tanto el sello está en `desactualizado` y los alumnos se sirven por
+ * el camino completo: más caro, pero nunca con el contenido anterior. Si la
+ * pestaña se cierra antes de que salte el temporizador, el sello se queda
+ * caducado y el siguiente guardado —o la acción manual del panel— lo arregla.
+ * Ese caso degrada el coste, nunca la corrección.
+ */
+export function programarRegeneracionAgregados(academiaId, cursoId, { esperaMs = 15000 } = {}) {
+  if (!academiaId || !cursoId) return
+  const anterior = regeneracionPendiente.get(cursoId)
+  if (anterior) clearTimeout(anterior)
+  regeneracionPendiente.set(
+    cursoId,
+    setTimeout(() => {
+      regeneracionPendiente.delete(cursoId)
+      regenerarAgregados(academiaId, cursoId).catch((err) => {
+        // No se reintenta en bucle: el sello sigue caducado, así que el
+        // contenido servido es correcto y el siguiente guardado lo reintenta.
+        console.warn(`[agregados] Regeneración fallida de ${cursoId}:`, err?.message || err)
+      })
+    }, esperaMs)
+  )
 }

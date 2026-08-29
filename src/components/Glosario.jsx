@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import Icon from './Icon.jsx'
-import { useGlosario } from '../lib/useGlosario.js'
+import { useGlosarioCompleto } from '../lib/useGlosario.js'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
 import { progresoGlosario } from '../lib/glosario.js'
 
@@ -23,7 +23,7 @@ import { progresoGlosario } from '../lib/glosario.js'
 //  palabra y la resalta un momento.
 // ============================================================
 export default function Glosario() {
-  const glosario = useGlosario()
+  const glosario = useGlosarioCompleto()
   const { temaVisible } = useVisibilidad()
   const [params, setParams] = useSearchParams()
   const buscado = params.get('t') || ''

@@ -19,6 +19,8 @@
 //  la posición en la estructura — mismo contrato que src/data/index.js.
 // ============================================================
 
+import { seccionesDesdeFirestore } from './contenidoModelo.js'
+
 export const ESTADOS_CONTENIDO = ['legacy', 'migrando', 'migrado', 'error']
 
 // Estado de migración de contenido de una academia. Cualquier valor ausente
@@ -42,7 +44,10 @@ export function temaDesdeDoc(docTema) {
     duracion: docTema.duracion || '',
     resumen: docTema.resumen || '',
     objetivos: docTema.objetivos || [],
-    secciones: docTema.secciones || [],
+    // Las filas de tabla viajan ENVUELTAS en un objeto porque Firestore no
+    // admite arreglos dentro de arreglos (ver contenidoModelo.js). Aquí se
+    // desenvuelven; un tema guardado antes de eso pasa sin tocarse.
+    secciones: seccionesDesdeFirestore(docTema.secciones || []),
     conceptosClave: docTema.conceptosClave || [],
     flashcards: docTema.flashcards || [],
     quiz: docTema.quiz || [],
@@ -252,5 +257,137 @@ export function construirApi(modulosBase) {
     todasLasPreguntas,
     todasLasFlashcards,
     buscar,
+  }
+}
+
+// ============================================================
+//  API BAJO DEMANDA (Fase 1) — la misma información, sin cargar el curso
+// ------------------------------------------------------------
+//  `construirApi` de arriba necesita los 287 temas COMPLETOS en memoria para
+//  poder responder cualquier cosa. Esta variante responde lo mismo pidiendo
+//  solo lo que cada pregunta necesita:
+//
+//    · lo que sale del ÍNDICE (títulos, numeración, vecinos, contadores) se
+//      responde SIN NINGUNA lectura: ya está cargado por el shell;
+//    · una lección concreta es una lectura;
+//    · las vistas derivadas (glosario, buscador, banco, mazo, galería) leen su
+//      AGREGADO, que se precalculó al publicar el curso (ver agregadosModelo).
+//
+//  Las funciones que antes eran sincrónicas y ahora cuestan una lectura pasan a
+//  devolver promesa. Se distinguen a propósito por el nombre —`getTemaAsync`,
+//  `preguntasDeModuloAsync`— en vez de reutilizar el nombre viejo con otro tipo
+//  de retorno: si una pantalla sin migrar llamara a `getTema` y recibiera una
+//  promesa, pintaría «[object Promise]» en lugar de fallar, y eso es un error
+//  que llega a producción. Con nombres distintos, la que no se migró revienta
+//  en la primera prueba.
+//
+//  Los loaders los pone la fuente (Firestore lee documentos; el bundle calcula
+//  en memoria), así que los componentes siguen sin elegir de dónde viene nada.
+// ============================================================
+
+/**
+ * @param {Object} opciones
+ * @param {Object} opciones.indice        índice ligero ya cargado (modulos + stats).
+ * @param {Function} opciones.cargarTema  (temaId) => Promise<tema|null>
+ * @param {Function} opciones.cargarAgregado (tipo, moduloId|null) => Promise<any>
+ */
+export function construirApiBajoDemanda({
+  indice, cargarTema, cargarAgregado,
+  fuente = 'firestore', academiaId = null, cursoId = null, cursos = [],
+}) {
+  const modulos = indice?.modulos || []
+
+  // Plano de navegación: id de tema → su ficha ligera y su módulo. Se arma una
+  // vez sobre el índice (que ya está en memoria) y responde vecinos, número y
+  // datos del módulo sin tocar la red.
+  const fichas = []
+  const porTemaId = new Map()
+  for (const modulo of modulos) {
+    for (const t of modulo.temas || []) {
+      const ficha = {
+        id: t.id,
+        numero: t.numero,
+        titulo: t.titulo,
+        moduloId: modulo.id,
+        moduloNumero: modulo.numero,
+        moduloTitulo: modulo.titulo,
+        moduloColor: modulo.color || '',
+      }
+      fichas.push(ficha)
+      porTemaId.set(t.id, ficha)
+    }
+  }
+
+  const getModulo = (moduloId) => modulos.find((m) => m.id === moduloId)
+  const getTemaLigero = (temaId) => porTemaId.get(temaId) || null
+
+  const getTemaVecinos = (temaId) => {
+    const idx = fichas.findIndex((t) => t.id === temaId)
+    return {
+      anterior: idx > 0 ? fichas[idx - 1] : null,
+      siguiente: idx >= 0 && idx < fichas.length - 1 ? fichas[idx + 1] : null,
+      indice: idx,
+      total: fichas.length,
+    }
+  }
+
+  // La lección completa, enriquecida con los datos de su módulo igual que hacía
+  // `todosLosTemas`: las pantallas los usan para el color y las migas de pan.
+  //
+  //  La precedencia replica la de `construirApi`, y no es arbitraria:
+  //   · los datos del MÓDULO solo existen en el índice;
+  //   · los campos del TEMA mandan sobre la ficha (el documento del tema es
+  //     donde el editor escribe: si la estructura quedó con un título viejo,
+  //     el bueno es el del tema, igual que hoy);
+  //   · `numero` sale SIEMPRE del índice, porque es posicional: lo calcula el
+  //     orden del plan, no el documento.
+  const getTemaAsync = async (temaId) => {
+    const tema = await cargarTema(temaId)
+    if (!tema) return null
+    const ficha = getTemaLigero(temaId)
+    if (!ficha) return tema
+    return { ...ficha, ...tema, numero: ficha.numero }
+  }
+
+  // Concatena un agregado de TODOS los módulos, en orden de plan. Son tantas
+  // lecturas como módulos (7 en el plan actual) y solo lo piden las pantallas
+  // que de verdad abarcan el curso entero: el examen general y el mazo completo.
+  const deTodosLosModulos = async (tipo) => {
+    const partes = await Promise.all(modulos.map((m) => cargarAgregado(tipo, m.id)))
+    return partes.flatMap((p) => p || [])
+  }
+
+  return {
+    fuente, academiaId, cursoId, cursos, indice,
+    stats: indice?.stats || {},
+    modulos,
+
+    // Sin lecturas: sale del índice.
+    getModulo,
+    getTemaLigero,
+    getTemaVecinos,
+    // Lista plana de FICHAS de todos los temas, en orden de plan: id, número,
+    // título y datos del módulo. Es lo que necesitan las pantallas que enumeran
+    // el temario sin enseñarlo (progreso, navegación), y no cuesta ninguna
+    // lectura porque ya viene en el índice.
+    todosLosTemasLigeros: fichas,
+
+    // Una lectura cada una.
+    getTemaAsync,
+    enlacesGlosarioAsync: () => cargarAgregado('glosarioEnlaces', null),
+    atlasAsync: () => cargarAgregado('atlas', null),
+    preguntasDeModuloAsync: (moduloId) => cargarAgregado('preguntas', moduloId),
+    flashcardsDeModuloAsync: (moduloId) => cargarAgregado('flashcards', moduloId),
+    glosarioDeModuloAsync: (moduloId) => cargarAgregado('glosario', moduloId),
+    // Fichas de las lecciones de un módulo: lo que la página del módulo lista
+    // (icono, resumen, duración, conteos) sin abrir ninguna lección.
+    fichasDeModuloAsync: (moduloId) => cargarAgregado('fichas', moduloId),
+
+    // Tantas lecturas como módulos.
+    todasLasPreguntasAsync: () => deTodosLosModulos('preguntas'),
+    todasLasFlashcardsAsync: () => deTodosLosModulos('flashcards'),
+    todasLasFichasAsync: () => deTodosLosModulos('fichas'),
+    glosarioCompletoAsync: () => deTodosLosModulos('glosario'),
+    imagenesAsync: () => deTodosLosModulos('imagenes'),
   }
 }

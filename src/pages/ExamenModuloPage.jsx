@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { useContenido, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
+import {
+  useApiContenido, usePreguntasDeModulo, CargandoContenido, ErrorContenido,
+} from '../context/ContenidoContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useProgress } from '../context/ProgressContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
@@ -32,8 +34,9 @@ function guardarSemilla(moduloId, semilla) {
 
 export default function ExamenModuloPage() {
   const { moduloId } = useParams()
-  const { contenido, error, reintentar } = useContenido()
-  const modulo = contenido?.getModulo(moduloId)
+  const { api } = useApiContenido()
+  const modulo = api?.getModulo(moduloId)
+  const { preguntas: delModulo, cargando, error, reintentar } = usePreguntasDeModulo(moduloId)
   const { user, perfil, academiaId } = useAuth()
   const { moduloVisible, temaVisible } = useVisibilidad()
 
@@ -53,8 +56,8 @@ export default function ExamenModuloPage() {
   // Banco disponible: las preguntas del módulo, menos las de temas ocultos
   // para el grupo del alumno.
   const banco = useMemo(
-    () => (contenido?.preguntasDeModulo(moduloId) || []).filter((q) => temaVisible(q.temaId)),
-    [contenido, moduloId, temaVisible]
+    () => delModulo.filter((q) => temaVisible(q.temaId)),
+    [delModulo, temaVisible]
   )
   // El examen: un SUBCONJUNTO repartido por tema, reproducible desde la semilla.
   const preguntas = useMemo(
@@ -63,7 +66,7 @@ export default function ExamenModuloPage() {
   )
 
   if (error) return <ErrorContenido onReintentar={reintentar} />
-  if (!contenido) return <CargandoContenido />
+  if (cargando) return <CargandoContenido />
   if (!modulo) return <NotFound />
 
   // Módulo (módulo) oculta para el grupo del alumno: examen no disponible.
@@ -178,7 +181,7 @@ export default function ExamenModuloPage() {
             </Link>
           </div>
 
-          {fin && <ModuloCompletado modulo={modulo} modulos={contenido.modulos} pct={fin.pct} onCerrar={() => setFin(null)} />}
+          {fin && <ModuloCompletado modulo={modulo} modulos={api.modulos} pct={fin.pct} onCerrar={() => setFin(null)} />}
         </>
       )}
     </div>

@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { useContenido, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
+import { useTodasLasFichas, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
+import { buscarEnFilas } from '../lib/agregadosModelo.js'
 import Icon from '../components/Icon.jsx'
 import MedicalIcon from '../components/MedicalIcon.jsx'
 
 export default function BuscarPage() {
-  const { contenido, error, reintentar } = useContenido()
+  const { fichas, cargando, error, reintentar } = useTodasLasFichas()
   const [params] = useSearchParams()
   const [query, setQuery] = useState(params.get('q') || '')
-  const resultados = contenido ? contenido.buscar(query) : []
+  const resultados = buscarEnFilas(fichas, query)
 
   // Sincroniza con el buscador del header (?q=…) sin remontar la página.
   useEffect(() => {
@@ -17,7 +18,7 @@ export default function BuscarPage() {
   }, [params])
 
   if (error) return <ErrorContenido onReintentar={reintentar} />
-  if (!contenido) return <CargandoContenido />
+  if (cargando) return <CargandoContenido />
 
   return (
     <div className="buscar-page">

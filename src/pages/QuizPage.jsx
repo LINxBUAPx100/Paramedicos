@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { useContenido, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
+import { useTema, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
 import { useProgress } from '../context/ProgressContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
 import { nuevaSemilla } from '../lib/azar.js'
@@ -11,8 +11,7 @@ import Icon from '../components/Icon.jsx'
 
 export default function QuizPage() {
   const { temaId } = useParams()
-  const { contenido, error, reintentar } = useContenido()
-  const tema = contenido?.getTema(temaId)
+  const { tema, cargando, error, reintentar } = useTema(temaId)
   const { registrarQuiz } = useProgress()
   const { temaVisible } = useVisibilidad()
   const [semilla, setSemilla] = useState(() => nuevaSemilla(temaId))
@@ -29,7 +28,7 @@ export default function QuizPage() {
   )
 
   if (error) return <ErrorContenido onReintentar={reintentar} />
-  if (!contenido) return <CargandoContenido />
+  if (cargando) return <CargandoContenido />
   if (!tema) return <NotFound />
 
   // Quiz de un tema oculto para el grupo del alumno: no disponible.

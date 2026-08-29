@@ -30,8 +30,27 @@ import {
 } from '../permisosEditor.js'
 import { validarContenidoTema, normalizarContenido } from '../temaContenidoModelo.js'
 import { validarReferenciasStorage } from '../archivosModelo.js'
-import { lotes } from '../contenidoModelo.js'
-import { registrarHistorial, limpiarCacheContenido } from './contenido.js'
+import { lotes, seccionesParaFirestore, seccionesDesdeFirestore } from '../contenidoModelo.js'
+import {
+  registrarHistorial, limpiarCacheContenido, programarRegeneracionAgregados,
+} from './contenido.js'
+import { marcarAgregadosDesactualizados } from './agregados.js'
+
+// Tras cambiar contenido de una ACADEMIA hay que hacer dos cosas, y en este
+// orden: olvidar lo cacheado en esta pestaña y avisar de que los agregados
+// —glosario, buscador, banco de exámenes, mazo, galería— ya no reflejan el
+// curso. Mientras el aviso está puesto, los alumnos se sirven por el camino
+// completo: cuesta más, pero nunca enseña el contenido anterior al cambio.
+//
+// Las plantillas no llevan agregados (no se sirven a alumnos), así que se
+// quedan solo con la limpieza de caché.
+function invalidarContenido(destino, cursoId) {
+  if (destino?.modo !== 'academia') return
+  limpiarCacheContenido(destino.academiaId)
+  if (!cursoId) return
+  marcarAgregadosDesactualizados(destino.academiaId, cursoId)
+  programarRegeneracionAgregados(destino.academiaId, cursoId)
+}
 
 export class ConflictoVersion extends Error {
   constructor() {
@@ -162,7 +181,13 @@ export async function temasDeCursoEditor(destino, cursoId) {
 export async function temaDelEditor(destino, cursoId, temaId) {
   const col = coleccionesDe(destino)
   const snap = await getDoc(doc(db, col.temas, `${cursoId}__${temaId}`))
-  return snap.exists() ? { docId: snap.id, ...snap.data() } : null
+  if (!snap.exists()) return null
+  const datos = snap.data()
+  // Las filas de tabla se guardan ENVUELTAS en un objeto porque Firestore no
+  // admite arreglos dentro de arreglos (ver contenidoModelo.js). El editor las
+  // maneja como arreglos, así que se desenvuelven al leer y se vuelven a
+  // envolver al guardar. Un tema anterior a este cambio pasa sin tocarse.
+  return { docId: snap.id, ...datos, secciones: seccionesDesdeFirestore(datos.secciones || []) }
 }
 
 // ---------- guardado transaccional de estructura ----------
@@ -296,7 +321,7 @@ export async function guardarEstructura(contexto, destino, cursoId, versionEsper
   })
 
   // La copia servida a los alumnos de esta academia queda obsoleta.
-  if (destino.modo === 'academia') limpiarCacheContenido(destino.academiaId)
+  invalidarContenido(destino, cursoId)
   await historialSeguro({
     academiaId: idAcademiaDe(destino), accion,
     coleccion: col.cursos, docId: cursoId,
@@ -352,6 +377,11 @@ export async function guardarContenidoTema(contexto, destino, cursoId, temaId, v
     }
     tx.update(temaRef, {
       ...contenido,
+      // Espejo de la lectura: las filas de tabla vuelven a envolverse. Sin
+      // esto, guardar una lección con tabla desde el editor se rechaza con
+      // «Property array contains an invalid nested entity» y el profesor solo
+      // ve que no se guardó.
+      ...(contenido.secciones ? { secciones: seccionesParaFirestore(contenido.secciones) } : {}),
       version: actual + 1,
       actualizado: serverTimestamp(),
       actualizadoPor: uid,
@@ -360,7 +390,7 @@ export async function guardarContenidoTema(contexto, destino, cursoId, temaId, v
     return actual + 1
   })
 
-  if (destino.modo === 'academia') limpiarCacheContenido(destino.academiaId)
+  invalidarContenido(destino, cursoId)
   await historialSeguro({
     academiaId: idAcademiaDe(destino), accion,
     coleccion: col.temas, docId: `${cursoId}__${temaId}`,
@@ -438,7 +468,7 @@ export async function actualizarCursoEditor(contexto, destino, cursoId, versionE
     })
     return actual + 1
   })
-  if (destino.modo === 'academia') limpiarCacheContenido(destino.academiaId)
+  invalidarContenido(destino, cursoId)
   await historialSeguro({
     academiaId: idAcademiaDe(destino), accion, coleccion: col.cursos, docId: cursoId,
     despues: { ...campos, version },

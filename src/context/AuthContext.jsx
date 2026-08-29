@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { esCorreoSupremo } from '../lib/firebase/supremos.js'
 import { capacidadesDe, planEfectivo } from '../lib/capacidades.js'
 import { registrar } from '../lib/registro.js'
@@ -7,11 +7,28 @@ import { perfilCompleto } from '../lib/perfilMinimo.js'
 import {
   calcularAcceso, msHastaFinDePrueba, pertenenciaEfectiva, pruebaVigente,
 } from '../lib/accesoModelo.js'
+import { gruposDeUsuario, grupoActivoDe, puedeElegirGrupo } from '../lib/gruposDeUsuario.js'
 
 const AuthContext = createContext(null)
 
 // Roles con acceso al contenido siendo staff de una academia.
 const ROLES_STAFF = ['admin_escuela', 'instructor']
+
+// Grupo con el que se está trabajando, recordado POR ACADEMIA y por navegador.
+// Mismo patrón que el curso elegido en ContenidoContext, y por el mismo motivo:
+// es una preferencia de lectura, no una credencial.
+const CLAVE_GRUPO = (academiaId) => `ptem:grupo:${academiaId || 'sin-academia'}`
+
+function leerGrupoGuardado(academiaId) {
+  try { return localStorage.getItem(CLAVE_GRUPO(academiaId)) || null } catch { return null }
+}
+
+function guardarGrupo(academiaId, grupoId) {
+  try {
+    if (grupoId) localStorage.setItem(CLAVE_GRUPO(academiaId), grupoId)
+    else localStorage.removeItem(CLAVE_GRUPO(academiaId))
+  } catch { /* almacenamiento bloqueado: la elección dura lo que la sesión */ }
+}
 
 // Expone usuario de Firebase Auth + perfil de Firestore (rol, academia, estado) +
 // la academia del usuario, y calcula el acceso al contenido. El SDK de Firebase se
@@ -97,9 +114,36 @@ export function AuthProvider({ children }) {
   // que cuelga del contexto —temario, panel, exámenes— parte de estos valores,
   // así que al vencer la persona queda como recién registrada. El espejo en el
   // servidor es `pruebaVencida()` en firestore.rules.
-  const { academiaId, grupoId, vencida: pruebaTerminada } = pertenenciaEfectiva(perfil)
+  const { academiaId, vencida: pruebaTerminada } = pertenenciaEfectiva(perfil)
+  const rol = perfil?.rol || null
 
-  // Grupo del usuario en vivo (visibilidad de contenido para alumnos).
+  // Perfil EFECTIVO: una prueba vencida no conserva grupos, aunque el documento
+  // los siga guardando. Se aplica aquí una vez para que ni la lista ni el grupo
+  // activo tengan que acordarse.
+  const perfilEfectivo = pruebaTerminada ? null : perfil
+
+  // GRUPOS de esta persona. Un alumno tiene el suyo; un profesor puede llevar
+  // varios (`grupoIds`) y elige con cuál trabaja. Ver src/lib/gruposDeUsuario.js.
+  const grupos = useMemo(
+    () => gruposDeUsuario(perfilEfectivo, rol),
+    [perfilEfectivo, rol]
+  )
+
+  // Cuál tiene abierto. Vive en `localStorage` y no en el perfil porque es una
+  // preferencia de trabajo, no un permiso: perderla no rompe nada y guardarla
+  // costaría una escritura cada vez que la maestra cambia de grupo. Y no
+  // concede nada: `grupoActivoDe` descarta un id que no sea suyo.
+  const [grupoElegido, setGrupoElegido] = useState(() => leerGrupoGuardado(academiaId))
+  useEffect(() => { setGrupoElegido(leerGrupoGuardado(academiaId)) }, [academiaId])
+
+  const grupoId = grupoActivoDe({ perfil: perfilEfectivo, rol, elegido: grupoElegido })
+
+  const elegirGrupo = useCallback((id) => {
+    guardarGrupo(academiaId, id)
+    setGrupoElegido(id || null)
+  }, [academiaId])
+
+  // Grupo ACTIVO en vivo (visibilidad de contenido para alumnos).
   const [grupo, setGrupo] = useState(null)
   useEffect(() => {
     const gid = grupoId
@@ -156,7 +200,7 @@ export function AuthProvider({ children }) {
     }
   }, [academiaId])
 
-  const rol = perfil?.rol || null
+  // `rol` se calcula más arriba: los grupos lo necesitan antes que esto.
   // El admin supremo se reconoce por su correo (igual que en firestore.rules):
   // manda aunque su doc de Firestore aún no diga 'superadmin'.
   const esSupremo = esCorreoSupremo(user?.email)
@@ -227,8 +271,16 @@ export function AuthProvider({ children }) {
     rol,
     // EFECTIVOS: null cuando la prueba venció, aunque el perfil los conserve.
     academiaId,
+    // GRUPO ACTIVO: el doc y su id. Para un alumno es el suyo y no cambia;
+    // para un profesor, aquel con el que ha decidido trabajar ahora.
     grupo,
     grupoId,
+    // TODOS sus grupos, y con qué puede cambiar de uno a otro. `grupos` son
+    // ids: quien necesite los documentos los cruza con los de su academia
+    // (gruposDelPanel), que ya los tiene cargados.
+    grupos,
+    elegirGrupo,
+    puedeElegirGrupo: puedeElegirGrupo(rol, grupos),
     enPrueba: pruebaVigente(perfil),
     // true = entró con un código temporal que ya venció. La cuenta existe, pero
     // no pertenece a nada hasta que canjee un código nuevo o el de su academia.

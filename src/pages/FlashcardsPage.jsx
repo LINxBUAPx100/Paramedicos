@@ -1,6 +1,8 @@
 import { useParams, Link } from 'react-router-dom'
 import { useState, useMemo } from 'react'
-import { useContenido, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
+import {
+  useTema, useTodasLasFlashcards, CargandoContenido, ErrorContenido,
+} from '../context/ContenidoContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
 import Icon from '../components/Icon.jsx'
 
@@ -16,15 +18,19 @@ function mezclar(arr) {
 // Puerta de carga: el estado inicial del mazo (orden barajable) se calcula al
 // montar, así que el componente interno solo se monta con el contenido listo.
 export default function FlashcardsPage() {
-  const { contenido, error, reintentar } = useContenido()
+  const { temaId } = useParams()
+  // Un tema concreto cuesta UNA lectura; el repaso global, una por módulo.
+  const { tema, cargando: cargandoTema, error: errorTema, reintentar } = useTema(temaId)
+  const { flashcards, cargando: cargandoMazo, error: errorMazo } = useTodasLasFlashcards(!temaId)
+  const error = errorTema || errorMazo
+  // Con tema NO hace falta el mazo global: se espera solo a lo que se va a usar.
+  const cargando = temaId ? cargandoTema : cargandoMazo
   if (error) return <ErrorContenido onReintentar={reintentar} />
-  if (!contenido) return <CargandoContenido />
-  return <Flashcards contenido={contenido} />
+  if (cargando) return <CargandoContenido />
+  return <Flashcards tema={tema} flashcards={flashcards} />
 }
 
-function Flashcards({ contenido }) {
-  const { temaId } = useParams()
-  const tema = temaId ? contenido.getTema(temaId) : null
+function Flashcards({ tema, flashcards }) {
   const { temaVisible } = useVisibilidad()
 
   // Flashcards de un tema oculto para el grupo del alumno: no disponibles.
@@ -35,8 +41,8 @@ function Flashcards({ contenido }) {
       return tema.flashcards.map((f, i) => ({ ...f, id: `${tema.id}-${i}` }))
     }
     // Repaso global: excluye las flashcards de temas ocultos.
-    return contenido.todasLasFlashcards.filter((f) => temaVisible(f.temaId))
-  }, [tema, temaVisible, contenido])
+    return flashcards.filter((f) => temaVisible(f.temaId))
+  }, [tema, temaVisible, flashcards])
 
   const [orden, setOrden] = useState(() => baseCartas.map((_, i) => i))
   const [indice, setIndice] = useState(0)

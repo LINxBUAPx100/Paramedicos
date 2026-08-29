@@ -1,6 +1,8 @@
 import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useEffect } from 'react'
-import { useContenido, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
+import {
+  useTema, useCargaDeAgregado, CargandoContenido, ErrorContenido,
+} from '../context/ContenidoContext.jsx'
 import { getRecursos } from '../data/recursosDescarga.js'
 import { imagenesDeTema } from '../data/imagenes.js'
 import Imagen from '../components/Imagen.jsx'
@@ -28,10 +30,23 @@ export default function TemaPage() {
   const ref = searchParams.get('ref') // clave de imagen del Atlas a la que saltar
   const navigate = useNavigate()
   // Contenido de LA ACADEMIA del usuario (resolutor: Firestore o bundle).
-  const { contenido, error, reintentar } = useContenido()
-  const tema = contenido?.getTema(temaId)
+  // Se pide SOLO esta lección: antes se bajaba el curso entero para leer una.
+  const { tema, api, cargando, error, reintentar } = useTema(temaId)
   const { estado, marcarLeido } = useProgress()
   const { temaVisible } = useVisibilidad()
+
+  // Temas que entran en el examen, cuando ESTE nodo es un examen. Son los
+  // únicos que obligan a traer otras lecciones, porque el banco de preguntas
+  // sale de ellas; en una lección normal la lista está vacía y no cuesta nada.
+  const idsDelAlcance = (tema?.alcanceExamen?.temas || []).join(',')
+  const temasCargados = useCargaDeAgregado(
+    async (a) => {
+      const ids = idsDelAlcance ? idsDelAlcance.split(',') : []
+      if (!ids.length) return []
+      return (await Promise.all(ids.map((id) => a.getTemaAsync(id)))).filter(Boolean)
+    },
+    [idsDelAlcance]
+  )
 
   // Al cambiar de tema: si venimos del Atlas (?ref=clave), salta a ese diagrama
   // y lo resalta; si no, sube al inicio.
@@ -51,12 +66,17 @@ export default function TemaPage() {
       }
     }
     window.scrollTo(0, 0)
-    // `contenido` en deps: el salto al diagrama requiere el DOM del tema ya montado.
-  }, [temaId, ref, contenido])
+    // `tema` en deps: el salto al diagrama requiere el DOM de la lección montado.
+  }, [temaId, ref, tema])
 
   if (error) return <ErrorContenido onReintentar={reintentar} />
-  if (!contenido) return <CargandoContenido variante="tema" />
+  if (cargando) return <CargandoContenido variante="tema" />
   if (!tema) return <NotFound />
+  // Un nodo de EXAMEN anuncia cuántos reactivos tiene, y esa cifra sale de las
+  // lecciones de su alcance. Mientras no lleguen diría «0 preguntas», que es
+  // falso. Solo espera el examen: una lección normal no tiene alcance y se
+  // pinta de inmediato.
+  if (tema.alcanceExamen && temasCargados === null) return <CargandoContenido variante="tema" />
 
   // Tema oculto para el grupo del alumno: aún no disponible.
   if (!temaVisible(tema.id)) {
@@ -70,7 +90,8 @@ export default function TemaPage() {
     )
   }
 
-  const vecinos = contenido.getTemaVecinos(temaId)
+  // Vecinos SIN lecturas: salen del índice, que el shell ya tenía cargado.
+  const vecinos = api.getTemaVecinos(temaId)
   const leido = estado.leidos[temaId]
   const recursos = getRecursos(temaId)
   const galeria = imagenesDeTema(temaId)
@@ -85,9 +106,7 @@ export default function TemaPage() {
   // Temas que entran en este examen. La ficha muestra TODO el alcance —el
   // alumno tiene derecho a saber qué le van a preguntar— pero el banco solo
   // cuenta los temas avalados, que es la regla real del examen.
-  const temasDelAlcance = (tema.alcanceExamen?.temas || [])
-    .map((id) => contenido.getTema(id))
-    .filter((t) => t && temaVisible(t.id))
+  const temasDelAlcance = (temasCargados || []).filter((t) => t && temaVisible(t.id))
   const preguntasDisponibles = bancoDeExamen(temasDelAlcance, { temaVisible }).length
   const pendientesDeValidar = temasEsperandoValidacion(temasDelAlcance, { temaVisible }).length
 

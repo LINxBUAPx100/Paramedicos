@@ -85,6 +85,62 @@ export function estructuraDesdeModulos(modulos) {
 // Contenido de UN tema como documento, SIN los campos derivados que index.js
 // calcula (numero, moduloId/moduloNumero/moduloTitulo/moduloColor): el orden y el módulo
 // los define la estructura del curso, no el doc del tema.
+// ============================================================
+//  Tablas: la única forma del contenido que Firestore no admite
+// ------------------------------------------------------------
+//  Firestore RECHAZA un arreglo que contenga otro arreglo, y un bloque de tabla
+//  guarda sus filas justo así: `filas: [['a','b'], ['c','d']]`. Medido sobre el
+//  temario actual son 1 026 filas repartidas en 170 de los 287 temas, es decir
+//  el 59 % del contenido.
+//
+//  La consecuencia era que NINGUNA academia con tablas podía migrarse: tanto
+//  `migrar-contenido.mjs --seed` como `clonarPlantillaAAcademia` fallaban con
+//  «Property array contains an invalid nested entity», y como la clonación cae
+//  al bundle cuando algo va mal, el síntoma visible era que la academia
+//  «seguía en legacy» sin decir por qué.
+//
+//  Se envuelve cada fila en un objeto en vez de serializar la sección entera a
+//  texto: el documento sigue siendo legible en la consola de Firestore y en el
+//  editor, que es donde alguien va a mirar cuando algo no cuadre.
+//
+//  La LECTURA acepta las dos formas a propósito. Un tema escrito antes de esto
+//  —los que no tenían tabla— sigue funcionando sin migrar nada.
+// ============================================================
+
+function filaEnvuelta(fila) {
+  return Array.isArray(fila) ? { celdas: fila } : fila
+}
+
+function filaDesenvuelta(fila) {
+  if (Array.isArray(fila)) return fila
+  return Array.isArray(fila?.celdas) ? fila.celdas : []
+}
+
+function mapearBloques(secciones, mapaFila) {
+  return (secciones || []).map((seccion) => {
+    const bloques = seccion?.bloques
+    if (!Array.isArray(bloques)) return seccion
+    return {
+      ...seccion,
+      bloques: bloques.map((bloque) => (
+        Array.isArray(bloque?.filas)
+          ? { ...bloque, filas: bloque.filas.map(mapaFila) }
+          : bloque
+      )),
+    }
+  })
+}
+
+/** Secciones listas para escribir en Firestore (filas envueltas en objetos). */
+export function seccionesParaFirestore(secciones) {
+  return mapearBloques(secciones, filaEnvuelta)
+}
+
+/** Secciones tal como las pinta la aplicación (filas como arreglos). */
+export function seccionesDesdeFirestore(secciones) {
+  return mapearBloques(secciones, filaDesenvuelta)
+}
+
 export function contenidoTema(tema) {
   return {
     temaId: tema.id,
@@ -93,13 +149,18 @@ export function contenidoTema(tema) {
     duracion: tema.duracion || '',
     resumen: tema.resumen || '',
     objetivos: tema.objetivos || [],
-    secciones: tema.secciones || [],
+    secciones: seccionesParaFirestore(tema.secciones || []),
     conceptosClave: tema.conceptosClave || [],
     flashcards: tema.flashcards || [],
     quiz: tema.quiz || [],
     recursos: tema.recursos || null,
     actividades: tema.actividades || null,
-    estado: 'publicado',
+    // Por defecto PUBLICADO, que es lo que el temario oficial siempre fue. Un
+    // tema puede pedir otro estado y entonces manda el suyo: lo necesitan los
+    // programas de andamio (Fase 3), que nacen en `borrador` para que ningún
+    // alumno los alcance —`alumnoLeeCurso` exige 'publicado'— mientras se
+    // comprueba que un programa nuevo funciona de punta a punta.
+    estado: tema.estado || 'publicado',
   }
 }
 

@@ -3,6 +3,7 @@ import { Link, NavLink, Navigate, Outlet, useOutletContext } from 'react-router-
 import { useAuth } from '../../context/AuthContext.jsx'
 import { useIndiceAcademia } from '../../context/ContenidoContext.jsx'
 import { pasaFiltroGrupo, seccionesPanel } from '../../lib/panelModelo.js'
+import { gruposDelPanel, filtroDeGrupoDelPanel } from '../../lib/gruposDeUsuario.js'
 import Icon from '../Icon.jsx'
 import { useDatosAcademia } from './datosAcademia.js'
 
@@ -31,19 +32,38 @@ export default function PanelShell() {
     // Permiso que su director le aprueba: abre los códigos y, con ellos, la
     // emisión de invitaciones de ALUMNO desde el centro de invitaciones.
     puedeVerCodigos,
+    // Grupo con el que este profesor está trabajando, y cómo cambiarlo.
+    grupoId: grupoActivoId, elegirGrupo,
   } = useAuth()
   const datos = useDatosAcademia(academiaId)
   const { modulos } = useIndiceAcademia(academiaId)
 
-  // Un profesor con grupo asignado queda fijado a su grupo y no puede cambiar
-  // el filtro: no tiene por qué ver el avance de los grupos de otro.
+  // Un profesor solo ve SUS grupos: no tiene por qué ver el avance de los de
+  // otro. Antes eso se resolvía fijándolo a `perfil.grupoId`, un único campo, y
+  // por eso una maestra con tres grupos en el sistema tenía uno. Ahora se
+  // resuelve con su lista, y el que ve es el que tiene ABIERTO —el mismo que
+  // usará el resto de la aplicación—, no uno distinto por pantalla.
   const esDirector = rol === 'admin_escuela'
-  const soloGrupo = !esDirector ? perfil?.grupoId || null : null
-  const [grupoFiltro, setGrupoFiltro] = useState(soloGrupo || '') // '' = todos; 'sin' = sin grupo
+  const misGrupos = useMemo(
+    () => gruposDelPanel({ rol, perfil, gruposDeAcademia: datos.grupos }),
+    [rol, perfil, datos.grupos]
+  )
+  // Al profesor con UN solo grupo se le sigue enseñando cuál es, sin selector.
+  const soloGrupo = !esDirector && misGrupos.length === 1 ? misGrupos[0].id : null
+  const [grupoFiltro, setGrupoFiltro] = useState('') // director: '' = todos; 'sin' = sin grupo
 
-  const filtroEfectivo = soloGrupo || grupoFiltro
+  // El director filtra libremente; el profesor está acotado a lo suyo, y su
+  // filtro NO es un estado aparte: es el grupo activo de la sesión. `null`
+  // significa NINGUNO —profesor sin grupos asignados—, que no es lo mismo que
+  // `''` (todos). Ver filtroDeGrupoDelPanel.
+  const filtroEfectivo = filtroDeGrupoDelPanel({
+    rol, misGrupos, grupoActivoId, filtroDirector: grupoFiltro,
+  })
+
   const alumnos = useMemo(
-    () => datos.miembros.filter((m) => m.rol === 'alumno' && pasaFiltroGrupo(m, filtroEfectivo)),
+    () => (filtroEfectivo === null
+      ? []
+      : datos.miembros.filter((m) => m.rol === 'alumno' && pasaFiltroGrupo(m, filtroEfectivo))),
     [datos.miembros, filtroEfectivo]
   )
   const staff = useMemo(() => datos.miembros.filter((m) => m.rol !== 'alumno'), [datos.miembros])
@@ -67,14 +87,20 @@ export default function PanelShell() {
       quienEmite: { rol, esSuperadmin: rol === 'superadmin', puedeVerCodigos, uid: user?.uid || null },
       miUid: user?.uid || null,
       soloGrupo,
-      grupoFiltro: filtroEfectivo,
+      grupoFiltro: filtroEfectivo ?? '',
       setGrupoFiltro,
+      // Lo que el selector puede ofrecer y cómo cambiarlo. El director elige
+      // sobre todos los grupos de la academia; el profesor, sobre los suyos, y
+      // su elección cambia el grupo ACTIVO de la sesión, no un filtro local.
+      esDirector,
+      misGrupos,
+      elegirGrupo,
       alumnos,
       staff,
       modulos,
       nombreGrupo: (id) => datos.grupos.find((g) => g.id === id)?.nombre || id,
     }),
-    [datos, academiaId, academia, esDirector, user, soloGrupo, filtroEfectivo, alumnos, staff, modulos, rol, puedeVerCodigos]
+    [datos, academiaId, academia, esDirector, user, soloGrupo, filtroEfectivo, alumnos, staff, modulos, rol, puedeVerCodigos, misGrupos, elegirGrupo]
   )
 
   if (cargando) {
@@ -138,10 +164,20 @@ export default function PanelShell() {
   )
 }
 
-// Selector de grupo del panel. Un profesor fijado a su grupo ve a qué grupo
-// está mirando, pero no puede cambiarlo.
+// Selector de grupo del panel. Tres formas, según quién mira:
+//
+//   · DIRECTOR   → todos los grupos de la academia, más «sin grupo».
+//   · PROFESOR con varios → solo los suyos, y elegir cambia el grupo ACTIVO de
+//     la sesión, no un filtro de esta pantalla. Es a propósito: la maestra
+//     trabaja con UN grupo a la vez, y que el panel, el temario y (más
+//     adelante) la clase en vivo hablen del mismo evita el error de calificar
+//     al grupo equivocado por haberlo cambiado solo en una pantalla.
+//   · PROFESOR con uno solo → se le dice cuál es, sin desplegable.
 export function FiltroGrupo() {
-  const { grupos, grupoFiltro, setGrupoFiltro, soloGrupo, nombreGrupo } = usePanel()
+  const {
+    grupos, grupoFiltro, setGrupoFiltro, soloGrupo, nombreGrupo,
+    esDirector, misGrupos, elegirGrupo,
+  } = usePanel()
   const { puedeVerCodigos } = useAuth()
 
   if (soloGrupo) {
@@ -151,6 +187,31 @@ export function FiltroGrupo() {
         <strong>{nombreGrupo(soloGrupo)}</strong>
         {puedeVerCodigos && <> <code>{soloGrupo}</code></>}
       </p>
+    )
+  }
+
+  if (!esDirector) {
+    // Sin grupos asignados no hay nada que ofrecer, y decirlo es mejor que
+    // enseñar un desplegable vacío: la acción que falta es de su director.
+    if (misGrupos.length === 0) {
+      return (
+        <p className="panel-grupo-aviso">
+          <Icon name="usuario" size={16} /> Todavía no tienes ningún grupo asignado.
+          Pídeselo al director de tu academia.
+        </p>
+      )
+    }
+    return (
+      <label className="panel-selector panel-selector--grupo">
+        Trabajando con
+        <select value={grupoFiltro} onChange={(e) => elegirGrupo(e.target.value)}>
+          {misGrupos.map((g) => (
+            <option key={g.id} value={g.id}>
+              {g.nombre}{puedeVerCodigos ? ` (${g.id})` : ''}
+            </option>
+          ))}
+        </select>
+      </label>
     )
   }
 

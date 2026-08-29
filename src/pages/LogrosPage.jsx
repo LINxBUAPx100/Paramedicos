@@ -4,9 +4,11 @@ import Icon from '../components/Icon.jsx'
 import Imagen from '../components/Imagen.jsx'
 import Reveal from '../components/Reveal.jsx'
 import { ATLAS_TEMAS } from '../data/imagenes.js'
-import { galeriaDeLogros } from '../lib/galeriaLogros.js'
+import { galeriaDesdeAgregado } from '../lib/agregadosModelo.js'
 import Glosario from '../components/Glosario.jsx'
-import { useContenido, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
+import {
+  useApiContenido, useCargaDeAgregado, CargandoContenido, ErrorContenido,
+} from '../context/ContenidoContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
 
 // ============================================================
@@ -30,18 +32,23 @@ import { useVisibilidad } from '../lib/useVisibilidad.js'
 //       misma regla.
 // ============================================================
 export default function LogrosPage() {
-  const { contenido, error, reintentar } = useContenido()
+  const { api, error, reintentar } = useApiContenido()
   const { temaVisible } = useVisibilidad()
+  // La galería y el mapa clave→tema vienen precalculados: antes esta pantalla
+  // recorría los 287 temas completos para armarlos.
+  const imagenes = useCargaDeAgregado((a) => a.imagenesAsync(), [])
+  const temaPorClaveImagen = useCargaDeAgregado((a) => a.atlasAsync(), [])
 
-  // Se recalcula solo cuando cambia el contenido: recorre los 287 temas.
   const galeria = useMemo(
-    () => galeriaDeLogros(contenido?.todosLosTemas, ATLAS_TEMAS),
-    [contenido],
+    () => (imagenes ? galeriaDesdeAgregado(imagenes, ATLAS_TEMAS) : []),
+    [imagenes],
   )
 
   if (error) return <ErrorContenido onReintentar={reintentar} />
-  if (!contenido) return <CargandoContenido />
-  const { temaPorClaveImagen, getTema } = contenido
+  if (!api || !imagenes || !temaPorClaveImagen) return <CargandoContenido />
+  // Solo se comprueba que el tema EXISTA para decidir si la tarjeta enlaza:
+  // basta la ficha del índice, sin leer la lección.
+  const getTema = (id) => api.getTemaLigero(id)
 
   return (
     <div className="atlas-page">

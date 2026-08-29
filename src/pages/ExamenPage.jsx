@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useContenido, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
+import {
+  useApiContenido, useTodasLasPreguntas, CargandoContenido, ErrorContenido,
+} from '../context/ContenidoContext.jsx'
 import { useProgress } from '../context/ProgressContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
@@ -12,7 +14,8 @@ import { seleccionarPreguntas } from '../lib/examenModelo.js'
 export default function ExamenPage() {
   const { registrarExamen } = useProgress()
   const { user } = useAuth()
-  const { contenido, error, reintentar } = useContenido()
+  const { api } = useApiContenido()
+  const { preguntas: bancoCompleto, cargando, error, reintentar } = useTodasLasPreguntas()
   const { moduloVisible, temaVisible } = useVisibilidad()
   const [config, setConfig] = useState(null) // { preguntas }
   const [cantidad, setCantidad] = useState(10)
@@ -20,13 +23,13 @@ export default function ExamenPage() {
 
   // Examen general: solo preguntas de temas visibles para el grupo del alumno.
   const preguntasDisponibles = useMemo(
-    () => (contenido?.todasLasPreguntas || []).filter((q) => temaVisible(q.temaId)),
-    [contenido, temaVisible]
+    () => bancoCompleto.filter((q) => temaVisible(q.temaId)),
+    [bancoCompleto, temaVisible]
   )
   // Módulos visibles para la lista de "examen por módulo".
   const modulosDisponibles = useMemo(
-    () => (contenido?.modulos || []).filter((f) => moduloVisible(f.id)),
-    [contenido, moduloVisible]
+    () => (api?.modulos || []).filter((f) => moduloVisible(f.id)),
+    [api, moduloVisible]
   )
 
   // Intentos del alumno (para mostrar su mejor puntuación por módulo).
@@ -72,7 +75,7 @@ export default function ExamenPage() {
   }
 
   if (error) return <ErrorContenido onReintentar={reintentar} />
-  if (!contenido) return <CargandoContenido />
+  if (cargando) return <CargandoContenido />
 
   if (config) {
     return (

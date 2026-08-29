@@ -5,6 +5,7 @@ import { db } from './init.js'
 import { doc, getDoc, updateDoc, collection, query, where, getDocs } from 'firebase/firestore'
 import { normalizarPermisos, validarPermisos, PERMISOS_EDITOR } from '../permisosEditor.js'
 import { normalizarPase, validarPase } from '../revisionDocente.js'
+import { validarGrupoIds, camposDeAsignacion } from '../gruposDeUsuario.js'
 
 // Une al alumno a una academia validando su código (el código ES el id del doc).
 export async function unirseAcademia(uid, codigo) {
@@ -60,6 +61,33 @@ export async function listarUsuarios() {
 // super-admin (cualquier cambio) o admin_escuela (alumno<->instructor de su academia).
 export async function actualizarUsuario(uid, cambios) {
   await updateDoc(doc(db, 'usuarios', uid), cambios)
+}
+
+/**
+ * Asigna a un PROFESOR los grupos con los que trabaja (Fase 2: multi-grupo).
+ *
+ * Hasta ahora un profesor cabía en un solo grupo porque el perfil tenía un
+ * único `grupoId`, así que una maestra con tres grupos en el sistema tenía uno.
+ * Esto escribe la lista y, con ella, el campo de siempre —el primero de la
+ * lista— para que ambos queden de acuerdo: `grupoId` se sigue leyendo en
+ * invitaciones, códigos y en las propias reglas, y dejarlos en desacuerdo es la
+ * clase de incoherencia que reaparece como «a este profesor le salen los
+ * alumnos de otro grupo».
+ *
+ * La barrera REAL es firestore.rules (solo el director de SU academia, solo
+ * estos dos campos). Aquí se valida para no intentar lo que va a rechazarse y
+ * para poder decir POR QUÉ, que una regla no puede.
+ *
+ * @param {string} uid profesor.
+ * @param {string[]} ids grupos; lista vacía = quitarle todos.
+ * @param {Array} gruposDeAcademia grupos reales de la academia (para rechazar ajenos).
+ */
+export async function asignarGruposAProfesor(uid, ids, gruposDeAcademia = []) {
+  const error = validarGrupoIds(ids, gruposDeAcademia)
+  if (error) throw new Error(error)
+  const cambios = camposDeAsignacion(ids)
+  await updateDoc(doc(db, 'usuarios', uid), cambios)
+  return cambios
 }
 
 // Concede/retira los PERMISOS EDITORIALES de un PROFESOR (Fase 6). La barrera
