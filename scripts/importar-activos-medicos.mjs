@@ -44,6 +44,7 @@ import { fileURLToPath } from 'node:url'
 import {
   limpiarSvg, problemasDeSvg, dimensionesSvg, dimensionesPng, cuerpoSvg, escaparXml,
 } from './lib/svgSeguro.mjs'
+import { minificarSvg, cargarMinificador } from './lib/minificarSvg.mjs'
 import { componerFigura } from './lib/componerFigura.mjs'
 import {
   CARPETA_A_LICENCIA, licenciaAdmitida, LICENCIAS, textoAtribucion,
@@ -56,6 +57,17 @@ const CACHE = path.join(RAIZ, '.cache', 'activos')
 const DESTINO = path.join(RAIZ, 'public', 'imagenes', 'medical')
 const CATALOGO = path.join(RAIZ, 'src', 'data', 'activosMedicos.js')
 const INVENTARIO = path.join(RAIZ, 'docs', 'INVENTARIO-ACTIVOS-MEDICOS.md')
+
+// El minificado es PARTE del archivo que se sirve, así que también es parte de
+// su hash. Sin svgo, esta ejecución produciría bytes distintos a los del
+// catálogo y volvería a dejar CI en rojo (ver scripts/lib/minificarSvg.mjs).
+// Por eso se aborta en vez de continuar «casi bien».
+if (!await cargarMinificador()) {
+  console.error('\n  Falta svgo, que es parte del pipeline: los SVG se sirven minificados.')
+  console.error('  Instálalo sin añadirlo a package.json y repite:\n')
+  console.error('    npm i --no-save svgo && npm run activos:importar\n')
+  process.exit(1)
+}
 
 const args = process.argv.slice(2)
 const SECO = args.includes('--dry-run')
@@ -225,11 +237,11 @@ async function importarBioicons(entrada) {
     return null
   }
 
-  const limpio = limpiarSvg(bruto, {
+  const limpio = minificarSvg(limpiarSvg(bruto, {
     titulo: entrada.title,
     descripcion: entrada.descripcion,
     quitarTexto: entrada.quitarTexto,
-  })
+  }))
   const problemas = problemasDeSvg(limpio, { nombre: entrada.ruta })
   if (problemas.length) {
     errores.push(`[${entrada.id}] SVG rechazado tras el saneado:\n      - ${problemas.join('\n      - ')}`)
@@ -308,11 +320,11 @@ async function importarSmart(entrada) {
     const texto = buf.toString('utf8')
     const enOrigen = problemasDeSvg(texto, { nombre: entrada.slug, modo: 'origen' })
     if (enOrigen.length) { errores.push(`[${entrada.id}] SVG rechazado en origen:\n      - ${enOrigen.join('\n      - ')}`); return null }
-    const limpio = limpiarSvg(texto, {
+    const limpio = minificarSvg(limpiarSvg(texto, {
       titulo: entrada.title,
       descripcion: entrada.descripcion,
       quitarTexto: entrada.quitarTexto,
-    })
+    }))
     const problemas = problemasDeSvg(limpio, { nombre: entrada.slug })
     if (problemas.length) { errores.push(`[${entrada.id}] SVG rechazado tras el saneado:\n      - ${problemas.join('\n      - ')}`); return null }
     contenido = Buffer.from(limpio, 'utf8')
@@ -504,6 +516,10 @@ for (const comp of composiciones.composiciones || []) {
   const r = componerFigura(comp, { porId, cuerpos, escaparXml })
   if (r.errores.length) { errores.push(...r.errores.map((x) => `[${comp.id}] ${x}`)); estados[comp.id] = 'bloqueado'; continue }
 
+  // La composición se sirve tal cual, así que se minifica ANTES de validarla y
+  // de calcular su hash: lo que se comprueba y lo que se sella es el archivo
+  // final, no una versión intermedia que nadie va a descargar.
+  r.svg = minificarSvg(r.svg)
   const problemas = problemasDeSvg(r.svg, { nombre: `${comp.id}.svg` })
   if (problemas.length) { errores.push(`[${comp.id}] la composición generada no pasa el saneado:\n      - ${problemas.join('\n      - ')}`); continue }
 

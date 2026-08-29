@@ -24,6 +24,7 @@
     "biblioteca": "node scripts/biblioteca.mjs",
     "matriz": "node scripts/matriz-decisiones.mjs",
     "activos:importar": "node scripts/importar-activos-medicos.mjs",
+    "activos:resellar": "node scripts/resellar-activos.mjs",
     "activos:iconos": "node scripts/migrar-iconos-emoji.mjs"
   },
   "dependencies": {

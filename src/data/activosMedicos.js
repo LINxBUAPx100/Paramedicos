@@ -44,7 +44,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-0/Microbiology/Pauline_Franz/generic-bacterium.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "fd05e9545b60434f3a19a411375d352a45d7fc8859cd1e5df2134600f60c3eca"
+      "sha256": "9f554f534f596ca7a11075fb756107c9ac0f31c55de0fd1c6ccc4f942e0c900a"
     },
     "license": {
       "id": "CC0-1.0",
@@ -86,8 +86,8 @@ export const ACTIVOS_MEDICOS = [
     "format": "svg",
     "dimensions": {
       "width": 899.63,
-      "height": 899.65,
-      "viewBox": "0 0 899.63396 899.65459"
+      "height": 899.66,
+      "viewBox": "0 0 899.634 899.655"
     },
     "origin": {
       "sourcePageUrl": "https://bioicons.com/",
@@ -95,7 +95,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-0/Safety_symbols/David-Eccles--gringer-/corrosive.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "9f6df43d749f56e5a0a7bb90ddaa1c25107287cf0b2b277a0afb8cb5b367a4a6"
+      "sha256": "5bcfaf3920c8d4cf9f02f549563dc398a9b7bce65e1ac51074c5ea8bdea464f7"
     },
     "license": {
       "id": "CC0-1.0",
@@ -138,7 +138,7 @@ export const ACTIVOS_MEDICOS = [
     "dimensions": {
       "width": 899.64,
       "height": 899.65,
-      "viewBox": "0 0 899.63751 899.65002"
+      "viewBox": "0 0 899.638 899.65"
     },
     "origin": {
       "sourcePageUrl": "https://bioicons.com/",
@@ -146,7 +146,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-0/Safety_symbols/David-Eccles--gringer-/explosive.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "bef7fcd98c499c25d20b121d28062131e60be88b4e84de3d037dc38c98e06df4"
+      "sha256": "d1cb9373d569653b7b7abdb8b33d7c50f0b9473dddddc1a725c1d6763cdbf83c"
     },
     "license": {
       "id": "CC0-1.0",
@@ -196,7 +196,7 @@ export const ACTIVOS_MEDICOS = [
     "dimensions": {
       "width": 899.64,
       "height": 899.65,
-      "viewBox": "0 0 899.63751 899.65002"
+      "viewBox": "0 0 899.638 899.65"
     },
     "origin": {
       "sourcePageUrl": "https://bioicons.com/",
@@ -204,7 +204,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-0/Safety_symbols/David-Eccles--gringer-/gas.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "c4327a19b58887f68a3b544d2cffe3f01325e2674fefd870dfe2be633d2e0ea4"
+      "sha256": "f31f53aa357f3521ad430c824368ad114ac4a0b55fb574560490345da3715976"
     },
     "license": {
       "id": "CC0-1.0",
@@ -252,7 +252,7 @@ export const ACTIVOS_MEDICOS = [
     "dimensions": {
       "width": 27.02,
       "height": 32.7,
-      "viewBox": "0 0 27.020367 32.696091"
+      "viewBox": "0 0 27.02 32.696"
     },
     "origin": {
       "sourcePageUrl": "https://bioicons.com/",
@@ -260,7 +260,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-0/General_items/Riccardo-Iacovelli/nitrile-gloves.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "612027a8cbab0c4011fd834c909430f7fc514091f138b1a84bfa501a66fac14e"
+      "sha256": "fd6be097a0a73b87b9d2d14880d8131334a0392cc8726794f77b7a4031f46f05"
     },
     "license": {
       "id": "CC0-1.0",
@@ -311,7 +311,7 @@ export const ACTIVOS_MEDICOS = [
     "dimensions": {
       "width": 899.64,
       "height": 899.65,
-      "viewBox": "0 0 899.63751 899.65002"
+      "viewBox": "0 0 899.638 899.65"
     },
     "origin": {
       "sourcePageUrl": "https://bioicons.com/",
@@ -319,7 +319,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-0/Safety_symbols/David-Eccles--gringer-/flammable.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "9648ba65c58259d7aa1ec635a9ef673baa64dcbf91a36ba59f08c5d74a0a17c9"
+      "sha256": "b0a0a8884339730f20ea739764ea62de1cccd1e51c21178cdfe851dccd60f1d7"
     },
     "license": {
       "id": "CC0-1.0",
@@ -370,7 +370,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-0/General_items/Marcel_Tisch/magnifying-glass.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "7de46a928512a4ff59f2c6616627a9e04a035c1545ac8b5fb9d271887ac194c9"
+      "sha256": "2d9ef067cad74d972c6c251d4ddfbaa91763350df845cbdce43183735a03903b"
     },
     "license": {
       "id": "CC0-1.0",
@@ -430,7 +430,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-0/Tissues/EmilyADaniel/nephron_2d.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "42ba8d71c48b9a364c9832676a170496808622172ccf34e54a61c63c127ed5f1"
+      "sha256": "15f32d02fbefae2d6ea6691cb871d24a84a4faa718d0053c71833be4762c4474"
     },
     "license": {
       "id": "CC0-1.0",
@@ -474,7 +474,7 @@ export const ACTIVOS_MEDICOS = [
     "dimensions": {
       "width": 194.13,
       "height": 194.13,
-      "viewBox": "0 0 194.13333 194.13333"
+      "viewBox": "0 0 194.133 194.133"
     },
     "origin": {
       "sourcePageUrl": "https://bioicons.com/",
@@ -482,7 +482,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-0/Safety_symbols/David-Eccles--gringer-/harmful.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "f274f65bf7dd783f8f1403bde4c270f1449a8c60b958d619ef71299f2935dc9e"
+      "sha256": "7f64eed67028c26a1091d884cebbb1b104e0aa2282c61cc079e0b8b1624cdb63"
     },
     "license": {
       "id": "CC0-1.0",
@@ -538,7 +538,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-0/Human_physiology/Marcel_Tisch/patient.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "8b02884269aead883d767ced8b10ecdde5f7e6edb50db7cb6b70391b6152e260"
+      "sha256": "e53b6a369e0b3d68b9d612d5ad0bc4402e1d2c847d173511e775325a47eb10ba"
     },
     "license": {
       "id": "CC0-1.0",
@@ -599,7 +599,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-0/Scientific_graphs/Marcel_Tisch/Action_potentials.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "d052aaba40fbefdf6d4df54ccab74d3fe38d0ef6557c593922abff71ebfcdae9"
+      "sha256": "9007cf396cdf171a7a32e53ff6a6938c8d173eba1449ba6528b1aaf207c8f3db"
     },
     "license": {
       "id": "CC0-1.0",
@@ -656,7 +656,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-0/Safety_symbols/Erick-Hernández-López/Riesgo_biologico_diseño_propio.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "51ef429b5cd8908c5930cb6239fb385fc8da607da73761fefb407f5ee904c654"
+      "sha256": "3a3c575a861ad4e16dafd9741e976f0e89e6d03a69d7953b7ac461a985aa9a5d"
     },
     "license": {
       "id": "CC0-1.0",
@@ -713,7 +713,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-0/General_items/kehan/thermometer.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "716eed3c531f55dc108dbb254148437cd1fe825aaa1b528769b38776f4d16418"
+      "sha256": "0eb6205322801b312c2c92ff31729ce0aa42d67bd0755e27af8dbe03a10045f8"
     },
     "license": {
       "id": "CC0-1.0",
@@ -762,7 +762,7 @@ export const ACTIVOS_MEDICOS = [
     "dimensions": {
       "width": 899.64,
       "height": 899.65,
-      "viewBox": "0 0 899.63751 899.65002"
+      "viewBox": "0 0 899.638 899.65"
     },
     "origin": {
       "sourcePageUrl": "https://bioicons.com/",
@@ -770,7 +770,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-0/Safety_symbols/David-Eccles--gringer-/toxic.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "30eb5a9b9a70966b3d89f97c51a34e3553d033f647f311e6d9c984084f9dc0c8"
+      "sha256": "9f41956855fdc9973244c6ea6675662d6f7e2a062daaff9f3037ae94a9d4c804"
     },
     "license": {
       "id": "CC0-1.0",
@@ -828,7 +828,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-0/Blood_Immunology/Marcel_Tisch/blood_sample_tube.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "e53531dddf99be7b344c0069aa6cf18fd912dfe9aa1e37ced9c3743b1841a245"
+      "sha256": "a534947ece31fd54a7038015eb2e5aa78ea6e74e6623f5c591cf5624ca69e5e4"
     },
     "license": {
       "id": "CC0-1.0",
@@ -885,7 +885,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-0/Viruses/Marcel_Tisch/virus-sketch.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "e1d238f2a1856644f3e101affe4f23f2f5f739d9856094e56d720ce73394ba8e"
+      "sha256": "c56bc34a0a22fa06a6b36e53518a26ab639a8a4663fd628743c824305ecce8b5"
     },
     "license": {
       "id": "CC0-1.0",
@@ -937,7 +937,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-4.0/Animals/DBCLS/European_honey_bee_adult.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "37bb8ec65923066731215b9c5eb0d567d6d9b73008e15088cb9c96e5fc11e4d6"
+      "sha256": "502287cfd3b06439549a7465c04cefa854046724161d02272bad297df058dbbc"
     },
     "license": {
       "id": "CC-BY-4.0",
@@ -995,7 +995,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-4.0/Animals/DBCLS/Common_house_spider.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "8b89fed8e41c334e60d1a74fae5b0226c5f976392a72ebbd4c4b1a27e7ac0c14"
+      "sha256": "4fd933936d4f591b4776e1779447372bdbb5931d324737bdcbc9638bee6ca088"
     },
     "license": {
       "id": "CC-BY-4.0",
@@ -1047,7 +1047,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-4.0/People-Other/DBCLS/Examination_child.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "15601cf646e3282b379cea3ce2cf8b5b898bcfff6a6df78b5e5283a0c49f85ff"
+      "sha256": "054310f073382752c8e9c35f0baf148830af751b24e630646cc46ac38c5730d2"
     },
     "license": {
       "id": "CC-BY-4.0",
@@ -1106,7 +1106,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-4.0/Human_physiology/DBCLS/Motor_neuron.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "dabe56bb5229088e2248739e20c737f5bdb8cdd65469d890116a4ff15cb5d634"
+      "sha256": "5d3b1b62775ccf65a3c06a7ffb5ac07f82729b9962abeb7724d845a303292374"
     },
     "license": {
       "id": "CC-BY-4.0",
@@ -1165,7 +1165,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-4.0/Animals/DBCLS/Japanese_striped_snake.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "a6c21e5baa7316cf51b9c07fcfe06cf7a07aa456f202917d5cdb7ddfefe8a863"
+      "sha256": "19ded56b56ad264afd1491f6efa6927adb2e460d5e1ce408303065fe71c6c7f4"
     },
     "license": {
       "id": "CC-BY-4.0",
@@ -1218,7 +1218,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-4.0/Human_physiology/DBCLS/Three_types_of_neurons.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "aa2e95b92c203e46a7df6ddb37a97166e6ee6a82ad101b320d8542afb86381d7"
+      "sha256": "12ff30e79450974b6c91ed702ccf9a3462455373ec9263036e6eb1c90703d117"
     },
     "license": {
       "id": "CC-BY-4.0",
@@ -1275,7 +1275,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/old-women.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "ebe2316f772fa3ccde8855ec2d4c3bea4b0c08b92666ed9592c2a15680458b56"
+      "sha256": "747cbd39db8d1b33797823212b02db9f01a82043068e0d8e92d9ff3feaa15017"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -1332,7 +1332,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/old-man.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "2e5163c9bad24899defe26c4d8c21e509b06381d5d7e72e64b5e31f4ff8eef7a"
+      "sha256": "b8c996e3cdf46907ecc1bd167af559f71733f331638a6ecb9a2c0dd2d8f24af0"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -1394,7 +1394,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/General_items/Servier/glass-water.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "8376624cf5f1ed4d9aef1706349e96943587e953b3d266e0aa4d62ed03df2d41"
+      "sha256": "c0b21be50e7fe7bb9a4e45dc0b983646fcef27dfe5c057af7bb3d7150faa5d14"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -1453,7 +1453,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/General_items/Servier/wine.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "974a8812152ef89cf0472b61c6f03f245037ce713b428687af6126ff4eb9a332"
+      "sha256": "8f63076c9ef63569d9728fe81dd1177de3621bece5a2f7ade91ad52f23ad33df"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -1510,7 +1510,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Blood_Immunology/Servier/antibody.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "8b8ebfb13a7085eca1565e94cde2318866c630e75c787eaadb540e388197baff"
+      "sha256": "e4e04bf3371dc1a35e8deececf0c4d0e4172f91b61aa0c1237832f4534c86e6a"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -1569,7 +1569,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/aorta.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "4126c1a0e3707f1d0f2319ba10430648828803f4ea46983269f1b25695752e4b"
+      "sha256": "067a0ae3da90c5d8988e11910d6212399267d8ed033f072161d05326084a1513"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -1627,7 +1627,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/vascular-tunic-artery.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "8977ef9f6a5861624ac18c1f00d5403e9a3e33539c763826e9d1d1f14412fe40"
+      "sha256": "7e035c5b259cfbbed9e6bcb88f503b9fb0f6e1a702a1f8915b2aa8d73ad7b6fe"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -1686,7 +1686,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/atomizer.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "d86ca6803133620707dfc1e5543c574733e3fc43f51f63973e185dbbb6d51262"
+      "sha256": "8a198544265fa8d47f47529baed6a5d382b7d234bc48619cdc38719d9b80c886"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -1744,7 +1744,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Microbiology/Servier/bacterium.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "5203c972d97a212c4d3de240a473250604df9f7f0f3815d3222623909b53998d"
+      "sha256": "ed5613dcf2f2ebb1b09554247278312307c23ae02f70be8b6cc27f8348dbb045"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -1803,7 +1803,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/General_items/Servier/scale-balanced.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "ae83be08997c3543bd22354739990644bb4e9876f8e715a0211feebacb599c2f"
+      "sha256": "b65d2fe4c0d9cc9b64146c68a0028082c1509f92354d1e167617589078578dfd"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -1860,7 +1860,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/General_items/Servier/scale-imbalanced-left-1.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "fa1ec80a731da4d5a85da2686066d823b1e9a4d551b541cf12bf53eaa6d963ed"
+      "sha256": "aeae23a77e3c1de5050939144cf5793d5150274d455d14acb040292ae7efb25d"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -1917,7 +1917,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/spleen-1.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "9176ed470e5b2b17b0d604828811acb7cef811b9ee6830c49da893773408b58f"
+      "sha256": "e36274501f9ecd3c4610ddb513308e159b198af87262ea1cf987cdb696362146"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -1974,7 +1974,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/drug-blister.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "5e235e920be7c40ef011eac6f4e2cd8f5df0acffed77dd92a590e6da7c13c2f1"
+      "sha256": "a207d6ddffc092f243eb46b4ac038df2c2282c650d4613e5a0f1cf9d297beb78"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -2033,7 +2033,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/infusion-bag-blue.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "e37f0e5ebeed983ab1535b0fc700cbe1f7820de2612f6d38e0e0b60f40c29542"
+      "sha256": "860e8c8a45b5d6928575006fc8b084370d6519964146110d4cd7e10ea55a813e"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -2095,7 +2095,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/inflamed-bronchus-crossection.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "d06777e4fb0a7c3506d002094665ce7e10e952a33d2a3ff5d4c826956ae1bde8"
+      "sha256": "ac12503ab54a0f761ad02065a6b0d67374d4ebc451c323c106d2e26141288770"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -2153,7 +2153,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/chronic-bronchitis.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "85afee5a7199d4ba61f3740721911ab45cc67112817aba6df995b6acc461c0fa"
+      "sha256": "a668022a06ea64eac95cb2693cf388f50ce8ac1334a634c4aaf97af0c7283358"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -2210,7 +2210,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/olfactory-bulb.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "a3034ae9e89dbac01cedbb1da7fec140ec5be688526a9ce9dcbd53883ac2b2bb"
+      "sha256": "5534e26e6cd96b94547c6b216f99f595669402364f030889b424423c4af18a8a"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -2267,7 +2267,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/small-calculi.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "100815c7f78f0d2b91427b26e7e1677675210fbb9b01a37a0281eab6417f1377"
+      "sha256": "aa15e65c95b289237d3d5f80490a2d68d706a216918f40288e28d06d39255a52"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -2324,7 +2324,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/General_items/Servier/heat.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "605a8f17bb2329e5a80b3a804760341e3c43fd40aefd747226dc08f00492dae9"
+      "sha256": "3becd9c23056b6fbb7b0577bfecadbb0dc9c59278b7f0a2c51bcfa41ff6e3095"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -2381,7 +2381,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/General_items/Servier/padlock-closed.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "dabfc9447440f0706e10050c4e9300e52a66f8c1928d7e57851dfd64fb44dfa8"
+      "sha256": "f8df53361a01866a488bdc7732ad4813d949f651b998e54e35c792808a355799"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -2439,7 +2439,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/capillaries.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "9a715e268b4299b847fe11a90a4ef9c25aa3acd1f3806c1b6973738764e7cdb7"
+      "sha256": "34b34d1c540b6295fae1f35f802372b92daf1ccee9acb59cb7385511c9659915"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -2500,7 +2500,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/drug-capsule-1.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "e481501e374a8fa65a043b6799b59516ca7a6f27313143189ca9363273a16dc2"
+      "sha256": "f9a8fd852ba0498005bf78b6cf8ce1c3fbecdb4bd0a5891672f6e130a7ef5b2d"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -2552,7 +2552,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/nasal-cavity.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "29a7c29f53bf31c39658293cb0a9dc27309537c06b492e58c51ae806c1d331c5"
+      "sha256": "dbe97303d6f297f6f9715e7e6039011c71184c63f8c148ecf914b7c0d1b88feb"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -2610,7 +2610,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/oral-cavity.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "b44c691fc23dfad66e7ab243dbefff0f906e7ba143dd35ebfcfd7d9b18b5bde4"
+      "sha256": "d07dc2b8997ef37f86355b081fc3b8543f40742e6a627fa6f269bc77a2ed6db3"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -2667,7 +2667,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Cell_membrane/Servier/emptycell-1.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "2910cf7bc2dcac45ae6320b078434ca8b00fe31dc28b27a93f1d686e3cfc5c51"
+      "sha256": "22e581685d26342cbbc592f9220a47d3192b3dd16e5671d4a918abd8935d74f7"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -2723,7 +2723,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/brain-1.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "1d10e03353a269843a5bef6d14a9cc13e7cf3f709b6b95fd85835f2bac703a66"
+      "sha256": "7ebcf12c68b9393fb8e6dcb2053dc260e5052ac6d7488a69009b06bc53b2c867"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -2789,7 +2789,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/cyclist.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "e1b654a86a527e1f92b97a8e7d7e93a60e61fa0e925f42567adbd957fcb01fde"
+      "sha256": "b446b9144fb5ef3ef63017f3baa68807c4e105fad61ca863ea75f726c0a53095"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -2849,7 +2849,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/General_items/Servier/cigarette.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "f69670a1603d657a47097fdfa420f7209db93db56a0edb9a7dea619842e27aa9"
+      "sha256": "b25aee17550e1b563dae269a2377e62e501ea774a9aa20f61d1c16df9fbdd01c"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -2905,7 +2905,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/pulmonary-circulation.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "eb17776257521600d67bf1fdd56077a231cb5682610c0fd6ca1d4c21135387ff"
+      "sha256": "ac29c5d7cae31e2a62f64bd4d44c34eaf794bb47174a90c96bf81ef82dd347c3"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -2957,7 +2957,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/venous-circulation-body.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "b7a3a72f0ec5b2ba7cb677ea0c7a4bba2e9ae8f17e055183a39806eae53ecd21"
+      "sha256": "b7128c8adda78e4e7bb2249bf2de972cbf9bda16e30e151987217cc10de84bd1"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -3009,7 +3009,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/cirrhosis.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "56e3ec52e9859c8cf6a46a751fae899f5c05cec054d322240680a863c498184a"
+      "sha256": "f9366bafc2f55e85d41884234b3e63bb15ac4ada8c3e9f923a40366b67be604e"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -3065,7 +3065,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Blood_Immunology/Servier/coagulation.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "f7c4bd039d735bc85118e40e7c42133264ad237159c5886391e34142e2a1ebe4"
+      "sha256": "bd5418d84d4297a3801e35efea02f0a7564b2312f5f1c6034ae07079a852c024"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -3117,7 +3117,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/bile-lithiasis-small-calculi.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "04b0f120e56e88d5fc8580de0754657b6692543c63ab08607ed710a3705523f5"
+      "sha256": "f48edb6484fbd6518462c1e092de26074b26d7b6d67e9d0ac1d945e5bda95dae"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -3174,7 +3174,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/crohns-disease.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "29ee2d13fd89c0e0e8cffc92ca54129220523f6b41c8c876b85caa3401c10848"
+      "sha256": "d216fd7d1e7a13bfea3609140e50a679d2c910dcada67cce191959aada17664d"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -3231,7 +3231,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/colon.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "34717ccf4801401745606d6f02e693e13e91f5e1e8e5c11e93237390b583f0be"
+      "sha256": "733bc95324f698db88c63a83b5bd0a71de11e05817d6b88a447eb5bb0e3cc31f"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -3290,7 +3290,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/heart-conduction-1.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "5d04daff03e59bc25a150c9421b6d206b83d161b2e6c16313568b3b7a9c9cf79"
+      "sha256": "dcd3e3c68f6ec03347dd2f8d950a83fcee5c1d7ec000834a435de9128f21f8b3"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -3341,7 +3341,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/heart.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "0920714866d262d62fe1034d96a9faee82e889bc740ea8f3a83d4084e918a215"
+      "sha256": "824afc715b630f0631691275755e74c97c69720e0f0ce4345c414185d103ca6f"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -3400,7 +3400,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/heart-interior-1.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "95008c69db9c216791cf2c5997b7d82d3fd98151c52826df6ca77048484ee9e2"
+      "sha256": "442f9ee6cc555b620681e14c883c45c1a92e8d97db376cb2d6be46128886a07a"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -3461,7 +3461,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/runner.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "b480575bc489973eefdafc6ecf5ab521b8b4549215824368b820491d734dbd40"
+      "sha256": "579ae132eeb131ca4f9c2ad31f8e8cfd40295177d5d12057ed9269dbb4be2e61"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -3518,7 +3518,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/General_items/Servier/stopwatch.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "ce193298181a798cec634ac1528155ea5bd9b4f9c02f80cd7a7241e9df38c1c3"
+      "sha256": "a955e71708b3cb36b71a4658cc517c0eb0e9a28b82f1e6c435b26cfa8779cdfe"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -3575,7 +3575,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Scientific_graphs/Servier/gauss-curve.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "cdbdc621ec7721c018a62e279cdd95bfabc17bc01545bbb1e5f88d62a9962a4e"
+      "sha256": "75d57bdad7aadecc42e99b152d4dae01d593760dac1b52db6ac2fce0d69af712"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -3634,7 +3634,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/teeth-adult.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "77bb2235b59f5473a957b704c4fe20f389812500303ab83ce3efdf95e277338d"
+      "sha256": "e71f9c1a31a1717907e92e02a6bd76c1a083f5b27e06c252d5683601b46478ae"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -3691,7 +3691,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Scientific_graphs/Servier/exponential-decrease.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "4fa74a364d0371515f9f06835cd4f4e93be71409e4c8acbacdc2da93ea4b8bb2"
+      "sha256": "c92970f3ffb962fb08efe20391907f04f14c691547bd8eff04386178d4d6d02d"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -3749,7 +3749,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/tooth.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "a3ca3293d0fce39db1a3182b7c1bf641b0e8c50f836e246f9e7d185e87bbbf08"
+      "sha256": "69bd813f205490b46dcab81e01a54042575dce0593b76d15c3764b50dd094515"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -3801,7 +3801,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Scientific_graphs/Servier/dose-effect-link.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "b31822a13b6534b75b7925e7487a647f3e67eb5467848ffeae24dc5b05a50931"
+      "sha256": "0936450544383f974cee0ad4cf315ddd212bc8070beb5992fe6203acaa5678f4"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -3859,7 +3859,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/electrocardiogram-ecg.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "45fc114ee2df3304f5edf814bb2874ce07da1dd0442effa47480f64ca587c2bd"
+      "sha256": "7b240a26295be45a1dbeb31a79cba91a95acbb33a483a191c894ffa5cea3b4b5"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -3921,7 +3921,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/oedema-legs.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "02b391fad93e8193bf4da1553e6275dceb46d571d94e4358066e13910beb6431"
+      "sha256": "5b5535e62e392e4ebba51ab1426a005288b4a711757d3640ae02f3fabde077c0"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -3977,7 +3977,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/pulmonary-edema.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "9d285dd94a11dcc82e084346edaa0572f4ccbf024cc7def31ca7bbbf0b5e0f3c"
+      "sha256": "5f2fae3bc2af4bb4bdb5df142aee872e11fa7971754f2b2635d9b1dfc63fc397"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -4034,7 +4034,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/emphysema.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "1a840aebdc9a6d686340e0f40431f53ee86f3bdb10fcc75f8bc8f6d0d871a2c0"
+      "sha256": "941d32140dd0a7e00f4bf3c2ee83b4d9dea23040d73968337de2bc93c7179cb2"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -4091,7 +4091,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Blood_Immunology/Servier/erythrocyte.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "e76b567626a071ea44e39ba3c3992d31099131e43c7e4d63c995548e302a208f"
+      "sha256": "6dab7ee1bd48ce3c32a8b3181b62b442de3fc21fda8fc796299cf86bc04fdfa6"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -4153,7 +4153,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/stomach.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "23dbd25deee67ec57d1749aedf9d5f48c00b1aeb65d16aa555f343ca13683f83"
+      "sha256": "220d28b30b71c886fbc4ebaab5804a6d60526649d0360e92e5e7d606367dee0c"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -4210,7 +4210,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/muscle-fiber.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "bfeda30c3d5d734a1775a1827466ed79ea0fd31055031815543d39334a346e58"
+      "sha256": "78b6a64427acb99bf33167c127b3cf731f228c7954cf03d1c1d3f5cb8a51eb74"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -4268,7 +4268,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Blood_Immunology/Servier/fibrin-1.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "486b4e104b7e09acd791ee0a7f76fb602e3de5609e74fbae410b3e7174f29655"
+      "sha256": "9d2f8908e29d466cd540d140824a955dd85d3ad1d6880c23e4875aa063bcb92f"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -4319,7 +4319,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/General_items/Servier/winter.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "257c432ec81f9b6dae286804365f51498c1ccde7e15466b3de756916d217513d"
+      "sha256": "da25f1dcc3410b22ba768ef29205bf3931f4d9b45bfe2a553be32b29336789b2"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -4377,7 +4377,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Scientific_graphs/Servier/iv-administration-perfusion.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "401b75c42b6fb72edad2f8d411ceea4979e1219b5f35c050c842fe4e844afdc6"
+      "sha256": "b6f867321301b2a572e7dc48f416d8bb7f654f5bd4e2db2ee4b12c8016ec147a"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -4435,7 +4435,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Scientific_graphs/Servier/renal-insufficeny-vs-normal.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "7cefc89782b0a3ec863a4bec02e9f7c87d0fc15892dd0f11a339dfdcd8897efa"
+      "sha256": "d524e2a8abfa45141a18a2afdc6345ff46b49b92e8520a89c2a0bbb4ba25cb98"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -4494,7 +4494,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/General_items/Servier/faucet.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "2225d364823383562b4794febfb4569c89a3a82d9ce2a0f281d57b4b94e9124d"
+      "sha256": "417587b70d29aa4b57b83a1b4563329aab51ea0403c8b656f6039baa9f3937c2"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -4545,7 +4545,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Blood_Immunology/Servier/hematopoesis.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "cbb744eb5c22fb8c2cddc2ee48bc1f0795ca301bedab5cf2f6c83f87f6a6a891"
+      "sha256": "fbe4a3ea73c77f60417ca80221188667f2126659731bff5f34b78c587131d5db"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -4602,7 +4602,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/hepatomegaly.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "6b7d5e8b2902c186643332f541a5773986ef286f53e626b7c51bfb9191fc998c"
+      "sha256": "108d4966b256420b59a2a210bcb69ca0399051c6122ddd0b1cec3f3069fc2b96"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -4658,7 +4658,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Blood_Immunology/Servier/wound-healing.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "c34f2bf141c36f05e1def5bd5a91e82307e85408cb47066934027fb7468a050f"
+      "sha256": "22f4f2268a8fed9884abafb8212798798fd7be4baa62c843bda0b2370f4f9a59"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -4726,7 +4726,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/hiatal-hernia.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "1a2303e20e98ef8fa591069d47a285c3240e8814e4171a70b07d2cf9d769d7c7"
+      "sha256": "05f33a94d8afff0ed0c7158f970767d50d1f8f6ba86133670b1317ff6ce31f89"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -4783,7 +4783,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/paraesophagal-hernia.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "11ef91e5f65b5591ae7e5846bb295aeb1dca65a67455744af5d4d68a344e6f3d"
+      "sha256": "7face41f8b6e1d4849f1f45d1e2a2403d6be5709626b5c24a92d1baff318a538"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -4839,7 +4839,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/liver.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "07d5315ec1c0bee93c36f9d188a0410a3f31c7372eb2a946c316138e24d3ffab"
+      "sha256": "03249231eef7fdccae12104b79d501f9ebd41eb606622b518dcca40aa7472bc1"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -4896,7 +4896,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Blood_Immunology/Servier/hypertonic-erythrocyte.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "b84d498218ae534e3af8b8271b40337fcb331a39c833a0aedd2aa1653d9fbd0a"
+      "sha256": "d69c79a371efada1a19931cf75d396a6da893a53f7ef812e306f6df9c872789a"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -4948,7 +4948,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Blood_Immunology/Servier/hypotonic-erythrocyte.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "b4f653c8d514308b79f5b646732c33cebe35d487d97ee526f62554c08abd0442"
+      "sha256": "6281ce3664f2199e6bb175c21c07873fc62dfc91ff230527e3bb102a45efd3bd"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -5000,7 +5000,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/inhaler.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "2e3295704c69ad518c7df9fb23410b590cdb8ab6b13fbd4b794f77431aec47f1"
+      "sha256": "d3eaa866329c8f6fb6271c4885401a78a3612a53fb5c393a5c948714f5b36063"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -5058,7 +5058,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/gas-exchange-pulmonary.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "fff081be6d7d0a4a0787e1f2956b94a1b5328e14ba73949f8e7b88ee0c31877f"
+      "sha256": "e19d92fe08625077138f5e825c4697c3207dfc3103070ac0fa03fa849e8bbbec"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -5114,7 +5114,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/intestine.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "557076b068af667201154f15cede083d5e5e5dc4d75d2de0996cdeaef1e0c76e"
+      "sha256": "2366279aba43283511bb942ded4c4d989de199af375e7c9c38cc39e75750b0a3"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -5171,7 +5171,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/small-intestine.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "31f377c93903dff89245ae25877e82c8afa68dd46df1bef92bc7f2ac6bc56fac"
+      "sha256": "34145d344bb37e86587f3e83494ba7a6c25245e45d3b21d373996c74e46fe4f8"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -5229,7 +5229,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/injectable.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "7d09af246a6b9c2979895654e612c22f69a1d7faf4e0975a5f2729229a2b6e6d"
+      "sha256": "8ccf9456bcf6c3eefffda8aa8b91ca6e393ff9a0576adf882201b5179d6b7295"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -5288,7 +5288,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/langerhans-islet-pancreas.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "f8770a14b6786047d8b581dd52f82c91e792ad8bd5b1a945129170ea355d4529"
+      "sha256": "6702633e256cd91db93315411332febb6b0ff185f8fbf2ab970f32a2b7b6e38d"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -5346,7 +5346,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Blood_Immunology/Servier/isotonic.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "26f61499384bad0dceb53245b5562150ef004b42743c3d3c75dbb87468bf2280"
+      "sha256": "4168da290dea7bcb63319fa7cc542019a7fdcd9f138d47c76e8ed55623e3a126"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -5397,7 +5397,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/syringe.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "560c390d4e0fcb20131c9ea90a6dc9ed16d12aac006178716de66e9219fc18eb"
+      "sha256": "f1a55543a8ab0d2d5fc93d38406f2805359f572cc1c9d63b479fe0c9b2d28932"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -5454,7 +5454,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/larynx.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "02d55b4c4fa00da08411127950913e748b2b1e2ac7093fd4aef5591b29b46296"
+      "sha256": "0ce6576fc0d7bcad73b5939896a7e7a6574d36227c57cebf92629b519f01b47f"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -5514,7 +5514,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/tongue.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "26d2875bbc632903c12db9958da9b6906447d09a015d56b8af7225bcedce7986"
+      "sha256": "5244df6050cc2312028884f03197dd966b9c1f872132f6fb23669e99fc7737a0"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -5574,7 +5574,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/General_items/Servier/glasses.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "5c1e4dd4885bb7d294527bc538563afffc9ee47e48b0a5c48b405ba3aef4ec7d"
+      "sha256": "2038889db6f452e2585a5a0e51ed410f3eef3feef205748030fd211434c57946"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -5632,7 +5632,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/General_items/Servier/notepad.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "4bae2ac42bbd7673c5ca44100e25aad86123e0bcb7a3c4ada4feb2e16a5a6e30"
+      "sha256": "b78943b929345544017afcdfae04a52ab50d09a1ccce57691e2664124a5c345f"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -5703,7 +5703,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/General_items/Servier/book.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "7988d729f10da9d46e2b264cf0e1eac244898a4276069aaebe96bf2a6db9ade7"
+      "sha256": "f50fcb8ab32b1fe7da5d163250d7d4e85b2bf4b7cdd44b214b7e7baba21601d2"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -5759,7 +5759,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/lymphatic-system.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "ec4c24aaf01e359474ee5ff14496866eb29d60552378de9ceb395d435f4bc228"
+      "sha256": "9eaaa3313315e72f60daa966be8d251d7d567e58b432ae1c0ce82b3a082dee6d"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -5816,7 +5816,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Blood_Immunology/Servier/lymphocytes-1.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "9b01cf426727b8c94c7ca7b163a64e492e0b354127f0eb4633e5d7172143fb32"
+      "sha256": "2fe11ad90a3315ff9e5d51df44425d74f26d4b2914ab4ea21c46fb5bf32eaa31"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -5873,7 +5873,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/General_items/Servier/key.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "ff237e70115b061d6103870cc5d022cb543380780398f5dcab6119665b9a2d20"
+      "sha256": "11ad45bd695a6e43cee389a03c5d9f92434fd7bee6e99a7460143a2e370fb953"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -5930,7 +5930,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/lung-lobes..svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "5b4d6072e7064fb88eff83b9f67420a4ec19b734ec9d3c34870833ecd3ed2740"
+      "sha256": "75d8d7dedbd5fe4d5b67edc7bf71b1448ded5525e42ccd794c8b18b9bbba7872"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -5990,7 +5990,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Blood_Immunology/Servier/macrophage.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "2346c1c3e2cd54bdb61443d842c85d4a47d1a605be56834ac2f47dcacfb1c50b"
+      "sha256": "4517653290bd18016728056476832c05ffa6a422396d0b52151eded49de997b1"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -6041,7 +6041,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/hand.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "c713c3b1ceb5f5e64777e73cf02b34fb33fe937a02be07d9d486d572d9253b94"
+      "sha256": "1851c1e930235d39e45b9a7c2e2549579c2a9a3f3a6994a8938fd99e3d67a2df"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -6099,7 +6099,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Intracellular_components/Servier/mitochondrium-1.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "5f09e844203267ac2596da6ffcc7761bdbfa5153c670fb439f8bfe93660c01e2"
+      "sha256": "58819b583485873c8799681dcd357fd7d012adabfe507540ca8f721d7337e960"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -6155,7 +6155,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/musculature-front.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "326fb7f65c84ec97b3529ed6eba990f395de2f411b322d9cdb70e770d7767aa5"
+      "sha256": "178221415f5c032925bca5eb768c74d7723c0b85dec4d9f0481c46b7fc1785e5"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -6214,7 +6214,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/muscle-1.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "eb740905e96caef03c8a3f5558fc3b5332c2eee84ee980a27a50ed93730f2f1e"
+      "sha256": "ff99da40efcf8a3a8f4e60f31f0db5623ee91fe3de5ac11f24121813f5644af3"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -6271,7 +6271,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/smooth-muscle-contracted.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "a87859e0eee1ca413f4346dc163c1a3996e308e3907579ee95331bf610dbb405"
+      "sha256": "a9e75b3ec8773eb01bc081889c0eb45f41d3c6531fde0eeb62493434a0178c5a"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -6322,7 +6322,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/eye-muscles.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "e1d510b6b7020435ed63a9178e3200ae7a0637faf8d5448dff71540baa0f5cbb"
+      "sha256": "0bd84a5307aacb02ec992fa69b096525c2680ff26bae0cbb3f2518ab928ec950"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -6379,7 +6379,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/pneumothorax.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "fd8c536bde528b1643ffe55b7671644b663d619bd2223950f883ce73cc90991a"
+      "sha256": "0f586421491f1292ad3ff779e1b22e7a514502b36429cf8b144f7f6c746aab02"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -6440,7 +6440,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Blood_Immunology/Servier/neutrophil-granulocyte.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "f3adea2e5bcf8227279ef389dff97c1e087d4e909bd8990b6744b1fbf6c3e08c"
+      "sha256": "3f6151aa60bd0ac312903540b07f3d5648419a74fc7869aa8175290deee620dd"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -6496,7 +6496,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Intracellular_components/Servier/nucleus.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "53c6376c29cb200415b98b547cc30728c8f541820c64e6b7056093d0973b4b9a"
+      "sha256": "c1a504d480cd020e3622a41f53c2238e03b599048fa6094d5436d26c186c28b0"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -6548,7 +6548,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/ear.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "e4c7f1db86f204d633e2186bbaed937e024165a1b7c8b2a0d6cded3a74b5b8ec"
+      "sha256": "f4fd2a36e05ae2f8b1656e37dda6ac5c9881a8dfc30449972b8401ee1a87e717"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -6604,7 +6604,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/eye.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "6f822481d773c4b7cf1ef8fb952632374b59c6f79de4b173d7d1ecb1d4525919"
+      "sha256": "c45aa5ff985013f43fefe1fffd3c184ae16e797d205fccadcb9263abf6e2ff64"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -6664,7 +6664,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/eye-crosssection.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "7068de4f2a32ad186512eae4b23bd2b65ff20383659d36fc10ed3503a697f0a7"
+      "sha256": "6e1e1bf7b7a56dbc2e3abdd15d3ce08e8cc43ed82efe4ba34367579c20692d24"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -6721,7 +6721,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/pancreas.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "a82ad73b88ce95ccc1037adf5d8a7e320da7e36010ab4e83be3025ba39397f15"
+      "sha256": "bcab7ae000cca5b4f95e7a3698104130a3ed6cbeb210448dd4b89f9db941bc4e"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -6779,7 +6779,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/peristalsis.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "c7bc65579d74734e2a03a67eae3e75845497d451fd281e914fe8cd80bd397d6c"
+      "sha256": "a30c630979358e66726ecc7fcbdc76c7bf4aab3235e9de2b608adf119e3cc2ab"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -6836,7 +6836,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/skin-normal.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "24d295d29245bbe075b4c9bf542d381bd634e5e9f20b4b5ed1fde9d9a76b5ed5"
+      "sha256": "597b52893ec779b489c836b062145e6a9c4459eefc187b007972b039f4139140"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -6893,7 +6893,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/leg.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "cef3d97338a0f3fce4fd6f4871c8f5f763bb92b3232f835c3d92a47df347d28a"
+      "sha256": "1a7457dfb2cfc39a435a7cfcb196f923afb29cba35e2bb1d24d08200b31548ff"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -6951,7 +6951,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Blood_Immunology/Servier/platetelet-1.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "feb3e903117592dde38f1bdf5edc6384a4634caba85d379c619e1c6ae547973d"
+      "sha256": "917564ef0c583cbf242fdfa4a1650b3db8581cf060dd3be031b9cbe3645e6cfe"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -7003,7 +7003,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/perfusion-stand.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "23a649cfc7671278ae7866c3fa7ba13b56eff42f1972e80ebd0d5b773e9a0e87"
+      "sha256": "aa3737ebab9108ed63dba92b66afc6e4b753fc33a0c68fbc1582944b4406d526"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -7060,7 +7060,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/lung.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "348ab1c2dab7a9ee3f77f1cc4ba69f85a6f560ab60962021aeed502b8417677f"
+      "sha256": "95f0e38eb75954fe33ea13f0443accb413e9dce8e4b83f94eeb67572ef06f9c2"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -7117,7 +7117,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/skin-first-degree-burn.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "bb64d28aab1f65db478103e086411d3f6cacb1d199b0e8e8cca72f8073edc7c3"
+      "sha256": "26ecc140a3c2eeb3de275f9e1e501b5d793d3ab9ac7c8949bc044fc4d1d087b1"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -7169,7 +7169,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/skin-second-degree-burn.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "02b884b3069be5a5eb946864742bbcfbbac1afe247b759ed5a2202e0cc6d9caf"
+      "sha256": "062a4b4874dabd750a0177ede1e65654a868b363f4d5a6469a93315a3a0c216a"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -7227,7 +7227,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/skin-third-degree-burn.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "666388a7ad4533a888bfb0aa9295f0c494c051c45ef8e4687ea15fe96c3d08f5"
+      "sha256": "6d7e7c9e7945bfcd7134d5af5670876027a84ada9f343b4be64217e4a7a4ab31"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -7279,7 +7279,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/General_items/Servier/uv-radition.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "681e708d46cde1e75c8e713893d1173e3b64ff32ce39e77d6fc46e085d72a10c"
+      "sha256": "d8e11fec431d3ec1a1cff929d0658f28f8798fa5a4eff91a3838776c3ce5e620"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -7336,7 +7336,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Receptors_channels/Servier/receptor-membrane-2.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "0d939c89093d722a0561f04d96c548947eab88e6364910808465930506cdebd0"
+      "sha256": "0300af82ecc8264385079f26fe10671cbd488aa9b908cbaf53ffdaae140523be"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -7387,7 +7387,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/rectum.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "30373cd72e21374afc9775cd74eb70b60b5f4d5c7cc6c64bf29e7bf0b9d8379d"
+      "sha256": "296d6f6df8783ae4e526b3f3c77c05712989e0fc5935de90b546c6156dbe67ea"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -7444,7 +7444,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/breathing-inspiration.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "8072c4f6ab6c2923448dc30821dad280fa733d18dd36589bc46a3ee47d0ac1e2"
+      "sha256": "8733183f04b54185e8da44d0e7c163019b6aa5e33fe97baa5c3e1d8cb394e2fe"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -7508,7 +7508,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/kidney-1.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "aec4e6c7a38c5ef184158848ea585f1c2fc0d5c3dd33e9ae730317524c920912"
+      "sha256": "7baba0b3cb606b9a51691a5021451f1b756b41700f4cce5bf2078043a4831ff3"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -7568,7 +7568,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/old-man-face.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "ffc6a4b39b8abdee1511074977ef78512aa717688aa24678d2be311500dfa48d"
+      "sha256": "b7171f456c2fe526aa6b5896894765061d3da990ced1ba787e459509688c1539"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -7626,7 +7626,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/General_items/Servier/toilet.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "7015f98c1d6573f6a83f75b610d796f0a8a2eb99e01cb6ae6095ad9280120584"
+      "sha256": "ffc200adb570460ca0327649dd723c9c9b87d0c139d918d81dde259097d03e65"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -7678,7 +7678,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/General_items/Servier/traffic-light-all.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "3c70c07599222a5e0af3c799fffe9f22498d07914d6d9fbc6e52ab5772b8e416"
+      "sha256": "0c354fc9c5de58b36a8784f56c0e54a341fa73ba459678987e3241cd467dcf39"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -7734,7 +7734,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/paranasal-sinus-head.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "22615973e0003f78af81ab42829d617a1b7207be9a3850291816e7d805e6565f"
+      "sha256": "9082377dfb0b627082b0c9cd8974995fcd9dda8af220d9f7c4dc925e2e3b9335"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -7793,7 +7793,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/General_items/Servier/sun.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "97ae2aa2bc51f59c01121b253de953705e54532ec6f9eddc78d5d949a2c32c38"
+      "sha256": "c95cb2dd4261d901df01d610d2553849109baf46cfc8916ac0e99cbea38faca6"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -7849,7 +7849,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/drug-tablet-1.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "27978ad6eb74f82b3f2a8e520ce3146d37bf2091f95ef31ea5b0922cb4d00d9d"
+      "sha256": "467e5f28817fd31afeb87b39d4d68b37c689393612b5c2f05fb8614620f052cd"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -7907,7 +7907,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/muscle-tendon.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "39a0567c33dff59d719b9f59d05cc228f4a79226b29a6fb093f0f80a1410c8b1"
+      "sha256": "83a54b402a024b4303d44a8745678478eed2ba8e3b1b4242dc722cf4a09e5239"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -7965,7 +7965,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/pulmonary-embolism.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "ec99dc296f752a36b495d91b2844405617eee1d575a3335f5a298625998ff071"
+      "sha256": "509e2682d60c3ea1868248a9e56f9b2df95edca8f4a7df05b5ba2d3eedcb99d7"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -8022,7 +8022,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/cough-1.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "7a2034bcc1ee980d73bdd8a6ec5f18b2777abecefe81868e93e53759b95b1914"
+      "sha256": "87897a80cdbf6a201434aa6091fd073cbd3283c203827dd98ee96a2fe39e5d22"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -8079,7 +8079,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/People-Other/Servier/carrying.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "320917a1e5c0c9f52704cdf05802b2d7ed188c046d621706fd6377d935fe3aab"
+      "sha256": "d30a6c9c3900e328432963e693ea21c7b510595cb7bf47d5c5a2ed273e1646f8"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -8136,7 +8136,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/venous-thrombosis-1.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "63b710459573fd3d9fc707acca60f83ab0e855a3436bc377b4e6c1b588f748cb"
+      "sha256": "62f0c25d292577f515e8a5e0a44a4300581ec1f233efa5a8ef87806a3a31a3df"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -8194,7 +8194,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/stomach-ulcer.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "4b237a3b3c2b38fe6842295f98e9f7249d7e348e56ed85147f32c3f257f41e0b"
+      "sha256": "39cff5ec325f25a32ef7ac261a1b4f65ab63735e1c6a17b9e3aa8905988e6609"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -8251,7 +8251,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/bladder.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "8da0adeb86254001c3bc4aa1de9d71232a3d614b9b26c4f3a47cd0499aab3a94"
+      "sha256": "5001302b541490d8221881bbbf42012225703c1ed92af20c4f81721832442743"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -8309,7 +8309,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/intestinal-villi.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "453ddd7fe02d45aa459430e122eaf763077b695db00ad573d8cc4c07e4e2c9a2"
+      "sha256": "b086831c45d4c4147e22eac84692b35e9ea4e065560a5352e6b1ad84f067118b"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -8366,7 +8366,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/vein.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "a640cbffed8a07c89e89d41d03f66ead931032ffb87ac3cbddaa19b5e7638c45"
+      "sha256": "6ec56e9f1ebd95545df6ca9f49939d7964bf70d55c46c1ee02a37d4509f43210"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -8424,7 +8424,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/General_items/Servier/ventilator.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "8230a710778a0d5f5f91d4c3f680fe2af7c8b894f82902c18ec01cc4fef87ddc"
+      "sha256": "23648553c82a8c08bf7e7faab638c0a73d08320e47b1a49048ee200c8c589cd2"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -8482,7 +8482,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/upper-respiartory-tract.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "f4348ce7e30d4b42fdb822bb1cb88f603643ee361f9896218a7b1161f85ca059"
+      "sha256": "5486743d3f5f89ecdaea0f8efb47959dcc28c4065ce42b9a4475391e8075cd1d"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -8544,7 +8544,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/intrapulmonary-airway.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "ec3b7f1a5389c119902924742fd05ba56e405e476bbf1f30358b3cf005585208"
+      "sha256": "289ae9622bd91e1cac3233c1cafd5795eb0706427d7683767e8622681220173d"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -8602,7 +8602,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Viruses/Servier/adeno-virus.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "c859b63465310c780a1e63ac844829ce328bd4bc67dc01916bec2fc0d3f95d40"
+      "sha256": "ccc93e1196458893baefab78810889bc5d3768d58a38a189f82e73d5c267c138"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -8659,7 +8659,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Viruses/Servier/hepatits-virus.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "8073b6cf5c4e061a9bd936e34172d8b217d9b480f82f512de337dad79389d913"
+      "sha256": "00847fb9492f815843779e33eb2cc7f929d1982ebc9b965af81050df8cd6b030"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -10467,7 +10467,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "scripts/activos/composiciones.json#dg-agentes-quemadura",
       "upstreamCommit": null,
       "retrievedAt": null,
-      "sha256": "c48b245c6185477e04848ba713c1d9890db1b6be36c7eca5b91200a08874bede"
+      "sha256": "cb912b0968541afaa1921497d8c0702b57c16e82770528eaac43a815c3e9e1ca"
     },
     "license": {
       "id": "PTEM-Propia",
@@ -10533,7 +10533,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "scripts/activos/composiciones.json#dg-bomba-sodio-potasio",
       "upstreamCommit": null,
       "retrievedAt": null,
-      "sha256": "eb26238f1934895a1ff0a0b8e8d59e7a9a4e7f71397160ed9b4accfe4b914545"
+      "sha256": "ccefc076cbd68bc03139270f1dd679d810042fc796408a474f6b80f3e4010038"
     },
     "license": {
       "id": "PTEM-Propia",
@@ -10598,7 +10598,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "scripts/activos/composiciones.json#dg-cascada-coagulacion",
       "upstreamCommit": null,
       "retrievedAt": null,
-      "sha256": "0fbfd9f2e9503b3b8a56ca0bdbb33dc580d281f4edc402a44dd0815530456e4b"
+      "sha256": "106e7f7acc35913abd37bda1a22ad9ec39506c10cce3bc58ff57a4d49376caf9"
     },
     "license": {
       "id": "PTEM-Propia",
@@ -10665,7 +10665,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "scripts/activos/composiciones.json#dg-celula-organelos",
       "upstreamCommit": null,
       "retrievedAt": null,
-      "sha256": "aeb1cff1d44976915a77ba1da86a1819c64c2372a71899c494df3f4b8d7d177d"
+      "sha256": "a2f75cd86a24e654c5176780f7c384424c307d4fef1bc5b10cf0cbb536c14a89"
     },
     "license": {
       "id": "PTEM-Propia",
@@ -10730,7 +10730,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "scripts/activos/composiciones.json#dg-circulacion-mayor-menor",
       "upstreamCommit": null,
       "retrievedAt": null,
-      "sha256": "9befa722af3b52a31ee5b897c7c7b74161343e8e36bc35b9748d8976e107405e"
+      "sha256": "832c9f3cb629d523f29edc5f0278350a444acd9b7275fab19370dad9443953c1"
     },
     "license": {
       "id": "PTEM-Propia",
@@ -10797,7 +10797,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "scripts/activos/composiciones.json#dg-clasificacion-shock",
       "upstreamCommit": null,
       "retrievedAt": null,
-      "sha256": "528a74c5d36e2339360deadd1121cc273f4b16c3c36d9734dc4d67acc7384e9d"
+      "sha256": "4ee52f4d958a00e1c3eaca710bdcee1508f91e9b266b374911afcab45a09408c"
     },
     "license": {
       "id": "PTEM-Propia",
@@ -10869,7 +10869,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "scripts/activos/composiciones.json#dg-columna-vertebral",
       "upstreamCommit": null,
       "retrievedAt": null,
-      "sha256": "5883e025a3798b6047c42e70f16fdf3d8eb6d120366fe4e5c92ba5c6db67ccec"
+      "sha256": "998978ce721071f76a90218dd89b7110b8973db889d5a3f2755965aba5629445"
     },
     "license": {
       "id": "PTEM-Propia",
@@ -10930,7 +10930,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "scripts/activos/composiciones.json#dg-cuadrantes-abdominales",
       "upstreamCommit": null,
       "retrievedAt": null,
-      "sha256": "d05a17f2a28339cefddc38593636e6f7d3ea2ea7a87bf19f79531fdc53d5f99b"
+      "sha256": "32a5a791e492141c970b042be4a1bbb726feccecb14b3672adc7b508123561e8"
     },
     "license": {
       "id": "PTEM-Propia",
@@ -10995,7 +10995,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "scripts/activos/composiciones.json#dg-curva-oxihemoglobina",
       "upstreamCommit": null,
       "retrievedAt": null,
-      "sha256": "510ff850869d76743a87072dd2a13f895fb5cac47337544034f9aa234a0e6eb2"
+      "sha256": "bf4e25bb938882c14c5f46ccfe3b3413c8fe497fd3fc3c01eb0a37b999c5b166"
     },
     "license": {
       "id": "PTEM-Propia",
@@ -11060,7 +11060,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "scripts/activos/composiciones.json#dg-ecg-onda-normal",
       "upstreamCommit": null,
       "retrievedAt": null,
-      "sha256": "fc76b5d906c2964af8c8cb79b2af9469bc38bf4fc735ebd63cb4522fdf468337"
+      "sha256": "e1e534cbfdeb83ad7becc3650b3a8d10e453194c970abe40541e6def54380d29"
     },
     "license": {
       "id": "PTEM-Propia",
@@ -11125,7 +11125,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "scripts/activos/composiciones.json#dg-encefalo-regiones",
       "upstreamCommit": null,
       "retrievedAt": null,
-      "sha256": "8a4318c4cb99fdc2cfe2960d0a13bab517eeaaadb94d0e2a262297e2b80d49c7"
+      "sha256": "97e848e0b8c7f400bf308e474a80855db81311c4d7300cdf88b0ff2fd45b1fca"
     },
     "license": {
       "id": "PTEM-Propia",
@@ -11192,7 +11192,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "scripts/activos/composiciones.json#dg-equilibrio-acido-base",
       "upstreamCommit": null,
       "retrievedAt": null,
-      "sha256": "a2c139ba5dbcd7057e9232b44013771b6c4468229abc0ef08da854d761c2c105"
+      "sha256": "1ced60c1a72cb6f25a7d67f2f41c3e82901a90da23d535e1b011e6ec0499f6ab"
     },
     "license": {
       "id": "PTEM-Propia",
@@ -11257,7 +11257,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "scripts/activos/composiciones.json#dg-gasto-cardiaco",
       "upstreamCommit": null,
       "retrievedAt": null,
-      "sha256": "d38894aad3fba179d3a0e7a2fd6d9894bfa4a1c4ae38a877bc586aab918e9dc6"
+      "sha256": "71c692ae978328d7939633110b7c867255e4b29fa8eb346e279992156d27c535"
     },
     "license": {
       "id": "PTEM-Propia",
@@ -11321,7 +11321,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "scripts/activos/composiciones.json#dg-glandulas-endocrinas",
       "upstreamCommit": null,
       "retrievedAt": null,
-      "sha256": "0f3699aea61fb018fa53afe4b8873cbf5c0d1ab2adb27af5b8b374c5770d33e8"
+      "sha256": "821ac5d0696c54bf1acef3ff2e9564605f01f6841d41b53533712b8daf109f0e"
     },
     "license": {
       "id": "PTEM-Propia",
@@ -11386,7 +11386,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "scripts/activos/composiciones.json#dg-grados-quemadura",
       "upstreamCommit": null,
       "retrievedAt": null,
-      "sha256": "be1f5b0af900e30f7d5b02311af7e6ec89cc97905a28eba84e18f025fe1ae22e"
+      "sha256": "3cb9f4e04d67fee0e35e3a7093d30858acbc7ffa9e20cab869cecec80da63909"
     },
     "license": {
       "id": "PTEM-Propia",
@@ -11454,7 +11454,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "scripts/activos/composiciones.json#dg-nefrona",
       "upstreamCommit": null,
       "retrievedAt": null,
-      "sha256": "9248b5d2b614ca77faa7b2c1d00d79adfaacb6c7ec77030fa654622c0446a1f2"
+      "sha256": "8b60352ac13aa128c5eb8a07b14fc21f565d21aeee39c87e794063587f280375"
     },
     "license": {
       "id": "PTEM-Propia",
@@ -11520,7 +11520,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "scripts/activos/composiciones.json#dg-picaduras-mordeduras",
       "upstreamCommit": null,
       "retrievedAt": null,
-      "sha256": "94fc70d74ba37d085000d4d8fccc58b1af122e2d4f20162b5d6fbec70ff2104b"
+      "sha256": "f7969140f715077a416737b7de3aa114a96e66aab29ac6cf8fefa61b849eaba9"
     },
     "license": {
       "id": "PTEM-Propia",
@@ -11586,7 +11586,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "scripts/activos/composiciones.json#dg-piel-capas",
       "upstreamCommit": null,
       "retrievedAt": null,
-      "sha256": "592918461a6e7136c95159e771afa7434ada57fae57f0afbb6290fac1ab93fea"
+      "sha256": "25dd2668751e865c882c46a922fe6eae1edac85bdb2d2dcfb62b9d8d6850cd05"
     },
     "license": {
       "id": "PTEM-Propia",
@@ -11652,7 +11652,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "scripts/activos/composiciones.json#dg-receptores-adrenergicos",
       "upstreamCommit": null,
       "retrievedAt": null,
-      "sha256": "6674292b84886bd647b423e97600940f73e98762a98f6e74a35784e538f1785e"
+      "sha256": "1c55c8d5acf6a166f2af5d2b16658b8e47f96404e5ecf8f050e528cfaebe815d"
     },
     "license": {
       "id": "PTEM-Propia",
@@ -11718,7 +11718,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "scripts/activos/composiciones.json#dg-secuencia-intubacion",
       "upstreamCommit": null,
       "retrievedAt": null,
-      "sha256": "36848042e3a7f4bb8dc5eec3bca626306220d2682c6200ace944fea811dbfbfd"
+      "sha256": "177a965ab56dfcaff0f2984efa0b6cf86338dae9048de820dc962ebaaec417f9"
     },
     "license": {
       "id": "PTEM-Propia",
@@ -11783,7 +11783,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "scripts/activos/composiciones.json#dg-sistema-conduccion",
       "upstreamCommit": null,
       "retrievedAt": null,
-      "sha256": "c09ece6773bdeb95c5f5475527c3ae4cddb9ed735c7e8fd87d35fdee93410fb7"
+      "sha256": "e284934875b25542504ae7220b88674c8a0b849f587c57abfb64124378a20910"
     },
     "license": {
       "id": "PTEM-Propia",
@@ -11850,7 +11850,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "scripts/activos/composiciones.json#dg-soluciones-cristaloides",
       "upstreamCommit": null,
       "retrievedAt": null,
-      "sha256": "e155855e7f05974e1897189faa5acbe7c394ded90d072d8de4c0561ea85eef33"
+      "sha256": "c558572970e1de55d8d73ef11fb8e7cc5d66a9fffc20183f9d3f41b48a5b3047"
     },
     "license": {
       "id": "PTEM-Propia",
@@ -11917,7 +11917,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "scripts/activos/composiciones.json#dg-tipos-hemorragia",
       "upstreamCommit": null,
       "retrievedAt": null,
-      "sha256": "01c94c26436bc828689203005752dec92b0fd9638d0466585072c78633bf130f"
+      "sha256": "5fc3d3ac92acfdff72dc3130e38c49b10be88e3eea023a1fa6a25102c7166c67"
     },
     "license": {
       "id": "PTEM-Propia",
@@ -13022,7 +13022,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/trachea-bronchi.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "1be78587b52468dcbf42ff45806362ec21e2afa77b83228a7fc6f2a6b2b3bb2b"
+      "sha256": "29bab9f9d9d53873a6f8fd3adb4fde9252a7fe73d8596673cf577f446a922be9"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -13139,7 +13139,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/heart-vascularization.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "ae680f0f7c6731978a9576432fe7c256bc26b6523a6054c797f4834ac5e9a73e"
+      "sha256": "e4ddface309da664212939f4eb2590a44a3edc9f351b27c8af476bd30a0f1768"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -13197,7 +13197,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/brain-2.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "cd7cf0331dca9079d620ac7c019a885074c4f593433285d731745ed599387db7"
+      "sha256": "dd34bb9ff07e5e1a1bde52ba12174ceb01a1f972787dab1e6b977f8d7f7c7991"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -13257,7 +13257,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/skin.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "83b2c038506724309a8b6a71435a5f80994b6ecfc058ca7e8575bf8ef41bc706"
+      "sha256": "40d3ddd43d520a641ade94f2d41f2b7ef440919d5a04e4893a1886e2b1f2bbc3"
     },
     "license": {
       "id": "CC-BY-3.0",
@@ -13309,7 +13309,7 @@ export const ACTIVOS_MEDICOS = [
       "repositoryPath": "static/icons/cc-by-3.0/Human_physiology/Servier/digestive-system.svg",
       "upstreamCommit": "d29e766ea7580b8063c4f47b29e872db40a4d979",
       "retrievedAt": null,
-      "sha256": "90d5bfe323d83faee2c3a8db98c60c1551abb8bd8ada50465d9683134249741f"
+      "sha256": "9d9c2d5be2b797910b629432e4e12bb8e704e7f2ba9e7c796f1c71b9c95ef039"
     },
     "license": {
       "id": "CC-BY-3.0",

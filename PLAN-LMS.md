@@ -1,6 +1,9 @@
 # PLAN-LMS — Auditoría y planeación: PTEM como LMS multiacademia
 
-> **AMPLIACIÓN VIGENTE: 2026-08-29 — ver §21-§32 al final del documento.**
+> **AMPLIACIÓN VIGENTE: 2026-08-29 — ver §21-§33 al final del documento.**
+> Incluye el diagnóstico del incidente que dejó la web sin actualizarse (§33):
+> el push de imágenes optimizadas sí subió, lo que falló fue CI, y como el
+> despliegue depende del test, la web se congeló sin avisar.
 > Ahí están el estado real medido del temario (que corrige `CLAUDE.md` §0), las
 > dieciséis decisiones del dueño del producto y las Fases 13-16: calidad
 > editorial v2, Mi Botiquín, entrenador de farmacología y simulador de escenas.
@@ -1653,3 +1656,117 @@ enseña todavía.
    maestra cierre: se califica lo hecho o se marca sin efecto?
 7. ¿Las tres funciones nuevas aparecen en el menú lateral del alumno o detrás
    de una sección «Práctica»?
+
+
+---
+
+# 33. Incidente del 29 de agosto de 2026 — por qué la web dejó de actualizarse
+
+Este bloque documenta un fallo real que costó horas de despliegue y que la
+persona que lo provocó no pudo diagnosticar. Se escribe aquí porque su causa
+afecta directamente a las Fases 13 y 14.
+
+## 33.1 Qué pasó
+
+El commit `92ba65a` («d») pasó los 180 SVG de `public/imagenes/medical` por un
+optimizador externo (SVGO) y los subió a `main`. **El push funcionó**: el
+commit quedó en `main`. Lo que falló fue **CI**, y como el workflow encadena
+`test → build → deploy`, un test en rojo **bloquea el despliegue entero**. La
+web se quedó congelada en la versión anterior sin ningún mensaje visible que
+explicara por qué. Vivido desde fuera, parece que «el push falló».
+
+| Ejecución | Commit | Rama | Resultado |
+|---|---|---|---|
+| 123 | `8f1dd9e` | main | verde (707/707) |
+| 126 | `92ba65a` | main | **rojo** — el commit del incidente |
+| 127 | `56266a5` | rama de planeación | rojo — heredado del anterior, causa idéntica |
+
+## 33.2 La causa
+
+`src/data/activosMedicos.js` es un catálogo **generado** que registra, entre
+otras cosas, el `sha256` de cada archivo servido, y
+`tests/activosMedicos.test.mjs` compara ese hash contra el archivo real. Al
+optimizar las imágenes sin regenerar el catálogo, los 180 hashes dejaron de
+coincidir.
+
+**El test no sobraba: hizo exactamente su trabajo.** Existe para impedir que
+una imagen cambie sin que cambie su procedencia, que es lo que sostiene la
+página de créditos y el cumplimiento de las licencias CC BY. Lo que faltaba no
+era permisividad, era que el optimizado fuera parte del pipeline.
+
+Comprobado sobre los archivos del incidente: las imágenes estaban **bien**.
+Conservan `<title>`, `<desc>` y el bloque `@media (prefers-color-scheme: dark)`
+—los 23 SVG con tema oscuro siguen siendo 23— y los 180 pasan el validador de
+seguridad `svgSeguro.mjs`. El ahorro real fue de 2.8 MB (15 %).
+
+## 33.3 Qué se hizo
+
+1. **`scripts/lib/minificarSvg.mjs`** — el minificado pasa a ser parte del
+   pipeline, con una configuración de SVGO deliberadamente conservadora:
+   se desactivan `cleanupIds` (las composiciones embeben varios activos en un
+   mismo documento y renombrar ids rompería sus `url(#…)`), `removeDesc` (es
+   el texto accesible en español) e `inlineStyles` (23 archivos definen ahí su
+   paleta clara y su media query de tema oscuro). Medido sobre los originales
+   sin optimizar: **19.7 % de ahorro, mejor que el 15 % del incidente**, con
+   cero archivos inseguros y sin tocar los bloques `<style>`.
+2. **`scripts/importar-activos-medicos.mjs`** — se minifica en los tres puntos
+   donde nace un archivo servido (BioIcons, Servier y composiciones), siempre
+   **antes** de validar y de calcular el hash: lo que se comprueba y lo que se
+   sella es el archivo final. Si falta `svgo`, el importador **aborta** en vez
+   de producir bytes distintos a los del catálogo.
+3. **`scripts/resellar-activos.mjs`** (`npm run activos:resellar`) — recalcula
+   `sha256` y `dimensions` desde los archivos que ya están en `public/`, sin
+   red y sin tocar ninguna imagen, autoría, licencia ni procedencia. Rechaza
+   cualquier archivo que no pase el saneado estricto: resellar es declarar
+   «este archivo es el bueno», y eso no se puede decir de un SVG con script.
+
+Con eso, `npm test` vuelve a **707/707** conservando los 2.8 MB de ahorro. Se
+retiró además `public/Sin título-1.png` (1.7 MB, sin ninguna referencia en el
+código, que se publicaba al sitio).
+
+## 33.4 Por qué hizo falta el resellado, y qué queda pendiente de verificar
+
+Lo correcto habría sido regenerar el catálogo con `npm run activos:importar`.
+**Se intentó y no se pudo**: `smart.servier.com` no es alcanzable desde este
+entorno (el proxy responde 403), y el importador, al no poder leer esas fichas,
+deja fuera del catálogo los **48 activos de Servier**. El remedio habría sido
+peor que la avería, así que se restauraron los archivos y se resolvió con el
+resellado.
+
+**Queda por hacer, en una máquina con acceso a `smart.servier.com`:** ejecutar
+`npm i --no-save svgo && npm run activos:importar` una vez, para confirmar que
+el pipeline reproduce byte a byte lo que hay en `public/` y para dejar poblada
+`.cache/activos`. Hasta entonces, la prueba «el catálogo de activos se puede
+regenerar sin red desde la caché» **se omite** por falta de caché —lo dice en
+voz alta al ejecutarse, no pasa en falso— y la reproducibilidad completa del
+pipeline está implementada pero **no verificada**. No debe darse por buena
+hasta que esa ejecución salga limpia.
+
+## 33.5 Reglas que quedan de este incidente
+
+1. **Un artefacto generado y su fuente se commitean juntos.** Cambiar imágenes
+   sin regenerar el catálogo, o contenido sin correr `npm run gen:plan`, deja
+   el repositorio incoherente y rojo.
+2. **Rojo en CI = la web no se actualiza.** No es un aviso cosmético: `deploy`
+   depende de `build` y `build` depende de `test`. Antes de suponer que un push
+   falló, hay que mirar la pestaña Actions.
+3. **Ningún paso manual sobre archivos que se sirven.** Si una transformación
+   merece aplicarse, merece estar en el pipeline, donde es reproducible y su
+   resultado queda sellado.
+
+## 33.6 Efecto sobre las fases planeadas
+
+- **Fase 13 (peso del contenido).** El presupuesto mejora: las imágenes pesan
+  19.7 % menos y el PNG suelto ya no se publica. No cambia el diagnóstico de
+  fondo —`planRescate.js` son 4.26 MB en un solo trozo y hay que partirlo antes
+  de enriquecer— pero sí deja algo de margen.
+- **Fase 14 (fotos del botiquín).** Es la consecuencia más concreta. Las
+  fotografías del equipo **no se copian a mano dentro de `public/`**: entran
+  por el mismo pipeline, con su licencia y su crédito declarados, su saneado y
+  su hash sellado en el catálogo. Cuando lleguen tus fotos, se añaden a
+  `scripts/activos/seleccion.json` como activos propios de la academia y se
+  importan. Añadir una foto sigue sin tocar código, pero sí toca el catálogo, y
+  ese es justamente el punto: una imagen sin procedencia registrada no llega al
+  sitio.
+- **Fases 15 y 16.** Sin efecto directo. La regla 1 de §33.5 aplica a sus
+  catálogos de fármacos y escenas igual que a cualquier otro dato generado.
