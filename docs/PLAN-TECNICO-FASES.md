@@ -19,7 +19,7 @@
 
 ## Estado en una tabla
 
-Diez trabajos terminados y once pendientes. Los tachados no se vuelven a tocar
+Diez trabajos terminados y catorce pendientes. Los tachados no se vuelven a tocar
 salvo regresión demostrada.
 
 ### Terminado
@@ -42,15 +42,18 @@ salvo regresión demostrada.
 | # | Trabajo | Duración | Depende de |
 |---|---|---|---|
 | **A** | Calidad editorial v2 + partir el bundle | larga, por lotes | — |
-| **B** | Mi Botiquín | corta | tu lista de artículos |
-| **C** | Clase en vivo con actividades calificables **(incluye el simulador de escenas)** | 2-3 semanas | A, para que las escenas exijan lo que el temario enseña |
-| **D** | Entrenador de farmacología | media | tu catálogo de fármacos |
+| **B** | Mi Botiquín | corta | lista de artículos de la academia |
+| **F** | Hosting propio + plan Blaze | 2-3 días | — · **promovido**: lo exigen C y L |
+| **J** | Paginación de `/admin`, auditoría, validar `intentos` | media | **promovido con F**: en Blaze el exceso ya no se corta, se cobra |
+| **L** | Suscripción y cobro (pasarela, webhook, recepción, corte de caja) | 2 semanas | F |
+| **C** | Clase en vivo con actividades calificables **(incluye el simulador de escenas)** | 2-3 semanas | A y F |
+| **D** | Entrenador de farmacología | media | catálogo de fármacos de la academia |
+| **M** | Tienda (uniformes e insumos) | 2 semanas | L · comparte catálogo con B |
+| **N** | Inventario simple | 1 semana | M |
 | **E** | Editor de temas (bloques, quiz, flashcards, actividades) | media | — |
-| **F** | Hosting propio + plan Blaze | 2-3 días | C, para contratar sabiendo el consumo real |
-| **G** | Migración a Next.js | 3-5 semanas | F |
-| **H** | Certificados con QR verificable | 2-3 semanas | F y G |
+| **H** | Certificados con QR verificable | 2-3 semanas | F y dominio propio |
+| **G** | Migración a Next.js | 3-5 semanas | F · **reevaluar tras A**, no comprometido |
 | **I** | Plan CURSO + directorio de capacitadores | media | — |
-| **J** | Auditoría, paginación de `/admin`, validar `intentos` | media | — |
 | **K** | Tipo MEDICINA (convocatorias) | larga | — |
 
 ## Los tres choques que había, y cómo quedaron
@@ -373,6 +376,56 @@ hace *desaparecer* el problema del temario pesado en vez de mitigarlo.
 - **Regla que no se rompe:** no migrar y construir funciones nuevas a la vez. Si
   algo falla, hay que poder saber si fue la migración o la función.
 
+### Costo real, medido sobre este código (29-08-2026)
+
+Se midió antes de comprometer las 3–5 semanas. **Lo que se muda intacto:**
+
+| Capa | Tamaño | Qué pasa |
+|---|---|---|
+| `src/lib` | 14,293 líneas · 78 archivos | JS puro, sin React ni Vite: se muda tal cual |
+| Pruebas | 13,925 líneas · 73 archivos, **solo 6 tocan React** | **El 92 % sobrevive intacto** |
+| `firestore.rules` / `storage.rules` | — | Sin cambios |
+| `src/index.css` | 8,648 líneas | CSS puro con variables; Next lo acepta casi tal cual |
+
+**Lo que se reescribe: ~19,550 líneas de JSX** (33 pantallas = 8,053 · 62
+componentes = 10,569 · contextos = 928). Pero el número de líneas no es el
+problema; son estas cuatro cosas:
+
+1. **React Router está en todo.** 47 archivos lo importan y hay **161 usos** de
+   `useNavigate`, `useParams`, `Link` y `useLocation`. Ninguno es difícil
+   aislado; son 161.
+2. **Rompe todos los enlaces guardados.** Hoy es `HashRouter`: las URLs son
+   `sitio/#/tema/m5-shock`. Next usa rutas reales. Cada marcador, cada enlace
+   compartido y cada QR impreso dejan de funcionar, y `PLAN-LMS.md` §2 exige que
+   `/tema/:id` sobreviva. Se arregla con un redirector, que es legado permanente.
+3. **La autenticación es el costo escondido y el mayor.** **34 componentes usan
+   `useAuth`**, y `AuthContext` está construido sobre `onAuthStateChanged` y
+   `onSnapshot` **en el cliente**. Firebase Auth de cliente no le sirve al
+   servidor: renderizar en servidor una página protegida exige sesión por
+   cookie, una ruta que la emita, verificación con el Admin SDK y decidir
+   pantalla por pantalla qué va en servidor. **Sin ese trabajo no hay beneficio
+   de SSR**: quedaría Next.js renderizando en cliente, o sea lo mismo de hoy con
+   otra sintaxis.
+4. **Arrastra hosting y plan.** GitHub Pages no ejecuta servidor. Obliga a Vercel
+   (uso comercial de pago) o Firebase App Hosting (exige Blaze). G no es
+   independiente de F.
+
+Más 17 usos de `import.meta.env` que pasan a `process.env.NEXT_PUBLIC_*`.
+
+### Veredicto: reevaluar después de A, no comprometer
+
+| Argumento a favor | ¿Se sostiene? |
+|---|---|
+| SSR hace desaparecer el temario pesado | **Es el argumento principal, y el trabajo A lo resuelve en días** |
+| Rutas de servidor para PDFs, certificados, reportes | Real — pero **Cloud Functions también**, y llegan con Blaze |
+| SEO | Un LMS tras login no lo necesita |
+| TypeScript | **No requiere Next.js**: se puede adoptar hoy en `src/lib` con Vite |
+
+**Recomendación registrada:** hacer A y volver a juzgar G con el peso ya medido.
+Reescribir 19,550 líneas y rehacer la autenticación de 34 componentes para
+llegar donde ya se está no se paga. G queda como «reevaluar», no como
+comprometido.
+
 ---
 
 ## Trabajo H (antes «Fase 7») — Certificados con QR verificable · PENDIENTE
@@ -491,6 +544,100 @@ Vienen de PLAN-LMS F10, F11 y F12. Ninguno bloquea a los demás.
   `intentos`, que hoy permite inyectar un 100 % falso.
 - **K — Tipo MEDICINA.** Organización por convocatoria e importación de
   temarios oficiales, nunca inventados.
+
+---
+
+## Trabajos L, M y N — Cobros, tienda e inventario · PENDIENTES
+
+Propuesta del dueño del 29 de agosto de 2026: **prohibir la transferencia manual
+al banco y que todo pago pase por la plataforma**, para acabar con los pagos
+perdidos. Se acepta la idea; abajo van las cinco correcciones que se le hicieron
+antes de planificarla.
+
+**Decisiones tomadas:** solo cobra **RESCATE** por ahora (una sola cuenta de
+pasarela, sin Stripe Connect ni Marketplace); **sin Odoo** —la academia no usa
+ERP y un contador de existencias cubre uniformes e insumos—; y **sin base
+relacional**: todo en Firestore, junto al resto.
+
+### Dónde encaja: el gancho ya existe
+
+`src/lib/accesoModelo.js::calcularAcceso()` es **la única función que decide si
+un alumno entra**, y ya modela acceso con caducidad (`esPrueba` + `pruebaHasta`).
+Añadir `accesoHasta` junto a esos campos es un cambio pequeño y contenido: no
+hace falta un sistema de acceso nuevo ni middleware nuevo. Esa centralización ya
+está hecha y es la parte difícil.
+
+### Las cinco correcciones a la propuesta original
+
+1. **No hace falta Next.js.** Un webhook necesita un endpoint de servidor, y eso
+   es **una Cloud Function**, no un framework. Son dos funciones —recibir el
+   webhook y registrar el cobro en efectivo—, no una migración. Es, eso sí, el
+   argumento más fuerte a favor de tener servidor que ha aparecido: **hace del
+   trabajo F un prerrequisito**, no algo tardío.
+2. **Nada de base relacional.** Una tabla `Users` aparte daría dos fuentes de
+   verdad sobre quién es un usuario, cuando roles, academias, grupos, progreso y
+   reglas ya viven en Firestore. `Orders` y `Order_Items` mapean a colecciones y
+   heredan el aislamiento por academia que ya funciona.
+3. **Verificar la firma del webhook — esto era un agujero de seguridad.** La
+   propuesta decía «tu código detecta el evento y suma 31 días». Tal cual,
+   cualquiera que descubra la URL se regala acceso mandando un POST falso. El
+   endpoint es la única puerta abierta a internet sin autenticación. Obligatorio:
+   validar `Stripe-Signature` (o la firma de Mercado Pago) con el secreto
+   compartido **antes de mirar el contenido**; **idempotencia**, porque las
+   pasarelas reintentan el mismo evento y sin registro de eventos procesados un
+   alumno acaba con 93 días por un pago; y **no confiar en el monto del payload**,
+   sino contrastarlo con la orden emitida.
+4. **El «+31 días» tiene dos errores.** Debe extenderse desde
+   `max(hoy, vencimiento_actual)`, no desde hoy: si un alumno paga tres días
+   antes de vencer, la fórmula original se los tira y enseña a pagar tarde. Y
+   31 × 12 = 372 días, o sea una semana gratis al año por alumno: o se usa mes
+   calendario o se decide a sabiendas.
+5. **Lo fiscal, que es lo que no se planea.** El dinero debe caer en la cuenta de
+   pasarela **de RESCATE**, no de PTEM: si PTEM cobra y reparte, maneja fondos de
+   terceros, que es actividad regulada. Hay que decidir antes quién emite el CFDI
+   al alumno que lo pida. Y **OXXO no es instantáneo** (de minutos a horas): el
+   alumno pagará esperando entrar de inmediato, así que la pantalla debe decirlo
+   o habrá quejas el primer día. Confirmar con contador antes de construir.
+
+### Trabajo L — Suscripción y cobro · **la etapa que resuelve el problema**
+
+~2 semanas. Es la única que ataca «quién pagó»; las otras dos son otro negocio.
+
+- Pasarela (Mercado Pago o Stripe) con sesión de pago vinculada al `uid`.
+- Referencias únicas de OXXO y CLABE dinámica para SPEI.
+- Cloud Function de webhook: firma verificada, idempotente, que extiende
+  `accesoHasta` con la regla del punto 4.
+- **Panel de recepción**: buscar al alumno por nombre o matrícula y registrar el
+  cobro en efectivo, ejecutando exactamente la misma función que el webhook.
+  Queda registrado **quién lo cobró y cuándo** (mismo criterio que el resto de
+  acciones sensibles del proyecto).
+- Corte de caja y recibo al correo del alumno.
+
+### Trabajo M — Tienda · ~2 semanas
+
+Carrito, `ordenes` y `ordenesArticulos` en Firestore, uniformes e insumos de
+botiquín, y **«recoger en instalaciones»** con alerta al panel de recepción
+cuando el pedido esté listo. Puede incluir la mensualidad en el mismo carrito.
+
+**Enlace con el trabajo B:** los insumos de la tienda son los mismos artículos
+del botiquín virtual. Un solo catálogo, dos usos —estudiar y reponer—, y no dos
+listas que se desincronizan.
+
+### Trabajo N — Inventario · ~1 semana
+
+Descuento de existencias al vender, alertas de reposición y exportación a hoja
+de cálculo. Sin ERP. Si algún día la academia adopta Odoo para su contabilidad,
+entonces sí se conecta con lo que ya use, que no es lo mismo que implantarlo.
+
+### Efecto sobre el calendario
+
+- **F (hosting + Blaze) sube de posición**: lo necesitan tanto C (60–150
+  conectados simultáneos superan el corte de 100 de Realtime Database) como L
+  (Cloud Functions para el webhook).
+- **J sube con él.** En Spark, `/admin` leyendo `usuarios` e `intentos`
+  completos sin límite se corta solo al agotar la cuota. En Blaze **ya no se
+  corta: se cobra**. Paginar `/admin` deja de ser higiene y pasa a ser control
+  de gasto.
 
 ---
 
