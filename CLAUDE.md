@@ -2,6 +2,14 @@
 
 Este archivo es obligatorio para cualquier sesión de Claude que trabaje en este repositorio. Léelo completo antes de editar. Su propósito es reconstruir el contenido académico de PTEM sin volver a mezclar conceptos, inventar subtemas ni presentar como validadas piezas generadas o reubicadas automáticamente.
 
+> **Este mandato cubre el trabajo EDITORIAL: redactar y validar el temario.**
+> El trabajo TÉCNICO (arquitectura, clase en vivo, multi-grupo, certificados)
+> avanza por separado y se registra en **`docs/PLAN-TECNICO-FASES.md`**. Si te
+> han pedido una fase técnica, empieza por ahí; si te han pedido redactar
+> temario, sigue en este archivo. Los dos proyectos son independientes: el
+> software funciona sin que exista una línea de temario nuevo, y el temario se
+> carga encima cuando esté listo.
+
 ## 0. Estado actual y mandato inmediato
 
 La contención inicial ya fue implementada. **No vuelvas a empezar la arquitectura desde cero** y no restaures el fallback de `reutilizado.js`.

@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext.jsx'
 import { useIndiceContenido, useCursos } from '../context/ContenidoContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
 import { idsVisiblesDeHome } from '../lib/homeModelo.js'
+import { gruposDelPanel } from '../lib/gruposDeUsuario.js'
 import Icon from '../components/Icon.jsx'
 import Reveal from '../components/Reveal.jsx'
 import Imagen from '../components/Imagen.jsx'
@@ -305,26 +306,39 @@ function SeccionFlashcards({ flashcards }) {
 // director y el super-admin configuran (variante, mensaje, avisos y accesos).
 // Sin configurar enseña logo, nombre y lema, como la banda de siempre.
 
-// Panel de bienvenida SOLO para profesores (instructores): un profesor puede
-// atender varios grupos, así que aquí elige con cuál trabaja. La selección se
-// guarda en su perfil (perfil.grupoId) y se mantiene hasta que la cambie; ese
-// grupo enfoca su panel de avance, sus reportes y su vista de "Temas".
+// ============================================================
+//  Panel de bienvenida del PROFESOR: con qué grupo trabaja hoy
+// ------------------------------------------------------------
+//  ANTES esto escribía `perfil.grupoId` para "recordar" la elección, y no
+//  funcionaba: firestore.rules prohíbe expresamente que alguien salte de un
+//  grupo a otro dentro de su academia por cuenta propia —el grupo lleva el
+//  plan de estudios—, así que a un profesor que ya tuviera grupo la escritura
+//  se le denegaba y solo veía «No se pudo cambiar de grupo». Además ofrecía
+//  TODOS los grupos de la academia, incluidos los que no son suyos.
+//
+//  Ahora la elección es local (ver AuthContext): no escribe nada, es
+//  instantánea y no puede ser denegada. Y solo ofrece los grupos que su
+//  director le asignó: cambiar de vista no es lo mismo que tener acceso.
+//
+//  Se quitó «Todos los grupos» a propósito. Una maestra trabaja con UN grupo a
+//  la vez —es lo que pidió el producto y lo que necesita la clase en vivo—, y
+//  un estado «todos» obligaría a decidir a qué grupo se le pone una
+//  calificación, que es exactamente el error que no se puede permitir.
+// ============================================================
 function SelectorGrupoProfesor() {
-  const { rol, user, perfil, academiaId, grupo } = useAuth()
-  const [grupos, setGrupos] = useState(null) // null = cargando
-  const [guardando, setGuardando] = useState(false)
-  const [error, setError] = useState('')
+  const { rol, perfil, academiaId, grupo, grupoId, grupos, elegirGrupo } = useAuth()
+  const [deLaAcademia, setDeLaAcademia] = useState(null) // null = cargando
 
   useEffect(() => {
-    if (rol !== 'instructor' || !academiaId) { setGrupos([]); return }
+    if (rol !== 'instructor' || !academiaId) { setDeLaAcademia([]); return undefined }
     let activo = true
     ;(async () => {
       try {
         const { listarGrupos } = await import('../lib/firebase/grupos.js')
         const lista = await listarGrupos(academiaId)
-        if (activo) setGrupos(lista.filter((g) => g.estado === 'activo'))
+        if (activo) setDeLaAcademia(lista.filter((g) => g.estado === 'activo'))
       } catch {
-        if (activo) setGrupos([])
+        if (activo) setDeLaAcademia([])
       }
     })()
     return () => { activo = false }
@@ -334,22 +348,9 @@ function SelectorGrupoProfesor() {
   if (rol !== 'instructor') return null
 
   const nombre = (perfil?.nombre || '').split(' ')[0]
-  const activo = perfil?.grupoId || ''
-
-  const elegir = async (grupoId) => {
-    if ((grupoId || '') === activo || guardando) return
-    setGuardando(true)
-    setError('')
-    try {
-      const { actualizarUsuario } = await import('../lib/firebase/usuarios.js')
-      // El AuthContext escucha el perfil en vivo: la UI se refresca sola.
-      await actualizarUsuario(user.uid, { grupoId: grupoId || null })
-    } catch {
-      setError('No se pudo cambiar de grupo. Revisa tu conexión e inténtalo de nuevo.')
-    } finally {
-      setGuardando(false)
-    }
-  }
+  // Sus grupos, con nombre, y sin los que ya no existen: un id que quedó en el
+  // perfil tras borrar un grupo no debe ofrecerse como opción.
+  const mios = gruposDelPanel({ rol, perfil, gruposDeAcademia: deLaAcademia || [] })
 
   return (
     <div className="ph-wrap">
@@ -359,41 +360,33 @@ function SelectorGrupoProfesor() {
           <div>
             <h2>Hola{nombre ? `, ${nombre}` : ''}</h2>
             <p>
-              Elige el grupo con el que vas a trabajar. Tu elección se guarda y
-              se mantiene hasta que la cambies: enfoca tu panel de avance, tus
-              reportes y la visibilidad de contenido.
+              {mios.length > 1
+                ? 'Elige el grupo con el que vas a trabajar. Enfoca tu panel de avance, tus reportes y la visibilidad de contenido.'
+                : 'Este es el grupo con el que trabajas. Enfoca tu panel de avance, tus reportes y la visibilidad de contenido.'}
             </p>
           </div>
         </div>
 
-        {grupos === null ? (
+        {deLaAcademia === null ? (
           <p className="prof-panel-vacio">Cargando tus grupos…</p>
-        ) : grupos.length === 0 ? (
+        ) : mios.length === 0 ? (
           <p className="prof-panel-vacio">
-            Tu academia aún no tiene grupos activos. Pide a tu director que cree
-            uno para poder organizar a tus alumnos.
+            Todavía no tienes ningún grupo asignado. Pide al director de tu
+            academia que te asigne los grupos que vas a impartir.
           </p>
         ) : (
           <>
-            <div className="prof-grupos" role="group" aria-label="Grupos disponibles">
-              <button
-                type="button"
-                className={`prof-grupo-chip ${!activo ? 'activo' : ''}`}
-                onClick={() => elegir(null)}
-                disabled={guardando}
-              >
-                Todos los grupos
-              </button>
-              {grupos.map((g) => (
+            <div className="prof-grupos" role="group" aria-label="Tus grupos">
+              {mios.map((g) => (
                 <button
                   key={g.id}
                   type="button"
-                  className={`prof-grupo-chip ${activo === g.id ? 'activo' : ''}`}
-                  onClick={() => elegir(g.id)}
-                  disabled={guardando}
+                  className={`prof-grupo-chip ${grupoId === g.id ? 'activo' : ''}`}
+                  aria-pressed={grupoId === g.id}
+                  onClick={() => elegirGrupo(g.id)}
                 >
                   {g.nombre}
-                  {activo === g.id && (
+                  {grupoId === g.id && (
                     <span className="prof-grupo-check" aria-hidden="true"><Icon name="check" size={14} /></span>
                   )}
                 </button>
@@ -402,8 +395,7 @@ function SelectorGrupoProfesor() {
 
             <div className="prof-panel-pie">
               <span className="prof-panel-actual">
-                Trabajando con:{' '}
-                <strong>{grupo?.nombre || (activo ? activo : 'Todos los grupos')}</strong>
+                Trabajando con: <strong>{grupo?.nombre || mios.find((g) => g.id === grupoId)?.nombre || '—'}</strong>
               </span>
               <Link to="/panel" className="btn btn--pildora btn--carbon">
                 <Icon name="progreso" size={16} /> Ir a mi panel
@@ -411,7 +403,6 @@ function SelectorGrupoProfesor() {
             </div>
           </>
         )}
-        {error && <p className="cuenta-error" role="alert">{error}</p>}
       </section>
     </div>
   )

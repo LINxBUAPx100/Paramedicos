@@ -218,6 +218,18 @@ service cloud.firestore {
           && request.resource.data.revisorTemporal.hasta.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
         );
     }
+    // Forma válida de `grupoIds`: los VARIOS grupos que lleva un profesor
+    // (Fase 2). Ausente vale —un profesor de antes de esta fase no lo tiene—;
+    // presente, tiene que ser una lista con tope. El tope no es pedagógico: sin
+    // él, un documento de perfil podría crecer sin control.
+    // El espejo en el cliente es MAX_GRUPOS en src/lib/gruposDeUsuario.js.
+    function grupoIdsFormaValida() {
+      return !('grupoIds' in request.resource.data)
+        || (
+          request.resource.data.grupoIds is list
+          && request.resource.data.grupoIds.size() <= 40
+        );
+    }
     // Forma válida del mapa permisosEditor escrito por el director: solo las
     // 7 claves conocidas (6 booleanos + cursosPermitidos). Evita inyectar basura.
     function permisosEditorFormaValida() {
@@ -517,7 +529,14 @@ service cloud.firestore {
         // profesor no se auto-concede acceso): solo el director PRO / super.
         // Redundante con la lista blanca de arriba, y a propósito: si algún día
         // se amplía esa lista, esta barrera sigue en pie.
-        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['permisosEditor'])
+        // `grupoIds` va en la misma barrera y por el mismo motivo: es el
+        // director quien reparte los grupos de un profesor. Si un profesor
+        // pudiera escribirlo, se añadiría a sí mismo los grupos que quisiera y
+        // vería en su panel a los alumnos de sus compañeros. Ya está fuera de
+        // la lista blanca de arriba; esto lo deja explícito para que ampliarla
+        // algún día no lo cuele sin querer.
+        && !request.resource.data.diff(resource.data).affectedKeys()
+             .hasAny(['permisosEditor', 'grupoIds'])
         // El ROL solo se mueve solo si lo respalda una INVITACIÓN POR ROL. Se
         // pone la igualdad primero para que el caso normal (editar el nombre,
         // unirse por código) no gaste una lectura extra: `||` corta.
@@ -606,7 +625,7 @@ service cloud.firestore {
         && request.resource.data.rol in ['alumno', 'instructor']
         && request.resource.data.academiaId == resource.data.academiaId
         && request.resource.data.diff(resource.data).affectedKeys()
-             .hasOnly(['rol', 'estado', 'grupoId', 'puedeVerCodigos'])
+             .hasOnly(['rol', 'estado', 'grupoId', 'grupoIds', 'puedeVerCodigos'])
         // Si asigna grupo, debe ser un grupo de SU academia (o quitarlo).
         && (
           request.resource.data.get('grupoId', null) == resource.data.get('grupoId', null)
@@ -615,7 +634,23 @@ service cloud.firestore {
             exists(/databases/$(database)/documents/grupos/$(request.resource.data.grupoId))
             && grupoDoc(request.resource.data.grupoId).academiaId == resource.data.academiaId
           )
-        );
+        )
+        // `grupoIds`: los VARIOS grupos de un profesor (Fase 2). Aquí solo se
+        // valida la FORMA —lista de textos y con tope—, no que cada id sea de
+        // esta academia, y es una decisión, no un olvido:
+        //
+        //  · comprobar cada elemento costaría un `get()` por grupo, y las
+        //    reglas admiten 10 por petición: un profesor con 11 grupos dejaría
+        //    de poder ser editado;
+        //  · y sobre todo, `grupoIds` NO CONCEDE NADA. Es un filtro de
+        //    pantalla. Todo lo que ese profesor pueda leer sigue pasando por
+        //    `esStaffDe(academiaId)` en su propia colección, así que un id
+        //    ajeno colado en la lista no abre ninguna puerta: aparece en un
+        //    desplegable cuyas lecturas se deniegan igual.
+        //
+        // El `grupoId` de la línea de arriba SÍ se comprueba contra la
+        // academia, porque ese campo sí decide plan de estudios para un alumno.
+        && grupoIdsFormaValida();
 
       // El DIRECTOR PRO concede/retira los PERMISOS EDITORIALES a los
       // PROFESORES de SU academia (Fase 6): SOLO el campo permisosEditor, con
@@ -1045,6 +1080,62 @@ service cloud.firestore {
               && camposTemaSegunPermisos()
           )
         );
+      allow delete: if esSuper();
+    }
+
+    // --- AGREGADOS del curso (vistas derivadas precalculadas) ---
+    //
+    // Qué son: el glosario, el buscador, el banco de exámenes, el mazo de
+    // flashcards, la galería y los contadores, ya calculados y guardados en
+    // documentos pequeños. Existen para que abrir UNA lección no obligue a leer
+    // las 287 del curso (ver src/lib/agregadosModelo.js).
+    //
+    // LEER: exactamente el mismo criterio que `temas`. Un agregado contiene
+    // trozos de las lecciones —definiciones del glosario, preguntas del
+    // examen—, así que no puede ser más accesible que el contenido del que
+    // sale: si un alumno no puede leer el tema, tampoco su agregado.
+    //
+    // ESCRIBIR: quien puede editar el curso. Los datos NO se validan campo a
+    // campo porque no los teclea nadie: los genera `escribirAgregadosDeCurso`
+    // desde los temas que ya pasaron sus propias reglas. Lo que sí se protege
+    // es que no cambien de dueño ni de curso.
+    //
+    // Sin `edicionContenidoValida()`, a diferencia de `cursos` y `temas`, y es
+    // deliberado: esa función exige que CADA escritura suba la `version`, y
+    // aquí hay una escritura que no lo hace —marcar el sello como caducado al
+    // guardar una lección—. Exigirlo dejaría al profesor sin poder avisar de
+    // que los agregados quedaron viejos, que es justo la señal que impide
+    // servir a los alumnos el examen anterior al cambio. El bloqueo optimista
+    // por versión no aporta nada en datos derivados: dos regeneraciones
+    // simultáneas escriben lo mismo.
+    match /agregados/{docId} {
+      allow get, list: if esSuper()
+        || esStaffDe(resource.data.academiaId)
+        || alumnoLeeCurso(resource.data.academiaId, resource.data.estado, resource.data.cursoId);
+
+      allow create: if (esSuper()
+          || (
+            esAdminDe(request.resource.data.academiaId)
+              && academiaEditaContenido(request.resource.data.academiaId)
+          )
+          || profesorPuedeEditar(request.resource.data.academiaId, request.resource.data.cursoId))
+        && request.resource.data.academiaId is string
+        && request.resource.data.cursoId is string
+        && request.resource.data.tipo is string;
+
+      // academiaId y cursoId INMUTABLES: un agregado no cambia de academia ni
+      // se reasigna a otro curso desde el cliente.
+      allow update: if request.resource.data.academiaId == resource.data.academiaId
+        && request.resource.data.cursoId == resource.data.cursoId
+        && (
+          esSuper()
+          || (
+            esAdminDe(resource.data.academiaId)
+              && academiaEditaContenido(resource.data.academiaId)
+          )
+          || profesorPuedeEditar(resource.data.academiaId, resource.data.cursoId)
+        );
+
       allow delete: if esSuper();
     }
 

@@ -83,8 +83,10 @@ export function ContenidoProvider({ children }) {
 
   const [indice, setIndice] = useState(INDICE_BUNDLE)
   const [contenido, setContenido] = useState(null) // API completa | null
+  const [api, setApi] = useState(null) // API BAJO DEMANDA | null
   const [error, setError] = useState(null)
   const [pedido, setPedido] = useState(false) // alguna página pidió el contenido
+  const [pedidoApi, setPedidoApi] = useState(false)
   const [reintento, setReintento] = useState(0)
 
   // Índice ligero de la academia migrada (1 lectura). Legacy: bundle directo.
@@ -139,7 +141,33 @@ export function ContenidoProvider({ children }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pedido, contenido, clave, reintento])
 
+  // API BAJO DEMANDA (Fase 1). Es la puerta que NO baja el curso entero: el
+  // índice ya está cargado, la lección es una lectura y cada vista derivada lee
+  // su agregado. Convive con `contenido` a propósito, no lo sustituye de golpe:
+  // las pantallas se migran una a una y la que todavía no lo esté sigue
+  // funcionando por el camino de siempre.
+  useEffect(() => {
+    setApi(null)
+    if (!pedidoApi) return undefined
+    let activo = true
+    ;(async () => {
+      try {
+        const { contenidoBajoDemandaDeAcademia } = await import('../lib/firebase/contenido.js')
+        const resuelto = await contenidoBajoDemandaDeAcademia(academia, acceso, cursoElegido)
+        if (activo && resuelto) setApi(resuelto)
+      } catch (err) {
+        // No se propaga a la pantalla: quien use el hook verá `api` en null y
+        // pintará su esqueleto. Aquí se registra porque es donde una academia
+        // dejaría de servirse por el camino barato sin que nadie lo notara.
+        registrar('contenido:api', err, { academiaId })
+      }
+    })()
+    return () => { activo = false }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pedidoApi, clave, reintento])
+
   const pedir = useCallback(() => setPedido(true), [])
+  const pedirApi = useCallback(() => setPedidoApi(true), [])
 
   // Cambiar de curso: se guarda y se descarta lo cargado. El contenido se
   // vuelve a resolver porque `clave` cambia.
@@ -160,8 +188,11 @@ export function ContenidoProvider({ children }) {
   const cursoId = contenido?.cursoId || indice?.cursoId || null
 
   const valor = useMemo(
-    () => ({ indice, contenido, error, pedir, reintentar, academiaId, cursos, cursoId, elegirCurso }),
-    [indice, contenido, error, pedir, reintentar, academiaId, cursos, cursoId, elegirCurso]
+    () => ({
+      indice, contenido, api, error, pedir, pedirApi, reintentar,
+      academiaId, cursos, cursoId, elegirCurso,
+    }),
+    [indice, contenido, api, error, pedir, pedirApi, reintentar, academiaId, cursos, cursoId, elegirCurso]
   )
   return <ContenidoContext.Provider value={valor}>{children}</ContenidoContext.Provider>
 }
@@ -184,6 +215,123 @@ export function useContenido() {
 // Índice LIGERO para el shell (no dispara la carga del contenido completo).
 export function useIndiceContenido() {
   return usarContexto().indice
+}
+
+// ============================================================
+//  HOOKS BAJO DEMANDA (Fase 1)
+// ------------------------------------------------------------
+//  Sustituyen a `useContenido()` en las pantallas de estudio. La diferencia no
+//  se ve: es que abrir una lección deja de costar 287 lecturas.
+//
+//  Todos devuelven `{ …, cargando, error }` y ninguno lanza: mientras
+//  `cargando` sea true la pantalla pinta su esqueleto, igual que hasta ahora.
+// ============================================================
+
+/**
+ * La API bajo demanda. `api` es null mientras resuelve.
+ *
+ * Lo que responde SIN lecturas: módulos, títulos, numeración, vecinos y
+ * contadores. Lo demás son métodos `…Async` que cuestan una lectura.
+ */
+export function useApiContenido() {
+  const ctx = usarContexto()
+  const { pedirApi } = ctx
+  useEffect(() => { pedirApi() }, [pedirApi])
+  return { api: ctx.api, error: ctx.error, reintentar: ctx.reintentar }
+}
+
+// Cualquier carga asíncrona derivada de la API, con su estado. `deps` son las
+// dependencias que obligan a recargar (normalmente el id de lo que se pide).
+//
+// El guardia `vivo` no es adorno: al pasar de una lección a otra deprisa,
+// la respuesta de la primera puede llegar DESPUÉS de la segunda y pintaría la
+// lección equivocada. Descartarla es la diferencia entre navegar y ver
+// parpadear contenido ajeno.
+function useCargaDeApi(pedir, deps) {
+  const { api, error: errorApi, reintentar } = useApiContenido()
+  const [dato, setDato] = useState(null)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    if (!api) return undefined
+    let vivo = true
+    setDato(null)
+    setError(null)
+    Promise.resolve()
+      .then(() => pedir(api))
+      .then((r) => { if (vivo) setDato(r) })
+      .catch((err) => { if (vivo) setError(err) })
+    return () => { vivo = false }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [api, ...deps])
+
+  return { dato, api, cargando: !api || (dato === null && !error), error: error || errorApi, reintentar }
+}
+
+/**
+ * Versión escueta de lo anterior para quien solo quiere el dato: devuelve
+ * `null` mientras carga y el resultado cuando llega.
+ *
+ * La usan las piezas que pueden pintarse sin su agregado —el subrayado del
+ * glosario, por ejemplo— y que prefieren aparecer luego a bloquear la página.
+ */
+export function useCargaDeAgregado(pedir, deps = []) {
+  return useCargaDeApi(pedir, deps).dato
+}
+
+/** Una lección completa. Una lectura. */
+export function useTema(temaId) {
+  const { dato, api, cargando, error, reintentar } = useCargaDeApi(
+    (a) => (temaId ? a.getTemaAsync(temaId) : null),
+    [temaId]
+  )
+  return { tema: dato, api, cargando: Boolean(temaId) && cargando, error, reintentar }
+}
+
+/** Preguntas de un módulo (examen de módulo). Una lectura. */
+export function usePreguntasDeModulo(moduloId) {
+  const { dato, cargando, error, reintentar } = useCargaDeApi(
+    (a) => (moduloId ? a.preguntasDeModuloAsync(moduloId) : []),
+    [moduloId]
+  )
+  return { preguntas: dato || [], cargando, error, reintentar }
+}
+
+/** Banco completo (examen general). Una lectura por módulo. */
+export function useTodasLasPreguntas() {
+  const { dato, cargando, error, reintentar } = useCargaDeApi((a) => a.todasLasPreguntasAsync(), [])
+  return { preguntas: dato || [], cargando, error, reintentar }
+}
+
+/**
+ * Mazo completo de flashcards. Una lectura por módulo.
+ *
+ * `activo` en false lo deja sin pedir nada. Existe porque la pantalla de
+ * flashcards de UN tema no necesita el mazo global, pero las reglas de los
+ * hooks obligan a invocarlo igual: sin este interruptor, abrir las tarjetas de
+ * una lección se llevaba por delante los siete agregados del curso.
+ */
+export function useTodasLasFlashcards(activo = true) {
+  const { dato, cargando, error, reintentar } = useCargaDeApi(
+    (a) => (activo ? a.todasLasFlashcardsAsync() : []),
+    [activo]
+  )
+  return { flashcards: dato || [], cargando, error, reintentar }
+}
+
+/** Fichas de las lecciones de un módulo (índice del módulo). Una lectura. */
+export function useFichasDeModulo(moduloId) {
+  const { dato, cargando, error, reintentar } = useCargaDeApi(
+    (a) => (moduloId ? a.fichasDeModuloAsync(moduloId) : []),
+    [moduloId]
+  )
+  return { fichas: dato || [], cargando, error, reintentar }
+}
+
+/** Fichas de TODO el curso (buscador). Una lectura por módulo. */
+export function useTodasLasFichas() {
+  const { dato, cargando, error, reintentar } = useCargaDeApi((a) => a.todasLasFichasAsync(), [])
+  return { fichas: dato || [], cargando, error, reintentar }
 }
 
 /**

@@ -33,7 +33,11 @@ import {
   verificarRespaldo, planDeRollback, fraseConfirmacion, resumenDeOperacion,
   huellaTema, huellaEstructura,
 } from '../replicacionModelo.js'
-import { registrarHistorial, limpiarCacheContenido, temasDeCurso, obtenerCurso } from './contenido.js'
+import {
+  registrarHistorial, limpiarCacheContenido, temasDeCurso, obtenerCurso,
+  programarRegeneracionAgregados,
+} from './contenido.js'
+import { marcarAgregadosDesactualizados } from './agregados.js'
 
 // Límite de academias destino que la UI puede APLICAR directamente. Más
 // destinos = usar el script privado (backend seguro), nunca el navegador.
@@ -657,6 +661,12 @@ export async function aplicarReplicacion(replicacionId, { onProgreso, reanudar =
         progreso, creados: creadosPorAcademia, actualizado: serverTimestamp(),
       })
       limpiarCacheContenido(academiaId)
+      // La replicación reescribe temas: los agregados de ese curso (glosario,
+      // banco de exámenes, buscador…) quedan describiendo el contenido
+      // anterior. Se marcan caducados y se reconstruyen; mientras tanto, la
+      // academia se sirve por el camino completo, que es correcto.
+      await marcarAgregadosDesactualizados(academiaId, plan.cursoId)
+      programarRegeneracionAgregados(academiaId, plan.cursoId)
       await registrarHistorial({
         academiaId, accion: 'replicar-contenido', coleccion: 'cursos', docId: plan.cursoId,
         despues: { replicacionId, version: op.version, estrategia: op.estrategia, escrituras: plan.estimacion.escrituras },
@@ -775,7 +785,13 @@ export async function ejecutarRollback(replicacionId, { forzar = {}, frase, onPr
       hechos += grupo.length
       onProgreso?.({ hechos, total: prev.restaurar.length + prev.archivar.length })
     }
-    for (const academiaId of op.destinos) limpiarCacheContenido(academiaId)
+    // El rollback también deja los agregados describiendo lo que ya no está.
+    for (const academiaId of op.destinos) {
+      limpiarCacheContenido(academiaId)
+      const cursoId = cursoIdDe(academiaId, op.plantillaId)
+      await marcarAgregadosDesactualizados(academiaId, cursoId)
+      programarRegeneracionAgregados(academiaId, cursoId)
+    }
     await transicion(replicacionId, 'revertida', {
       finRollback: serverTimestamp(),
       rollback: {

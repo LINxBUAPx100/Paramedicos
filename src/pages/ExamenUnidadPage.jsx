@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { useContenido, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
+import {
+  useTema, useCargaDeAgregado, CargandoContenido, ErrorContenido,
+} from '../context/ContenidoContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
 import { bancoDeExamen, motivoExamenInactivo } from '../lib/bancoExamen.js'
 import { seleccionarPreguntas, temasCubiertos } from '../lib/examenModelo.js'
@@ -28,18 +30,25 @@ import NotFound from './NotFound.jsx'
 
 export default function ExamenUnidadPage() {
   const { temaId } = useParams()
-  const { contenido, error, reintentar } = useContenido()
-  const tema = contenido?.getTema(temaId)
+  const { tema, cargando, error, reintentar } = useTema(temaId)
   const { temaVisible } = useVisibilidad()
   const [iniciado, setIniciado] = useState(false)
   const [semilla, setSemilla] = useState(() => nuevaSemilla(temaId))
 
   // Temas del alcance ya resueltos. La regla de qué aporta reactivos vive en
   // src/lib/bancoExamen.js y es una sola: `validado` o `publicado`.
-  const temasDelAlcance = useMemo(() => {
-    if (!contenido || !tema?.alcanceExamen) return []
-    return tema.alcanceExamen.temas.map((id) => contenido.getTema(id)).filter(Boolean)
-  }, [contenido, tema])
+  // Las lecciones del alcance son las únicas otras que hay que traer: de
+  // ellas sale el banco de reactivos.
+  const idsDelAlcance = (tema?.alcanceExamen?.temas || []).join(',')
+  const cargados = useCargaDeAgregado(
+    async (a) => {
+      const ids = idsDelAlcance ? idsDelAlcance.split(',') : []
+      if (!ids.length) return []
+      return (await Promise.all(ids.map((id) => a.getTemaAsync(id)))).filter(Boolean)
+    },
+    [idsDelAlcance]
+  )
+  const temasDelAlcance = useMemo(() => cargados || [], [cargados])
 
   const banco = useMemo(
     () => bancoDeExamen(temasDelAlcance, { temaVisible }),
@@ -53,8 +62,12 @@ export default function ExamenUnidadPage() {
   const preguntas = useMemo(() => seleccionarPreguntas(banco, { semilla }), [banco, semilla])
 
   if (error) return <ErrorContenido onReintentar={reintentar} />
-  if (!contenido) return <CargandoContenido />
+  if (cargando) return <CargandoContenido />
   if (!tema || !tema.alcanceExamen) return <NotFound />
+  // Hay que esperar también a las lecciones del alcance, no solo a esta página.
+  // Sin esto, el banco está vacío durante un instante y la pantalla anuncia
+  // «este examen no tiene reactivos», que es falso y desconcierta al alumno.
+  if (cargados === null) return <CargandoContenido />
 
   const otroIntento = () => setSemilla(nuevaSemilla(`${temaId}-${Date.now()}`))
 

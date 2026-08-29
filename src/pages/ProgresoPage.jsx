@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { useContenido, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
+import { useApiContenido, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
 import { useProgress } from '../context/ProgressContext.jsx'
 import MisCalificaciones from '../components/MisCalificaciones.jsx'
 import ProgresoStaff from '../components/ProgresoStaff.jsx'
@@ -77,7 +77,7 @@ export default function ProgresoPage() {
 // pestaña «Mi progreso» del staff, de ahí `conCabecera`.
 function MiProgreso({ conCabecera = true }) {
   const { user } = useAuth()
-  const { contenido, error, reintentar } = useContenido()
+  const { api, error, reintentar } = useApiContenido()
   const { estado, reiniciar } = useProgress()
 
   // Mejor calificación del alumno en el examen de CADA módulo. Vive en Firestore
@@ -108,8 +108,10 @@ function MiProgreso({ conCabecera = true }) {
   }, [user?.uid])
 
   if (error) return <ErrorContenido onReintentar={reintentar} />
-  if (!contenido) return <CargandoContenido />
-  const { modulos, stats, todosLosTemas } = contenido
+  if (!api) return <CargandoContenido />
+  // Módulos, contadores y lista de temas salen del índice: cero lecturas.
+  const { modulos, stats } = api
+  const todosLosTemas = api.todosLosTemasLigeros
 
   const temasLeidos = Object.values(estado.leidos).filter(Boolean).length
   const progresoGlobal = Math.round((temasLeidos / stats.temas) * 100)

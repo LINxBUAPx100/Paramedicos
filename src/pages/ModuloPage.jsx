@@ -1,5 +1,7 @@
 import { useParams, Link } from 'react-router-dom'
-import { useContenido, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
+import {
+  useApiContenido, useFichasDeModulo, CargandoContenido, ErrorContenido,
+} from '../context/ContenidoContext.jsx'
 import { useProgress } from '../context/ProgressContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
 import NotFound from './NotFound.jsx'
@@ -10,13 +12,15 @@ import { tituloVisibleDe } from '../data/contenido/titulosVisibles.js'
 
 export default function ModuloPage() {
   const { moduloId } = useParams()
-  const { contenido, error, reintentar } = useContenido()
-  const modulo = contenido?.getModulo(moduloId)
+  // El módulo sale del índice (sin lecturas); sus lecciones, de UNA ficha.
+  const { api, error, reintentar } = useApiContenido()
+  const modulo = api?.getModulo(moduloId)
+  const { fichas, cargando } = useFichasDeModulo(moduloId)
   const { estado } = useProgress()
   const { moduloVisible, temaVisible } = useVisibilidad()
 
   if (error) return <ErrorContenido onReintentar={reintentar} />
-  if (!contenido) return <CargandoContenido variante="modulo" />
+  if (cargando) return <CargandoContenido variante="modulo" />
   if (!modulo) return <NotFound />
 
   // Módulo oculta para el grupo del alumno: aún no disponible.
@@ -31,7 +35,7 @@ export default function ModuloPage() {
     )
   }
 
-  const temas = modulo.temas.filter((t) => temaVisible(t.id))
+  const temas = fichas.filter((t) => temaVisible(t.id))
 
   return (
     <div className="modulo-page" style={{ '--modulo-color': modulo.color }}>
@@ -79,8 +83,8 @@ export default function ModuloPage() {
                 <p className="tema-fila-resumen">{tema.resumen}</p>
                 <div className="tema-fila-meta">
                   {tema.duracion && <span><Icon name="reloj" size={14} /> {tema.duracion}</span>}
-                  <span><Icon name="pregunta" size={14} /> {tema.quiz.length} preguntas</span>
-                  <span><Icon name="flashcards" size={14} /> {tema.flashcards.length} flashcards</span>
+                  <span><Icon name="pregunta" size={14} /> {tema.nQuiz} preguntas</span>
+                  <span><Icon name="flashcards" size={14} /> {tema.nFlashcards} flashcards</span>
                 </div>
               </div>
               <span className="tema-fila-flecha" aria-hidden="true"><Icon name="chevronDer" size={18} /></span>

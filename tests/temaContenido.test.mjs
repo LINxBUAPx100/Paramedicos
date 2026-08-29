@@ -4,6 +4,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { todosLosTemas } from '../src/data/index.js'
 import { contenidoTema } from '../src/lib/contenidoModelo.js'
+import { temaDesdeDoc } from '../src/lib/contenidoApi.js'
 import {
   validarBloque, validarSecciones, validarPregunta, validarQuiz,
   validarRecursos, validarActividades, validarContenidoTema,
@@ -19,7 +20,15 @@ import {
 
 test('compatibilidad: el contenido de los 68 temas actuales valida sin errores', () => {
   for (const tema of todosLosTemas) {
-    const doc = contenidoTema(tema)
+    // Se valida el tema DESPUÉS de ir y volver de Firestore, no antes: es la
+    // forma que de verdad le llega al alumno de una academia migrada.
+    //
+    // Antes bastaba con `contenidoTema(tema)` porque las dos formas eran la
+    // misma. Ya no: las filas de tabla viajan envueltas en un objeto porque
+    // Firestore no admite arreglos dentro de arreglos, y el validador —que
+    // corre sobre lo que teclea el editor— espera arreglos. Validar la forma
+    // de Firestore comprobaría algo que ninguna pantalla ve nunca.
+    const doc = temaDesdeDoc(contenidoTema(tema))
     const contenido = {
       resumen: doc.resumen, duracion: doc.duracion, objetivos: doc.objetivos,
       secciones: doc.secciones, conceptosClave: doc.conceptosClave,

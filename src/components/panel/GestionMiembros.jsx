@@ -1,6 +1,7 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { ETIQUETA_ROL, ROLES, ROLES_DIRECTOR } from '../../lib/roles.js'
 import { etiquetaPrueba } from '../../lib/accesoModelo.js'
+import { gruposDeUsuario } from '../../lib/gruposDeUsuario.js'
 import Icon from '../Icon.jsx'
 
 // ============================================================
@@ -46,6 +47,25 @@ export default function GestionMiembros({ miembros, grupos = [], gestion, miUid,
       onCambio()
     } catch {
       setError('No se pudo aplicar el cambio (revisa permisos o conexión).')
+    } finally {
+      setOcupado(null)
+    }
+  }
+
+  // Asignar GRUPOS a un profesor. Va aparte de `aplicar` porque escribe dos
+  // campos a la vez (la lista y el `grupoId` heredado, que deben quedar de
+  // acuerdo) y porque su validación tiene mensajes propios: si el director
+  // elige un grupo que no es de su academia, hay que decírselo, no dar un
+  // «revisa permisos» genérico.
+  const asignarGrupos = async (uid, ids) => {
+    setOcupado(uid)
+    setError('')
+    try {
+      const { asignarGruposAProfesor } = await import('../../lib/firebase/usuarios.js')
+      await asignarGruposAProfesor(uid, ids, grupos)
+      onCambio()
+    } catch (err) {
+      setError(err?.message || 'No se pudieron asignar los grupos (revisa permisos o conexión).')
     } finally {
       setOcupado(null)
     }
@@ -145,8 +165,19 @@ export default function GestionMiembros({ miembros, grupos = [], gestion, miUid,
                       <span className={`panel-rol-tag rol-${m.rol}`}>{ETIQUETA_ROL[m.rol] || m.rol}</span>
                     )}
                   </td>
+                  {/* Un PROFESOR puede llevar varios grupos; un ALUMNO, uno.
+                      No es una asimetría gratuita: el grupo de un alumno lleva
+                      su plan de estudios, y dos planes a la vez no es algo que
+                      el producto contemple (ver src/lib/gruposDeUsuario.js). */}
                   <td data-label="Grupo">
-                    {puede && grupos.length > 0 ? (
+                    {puede && grupos.length > 0 && m.rol === 'instructor' ? (
+                      <GruposDelProfesor
+                        profesor={m}
+                        grupos={grupos}
+                        ocupado={ocupado === m.id}
+                        onGuardar={(ids) => asignarGrupos(m.id, ids)}
+                      />
+                    ) : puede && grupos.length > 0 ? (
                       <select
                         className="panel-rol-select"
                         value={m.grupoId || ''}
@@ -234,5 +265,92 @@ export default function GestionMiembros({ miembros, grupos = [], gestion, miUid,
         <p className="panel-vacio">Nadie coincide con «{filtro}».</p>
       )}
     </section>
+  )
+}
+
+// ============================================================
+//  Los grupos de UN profesor
+// ------------------------------------------------------------
+//  Un desplegable no sirve aquí: hay que elegir VARIOS. Se usa <details> nativo
+//  en vez de un modal porque cabe dentro de la celda, funciona con teclado y en
+//  móvil sin código propio, y no roba el foco de la tabla mientras el director
+//  repasa la lista.
+//
+//  Los cambios NO se guardan al marcar cada casilla: se acumulan y se aplican
+//  con un botón. Marcar tres grupos serían tres escrituras y tres recargas de
+//  la tabla, y el estado intermedio dejaría al profesor un instante sin grupos.
+// ============================================================
+function GruposDelProfesor({ profesor, grupos, ocupado, onGuardar }) {
+  const asignados = useMemo(() => gruposDeUsuario(profesor, 'instructor'), [profesor])
+  const [seleccion, setSeleccion] = useState(asignados)
+  const [abierto, setAbierto] = useState(false)
+
+  // Si la tabla se recarga con datos nuevos, la selección local se descarta:
+  // lo que manda es lo guardado, no lo que quedó marcado antes.
+  useEffect(() => { setSeleccion(asignados) }, [asignados])
+
+  const quien = profesor.nombre || profesor.email || profesor.id
+  const nombresAsignados = grupos.filter((g) => asignados.includes(g.id)).map((g) => g.nombre)
+  const cambiado = seleccion.length !== asignados.length
+    || seleccion.some((id) => !asignados.includes(id))
+
+  const alternar = (id) => {
+    setSeleccion((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]))
+  }
+
+  return (
+    <details
+      className="panel-grupos-multi"
+      open={abierto}
+      onToggle={(e) => setAbierto(e.currentTarget.open)}
+    >
+      <summary aria-label={`Grupos de ${quien}`}>
+        {nombresAsignados.length === 0
+          ? <span className="panel-celda-vacia">Sin grupos</span>
+          : nombresAsignados.length === 1
+            ? <span className="panel-rol-tag">{nombresAsignados[0]}</span>
+            : <span className="panel-rol-tag">{nombresAsignados.length} grupos</span>}
+      </summary>
+
+      <div className="panel-grupos-lista">
+        {grupos.map((g) => (
+          <label key={g.id} className="panel-grupos-opcion">
+            <input
+              type="checkbox"
+              checked={seleccion.includes(g.id)}
+              disabled={ocupado}
+              onChange={() => alternar(g.id)}
+            />
+            {g.nombre}
+          </label>
+        ))}
+
+        <div className="panel-grupos-acciones">
+          <button
+            type="button"
+            className="btn btn--pildora btn--carbon btn--mini"
+            disabled={ocupado || !cambiado}
+            onClick={() => onGuardar(seleccion)}
+          >
+            {ocupado ? 'Guardando…' : 'Guardar grupos'}
+          </button>
+          {cambiado && (
+            <button
+              type="button"
+              className="panel-grupos-cancelar"
+              disabled={ocupado}
+              onClick={() => setSeleccion(asignados)}
+            >
+              Descartar
+            </button>
+          )}
+        </div>
+        {seleccion.length === 0 && (
+          <p className="panel-grupos-aviso">
+            Sin ningún grupo, este profesor no verá alumnos en su panel.
+          </p>
+        )}
+      </div>
+    </details>
   )
 }
