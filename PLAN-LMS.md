@@ -1,5 +1,10 @@
 # PLAN-LMS — Auditoría y planeación: PTEM como LMS multiacademia
 
+> **AMPLIACIÓN VIGENTE: 2026-08-29 — ver §21-§32 al final del documento.**
+> Ahí están el estado real medido del temario (que corrige `CLAUDE.md` §0), las
+> dieciséis decisiones del dueño del producto y las Fases 13-16: calidad
+> editorial v2, Mi Botiquín, entrenador de farmacología y simulador de escenas.
+>
 > Fecha: 2026-07-15 · Estado: auditoría completa · Fases 1-4 + permisos
 > editoriales (roadmap Fase 6) + CABLEADO DEL RESOLUTOR (roadmap Fase 4) +
 > REPLICACIÓN (roadmap Fase 9, pedida como "Fase 7") implementadas
@@ -341,6 +346,7 @@ aislamiento no negociable, documentada aquí). No se duplica nada más.
 | **10** | Plan CURSO (modo mono-curso) + directorio de capacitadores | capacidades + Home |
 | **11** | Auditoría (`historial` append-only) + paginación y contadores de `/admin` + validar campos numéricos de `intentos` | reglas + admin |
 | **12** | Tipo MEDICINA: convocatorias e importación de versiones oficiales | modelo por convocatoria |
+| **13-16** | **Ampliación del 2026-08-29** (calidad editorial v2 + carga por tema · Mi Botiquín · entrenador de farmacología · simulador de escenas). Se ANTEPONEN a las fases 5, 8, 10, 11 y 12 por decisión del dueño — ver §21-§32 | generador de contenido, páginas nuevas, `capacidades.js`, reglas |
 
 Cada fase de implementación incluirá: problema que resuelve, archivos y colecciones
 afectados, riesgos, pruebas y reversión (formato de esta planeación).
@@ -1042,3 +1048,608 @@ ocultó, encabezan la página.
   regla lo rechaza; el alumno de la academia ve el orden configurado — ✔
   (modelo puro + UI + regla; regla pendiente de emulador).
 - `npm test` (138, +8) y `npm run build` (entrada 82.9 KB gzip) — ✔.
+
+---
+---
+
+# AMPLIACIÓN 2026-08-29 — Calidad editorial y tres funciones nuevas
+
+> Fecha: 29 de agosto de 2026 · Estado: **planeación aprobada, nada implementado**
+> · Origen: petición del dueño del producto (cuatro puntos) + dieciséis
+> decisiones tomadas en la sesión de preguntas de ese día.
+> Prompts de trabajo: `docs/PROMPTS-AUTORIA-PTEM.md`.
+> Sigue vigente la regla del documento: **una fase por entrega**.
+
+## 21. Qué se pidió
+
+Cuatro añadidos al plan vigente:
+
+1. Mejorar la calidad de la información **respetando el formato actual**.
+2. Un **entrenador de farmacología** para paramédicos.
+3. Un **simulador de escenas** con dos usos: repaso individual y actividad de
+   clase creada por la maestra.
+4. Un **simulador de botiquín**: qué equipo debe tener el alumno, qué es cada
+   pieza y para qué sirve.
+
+Y, como condición de entrega, que la replaneación se escriba aquí.
+
+## 22. Estado real verificado (corrige `CLAUDE.md` §0)
+
+Antes de planear nada se corrió `npm run inventario`. **El mandato de
+`CLAUDE.md` §0 está gravemente desactualizado** y cualquier sesión que lo tome
+como línea base repetirá trabajo ya hecho:
+
+| Métrica | `CLAUDE.md` §0 (17 ago) | Real (29 ago, medido) |
+|---|---:|---:|
+| Lecciones con material estudiable | 161 | **268** de 273 |
+| Temas vacíos | 107 | **19** |
+| Completos / escasos | — | 267 / 1 |
+| Borrador | 71 | **178** |
+| En revisión | 104 | 104 |
+| Bloqueados por decisión | 5 | 5 |
+| Pruebas unitarias | 499 | 57 archivos de prueba |
+
+Lo que de verdad falta por redactar son **8 lecciones** (4 patologías, 1
+procedimiento, 3 prácticas), más **12 nodos de examen** que no llevan prosa
+sino cableado de `alcanceDeExamen`, y los **4 temas de Módulo 7** que siguen
+bloqueados por falta de alcance oficial. Reparto: M1 1 · M2 4 · M3 2 · M4 3 ·
+M5 4 · M6 2 · M7 4.
+
+**Consecuencia para la planeación:** «contenido primero» ya no significa llenar
+huecos. Significa **la pasada de calidad sobre 268 lecciones existentes**, que
+es exactamente lo que pidió el dueño («se tomará la estructura actual de cada
+tema y se colocará una mejor información»).
+
+**Acción pendiente de autorización:** actualizar `CLAUDE.md` §0 y §3 con estas
+cifras. No se tocó ese archivo porque es el mandato y su edición corresponde al
+dueño del producto.
+
+## 23. Decisiones del dueño del producto (2026-08-29)
+
+Estas dieciséis decisiones gobiernan todo lo que sigue. Están escritas para que
+una sesión futura no vuelva a abrirlas.
+
+| # | Decisión | Consecuencia |
+|---|---|---|
+| 1 | **Contenido curado, no IA en vivo.** Los prompts son de autoría y se ejecutan fuera de la aplicación. | No hace falta backend ni salir del plan Spark. Ningún texto llega al alumno sin pasar por revisión. |
+| 2 | **Las dosis se enseñan con guías internacionales citadas.** | Levanta el bloqueo de farmacología. Ver §23.1: es la única decisión que contradice el mandato vigente. |
+| 3 | **Simulador de clase semi-síncrono:** la maestra abre y cierra; dentro, cada alumno resuelve a su ritmo. | Tolera mala conexión y cuesta pocas lecturas. |
+| 4 | **Botiquín = catálogo normativo + desbloqueo por progreso.** El dueño entregará la lista de artículos y el mapa de qué desbloquea cada módulo. | El catálogo se escribe como dato, no como código. |
+| 5 | **Enriquecer lo existente respetando la estructura actual**, no reescribirla. | El molde v2 usa las secciones que ya tiene cada lección. |
+| 6 | **Sin campos nuevos en el esquema del tema.** | Mnemotecnias, errores y repaso se expresan con `tabla`, `callout`, `pasos` y `lista`. Cero migración. |
+| 7 | **Escenas de tres orígenes:** lote curado + editor para la maestra + generadas desde el temario, **3 variantes por módulo**. | El modelo de escena lleva campo `origen` y las tres rutas convergen en el mismo esquema. |
+| 8 | **Contenido antes que funciones.** | Fase 13 completa antes de empezar la 14. |
+| 9 | **Enriquecer fuerte + carga por tema.** | Obliga a partir `planRescate.js` antes de enriquecer nada (§25.2). |
+| 10 | **En el simulador solo califica la maestra.** | El sistema muestra el recorrido y el resumen de errores; no propone nota. |
+| 11 | **Las escenas son árboles con finales distintos.** | Encarece la redacción; se acota con límites duros (§28.1). |
+| 12 | **Botiquín con fotografías reales**, silueta mientras no lleguen. | La ficha nunca se ve rota por falta de imagen. |
+| 13 | **Entrenador con ficha propia por fármaco y enlace bidireccional** con los temas del Módulo 4. | El enlace se deriva del catálogo; no se edita ni un tema para conseguirlo. |
+| 14 | **El catálogo de fármacos lo entrega el dueño.** | No se elige lista por cuenta propia. |
+| 15 | **Las tres funciones son de plan Pro.** | Tres capacidades nuevas en `capacidades.js`. Ver §23.2. |
+| 16 | La replaneación se escribe en este documento. | Este bloque. |
+
+### 23.1 Sobre la decisión 2 — autorización expresa para enseñar dosis
+
+Hay que dejarlo por escrito porque **contradice el mandato vigente**. Hoy
+`CLAUDE.md` §6 y §11 mantienen `m4-far-dosis-urgencia` y
+`m4-far-infusiones-aminas` en `bloqueado_por_decision` hasta que la academia
+entregue formulario, presentaciones, concentraciones, equipo y protocolo local.
+El dueño del producto, al que se le planteó el conflicto, decidió enseñar las
+dosis citando la guía vigente. Esa es su decisión y así se implementa, con
+cuatro condiciones que la hacen defendible:
+
+1. **Ninguna dosis sin fuente completa**: documento, edición, año y capítulo,
+   tabla, algoritmo o página. Una prueba automática rechaza la ficha que no la
+   traiga (§29).
+2. **Aviso visible en toda ficha**: la cifra procede de la guía citada, no del
+   cuadro básico de su unidad; presentación, concentración, equipo y alcance
+   profesional dependen del protocolo del servicio.
+3. **Lo que dependa de la unidad sigue sin cifra**: donde la respuesta cambie
+   con la presentación o el equipo disponible, se escribe «según protocolo del
+   servicio».
+4. **El bloqueo se levanta condicionado, no borrado**: los dos temas pasan a
+   `borrador` solo cuando cumplan 1 a 3, y siguen sin poder llegar a
+   `validado` sin firma docente, como cualquier otro tema.
+
+`CLAUDE.md` §6 y §11 deben actualizarse para reflejar esta autorización; no se
+hizo aquí por la misma razón que en §22.
+
+### 23.2 Sobre la decisión 15 — qué pasa con la academia del dueño
+
+Las tres funciones se otorgan solo al plan `pro`. Conviene saber que **eso no
+deja fuera a la academia actual**: `capacidadesDe()` interpreta una academia
+sin campo `planComercial` como plan efectivo `pro` (Fase 1, mitigación de
+compatibilidad). Las academias creadas antes de la Fase 1 las tendrán sin
+tocar nada. Una academia creada después con `planComercial: 'base'` no.
+
+## 24. Los cuatro prompts, adaptados
+
+Los prompts de ejemplo no eran usables tal cual: están en primera persona,
+asumen una IA que responde en vivo dentro de la aplicación, uno de ellos pide
+arquitectura Next.js + TypeScript + Tailwind + Framer Motion (el proyecto es
+Vite + React 18 + CSS puro, sin TypeScript), y su volumen fijo multiplicaría
+por tres o cuatro un temario que ya pesa 4.26 MB.
+
+Su versión adaptada vive en **`docs/PROMPTS-AUTORIA-PTEM.md`**: prompt A
+(lección), B (ficha de fármaco), C (escena) y D (artículo del botiquín). La
+mitad de ingeniería del prompt de botiquín no se convirtió en prompt: está
+resuelta en §26 con el stack real.
+
+---
+
+# FASE 13 — Calidad editorial v2 y carga de contenido por tema
+
+Cierra el punto 1 de la petición. **Es la fase más larga y va primero**
+(decisión 8).
+
+## 25.1 El molde v2, con los bloques que ya existen
+
+Ninguna lección cambia de forma: se le añaden piezas dentro de las secciones
+que ya tiene. El contrato mínimo de `CLAUDE.md` §8 sigue siendo el suelo; esto
+es el techo al que se sube.
+
+| Pieza pedagógica pedida | Cómo se representa hoy, sin tocar el esquema |
+|---|---|
+| Progresión de lo simple a lo avanzado | orden de `secciones` |
+| Anatomía → fisiología → patología → clínica | moldes por tipo de tema (`CLAUDE.md` §7) |
+| Términos complejos en lenguaje accesible | `conceptosClave` + glosario ya existente (`TextoGlosario`) |
+| Tabla comparativa | bloque `tabla` |
+| Diagrama de flujo / algoritmo | bloque `pasos` (o `diagrama` con activo del catálogo) |
+| Mnemotecnia | `callout` variante `clave`, título «Regla mnemotécnica» |
+| Alto rendimiento | `callout` variante `clave`, título «Lo que más se pregunta» |
+| Errores frecuentes de estudio | sección propia con `callout` variante `alerta` |
+| Resumen de una página | sección «Repaso rápido» (`lista` o `tabla`) |
+| Datos imprescindibles antes del examen | viñetas dentro de «Repaso rápido», máximo 12 |
+| Preguntas de evaluación oral | sección «Preguntas de repaso oral», bloque `lista` |
+| Banco de preguntas | `quiz` (4-6) + `actividades.preguntas` |
+| Fuentes | bloque `fuentes`, ya obligatorio |
+
+**Topes por lección** (para que la mejora no se pague en rendimiento): ~35 KB
+por tema, máximo 2 tablas, 3 mnemotecnias, 12 viñetas de repaso, 10 preguntas
+orales, 6 preguntas de quiz, 10 flashcards.
+
+## 25.2 El problema de peso, y por qué se resuelve ANTES de enriquecer
+
+Medido hoy: `src/data/planRescate.js` pesa **4.26 MB** y `src/data/contenido/`
+**4.0 MB**. `planRescate.js` es un solo archivo generado que contiene los 287
+temas enteros. No está en el bundle de entrada —`src/lib/firebase/contenido.js`
+lo carga con `import()` dinámico— pero sí es **un único trozo de 4.26 MB que se
+descarga completo la primera vez que un alumno abre cualquier tema** en una
+academia que no tenga copia en Firestore. Aplicarle el molde v2 lo llevaría a
+12-16 MB. Eso no se puede entregar a un alumno con datos móviles.
+
+Por eso la fase empieza por la infraestructura:
+
+1. **Partir el generador.** `scripts/gen-plan-rescate.mjs` deja de emitir un
+   archivo y emite:
+   - `src/data/planRescate.js` — solo **estructura y metadatos** (módulos,
+     unidades, ids, títulos oficial y visible, icono, duración, resumen,
+     estado editorial, orden). Debe quedar en el orden de las decenas de KB.
+   - `src/data/planRescate/m1.js … m7.js` — el contenido pesado (secciones,
+     conceptos, flashcards, quiz, actividades), un archivo por módulo.
+   - `src/data/indiceBusqueda.js` — índice ligero pregenerado, para que
+     `BuscarPage` no necesite el corpus entero en memoria.
+   - `src/data/bancoPreguntas/mN.js` — preguntas por módulo, para que los
+     exámenes no arrastren la prosa.
+2. **`src/data/index.js`** conserva su API síncrona para todo lo estructural y
+   gana `getTemaCompleto(temaId)` asíncrono, que resuelve al módulo y hace
+   `import()` de su archivo. La forma ya encaja: `ContenidoContext` distingue
+   desde la Fase 4 entre índice ligero y contenido completo bajo demanda.
+3. **Consumidores a ajustar:** `TemaPage`, `QuizPage`, `FlashcardsPage`,
+   `ExamenPage`, `ExamenModuloPage`, `ExamenUnidadPage`, `BuscarPage`,
+   `ProgresoPage`, `Landing.jsx` (usa `getTema` en import dinámico) y
+   `src/lib/firebase/contenido.js` (rama `legacy`).
+4. **Guardarraíl:** prueba nueva que falla si un archivo de módulo supera el
+   tope acordado, y `generadoAlDia.test.mjs` extendido a los archivos nuevos.
+
+Solo cuando esto pase `npm test` y `npm run build` empieza el enriquecimiento.
+
+## 25.3 Orden de trabajo editorial
+
+1. **Lote 0 — cerrar lo que falta**: las 8 lecciones pendientes (4 patologías,
+   1 procedimiento, 3 prácticas) y el cableado de `alcanceDeExamen` de los 12
+   nodos de examen. M7 sigue bloqueado.
+2. **Lotes por módulo**, uno por entrega, con el prompt A: M3 y M5 primero (vía
+   aérea, soporte vital, trauma: el material de más riesgo y el que alimenta
+   las escenas), luego M4, M6, M2, M1.
+3. Cada lote conserva el estado editorial que tenga el tema. **Nada sube a
+   `validado`** sin docente.
+4. Cada lote termina con `npm run gen:plan`, `npm run gen:nav`, `npm test`,
+   `npm run build` y `npm run inventario`, y con el reporte de qué cambió.
+
+---
+
+# FASE 14 — Mi Botiquín
+
+Cierra el punto 4. Es la función más barata y la que menos depende del temario:
+la lista la entrega el dueño.
+
+## 26.1 Modelo de datos
+
+El catálogo es **contenido curado en el repositorio**, no datos de Firestore:
+es el mismo para todas las academias y así viaja con las mismas garantías de
+revisión que el temario.
+
+```js
+// src/data/botiquin/catalogo.js
+{
+  id: 'torniquete-cat',
+  nombre: 'Torniquete de aplicación rápida',
+  compartimento: 'circulatorio',   // catálogo cerrado, ver abajo
+  categoria: 'dispositivo',        // dispositivo|insumo|medicamento|equipo|proteccion
+  dotacion: {                      // lo que la norma exija, si aplica
+    tipoUnidad: ['sva', 'svb'],
+    cantidadMinima: 2,
+    fuente: { documento, edicion, anio, tabla },
+  },
+  paraQueSirve: '…',
+  cuandoSeUsa: ['…'],
+  cuandoNo: ['…'],
+  comoSeRevisa: ['…'],             // checklist de turno
+  erroresFrecuentes: ['…'],
+  seConfundeCon: ['…'],
+  caducidad: 'no_aplica' | 'revisar_fecha' | 'esteril_sellado',
+  temaId: 'm5-hem-torniquete',     // la lección que lo enseña
+  desbloqueaCon: { moduloId: 'm5', temaId: 'm5-hem-torniquete' },
+  foto: null,                      // null ⇒ la interfaz pinta la silueta
+  fuentes: [ … ],
+  estadoEditorial: 'borrador',
+}
+```
+
+**Compartimentos** (catálogo cerrado, agrupan la pantalla): vía aérea ·
+circulatorio y hemorragias · inmovilización · curación · medicamentos ·
+monitoreo · protección personal · otros.
+
+## 26.2 Lógica de desbloqueo
+
+Tres estados por artículo, **derivados en el cliente, sin una sola lectura ni
+escritura nueva en Firestore**:
+
+- **«En tu botiquín»** — el alumno ya tiene visible el módulo de
+  `desbloqueaCon` y leído su tema (`progreso/{uid}.leidos`, ya cargado).
+- **«Próximo a desbloquear»** — pertenece al siguiente módulo visible.
+- **«Bloqueado»** — se muestra la silueta y el nombre del módulo que lo abre,
+  nunca la ficha. Ver qué falta es parte de la motivación; leer la ficha
+  antes de tiempo, no.
+
+La visibilidad de módulos ya la resuelve `src/lib/avanceAlumno.js`
+(`modulosOcultos` del grupo + `modulosDesbloqueados` del alumno). El botiquín
+se limita a leer ese estado: **no inventa una segunda noción de progreso.**
+
+## 26.3 Interfaz
+
+- Ruta nueva `/botiquin`, dentro de `RutaProtegida`, con gate de capacidad.
+- La pantalla se agrupa por compartimento, no por módulo: así se parece al
+  botiquín real. Dentro de cada compartimento, los artículos desbloqueados
+  primero.
+- Al tocar un artículo desbloqueado se abre su ficha completa, con enlace a la
+  lección que lo enseña. Al tocar uno bloqueado, solo el nombre del módulo que
+  lo abre.
+- **Sin librería de animación nueva.** El proyecto usa CSS puro con variables
+  y ya tiene sus transiciones; el momento de desbloqueo se marca con la misma
+  gramática visual de `/logros`, no con una dependencia añadida.
+- Fotografías en `public/imagenes/botiquin/{id}.webp`, con su crédito en el
+  mismo sistema que el catálogo de activos médicos (`/creditos`). Mientras no
+  exista foto, silueta por compartimento. **Añadir una foto no toca código.**
+
+## 26.4 Lo que hace falta del dueño
+
+1. La lista de artículos del botiquín, por compartimento.
+2. Qué módulo desbloquea cada uno.
+3. El tipo de unidad de la academia (para la columna de dotación normativa).
+4. Las fotografías, cuando las tenga.
+
+---
+
+# FASE 15 — Entrenador de farmacología
+
+Cierra el punto 2. **No arranca hasta tener el catálogo de fármacos del dueño**
+(decisión 14).
+
+## 27.1 Modelo de datos
+
+```js
+// src/data/farmacos/catalogo.js
+{
+  id: 'adrenalina',
+  nombre: 'Adrenalina (epinefrina)',
+  familia: 'simpaticomimetico',
+  presentaciones: [{ concentracion: '1 mg/mL', envase: 'ampolleta 1 mL' }],
+  mecanismo: '…',
+  indicaciones: ['…'],
+  contraindicaciones: { absolutas: ['…'], relativas: ['…'] },
+  vias: ['IV', 'IO', 'IM', 'IN'],
+  dosis: [{
+    indicacion, poblacion, via, dosis, maximo, frecuencia,
+    fuente: { documento, edicion, anio, capitulo, pagina, url },  // OBLIGATORIA
+  }],
+  adversos: ['…'],
+  interacciones: ['…'],
+  farmacocinetica: { inicio, pico, duracion },
+  comparaCon: ['amiodarona'],
+  mnemotecnia: '…',
+  altoRendimiento: ['…'],
+  temasRelacionados: ['m4-far-…'],   // enlace bidireccional
+  preguntas: [ … ],                  // 8-12, esquema de quiz existente
+  escenarios: [ … ],                 // 5-8 decisiones clínicas breves
+  repaso: ['…'],                     // hoja de una pantalla
+  estadoEditorial: 'borrador',
+}
+```
+
+**Regla dura, consecuencia directa de la decisión 2:** una entrada de `dosis`
+sin `fuente` completa **no compila** — la prueba de §29 falla. No es una
+recomendación de estilo, es el guardarraíl que hace defendible enseñar dosis.
+
+## 27.2 El enlace bidireccional, sin tocar el esquema del tema
+
+De la ficha al tema, con `temasRelacionados`. Del tema a la ficha, **derivando
+el índice inverso** (`temaId → fármacos`) en tiempo de generación: `TemaPage`
+pinta una tira «Fármacos de este tema» al pie. Ninguna lección se edita para
+conseguirlo, y por tanto no se rompe ninguna regla de `CLAUDE.md` §8.
+
+## 27.3 Modos de estudio
+
+Reutilizan piezas que ya existen, no se construyen desde cero:
+
+- **Ficha** — la referencia completa.
+- **Tarjetas** — sobre `src/lib/baraja.js`, el mismo motor de `/flashcards`.
+- **Dosis relámpago** — contrarreloj sobre las entradas de `dosis`, con la
+  fuente visible en la corrección. Cada respuesta muestra el aviso de
+  protocolo local.
+- **Casos** — los `escenarios` de la ficha, con el componente `Quiz` actual.
+
+Ruta `/farmacos` y `/farmacos/:id`, en `RutaProtegida`, con gate de capacidad.
+
+## 27.4 Aviso permanente
+
+Toda pantalla que muestre una cifra lleva el aviso de §23.1 punto 2. No es un
+banner descartable: es parte de la ficha.
+
+---
+
+# FASE 16 — Simulador de escenas
+
+Cierra el punto 3. Va al final porque es la que más depende de que el temario
+esté enriquecido: una escena solo puede exigir lo que sus temas ya enseñan y
+citan.
+
+## 28.1 Modelo de la escena
+
+```js
+// src/data/escenas/mN-*.js
+{
+  id: 'esc-m5-motociclista',
+  titulo: 'Motociclista contra poste, avenida principal',
+  moduloId: 'm5',
+  temasRequeridos: ['m5-cin-…', 'm5-hem-…'],
+  nivel: 'intermedio',
+  origen: 'curado' | 'academia' | 'generado',
+  estadoEditorial: 'borrador',
+  despacho: { hora, ubicacion, texto },
+  paciente: { edad, sexo, motivo },
+  nodos: {
+    inicio: {
+      texto: '…',
+      assetId: null,
+      signos: { fc, fr, ta, spo2, glasgow, temp },   // visibles si el alumno evalúa
+      opciones: [{
+        texto: '…',
+        juicio: 'correcta' | 'aceptable' | 'incorrecta',
+        critica: false,          // true = error que compromete al paciente
+        retro: 'Por qué sí o por qué no…',
+        siguiente: 'nodo-2',
+      }],
+    },
+  },
+  finales: {
+    'fin-optimo': { texto, veredicto: 'optimo' | 'aceptable' | 'deficiente' },
+  },
+  fuentes: [ … ],
+}
+```
+
+**Límites duros** (decisión 11 elegida sabiendo que es la más cara de las tres):
+máximo 12 nodos, 3 opciones por nodo, 4 finales y 6 decisiones de profundidad.
+Sin esos topes, un árbol con finales distintos se vuelve inescribible y, peor,
+irrevisable por un docente.
+
+**Los tres orígenes** (decisión 7) comparten esquema:
+
+- `curado` — lote inicial redactado a mano con el prompt C, anclado a temas ya
+  escritos. Arranque previsto: 8 a 10 escenas.
+- `generado` — **3 variantes por módulo** producidas por script desde los
+  quizzes y actividades existentes (21 en total). Nacen más superficiales
+  (≤6 nodos, 2 finales) y **nacen `borrador`**.
+- `academia` — creadas por la maestra con el editor de escenas, guardadas en
+  Firestore bajo su `academiaId`.
+
+**Regla de uso por estado**, calcada de la que ya gobierna los bancos de
+examen: una escena `borrador` sirve para práctica individual si la maestra la
+asigna; **una escena solo puede usarse en un evento de clase calificable si
+está `validado` o `publicado`**. Una escena generada por script no llega a un
+alumno calificado sin que un docente la haya leído.
+
+## 28.2 Uso 1 — repaso individual
+
+El alumno entra a `/simulador`, ve las escenas de los módulos que ya tiene
+visibles (mismo criterio de `avanceAlumno.js` que el botiquín) más las que se
+le hayan asignado, y resuelve cuando quiera. El resultado se guarda en
+`progreso/{uid}.escenas{}` con el mismo debounce de 800 ms que ya usa
+`ProgressContext`: **una escritura por escena terminada**, no una por decisión.
+
+## 28.3 Uso 2 — evento de clase
+
+Se monta sobre el libro de calificaciones que **ya existe** (`evaluaciones` +
+`calificaciones`, `src/lib/calificacionesModelo.js`, reglas en
+`firestore.rules`). No se inventa un segundo mecanismo de notas.
+
+Dos colecciones nuevas:
+
+```
+sesionesEscena/{id}
+  { academiaId, grupoId, escenaId, escenaTitulo, creadoPor,
+    estado: 'abierta' | 'cerrada' | 'cancelada',
+    abiertaEn, cerradaEn, evaluacionId | null }
+
+recorridos/{sesionId__uid}          ← id determinista: un recorrido por alumno
+  { academiaId, sesionId, uid, nombre,
+    ruta: ['inicio', 'nodo-2', …], decisiones: [{ nodoId, opcion, juicio, critica }],
+    finalId, veredicto, criticosFallados, aciertos,
+    iniciado, terminado, estado: 'en_curso' | 'terminado' | 'sin_efecto' }
+```
+
+**Flujo, semi-síncrono (decisión 3):**
+
+1. La maestra elige una escena y un grupo, y **abre** la sesión.
+2. Los alumnos del grupo la ven aparecer y entran. Cada uno resuelve a su
+   ritmo. Un listener sobre el doc de la sesión (1 lectura + los cambios de
+   estado) les cierra la pantalla cuando ella termina.
+3. Ella ve el avance en vivo: quién va por dónde, quién terminó, qué errores
+   críticos han caído.
+4. Tres botones, y solo ella los tiene:
+   - **Terminar** → `estado: 'cerrada'`. Los recorridos en curso se congelan
+     tal como estén.
+   - **Calificar** → crea la `evaluacion` (con su ponderación) y abre la
+     tabla de notas del grupo. **El sistema le muestra el recorrido y el
+     resumen de cada alumno, pero no propone nota**: la escribe ella
+     (decisión 10). Al guardar, entra al libro de calificaciones existente.
+   - **Cancelar sin efecto** → `estado: 'cancelada'`, los recorridos se marcan
+     `sin_efecto`, no se crea ninguna evaluación y **nada de eso aparece en el
+     expediente del alumno ni en su promedio**.
+
+**Reglas de Firestore** (mismos helpers que ya existen):
+
+- `sesionesEscena`: crear y actualizar, `esStaffDe(academiaId)`; borrar, solo
+  director o super. Leer: staff de la academia y alumnos que pertenecen a ella.
+- `recorridos`: crear y actualizar, **solo el dueño**, y solo si la sesión está
+  abierta —`get()` del doc de sesión dentro de la regla, como ya se hace con
+  `canjeValido`—; `academiaId`, `sesionId` y `uid` inmutables tras la creación.
+  Leer: el dueño y el staff de la academia. Un alumno jamás lee el recorrido
+  de otro.
+- El staff **no** escribe `recorridos`: si pudiera, la nota dejaría de ser
+  trazable al trabajo del alumno.
+
+## 28.4 Limitación honesta
+
+Las escenas curadas y generadas viajan en el bundle, así que un alumno decidido
+puede leer las respuestas correctas en el código. Es exactamente la misma
+exposición que tienen hoy los quizzes y no se resuelve sin mover el contenido
+al servidor. Se documenta, no se disimula; lo que sostiene la evaluación de
+clase es que **la nota la pone la maestra viendo el recorrido**, no el marcador
+automático. Las escenas creadas por la academia viven en Firestore y no tienen
+este problema.
+
+---
+
+# 29. Modelo consolidado, pruebas, costo y reversión
+
+## 29.1 Capacidades nuevas (`src/lib/capacidades.js`)
+
+Tres líneas por plan, y nada más (decisión 15):
+
+| Capacidad | base | pro | curso |
+|---|---|---|---|
+| `botiquinVirtual` | — | ✔ | — |
+| `entrenadorFarmacologia` | — | ✔ | — |
+| `simuladorEscenas` | — | ✔ | — |
+
+Academias sin `planComercial` = plan efectivo `pro` ⇒ las reciben (§23.2).
+
+## 29.2 Pruebas nuevas (todas con `node --test`, sin dependencias añadidas)
+
+| Archivo | Qué impide |
+|---|---|
+| `tests/pesoContenido.test.mjs` | Que un archivo de módulo supere su tope tras el enriquecimiento. |
+| `tests/calidadEditorial.test.mjs` | Lección del molde v2 sin sección de fuentes, sin repaso o con una cifra sin cita. |
+| `tests/botiquin.test.mjs` | Artículo con compartimento inválido, `temaId` inexistente o `desbloqueaCon` a un módulo que no existe. |
+| `tests/farmacos.test.mjs` | **Una dosis sin fuente completa** (edición, año y capítulo o página). Guardarraíl de §23.1. |
+| `tests/escenas.test.mjs` | Nodo huérfano, ciclo infinito, camino sin final, opción sin retroalimentación, límites excedidos. |
+| `tests/escenaEstado.test.mjs` | Que una escena que no está `validado`/`publicado` alimente un evento calificable. |
+| `tests/rules/escenas.rules.test.mjs` | Alumno que escribe el recorrido de otro; alumno que escribe con la sesión cerrada; staff que escribe recorridos; academia que lee sesiones ajenas. |
+
+`generadoAlDia.test.mjs` se extiende a los archivos generados nuevos.
+
+## 29.3 Costo en Firebase Spark (50k lecturas / 20k escrituras al día)
+
+| Operación | Lecturas | Escrituras |
+|---|---:|---:|
+| Abrir `/botiquin` | 0 (derivado del progreso ya cargado) | 0 |
+| Abrir `/farmacos` o una ficha | 0 (catálogo en el bundle) | 0 |
+| Escena de repaso individual | 0 | 1 (progreso, con debounce) |
+| Sesión de clase, grupo de 30 | ~300 (listener de la maestra + doc de sesión) | ~90 |
+| Calificar ese grupo | 30 | 31 |
+
+El recorrido se escribe **al terminar**, más un latido cada tres decisiones
+para que la maestra vea avance: por eso 90 escrituras y no 300. Da margen para
+decenas de sesiones diarias sin acercarse al tope.
+
+## 29.4 Riesgos
+
+1. **El enriquecimiento degrada el rendimiento** si se hace antes de partir el
+   generador. Mitigación: §25.2 es requisito previo, con prueba de peso.
+2. **La decisión de dosis expone a la academia** si una cifra queda sin cita.
+   Mitigación: `tests/farmacos.test.mjs` y el aviso permanente. Es el riesgo
+   que el dueño aceptó a sabiendas.
+3. **Las escenas generadas por script serán de calidad despareja.** Mitigación:
+   nacen `borrador` y no pueden calificar.
+4. **El árbol con finales distintos multiplica el trabajo de redacción.**
+   Mitigación: los límites de §28.1; si un lote se atasca, se entregan menos
+   escenas mejor hechas, nunca más escenas peores.
+5. **Las fotos del botiquín pueden no llegar.** Mitigación: la silueta es el
+   estado por defecto, no un error.
+6. **Reglas sin verificar en emulador** (no hay Java en la máquina del dueño):
+   los casos se escriben y se verifican en CI, como el resto.
+
+## 29.5 Reversión
+
+Las cuatro fases son **aditivas**. Fase 13: el generador vuelve a emitir un
+archivo único (una bandera en el script) y las lecciones enriquecidas siguen
+siendo válidas en el esquema actual. Fases 14-16: quitar la ruta y la
+capacidad; los catálogos quedan inertes en el repositorio. Solo el simulador
+crea colecciones nuevas, y borrarlas no toca ni progreso, ni intentos, ni el
+libro de calificaciones.
+
+## 30. Roadmap actualizado
+
+| Fase | Contenido | Estado |
+|---|---|---|
+| 5 | Editor de TEMAS (bloques, quiz, flashcards, actividades) | pendiente |
+| 8 | Certificados digitales | pendiente |
+| 10 | Plan CURSO + directorio de capacitadores | pendiente |
+| 11 | Auditoría, paginación de `/admin`, validación de `intentos` | pendiente |
+| 12 | Tipo MEDICINA | pendiente |
+| **13** | **Calidad editorial v2 + carga por tema** | **siguiente** |
+| **14** | **Mi Botiquín** | planeada |
+| **15** | **Entrenador de farmacología** | planeada, bloqueada por el catálogo del dueño |
+| **16** | **Simulador de escenas** (repaso + evento de clase) | planeada |
+
+Las fases 13 a 16 se anteponen a las 5, 8, 10, 11 y 12 por decisión del dueño.
+La 13 es requisito de la 16: una escena no puede exigir lo que su tema no
+enseña todavía.
+
+## 31. Lo que hace falta del dueño para empezar
+
+| Para | Hace falta |
+|---|---|
+| Fase 13 | Nada. Puede empezar ya. |
+| Fase 14 | Lista de artículos por compartimento · qué módulo desbloquea cada uno · tipo de unidad de la academia · fotografías (después). |
+| Fase 15 | Catálogo de fármacos que enseña la academia · presentaciones y concentraciones que maneja · protocolo local si existe. |
+| Fase 16 | Nada para empezar; sí decidir si el editor de escenas para la maestra entra en la misma entrega o en una posterior. |
+
+## 32. Decisiones que siguen abiertas
+
+1. ¿Se autoriza actualizar `CLAUDE.md` §0, §3, §6 y §11 con las cifras reales
+   y con la autorización de dosis? Mientras no se haga, cada sesión nueva
+   parte de una línea base falsa.
+2. ¿El editor de escenas de la maestra entra en la Fase 16 o en una 17?
+3. ¿El botiquín incluye el modo «revisión de turno» (recorrer el botiquín
+   marcando lo caducado y lo que falta) o se queda en fichas?
+4. ¿La maestra puede asignar escenas concretas a alumnos concretos, o solo a
+   grupos completos?
+5. ¿El resultado de una escena de repaso individual cuenta para `/logros`?
+6. ¿Qué pasa con el recorrido de un alumno que no termina antes de que la
+   maestra cierre: se califica lo hecho o se marca sin efecto?
+7. ¿Las tres funciones nuevas aparecen en el menú lateral del alumno o detrás
+   de una sección «Práctica»?
