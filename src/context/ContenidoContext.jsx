@@ -23,6 +23,7 @@ import { useAuth } from './AuthContext.jsx'
 import { academiaMigrada } from '../lib/contenidoApi.js'
 import { programasDeGrupo } from '../lib/programasModelo.js'
 import { registrar } from '../lib/registro.js'
+import { apiConValidaciones } from '../lib/validacionesModelo.js'
 import { modulosNav, stats as statsBundle } from '../data/navIndice.js'
 
 const INDICE_BUNDLE = { modulos: modulosNav, stats: statsBundle, fuente: 'legacy' }
@@ -88,6 +89,16 @@ export function ContenidoProvider({ children }) {
   const [pedido, setPedido] = useState(false) // alguna página pidió el contenido
   const [pedidoApi, setPedidoApi] = useState(false)
   const [reintento, setReintento] = useState(0)
+  // Capa de VALIDACIONES DOCENTES: `temaId → firma`. Se lee UNA vez por
+  // academia (un solo documento) y se superpone a cada lección que sale del
+  // resolutor. Sin esto, validar un tema no se notaba en ningún sitio: el
+  // estado editorial vive en el contenido generado y nadie lo reescribía.
+  const [validaciones, setValidaciones] = useState({})
+  // Alguien pidió la capa de firmas sin pedir el temario. Pasa en el panel del
+  // director: el semáforo «listo y aprobado» necesita saber qué está firmado,
+  // pero esa pantalla nunca carga lecciones. Sin esta bandera el semáforo se
+  // quedaba en ámbar para siempre, contradiciendo a la página del tema.
+  const [pedidoValidaciones, setPedidoValidaciones] = useState(false)
 
   // Índice ligero de la academia migrada (1 lectura). Legacy: bundle directo.
   useEffect(() => {
@@ -166,8 +177,47 @@ export function ContenidoProvider({ children }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pedidoApi, clave, reintento])
 
+  // Firmas docentes de esta academia. Una lectura, y si falla se sigue con el
+  // estado que declara el propio material: la capa mejora la vista, no es
+  // condición para que el temario se pinte.
+  //
+  // Se espera a que alguien PIDA contenido. La portada y el resto del sitio
+  // público no enseñan lecciones, así que ahí esta lectura no diría nada y sí
+  // se cobraría una vez por visitante.
+  useEffect(() => {
+    if (!pedido && !pedidoApi && !pedidoValidaciones) return undefined
+    let activo = true
+    ;(async () => {
+      try {
+        const { leerValidaciones } = await import('../lib/firebase/validaciones.js')
+        const mapa = await leerValidaciones(academiaId)
+        if (activo) setValidaciones(mapa)
+      } catch (err) {
+        registrar('contenido:validaciones', err, { academiaId })
+      }
+    })()
+    return () => { activo = false }
+  }, [academiaId, reintento, pedido, pedidoApi, pedidoValidaciones])
+
   const pedir = useCallback(() => setPedido(true), [])
   const pedirApi = useCallback(() => setPedidoApi(true), [])
+  const pedirValidaciones = useCallback(() => setPedidoValidaciones(true), [])
+
+  // Refresca la capa sin recargar el temario entero: lo llama la barra de
+  // revisión justo después de firmar, para que el cambio se vea al instante en
+  // la misma página en la que se firmó.
+  const refrescarValidaciones = useCallback(async (parche = null) => {
+    if (parche) {
+      setValidaciones((v) => ({ ...v, ...parche }))
+      return
+    }
+    try {
+      const { leerValidaciones } = await import('../lib/firebase/validaciones.js')
+      setValidaciones(await leerValidaciones(academiaId))
+    } catch (err) {
+      registrar('contenido:validaciones', err, { academiaId })
+    }
+  }, [academiaId])
 
   // Cambiar de curso: se guarda y se descarta lo cargado. El contenido se
   // vuelve a resolver porque `clave` cambia.
@@ -187,12 +237,17 @@ export function ContenidoProvider({ children }) {
   const cursos = contenido?.cursos || indice?.cursos || []
   const cursoId = contenido?.cursoId || indice?.cursoId || null
 
+  // La API que ven las pantallas ya trae la capa de validaciones puesta: nadie
+  // río abajo tiene que acordarse de aplicarla.
+  const apiValidada = useMemo(() => apiConValidaciones(api, validaciones), [api, validaciones])
+
   const valor = useMemo(
     () => ({
-      indice, contenido, api, error, pedir, pedirApi, reintentar,
-      academiaId, cursos, cursoId, elegirCurso,
+      indice, contenido, api: apiValidada, error, pedir, pedirApi, reintentar,
+      academiaId, cursos, cursoId, elegirCurso, validaciones, refrescarValidaciones, pedirValidaciones,
     }),
-    [indice, contenido, api, error, pedir, pedirApi, reintentar, academiaId, cursos, cursoId, elegirCurso]
+    [indice, contenido, apiValidada, error, pedir, pedirApi, reintentar,
+      academiaId, cursos, cursoId, elegirCurso, validaciones, refrescarValidaciones, pedirValidaciones]
   )
   return <ContenidoContext.Provider value={valor}>{children}</ContenidoContext.Provider>
 }
@@ -238,6 +293,22 @@ export function useApiContenido() {
   const { pedirApi } = ctx
   useEffect(() => { pedirApi() }, [pedirApi])
   return { api: ctx.api, error: ctx.error, reintentar: ctx.reintentar }
+}
+
+/**
+ * Capa de validaciones docentes y la forma de refrescarla.
+ *
+ * `validaciones` es `temaId → firma`; `refrescarValidaciones(parche)` acepta un
+ * parche optimista (lo que se acaba de firmar) o, sin argumentos, relee el
+ * documento. Lo usa la barra de revisión de cada tema.
+ */
+export function useValidaciones() {
+  const { validaciones, refrescarValidaciones, pedirValidaciones } = usarContexto()
+  // Pedirlas es parte de usarlas. El panel del director enseña el semáforo
+  // editorial sin cargar una sola lección, así que no basta con que la capa se
+  // lea «cuando alguien pida contenido»: quien la consulta la pide.
+  useEffect(() => { pedirValidaciones() }, [pedirValidaciones])
+  return { validaciones, refrescarValidaciones }
 }
 
 // Cualquier carga asíncrona derivada de la API, con su estado. `deps` son las

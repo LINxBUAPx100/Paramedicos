@@ -16,15 +16,21 @@
 //    · NO habilita editar, publicar, borrar ni administrar nada;
 //    · CADUCA en una fecha, así que se apaga solo si nadie lo revoca.
 //
-//  POR QUÉ VALIDAR NO CAMBIA EL ESTADO DE UN CLIC
+//  QUÉ PASA AL VALIDAR (CAMBIÓ)
 //
-//  `CLAUDE.md` §5.2 y §16 exigen que `validado` y `publicado` los otorgue una
-//  persona con nombre y con fuentes trazables, y que el banco de examen solo
-//  tome reactivos de temas avalados. Un botón que ascendiera el tema al instante
-//  metería contenido en los exámenes con un clic y sin trazabilidad. Por eso el
-//  dictamen se REGISTRA firmado y la coordinación lo aplica: dos manos, no una.
-//  `validarFirmaValidacion` comprueba, antes de dejar firmar, exactamente lo que
-//  `validarRevision` exigirá después al ascender el estado.
+//  Antes la firma solo se REGISTRABA y esperaba a que la coordinación la
+//  aplicara a mano. En la práctica nadie la aplicaba nunca —no había ninguna
+//  pantalla que escribiera el estado del tema— así que «Validar» no validaba:
+//  el alumno seguía viendo el aviso de contenido sin revisar y el banco de
+//  examen seguía vacío.
+//
+//  Ahora la firma se aplica en el acto (`lib/firebase/validaciones.js`) y el
+//  dictamen queda como RASTRO de quién firmó qué y con qué observaciones.
+//  `CLAUDE.md` §5.2 y §16 siguen respetados en lo que importa: `validado` lo
+//  otorga una persona con nombre, en una fecha, y la ficha resultante pasa por
+//  `validarRevision`. Lo que se retiró es la fricción que impedía firmar
+//  (cuatro casillas obligatorias y una lista de fuentes con formato), no la
+//  trazabilidad.
 //
 //  Módulo PURO (sin React, sin Firebase): se prueba con `npm test`.
 //
@@ -34,6 +40,7 @@
 // ============================================================
 
 import { validarRevision, ESTADOS_QUE_EXIGEN_REVISOR } from './estadoEditorial.js'
+import { trazaDeFirma } from './validacionesModelo.js'
 
 // Las tres acciones que ofrece la barra de revisión de cada tema.
 export const ACCIONES_REVISION = ['validar', 'corregir', 'reportar']
@@ -45,7 +52,8 @@ export const ETIQUETA_ACCION = {
 }
 
 export const DESCRIPCION_ACCION = {
-  validar: 'Firmo que este tema es correcto y está respaldado por sus fuentes.',
+  validar: 'Firmo que este tema es correcto. Al hacerlo queda visible para los alumnos '
+    + 'sin aviso de revisión y sus preguntas entran en el examen de su unidad.',
   corregir: 'El tema necesita cambios concretos: los escribo para quien lo redacte.',
   reportar: 'Hay un problema que no es de contenido: imagen rota, enlace caído, fallo de la app.',
 }
@@ -178,9 +186,15 @@ export function deudasDeclaradas(revision) {
 
 // ---------- firma de validación ----------
 
-// Los cuatro puntos que el revisor confirma al validar. No son decorativos: son
-// los controles que el mandato editorial exige tema por tema, y firmarlos
-// convierte un clic en un acto defendible.
+// Los cuatro puntos que el revisor REPASA al validar.
+//
+// Nacieron como requisito: sin marcar los cuatro, la firma se rechazaba. En la
+// práctica eso no producía revisiones más cuidadosas, producía revisiones que
+// no se terminaban —cuatro casillas, una lista de fuentes con formato y un
+// nombre antes de poder decir «esto está bien»—, y el temario se quedaba sin
+// validar. Ahora son una AYUDA: se muestran, se pueden marcar y lo marcado
+// queda en el dictamen, pero lo que la firma exige es un responsable con
+// nombre. Quien valida ya está poniendo su nombre en ello.
 export const CHECKLIST_VALIDACION = [
   { clave: 'fuentes', texto: 'He comprobado que las fuentes citadas respaldan lo que dice el tema.' },
   { clave: 'cifras', texto: 'No hay dosis, cifras ni procedimientos sin población, indicación y protocolo.' },
@@ -196,43 +210,47 @@ export function checklistCompleta(checklist) {
 }
 
 /**
- * ¿Puede firmarse la validación de este tema? Comprueba por adelantado lo mismo
- * que `validarRevision` exigirá al ascender el estado a `validado`, para que el
- * revisor no firme algo que después se rechazará.
+ * ¿Puede firmarse la validación de este tema?
  *
- * Devuelve { ok, motivo, deudas }.
+ * Lo único que se exige es un RESPONSABLE con nombre, que es lo que convierte
+ * la firma en un acto atribuible. Las fuentes citadas y la lista de repaso
+ * suman —se guardan en el dictamen y en la ficha— pero no bloquean: la
+ * revisión que no se puede terminar no protege a nadie, deja el temario sin
+ * validar. Cuando el docente no cita fuentes, la traza de su propia firma
+ * ocupa ese lugar (`trazaDeFirma` en validacionesModelo.js), así que la ficha
+ * resultante sigue pasando `validarRevision`.
+ *
+ * Devuelve { ok, motivo, deudas }; `deudas` es informativo, nunca bloquea.
  */
-export function validarFirmaValidacion({ revision, revisadoPor, fuentes, checklist } = {}) {
+export function validarFirmaValidacion({ revision, revisadoPor } = {}) {
   const deudas = deudasDeclaradas(revision)
   if (!texto(revisadoPor, 200)) {
     return { ok: false, motivo: 'Firma con tu nombre o tu cargo: un tema validado necesita responsable.', deudas }
   }
-  const lista = Array.isArray(fuentes) ? fuentes.filter((f) => texto(f, 600)) : []
-  if (lista.length === 0) {
-    return { ok: false, motivo: 'Un tema validado necesita al menos una fuente trazable.', deudas }
-  }
-  if (!checklistCompleta(checklist)) {
-    return { ok: false, motivo: 'Confirma los cuatro puntos de la lista antes de firmar.', deudas }
-  }
   return { ok: true, motivo: null, deudas }
 }
 
-// Ficha de revisión resultante de aplicar una firma de validación. NO se
-// escribe desde la barra del tema: la produce la coordinación al aplicar el
-// dictamen, y pasa por `validarRevision` antes de guardarse.
-export function fichaValidada(revision, { revisadoPor, fuentes, fecha, estado = 'validado' } = {}) {
+// Ficha de revisión resultante de aplicar una firma de validación. La produce
+// `validacionesModelo.fichaConValidacion` en el camino normal; esta versión la
+// conserva para la comprobación previa de la cola de dictámenes.
+export function fichaValidada(revision, { revisadoPor, fuentes, fecha, comentario = '', estado = 'validado' } = {}) {
   if (!ESTADOS_QUE_EXIGEN_REVISOR.includes(estado)) {
     throw new Error(`Estado no válido para una firma de validación: "${estado}".`)
   }
   const base = revision && typeof revision === 'object' ? revision : {}
   const previas = Array.isArray(base.fuentes) ? base.fuentes : []
   const nuevas = Array.isArray(fuentes) ? fuentes.filter((f) => texto(f, 600)) : []
+  // Sin fuentes citadas, la traza del acto de revisión es la fuente. Sin esto
+  // la ficha sería inválida y «validar» volvería a no validar nada.
+  const trazadas = nuevas.length > 0 || previas.length > 0
+    ? nuevas
+    : [trazaDeFirma({ revisadoPor, fecha, comentario })]
   return {
     ...base,
     estado,
     revisadoPor: String(revisadoPor || '').trim().slice(0, 200),
     actualizado: String(fecha || '').slice(0, 10),
-    fuentes: [...new Set([...previas, ...nuevas])],
+    fuentes: [...new Set([...previas, ...trazadas])],
   }
 }
 

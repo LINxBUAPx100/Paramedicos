@@ -40,6 +40,16 @@ export function temaDesdeDoc(docTema) {
   return {
     id: docTema.temaId,
     titulo: docTema.titulo,
+    // Espejo exacto de `contenidoTema` en contenidoModelo.js. Estas cinco
+    // claves se perdían al leer, así que una academia migrada veía TODO su
+    // temario como borrador aunque el documento dijera otra cosa, y ninguna
+    // validación podía notarse nunca.
+    tituloVisible: docTema.tituloVisible || '',
+    tituloOficial: docTema.tituloOficial || '',
+    estadoEditorial: docTema.estadoEditorial || '',
+    revision: docTema.revision || null,
+    evaluacion: docTema.evaluacion || null,
+    alcanceExamen: docTema.alcanceExamen || null,
     icono: docTema.icono || '',
     duracion: docTema.duracion || '',
     resumen: docTema.resumen || '',

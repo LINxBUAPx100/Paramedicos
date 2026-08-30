@@ -35,15 +35,62 @@ export default function Glosario() {
     [glosario, temaVisible]
   )
 
-  // Llegada desde una lección: desplazarse a la palabra exacta y resaltarla.
+  // ¿La palabra que se vino a buscar existe en este glosario? Se comprueba
+  // SOLO cuando ya terminó de cargar: mientras carga, «no está» significa
+  // «todavía no ha llegado». Sin esto, un enlace que apunta a una palabra que
+  // esta academia no tiene fallaba en silencio y parecía que el botón no hacía
+  // nada, que es como se descubrió este fallo.
+  const slugs = useMemo(
+    () => new Set(glosario.entradas.map((e) => e.slug)),
+    [glosario]
+  )
+  const noEncontrada = Boolean(buscado) && !glosario.cargando && !slugs.has(buscado)
+
+  // Llegada desde una lección: colocarse en la palabra exacta y resaltarla.
+  //
+  // Tenía dos fallos, y juntos hacían que pulsar un tecnicismo te dejara en el
+  // encabezado de Logros en vez de en tu palabra:
+  //
+  //  1. Se rendía al PRIMER intento. El glosario llega en un agregado aparte y
+  //     esta pantalla espera además a los de la galería, así que en el momento
+  //     en que corría el efecto la palabra todavía no existía en el DOM. Ahora
+  //     reintenta por fotograma hasta que aparece.
+  //  2. El desplazamiento era SUAVE. Son varios miles de píxeles hasta el final
+  //     de la página: se lee como «me mandó a Logros», no como «me trajo a mi
+  //     palabra», y además el armazón lo cancelaba a mitad al subir al inicio
+  //     (eso último ya no pasa, ver `lib/saltoEnPagina.js`). Instantáneo: el
+  //     lector aparece donde pidió.
   useEffect(() => {
-    if (!buscado) return
-    const nodo = refs.current[buscado]
-    if (!nodo) return
-    nodo.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    nodo.classList.add('glo-destacada')
-    const t = setTimeout(() => nodo.classList.remove('glo-destacada'), 2600)
-    return () => clearTimeout(t)
+    if (!buscado) return undefined
+    let cancelado = false
+    let intentos = 0
+    let cuadro = 0
+    let quitar = 0
+
+    const colocar = () => {
+      if (cancelado) return
+      const nodo = refs.current[buscado]
+      if (!nodo) {
+        // ~2 s de margen. Si el agregado tarda más, el efecto vuelve a correr
+        // solo: `glosario` está en las dependencias.
+        if (intentos++ < 120) cuadro = requestAnimationFrame(colocar)
+        return
+      }
+      // `behavior: 'instant'` explícito: la hoja de estilos pone
+      // `scroll-behavior: smooth` en <html>, así que el valor por defecto
+      // («auto») heredaría la animación que aquí no se quiere.
+      nodo.scrollIntoView({ behavior: 'instant', block: 'center' })
+      nodo.classList.add('glo-destacada')
+      quitar = setTimeout(() => nodo.classList.remove('glo-destacada'), 2600)
+    }
+
+    colocar()
+    return () => {
+      cancelado = true
+      cancelAnimationFrame(cuadro)
+      clearTimeout(quitar)
+      refs.current[buscado]?.classList.remove('glo-destacada')
+    }
   }, [buscado, glosario])
 
   const consulta = filtro.trim().toLowerCase()
@@ -88,6 +135,12 @@ export default function Glosario() {
             aria-label="Buscar en el glosario"
           />
         </label>
+        {noEncontrada && (
+          <p className="glo-sin-palabra" role="status">
+            La palabra que buscabas no está en el glosario de este temario. Puede que
+            pertenezca a una lección que tu academia no imparte.
+          </p>
+        )}
         {buscado && (
           <button className="glo-limpiar" onClick={() => setParams({}, { replace: true })}>
             Quitar el resaltado

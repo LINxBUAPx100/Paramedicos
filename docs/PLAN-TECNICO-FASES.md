@@ -12,14 +12,18 @@
 > editorial y el incidente de imágenes). `CLAUDE.md` gobierna el trabajo
 > EDITORIAL —redactar el temario— y es otro proyecto: el software avanza sin él.
 >
-> Última actualización: **29 de agosto de 2026**, con las fases 1-3 ya
-> integradas en `main` (commit de fusión `ebfc963`).
+> Última actualización: **30 de agosto de 2026** — se añade el **trabajo O
+> (Dashboard de Recepción)**, se corrigen tres afirmaciones que ya no eran
+> ciertas (el cableado de `alcanceDeExamen`, la validación de `intentos` y el
+> número de lecciones vacías) y se aclara que los certificados con QR **no**
+> dependen de la migración a Next.js. Las fases 1-3 siguen integradas en `main`
+> (commit de fusión `ebfc963`).
 
 ---
 
 ## Estado en una tabla
 
-Diez trabajos terminados y catorce pendientes. Los tachados no se vuelven a tocar
+Diez trabajos terminados y veinte pendientes. Los tachados no se vuelven a tocar
 salvo regresión demostrada.
 
 ### Terminado
@@ -42,19 +46,33 @@ salvo regresión demostrada.
 | # | Trabajo | Duración | Depende de |
 |---|---|---|---|
 | **A** | Calidad editorial v2 + partir el bundle | larga, por lotes | — |
+| **O1** | Matrícula secuencial del alumno | 1-2 días | — |
 | **B** | Mi Botiquín | corta | lista de artículos de la academia |
-| **F** | Hosting propio + plan Blaze | 2-3 días | — · **promovido**: lo exigen C y L |
-| **J** | Paginación de `/admin`, auditoría, validar `intentos` | media | **promovido con F**: en Blaze el exceso ya no se corta, se cobra |
-| **L** | Suscripción y cobro (pasarela, webhook, recepción, corte de caja) | 2 semanas | F |
-| **C** | Clase en vivo con actividades calificables **(incluye el simulador de escenas)** | 2-3 semanas | A y F |
+| **F** | Hosting propio + plan Blaze | 2-3 días | — · **promovido**: lo exigen C, L y O |
+| **J** | Paginación de `/admin` y auditoría | media | **promovido con F**: en Blaze el exceso ya no se corta, se cobra |
+| **O2** | Bloqueo por pago + bypass auditado | 3-5 días | O1 |
+| **O3** | Check-in de 8 horas | 3-5 días | O1 |
+| **L** | Suscripción y cobro (pasarela, webhook, recepción, corte de caja) | 2 semanas | F · O2 |
+| **O4** | Pantalla de Recepción (rol `recepcion`) | 1 semana | O1-O3 · L |
+| **C** | Clase en vivo con actividades calificables **(incluye el simulador de escenas)** | 2-3 semanas | A, F · **O3** (la bandera «en clase» decide a quién se puede calificar) |
 | **D** | Entrenador de farmacología | media | catálogo de fármacos de la academia |
 | **M** | Tienda (uniformes e insumos) | 2 semanas | L · comparte catálogo con B |
+| **O5** | Feed de logística de tienda en recepción | 3-5 días | M · O4 |
+| **O6** | Credencial con código + escáner USB | 1-2 días | O4 |
 | **N** | Inventario simple | 1 semana | M |
 | **E** | Editor de temas (bloques, quiz, flashcards, actividades) | media | — |
 | **H** | Certificados con QR verificable | 2-3 semanas | F y dominio propio |
 | **G** | Migración a Next.js | 3-5 semanas | F · **reevaluar tras A**, no comprometido |
 | **I** | Plan CURSO + directorio de capacitadores | media | — |
 | **K** | Tipo MEDICINA (convocatorias) | larga | — |
+
+> **Sobre el trabajo O.** El «Dashboard de Recepción» que se pidió el 30 de
+> agosto de 2026 **no es un módulo nuevo**: es la pantalla a la que ya
+> convergían L (cobro en caja), M (recoger en instalaciones) y C (calificar en
+> clase). Se parte en seis piezas porque tres de ellas —matrícula, bloqueo por
+> pago y check-in— son **datos**, no dependen de la pasarela y pueden hacerse
+> antes; y las otras tres son la pantalla y sus accesorios. Detalle en el
+> apartado «Trabajo O».
 
 ## Los tres choques que había, y cómo quedaron
 
@@ -430,8 +448,17 @@ comprometido.
 
 ## Trabajo H (antes «Fase 7») — Certificados con QR verificable · PENDIENTE
 
-Necesita los trabajos F y G. **2–3 semanas.** Absorbe la «Fase 8 — certificados
-digitales» de PLAN-LMS: es la misma función, mejor pensada.
+Necesita el trabajo F y un dominio propio. **2–3 semanas.** Absorbe la «Fase 8
+— certificados digitales» de PLAN-LMS: es la misma función, mejor pensada.
+
+> **Corregido el 30-08-2026: NO depende de la migración a Next.js (trabajo G).**
+> La página pública de verificación es una ruta que lee `certificados/{folio}`
+> con `allow read: if true`. Next.js haría que cargue sin descargar la
+> aplicación entera —es el único sitio del producto donde el SSR se paga solo—,
+> pero eso es una mejora, no una condición. Y **Python no interviene**: el PDF y
+> el QR se generan en el cliente o en una Cloud Function en Node, que es lo que
+> ya trae el trabajo F. Lo que da seriedad al certificado es el folio imposible
+> de adivinar, la revocación y el dominio propio, no el framework.
 
 El QR no vale por el QR: vale porque lleva a una página **pública, en el dominio
 de la academia**, que confirma que el certificado existe y sigue vigente, sin
@@ -468,9 +495,14 @@ módulo + índice de búsqueda + banco de preguntas por módulo, y `src/data/ind
 gana `getTemaCompleto()` asíncrono. Sin esto, enriquecer el temario lo llevaría
 a 12-16 MB.
 
-**Después el contenido, un lote por entrega.** Lote 0 cierra lo que falta de
-verdad: 4 patologías, 1 procedimiento, 3 prácticas y el cableado de
-`alcanceDeExamen` de 12 nodos de examen. Luego, módulo por módulo, en este
+**Después el contenido, un lote por entrega.** Medido el 30-08-2026, el «lote 0»
+está casi vacío: **`alcanceDeExamen` ya está cableado** en 12 de los 14 nodos de
+evaluación —los dos que faltan son las prácticas de M2 y M5, que no llevan banco
+de preguntas—, y **no queda ninguna lección vacía**: de los 19 «vacíos» que
+cuenta el inventario, 14 son nodos de evaluación que por diseño no llevan prosa
+y 5 son temas `bloqueado_por_decision` esperando a la academia (los cuatro de M7
+y el taller de aminas de M4). Así que lo que queda es la pasada de calidad,
+módulo por módulo, en este
 orden: M3 y M5 (vía aérea, soporte vital, trauma), M4, M6, M2, M1. A cada
 lección se le añaden tabla comparativa, algoritmo, mnemotecnias, «Lo que más se
 pregunta», «Errores frecuentes», «Repaso rápido» y preguntas de repaso oral,
@@ -538,10 +570,14 @@ Vienen de PLAN-LMS F10, F11 y F12. Ninguno bloquea a los demás.
 
 - **I — Plan CURSO + directorio de capacitadores.** Academia de un solo curso
   (RCP, ACLS, PHTLS) y su directorio, si la academia lo activa.
-- **J — Auditoría y coste de `/admin`.** Historial append-only; paginación y
-  contadores de `/admin`, que hoy lee `usuarios` e `intentos` completos sin
-  límite y puede agotar la cuota; y validación de los campos numéricos de
-  `intentos`, que hoy permite inyectar un 100 % falso.
+- **J — Auditoría y coste de `/admin`.** Historial append-only, paginación y
+  contadores. Comprobado el 30-08-2026: `src/lib/firebase/intentos.js:62` lee la
+  colección `intentos` ENTERA y `usuarios.js:54` la de `usuarios`, sin un solo
+  `limit()`. **La validación numérica de `intentos` YA ESTÁ HECHA** —llegó con
+  PLAN-LMS F4—: las reglas comprueban tipos, rangos y la coherencia
+  `porcentaje ≈ aciertos/total` con tolerancia de ±1, así que la frase «hoy
+  permite inyectar un 100 % falso» ya no es cierta. De J solo queda paginar y
+  auditar.
 - **K — Tipo MEDICINA.** Organización por convocatoria e importación de
   temarios oficiales, nunca inventados.
 
@@ -638,6 +674,185 @@ entonces sí se conecta con lo que ya use, que no es lo mismo que implantarlo.
   completos sin límite se corta solo al agotar la cuota. En Blaze **ya no se
   corta: se cobra**. Paginar `/admin` deja de ser higiene y pasa a ser control
   de gasto.
+
+---
+
+## Trabajo O — Dashboard de Recepción · PENDIENTE · pedido el 30-08-2026
+
+La academia registra asistencias y pagos **en papel**. Se pide una pantalla de
+recepción operada a alta velocidad: buscar al alumno, marcarle entrada, cobrarle
+y, si hace falta, dejarlo pasar hoy aunque deba. Más un feed en vivo de los
+pedidos de la tienda y, a futuro, un escáner USB de códigos.
+
+### Lo primero: esto ya estaba medio planeado
+
+Conviene decirlo antes de estimar nada, porque cambia el precio:
+
+| Se pidió | Ya estaba en el plan |
+|---|---|
+| Panel de recepción para cobrar en efectivo | **Trabajo L**, con «quién lo cobró y cuándo» y corte de caja |
+| Bloquear al alumno que no está al corriente | **Trabajo L**: `accesoHasta` junto a `esPrueba`/`pruebaHasta` en `calcularAcceso()` |
+| Aviso a recepción cuando un pedido está listo · «pago en caja» | **Trabajo M**, «recoger en instalaciones» |
+| Que el profesor califique en clase | **Trabajo C**, con estados `evaluado` / `sin_responder` / `pendiente` |
+
+**Genuinamente nuevo son tres cosas:** la matrícula secuencial, el check-in con
+caducidad de 8 horas y el escáner. El resto es juntar en una sola pantalla lo
+que ya tenía dueño. Por eso O no son «2 semanas de módulo nuevo» sino seis
+piezas cortas, de las que **tres se pueden empezar sin esperar a la pasarela**.
+
+Y una pieza clave ya existe y está probada: `src/lib/accesoModelo.js::calcularAcceso()`
+es **la única función que decide si un alumno entra**. No hace falta un sistema
+de acceso nuevo ni middleware nuevo; hace falta un campo más y una rama más.
+
+---
+
+### La decisión de stack, que hay que tomar antes de escribir una línea
+
+La petición del 30 de agosto describe el stack como **Next.js + TypeScript +
+Tailwind, con Python y base de datos relacional**. El proyecto de hoy es **Vite +
+React + JavaScript, con Firestore**, y el 29 de agosto ya se decidió lo contrario
+en dos puntos concretos (apartado «Trabajos L, M y N»): *sin base relacional* y
+*«no hace falta Next.js: un webhook es una Cloud Function, no un framework»*.
+
+No se resuelve solo. Son tres caminos con precios muy distintos:
+
+| Camino | Qué cuesta | Qué se gana |
+|---|---|---|
+| **1. Construir O sobre lo que hay** (Vite + Firestore + Cloud Functions en Node) · **recomendado** | Nada extra. Las seis piezas suman ~3 semanas | Recepción funcionando este mes. Roles, aislamiento por academia, reglas y `calcularAcceso` ya están construidos y con pruebas |
+| **2. Migrar a Next.js primero, luego O** | +3-5 semanas de migración (trabajo G) **antes** de que recepción exista | Se escribe la pantalla una sola vez. `src/lib` (14 293 líneas) y el 92 % de las pruebas se mudan intactas; se reescriben las pantallas y el enrutado |
+| **3. Añadir Python + base relacional** | Segundo runtime, segundo despliegue, verificar el token de Firebase en Python, y **dos fuentes de verdad** sobre quién es un usuario | Ninguna de las cinco exigencias de O lo pide. Roles, academias, grupos, progreso y reglas ya viven en Firestore |
+
+**Recomendación: camino 1.** Ningún requisito de O necesita SQL ni Python.
+«Matrícula secuencial» suena a `AUTO_INCREMENT`, pero en Firestore se resuelve
+con un documento contador y una transacción, y a escala de una academia eso
+sobra. Lo único que de verdad necesita servidor es el webhook de la pasarela, y
+eso es **una Cloud Function**, que llega con el trabajo F.
+
+**Sobre Python y los certificados**, que es donde surgió la pregunta: la página
+pública de verificación del trabajo H **no necesita Next.js ni Python**. Es una
+ruta pública que lee `certificados/{folio}` con `allow read: if true`. Next.js
+ayudaría a que esa página cargue sin descargar la aplicación entera —es el único
+sitio del producto donde el SSR se paga solo—, pero es una mejora, no un
+requisito. Lo que da seriedad al certificado no es el framework: es el folio
+imposible de adivinar, la revocación y el dominio propio.
+
+---
+
+### O1 — Matrícula secuencial · 1-2 días · dificultad baja
+
+Siete dígitos rellenos con ceros (`0000001`). En Firestore no hay
+autoincremento: un documento `contadores/{academiaId}` y una transacción que lee
+y suma. Soporta cómodamente el ritmo de inscripción de una academia (el límite
+real es ~1 escritura por segundo sostenida **sobre ese documento**, no sobre la
+base).
+
+- Campo `matricula` en `usuarios/{uid}`, inmutable desde el cliente por reglas.
+- **Relleno de los alumnos que ya existen**: un script como los de `scripts/`,
+  en seco por defecto, ordenando por fecha de alta.
+- Índice para buscar por matrícula, y búsqueda por prefijo con consulta de rango.
+
+**Riesgo:** que dos academias tengan el mismo `0000001`. **Decisión necesaria:**
+¿la matrícula es única por academia (lo coherente con el aislamiento que ya
+existe) o única en toda la plataforma? Si es por academia, la credencial impresa
+tiene que llevar también la academia.
+
+### O2 — Bloqueo por pago + bypass auditado · 3-5 días · dificultad media
+
+- `accesoHasta` (fecha) en el perfil, leído por `calcularAcceso()`.
+- `bypassHasta`, `bypassPor` y `bypassMotivo` para el botón «permitir acceso por
+  hoy». **Auditado siempre**: quién lo concedió y cuándo, mismo criterio que el
+  resto de acciones sensibles del proyecto.
+- El cierre de sesión en caliente ya está resuelto para las cuentas de prueba
+  (`msParaVencerPrueba`): se reutiliza el mismo patrón, o el alumno vencido
+  seguiría leyendo hasta recargar la página.
+
+**Riesgo alto, y hay que decirlo:** ésta es la función más peligrosa de todo el
+producto. Un fallo aquí no molesta, **deja a un alumno fuera de su clase**. Pide
+un periodo de gracia configurable, una pantalla que diga con claridad qué pasó y
+a quién acudir, y un camino de desbloqueo que recepción pueda ejecutar en
+segundos. **Decisión necesaria:** ¿cuántos días de gracia, y bloquea también al
+alumno que está a mitad de un examen?
+
+### O3 — Check-in de 8 horas · 3-5 días · dificultad media
+
+`asistencias/{id}`: `uid`, `academiaId`, `grupoId`, `inicio`, `expira`
+(= inicio + 8 h), `registradoPor`, `medio` (`manual` | `codigo`).
+
+**«En clase» se DERIVA de `expira > ahora`; no es un campo booleano.** Un
+booleano exigiría un proceso que lo apague, y en Spark no hay ni TTL ni cron:
+alguien se quedaría «en clase» para siempre. Derivarlo de la marca de tiempo no
+cuesta nada y no puede desincronizarse.
+
+Es lo que habilita la regla pedida: **el profesor solo califica al alumno con la
+bandera activa**. Eso ata O3 al trabajo C, y por eso C pasa a depender de O3.
+
+**Riesgo:** si el check-in falla o alguien llega tarde, el alumno se queda sin
+poder ser calificado. El profesor necesita una anulación manual, registrada.
+**Decisiones necesarias:** ¿8 horas fijas o hasta el fin de la jornada? ¿Qué
+pasa si alguien hace check-in dos veces el mismo día? ¿Y si una clase pasa de
+medianoche?
+
+### O4 — Pantalla de Recepción · 1 semana · dificultad media
+
+Rol nuevo `recepcion` y ruta `/recepcion`. Buscador enfocado al abrir,
+operable **sin ratón**, con el resultado y sus tres botones —Check-in, Cobrar,
+Permitir hoy— alcanzables por teclado.
+
+Archivos que toca el rol nuevo: `src/lib/roles.js` (`ROLES`, `ROLES_DIRECTOR`,
+`ETIQUETA_ROL`), `src/lib/capacidades.js`, el enrutado del panel y
+`firestore.rules`.
+
+> **Aviso de arquitectura, para no repetir un error conocido.** En las reglas,
+> `esStaffDe()` hoy significa «instructor o director», y con eso se abre la
+> lectura de `temas`, `cursos` y `dictamenes`. **Meter `recepcion` dentro de
+> `esStaffDe()` le regalaría a recepción el temario completo.** Necesita
+> predicado propio (`esRecepcionDe()`) con acceso a `usuarios`, `asistencias`,
+> `pagos` y `ordenes` de su academia, y a nada más.
+
+Responsivo de verdad: se opera en un mostrador, a veces desde una tableta. Vale
+la regla que ya se aplicó en la barra de revisión —rejilla en pantalla estrecha
+y objetivos táctiles de 44 px— y **una sola columna por debajo de 900 px**, con
+el buscador fijo arriba.
+
+### O5 — Feed de logística de tienda · 3-5 días · dificultad media · depende de M
+
+Barra lateral en vivo con la línea de tiempo del pedido: `comprado` →
+`en_sucursal` → `entregado`, más `pago_en_caja` pendiente de cobro.
+
+Se resuelve con **un `onSnapshot`** sobre `ordenes` de esa academia filtrando lo
+ya entregado. No hace falta websocket propio ni sondeo: Firestore ya empuja, y
+se paga por documento que cambia, no por minuto abierto. Confirmar el cobro
+físico desde la alerta ejecuta **exactamente la misma función que el webhook**
+(decisión ya tomada en el trabajo L; no se duplica la lógica de cobro).
+
+**Riesgo:** una pestaña abierta todo el día con un listener mal filtrado se come
+la cuota. Filtrar por academia **y** por estado, y cerrar el listener al salir.
+
+### O6 — Credencial con código + escáner USB · 1-2 días · dificultad baja
+
+Un escáner USB de QR/código de barras **es un teclado**: escribe el código y
+pulsa Enter. Si el buscador de O4 nace enfocado y operable por teclado, el
+escáner funciona el día que se compre, sin driver ni integración. El software
+casi no es el trabajo.
+
+Lo que sí hay que diseñar es **la credencial**, y ahí hay una trampa: si el
+código impreso es la matrícula, cualquiera que vea la credencial de otro puede
+teclear su número y hacerle check-in. **El código debe ser un identificador
+opaco** guardado junto al perfil, no la matrícula visible.
+
+---
+
+### Lo que hace falta de la academia para el trabajo O
+
+| Para | Hace falta |
+|---|---|
+| O1 | Decidir si la matrícula es única por academia o global · confirmar que 7 dígitos es lo que se quiere imprimir |
+| O2 | Días de gracia · qué se le enseña al alumno bloqueado · quién puede conceder el bypass |
+| O3 | Si son 8 horas fijas o jornada · qué hace el profesor cuando falta el check-in |
+| O4 | Quién será `recepcion` · si opera en computadora, tableta o las dos |
+| O5 | Catálogo de la tienda (el mismo del botiquín, trabajo B) |
+| O6 | Si se imprimen credenciales, y con qué diseño |
+| **Todo O** | **La decisión de stack de arriba.** Es la única que bloquea de verdad |
 
 ---
 

@@ -7,7 +7,7 @@ import { useVisibilidad } from '../lib/useVisibilidad.js'
 import NotFound from './NotFound.jsx'
 import Icon from '../components/Icon.jsx'
 import MedicalIcon from '../components/MedicalIcon.jsx'
-import { estadoEditorialDe, estaAvalado, ETIQUETA_ESTADO } from '../lib/estadoEditorial.js'
+import { estadoEditorialDeFicha, estaAvalado, ETIQUETA_ESTADO } from '../lib/estadoEditorial.js'
 import { tituloVisibleDe } from '../data/contenido/titulosVisibles.js'
 
 export default function ModuloPage() {
@@ -60,7 +60,7 @@ export default function ModuloPage() {
           const quiz = estado.quizzes[tema.id]
           // El listado dice el estado editorial ANTES de entrar: abrir cinco
           // temas seguidos para descubrir que están vacíos es peor que verlo.
-          const estadoEd = estadoEditorialDe(tema)
+          const estadoEd = estadoEditorialDeFicha(tema)
           return (
             <Link to={`/tema/${tema.id}`} key={tema.id} className="tema-fila">
               <span className="tema-fila-ico"><MedicalIcon id={tema.icono} size={26} /></span>

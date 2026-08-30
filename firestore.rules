@@ -203,6 +203,22 @@ service cloud.firestore {
     function cursoSegunPermisos() {
       return (!cambia('estado') || instructorPermite('publicarContenido'));
     }
+    // Forma válida de la ACEPTACIÓN DE TÉRMINOS. Solo dos claves: la versión
+    // aceptada (AAAA-MM-DD) y cuándo. La fecha tiene que ser la del SERVIDOR:
+    // es la constancia de cuándo se aceptó un contrato, y el reloj de quien
+    // acepta no puede decidirla. Ausente vale —quien todavía no ha aceptado no
+    // tiene el campo—; presente, tiene esta forma y ninguna otra.
+    function terminosFormaValidos() {
+      return !('terminos' in request.resource.data)
+        || (
+          request.resource.data.terminos is map
+          && request.resource.data.terminos.keys().hasOnly(['version', 'aceptadoEn'])
+          && request.resource.data.terminos.keys().hasAll(['version', 'aceptadoEn'])
+          && request.resource.data.terminos.version is string
+          && request.resource.data.terminos.version.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+          && request.resource.data.terminos.aceptadoEn == request.time
+        );
+    }
     // Forma válida del PASE DE REVISIÓN docente: solo esas cuatro claves, con
     // caducidad obligatoria en AAAA-MM-DD. Un pase sin fecha de caducidad sería
     // un rol permanente disfrazado, y por eso las reglas lo rechazan.
@@ -521,10 +537,16 @@ service cloud.firestore {
         //     `rol` está en la lista, pero SOLO se deja cambiar respaldado por
         //     una invitación válida (cláusula de más abajo). Sin ella, sigue
         //     siendo inmutable para su dueño.
+        //   terminos       → aceptarTerminos (lib/firebase/auth.js). Es el
+        //     ÚNICO campo que el usuario escribe sobre sí mismo sin que se lo
+        //     conceda nadie, y tiene que serlo: aceptar un contrato es un acto
+        //     personal. Su forma se acota abajo (terminosFormaValidos) para que
+        //     no sirva de hueco por donde meter cualquier otra cosa.
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
              'nombre', 'email', 'academiaId', 'grupoId',
              'esPrueba', 'pruebaHasta', 'codigoPrueba',
-             'rol', 'invitacionUsada'])
+             'rol', 'invitacionUsada', 'terminos'])
+        && terminosFormaValidos()
         // Los permisos editoriales NUNCA los edita el propio usuario (un
         // profesor no se auto-concede acceso): solo el director PRO / super.
         // Redundante con la lista blanca de arriba, y a propósito: si algún día
@@ -1139,10 +1161,35 @@ service cloud.firestore {
       allow delete: if esSuper();
     }
 
+    // --- VALIDACIONES docentes aplicadas al temario ---
+    //
+    // UN documento por academia (`validaciones/{academiaId}`), más
+    // `validaciones/_plataforma` para lo que se revisa fuera de toda academia.
+    // Dentro, el mapa `temas: { temaId: { estado, revisadoPor, fecha, … } }`.
+    //
+    // LEER: abierto. El estado editorial es una etiqueta que existe PARA quien
+    // lee la lección —«esto lo firmó un docente» o «esto aún no»— y el temario
+    // se sirve también a quien no ha entrado con sesión. Cerrarlo dejaría al
+    // visitante viendo un aviso de revisión sobre material ya validado.
+    // Lo único que el documento contiene es esa etiqueta y el nombre o cargo
+    // con el que el docente decidió firmarla, que es justamente lo que da la
+    // cara por el contenido.
+    //
+    // ESCRIBIR: super-admin, o staff (profesor/director) de ESA academia. El
+    // pase de revisión temporal se comprueba en la aplicación y no aquí: es un
+    // control de flujo de trabajo entre gente de la misma escuela, no una
+    // frontera de seguridad, y expresarlo en reglas exigiría comparar fechas
+    // en texto contra request.time sin poder formatearla.
+    match /validaciones/{docId} {
+      allow read: if true;
+      allow write: if esSuper() || esStaffDe(docId);
+    }
+
     // --- DICTÁMENES de revisión docente (validar / corregir) ---
     //
-    // Un dictamen es la firma de un docente sobre un tema. NO cambia el estado
-    // editorial: lo aplica después la coordinación. Por eso basta con sesión
+    // Un dictamen es la firma de un docente sobre un tema. Las de VALIDACIÓN
+    // llegan ya aplicadas (ver `validaciones` arriba) y aquí quedan como
+    // auditoría; las de corregir/reportar sí esperan trabajo. Basta con sesión
     // para crearlo (la app ya limita quién ve los botones) y se restringe a
     // staff/super quién lo LEE y quién lo RESUELVE.
     match /dictamenes/{id} {
