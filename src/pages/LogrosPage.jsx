@@ -45,10 +45,17 @@ export default function LogrosPage() {
   )
 
   if (error) return <ErrorContenido onReintentar={reintentar} />
-  if (!api || !imagenes || !temaPorClaveImagen) return <CargandoContenido />
+  // La GALERÍA tiene su propio estado de carga; el GLOSARIO no espera por ella.
+  //
+  // Antes esta pantalla entera se quedaba en «Cargando» hasta que llegaban los
+  // dos agregados de imágenes. Como a /logros se llega sobre todo pulsando un
+  // tecnicismo subrayado dentro de una lección, eso significaba hacerle pagar a
+  // una definición el precio de la galería completa: dos lecturas y una espera
+  // antes de que la palabra pudiera siquiera existir en la página.
+  const cargandoGaleria = !api || !imagenes || !temaPorClaveImagen
   // Solo se comprueba que el tema EXISTA para decidir si la tarjeta enlaza:
   // basta la ficha del índice, sin leer la lección.
-  const getTema = (id) => api.getTemaLigero(id)
+  const getTema = (id) => (api ? api.getTemaLigero(id) : null)
 
   return (
     <div className="atlas-page">
@@ -73,6 +80,8 @@ export default function LogrosPage() {
           <Icon name="libro" size={16} /> Ir al glosario
         </button>
       </header>
+      {cargandoGaleria && <CargandoContenido />}
+
       <div className="atlas-grid">
         {galeria.map((tema, i) => {
           // El tema al que salta la tarjeta: 1º el que trae la entrada (el de

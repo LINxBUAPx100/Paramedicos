@@ -3,10 +3,12 @@ import { Routes, Route, Navigate, useLocation, useParams } from 'react-router-do
 import Layout from './components/Layout.jsx'
 import ErrorBoundary from './components/ErrorBoundary.jsx'
 import RutaProtegida from './components/RutaProtegida.jsx'
+import AceptarTerminos from './components/AceptarTerminos.jsx'
 import Home from './pages/Home.jsx'
 import Landing from './pages/Landing.jsx'
 import Bienvenida from './pages/Bienvenida.jsx'
 import NotFound from './pages/NotFound.jsx'
+import TerminosPage from './pages/TerminosPage.jsx'
 import { useAuth } from './context/AuthContext.jsx'
 
 // Rutas de contenido: carga diferida. Su código y los datos pesados del temario
@@ -96,16 +98,29 @@ function RedirigirModulo({ examen = false }) {
   return <Navigate to={`/modulo/${moduloId}${examen ? '/examen' : ''}`} replace />
 }
 
+// Rutas que se pueden ver SIN haber aceptado los términos. Son las dos que
+// hacen falta para poder decidir: leer el texto entero, y gestionar o cerrar la
+// propia cuenta. Sin ellas, la única salida de la puerta sería aceptar.
+const RUTAS_SIN_TERMINOS = ["/terminos-y-condiciones", "/cuenta"]
+
 export default function App() {
   const location = useLocation()
+  const { debeAceptarTerminos } = useAuth()
+  const exentaDeTerminos = RUTAS_SIN_TERMINOS.some(
+    (r) => location.pathname === r || location.pathname.startsWith()
+  )
   return (
     <Layout>
       <ErrorBoundary routeKey={location.pathname}>
         <Suspense fallback={<Cargando />}>
+          {debeAceptarTerminos && !exentaDeTerminos ? <AceptarTerminos /> : (
           <Routes>
             {/* Públicas: inicio (landing o home según sesión) + cuenta */}
             <Route path="/" element={<Inicio />} />
             <Route path="/cuenta" element={<Cuenta />} />
+            {/* PÚBLICA a propósito: hay que poder leer lo que se te pide
+                aceptar antes de aceptarlo. */}
+            <Route path="/terminos-y-condiciones" element={<TerminosPage />} />
 
             {/* Contenido: requiere sesión + academia activa (o superadmin) */}
             <Route path="/modulo/:moduloId" element={<RutaProtegida><ModuloPage /></RutaProtegida>} />
@@ -190,6 +205,7 @@ export default function App() {
 
             <Route path="*" element={<NotFound />} />
           </Routes>
+          )}
         </Suspense>
       </ErrorBoundary>
     </Layout>

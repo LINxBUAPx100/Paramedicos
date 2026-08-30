@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { stats } from '../data/navIndice.js'
-import { PLANES, ETIQUETA_PLAN, DESCRIPCION_PLAN } from '../lib/capacidades.js'
 import Icon from '../components/Icon.jsx'
 import MedicalIcon from '../components/MedicalIcon.jsx'
 import Reveal from '../components/Reveal.jsx'
@@ -65,7 +64,6 @@ export default function Landing() {
       <PortadaLanding />
       <PilaresLanding />
       <DemoTema />
-      <PlanesLanding />
       <CierreLanding />
     </div>
   )
@@ -257,31 +255,12 @@ function DemoTema() {
   )
 }
 
-// ---------- Planes ----------
-// Los textos salen de capacidades.js, que ya es la fuente de verdad de qué
-// incluye cada plan. Duplicarlos aquí garantizaría que algún día mientan.
-function PlanesLanding() {
-  return (
-    <section className="lp-wrap lp-planes" aria-label="Planes para academias">
-      <div className="lp-demo-cabecera">
-        <span className="lp-etiqueta">Para academias</span>
-        <h2>Un plan según lo que necesites</h2>
-      </div>
-      <div className="lp-planes-grid">
-        {PLANES.map((p, i) => (
-          <Reveal as="article" key={p} className={`lp-plan ${p === 'pro' ? 'lp-plan--destacado' : ''}`} delay={i * 90}>
-            {p === 'pro' && <span className="lp-plan-cinta">El más completo</span>}
-            <h3>{ETIQUETA_PLAN[p]}</h3>
-            <p>{DESCRIPCION_PLAN[p]}</p>
-          </Reveal>
-        ))}
-      </div>
-      <p className="lp-planes-pie">
-        ¿No sabes cuál te toca? Tu academia ya lo tiene contratado: pídele tu código de acceso.
-      </p>
-    </section>
-  )
-}
+// La portada tenía aquí una sección «Un plan según lo que necesites» con las
+// tres tarjetas de plan comercial. Se retiró a petición del dueño el 30 de
+// agosto de 2026: quien llega a la portada es un alumno con un código, y el
+// plan lo contrata la academia, no él. Los planes siguen viviendo en
+// `lib/capacidades.js`, que es su fuente de verdad, y se enseñan donde se
+// deciden: el panel del director y la consola del super-admin.
 
 // ---------- Cierre: tres vías, porque llegan tres personas distintas ----------
 function CierreLanding() {

@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { debePedirTerminos } from '../lib/terminosModelo.js'
 import { esCorreoSupremo } from '../lib/firebase/supremos.js'
 import { capacidadesDe, planEfectivo } from '../lib/capacidades.js'
 import { registrar } from '../lib/registro.js'
@@ -305,6 +306,10 @@ export function AuthProvider({ children }) {
     puedeAcceder,
     accesoCargando,
     motivoBloqueo: motivo,
+    // ¿Hay que pedirle que acepte los términos antes de dejarle usar nada?
+    // Se calcula aquí, junto al resto del acceso, para que ninguna pantalla
+    // tenga que acordarse de preguntarlo por su cuenta.
+    debeAceptarTerminos: debePedirTerminos({ perfil, perfilListo, rol, esSupremo }),
   }
 
   return <AuthContext.Provider value={valor}>{children}</AuthContext.Provider>

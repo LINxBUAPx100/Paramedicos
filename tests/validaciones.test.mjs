@@ -229,3 +229,83 @@ test('trazaDeFirma no se rompe con datos incompletos', () => {
   assert.match(trazaDeFirma({ revisadoPor: 'X' }), /fecha no registrada/)
   assert.doesNotMatch(trazaDeFirma({ revisadoPor: 'X', fecha: HOY }), /Observaciones/)
 })
+
+// ---------- la capa llega a TODAS las puertas por las que sale una lección ----------
+
+test('el envoltorio cubre cada método de la API que devuelve lecciones o fichas', async () => {
+  // Guarda estructural. Si mañana se añade otra puerta —`getTemaCompletoAsync`,
+  // otra vista de fichas— y no se envuelve, esa pantalla enseñaría el estado
+  // editorial SIN las firmas docentes y el aviso de «contenido en revisión»
+  // reaparecería sobre material ya validado. Aquí falla la prueba, no el alumno.
+  const { construirApiBajoDemanda } = await import('../src/lib/contenidoApi.js')
+  const api = construirApiBajoDemanda({
+    indice: { modulos: [{ id: 'm5', numero: 5, titulo: 'Trauma', temas: [{ id: TEMA.id, numero: '5.1', titulo: TEMA.titulo }] }] },
+    cargarTema: async () => TEMA,
+    cargarAgregado: async () => [],
+  })
+  const PUERTAS = ['getTemaAsync', 'fichasDeModuloAsync', 'todasLasFichasAsync']
+  for (const p of PUERTAS) {
+    assert.equal(typeof api[p], 'function', `la API ya no expone ${p}`)
+  }
+  const envuelta = apiConValidaciones(api, { [TEMA.id]: FIRMA })
+  for (const p of PUERTAS) {
+    assert.notEqual(envuelta[p], api[p], `${p} salió SIN envolver`)
+  }
+  // Y lo que no devuelve lecciones se pasa tal cual, sin coste.
+  assert.equal(envuelta.getTemaVecinos, api.getTemaVecinos)
+  assert.equal(envuelta.cursoId, api.cursoId)
+})
+
+test('firmar dos veces el mismo tema deja el mismo resultado', () => {
+  const uno = aplicarValidacion(TEMA, { [TEMA.id]: FIRMA })
+  const dos = aplicarValidacion(uno, { [TEMA.id]: FIRMA })
+  assert.equal(estadoEditorialDe(dos), 'validado')
+  assert.deepEqual(dos.revision.fuentes, uno.revision.fuentes, 'las fuentes no se duplican')
+  assert.equal(dos.revision.revisadoPor, FIRMA.revisadoPor)
+})
+
+test('retirar la firma devuelve el tema a su estado propio y cierra el examen', () => {
+  // Es lo que hace «Retirar validación»: la entrada desaparece del mapa.
+  const validado = aplicarValidacion(TEMA, { [TEMA.id]: FIRMA })
+  assert.equal(bancoDeExamen([validado]).length, 1)
+  const retirado = aplicarValidacion(TEMA, {})
+  assert.equal(estadoEditorialDe(retirado), 'en_revision')
+  assert.deepEqual(bancoDeExamen([retirado]), [])
+  assert.equal(retirado, TEMA, 'sin firma se devuelve el mismo objeto, sin copiar')
+})
+
+test('una firma de «publicado» también avala', () => {
+  const publicado = normalizarValidacion({ estado: 'publicado', revisadoPor: 'Dir. Z', fecha: HOY })
+  const tema = aplicarValidacion(TEMA, { [TEMA.id]: publicado })
+  assert.equal(estadoEditorialDe(tema), 'publicado')
+  assert.equal(estaAvalado(estadoEditorialDe(tema)), true)
+})
+
+test('la firma de un tema no toca a sus vecinos', () => {
+  const otro = { ...TEMA, id: 'm5-cin-energia' }
+  const [a, b] = aplicarValidaciones([TEMA, otro], { [TEMA.id]: FIRMA })
+  assert.equal(estadoEditorialDe(a), 'validado')
+  assert.equal(estadoEditorialDe(b), 'en_revision')
+  assert.equal(b, otro)
+})
+
+// ---------- el semáforo: la promesa que ve quien coordina ----------
+
+test('una firma deja el tema en verde «listo y aprobado»', async () => {
+  const { semaforoDe, tituloSemaforo } = await import('../src/lib/estadoEditorial.js')
+  const { estadosEditoriales } = await import('../src/data/navIndice.js')
+
+  // Cómo lo resuelve el panel (VisibilidadGrupos): la firma manda sobre el
+  // estado que trae el paquete, que se calculó al compilar y no puede saber
+  // nada de lo que un docente firme después.
+  const estadoDelSemaforo = (temaId, mapa) => mapa?.[temaId]?.estado || estadosEditoriales[temaId]
+
+  const temaReal = 'm5-cin-definicion'
+  assert.ok(estadosEditoriales[temaReal], 'el tema de la prueba existe en el índice generado')
+  assert.notEqual(semaforoDe(estadoDelSemaforo(temaReal, {})), 'verde', 'sin firma no está en verde')
+
+  const conFirma = estadoDelSemaforo(temaReal, { [temaReal]: FIRMA })
+  assert.equal(conFirma, 'validado')
+  assert.equal(semaforoDe(conFirma), 'verde')
+  assert.match(tituloSemaforo(conFirma), /listo y aprobado/)
+})

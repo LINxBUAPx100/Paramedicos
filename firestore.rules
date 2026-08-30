@@ -203,6 +203,22 @@ service cloud.firestore {
     function cursoSegunPermisos() {
       return (!cambia('estado') || instructorPermite('publicarContenido'));
     }
+    // Forma válida de la ACEPTACIÓN DE TÉRMINOS. Solo dos claves: la versión
+    // aceptada (AAAA-MM-DD) y cuándo. La fecha tiene que ser la del SERVIDOR:
+    // es la constancia de cuándo se aceptó un contrato, y el reloj de quien
+    // acepta no puede decidirla. Ausente vale —quien todavía no ha aceptado no
+    // tiene el campo—; presente, tiene esta forma y ninguna otra.
+    function terminosFormaValidos() {
+      return !('terminos' in request.resource.data)
+        || (
+          request.resource.data.terminos is map
+          && request.resource.data.terminos.keys().hasOnly(['version', 'aceptadoEn'])
+          && request.resource.data.terminos.keys().hasAll(['version', 'aceptadoEn'])
+          && request.resource.data.terminos.version is string
+          && request.resource.data.terminos.version.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+          && request.resource.data.terminos.aceptadoEn == request.time
+        );
+    }
     // Forma válida del PASE DE REVISIÓN docente: solo esas cuatro claves, con
     // caducidad obligatoria en AAAA-MM-DD. Un pase sin fecha de caducidad sería
     // un rol permanente disfrazado, y por eso las reglas lo rechazan.
@@ -521,10 +537,16 @@ service cloud.firestore {
         //     `rol` está en la lista, pero SOLO se deja cambiar respaldado por
         //     una invitación válida (cláusula de más abajo). Sin ella, sigue
         //     siendo inmutable para su dueño.
+        //   terminos       → aceptarTerminos (lib/firebase/auth.js). Es el
+        //     ÚNICO campo que el usuario escribe sobre sí mismo sin que se lo
+        //     conceda nadie, y tiene que serlo: aceptar un contrato es un acto
+        //     personal. Su forma se acota abajo (terminosFormaValidos) para que
+        //     no sirva de hueco por donde meter cualquier otra cosa.
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
              'nombre', 'email', 'academiaId', 'grupoId',
              'esPrueba', 'pruebaHasta', 'codigoPrueba',
-             'rol', 'invitacionUsada'])
+             'rol', 'invitacionUsada', 'terminos'])
+        && terminosFormaValidos()
         // Los permisos editoriales NUNCA los edita el propio usuario (un
         // profesor no se auto-concede acceso): solo el director PRO / super.
         // Redundante con la lista blanca de arriba, y a propósito: si algún día

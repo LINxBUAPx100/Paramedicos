@@ -94,6 +94,11 @@ export function ContenidoProvider({ children }) {
   // resolutor. Sin esto, validar un tema no se notaba en ningún sitio: el
   // estado editorial vive en el contenido generado y nadie lo reescribía.
   const [validaciones, setValidaciones] = useState({})
+  // Alguien pidió la capa de firmas sin pedir el temario. Pasa en el panel del
+  // director: el semáforo «listo y aprobado» necesita saber qué está firmado,
+  // pero esa pantalla nunca carga lecciones. Sin esta bandera el semáforo se
+  // quedaba en ámbar para siempre, contradiciendo a la página del tema.
+  const [pedidoValidaciones, setPedidoValidaciones] = useState(false)
 
   // Índice ligero de la academia migrada (1 lectura). Legacy: bundle directo.
   useEffect(() => {
@@ -180,7 +185,7 @@ export function ContenidoProvider({ children }) {
   // público no enseñan lecciones, así que ahí esta lectura no diría nada y sí
   // se cobraría una vez por visitante.
   useEffect(() => {
-    if (!pedido && !pedidoApi) return undefined
+    if (!pedido && !pedidoApi && !pedidoValidaciones) return undefined
     let activo = true
     ;(async () => {
       try {
@@ -192,10 +197,11 @@ export function ContenidoProvider({ children }) {
       }
     })()
     return () => { activo = false }
-  }, [academiaId, reintento, pedido, pedidoApi])
+  }, [academiaId, reintento, pedido, pedidoApi, pedidoValidaciones])
 
   const pedir = useCallback(() => setPedido(true), [])
   const pedirApi = useCallback(() => setPedidoApi(true), [])
+  const pedirValidaciones = useCallback(() => setPedidoValidaciones(true), [])
 
   // Refresca la capa sin recargar el temario entero: lo llama la barra de
   // revisión justo después de firmar, para que el cambio se vea al instante en
@@ -238,10 +244,10 @@ export function ContenidoProvider({ children }) {
   const valor = useMemo(
     () => ({
       indice, contenido, api: apiValidada, error, pedir, pedirApi, reintentar,
-      academiaId, cursos, cursoId, elegirCurso, validaciones, refrescarValidaciones,
+      academiaId, cursos, cursoId, elegirCurso, validaciones, refrescarValidaciones, pedirValidaciones,
     }),
     [indice, contenido, apiValidada, error, pedir, pedirApi, reintentar,
-      academiaId, cursos, cursoId, elegirCurso, validaciones, refrescarValidaciones]
+      academiaId, cursos, cursoId, elegirCurso, validaciones, refrescarValidaciones, pedirValidaciones]
   )
   return <ContenidoContext.Provider value={valor}>{children}</ContenidoContext.Provider>
 }
@@ -297,7 +303,11 @@ export function useApiContenido() {
  * documento. Lo usa la barra de revisión de cada tema.
  */
 export function useValidaciones() {
-  const { validaciones, refrescarValidaciones } = usarContexto()
+  const { validaciones, refrescarValidaciones, pedirValidaciones } = usarContexto()
+  // Pedirlas es parte de usarlas. El panel del director enseña el semáforo
+  // editorial sin cargar una sola lección, así que no basta con que la capa se
+  // lea «cuando alguien pida contenido»: quien la consulta la pide.
+  useEffect(() => { pedirValidaciones() }, [pedirValidaciones])
   return { validaciones, refrescarValidaciones }
 }
 

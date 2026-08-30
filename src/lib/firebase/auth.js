@@ -112,3 +112,26 @@ export async function restablecerMiPassword() {
   if (!auth.currentUser?.email) throw new Error('Tu cuenta no tiene correo.')
   await sendPasswordResetEmail(auth, auth.currentUser.email)
 }
+
+// ---------- términos y condiciones ----------
+
+/**
+ * Registra en MI perfil que acepté la versión vigente del texto legal.
+ *
+ * La fecha la pone el SERVIDOR (`serverTimestamp`) y no el navegador: es la
+ * constancia de cuándo se aceptó un contrato, y el reloj de quien acepta no
+ * puede decidirla. La versión sí viaja desde el cliente, pero solo puede ser
+ * la que la aplicación está mostrando: si mañana cambia, `aceptoTerminos`
+ * dejará de darla por buena y se volverá a pedir.
+ *
+ * Las reglas permiten al usuario escribir únicamente el campo `terminos` de su
+ * propio documento, y solo con esta forma.
+ */
+export async function aceptarTerminos(version) {
+  const uid = auth.currentUser?.uid
+  if (!uid) throw new Error('Necesitas iniciar sesión para aceptar los términos.')
+  const { fichaAceptacion } = await import('../terminosModelo.js')
+  await updateDoc(doc(db, 'usuarios', uid), {
+    terminos: fichaAceptacion(serverTimestamp(), version),
+  })
+}

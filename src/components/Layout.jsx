@@ -4,6 +4,7 @@ import { useProgress } from '../context/ProgressContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useIndiceContenido } from '../context/ContenidoContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
+import { debeSubirAlInicio } from '../lib/saltoEnPagina.js'
 import Icon from './Icon.jsx'
 import LogoPTEM from './marca/LogoPTEM.jsx'
 import LogoIcono from './marca/LogoIcono.jsx'
@@ -63,11 +64,27 @@ export default function Layout({ children }) {
   // tablas y rejillas con su propia navegación lateral, no texto para leer.
   const esConsola = location.pathname.startsWith('/admin') || location.pathname.startsWith('/panel')
 
-  // Al cambiar de ruta, arranca arriba (sin animación). Las páginas con saltos
-  // propios (p. ej. TemaPage con ?ref=) se reposicionan después por su cuenta.
+  // Al cambiar de ruta, arranca arriba (sin animación) — SALVO cuando la ruta
+  // trae un destino dentro de la propia página (`?t=` una palabra del glosario,
+  // `?ref=` un diagrama). Ahí no se toca: la pantalla se coloca sola.
+  //
+  // Antes se subía siempre. Como los efectos del hijo corren antes que los del
+  // padre, el glosario se desplazaba hasta la palabra y este efecto la devolvía
+  // arriba: pulsar un tecnicismo te dejaba en el encabezado de Logros, no en tu
+  // palabra. Ver `lib/saltoEnPagina.js`.
+  //
+  // Se mira el PATHNAME, no la URL entera: una pantalla que cambia sus propios
+  // parámetros —el glosario al quitar el resaltado, el buscador al reescribir la
+  // consulta— no está navegando a ninguna parte, y subirla al inicio le
+  // arrancaría al lector el sitio donde estaba leyendo.
+  const rutaAnterior = useRef(location.pathname)
   useEffect(() => {
+    const cambioDePantalla = rutaAnterior.current !== location.pathname
+    rutaAnterior.current = location.pathname
+    if (!cambioDePantalla) return
+    if (!debeSubirAlInicio(location)) return
     window.scrollTo({ top: 0, behavior: 'instant' })
-  }, [location.pathname])
+  }, [location.pathname, location.search])
 
   // Cerrar el drawer devuelve SIEMPRE el foco al botón que lo abrió: sin esto,
   // quien navega con teclado se queda con el foco en un elemento que acaba de
@@ -289,6 +306,9 @@ export default function Layout({ children }) {
             {/* Las licencias CC BY del material visual del temario obligan a que
                 la atribución esté accesible. Este es el enlace estable a ella. */}
             <Link to="/creditos">Créditos del material visual</Link>
+            {/* Enlace estable al texto legal: quien lo aceptó al entrar tiene
+                que poder releerlo después sin buscarlo. */}
+            <Link to="/terminos-y-condiciones">Términos y condiciones</Link>
             <Link to="/cuenta">Mi cuenta</Link>
           </div>
         </div>

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.jsx'
-import { useIndiceAcademia } from '../../context/ContenidoContext.jsx'
+import { useIndiceAcademia, useValidaciones } from '../../context/ContenidoContext.jsx'
 import { contarTemasOcultos, estadoModulo, focoBaraja, totalTemas } from '../../lib/panelModelo.js'
 import { semaforoDe, tituloSemaforo } from '../../lib/estadoEditorial.js'
 import { estadosEditoriales } from '../../data/navIndice.js'
@@ -11,9 +11,16 @@ import Icon from '../Icon.jsx'
 // superadmin: a un profesor le diría que un tema «no está listo» sin que pueda
 // hacer nada al respecto, y al alumno ya se le informa con el aviso de la propia
 // página del tema, que es donde la advertencia sirve de algo.
-function SemaforoEditorial({ temaId }) {
-  const estado = estadosEditoriales[temaId]
-  if (!estado) return null // academia con temario propio: no hay estado oficial que mostrar
+function SemaforoEditorial({ temaId, validaciones }) {
+  // La firma docente MANDA sobre el estado que trae el paquete.
+  //
+  // `estadosEditoriales` se calcula al compilar: es una foto del temario en el
+  // momento del build y no puede saber nada de lo que un profesor firme después.
+  // Sin esta línea, validar un tema no lo ponía en verde aquí —seguía en ámbar,
+  // «en desarrollo, sin validar»— y el semáforo contradecía a la propia página
+  // del tema, que ya decía «Validado».
+  const estado = validaciones?.[temaId]?.estado || estadosEditoriales[temaId]
+  if (!estado) return null // academia con temario propio y sin firmar: nada que mostrar
   const color = semaforoDe(estado)
   const titulo = tituloSemaforo(estado)
   return (
@@ -60,6 +67,8 @@ export default function VisibilidadGrupos({ academiaId, academiaNombre = '', gru
   const { grupoId: miGrupoId, puedeVerCodigos, esSuperadmin } = useAuth()
   // Temario de LA ACADEMIA gestionada: su copia si está migrada, bundle si no.
   const { modulos: modulosTemario } = useIndiceAcademia(academiaId)
+  // Firmas docentes vigentes: lo que hace que el semáforo se ponga en verde.
+  const { validaciones } = useValidaciones()
 
   const [lista, setLista] = useState(grupos)
   const [grupoSel, setGrupoSel] = useState('')
@@ -379,7 +388,7 @@ export default function VisibilidadGrupos({ academiaId, academiaNombre = '', gru
                     const tOculto = est.porModulo || temaOcultoSolo(tema.id)
                     return (
                       <li key={tema.id} className={`tv-tema ${tOculto ? 'tv-oculto' : ''}`}>
-                        {esSuperadmin && <SemaforoEditorial temaId={tema.id} />}
+                        {esSuperadmin && <SemaforoEditorial temaId={tema.id} validaciones={validaciones} />}
                         <span className="tv-tema-num">{tema.numero}</span>
                         <Link to={`/tema/${tema.id}`} className="tv-tema-titulo">{tema.titulo}</Link>
                         {est.porModulo ? (

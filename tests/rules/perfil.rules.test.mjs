@@ -212,3 +212,34 @@ test('progreso: nadie lee ni escribe el progreso de otro', { skip }, async () =>
     setDoc(doc(como('alumBasura'), 'progreso/alumProgreso'), progresoValido(), { merge: true })
   )
 })
+
+// ---------- aceptación de los términos y condiciones ----------
+
+test('el usuario acepta los términos sobre su propio perfil', { skip }, async () => {
+  await preparar()
+  const { doc, updateDoc, serverTimestamp } = fsmod
+  const { assertSucceeds, assertFails } = rut
+  const ficha = { version: '2026-08-30', aceptadoEn: serverTimestamp() }
+
+  await assertSucceeds(updateDoc(doc(como('alumNombre'), 'usuarios/alumNombre'), { terminos: ficha }))
+  // Sobre el perfil de OTRO, no: aceptar un contrato es un acto personal.
+  await assertFails(updateDoc(doc(como('alumNombre'), 'usuarios/alumBasura'), { terminos: ficha }))
+})
+
+test('la fecha de aceptación la pone el servidor, no quien acepta', { skip }, async () => {
+  await preparar()
+  const { doc, updateDoc, Timestamp, serverTimestamp } = fsmod
+  const { assertFails } = rut
+  // Antedatar la aceptación es rehacer la constancia de cuándo se aceptó.
+  await assertFails(updateDoc(doc(como('alumNombre'), 'usuarios/alumNombre'), {
+    terminos: { version: '2026-08-30', aceptadoEn: Timestamp.fromMillis(0) },
+  }))
+  // Y la versión tiene que ser una fecha, no una etiqueta libre.
+  await assertFails(updateDoc(doc(como('alumNombre'), 'usuarios/alumNombre'), {
+    terminos: { version: 'la ultima', aceptadoEn: serverTimestamp() },
+  }))
+  // Ni sirve de hueco para colar otra cosa dentro del mismo campo.
+  await assertFails(updateDoc(doc(como('alumNombre'), 'usuarios/alumNombre'), {
+    terminos: { version: '2026-08-30', aceptadoEn: serverTimestamp(), rol: 'superadmin' },
+  }))
+})

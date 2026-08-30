@@ -9,6 +9,7 @@ import {
 } from '../lib/revisionDocente.js'
 import { sePuedeValidar } from '../lib/validacionesModelo.js'
 import { estadoEditorialDe, ETIQUETA_ESTADO, estaAvalado } from '../lib/estadoEditorial.js'
+import { registrar } from '../lib/registro.js'
 
 // ============================================================
 //  Barra de revisión docente — los tres botones de cada tema
@@ -30,6 +31,26 @@ import { estadoEditorialDe, ETIQUETA_ESTADO, estaAvalado } from '../lib/estadoEd
 // ============================================================
 
 const hoyISO = () => new Date().toISOString().slice(0, 10)
+
+/**
+ * Traduce el fallo de una firma a algo que se pueda accionar.
+ *
+ * Firestore contesta «Missing or insufficient permissions», que no le dice al
+ * docente ni qué le falta ni a quién pedírselo. Los dos casos reales tienen
+ * causa concreta: firmar sobre la plantilla global sin ser super-admin, y
+ * firmar sin pertenecer a ninguna academia.
+ */
+function mensajeDeFallo(err, { esValidar, academiaId } = {}) {
+  const bruto = err?.message || ''
+  if (esValidar && /permission|insufficient|PERMISSION_DENIED/i.test(bruto)) {
+    return academiaId
+      ? 'Tu cuenta no tiene permiso para validar el temario de esta academia. '
+        + 'Pídele al director que te conceda el pase de revisión.'
+      : 'Tu cuenta no está asignada a ninguna academia, así que esta firma iría al '
+        + 'temario de la plataforma y eso solo lo puede hacer el super-admin.'
+  }
+  return bruto || 'No se pudo enviar (revisa tu conexión).'
+}
 
 export default function RevisionDocente({ tema }) {
   const { user, perfil, rol, esSuperadmin, academiaId } = useAuth()
@@ -184,6 +205,8 @@ function FormularioDictamen({ accion, tema, deudas, estadoEd, onCerrar, onEnviad
   const [checklist, setChecklist] = useState({})
   const [estado, setEstado] = useState('') // '' | 'enviando' | 'ok' | 'error'
   const [error, setError] = useState('')
+  // Aviso de algo secundario que no salió, cuando lo principal SÍ salió.
+  const [aviso, setAviso] = useState('')
 
   const esValidar = accion === 'validar'
   const listaFuentes = fuentes.split('\n').map((f) => f.trim()).filter(Boolean)
@@ -191,6 +214,7 @@ function FormularioDictamen({ accion, tema, deudas, estadoEd, onCerrar, onEnviad
   const enviar = async (e) => {
     e.preventDefault()
     setError('')
+    setAviso('')
 
     if (esValidar) {
       const r = validarFirmaValidacion({ revision: tema.revision, revisadoPor })
@@ -249,15 +273,27 @@ function FormularioDictamen({ accion, tema, deudas, estadoEd, onCerrar, onEnviad
             nombre: firma.nombre,
           })
           await refrescarValidaciones({ [tema.id]: validacion })
+          // El rastro NO puede tumbar la validación que ya se aplicó. Si esta
+          // escritura falla, el tema está validado igualmente y decir «no se
+          // pudo enviar» sería mentir: el docente reintentaría creyendo que su
+          // firma no surtió efecto. Se avisa de lo que falta, no de lo hecho.
+          try {
+            const { crearDictamen } = await import('../lib/firebase/dictamenes.js')
+            await crearDictamen({ ...bruto, ...firma, aplicadoAlFirmar: true })
+          } catch (errRastro) {
+            registrar('revision:dictamen', errRastro, { temaId: tema.id })
+            setAviso('El tema quedó validado, pero no se pudo dejar el registro en la cola de revisión.')
+          }
+        } else {
+          const { crearDictamen } = await import('../lib/firebase/dictamenes.js')
+          await crearDictamen({ ...bruto, ...firma, aplicadoAlFirmar: false })
         }
-        const { crearDictamen } = await import('../lib/firebase/dictamenes.js')
-        await crearDictamen({ ...bruto, ...firma, aplicadoAlFirmar: esValidar })
       }
       setEstado('ok')
       setTimeout(() => onEnviado({ ...bruto, uid: user.uid, estado: 'abierto' }), 1400)
     } catch (err) {
       setEstado('error')
-      setError(err?.message || 'No se pudo enviar (revisa tu conexión).')
+      setError(mensajeDeFallo(err, { esValidar, academiaId, rol: perfil?.rol }))
     }
   }
 
@@ -351,6 +387,7 @@ function FormularioDictamen({ accion, tema, deudas, estadoEd, onCerrar, onEnviad
       </label>
 
       {error && <p className="cuenta-error" role="alert">{error}</p>}
+      {aviso && <p className="revdoc-aviso" role="status">{aviso}</p>}
       {estado === 'ok' && (
         <p className="cuenta-ok" role="status">
           {esValidar

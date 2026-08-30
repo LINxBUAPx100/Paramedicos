@@ -3955,6 +3955,17 @@ html[data-tema='oscuro'] .hero-badge { color: var(--primario-claro); }
   margin-top: var(--e-8); border: none; background: none; padding: 0;
   color: var(--texto-3); font: inherit; font-size: var(--t-xs); cursor: pointer; text-decoration: underline;
 }
+/* La palabra que se vino a buscar no está en este temario. Se dice en voz alta:
+   antes fallaba en silencio y parecía que el enlace no hacía nada. */
+.glo-sin-palabra {
+  margin-top: var(--e-8);
+  padding: var(--e-8) var(--e-12);
+  border-radius: 8px;
+  border: 1px solid var(--borde);
+  background: var(--bg-3);
+  font-size: var(--t-sm);
+  color: var(--texto-2);
+}
 .glo-modulo { margin-bottom: var(--e-32); }
 .glo-modulo-titulo {
   display: flex; align-items: baseline; gap: var(--e-12); flex-wrap: wrap;
@@ -7361,36 +7372,9 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 }
 .lp-demo-corte p { color: var(--texto-2); margin-bottom: var(--e-16); }
 
-/* ---- Planes ---- */
-.lp-planes { padding: var(--e-64) 0; }
-.lp-planes-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: var(--e-24);
-}
-.lp-plan {
-  position: relative;
-  padding: var(--e-24);
-  border: 1px solid var(--borde);
-  border-radius: var(--radio);
-  background: var(--bg-2);
-}
-.lp-plan--destacado { border-color: var(--primario); box-shadow: var(--sombra-md); }
-.lp-plan-cinta {
-  position: absolute;
-  top: calc(var(--e-12) * -1);
-  left: var(--e-24);
-  padding: var(--e-4) var(--e-12);
-  border-radius: 999px;
-  background: var(--primario);
-  color: #fff;
-  font-family: var(--fuente-sub);
-  font-size: var(--t-xs);
-  font-weight: 600;
-}
-.lp-plan h3 { font-size: var(--t-lg); margin-bottom: var(--e-8); }
-.lp-plan p { color: var(--texto-2); font-size: var(--t-sm); }
-.lp-planes-pie { margin-top: var(--e-24); color: var(--texto-3); font-size: var(--t-sm); }
+/* Los estilos `.lp-planes*` se retiraron con su sección el 30 de agosto de
+   2026: la portada ya no enseña planes comerciales. Si vuelven, vuelven en el
+   panel del director, que es donde se contratan. */
 
 /* ---- Cierre ---- */
 .lp-cierre { padding: var(--e-48) 0 var(--e-64); background: var(--carbon); color: var(--carbon-texto); }
@@ -8762,4 +8746,160 @@ html[data-tema='oscuro'] .dic-item--validar { border-left-color: #6ee7b7; }
     min-width: 0;
     box-shadow: none;
   }
+}
+
+/* ============================================================
+   TÉRMINOS Y CONDICIONES
+   ------------------------------------------------------------
+   Dos superficies para un mismo texto: la página pública que se puede leer e
+   imprimir, y la puerta que se cruza una vez por versión al entrar. El cuerpo
+   del documento (.legal-cuerpo) es el mismo en las dos, así que sus estilos no
+   dependen del contenedor.
+   ============================================================ */
+.legal {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: var(--e-24) 0 var(--e-64);
+}
+.legal-cab { margin-bottom: var(--e-32); }
+.legal-eyebrow {
+  display: block;
+  font-family: var(--fuente-sub);
+  font-size: var(--t-xs);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--primario);
+  margin-bottom: var(--e-8);
+}
+.legal-cab h1 { font-size: var(--t-3xl, 2rem); line-height: 1.15; margin-bottom: var(--e-16); }
+.legal-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-8) var(--e-24);
+  padding-top: var(--e-12);
+  border-top: 1px solid var(--borde);
+  font-size: var(--t-sm);
+}
+.legal-meta div { display: flex; gap: 6px; align-items: baseline; }
+.legal-meta dt {
+  font-family: var(--fuente-sub);
+  font-size: var(--t-xs);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--texto-3);
+}
+.legal-meta dd { margin: 0; color: var(--texto-2); font-variant-numeric: tabular-nums; }
+
+.legal-cuerpo { display: flex; flex-direction: column; gap: var(--e-32); }
+.legal-seccion { display: flex; flex-direction: column; gap: var(--e-12); }
+.legal-seccion h2 {
+  display: flex;
+  align-items: baseline;
+  gap: var(--e-12);
+  font-size: var(--t-lg);
+  line-height: 1.25;
+}
+/* El número de apartado NO es decoración: un contrato se cita por apartado
+   («conforme al punto 3.4»), así que tiene que verse y poder leerse en voz alta. */
+.legal-num {
+  flex: none;
+  min-width: 1.6rem;
+  font-family: var(--fuente-sub);
+  font-size: var(--t-sm);
+  color: var(--primario);
+}
+.legal-seccion p { color: var(--texto-2); line-height: 1.65; }
+.legal-puntos {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-8);
+  color: var(--texto-2);
+  line-height: 1.6;
+}
+.legal-puntos strong { color: var(--texto); }
+.legal-pie { margin-top: var(--e-32); padding-top: var(--e-16); border-top: 1px solid var(--borde); }
+
+/* ---- La puerta de aceptación ---- */
+.terminos-puerta {
+  display: flex;
+  justify-content: center;
+  padding: var(--e-16) 0 var(--e-48);
+}
+.terminos-panel {
+  width: 100%;
+  max-width: 46rem;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--bg-2);
+  overflow: hidden;
+}
+.terminos-panel-cab {
+  padding: var(--e-24);
+  border-bottom: 1px solid var(--borde);
+}
+.terminos-eyebrow {
+  display: block;
+  font-family: var(--fuente-sub);
+  font-size: var(--t-xs);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--primario);
+  margin-bottom: 6px;
+}
+.terminos-panel-cab h1 { font-size: var(--t-xl, 1.5rem); line-height: 1.2; margin-bottom: var(--e-8); }
+.terminos-panel-cab p { color: var(--texto-2); font-size: var(--t-sm); margin: 0; }
+/* Alto acotado y desplazamiento propio: el texto se lee AQUÍ, sin salir de la
+   pantalla en la que hay que decidir. */
+.terminos-scroll {
+  max-height: 26rem;
+  overflow-y: auto;
+  padding: var(--e-24);
+  background: var(--bg);
+}
+.terminos-scroll:focus-visible { outline: 2px solid var(--primario); outline-offset: -2px; }
+.terminos-acciones {
+  padding: var(--e-24);
+  border-top: 1px solid var(--borde);
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-16);
+}
+.terminos-check {
+  display: flex;
+  gap: var(--e-12);
+  align-items: flex-start;
+  line-height: 1.5;
+  cursor: pointer;
+}
+.terminos-check input { margin-top: 4px; flex: none; width: 18px; height: 18px; }
+.terminos-botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--e-12);
+  align-items: center;
+}
+.terminos-salir {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  border: none;
+  background: none;
+  padding: 6px 0;
+  font: inherit;
+  font-size: var(--t-xs);
+  color: var(--texto-3);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.terminos-salir:hover { color: var(--urgencia); }
+
+@media (max-width: 560px) {
+  .terminos-panel-cab, .terminos-scroll, .terminos-acciones { padding: var(--e-16); }
+  .terminos-scroll { max-height: 20rem; }
+  .terminos-botones .btn { flex: 1 1 100%; justify-content: center; }
+  .terminos-salir { margin-left: 0; }
+  .legal-seccion h2 { flex-direction: column; gap: 2px; }
 }
