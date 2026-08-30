@@ -108,6 +108,23 @@ export function normalizarLeido(bruto) {
   }
 }
 
+/**
+ * Une las firmas de la PLATAFORMA con las de una academia.
+ *
+ * El super-admin firma sobre el temario global (`_plataforma`), que es el que
+ * se clona a todas las academias; una academia firma sobre su propia copia.
+ * Las dos capas cuentan, y la de la academia manda sobre la global cuando las
+ * dos hablan del mismo tema: quien tiene el temario delante y conoce a sus
+ * alumnos es quien responde por él.
+ *
+ * Sin esto, validar como super-admin no se notaba en ninguna academia —la
+ * firma se guardaba en un documento que nadie leía— y la única lectura posible
+ * era «validé y no pasó nada».
+ */
+export function combinarValidaciones(plataforma, academia) {
+  return { ...(plataforma || {}), ...(academia || {}) }
+}
+
 /** Mapa `temaId → validación` ya limpio, a partir del documento de Firestore. */
 export function mapaDeValidaciones(documento) {
   const temas = documento && typeof documento === 'object' ? documento.temas : null

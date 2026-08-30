@@ -23,7 +23,8 @@
 import { db } from './init.js'
 import { doc, getDoc, setDoc, deleteField, serverTimestamp } from 'firebase/firestore'
 import {
-  docValidacionesDe, mapaDeValidaciones, normalizarValidacion,
+  DOC_PLATAFORMA, combinarValidaciones, docValidacionesDe, mapaDeValidaciones,
+  normalizarValidacion,
 } from '../validacionesModelo.js'
 
 const refDe = (academiaId) => doc(db, 'validaciones', docValidacionesDe(academiaId))
@@ -37,12 +38,26 @@ const refDe = (academiaId) => doc(db, 'validaciones', docValidacionesDe(academia
  * donde ya había firma); romper la página sería peor.
  */
 export async function leerValidaciones(academiaId) {
-  try {
-    const snap = await getDoc(refDe(academiaId))
-    return snap.exists() ? mapaDeValidaciones(snap.data()) : {}
-  } catch {
-    return {}
+  const leerUno = async (id) => {
+    try {
+      const snap = await getDoc(doc(db, 'validaciones', id))
+      return snap.exists() ? mapaDeValidaciones(snap.data()) : {}
+    } catch {
+      return {}
+    }
   }
+  // Sin academia solo hay una capa que leer, y es la de la plataforma.
+  if (!academiaId) return leerUno(DOC_PLATAFORMA)
+  // Con academia son DOS, en paralelo: lo que el super-admin firmó sobre el
+  // temario global y lo que firmó esta academia sobre su copia. La segunda
+  // manda. Es una lectura más por sesión, y es lo que hace que validar desde
+  // la consola de la plataforma sirva para todas las academias en vez de
+  // guardarse en un documento que nadie mira.
+  const [plataforma, propias] = await Promise.all([
+    leerUno(DOC_PLATAFORMA),
+    leerUno(academiaId),
+  ])
+  return combinarValidaciones(plataforma, propias)
 }
 
 /**

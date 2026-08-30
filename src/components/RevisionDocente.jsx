@@ -40,16 +40,29 @@ const hoyISO = () => new Date().toISOString().slice(0, 10)
  * causa concreta: firmar sobre la plantilla global sin ser super-admin, y
  * firmar sin pertenecer a ninguna academia.
  */
-function mensajeDeFallo(err, { esValidar, academiaId } = {}) {
+function mensajeDeFallo(err, { esValidar, academiaId, esSuperadmin } = {}) {
   const bruto = err?.message || ''
-  if (esValidar && /permission|insufficient|PERMISSION_DENIED/i.test(bruto)) {
-    return academiaId
-      ? 'Tu cuenta no tiene permiso para validar el temario de esta academia. '
-        + 'Pídele al director que te conceda el pase de revisión.'
-      : 'Tu cuenta no está asignada a ninguna academia, así que esta firma iría al '
-        + 'temario de la plataforma y eso solo lo puede hacer el super-admin.'
+  if (!esValidar || !/permission|insufficient|PERMISSION_DENIED/i.test(bruto)) {
+    return bruto || 'No se pudo enviar (revisa tu conexión).'
   }
-  return bruto || 'No se pudo enviar (revisa tu conexión).'
+  // Al super-admin no se le puede decir «no tienes permiso»: lo tiene, y las
+  // reglas se lo conceden. Si aun así le rechazan la escritura, la causa es de
+  // despliegue —el `firestore.rules` publicado todavía no conoce la colección
+  // `validaciones`— o de identidad, y eso es lo que hay que decirle. La versión
+  // anterior de este mensaje le contaba justamente lo contrario y lo mandaba a
+  // buscar un permiso que ya tenía.
+  if (esSuperadmin) {
+    return 'Firestore rechazó la escritura, y tu cuenta sí tiene permiso para hacerla. '
+      + 'Casi seguro que las reglas publicadas todavía no incluyen la colección '
+      + '«validaciones»: publica firestore.rules en la consola de Firebase. Si ya están '
+      + 'publicadas, comprueba que tu documento en «usuarios» tenga rol «superadmin» o '
+      + 'que tu correo esté verificado.'
+  }
+  return academiaId
+    ? 'Tu cuenta no tiene permiso para validar el temario de esta academia. '
+      + 'Pídele al director que te conceda el pase de revisión.'
+    : 'Tu cuenta no está asignada a ninguna academia, así que esta firma iría al '
+      + 'temario de la plataforma y eso solo lo puede hacer el super-admin.'
 }
 
 export default function RevisionDocente({ tema }) {
@@ -197,7 +210,7 @@ function PaseVigente({ perfil, rol, hoy }) {
 }
 
 function FormularioDictamen({ accion, tema, deudas, estadoEd, onCerrar, onEnviado }) {
-  const { user, perfil, academiaId } = useAuth()
+  const { user, perfil, academiaId, esSuperadmin } = useAuth()
   const { refrescarValidaciones } = useValidaciones()
   const [comentario, setComentario] = useState('')
   const [revisadoPor, setRevisadoPor] = useState(perfil?.nombre || user?.displayName || '')
@@ -293,7 +306,7 @@ function FormularioDictamen({ accion, tema, deudas, estadoEd, onCerrar, onEnviad
       setTimeout(() => onEnviado({ ...bruto, uid: user.uid, estado: 'abierto' }), 1400)
     } catch (err) {
       setEstado('error')
-      setError(mensajeDeFallo(err, { esValidar, academiaId, rol: perfil?.rol }))
+      setError(mensajeDeFallo(err, { esValidar, academiaId, esSuperadmin }))
     }
   }
 

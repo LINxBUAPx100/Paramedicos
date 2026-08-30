@@ -24,7 +24,7 @@ import assert from 'node:assert/strict'
 import {
   DOC_PLATAFORMA, docValidacionesDe, trazaDeFirma, normalizarValidacion,
   normalizarLeido, mapaDeValidaciones, fichaConValidacion, aplicarValidacion,
-  aplicarValidaciones, apiConValidaciones, sePuedeValidar,
+  aplicarValidaciones, apiConValidaciones, sePuedeValidar, combinarValidaciones,
 } from '../src/lib/validacionesModelo.js'
 import {
   estadoEditorialDe, estadoEditorialDeFicha, estaAvalado, avisoEditorial, validarRevision,
@@ -308,4 +308,28 @@ test('una firma deja el tema en verde «listo y aprobado»', async () => {
   assert.equal(conFirma, 'validado')
   assert.equal(semaforoDe(conFirma), 'verde')
   assert.match(tituloSemaforo(conFirma), /listo y aprobado/)
+})
+
+// ---------- la firma de la plataforma llega a todas las academias ----------
+
+test('lo que firma el super-admin en la plataforma vale en cada academia', () => {
+  // Antes no: la firma se guardaba en `_plataforma`, cada academia leía solo su
+  // propio documento, y validar desde la consola no se notaba en ningún sitio.
+  const dePlataforma = { 'm5-cin-definicion': FIRMA }
+  assert.deepEqual(combinarValidaciones(dePlataforma, {}), dePlataforma)
+  assert.deepEqual(combinarValidaciones(dePlataforma, null), dePlataforma)
+  assert.deepEqual(combinarValidaciones(null, null), {})
+})
+
+test('la firma de la academia manda sobre la de la plataforma', () => {
+  // Quien tiene el temario delante y conoce a sus alumnos es quien responde.
+  const suya = normalizarValidacion({ revisadoPor: 'Dir. de la academia', fecha: HOY })
+  const unido = combinarValidaciones({ [TEMA.id]: FIRMA }, { [TEMA.id]: suya })
+  assert.equal(unido[TEMA.id].revisadoPor, 'Dir. de la academia')
+})
+
+test('las dos capas se suman cuando hablan de temas distintos', () => {
+  const otra = normalizarValidacion({ revisadoPor: 'Dir. Z', fecha: HOY })
+  const unido = combinarValidaciones({ a: FIRMA }, { b: otra })
+  assert.deepEqual(Object.keys(unido).sort(), ['a', 'b'])
 })
