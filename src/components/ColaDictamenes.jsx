@@ -14,11 +14,11 @@ import {
 //    · APLICADO   → se hizo el cambio (o se ascendió el estado del tema).
 //    · DESCARTADO → no procede, y hay que decir por qué.
 //
-//  Lo que esta vista NO hace es ascender el estado editorial por su cuenta. La
-//  firma de un docente es la mitad del acto; la otra mitad es aplicar el cambio
-//  en el contenido, y eso pasa por el editor y por `validarRevision`. El botón
-//  «Comprobar» de cada firma dice, antes de tocar nada, si la ficha resultante
-//  sería válida.
+//  Las firmas de VALIDACIÓN llegan aquí ya aplicadas: el tema cambió de estado
+//  al firmarse (`lib/firebase/validaciones.js`) y la tarjeta lo dice. Quedan en
+//  la cola como rastro y para que la coordinación pueda revisarlas, no porque
+//  esperen a que alguien las ejecute. Lo que sí espera trabajo es `corregir` y
+//  `reportar`.
 // ============================================================
 
 const hoyISO = () => new Date().toISOString().slice(0, 10)
@@ -67,8 +67,8 @@ export default function ColaDictamenes({ academiaId, plataforma = false, despleg
       <h2><Icon name="check" size={20} /> Revisión docente del contenido</h2>
       <p className="panel-gestion-sub">
         Lo que los profesores con pase de revisión han firmado sobre cada tema.
-        Una firma de validación no cambia el estado del tema por sí sola: la
-        aplicas aquí y el cambio pasa por el editor.
+        Las validaciones ya están aplicadas al firmarse; las correcciones y los
+        reportes esperan trabajo tuyo.
       </p>
 
       <details open={desplegada} onToggle={(e) => { if (e.target.open && lista === null) cargar() }}>
@@ -192,6 +192,12 @@ function Dictamen({ dictamen, porUid, onResuelto }) {
         </p>
       )}
 
+      {dictamen.aplicadoAlFirmar && (
+        <p className="dic-aplicado">
+          <Icon name="check" size={14} /> Ya aplicado: el tema quedó validado al firmarse.
+        </p>
+      )}
+
       {dictamen.notaResolucion && <p className="dic-resolucion">Resolución: {dictamen.notaResolucion}</p>}
 
       {abierto && (
@@ -231,8 +237,8 @@ function Dictamen({ dictamen, porUid, onResuelto }) {
       {comprobacion && (
         <p className={comprobacion.ok ? 'cuenta-ok' : 'cuenta-error'} role="status">
           {comprobacion.ok
-            ? 'La ficha resultante sería válida: puedes ascender el tema a Validado en el editor.'
-            : `No se puede aplicar todavía: ${comprobacion.motivo}`}
+            ? 'La ficha de esta firma es válida.'
+            : `Esta firma no produce una ficha válida: ${comprobacion.motivo}`}
         </p>
       )}
       {error && <p className="cuenta-error" role="alert">{error}</p>}

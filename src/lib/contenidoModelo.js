@@ -145,6 +145,22 @@ export function contenidoTema(tema) {
   return {
     temaId: tema.id,
     titulo: tema.titulo,
+    // Grafía corregida y transcripción literal del plan oficial. Viajan
+    // juntas: `tituloVisibleDe` enseña la primera y la segunda es la traza.
+    tituloVisible: tema.tituloVisible || '',
+    tituloOficial: tema.tituloOficial || '',
+    // ESTADO EDITORIAL y su ficha. Sin estas dos claves, un temario clonado a
+    // Firestore perdía de dónde salió cada lección y quién respondía por ella:
+    // TODO volvía a nacer «borrador» al leerse, el aviso de contenido sin
+    // revisar salía sobre material ya trabajado y el banco de examen se
+    // quedaba permanentemente vacío (`bancoExamen.js` solo admite avalado).
+    estadoEditorial: tema.estadoEditorial || '',
+    revision: tema.revision || null,
+    // Nodos de EVALUACIÓN: un examen o una práctica no se mide por material de
+    // estudio sino por su configuración, y sin ella `estadoEditorialDe` los
+    // daba por vacíos.
+    evaluacion: tema.evaluacion || null,
+    alcanceExamen: tema.alcanceExamen || null,
     icono: tema.icono || '',
     duracion: tema.duracion || '',
     resumen: tema.resumen || '',
@@ -225,6 +241,15 @@ export function docsClonadosParaAcademia({ academiaId, plantillaId, plantillaTem
       cursoId,
       temaId: t.temaId,
       titulo: t.titulo,
+      tituloVisible: t.tituloVisible || '',
+      tituloOficial: t.tituloOficial || '',
+      // Igual que en contenidoTema(): la clonación tiene que llevarse el
+      // estado editorial y la ficha de revisión, o la academia recibe el
+      // temario sin saber qué está validado y qué no.
+      estadoEditorial: t.estadoEditorial || '',
+      revision: clonProfundo(t.revision ?? null),
+      evaluacion: clonProfundo(t.evaluacion ?? null),
+      alcanceExamen: clonProfundo(t.alcanceExamen ?? null),
       icono: t.icono || '',
       duracion: t.duracion || '',
       resumen: t.resumen || '',

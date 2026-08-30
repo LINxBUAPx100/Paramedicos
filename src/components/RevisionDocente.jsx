@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
 import Icon from './Icon.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
+import { useValidaciones } from '../context/ContenidoContext.jsx'
 import {
   ACCIONES_REVISION, ETIQUETA_ACCION, DESCRIPCION_ACCION, CHECKLIST_VALIDACION,
   puedeRevisar, puedeReportar, motivoSinRevision, paseActivo, diasRestantesPase,
   deudasDeclaradas, validarFirmaValidacion, validarDictamen, yaFirmado,
 } from '../lib/revisionDocente.js'
+import { sePuedeValidar } from '../lib/validacionesModelo.js'
 import { estadoEditorialDe, ETIQUETA_ESTADO, estaAvalado } from '../lib/estadoEditorial.js'
 
 // ============================================================
@@ -19,17 +21,22 @@ import { estadoEditorialDe, ETIQUETA_ESTADO, estaAvalado } from '../lib/estadoEd
 //    · Reportar: cualquiera con sesión. Un alumno que ve una imagen rota debe
 //      poder decirlo, y esa vía ya existía en la app.
 //
-//  Ninguno de los tres cambia el estado editorial del tema. Firman un dictamen
-//  que queda en cola: `lib/revisionDocente.js` explica por qué la validación
-//  necesita dos manos y no un clic.
+//  VALIDAR SÍ CAMBIA EL ESTADO. Antes no: firmaba un dictamen y esperaba a que
+//  la coordinación lo aplicara, cosa que ninguna pantalla sabía hacer. El
+//  resultado era que «Validar» no validaba. Ahora la firma se aplica en el acto
+//  —el alumno deja de ver el aviso de contenido sin revisar y el tema entra en
+//  el banco de examen— y el dictamen queda como rastro de quién firmó qué.
+//  Corregir y Reportar siguen siendo avisos: no tocan el estado.
 // ============================================================
 
 const hoyISO = () => new Date().toISOString().slice(0, 10)
 
 export default function RevisionDocente({ tema }) {
   const { user, perfil, rol, esSuperadmin, academiaId } = useAuth()
+  const { validaciones, refrescarValidaciones } = useValidaciones()
   const [abierto, setAbierto] = useState(null) // 'validar' | 'corregir' | 'reportar' | null
   const [dictamenes, setDictamenes] = useState([])
+  const [retirando, setRetirando] = useState('')
   const hoy = hoyISO()
 
   const puedeFirmar = puedeRevisar({ esSuperadmin, rol, perfil, hoy })
@@ -57,6 +64,24 @@ export default function RevisionDocente({ tema }) {
 
   const firmado = yaFirmado(dictamenes, { temaId: tema.id, uid: user.uid })
   const abiertos = dictamenes.filter((d) => (d.estado || 'abierto') === 'abierto')
+  // Firma vigente sobre ESTE tema (la capa de validaciones, no el dictamen):
+  // es lo que permite retirarla si se firmó por error.
+  const validacion = validaciones?.[tema.id] || null
+
+  // Retirar devuelve el tema a su estado propio y lo saca del banco de examen.
+  // Existe porque una firma que no se puede deshacer obliga a acertar a la
+  // primera, y validar 287 temas a mano no perdona errores.
+  const retirar = async () => {
+    setRetirando('yendo')
+    try {
+      const { retirarValidacionTema } = await import('../lib/firebase/validaciones.js')
+      await retirarValidacionTema({ academiaId, temaId: tema.id })
+      await refrescarValidaciones()
+      setRetirando('')
+    } catch (err) {
+      setRetirando(err?.message || 'No se pudo retirar la validación.')
+    }
+  }
 
   return (
     <section className="revdoc" aria-label="Revisión del contenido">
@@ -77,7 +102,14 @@ export default function RevisionDocente({ tema }) {
           const soloDocente = accion !== 'reportar'
           const habilitado = soloDocente ? puedeFirmar : puedeAvisar
           if (soloDocente && !puedeFirmar) return null
-          const yaHecho = accion === 'validar' && firmado
+          // Un tema vacío o detenido por la academia no se valida: no hay
+          // material que avalar, y firmarlo solo lo colaría en los exámenes.
+          if (accion === 'validar' && !sePuedeValidar(estadoEd)) return null
+          // «Ya validado por ti» depende de que la firma SIGA puesta, no de que
+          // exista un dictamen antiguo: si no, retirar una validación dejaba el
+          // botón bloqueado para siempre y el tema no se podía volver a firmar.
+          const yaHecho = accion === 'validar' && Boolean(validacion)
+            && (validacion.uid === user.uid || firmado)
           return (
             <button
               key={accion}
@@ -94,6 +126,23 @@ export default function RevisionDocente({ tema }) {
           )
         })}
       </div>
+
+      {puedeFirmar && validacion && (
+        <p className="revdoc-nota revdoc-nota--firmado">
+          <Icon name="check" size={14} /> Validado por {validacion.revisadoPor} el {validacion.fecha}.
+          <button
+            type="button"
+            className="revdoc-retirar"
+            onClick={retirar}
+            disabled={retirando === 'yendo'}
+          >
+            {retirando === 'yendo' ? 'Retirando…' : 'Retirar validación'}
+          </button>
+        </p>
+      )}
+      {retirando && retirando !== 'yendo' && (
+        <p className="cuenta-error" role="alert">{retirando}</p>
+      )}
 
       {!puedeFirmar && rol === 'instructor' && (
         <p className="revdoc-nota">{motivoSinRevision({ esSuperadmin, rol, perfil, hoy })}</p>
@@ -128,11 +177,11 @@ function PaseVigente({ perfil, rol, hoy }) {
 
 function FormularioDictamen({ accion, tema, deudas, estadoEd, onCerrar, onEnviado }) {
   const { user, perfil, academiaId } = useAuth()
+  const { refrescarValidaciones } = useValidaciones()
   const [comentario, setComentario] = useState('')
   const [revisadoPor, setRevisadoPor] = useState(perfil?.nombre || user?.displayName || '')
   const [fuentes, setFuentes] = useState('')
   const [checklist, setChecklist] = useState({})
-  const [aceptaDeudas, setAceptaDeudas] = useState(false)
   const [estado, setEstado] = useState('') // '' | 'enviando' | 'ok' | 'error'
   const [error, setError] = useState('')
 
@@ -144,12 +193,8 @@ function FormularioDictamen({ accion, tema, deudas, estadoEd, onCerrar, onEnviad
     setError('')
 
     if (esValidar) {
-      const r = validarFirmaValidacion({ revision: tema.revision, revisadoPor, fuentes: listaFuentes, checklist })
+      const r = validarFirmaValidacion({ revision: tema.revision, revisadoPor })
       if (!r.ok) { setError(r.motivo); return }
-      if (deudas.length > 0 && !aceptaDeudas) {
-        setError('Este tema declara deudas pendientes: confírmalo antes de firmar.')
-        return
-      }
     }
 
     const bruto = {
@@ -166,6 +211,7 @@ function FormularioDictamen({ accion, tema, deudas, estadoEd, onCerrar, onEnviad
     if (problema) { setError(problema); return }
 
     setEstado('enviando')
+    const hoy = hoyISO()
     try {
       const firma = {
         uid: user.uid,
@@ -186,8 +232,26 @@ function FormularioDictamen({ accion, tema, deudas, estadoEd, onCerrar, onEnviad
           mensaje: comentario,
         })
       } else {
+        // ORDEN IMPORTANTE. Validar APLICA primero y deja el rastro después:
+        // si la escritura del estado falla (reglas, red), el docente lo ve en
+        // el acto y no se queda un dictamen firmado prometiendo un cambio que
+        // no ocurrió. El dictamen es la auditoría, no el efecto.
+        if (esValidar) {
+          const { validarTema } = await import('../lib/firebase/validaciones.js')
+          const validacion = await validarTema({
+            academiaId,
+            temaId: tema.id,
+            revisadoPor,
+            comentario,
+            fuentes: listaFuentes,
+            fecha: hoy,
+            uid: user.uid,
+            nombre: firma.nombre,
+          })
+          await refrescarValidaciones({ [tema.id]: validacion })
+        }
         const { crearDictamen } = await import('../lib/firebase/dictamenes.js')
-        await crearDictamen({ ...bruto, ...firma })
+        await crearDictamen({ ...bruto, ...firma, aplicadoAlFirmar: esValidar })
       }
       setEstado('ok')
       setTimeout(() => onEnviado({ ...bruto, uid: user.uid, estado: 'abierto' }), 1400)
@@ -209,26 +273,21 @@ function FormularioDictamen({ accion, tema, deudas, estadoEd, onCerrar, onEnviad
       )}
 
       {esValidar && deudas.length > 0 && (
-        <div className="revdoc-deudas" role="alert">
+        <div className="revdoc-deudas" role="note">
           <p>
             <Icon name="alerta" size={15} /> Este tema declara {deudas.length} deuda
             {deudas.length === 1 ? '' : 's'} sin resolver:
           </p>
           <ul>{deudas.map((d, i) => <li key={i}>{d}</li>)}</ul>
-          <label className="revdoc-check">
-            <input
-              type="checkbox"
-              checked={aceptaDeudas}
-              onChange={(e) => setAceptaDeudas(e.target.checked)}
-            />
-            He leído las deudas y valido el tema de todas formas.
-          </label>
+          <p className="revdoc-deudas-pie">
+            Puedes validarlo de todas formas: quedan anotadas en tu firma.
+          </p>
         </div>
       )}
 
       {esValidar && (
         <fieldset className="revdoc-checklist">
-          <legend>Confirma antes de firmar</legend>
+          <legend>Repaso sugerido (opcional)</legend>
           {CHECKLIST_VALIDACION.map((c) => (
             <label key={c.clave} className="revdoc-check">
               <input
@@ -258,14 +317,13 @@ function FormularioDictamen({ accion, tema, deudas, estadoEd, onCerrar, onEnviad
 
       {esValidar && (
         <label className="revdoc-campo">
-          <span>Fuentes con las que lo comprobaste (una por línea)</span>
+          <span>Fuentes con las que lo comprobaste (opcional, una por línea)</span>
           <textarea
             value={fuentes}
             onChange={(e) => setFuentes(e.target.value)}
             rows={3}
             maxLength={2000}
             placeholder={'NAEMT. PHTLS, 9.ª ed., 2020, cap. 4, p. 112.\nProtocolo interno RESCATE, v3, p. 8.'}
-            required
           />
         </label>
       )}
@@ -296,7 +354,7 @@ function FormularioDictamen({ accion, tema, deudas, estadoEd, onCerrar, onEnviad
       {estado === 'ok' && (
         <p className="cuenta-ok" role="status">
           {esValidar
-            ? 'Firma registrada. La coordinación aplicará el cambio de estado.'
+            ? 'Tema validado. Ya se muestra a los alumnos sin aviso de revisión y entra en el banco de examen.'
             : 'Enviado. Gracias.'}
         </p>
       )}

@@ -1139,10 +1139,35 @@ service cloud.firestore {
       allow delete: if esSuper();
     }
 
+    // --- VALIDACIONES docentes aplicadas al temario ---
+    //
+    // UN documento por academia (`validaciones/{academiaId}`), más
+    // `validaciones/_plataforma` para lo que se revisa fuera de toda academia.
+    // Dentro, el mapa `temas: { temaId: { estado, revisadoPor, fecha, … } }`.
+    //
+    // LEER: abierto. El estado editorial es una etiqueta que existe PARA quien
+    // lee la lección —«esto lo firmó un docente» o «esto aún no»— y el temario
+    // se sirve también a quien no ha entrado con sesión. Cerrarlo dejaría al
+    // visitante viendo un aviso de revisión sobre material ya validado.
+    // Lo único que el documento contiene es esa etiqueta y el nombre o cargo
+    // con el que el docente decidió firmarla, que es justamente lo que da la
+    // cara por el contenido.
+    //
+    // ESCRIBIR: super-admin, o staff (profesor/director) de ESA academia. El
+    // pase de revisión temporal se comprueba en la aplicación y no aquí: es un
+    // control de flujo de trabajo entre gente de la misma escuela, no una
+    // frontera de seguridad, y expresarlo en reglas exigiría comparar fechas
+    // en texto contra request.time sin poder formatearla.
+    match /validaciones/{docId} {
+      allow read: if true;
+      allow write: if esSuper() || esStaffDe(docId);
+    }
+
     // --- DICTÁMENES de revisión docente (validar / corregir) ---
     //
-    // Un dictamen es la firma de un docente sobre un tema. NO cambia el estado
-    // editorial: lo aplica después la coordinación. Por eso basta con sesión
+    // Un dictamen es la firma de un docente sobre un tema. Las de VALIDACIÓN
+    // llegan ya aplicadas (ver `validaciones` arriba) y aquí quedan como
+    // auditoría; las de corregir/reportar sí esperan trabajo. Basta con sesión
     // para crearlo (la app ya limita quién ve los botones) y se restringe a
     // staff/super quién lo LEE y quién lo RESUELVE.
     match /dictamenes/{id} {

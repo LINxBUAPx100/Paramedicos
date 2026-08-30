@@ -137,6 +137,20 @@ export function estadoEditorialDe(tema) {
   return 'borrador'
 }
 
+/**
+ * Estado editorial de una FICHA de listado (agregado `fichas`).
+ *
+ * No sirve `estadoEditorialDe` aquí: una ficha no lleva secciones ni quiz —ese
+ * es su motivo de existir, pesa la décima parte— y la regla de «declarado con
+ * material pero llega vacío ⇒ vacío» la convertiría en vacía siempre. El
+ * agregado ya guarda el estado RESUELTO sobre el tema entero, así que lo único
+ * que queda por hacer es comprobar que sea uno de los conocidos.
+ */
+export function estadoEditorialDeFicha(ficha) {
+  const declarado = ficha?.estadoEditorial
+  return esEstadoEditorial(declarado) ? declarado : 'vacio'
+}
+
 // ¿Se le enseña el material al alumno? Un tema bloqueado o vacío no muestra
 // prosa: muestra por qué no la hay.
 export function muestraContenido(estado) {

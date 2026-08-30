@@ -4,8 +4,8 @@
 //  Lo que estas pruebas protegen:
 //   1. el pase CADUCA (un pase sin caducidad sería un rol disfrazado);
 //   2. el pase habilita FIRMAR, no editar ni publicar;
-//   3. validar exige firma, fuentes y checklist completa —lo mismo que
-//      `validarRevision` exigirá al ascender el estado—;
+//   3. validar exige un RESPONSABLE con nombre —y solo eso: la lista de
+//      repaso y las fuentes citadas suman, pero ya no bloquean la firma—;
 //   4. corregir exige el detalle de la corrección;
 //   5. las deudas que el propio tema declara se detectan antes de firmar;
 //   6. aplicar una firma produce una ficha que `validarRevision` acepta.
@@ -103,16 +103,16 @@ test('reportar no exige pase: basta tener sesión', () => {
   assert.equal(puedeReportar({}), false)
 })
 
-// ---------- 3. validar exige firma, fuentes y checklist ----------
+// ---------- 3. validar exige un responsable con nombre ----------
 
-test('la firma de validación exige nombre, fuente y los cuatro puntos', () => {
+test('la firma de validación exige nombre y nada más', () => {
   assert.match(validarFirmaValidacion({ fuentes: FUENTES, checklist: OK }).motivo, /firma/i)
-  assert.match(validarFirmaValidacion({ revisadoPor: 'Dra. X', checklist: OK }).motivo, /fuente/i)
-  assert.match(
-    validarFirmaValidacion({ revisadoPor: 'Dra. X', fuentes: FUENTES, checklist: { ...OK, cifras: false } }).motivo,
-    /cuatro puntos/i,
-  )
-  assert.equal(validarFirmaValidacion({ revisadoPor: 'Dra. X', fuentes: FUENTES, checklist: OK }).ok, true)
+  // Sin fuentes y sin marcar la lista: se puede firmar. La fricción anterior
+  // —cuatro casillas y una lista de fuentes con formato— no producía revisiones
+  // más cuidadosas, producía revisiones sin terminar y un temario sin validar.
+  assert.equal(validarFirmaValidacion({ revisadoPor: 'Dra. X' }).ok, true)
+  assert.equal(validarFirmaValidacion({ revisadoPor: 'Dra. X', fuentes: [], checklist: {} }).ok, true)
+  assert.equal(validarFirmaValidacion({ revisadoPor: '   ' }).ok, false)
 })
 
 test('checklistCompleta exige todas las claves declaradas', () => {
@@ -224,11 +224,22 @@ test('la ficha resultante de una firma pasa validarRevision', () => {
   assert.ok(ficha.fuentes.includes(FUENTES[0]))
 })
 
-test('una firma sin fuentes produce una ficha que validarRevision rechaza', () => {
-  // Guarda del guarda: si alguien saltara la validación de la firma, el control
-  // de la ficha editorial sigue impidiendo un `validado` sin trazabilidad.
+test('una firma sin fuentes citadas deja la traza del acto de revisión', () => {
+  // `validarRevision` sigue exigiendo trazabilidad y esa exigencia NO se tocó:
+  // lo que cambia es de dónde sale cuando el docente no cita nada. La traza
+  // dice quién firmó y cuándo, con esas palabras, para que nadie la confunda
+  // con una cita bibliográfica.
   const ficha = fichaValidada({ estado: 'borrador' }, { revisadoPor: 'Dra. X', fuentes: [], fecha: HOY })
-  assert.match(validarRevision(ficha), /fuente/i)
+  assert.equal(validarRevision(ficha), null)
+  assert.equal(ficha.fuentes.length, 1)
+  assert.match(ficha.fuentes[0], /Revision docente de Dra\. X \(2026-08-17\)/)
+})
+
+test('sin nombre, la ficha de una firma sigue siendo rechazada', () => {
+  // Guarda del guarda: aunque alguien saltara `validarFirmaValidacion`, un
+  // `validado` sin responsable no pasa el control de la ficha editorial.
+  const ficha = fichaValidada({ estado: 'borrador' }, { revisadoPor: '', fuentes: [], fecha: HOY })
+  assert.match(validarRevision(ficha), /nombre o rol/i)
 })
 
 test('fichaValidada rechaza un estado que no exige revisor', () => {

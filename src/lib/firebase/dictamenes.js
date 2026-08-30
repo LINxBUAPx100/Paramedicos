@@ -2,14 +2,16 @@
 //  Dictámenes de revisión docente — colección `dictamenes`
 // ------------------------------------------------------------
 //  Un dictamen es la firma de un docente sobre un tema: lo valida, pide
-//  correcciones o reporta un problema. NO cambia el estado editorial del tema.
+//  correcciones o reporta un problema.
 //
-//  POR QUÉ NO LO CAMBIA
+//  QUÉ CAMBIÓ
 //
-//  `validado` y `publicado` abren el banco de examen (lib/bancoExamen.js), así
-//  que un clic que ascendiera el estado metería contenido en los exámenes sin
-//  segunda mano. El dictamen queda firmado y en cola; la coordinación lo aplica
-//  desde el panel, y ahí sí pasa por `validarRevision`.
+//  El dictamen de VALIDACIÓN ya no es una petición en espera: el estado del
+//  tema se escribe en el acto (lib/firebase/validaciones.js) y este documento
+//  queda como AUDITORÍA de quién firmó qué, cuándo y con qué observaciones.
+//  Antes esperaba a que la coordinación lo aplicara y ninguna pantalla sabía
+//  hacerlo, así que «Validar» no validaba nada. Los de `corregir` y `reportar`
+//  sí siguen siendo trabajo pendiente para la coordinación.
 //
 //  La barrera REAL es firestore.rules: crear un dictamen exige sesión, y
 //  resolverlo exige ser director de la academia o super-admin. Aquí solo se
@@ -31,7 +33,7 @@ import { validarDictamen, normalizarDictamen, ESTADOS_DICTAMEN } from '../revisi
 export async function crearDictamen({
   uid, nombre, email, academiaId, grupoId, cursoId = null,
   temaId, temaTitulo, accion, comentario = '', revisadoPor = '',
-  fuentes = [], checklist = null, deudasAlFirmar = [],
+  fuentes = [], checklist = null, deudasAlFirmar = [], aplicadoAlFirmar = false,
 }) {
   if (!uid) throw new Error('Necesitas iniciar sesión para firmar un dictamen.')
   const bruto = {
@@ -43,6 +45,11 @@ export async function crearDictamen({
 
   const ref = await addDoc(collection(db, 'dictamenes'), {
     ...limpio,
+    // Una firma de validación YA cambió el estado del tema al guardarse (ver
+    // lib/firebase/validaciones.js). El dictamen es su rastro, no una tarea
+    // pendiente, y la cola tiene que poder distinguirlo de lo que sí espera
+    // que alguien haga algo.
+    aplicadoAlFirmar: aplicadoAlFirmar === true,
     uid,
     nombre: nombre || '',
     email: email || '',

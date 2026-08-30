@@ -29,6 +29,7 @@
 //  Módulo PURO (sin React, sin Firebase): se prueba con `npm test`.
 // ============================================================
 import { construirGlosario, slugTermino } from './glosario.js'
+import { estadoEditorialDe } from './estadoEditorial.js'
 
 // Agregados que se parten por módulo, y los que son únicos para el curso.
 export const AGREGADOS_POR_MODULO = ['fichas', 'preguntas', 'flashcards', 'glosario', 'imagenes']
@@ -172,6 +173,15 @@ function fichaDeTema(tema) {
     id: tema.id,
     numero: tema.numero,
     titulo: tema.titulo,
+    tituloVisible: tema.tituloVisible || '',
+    tituloOficial: tema.tituloOficial || '',
+    // Estado editorial YA RESUELTO, no el declarado. La ficha no lleva
+    // secciones ni quiz —ese es su motivo de existir—, así que `estadoEditorialDe`
+    // aplicada sobre ella no puede ver material y daría «vacío» en las 287
+    // lecciones del índice de módulo. Se resuelve aquí, donde el tema entero
+    // todavía está delante, y la lista pinta lo que se calculó.
+    estadoEditorial: estadoEditorialDe(tema),
+    revision: tema.revision || null,
     icono: tema.icono || '',
     resumen: tema.resumen || '',
     duracion: tema.duracion || '',
