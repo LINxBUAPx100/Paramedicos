@@ -63,7 +63,41 @@ export default function CreditosPage() {
   return (
     <div className="creditos-page">
       <header className="creditos-page-header">
-        <h1 className="ph-h2"><Icon name="libro" size={28} /> Créditos del material visual</h1>
+        <h1 className="ph-h2"><Icon name="libro" size={28} /> Créditos</h1>
+
+        {/* Quién es quién, dicho antes que nada. La plataforma se llamó «PTEM /
+            T-Tem» en los textos legales durante meses, y no es lo mismo: el
+            producto es PTEM. Aquí queda escrito quién lo hace, quién pone el
+            contenido y quién ilustra, que son tres partes distintas. */}
+        <section className="creditos-autoria">
+          <h2>Quién hace PTEM</h2>
+          <dl className="creditos-autoria-lista">
+            <div>
+              <dt>La plataforma</dt>
+              <dd>
+                <strong>PTEM</strong> — desarrollada por <strong>Riders.Media</strong>.
+                El software, su diseño, su arquitectura y su código son suyos.
+              </dd>
+            </div>
+            <div>
+              <dt>El contenido académico</dt>
+              <dd>
+                Plan de estudios y material didáctico de la{' '}
+                <strong>Academia R.E.S.C.A.T.E.</strong>, que lo redacta, lo revisa y
+                responde por él. El contenido es suyo y no se comparte con terceros.
+              </dd>
+            </div>
+            <div>
+              <dt>El material visual</dt>
+              <dd>
+                Ilustraciones de bibliotecas de acceso abierto, con sus autores y
+                licencias detallados más abajo.
+              </dd>
+            </div>
+          </dl>
+        </section>
+
+        <h2 className="creditos-sub">Material visual</h2>
         <p>
           Las ilustraciones y los iconos médicos de PTEM proceden de dos bibliotecas de
           acceso abierto: <Ext url="https://bioicons.com/">BioIcons</Ext> y{' '}

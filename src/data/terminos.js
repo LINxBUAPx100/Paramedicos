@@ -51,7 +51,7 @@ export const TERMINOS = [
     n: 1,
     titulo: 'Aceptación de los términos',
     parrafos: [
-      'El acceso y uso de la plataforma educativa PTEM / T-Tem (en adelante, «la Plataforma»), '
+      'El acceso y uso de la plataforma educativa PTEM (en adelante, «la Plataforma»), '
         + 'operada para la Academia RESCATE, constituye la aceptación expresa y sin reservas de '
         + 'los presentes términos y condiciones por parte del usuario (en adelante, «el Alumno» '
         + 'o «el Usuario»).',
