@@ -30,6 +30,7 @@ import { huellaTema } from '../replicacionModelo.js'
 import { programasVisibles, programasDeGrupo } from '../programasModelo.js'
 import { cursosDelUsuario, cursoAServir } from '../cursosDelUsuario.js'
 import { obtenerPlantilla, temasDePlantilla } from './plantillas.js'
+import { contenidoVacio } from '../contenidoVacio.js'
 
 // --- Estado de migración de la academia (academias/{id}.contenido) ---------
 // Solo lo escribe el super-admin (las reglas del doc de academia ya lo acotan:
@@ -311,12 +312,19 @@ function cursosPermitidos(cursos, acceso) {
   })
 }
 
-function contenidoLegacy() {
+// EL FALLBACK AL BUNDLE SE APAGÓ (trabajo P2, 31-08-2026).
+//
+// Antes esto devolvía `src/data/index.js`: el temario de R.E.S.C.A.T.E.
+// compilado dentro de la aplicación. Servía de red cuando Firestore no
+// respondía, y a cambio obligaba a publicar 4,3 MB con las 287 lecciones y las
+// respuestas de todos los exámenes, descargables sin cuenta. Además, a una
+// academia que no fuera R.E.S.C.A.T.E. le enseñaba material ajeno en silencio.
+//
+// Ahora, sin contenido propio no hay contenido. Las pantallas ya sabían
+// enseñar su estado vacío; lo que faltaba era dejar de taparlo.
+function contenidoLegacy(motivo = '') {
   if (!cacheContenido.has(CLAVE_LEGACY)) {
-    cacheContenido.set(
-      CLAVE_LEGACY,
-      import('../../data/index.js').then((mod) => ({ ...mod, fuente: 'legacy' }))
-    )
+    cacheContenido.set(CLAVE_LEGACY, Promise.resolve(contenidoVacio(motivo)))
   }
   return cacheContenido.get(CLAVE_LEGACY)
 }
@@ -374,15 +382,22 @@ async function cargarDeFirestore(academiaId, acceso, cursoPreferido = null) {
 //  programas ve (aislamiento por programa) y forma parte de la clave de caché.
 export async function contenidoDeAcademia(academia, acceso = null, cursoPreferido = null) {
   const academiaId = academia?.id
-  if (!academiaId || !academiaMigrada(academia)) return contenidoLegacy()
+  if (!academiaId || !academiaMigrada(academia)) {
+    return contenidoLegacy(academiaId
+      ? `La academia ${academiaId} todavía no tiene su contenido migrado.`
+      : 'Sin academia: no hay temario que servir.')
+  }
   const clave = claveContenido(academiaId, acceso, cursoPreferido)
   if (!cacheContenido.has(clave)) {
     cacheContenido.set(
       clave,
       cargarDeFirestore(academiaId, acceso, cursoPreferido).catch((err) => {
-        console.warn(`[contenido] Fallback a legacy para ${academiaId}:`, err?.message || err)
+        // Se avisa SIEMPRE: antes esto caía al bundle y el fallo quedaba
+        // invisible —la persona veía un temario y nadie se enteraba de que no
+        // era el suyo—. Ahora se ve el estado vacío, que es la verdad.
+        console.warn(`[contenido] Sin contenido para ${academiaId}:`, err?.message || err)
         cacheContenido.delete(clave)
-        return contenidoLegacy()
+        return contenidoLegacy(err?.message || 'No se pudo cargar el temario.')
       })
     )
   }

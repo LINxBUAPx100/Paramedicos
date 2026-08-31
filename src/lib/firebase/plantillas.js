@@ -9,45 +9,26 @@
 // ============================================================
 import { db } from './init.js'
 import {
-  collection, doc, getDoc, getDocs, setDoc, query, where, writeBatch, serverTimestamp,
+  collection, doc, getDoc, getDocs, query, where,
 } from 'firebase/firestore'
-import { plantillaDesdeData, lotes, temaDocIdEnPlantilla } from '../contenidoModelo.js'
+import { temaDocIdEnPlantilla } from '../contenidoModelo.js'
 
 export const PLANTILLA_OFICIAL_ID = 'paramedico-tum'
 export const PLANTILLA_OFICIAL_NOMBRE = 'Programa Paramédico (TUM)'
 
-// Siembra (o re-siembra) la plantilla oficial desde el temario del bundle.
-// Idempotente: reescribe los mismos doc-id. Lo ejecuta el super-admin una vez.
-export async function importarPlantillaOficial({ onProgreso } = {}) {
-  // El contenido pesado se importa de forma diferida solo al sembrar.
-  const { modulos, todosLosTemas } = await import('../../data/index.js')
-  const { plantilla, temas } = plantillaDesdeData({
-    id: PLANTILLA_OFICIAL_ID,
-    nombre: PLANTILLA_OFICIAL_NOMBRE,
-    tipoDestino: 'basico',
-    version: 1,
-    modulos,
-    todosLosTemas,
-  })
-
-  await setDoc(doc(db, 'plantillas', plantilla.id), {
-    ...plantilla,
-    actualizado: serverTimestamp(),
-  })
-
-  let hechos = 0
-  for (const grupo of lotes(temas, 20)) {
-    const batch = writeBatch(db)
-    for (const t of grupo) {
-      const { docId, ...datos } = t
-      batch.set(doc(db, 'plantillasTemas', docId), datos)
-    }
-    await batch.commit()
-    hechos += grupo.length
-    onProgreso?.({ hechos, total: temas.length })
-  }
-  return { plantillaId: plantilla.id, temas: temas.length }
-}
+// LA SIEMBRA DE LA PLANTILLA OFICIAL YA NO VIVE AQUÍ.
+//
+// `importarPlantillaOficial` construía la plantilla desde `src/data` con un
+// `import('../../data/index.js')` diferido. Dos problemas:
+//
+//   · No la llamaba NADIE. Ninguna pantalla la usaba: era código muerto.
+//   · Y aun así arrastraba el temario entero —4,3 MB— al archivo publicado,
+//     porque un import dinámico no saca el código de la aplicación: lo mueve a
+//     otro archivo que se sirve igual de abierto.
+//
+// La siembra se hace con `scripts/migrar-contenido.mjs --seed`, que corre en
+// una terminal con credenciales y no necesita que el temario viaje al
+// navegador de nadie. Ver el bloque P del plan (trabajo P2).
 
 export async function listarPlantillas() {
   const snap = await getDocs(collection(db, 'plantillas'))

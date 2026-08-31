@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { stats } from '../data/navIndice.js'
+import { demoPortada } from '../data/demoPortada.js'
 import Icon from '../components/Icon.jsx'
 import MedicalIcon from '../components/MedicalIcon.jsx'
 import Reveal from '../components/Reveal.jsx'
@@ -19,19 +19,10 @@ import IconoEstrella from '../components/marca/IconoEstrella.jsx'
 //  respuestas distintas según quién seas, y por eso el cierre tiene tres vías.
 // ============================================================
 
-// Tema real que se abre como muestra. Cardiovascular es el que mejor enseña la
-// promesa del producto —comprender el porqué, no memorizar— a una audiencia de
-// urgencias. Si algún día se renombra, el bloque cae con elegancia (ver DemoTema).
-// Tema de muestra de la portada. Apuntaba a `cardiovascular-profundo`, un id del
-// temario ANTERIOR: desapareció al adoptar el plan oficial de 287 temas y desde
-// entonces `getTema` devolvía undefined, el estado pasaba a 'error' y la sección
-// entera no se pintaba. Un visitante sin sesión no veía ninguna muestra del
-// contenido y nada fallaba de forma visible. Es el mismo asunto —anatomía y
-// fisiología cardiovascular— en su id vigente.
-const TEMA_DEMO = 'm2-afi-cardiovascular'
-// Secciones que se muestran antes de pedir cuenta. Suficiente para juzgar la
-// profundidad del contenido; no tanto como para regalar el temario.
-const SECCIONES_MUESTRA = 2
+// El tema de muestra y cuántas secciones se enseñan ya NO se deciden aquí:
+// los fija `scripts/gen-demo-portada.mjs`, que es quien extrae el fragmento a
+// `src/data/demoPortada.js`. Tenerlo en dos sitios habría permitido que la
+// portada dijera «dos secciones» mientras el generador escribía otra cosa.
 
 const HERO_ANCHOS = [480, 800, 1200, 1600]
 const heroSet = (ext) =>
@@ -149,52 +140,26 @@ function PilaresLanding() {
 }
 
 // ---------- Muestra de un tema real ----------
-// El contenido completo del temario es el chunk MÁS PESADO de la app (~190 kB
-// gz). Cargarlo en una página de marketing sería absurdo, así que se trae solo
-// cuando esta sección entra en pantalla. Quien no baje hasta aquí no lo paga.
+// La muestra sale de `src/data/demoPortada.js`: DOS secciones de una lección
+// real, unos 3 kB, generadas por `npm run gen:demo`.
+//
+// Antes se hacía `import('../data/index.js')` cuando la sección entraba en
+// pantalla. Se creía que eso era prudente —solo lo paga quien baja hasta aquí—
+// y no lo era: un import dinámico NO saca el código de la aplicación, lo mueve
+// a otro archivo que se sirve igual de abierto. Es decir, una página pública de
+// marketing obligaba a publicar el temario completo, con sus 287 lecciones y
+// las respuestas de todos sus exámenes, para enseñar dos secciones.
+//
+// Lo que se publica ahora es exactamente lo que se ve: dos secciones, el título
+// y el resumen. Ni el quiz, ni las flashcards, ni las secciones restantes — la
+// portada dice cuántas quedan, pero no las trae.
 function DemoTema() {
-  const ref = useRef(null)
-  const [tema, setTema] = useState(null)
-  const [estado, setEstado] = useState('espera') // espera | cargando | listo | error
-
-  const cargar = async () => {
-    if (estado === 'cargando' || estado === 'listo') return
-    setEstado('cargando')
-    try {
-      const { getTema } = await import('../data/index.js')
-      const t = getTema(TEMA_DEMO)
-      // Si el tema se renombró, la landing no se rompe: la sección no se pinta.
-      if (!t) { setEstado('error'); return }
-      setTema(t)
-      setEstado('listo')
-    } catch {
-      setEstado('error')
-    }
-  }
-
-  // El observador solo ADELANTA la carga. El estado inicial es un botón real,
-  // no un esqueleto: si el observador no llegara a dispararse (documento
-  // oculto, navegador sin soporte, pestaña en segundo plano), el visitante ve
-  // algo con lo que puede actuar en vez de un esqueleto atascado para siempre.
-  useEffect(() => {
-    const el = ref.current
-    if (!el || estado !== 'espera' || typeof IntersectionObserver === 'undefined') return undefined
-    const io = new IntersectionObserver(
-      (entradas) => { if (entradas.some((e) => e.isIntersecting)) { io.disconnect(); cargar() } },
-      { rootMargin: '200px' } // se adelanta para que llegue cargado al leerlo
-    )
-    io.observe(el)
-    return () => io.disconnect()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [estado])
-
-  if (estado === 'error') return null
-
-  const secciones = (tema?.secciones || []).slice(0, SECCIONES_MUESTRA)
-  const restantes = Math.max(0, (tema?.secciones?.length || 0) - SECCIONES_MUESTRA)
+  const tema = demoPortada
+  const secciones = tema.secciones || []
+  const restantes = tema.seccionesRestantes || 0
 
   return (
-    <section className="lp-demo" id="lp-demo" ref={ref} aria-label="Muestra del contenido">
+    <section className="lp-demo" id="lp-demo" aria-label="Muestra del contenido">
       <div className="lp-wrap">
         <div className="lp-demo-cabecera">
           <span className="lp-etiqueta">Tema de muestra · abierto</span>
@@ -206,48 +171,25 @@ function DemoTema() {
         </div>
 
         <article className="lp-demo-tema">
-          {estado === 'espera' ? (
-            <div className="lp-demo-espera">
+          <header className="lp-demo-header" style={{ '--modulo-color': tema.moduloColor }}>
+            <span className="lp-demo-ico"><MedicalIcon id={tema.icono} size={30} /></span>
+            <div>
+              <span className="lp-demo-num">Modulo {tema.moduloNumero} · Tema {tema.numero}</span>
+              <h3>{tema.titulo}</h3>
+            </div>
+          </header>
+          <p className="lp-demo-resumen">{tema.resumen}</p>
+          <Contenido secciones={secciones} />
+          {restantes > 0 && (
+            <div className="lp-demo-corte">
               <p>
-                Sistema cardiovascular — un tema completo del Módulo 2, con sus secciones,
-                diagramas y conceptos clave.
+                <strong>Quedan {restantes} secciones de este tema</strong>, más sus conceptos
+                clave, flashcards y preguntas de repaso.
               </p>
-              <button type="button" className="btn btn--pildora btn--carbon" onClick={cargar}>
-                Ver el tema de muestra <Icon name="flecha" size={16} />
-              </button>
+              <Link to="/cuenta" className="btn btn--pildora btn--carbon">
+                Entrar con mi código <Icon name="flecha" size={16} />
+              </Link>
             </div>
-          ) : estado === 'cargando' ? (
-            <div className="esqueleto" role="status" aria-busy="true">
-              <span className="sr-only">Cargando el tema de muestra…</span>
-              <span className="esq-linea esq-linea--titulo" aria-hidden="true" />
-              <span className="esq-linea" aria-hidden="true" />
-              <span className="esq-linea" aria-hidden="true" />
-              <span className="esq-linea esq-linea--media" aria-hidden="true" />
-              <span className="esq-bloque" aria-hidden="true" />
-            </div>
-          ) : (
-            <>
-              <header className="lp-demo-header" style={{ '--modulo-color': tema.moduloColor }}>
-                <span className="lp-demo-ico"><MedicalIcon id={tema.icono} size={30} /></span>
-                <div>
-                  <span className="lp-demo-num">Modulo {tema.moduloNumero} · Tema {tema.numero}</span>
-                  <h3>{tema.titulo}</h3>
-                </div>
-              </header>
-              <p className="lp-demo-resumen">{tema.resumen}</p>
-              <Contenido secciones={secciones} />
-              {restantes > 0 && (
-                <div className="lp-demo-corte">
-                  <p>
-                    <strong>Quedan {restantes} secciones de este tema</strong>, más sus conceptos
-                    clave, flashcards y preguntas de repaso.
-                  </p>
-                  <Link to="/cuenta" className="btn btn--pildora btn--carbon">
-                    Entrar con mi código <Icon name="flecha" size={16} />
-                  </Link>
-                </div>
-              )}
-            </>
           )}
         </article>
       </div>
