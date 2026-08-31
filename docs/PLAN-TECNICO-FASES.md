@@ -12,7 +12,8 @@
 > editorial y el incidente de imágenes). `CLAUDE.md` gobierna el trabajo
 > EDITORIAL —redactar el temario— y es otro proyecto: el software avanza sin él.
 >
-> **Última actualización: 31 de agosto de 2026.** Se ejecutaron **P4, P6, P7,
+> **Última actualización: 31 de agosto de 2026.** Se ejecutó **P1** contra
+> producción (ver su sección) y antes **P4, P6, P7,
 > P8, T, U y V** —ver «Registro · sesión del 30 de agosto»— y esa misma sesión
 > destapó **tres fallos** que no estaban en ningún plan, el más grave de ellos
 > todavía por comprobar contra producción. El **bloque P** sigue al frente de la
@@ -31,13 +32,16 @@
 
 ## Estado en una tabla
 
-Diecisiete trabajos terminados y veinticinco pendientes. Los tachados no se
+Dieciocho trabajos terminados y veinticuatro pendientes. Los tachados no se
 vuelven a tocar salvo regresión demostrada.
 
-**Lo que bloquea todo lo demás son tres decisiones del dueño del producto**, no
-trabajo pendiente: autorizar **P1** (emulador o ventana en producción),
-desplegar `firestore.rules` y comprar el dominio. Mientras no lleguen, el
-blindaje real —**P2**— no puede empezar.
+**P1 está hecho, así que P2 ya no está bloqueado.** Apagar el bundle —el
+blindaje de verdad— puede empezar cuando se quiera.
+
+Siguen esperando dos decisiones, y ninguna bloquea a P2: desplegar
+`firestore.rules` (para que los tutoriales crucen de dispositivo) y comprar el
+dominio (para F1). Y una tarea de la academia, no técnica: **meter a los dos
+alumnos en un grupo**, porque hoy no están en ninguno.
 
 ### Terminado
 
@@ -60,14 +64,14 @@ blindaje real —**P2**— no puede empezar.
 | ~~**T** — Tutoriales de primera vez (24 pantallas)~~ | pedido el 30-08-2026 |
 | ~~**U** — Orden y filtros de las listas de personas~~ | pedido el 30-08-2026 |
 | ~~**V** — Emulador local + usuarios de prueba~~ | necesario para verificar |
+| ~~**P1** — Migrar R.E.S.C.A.T.E. a su propio contenido en Firestore~~ | bloque P · 31-08-2026 |
 
 ### Pendiente, en orden de ejecución
 
 | # | Trabajo | Duración | Depende de |
 |---|---|---|---|
-| **P1** | Migrar RESCATE a su propio contenido en Firestore | 2-3 días | — |
-| **P2** | Apagar el bundle: el temario deja de compilarse en el JS | 3-5 días | P1 |
-| **P3** | Reglas de lectura por academia, grupo y programa | 2-3 días | P1 |
+| **P2** | Apagar el bundle: el temario deja de compilarse en el JS | 3-5 días | — · **P1 hecho, ya no bloquea** |
+| **P3** | Reglas de lectura por academia, grupo y programa | 2-3 días | — · **P1 hecho, ya no bloquea** |
 | **F1** | Dominio propio + Firebase Hosting + `BrowserRouter` | 1-2 días | — · **cabe en Spark** · las portadas de P4 ya existen y esperan sus URLs |
 | **P5** | Optimización del arranque (la no-indexación ya está en P8) | 1-2 días | P2 |
 | **A** | Calidad editorial v2 | larga, por lotes | P2 (ya no incluye partir el bundle) |
@@ -298,7 +302,54 @@ protección es decorativa.
 > se sirve, la del fuente mide lo que se escribió. Se conservan las dos a
 > propósito, para que nadie las tome por un error de cuentas.
 
-### P1 — Migrar RESCATE a su propio contenido en Firestore
+### P1 — Migrar R.E.S.C.A.T.E. a Firestore · HECHO el 31-08-2026
+
+**El punto de partida no era el que este plan suponía.** La inspección previa
+—con credencial de service account, solo lectura— encontró esto en producción:
+
+| | |
+|---|---|
+| Plantillas | **0**. Nunca se sembró ninguna |
+| Curso de RES-2026 | 1: `RES-2026__r-e-s-c-a-t-e` — **borrador, 0 temas**, clonación nunca completada |
+| `contenido.estado` | **`migrado`** |
+| Grupos | 1 (`GRP-SCZD`, «Sabatino Matutino»), apuntando a ese curso vacío |
+| Alumnos | **2** |
+
+Es decir: la academia estaba **marcada como migrada sin estarlo**. Una etiqueta
+sin nada detrás. Por eso los alumnos leían del bundle por el fallback, y por eso
+el alcance real de la operación eran dos personas y no doscientas.
+
+**Lo ejecutado**, en cuatro pasos:
+
+1. Sembrar la plantilla `paramedico-tum` — 288 docs (1 + 287 temas).
+2. Clonarla a RES-2026 — 288 docs. **No se tocó** el curso vacío anterior: al
+   estar en borrador no se sirve a nadie, y borrarlo es decisión de la academia.
+3. **Reapuntar `GRP-SCZD.programaId`** al curso nuevo. Este paso NO está en el
+   script y sin él los alumnos no verían nada. Se anotó el valor previo antes
+   de tocarlo.
+4. Verificar: `clonacion.completa=true; temas 287/287; faltantes: ninguno`.
+
+**Lo que sobrevivió al viaje**, comprobado documento a documento:
+
+| | |
+|---|---|
+| `estadoEditorial` | 104 en revisión · 178 borrador · 5 bloqueados — idéntico al generador |
+| `propietario` | `rescate` en los 287 |
+| Ficha `revision` | 287/287 |
+| `tituloOficial` | 287/287 |
+| Material | 268 temas con secciones, quiz y flashcards |
+| **Validaciones docentes** | **Intactas.** Viven en `validaciones/`, que la migración no toca |
+
+**Vuelta atrás**, si hiciera falta: `grupos/GRP-SCZD.programaId` de vuelta a
+`RES-2026__r-e-s-c-a-t-e` y todos regresan al bundle en la siguiente recarga.
+
+> **Lo que quedó pendiente y NO es técnico: los dos alumnos no están en ningún
+> grupo.** `grupoId` vacío en ambos. El grupo existe y ya apunta al temario
+> migrado, pero nadie está dentro, así que los dos siguen viendo «Necesitas un
+> código de grupo». Eso era cierto antes de migrar y lo sigue siendo: a quién
+> corresponde cada grupo lo decide la academia, no la migración.
+
+### P1 — cómo se hizo (referencia para la próxima academia)
 
 La maquinaria ya existe y está probada: plantillas versionadas,
 `clonarPlantillaAAcademia` y la replicación (trabajo PLAN-LMS F9). Lo que falta
