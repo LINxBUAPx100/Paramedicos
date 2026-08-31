@@ -12,8 +12,9 @@
 > editorial y el incidente de imágenes). `CLAUDE.md` gobierna el trabajo
 > EDITORIAL —redactar el temario— y es otro proyecto: el software avanza sin él.
 >
-> Última actualización: **30 de agosto de 2026** — se añade el **trabajo O
-> (Dashboard de Recepción)**, se corrigen tres afirmaciones que ya no eran
+> Última actualización: **30 de agosto de 2026** — se añade el **bloque P
+> (blindaje del contenido y portada pública)**, que pasa al frente de la cola.
+> Antes ese mismo día se había añadido el **trabajo O (Dashboard de Recepción)**, se corrigen tres afirmaciones que ya no eran
 > ciertas (el cableado de `alcanceDeExamen`, la validación de `intentos` y el
 > número de lecciones vacías) y se aclara que los certificados con QR **no**
 > dependen de la migración a Next.js. Las fases 1-3 siguen integradas en `main`
@@ -40,29 +41,41 @@ salvo regresión demostrada.
 | ~~**Fase 1** — Lectura por tema (287 → 3 lecturas)~~ | técnico F1 |
 | ~~**Fase 2** — Un profesor, varios grupos~~ | técnico F2 |
 | ~~**Fase 3** — Programas de andamio~~ | técnico F3 |
+| ~~**P4** — Portada pública de PTEM y vitrinas por carrera~~ | bloque P |
+| ~~**P6** — Sello de propiedad del contenido~~ | bloque P |
+| ~~**P7** — Blindaje de la interfaz (menú, buscador, pie, Home)~~ | bloque P · nuevo |
+| ~~**P8** — No-indexación de lo que no es público~~ | bloque P · nuevo |
+| ~~**T** — Tutoriales de primera vez (24 pantallas)~~ | pedido el 30-08-2026 |
+| ~~**U** — Orden y filtros de las listas de personas~~ | pedido el 30-08-2026 |
+| ~~**V** — Emulador local + usuarios de prueba~~ | necesario para verificar |
 
 ### Pendiente, en orden de ejecución
 
 | # | Trabajo | Duración | Depende de |
 |---|---|---|---|
-| **A** | Calidad editorial v2 + partir el bundle | larga, por lotes | — |
+| **P1** | Migrar RESCATE a su propio contenido en Firestore | 2-3 días | — |
+| **P2** | Apagar el bundle: el temario deja de compilarse en el JS | 3-5 días | P1 |
+| **P3** | Reglas de lectura por academia, grupo y programa | 2-3 días | P1 |
+| **F1** | Dominio propio + Firebase Hosting + `BrowserRouter` | 1-2 días | — · **cabe en Spark** · las portadas de P4 ya existen y esperan sus URLs |
+| **P5** | Optimización del arranque (la no-indexación ya está en P8) | 1-2 días | P2 |
+| **A** | Calidad editorial v2 | larga, por lotes | P2 (ya no incluye partir el bundle) |
 | **O1** | Matrícula secuencial del alumno | 1-2 días | — |
 | **B** | Mi Botiquín | corta | lista de artículos de la academia |
-| **F** | Hosting propio + plan Blaze | 2-3 días | — · **promovido**: lo exigen C, L y O |
-| **J** | Paginación de `/admin` y auditoría | media | **promovido con F**: en Blaze el exceso ya no se corta, se cobra |
 | **O2** | Bloqueo por pago + bypass auditado | 3-5 días | O1 |
 | **O3** | Check-in de 8 horas | 3-5 días | O1 |
-| **L** | Suscripción y cobro (pasarela, webhook, recepción, corte de caja) | 2 semanas | F · O2 |
+| **F2** | Contratar Blaze + alertas de gasto + RTDB + respaldos | 1 día | medir consumo real primero |
+| **J** | Paginación de `/admin` y auditoría | media | **va con F2**: en Blaze el exceso ya no se corta, se cobra |
+| **L** | Suscripción y cobro (pasarela, webhook, recepción, corte de caja) | 2 semanas | **F2** · O2 |
 | **O4** | Pantalla de Recepción (rol `recepcion`) | 1 semana | O1-O3 · L |
-| **C** | Clase en vivo con actividades calificables **(incluye el simulador de escenas)** | 2-3 semanas | A, F · **O3** (la bandera «en clase» decide a quién se puede calificar) |
+| **C** | Clase en vivo con actividades calificables **(incluye el simulador de escenas)** | 2-3 semanas | A, **F2** · **O3** (la bandera «en clase» decide a quién se puede calificar) |
 | **D** | Entrenador de farmacología | media | catálogo de fármacos de la academia |
 | **M** | Tienda (uniformes e insumos) | 2 semanas | L · comparte catálogo con B |
 | **O5** | Feed de logística de tienda en recepción | 3-5 días | M · O4 |
 | **O6** | Credencial con código + escáner USB | 1-2 días | O4 |
 | **N** | Inventario simple | 1 semana | M |
 | **E** | Editor de temas (bloques, quiz, flashcards, actividades) | media | — |
-| **H** | Certificados con QR verificable | 2-3 semanas | F y dominio propio |
-| **G** | Migración a Next.js | 3-5 semanas | F · **reevaluar tras A**, no comprometido |
+| **H** | Certificados con QR verificable | 2-3 semanas | F1 (dominio) · F2 (Functions) |
+| **G** | Migración a Next.js | 3-5 semanas | F1 · **reevaluar tras A**, no comprometido |
 | **I** | Plan CURSO + directorio de capacitadores | media | — |
 | **K** | Tipo MEDICINA (convocatorias) | larga | — |
 
@@ -73,6 +86,399 @@ salvo regresión demostrada.
 > pago y check-in— son **datos**, no dependen de la pasarela y pueden hacerse
 > antes; y las otras tres son la pantalla y sus accesorios. Detalle en el
 > apartado «Trabajo O».
+
+> **Sobre el bloque P (30 de agosto de 2026).** El dueño del producto decidió
+> tres cosas que reordenan todo lo demás: la plataforma se vende a otras
+> academias **muy a futuro**, hoy solo se trabaja para RESCATE, y el contenido
+> tiene que quedar blindado antes que cualquier función nueva. El bloque P es
+> ese blindaje, más la portada pública que la venta futura va a necesitar.
+
+---
+
+## Sesión del 30 de agosto de 2026 — lo que se hizo y lo que se encontró
+
+Además de P4 y P6, esta sesión cerró tres peticiones nuevas del dueño del
+producto y **destapó tres fallos que nadie había visto**. Los fallos importan
+más que las funciones, así que van primero.
+
+### Lo que se encontró auditando
+
+**1. El menú lateral enseñaba el temario entero a cualquiera.** Con la sesión
+cerrada, el panel principal decía «No has iniciado sesión» y el menú listaba
+los **287 títulos** del plan de R.E.S.C.A.T.E. Los títulos son contenido de la
+academia: son su índice. Causa: `Layout` pintaba el índice sin preguntarle nada
+a nadie, y el índice viaja en el bundle.
+
+**2. Y también a un alumno con cuenta pero SIN GRUPO.** Éste es el que casi se
+escapa. `puedeAcceder` responde «¿tiene sesión y su academia está al
+corriente?», y ese alumno la pasa. La otra mitad —«¿tiene plan de estudios
+asignado?»— la responde `motivoSinPrograma`, y ahí falla. Con solo la primera
+puerta puesta, el menú le enseñaba los 287 títulos mientras la página le pedía
+un código de grupo. **El Home tenía el mismo agujero por su cuenta**, porque
+`/` no cuelga de `RutaProtegida`: le pintaba el carrusel con los siete módulos.
+
+**3. El bloqueo «Tu programa todavía no está disponible» se daba en falso.**
+`motivoSinPrograma` tenía `programasDeAcademia = []` por defecto, y **ningún
+llamador de la aplicación pasa ese dato** —solo las pruebas—. Así que la
+comprobación concluía «no está publicado» sin haber mirado nada, y TODO alumno
+con grupo quedaba bloqueado en todas las pantallas protegidas. Se corrigió: sin
+la lista, la comprobación no corre, porque no se puede demostrar que algo no
+esté publicado sin mirarlo. No abre ningún agujero —quién ve qué lo deciden
+`puedeVerPrograma` sobre cada contenido y las reglas de Firestore—; lo que se
+retira es un diagnóstico que se estaba dando en falso.
+
+> **Conviene comprobarlo contra producción.** Si ese bloqueo estaba activo, los
+> alumnos con grupo no podían abrir ninguna lección. No se puede confirmar sin
+> mirar los datos reales.
+
+**4. Una trampa en el sitemap.** Llevaba escrito «cuando se migre a
+BrowserRouter, añadir aquí cada /tema/…». Seguir esa nota habría publicado el
+índice completo del plan en Google. Corregida, y con una prueba que impide que
+vuelva.
+
+### P7 — Blindaje de la interfaz · HECHO
+
+Sin acceso, y **sin plan de estudios**, no se pinta: ni el recorrido de estudio,
+ni el buscador de la barra, ni los enlaces de estudio del pie, ni el carrusel de
+módulos del Home, ni el rótulo «Recorrido de estudio» (un encabezado sobre la
+nada anuncia que hay algo escondido). La lista se **vacía antes de recorrerla**,
+no se oculta con CSS: lo que no se pinta no se lee en el inspector.
+
+Verificado en pantalla: sin sesión, buscar `OVACE`, `AVDI` o `PROPEDÉUTICO` en
+el HTML devuelve **cero coincidencias**. Con grupo, todo vuelve a verse.
+
+**Lo que P7 NO arregla, y hay que decirlo:** el temario **sigue viajando en el
+JavaScript publicado**. `grep` sobre `dist/` devuelve todavía **1 546 respuestas
+de examen**. Quien abra las herramientas del navegador se lo lleva entero
+aunque el menú no le enseñe nada. Eso es **P2**, y P2 necesita **P1**.
+
+### P8 — No-indexación · HECHO
+
+`robots.txt` reescrito, `sitemap.xml` con **solo portadas públicas**, y —lo que
+de verdad funciona en una aplicación de una sola página— una etiqueta
+`<meta name="robots">` que el shell recalcula en cada navegación
+(`src/lib/indexable.js`). Es **lista blanca**: una ruta nueva nace sin indexar.
+
+### T — Tutoriales de primera vez · HECHO
+
+24 pantallas, una vez en la vida de la cuenta, **nunca en las páginas de tema**.
+Un solo punto de montaje en el `Layout` guiado por la ruta: ninguna pantalla
+sabe que existen. Un paso cuyo elemento no está se enseña centrado en vez de
+romperse. Y no salen sin acceso: se vio en pantalla el tutorial de «visibilidad
+del temario» encima del muro de «No has iniciado sesión».
+
+Se guardan en `tutoriales/{uid}`, **colección propia y no un campo en
+`usuarios`**: la regla de `usuarios` tiene lista blanca estricta porque
+ensancharla ya causó una escalada de privilegios, y el peor caso aquí es que
+alguien se marque un tutorial como visto. **Falta desplegar la regla** para que
+crucen de dispositivo; mientras tanto funciona con `localStorage`.
+
+### U — Orden y filtros de las listas de personas · HECHO
+
+`src/lib/listaUsuarios.js`, compartido por la tabla de la academia y la de la
+plataforma. El desorden no era aleatorio: comparar con `<` pone «Ximena» antes
+que «alexis» y «Díaz» después de «Duarte». Ahora `Intl.Collator` en español, y
+la búsqueda ignora acentos y ñ (`lopez` encuentra *López*, `sedeno` encuentra
+*sedeño*). Filtros de rol, estado y grupo, acumulables, con contador.
+
+**Las cuentas inactivas salen de los listados** —suspendidas y dadas de baja—,
+filtradas en `datosAcademia`, el hook único del panel. Eso arregló de paso el
+fallo que se reportó: «permisos de edición» ofrecía permisos a un profesor
+suspendido, que no puede ni entrar.
+
+### V — Emulador local + usuarios de prueba · HECHO
+
+`npm run emu` y `npm run seed:usuarios`. Once personas que cubren los casos que
+de verdad rompen: dos grupos, acentos y ñ, orden numérico, suspendido, dado de
+baja y **sin grupo** —que es el que destapó el fallo 2—. El script **se niega a
+correr sin emulador** salvo `--produccion` explícito.
+
+`VITE_FIREBASE_EMULADOR=1` en el `.env` local apunta la aplicación al emulador.
+La rama se elimina del build de producción, y hay una prueba que lo vigila.
+
+---
+
+## El orden lo manda la validación docente, no el plan
+
+**Los profesores están dentro validando material.** Eso reordenó el bloque P el
+30 de agosto de 2026, y conviene entender por qué se pudo reordenar sin riesgo.
+
+**El trabajo docente vive en otra capa.** Las firmas no están dentro de los
+temas: están en `validaciones/{academiaId}`, un documento por academia indexado
+por `temaId`, más `validaciones/_plataforma` para lo que firma el super-admin.
+P1 escribe DOCUMENTOS DE TEMA; no toca `validaciones` ni `dictamenes`. Y como
+la capa se cruza por `temaId` —identidad estable—, una firma puesta hoy sigue
+aplicando después de la migración. Comprobado también el caso feo: un documento
+de academia vacío no tapa las firmas de la plataforma, porque
+`combinarValidaciones` mezcla por clave.
+
+Dicho de otro modo: **el contenido se puede volver a sembrar desde el repo las
+veces que haga falta; la firma de un docente, no.** Es lo único irreemplazable
+del sistema, y es justo lo que la migración no toca.
+
+| Trabajo | ¿Estorba a quien está validando? |
+|---|---|
+| P4, P6 | **No.** Rutas nuevas y un campo nuevo. No tocan el panel ni el temario en revisión |
+| P1 | **Sí.** El contenido cambia de fuente bajo sus pies, y un clonado interrumpido deja temario parcial |
+| P2 | **Sí.** Es el punto de no retorno: si P1 quedó incompleto, no ven nada |
+| F1 | **Sí.** Les rompe los marcadores a `#/panel/contenido` |
+
+Por eso P4 y P6 se hicieron primero, con los profesores dentro, y P1-P2-P3
+esperan una ventana acordada con vuelta atrás lista (basta desmarcar la academia
+como migrada para que vuelva a leer del bundle).
+
+**Y un incentivo real:** los bancos de examen solo toman temas `validado` o
+`publicado`. Cada firma que pongan antes de la migración es contenido que ya
+queda utilizable del otro lado.
+
+---
+
+## Bloque P — Blindaje del contenido y portada pública
+
+### El hallazgo que obliga a poner esto primero
+
+`RutaProtegida` no protege nada. Es una comprobación de cliente sobre una app
+estática: el temario viaja **compilado dentro del bundle** y GitHub Pages lo
+sirve a cualquiera que pida el archivo, sin cuenta, sin academia y sin grupo.
+
+Medido en `dist/` el 30 de agosto de 2026, sobre `assets/index-*.js` (3 026 KB):
+
+| Qué está a la vista de cualquiera | Cantidad |
+|---|---|
+| Respuestas correctas de quiz (`correcta:`) | 1 546 |
+| Explicaciones de examen | 1 539 |
+| Flashcards completas | 1 429 |
+| Lecciones redactadas (incluida farmacología con dosis) | todas |
+
+No es una fuga parcial ni un descuido de permisos: es la forma del despliegue.
+Un competidor descarga **un** archivo y tiene el curso entero y su banco de
+exámenes. Mientras el contenido se empaquete en el JS, cualquier otra medida de
+protección es decorativa.
+
+### P1 — Migrar RESCATE a su propio contenido en Firestore
+
+La maquinaria ya existe y está probada: plantillas versionadas,
+`clonarPlantillaAAcademia` y la replicación (trabajo PLAN-LMS F9). Lo que falta
+es **usarla con RESCATE**, que hoy sigue siendo una academia «sin migrar» y por
+eso lee del bundle.
+
+Hay que respetar el bloqueador de la Fase 3: Firestore rechaza arreglos
+anidados, y las tablas ya viajan envueltas (`{ celdas: [...] }`). Cualquier campo
+nuevo necesita el mismo trato.
+
+Criterio de terminado: RESCATE abre cualquier lección por el camino de Firestore
+(3 lecturas) y ninguna pantalla cae al bundle.
+
+### P2 — Apagar el bundle
+
+`src/data/contenido/` deja de ser una dependencia de la aplicación y pasa a ser
+**material de siembra**: lo leen los scripts (`gen:plan`, `seed`, replicación) en
+tiempo de construcción, no el navegador.
+
+Esto toca los tres puntos donde hoy existe el fallback a legacy:
+`src/lib/contenidoApi.js`, `src/lib/firebase/contenido.js` y
+`src/context/ContenidoContext.jsx`. El fallback no se puede quitar a ciegas: una
+academia sin migrar se quedaría con la pantalla en blanco en vez de con un
+temario ajeno. La salida correcta es que «sin contenido propio» sea un estado
+explícito y visible, no un silencio que se rellena solo.
+
+Invariante que se conserva: **una academia migrada nunca cae al bundle.** Deja
+de ser una regla de prudencia y pasa a ser trivial, porque el bundle ya no
+existe.
+
+Criterio de terminado: `grep -c "correcta:"` sobre `dist/assets/*.js` devuelve 0.
+
+### P3 — Reglas de lectura por academia, grupo y programa
+
+Sacar el contenido del bundle solo sirve si Firestore no lo entrega igual de
+abierto. La lectura de `temas` y de los agregados debe exigir sesión, membresía
+de la academia dueña y un grupo cuyo `programaId` incluya ese temario — la
+misma cadena que ya aplica `motivoSinPrograma`, ahora del lado del servidor.
+
+Las suites de `tests/rules/` corren con emulador y Java 21 en CI. **Una suite
+omitida no es una suite aprobada**: si el emulador no arranca, se reporta.
+
+> **Trampa localizada antes de escribirla.** El staff NO tiene grupo:
+> `grupoIds` es exclusivo de staff y los profesores validan sin pertenecer a
+> ningún grupo de alumnos. Una regla que exija «grupo con ese `programaId`»
+> sin exentarlos deja a los profesores fuera del material que están revisando,
+> que es justo el trabajo que no se puede interrumpir. `RutaProtegida` ya los
+> exenta en el cliente (`motivoSinPrograma`); la regla tiene que hacer lo
+> mismo en el servidor.
+>
+> La lectura de `validaciones` se queda como está (`allow read: if true`): la
+> etiqueta editorial se sirve también a quien no tiene sesión, y cerrarla
+> dejaría al visitante viendo un aviso de revisión sobre material ya firmado.
+
+### F1 — Dominio propio, Firebase Hosting y `BrowserRouter`
+
+**El blindaje NO necesita Blaze.** Esto se aclara aquí porque el plan anterior
+juntaba dos cosas distintas bajo una sola «F» y hacía parecer que había que
+contratar antes de empezar.
+
+`src/main.jsx:18` usa `HashRouter`, así que toda URL pública sería
+`ptem.mx/#/paramedicos`: Google no indexa fragmentos y WhatsApp no genera vista
+previa. Una portada comercial que no se busca ni se comparte no vende. GitHub
+Pages no hace rewrites de SPA; Firebase Hosting sí, **y está en el plan gratuito**
+con dominio propio y certificado incluidos.
+
+El límite de Spark aquí no son las lecturas: es la **transferencia, 360 MB al
+día**. Con el bundle actual de 3 MB eso da ~120 visitas diarias. Después de P2,
+varios miles. Es decir que P2 no es que no exija Blaze: es lo que vuelve viable
+la portada pública sin contratarlo.
+
+> Confirmar las cifras del plan gratuito en la página de precios de Firebase
+> antes de mover el dominio. Se han movido antes.
+
+### F2 — Contratar Blaze
+
+Se hace **cuando ya haya algo que medir**, no antes. Tres cosas lo exigen y
+ninguna es el blindaje:
+
+| Necesita Blaze | Por qué |
+|---|---|
+| Presencia en clase en vivo (**C**) | RTDB gratis corta en 100 conexiones simultáneas: con 200 alumnos no se puede ni ensayar |
+| Webhook de la pasarela (**L**) | Exige Cloud Functions |
+| Respaldos programados de Firestore | El export automático es de pago |
+
+Al contratarlo: **alertas de gasto desde el primer día** y separar de verdad el
+entorno de pruebas del de producción. Y con Blaze la cuota deja de cortar y
+empieza a cobrar, así que el trabajo **J** (paginación de `/admin`) va pegado a
+esta fase, no a F1.
+
+### Lo que el blindaje consume en Spark
+
+| Operación | Coste | Cuota Spark |
+|---|---|---|
+| Migrar RESCATE (P1) | ~350 escrituras, **una sola vez** | 20 000/día |
+| Abrir una lección | 3 lecturas (medido en la Fase 1) | — |
+| 200 alumnos × 10 lecciones | ~4 000 lecturas/día | 50 000/día |
+| El temario en Firestore | unos pocos MB | 1 GiB |
+
+Cabe con holgura. Y el consumo de red **baja**: hoy cada alumno se descarga
+3 MB de JavaScript aunque abra una sola lección.
+
+### P4 — Portada pública
+
+Cuatro capas, y solo la primera es nueva de verdad:
+
+1. **Home general de PTEM** (`/`): qué es la plataforma, qué se puede hacer en
+   ella y la alianza con RESCATE.pro. Es la portada de la empresa, no la de un
+   curso.
+2. **`/paramedicos`**: la Landing actual, que ya está escrita y probada
+   (`src/pages/Landing.jsx`), movida a su ruta propia.
+3. **Vitrinas por carrera**: enfermería, TSU en paramédico, licenciatura en
+   paramédico, cursos y protección civil. **Vitrina sin contenido**: qué es la
+   carrera, qué incluiría y cómo contactar. Cero temario, cero estructura.
+4. **Una sola ruta guiada por catálogo**, no cinco páginas a mano.
+   `META_PROGRAMA` en `src/lib/programasModelo.js` ya tiene los tipos `tum`,
+   `enfermeria`, `tsu`, `licenciatura`, `curso` y `certificacion`; añadir uno es
+   una entrada en ese objeto y nada más. Falta el tipo **protección civil**, que
+   no está en `TIPOS_PROGRAMA`.
+
+Regla que no se rompe: `/tema/:id` y `/modulo/:id` son la identidad pública del
+contenido y sobreviven a la migración de router.
+
+### P4 — Portada pública · HECHO el 30-08-2026
+
+| Archivo | Qué es |
+|---|---|
+| `src/lib/carrerasModelo.js` | Catálogo de las seis carreras. Lógica pura |
+| `src/pages/PortadaPTEM.jsx` | La raíz para quien llega sin sesión |
+| `src/pages/CarreraPage.jsx` | Una vitrina para las cinco carreras sin temario |
+| `tests/carrerasModelo.test.mjs` | 11 pruebas, incluidas las dos que importan |
+
+**La raíz dejó de ser la portada de paramédicos.** Ahora `/` explica qué es
+PTEM, lista las seis carreras y declara la alianza con R.E.S.C.A.T.E. La
+portada de paramédicos **no se tocó**: vive íntegra en `/paramedicos`, con su
+muestra de un tema real, y de paso salió de la entrada del bundle (ahora se
+carga diferida, 7.6 kB en su propio archivo).
+
+**Las rutas se generan desde el catálogo**, no se escriben a mano. Añadir una
+carrera es una entrada en `carrerasModelo.js`: ni página nueva, ni ruta nueva,
+ni un `if` suelto. El catálogo comprueba solo que ningún slug choque con una
+ruta de la aplicación.
+
+**`proteccion_civil` es por fin un tipo de programa.** Venía disfrazado de
+`licenciatura` desde la Fase 3, que ya avisaba de que cambiaría; anunciarla en
+la portada con el nombre de otra carrera habría sido incorrecto. Las dos
+pruebas que guardaban ese dato avisaron solas, que es para lo que estaban.
+
+**Dos pruebas sujetan la regla que de verdad importa:** una carrera sin temario
+tiene que decirlo en su propio texto, y ninguna puede anunciar módulos, horas ni
+número de temas. Es la versión comercial de la prohibición de CLAUDE.md de
+inventar el alcance de un programa: una vitrina que calla equivale a una que
+promete.
+
+**Lo que queda de P4** son las URLs sin `#`, y eso es F1.
+
+---
+
+### P6 — Sello de propiedad · HECHO el 30-08-2026
+
+Cada uno de los **287 nodos** declara ahora de quién es: `rescate`, `ptem` o
+`terceros`. Hoy el reparto es `rescate 287`, y el generador lo imprime en cada
+ejecución para que el día que deje de serlo se vea sin ir a buscarlo.
+
+**El defecto es `rescate` a propósito.** Un tema sin sellar se trata como de la
+academia: el error barato es no replicar algo replicable; el caro es replicar
+material ajeno.
+
+**Lo que casi se escapa.** Las claves que no se copian explícitamente en
+`contenidoModelo` / `contenidoApi` / `agregadosModelo` **se pierden al viajar a
+Firestore** —ya pasó con `estadoEditorial`, y por eso una academia migrada veía
+todo su temario como borrador—. El sello se añadió en los cuatro puntos de paso;
+sin eso, la migración de P1 lo habría borrado entero en una sola pasada. Hay una
+prueba que lo comprueba.
+
+---
+
+### La fuga, ya medida
+
+`tests/fugaDelBundle.test.mjs` recorre el grafo de imports desde
+`src/main.jsx` —siguiendo también los `import()` diferidos, porque un chunk
+diferido se sirve igual de abierto— y deja escrito el tamaño del problema:
+
+**1 539 respuestas correctas, 1 539 explicaciones y 1 428 tarjetas**
+descargables sin cuenta.
+
+La prueba está **en verde a propósito**: afirma lo que hoy es cierto, no lo que
+debería ser. Una prueba en rojo en `main` corta el despliegue, y el despliegue
+está activo. **Cuando P2 funcione, esta prueba fallará** — ése es su modo de
+avisar. Entonces se invierten sus dos aserciones y pasa a ser el guardián que
+impide que la fuga se reabra.
+
+---
+
+### P5 — Optimización y no-indexación
+
+Dos cosas distintas que se hacen juntas porque tocan el mismo despliegue.
+
+Medido hoy: entrada 727 KB, SDK de Firebase 703 KB, `init` 215 KB. Con P2 el
+trozo de 3 MB desaparece solo; lo que queda es el arranque.
+
+Y al pasar a URLs reales hay que decidir qué ve un rastreador: `robots.txt` y
+`noindex` sobre todo lo que cuelga de `RutaProtegida`, sitemap **solo** de las
+portadas públicas. Sin esto, blindar la puerta y publicar el temario en Google
+es el mismo despliegue.
+
+### P6 — Sello de propiedad del contenido
+
+Hoy «contenido de PTEM» y «contenido de RESCATE» son la misma cosa. El día que
+entre la segunda academia, separarlos exige auditar 287 nodos a mano. Marcarlos
+ahora —propietario y licencia por nodo— es un script y una columna.
+
+Va en el bloque P por eso: es la única pieza cuyo costo se multiplica por
+esperar.
+
+### Lo que el bloque P NO incluye
+
+- Cobrar a otras academias. Eso es **L**, y sigue donde estaba.
+- Contenido de las otras carreras. Las vitrinas no lo prometen.
+- Marca de agua por matrícula. Depende de **O1** y se hace ahí.
+- Migrar a Next.js. **G** sigue sin comprometerse.
+
+---
 
 ## Los tres choques que había, y cómo quedaron
 

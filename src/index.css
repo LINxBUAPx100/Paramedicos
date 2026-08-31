@@ -67,6 +67,10 @@
   --plata-2: #d8dde3;
 
   --modulo-color: var(--primario);
+  /* Color de la CARRERA en las portadas públicas. Lo sobrescribe cada página
+     con el de su tipo de programa (META_PROGRAMA); aquí solo vive el valor de
+     reserva, para que una vitrina sin color declarado no pierda los bordes. */
+  --carrera-color: var(--primario);
 
   --fuente-display: 'Heebo', system-ui, -apple-system, 'Segoe UI', sans-serif; /* títulos */
   --fuente-cifra: 'Cascadia Code', 'Heebo', ui-monospace, monospace;          /* números */
@@ -7052,6 +7056,9 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 }
 .rp-enlace:hover:not(:disabled) { color: var(--primario); text-decoration: underline; }
 .rp-enlace:disabled { opacity: 0.5; cursor: default; }
+/* Borrar una plantilla no se deshace: se distingue en rojo del resto de
+   acciones secundarias, que sí son reversibles. */
+.rp-enlace--peligro:hover:not(:disabled) { color: var(--urgencia); }
 
 @media (max-width: 640px) {
   .rp-plantilla { grid-template-columns: 1fr; }
@@ -8903,3 +8910,304 @@ html[data-tema='oscuro'] .dic-item--validar { border-left-color: #6ee7b7; }
   .terminos-salir { margin-left: 0; }
   .legal-seccion h2 { flex-direction: column; gap: 2px; }
 }
+
+/* ============================================================
+   Portada general de PTEM (src/pages/PortadaPTEM.jsx)
+   ------------------------------------------------------------
+   La raíz para quien llega sin sesión. Reutiliza el armazón de la portada de
+   paramédicos (.lp-*) y añade solo lo que es propio: la rejilla de carreras y
+   la banda de la alianza. No duplica el hero: aquí no hay foto, porque la
+   página habla de la plataforma y no de una profesión concreta.
+   ============================================================ */
+.pt-portada { padding-block: var(--e-64) var(--e-48); }
+.pt-portada-in {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--e-16);
+  max-width: 62ch;
+}
+.pt-lede { max-width: 60ch; }
+
+.pt-seccion { padding-block: var(--e-48); }
+.pt-seccion--alt { background: var(--bg-3); }
+.pt-cabecera { max-width: 62ch; margin-bottom: var(--e-32); }
+.pt-cabecera h2 { font-size: var(--t-xl); margin-bottom: var(--e-8); }
+.pt-cabecera p { color: var(--texto-2); }
+
+/* --- Baraja de carreras ---
+   Reutiliza `.deck-*` de la baraja de módulos (ver CarrerasCarrusel.jsx). Solo
+   se añade lo que una carrera tiene y un módulo no: la etiqueta de estado en el
+   pie, y el hueco que mantiene el botón centrado donde el módulo pone su
+   contador de temas. */
+.deck-estado {
+  font-family: var(--fuente-sub);
+  font-size: var(--t-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--texto-3);
+  padding: 2px var(--e-8);
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.deck-estado.is-abierta { color: var(--verde); }
+/* Mismo ancho aproximado que la etiqueta de la izquierda, para que el botón
+   quede en el centro óptico de la tarjeta igual que en la de módulos. */
+.deck-hueco { flex: 0 0 5.5rem; }
+
+.pt-capacidades {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: var(--e-16);
+}
+.pt-capacidades h3 { font-size: var(--t-md); margin-bottom: var(--e-8); }
+
+/* --- Alianza con R.E.S.C.A.T.E. --- */
+.pt-aliado { padding-block: var(--e-48); background: var(--bg-2); border-block: 1px solid var(--borde); }
+.pt-aliado-in { display: flex; flex-direction: column; align-items: flex-start; gap: var(--e-12); max-width: 68ch; }
+.pt-aliado-in h2 { font-size: var(--t-xl); }
+.pt-aliado-in p { color: var(--texto-2); }
+
+/* ============================================================
+   Vitrina de una carrera (src/pages/CarreraPage.jsx)
+   ------------------------------------------------------------
+   Una sola hoja para las cinco carreras sin temario. El color lo pone la
+   carrera a través de --carrera-color; el resto es idéntico entre todas.
+   ============================================================ */
+.vt-portada {
+  padding-block: var(--e-64) var(--e-48);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--carrera-color) 10%, var(--bg)) 0%,
+    var(--bg) 100%
+  );
+}
+.vt-portada-in { display: flex; flex-direction: column; align-items: flex-start; gap: var(--e-16); max-width: 62ch; }
+.vt-tipo {
+  display: inline-flex; align-items: center; gap: var(--e-8);
+  font-family: var(--fuente-sub);
+  font-size: var(--t-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--carrera-color);
+  padding: var(--e-4) var(--e-12);
+  border: 1px solid color-mix(in srgb, var(--carrera-color) 40%, transparent);
+  border-radius: 999px;
+}
+.vt-portada-in h1 { font-size: var(--t-3xl); line-height: 1.1; }
+.vt-acciones { display: flex; flex-wrap: wrap; gap: var(--e-12); margin-top: var(--e-8); }
+
+/* El aviso de «todavía no está» es lo primero que necesita leer quien llega.
+   Va en el hero y no en una nota al pie por eso mismo. */
+.vt-aviso {
+  display: flex; gap: var(--e-12); align-items: flex-start;
+  margin-top: var(--e-8);
+  padding: var(--e-16);
+  background: var(--bg-2);
+  border: 1px solid var(--borde-fuerte);
+  border-left: 3px solid var(--alerta);
+  border-radius: var(--radio-sm);
+}
+.vt-aviso-ico { color: var(--alerta); flex-shrink: 0; }
+.vt-aviso strong { display: block; margin-bottom: var(--e-4); }
+.vt-aviso p { color: var(--texto-2); font-size: var(--t-sm); }
+
+.vt-cuerpo { padding-block: var(--e-48); }
+.vt-cuerpo-in {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: var(--e-24);
+}
+.vt-bloque {
+  padding: var(--e-24);
+  background: var(--bg-2);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+}
+.vt-bloque h2 { font-size: var(--t-md); margin-bottom: var(--e-12); }
+.vt-bloque p { color: var(--texto-2); }
+.vt-puntos { display: flex; flex-direction: column; gap: var(--e-12); list-style: none; }
+.vt-puntos li { display: flex; gap: var(--e-8); align-items: flex-start; color: var(--texto-2); font-size: var(--t-sm); }
+.vt-puntos li svg { color: var(--carrera-color); flex-shrink: 0; margin-top: 3px; }
+
+@media (max-width: 880px) {
+  .pt-portada, .vt-portada { padding-block: var(--e-32) var(--e-24); }
+  .vt-portada-in h1 { font-size: var(--t-2xl); }
+}
+
+/* --- Filtros de la tabla de miembros ---
+   El buscador y la casilla de cuentas dadas de baja comparten fila. La casilla
+   solo se pinta cuando hay alguna baja (GestionMiembros.jsx). */
+.panel-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--e-12) var(--e-16);
+  margin-bottom: var(--e-12);
+}
+.panel-filtros .admin-buscar { flex: 1 1 18rem; margin-bottom: 0; }
+.panel-ver-bajas {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e-8);
+  font-size: var(--t-sm);
+  color: var(--texto-2);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.panel-ver-bajas input { cursor: pointer; }
+.panel-baja-celda { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--e-8); }
+.panel-baja-nota { color: var(--texto-3); font-size: var(--t-xs); }
+
+/* ============================================================
+   Tutorial de primera vez (src/components/Tutorial.jsx)
+   ------------------------------------------------------------
+   El velo NO es una capa oscura con un recorte: es un rectángulo del tamaño
+   del elemento iluminado con una sombra enorme alrededor. El navegador lo
+   compone en la GPU, así que mover el foco de un paso a otro no repinta la
+   página entera.
+   ============================================================ */
+.tut {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+}
+/* Sin objetivo iluminado, el velo lo pone la propia capa. */
+.tut:has(> .tut-caja--centro) { background: rgba(11, 18, 32, 0.62); }
+
+.tut-foco {
+  position: fixed;
+  border-radius: var(--radio-sm);
+  box-shadow: 0 0 0 9999px rgba(11, 18, 32, 0.62);
+  outline: 2px solid var(--primario-claro);
+  outline-offset: 2px;
+  pointer-events: none;
+  transition: top var(--dur-media) var(--ease-out), left var(--dur-media) var(--ease-out),
+              width var(--dur-media) var(--ease-out), height var(--dur-media) var(--ease-out);
+}
+
+.tut-caja {
+  position: fixed;
+  width: min(360px, calc(100vw - 2rem));
+  background: var(--bg-2);
+  color: var(--texto);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-lg);
+  padding: var(--e-20);
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-12);
+}
+.tut-caja--centro {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(420px, calc(100vw - 2rem));
+}
+.tut-caja:focus { outline: none; }
+.tut-caja:focus-visible { outline: 2px solid var(--primario); outline-offset: 3px; }
+
+.tut-cabecera { display: flex; align-items: center; justify-content: space-between; gap: var(--e-8); }
+.tut-etiqueta {
+  font-family: var(--fuente-sub);
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--texto-3);
+}
+.tut-cerrar {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px;
+  border: 0; border-radius: 50%;
+  background: transparent;
+  color: var(--texto-3);
+  cursor: pointer;
+}
+.tut-cerrar:hover { background: var(--bg-3); color: var(--texto); }
+
+.tut-titulo { font-size: var(--t-md); line-height: 1.25; }
+.tut-texto { color: var(--texto-2); font-size: var(--t-sm); }
+
+.tut-pie { display: flex; align-items: center; justify-content: space-between; gap: var(--e-12); flex-wrap: wrap; }
+.tut-puntos { display: flex; gap: 5px; }
+.tut-punto { width: 6px; height: 6px; border-radius: 50%; background: var(--borde-fuerte); }
+.tut-punto.on { width: 18px; border-radius: 999px; background: var(--primario); }
+.tut-acciones { display: flex; align-items: center; gap: var(--e-8); margin-left: auto; }
+.tut-saltar {
+  border: 0; background: transparent;
+  color: var(--texto-3);
+  font-size: var(--t-sm);
+  cursor: pointer;
+  padding: var(--e-4) var(--e-8);
+}
+.tut-saltar:hover { color: var(--texto); text-decoration: underline; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tut-foco { transition: none; }
+}
+
+/* Repetir los tutoriales, desde la cuenta (src/pages/Cuenta.jsx). */
+.cuenta-tutoriales {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-12);
+  margin-top: var(--e-16);
+  padding: var(--e-16);
+  background: var(--bg-3);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+}
+.cuenta-tutoriales p { color: var(--texto-2); font-size: var(--t-sm); margin-top: 2px; }
+
+/* ============================================================
+   Barra de filtros de listas de personas
+   (src/components/panel/FiltrosUsuarios.jsx)
+   ============================================================ */
+.fu { display: flex; flex-direction: column; gap: var(--e-8); margin-bottom: var(--e-12); }
+.fu-fila { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--e-12); }
+.fu-buscar { flex: 1 1 16rem; margin-bottom: 0; }
+.fu-campo { display: flex; flex-direction: column; gap: 3px; }
+.fu-campo > span {
+  font-family: var(--fuente-sub);
+  font-size: var(--t-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--texto-3);
+}
+.fu-pie { display: flex; align-items: center; gap: var(--e-12); }
+.fu-cuenta { font-family: var(--fuente-cifra); font-size: var(--t-sm); color: var(--texto-3); }
+.fu-limpiar {
+  border: 0; background: transparent; padding: 0;
+  color: var(--enlace); font-size: var(--t-sm); cursor: pointer;
+}
+.fu-limpiar:hover { text-decoration: underline; }
+
+/* Autoría de PTEM, en Créditos (src/pages/CreditosPage.jsx).
+   Va arriba del todo y antes del material visual: quién hace la plataforma,
+   quién pone el contenido y quién ilustra son tres respuestas distintas. */
+.creditos-autoria {
+  margin: var(--e-24) 0 var(--e-32);
+  padding: var(--e-20);
+  background: var(--bg-2);
+  border: 1px solid var(--borde);
+  border-left: 3px solid var(--primario);
+  border-radius: var(--radio-sm);
+}
+.creditos-autoria h2 { font-size: var(--t-md); margin-bottom: var(--e-16); }
+.creditos-autoria-lista { display: flex; flex-direction: column; gap: var(--e-16); }
+.creditos-autoria-lista dt {
+  font-family: var(--fuente-sub);
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--texto-3);
+  margin-bottom: 3px;
+}
+.creditos-autoria-lista dd { margin: 0; color: var(--texto-2); }
+.creditos-sub { font-size: var(--t-md); margin-bottom: var(--e-8); }
