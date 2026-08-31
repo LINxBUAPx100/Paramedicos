@@ -42,14 +42,18 @@
 Veinte trabajos terminados y veintitrés pendientes. Los tachados no se vuelven a
 tocar salvo regresión demostrada.
 
-**P1 y P2 están hechos. Del bloque P solo queda P3**, y hasta que esté puesto el
-blindaje está a medias: el temario ya no viaja en el JavaScript, pero Firestore
-lo entrega a cualquiera que sepa pedirlo.
+**El bloque P está cerrado.** P1 movió el contenido a Firestore, P2 lo sacó del
+JavaScript publicado y P3 cerró la puerta del servidor: comprobado contra
+producción sin sesión, **ninguna colección de contenido es legible**.
 
-Siguen esperando dos decisiones: desplegar `firestore.rules` (que ahora **sí**
-bloquea a P3, además de los tutoriales entre dispositivos) y comprar el dominio
-(para F1). Y una tarea de la academia, no técnica: **meter a los dos alumnos en
-un grupo**, porque hoy no están en ninguno.
+Con una salvedad que no es menor: **las reglas no se aplican al SDK de
+administración**. La credencial de service account que se filtró el 31 de agosto
+sigue viva —comprobado— y lee todo el proyecto saltándose P3. Rotarla es la otra
+mitad del blindaje, y solo puede hacerla el dueño del proyecto.
+
+Queda una decisión (comprar el dominio, para F1), una tarea de la academia
+(**meter a los dos alumnos en un grupo**) y una deuda destapada al desplegar:
+**la colección `agregados` está vacía en producción**.
 
 ### Terminado
 
@@ -75,12 +79,12 @@ un grupo**, porque hoy no están en ninguno.
 | ~~**P1** — Migrar R.E.S.C.A.T.E. a su propio contenido en Firestore~~ | bloque P · 31-08-2026 |
 | ~~**P2** — Apagar el bundle: el temario deja de viajar en el JS~~ | bloque P · 31-08-2026 |
 | ~~**P9** — Portada central rediseñada (foto a sangre, voces, menú)~~ | pedido el 31-08-2026 |
+| ~~**P3** — Reglas de lectura por academia, grupo y programa~~ | bloque P · 31-08-2026 · **el bloque P queda cerrado** |
 
 ### Pendiente, en orden de ejecución
 
 | # | Trabajo | Duración | Depende de |
 |---|---|---|---|
-| **P3** | Reglas de lectura por academia, grupo y programa | 2-3 días | **desplegar `firestore.rules`** · P1 y P2 hechos |
 | **F1** | Dominio propio + Firebase Hosting + `BrowserRouter` | 1-2 días | — · **cabe en Spark** · las portadas de P4 ya existen y esperan sus URLs |
 | **P5** | Optimización del arranque (la no-indexación ya está en P8) | 1-2 días | — · **P2 hecho, ya no bloquea** |
 | **A** | Calidad editorial v2 | larga, por lotes | — · **P2 hecho, ya no bloquea** |
@@ -127,15 +131,31 @@ P2. Quedan dos permisos y una tarea de la academia.
 
 | Decisión | Por qué te toca | Desbloquea |
 |---|---|---|
-| **Desplegar `firestore.rules`** | Toca producción | **P3** —lo único que falta del blindaje— y que los tutoriales crucen de dispositivo |
+| ~~Desplegar `firestore.rules`~~ | — | **Hecho el 31-08-2026.** Cerró P3 y los tutoriales ya cruzan de dispositivo |
 | Comprar el dominio | Es una compra | **F1**, y con él las URLs sin `#` |
-| Meter a los dos alumnos en `GRP-SCZD` | Es alta en la academia, no código | Que dejen de ver «Necesitas un código de grupo» |
+| Meter a los dos alumnos en `GRP-SCZD` | Es alta en la academia, no código | Que dejen de ver «Necesitas un código de grupo». El grupo ya apunta al programa correcto |
 
-Y una que no es una decisión sino seguridad, y corre prisa: **rotar la
-credencial del service account** cuyo contenido se pegó en un chat el 31 de
-agosto (id de clave `97418f440957b97713aed40e2679c01310ae2dda`). Sigue viva
-hasta que se rote desde la consola de Firebase, y da acceso de administrador al
-proyecto entero.
+### La credencial filtrada SIGUE VIVA
+
+No es una decisión pendiente: es un agujero abierto. El 31 de agosto se pegó en
+un chat el contenido de una clave de service account del proyecto. Ese mismo día
+se dio por rotada, y **se comprobó que no lo estaba**: la clave
+`97418f4409…` seguía devolviendo un token de acceso válido.
+
+Por qué importa más ahora que antes: **las reglas de Firestore no se aplican al
+SDK de administración.** P3 cierra la puerta del cliente, pero quien tenga esa
+clave entra por la de servicio y lee los 287 temas, los usuarios y todo lo
+demás. Mientras siga viva, el blindaje tiene una llave maestra circulando.
+
+Se borra desde la consola de Firebase (Configuración → Cuentas de servicio →
+administrar permisos → Claves) o con:
+
+```bash
+gcloud iam service-accounts keys delete 97418f440957b97713aed40e2679c01310ae2dda --iam-account=firebase-adminsdk-fbsvc@ptem-a304f.iam.gserviceaccount.com
+```
+
+Y después borrar el archivo de `Downloads`. Para comprobar que quedó muerta,
+pedirle un token: una clave revocada falla con `invalid_grant`.
 
 ---
 
@@ -426,7 +446,48 @@ existe.
 
 Criterio de terminado: `grep -c "correcta:"` sobre `dist/assets/*.js` devuelve 0.
 
-### P3 — Reglas de lectura por academia, grupo y programa
+### P3 — Reglas de lectura por academia, grupo y programa · HECHO el 31-08-2026
+
+> **Cerrado, y con la sorpresa de que las reglas ya estaban escritas.** Lo que
+> faltaba no era código sino el despliegue: `firestore.rules` llevaba la cadena
+> completa (`alumnoLeeCurso` = pertenece a la academia + curso `publicado` +
+> el curso está en el programa de su grupo) y el staff exento por `esStaffDe`,
+> pero producción seguía corriendo reglas viejas.
+>
+> **Pre-vuelo contra producción antes de tocar nada** (solo lectura), porque el
+> riesgo no era la regla sino el dato:
+>
+> | Comprobación | Resultado |
+> |---|---|
+> | Staff activo | 10 (2 directores + 8 instructores), **todos con `academiaId = RES-2026`** |
+> | Contenido | 287 temas, todos `aca=RES-2026 curso=RES-2026__paramedico-tum estado=publicado` |
+> | Staff que perdería acceso | 5 — **los cinco con `estado=eliminado`**. Ningún profesor activo |
+> | `agregados` | 0 documentos: nada que cerrar (ver la deuda de abajo) |
+> | `plantillas*` | Sin `academiaId`, pero su regla es solo super-admin: no les afecta |
+>
+> **Verificado después del despliegue, con el cliente web y sin sesión**, que es
+> como llega un visitante: `temas`, `cursos`, `agregados`, un tema suelto,
+> `usuarios`, `grupos` y `plantillasTemas` responden todas
+> `permission-denied`. **Cero colecciones legibles sin sesión.** La portada
+> pública sigue cargando sin un solo error de consola.
+>
+> **Lo que P3 NO protege, y hay que decirlo:** las reglas no se aplican al SDK
+> de administración. Quien tenga una clave de service account del proyecto lee
+> todo, sin excepción. Por eso rotar la credencial que se filtró no es una
+> tarea menor pendiente: es la otra mitad de este blindaje.
+
+#### Deuda destapada por el pre-vuelo: los agregados están vacíos
+
+La colección `agregados` tiene **0 documentos** en producción. Son las vistas
+derivadas —glosario, buscador, banco de exámenes, mazo de flashcards, galería,
+contadores— que existen para que abrir UNA lección no obligue a leer las 287
+(Fase 1). Nunca se generaron para R.E.S.C.A.T.E. después de P1.
+
+No bloqueaba P3 —no hay documentos que cerrar— pero hay que comprobar qué ven
+hoy el buscador, el glosario y el banco de exámenes, y regenerarlos si están
+sirviendo vacío.
+
+### P3 — cómo estaba escrito (referencia)
 
 Sacar el contenido del bundle solo sirve si Firestore no lo entrega igual de
 abierto. La lectura de `temas` y de los agregados debe exigir sesión, membresía
