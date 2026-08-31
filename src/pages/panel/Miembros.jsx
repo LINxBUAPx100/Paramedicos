@@ -15,7 +15,7 @@ import PermisosEditoriales from '../../components/PermisosEditoriales.jsx'
 export default function PanelMiembros() {
   const { capacidades, puedeVerCodigos } = useAuth()
   const {
-    academiaId, alumnos, miembros, grupos, modulos, porAlumno, intentos,
+    academiaId, alumnos, miembros, miembrosInactivos, grupos, modulos, porAlumno, intentos,
     grupoFiltro, nombreGrupo, gestion, miUid, recargar,
   } = usePanel()
 
@@ -48,9 +48,11 @@ export default function PanelMiembros() {
       {gestion && (
         <GestionMiembros
           miembros={miembros}
+          inactivos={miembrosInactivos}
           grupos={grupos}
           gestion={gestion}
           miUid={miUid}
+          academiaId={academiaId}
           onCambio={recargar}
         />
       )}

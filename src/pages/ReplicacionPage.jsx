@@ -291,6 +291,19 @@ function SeccionPlantillas({ api }) {
                           <Icon name="archivo" size={13} /> Archivar
                         </button>
                       )}
+                      {/* Borrar solo se ofrece sobre lo ya ARCHIVADO. Archivar
+                          es el paso que obliga a mirar la plantilla dos veces;
+                          borrar sin él sería un clic de distancia entre «esto
+                          estorba» y «esto ya no existe». */}
+                      {p.estado === 'archivada' && (
+                        <button
+                          className="rp-enlace rp-enlace--peligro"
+                          disabled={ocupado}
+                          onClick={() => setDialogo({ tipo: 'borrar', plantilla: p })}
+                        >
+                          <Icon name="basura" size={13} /> Borrar
+                        </button>
+                      )}
                     </div>
                   </li>
                 )
@@ -391,6 +404,37 @@ function SeccionPlantillas({ api }) {
           }
           onConfirmar={() =>
             ejecutar(() => api.cambiarEstadoPlantilla(dialogo.plantilla.id, 'archivada'), 'Plantilla archivada.')}
+        />
+      )}
+      {dialogo?.tipo === 'borrar' && (
+        <ConfirmacionReforzada
+          titulo={`Borrar "${dialogo.plantilla.nombre}"`}
+          frase="BORRAR PLANTILLA"
+          ocupado={ocupado}
+          etiquetaConfirmar="Borrar definitivamente"
+          onCerrar={() => setDialogo(null)}
+          resumen={
+            <>
+              <p>
+                Se borra la plantilla con <strong>todas sus versiones</strong> y sus
+                snapshots de temas. <strong>Esto no se puede deshacer</strong>: a
+                diferencia de archivar, no hay «Restaurar».
+              </p>
+              <p>
+                El contenido de las academias <strong>no se toca</strong>: lo que ya se
+                replicó es suyo y se queda como está. Si alguna academia nació de esta
+                plantilla, el borrado se negará y te dirá cuál.
+              </p>
+            </>
+          }
+          onConfirmar={() =>
+            ejecutar(
+              async () => {
+                const r = await api.borrarPlantilla(dialogo.plantilla.id)
+                return r
+              },
+              `Plantilla "${dialogo.plantilla.nombre}" borrada.`
+            )}
         />
       )}
       {versiones && (

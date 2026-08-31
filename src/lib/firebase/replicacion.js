@@ -16,7 +16,7 @@
 // ============================================================
 import { auth, db } from './init.js'
 import {
-  collection, doc, getDoc, getDocs, setDoc, updateDoc, addDoc,
+  collection, doc, getDoc, getDocs, setDoc, updateDoc, addDoc, deleteDoc,
   query, where, orderBy, limit, startAfter, writeBatch, runTransaction,
   serverTimestamp,
 } from 'firebase/firestore'
@@ -246,6 +246,78 @@ export async function abrirSiguienteVersion(plantillaId) {
     ...cambios, actualizadaPor: uidActual(), actualizado: serverTimestamp(),
   })
   return cambios
+}
+
+/**
+ * BORRA una plantilla archivada, con todo su rastro.
+ *
+ * Existe porque las plantillas de PRUEBA se acumulan: se crean para ver cómo
+ * funciona algo, se archivan, y ahí se quedan estorbando en una lista que se
+ * consulta para trabajar. Archivar es reversible a propósito; borrar no lo es,
+ * y por eso pide más.
+ *
+ * TRES GUARDAS, en este orden:
+ *
+ *  1. Solo ARCHIVADA. Una plantilla en borrador o publicada no se borra: se
+ *     archiva primero. Ese paso obliga a mirarla una segunda vez.
+ *  2. NADIE LA PUEDE ESTAR USANDO. Si una academia nació de esta plantilla,
+ *     borrarla dejaría su curso apuntando a un origen que ya no existe, y el
+ *     historial de replicaciones sin forma de explicarse. Se comprueba contra
+ *     `cursos` y se niega con el nombre de la academia, no con un «no se puede».
+ *  3. Se borra el rastro entero —versiones, snapshots de temas y borrador—, no
+ *     solo el documento de cabecera: dejar los hijos huérfanos es peor que no
+ *     borrar, porque nadie los vuelve a encontrar para limpiarlos.
+ *
+ * NO toca el contenido de ninguna academia. Lo que se replicó ya es suyo.
+ */
+export async function borrarPlantilla(plantillaId) {
+  const snap = await getDoc(doc(db, 'plantillas', plantillaId))
+  if (!snap.exists()) throw new Error('La plantilla no existe.')
+  const plantilla = { id: snap.id, ...snap.data() }
+
+  if (plantilla.estado !== 'archivada') {
+    throw new Error('Solo se puede borrar una plantilla archivada. Archívala primero.')
+  }
+
+  const { cursos } = await academiasQueUsanPlantilla(plantillaId, { limite: 3 })
+  if (cursos.length > 0) {
+    const academias = [...new Set(cursos.map((c) => c.academiaId).filter(Boolean))]
+    throw new Error(
+      `No se puede borrar: ${academias.length === 1 ? 'la academia' : 'las academias'} `
+      + `${academias.join(', ')} ${academias.length === 1 ? 'nació' : 'nacieron'} de esta `
+      + 'plantilla. Su contenido no se toca, pero perderían la traza de su origen.'
+    )
+  }
+
+  // Hijos primero, cabecera al final: si algo falla a mitad, la plantilla sigue
+  // en la lista y se puede reintentar. Al revés quedaría invisible y a medio
+  // borrar, que es exactamente el estado que nadie encuentra.
+  const versiones = await getDocs(query(
+    collection(db, 'plantillasVersiones'), where('plantillaId', '==', plantillaId)))
+  const temasBorrador = await getDocs(query(
+    collection(db, 'plantillasTemas'), where('plantillaId', '==', plantillaId)))
+
+  const temasDeVersiones = []
+  for (const v of versiones.docs) {
+    const t = await getDocs(query(
+      collection(db, 'plantillasVersionesTemas'), where('versionId', '==', v.id)))
+    temasDeVersiones.push(...t.docs)
+  }
+
+  const aBorrar = [...temasDeVersiones, ...temasBorrador.docs, ...versiones.docs]
+  for (const grupo of lotes(aBorrar, 400)) {
+    const batch = writeBatch(db)
+    for (const d of grupo) batch.delete(d.ref)
+    await batch.commit()
+  }
+
+  await deleteDoc(doc(db, 'plantillas', plantillaId))
+
+  return {
+    nombre: plantilla.nombre || plantillaId,
+    versiones: versiones.size,
+    temas: temasDeVersiones.length + temasBorrador.size,
+  }
 }
 
 export async function listarVersiones(plantillaId) {

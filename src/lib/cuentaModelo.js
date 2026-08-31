@@ -67,3 +67,51 @@ export function accionesDeCuenta(usuario, { esSuperadmin = false } = {}) {
 export function avisoDeReactivacion() {
   return 'Vuelve con su historial y sus intentos, pero SIN los permisos editoriales que tuviera: la baja se los retiró y hay que concederlos otra vez si los necesita.'
 }
+
+// ------------------------------------------------------------
+//  Listados: una cuenta INACTIVA no se enseña con las activas
+// ------------------------------------------------------------
+//  El dueño del producto lo fijó en dos pasos, el 30 de agosto de 2026:
+//  primero «si elimino un usuario esperaría no verlo más listado», y después
+//  «hay usuarios que no están activos, deberían estar ocultos, y si están
+//  desactivados no deben salir en la sección de permisos».
+//
+//  Así que la frontera NO es «dada de baja»: es ACTIVA o no. Suspendida y dada
+//  de baja se esconden las dos. La diferencia entre ellas sigue existiendo
+//  —cambia qué se puede hacer con cada una— pero no decide si se listan.
+//
+//  Se reparte aquí, en lógica pura, y no en cada pantalla: la tabla de
+//  miembros, el avance, las estadísticas, los grupos y los PERMISOS DE EDICIÓN
+//  leen todos de la misma fuente. Filtrar en cinco sitios distintos garantiza
+//  que uno se olvide, y el que se olvidó fue precisamente el de permisos.
+//
+//  NO se tiran del conjunto: se devuelven aparte, porque la tabla de miembros
+//  tiene que poder enseñarlas bajo petición para levantar una suspensión o
+//  reactivar una baja. Ésa es la única pantalla que las pide.
+
+/** ¿Está esta cuenta operativa? Ni suspendida ni dada de baja. */
+export function estaActiva(usuario) {
+  return estadoDeCuenta(usuario) === 'activo'
+}
+
+/**
+ * Reparte una lista de usuarios en los que se enseñan y los que no.
+ *
+ * `inactivos` incluye suspendidas Y dadas de baja. Un profesor suspendido no
+ * puede entrar, así que ofrecérselo en «permisos de edición» era ofrecer
+ * permisos a quien no puede usarlos.
+ */
+export function separarInactivas(usuarios) {
+  const activos = []
+  const inactivos = []
+  for (const u of usuarios || []) {
+    if (!u) continue
+    ;(estaActiva(u) ? activos : inactivos).push(u)
+  }
+  return { activos, inactivos }
+}
+
+/** Solo las operativas. Atajo para los listados que no ofrecen casilla. */
+export function soloActivas(usuarios) {
+  return separarInactivas(usuarios).activos
+}

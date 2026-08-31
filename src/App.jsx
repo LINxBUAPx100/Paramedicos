@@ -5,14 +5,29 @@ import ErrorBoundary from './components/ErrorBoundary.jsx'
 import RutaProtegida from './components/RutaProtegida.jsx'
 import AceptarTerminos from './components/AceptarTerminos.jsx'
 import Home from './pages/Home.jsx'
-import Landing from './pages/Landing.jsx'
+import PortadaPTEM from './pages/PortadaPTEM.jsx'
 import Bienvenida from './pages/Bienvenida.jsx'
 import NotFound from './pages/NotFound.jsx'
 import TerminosPage from './pages/TerminosPage.jsx'
 import { useAuth } from './context/AuthContext.jsx'
+import { carrerasPublicas } from './lib/carrerasModelo.js'
+
+// Slug de la carrera que SÍ tiene temario. Es la única que no usa la vitrina
+// genérica: `/paramedicos` sirve la portada completa de siempre, con su muestra
+// de un tema real. Si algún día se abre otra carrera, se le da su propia
+// portada aquí o se enseña con la vitrina, pero nunca se promete contenido que
+// no exista (ver `lib/carrerasModelo.js`).
+const SLUG_PARAMEDICOS = 'paramedicos'
 
 // Rutas de contenido: carga diferida. Su código y los datos pesados del temario
 // (data/index.js) salen del bundle inicial y se descargan solo al visitarlas.
+// La portada de PARAMÉDICOS deja de ser la raíz y pasa a `/paramedicos`, así
+// que ya no hace falta en el primer pintado: se difiere. Con ella se va su
+// muestra de un tema real, que era lo más pesado de la entrada.
+const Landing = lazy(() => import('./pages/Landing.jsx'))
+// Vitrina de las carreras que todavía no tienen temario. Una sola página para
+// las cinco, alimentada por el catálogo.
+const CarreraPage = lazy(() => import('./pages/CarreraPage.jsx'))
 const ModuloPage = lazy(() => import('./pages/ModuloPage.jsx'))
 const TemaPage = lazy(() => import('./pages/TemaPage.jsx'))
 const QuizPage = lazy(() => import('./pages/QuizPage.jsx'))
@@ -69,9 +84,14 @@ function Cargando() {
 
 // La raíz sirve a TRES personas distintas, y hasta ahora les daba la misma
 // pantalla a las tres:
-//   sin sesión           → Landing    (qué es PTEM, muestra, cómo entrar)
+//   sin sesión           → PortadaPTEM (qué es PTEM, sus carreras, cómo entrar)
 //   con sesión sin academia → Bienvenida (código o directorio)
-//   con academia         → Home       (el recorrido de estudio)
+//   con academia         → Home        (el recorrido de estudio)
+//
+// El 30 de agosto de 2026 la raíz dejó de ser la portada de PARAMÉDICOS. La
+// academia declaró seis carreras y la raíz anunciaba una sola como si fuera
+// todo el producto. La portada de paramédicos NO se tocó: vive íntegra en
+// `/paramedicos`, que es la dirección que se comparte desde ahora.
 //
 // Mientras se resuelve la sesión NO se pinta ninguna: enseñar la portada
 // comercial a un alumno que ya tiene cuenta, y quitársela medio segundo
@@ -83,7 +103,7 @@ function Cargando() {
 function Inicio() {
   const { autenticado, cargando, accesoCargando, academiaId, esStaff, enPrueba } = useAuth()
   if (cargando || accesoCargando) return <Cargando />
-  if (!autenticado) return <Landing />
+  if (!autenticado) return <PortadaPTEM />
   if (!academiaId && !esStaff && !enPrueba) return <Bienvenida />
   return <Home />
 }
@@ -115,9 +135,24 @@ export default function App() {
         <Suspense fallback={<Cargando />}>
           {debeAceptarTerminos && !exentaDeTerminos ? <AceptarTerminos /> : (
           <Routes>
-            {/* Públicas: inicio (landing o home según sesión) + cuenta */}
+            {/* Públicas: inicio (portada o home según sesión) + cuenta */}
             <Route path="/" element={<Inicio />} />
             <Route path="/cuenta" element={<Cuenta />} />
+
+            {/* Portadas de carrera. Se GENERAN desde el catálogo: añadir una
+                carrera es una entrada en `lib/carrerasModelo.js`, no una ruta
+                escrita a mano ni una página nueva. Los slugs cuelgan de la raíz
+                porque son direcciones para compartir y dictar por teléfono; el
+                catálogo comprueba que ninguno choque con una ruta de la app. */}
+            {carrerasPublicas().map((c) => (
+              <Route
+                key={c.slug}
+                path={`/${c.slug}`}
+                element={c.slug === SLUG_PARAMEDICOS
+                  ? <Landing />          /* la portada de siempre, íntegra */
+                  : <CarreraPage slug={c.slug} />}
+              />
+            ))}
             {/* PÚBLICA a propósito: hay que poder leer lo que se te pide
                 aceptar antes de aceptarlo. */}
             <Route path="/terminos-y-condiciones" element={<TerminosPage />} />

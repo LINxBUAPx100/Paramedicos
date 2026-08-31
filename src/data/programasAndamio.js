@@ -218,10 +218,10 @@ function programaDeAndamio({ id, clave, tipoPrograma, titulo, etiqueta, color })
 /**
  * Los cuatro programas que la academia va a impartir, como andamio.
  *
- * Protección Civil va de momento como `licenciatura`: el catálogo de tipos no
- * tiene uno propio y, mientras no necesite reglas distintas, añadirlo sería
- * inventar una categoría que nadie ha pedido. Si la academia decide que la
- * necesita, se añade en META_PROGRAMA y aquí cambia una línea.
+ * Protección Civil ya tiene tipo propio (`proteccion_civil`, añadido el 30 de
+ * agosto de 2026). Ésta es la línea que el comentario anterior anunciaba que
+ * cambiaría: la portada pública lista las carreras desde META_PROGRAMA, y
+ * anunciarla como «Licenciatura en Paramédicos» habría sido incorrecto.
  */
 export const PROGRAMAS_ANDAMIO = [
   programaDeAndamio({
@@ -251,7 +251,7 @@ export const PROGRAMAS_ANDAMIO = [
   programaDeAndamio({
     id: 'andamio-proteccion-civil',
     clave: 'pc',
-    tipoPrograma: 'licenciatura',
+    tipoPrograma: 'proteccion_civil',
     titulo: 'Protección Civil (andamio de prueba)',
     etiqueta: 'Protección Civil',
     color: '#f59e0b',

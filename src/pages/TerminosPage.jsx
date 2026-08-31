@@ -18,7 +18,7 @@ export default function TerminosPage() {
   return (
     <article className="legal">
       <header className="legal-cab">
-        <span className="legal-eyebrow">PTEM / T-Tem · Academia RESCATE</span>
+        <span className="legal-eyebrow">PTEM · Riders.Media · Academia R.E.S.C.A.T.E.</span>
         <h1>{TITULO_TERMINOS}</h1>
         <dl className="legal-meta">
           <div><dt>Versión</dt><dd>{VERSION_TERMINOS}</dd></div>

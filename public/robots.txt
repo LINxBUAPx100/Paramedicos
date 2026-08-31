@@ -1,4 +1,43 @@
+# PTEM — qué puede indexar un buscador.
+#
+# Lo que se abre son las PORTADAS: la de la plataforma y la de cada carrera.
+# Todo lo demás es contenido de la Academia R.E.S.C.A.T.E. y no se indexa.
+#
+# Hoy la aplicación usa HashRouter, así que un rastreador solo ve la raíz y
+# estas reglas apenas tienen efecto. Se escriben igual, y con las rutas que
+# existirán tras el trabajo F1 (dominio propio + BrowserRouter): el día que las
+# URLs sean reales, la puerta ya está cerrada. Al revés —abrirlas primero y
+# acordarse después— el temario se indexa antes de que nadie lo note, y
+# desindexar es mucho más lento que no indexar.
+#
+# La aplicación además inyecta <meta name="robots" content="noindex"> en toda
+# ruta que no sea pública (ver src/lib/indexable.js), que es lo que de verdad
+# funciona con una SPA.
+
 User-agent: *
-Allow: /
+
+Allow: /$
+Allow: /paramedicos
+Allow: /enfermeria
+Allow: /tsu-paramedico
+Allow: /licenciatura-paramedico
+Allow: /proteccion-civil
+Allow: /cursos
+Allow: /creditos
+Allow: /terminos-y-condiciones
+
+# Contenido de la academia: fuera del índice.
+Disallow: /tema/
+Disallow: /modulo/
+Disallow: /temario
+Disallow: /examen
+Disallow: /flashcards
+Disallow: /progreso
+Disallow: /logros
+Disallow: /buscar
+Disallow: /panel
+Disallow: /admin
+Disallow: /editor
+Disallow: /cuenta
 
 Sitemap: https://linxbuapx100.github.io/Paramedicos/sitemap.xml

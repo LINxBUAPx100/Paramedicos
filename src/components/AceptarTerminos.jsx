@@ -77,7 +77,7 @@ export default function AceptarTerminos() {
               disabled={estado === 'guardando'}
             />
             <span>
-              He leído y acepto los términos y condiciones de uso de la plataforma PTEM / T-Tem
+              He leído y acepto los términos y condiciones de uso de la plataforma PTEM
               (versión {VERSION_TERMINOS}).
             </span>
           </label>

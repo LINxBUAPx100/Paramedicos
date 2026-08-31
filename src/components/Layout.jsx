@@ -4,31 +4,41 @@ import { useProgress } from '../context/ProgressContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useIndiceContenido } from '../context/ContenidoContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
+import { motivoSinPrograma } from '../lib/programasModelo.js'
+import { metaRobots } from '../lib/indexable.js'
 import { debeSubirAlInicio } from '../lib/saltoEnPagina.js'
 import Icon from './Icon.jsx'
+import TutorialDeRuta from './TutorialDeRuta.jsx'
 import LogoPTEM from './marca/LogoPTEM.jsx'
 import LogoIcono from './marca/LogoIcono.jsx'
 import IconoEstrella from './marca/IconoEstrella.jsx'
 
 // Navegación primaria del header (patrón del diseño PTEM).
 // "Temas" (/temario) es el panel de visibilidad: SOLO staff (soloStaff).
+//
+// `soloConAcceso` marca lo que NO se le enseña a quien no ha entrado. No es
+// cosmética: un enlace a /examen sin sesión termina en «No has iniciado
+// sesión», y ofrecerlo es prometer algo que no se puede dar. El recorrido de
+// estudio del drawer es peor todavía —enseñaba los 287 títulos del temario a
+// cualquier visitante, y también a un alumno con cuenta pero sin grupo—, y eso
+// se corta más abajo con `veContenido`.
 const TOPNAV = [
   { to: '/', label: 'Inicio', end: true },
   { to: '/temario', label: 'Temas', soloStaff: true },
-  { to: '/examen', label: 'Examen' },
-  { to: '/progreso', label: 'Progreso' },
-  { to: '/logros', label: 'Logros' },
+  { to: '/examen', label: 'Examen', soloConAcceso: true },
+  { to: '/progreso', label: 'Progreso', soloConAcceso: true },
+  { to: '/logros', label: 'Logros', soloConAcceso: true },
 ]
 
 // Navegación completa del drawer (incluye accesos que no caben en el header).
 const NAV = [
   { to: '/', icon: 'home', label: 'Inicio', end: true },
   { to: '/temario', icon: 'temario', label: 'Temario (staff)', soloStaff: true },
-  { to: '/examen', icon: 'examen', label: 'Examen general' },
-  { to: '/flashcards', icon: 'flashcards', label: 'Flashcards' },
-  { to: '/logros', icon: 'atlas', label: 'Logros' },
-  { to: '/progreso', icon: 'progreso', label: 'Mi progreso' },
-  { to: '/buscar', icon: 'buscar', label: 'Buscar' },
+  { to: '/examen', icon: 'examen', label: 'Examen general', soloConAcceso: true },
+  { to: '/flashcards', icon: 'flashcards', label: 'Flashcards', soloConAcceso: true },
+  { to: '/logros', icon: 'atlas', label: 'Logros', soloConAcceso: true },
+  { to: '/progreso', icon: 'progreso', label: 'Mi progreso', soloConAcceso: true },
+  { to: '/buscar', icon: 'buscar', label: 'Buscar', soloConAcceso: true },
 ]
 
 export default function Layout({ children }) {
@@ -37,7 +47,9 @@ export default function Layout({ children }) {
   const menuRef = useRef(null)
   const drawerRef = useRef(null)
   const { estado, alternarTema } = useProgress()
-  const { autenticado, perfil, user, esStaff, esSuperadmin } = useAuth()
+  const {
+    autenticado, perfil, user, esStaff, esSuperadmin, puedeAcceder, rol, grupo,
+  } = useAuth()
   const { modulos } = useIndiceContenido() // índice de LA academia (bundle si legacy)
   const { moduloVisible, temaVisible } = useVisibilidad()
   const location = useLocation()
@@ -51,11 +63,31 @@ export default function Layout({ children }) {
     ? [{ to: '/admin', icon: 'capas', label: 'Dashboard general' }]
     : esStaff ? [{ to: '/panel', icon: 'progreso', label: 'Panel de avance' }] : []
   const soloStaff = (item) => !item.soloStaff || esStaff
-  const topnav = [...TOPNAV.filter(soloStaff), ...extraTop]
-  const navDrawer = [...NAV.filter(soloStaff), ...extraDrawer]
+  // DOS PUERTAS, las mismas que RutaProtegida, y hacen falta las dos. El menú
+  // tiene que obedecer lo mismo que la página: enseñar el enlace y negar el
+  // destino no protege nada, y además revela qué hay dentro.
+  //
+  // `puedeAcceder` responde «¿tiene sesión y su academia está al corriente?».
+  // `motivoSinPrograma` responde la otra mitad: «¿tiene un plan de estudios
+  // asignado?». Un alumno con cuenta y academia pero SIN GRUPO pasa la primera
+  // y falla la segunda — y con solo la primera puesta, el menú le enseñaba los
+  // 287 títulos del temario mientras la página le decía «necesitas un código de
+  // grupo». Encontrado auditando con un usuario de prueba en ese estado.
+  const bloqueoDePrograma = motivoSinPrograma({ rol, esSuperadmin, grupo })
+  const veContenido = puedeAcceder && !bloqueoDePrograma
+  const conAcceso = (item) => !item.soloConAcceso || veContenido
+  const visible = (item) => soloStaff(item) && conAcceso(item)
+  const topnav = [...TOPNAV.filter(visible), ...extraTop]
+  const navDrawer = [...NAV.filter(visible), ...extraDrawer]
 
   // Recorrido de estudio filtrado por la visibilidad del grupo del alumno.
-  const modulosVisibles = modulos
+  //
+  // SIN ACCESO NO HAY RECORRIDO. El índice del temario viaja en el bundle, así
+  // que este componente podía pintar los 287 títulos del plan de R.E.S.C.A.T.E.
+  // a cualquiera que abriera la web sin cuenta —los títulos SON contenido de la
+  // academia, no un menú—. La lista se vacía antes de recorrerla, no se oculta
+  // por CSS: lo que no se pinta no se lee en el inspector.
+  const modulosVisibles = !veContenido ? [] : modulos
     .filter((f) => moduloVisible(f.id))
     .map((f) => ({ ...f, temas: f.temas.filter((t) => temaVisible(t.id)) }))
 
@@ -63,6 +95,20 @@ export default function Layout({ children }) {
   // Las consolas del super-admin y del director aprovechan todo el ancho: son
   // tablas y rejillas con su propia navegación lateral, no texto para leer.
   const esConsola = location.pathname.startsWith('/admin') || location.pathname.startsWith('/panel')
+
+  // NO INDEXAR lo que no es público. Con una sola página, `robots.txt` apenas
+  // decide nada: el rastreador descarga un documento y lo que lee después es lo
+  // que el JavaScript haya dejado puesto. Esta etiqueta es lo que de verdad
+  // respeta Google, y se recalcula en cada navegación.
+  useEffect(() => {
+    let meta = document.querySelector('meta[name="robots"]')
+    if (!meta) {
+      meta = document.createElement('meta')
+      meta.setAttribute('name', 'robots')
+      document.head.appendChild(meta)
+    }
+    meta.setAttribute('content', metaRobots(location.pathname))
+  }, [location.pathname])
 
   // Al cambiar de ruta, arranca arriba (sin animación) — SALVO cuando la ruta
   // trae un destino dentro de la propia página (`?t=` una palabra del glosario,
@@ -160,6 +206,10 @@ export default function Layout({ children }) {
           ))}
         </nav>
 
+        {/* Busca DENTRO de las lecciones. Sin acceso no se ofrece: escribir
+            aquí llevaría a «No has iniciado sesión», y los resultados serían
+            contenido de la academia. */}
+        {veContenido && (
         <form className="topbar-buscar" onSubmit={buscar} role="search">
           <Icon name="buscar" size={17} />
           <input
@@ -170,6 +220,7 @@ export default function Layout({ children }) {
             aria-label="Buscar en el temario"
           />
         </form>
+        )}
 
         <NavLink
           to="/cuenta"
@@ -226,7 +277,12 @@ export default function Layout({ children }) {
               </NavLink>
             ))}
 
-            <div className="nav-titulo">Recorrido de estudio</div>
+            {/* El rótulo solo si hay algo debajo. Sin acceso la lista queda
+                vacía, y un encabezado sobre la nada anuncia que existe un
+                temario y que a ti te lo están ocultando. */}
+            {modulosVisibles.length > 0 && (
+              <div className="nav-titulo">Recorrido de estudio</div>
+            )}
             {modulosVisibles.map((modulo) => (
               <div key={modulo.id} className="nav-grupo">
                 <NavLink
@@ -284,25 +340,32 @@ export default function Layout({ children }) {
               <p>Plataforma de estudio en Atención Prehospitalaria y Cuidados Críticos.</p>
             </div>
           </div>
-          <div className="footer-col">
-            <h4>Estudio</h4>
-            {/* /temario es el panel de visibilidad, exclusivo del staff. */}
-            {esStaff && <Link to="/temario">Temario (staff)</Link>}
-            <Link to="/examen">Examen</Link>
-            <Link to="/flashcards">Flashcards</Link>
-            <Link to="/logros">Logros</Link>
-          </div>
-          <div className="footer-col">
-            <h4>Avanza</h4>
-            <Link to="/progreso">Mi progreso</Link>
-            <Link to="/buscar">Buscar</Link>
-            {/* Sin sesión, "Empezar" lleva a crear la cuenta (no a un candado). */}
-            <Link to={autenticado && modulos[0] ? `/modulo/${modulos[0].id}` : '/cuenta'}>Empezar</Link>
-          </div>
+          {/* Las dos columnas de estudio son atajos a contenido de la
+              academia. Sin acceso no se pintan: un pie lleno de enlaces que
+              todos terminan en «inicia sesión» no ayuda a nadie y enseña el
+              mapa de lo que hay dentro. */}
+          {veContenido && (
+            <div className="footer-col">
+              <h4>Estudio</h4>
+              {/* /temario es el panel de visibilidad, exclusivo del staff. */}
+              {esStaff && <Link to="/temario">Temario (staff)</Link>}
+              <Link to="/examen">Examen</Link>
+              <Link to="/flashcards">Flashcards</Link>
+              <Link to="/logros">Logros</Link>
+            </div>
+          )}
+          {veContenido && (
+            <div className="footer-col">
+              <h4>Avanza</h4>
+              <Link to="/progreso">Mi progreso</Link>
+              <Link to="/buscar">Buscar</Link>
+              <Link to={modulos[0] ? `/modulo/${modulos[0].id}` : '/cuenta'}>Empezar</Link>
+            </div>
+          )}
           <div className="footer-col">
             <h4>Materiales</h4>
             {esStaff && <Link to="/temario">Guías descargables</Link>}
-            <Link to="/logros">Logros y glosario</Link>
+            {veContenido && <Link to="/logros">Logros y glosario</Link>}
             {/* Las licencias CC BY del material visual del temario obligan a que
                 la atribución esté accesible. Este es el enlace estable a ella. */}
             <Link to="/creditos">Créditos del material visual</Link>
@@ -314,13 +377,17 @@ export default function Layout({ children }) {
         </div>
         <div className="footer-pie">
           <span><strong>PTEM</strong></span>
-          <span>Desarrollado por Riders.Media · 2026 · Todos los derechos reservados</span>
+          <span>PTEM · desarrollada por Riders.Media · 2026 · Todos los derechos reservados</span>
           <span>
             Ilustraciones médicas de <Link to="/creditos">BioIcons y Servier Medical Art</Link>,
             bajo licencias abiertas.
           </span>
         </div>
       </footer>
+
+      {/* Tutorial de primera vez. Un único punto de montaje para toda la
+          aplicación: mira la ruta y decide. Ninguna pantalla sabe que existe. */}
+      <TutorialDeRuta />
     </div>
   )
 }

@@ -5,6 +5,8 @@ import { ETIQUETA_ROL, ROLES } from '../lib/roles.js'
 import { PLANES, TIPOS, ETIQUETA_PLAN, ETIQUETA_TIPO, DESCRIPCION_PLAN, validarPlanTipo } from '../lib/capacidades.js'
 import { rolAlReactivar, avisoDeReactivacion } from '../lib/cuentaModelo.js'
 import Icon from '../components/Icon.jsx'
+import FiltrosUsuarios from '../components/panel/FiltrosUsuarios.jsx'
+import { prepararLista, FILTRO_VACIO, ORDEN_DEFECTO } from '../lib/listaUsuarios.js'
 
 // ============================================================
 //  Consola del super-admin · ACADEMIAS y USUARIOS (Bloque N)
@@ -26,20 +28,17 @@ export default function AdminPage({ seccion = 'academias' }) {
   const [destinoReactivar, setDestinoReactivar] = useState('')
   const [error, setError] = useState('')
   const [aviso, setAviso] = useState('')
-  const [filtro, setFiltro] = useState('')
+  const [filtro, setFiltro] = useState(FILTRO_VACIO)
+  const [orden, setOrden] = useState(ORDEN_DEFECTO)
   const [ocupado, setOcupado] = useState(null)
   const [editando, setEditando] = useState(null)
 
   // El listado de usuarios es de TODA la plataforma y crece sin techo, así que
-  // el buscador no es un adorno: es la única forma de encontrar a alguien.
-  const usuariosFiltrados = useMemo(() => {
-    const q = filtro.trim().toLowerCase()
-    if (!q) return usuarios
-    return usuarios.filter((u) =>
-      [u.nombre, u.email, u.academiaId, ETIQUETA_ROL[u.rol] || u.rol]
-        .some((v) => String(v || '').toLowerCase().includes(q))
-    )
-  }, [usuarios, filtro])
+  // los filtros no son un adorno: son la única forma de encontrar a alguien.
+  // El ORDEN tampoco: sin él la lista salía como la devolviera Firestore, y
+  // comparando con `<` las mayúsculas y los acentos la desordenaban igual.
+  const usuariosFiltrados = useMemo(
+    () => prepararLista(usuarios, filtro, orden), [usuarios, filtro, orden])
 
   const correr = async (uid, fn, exito = '') => {
     setOcupado(uid)
@@ -151,13 +150,14 @@ export default function AdminPage({ seccion = 'academias' }) {
               contraseña nueva, o elimínalo. El correo de inicio de sesión solo puede cambiarlo cada
               usuario desde <strong>Mi cuenta</strong>.
             </p>
-            <input
-              type="search"
-              className="admin-buscar"
-              placeholder="Filtrar por nombre, correo, academia o rol…"
-              value={filtro}
-              onChange={(e) => setFiltro(e.target.value)}
-              aria-label="Filtrar usuarios"
+            <FiltrosUsuarios
+              usuarios={usuarios}
+              filtro={filtro}
+              onFiltro={setFiltro}
+              orden={orden}
+              onOrden={setOrden}
+              total={usuarios.length}
+              mostrados={usuariosFiltrados.length}
             />
             <div className="panel-tabla-wrap">
               <table className="panel-tabla panel-tabla--gestion">

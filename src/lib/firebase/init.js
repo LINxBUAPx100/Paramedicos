@@ -16,8 +16,8 @@
 //  rojo a desplegar una app que no puede hablar con su backend.
 // ============================================================
 import { initializeApp } from 'firebase/app'
-import { getAuth } from 'firebase/auth'
-import { getFirestore } from 'firebase/firestore'
+import { getAuth, connectAuthEmulator } from 'firebase/auth'
+import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore'
 import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check'
 
 const firebaseConfig = {
@@ -80,6 +80,41 @@ if (appCheckListo) {
 
 export const auth = getAuth(app)
 export const db = getFirestore(app)
+
+// --- EMULADOR local (solo desarrollo) -------------------------------------
+//
+// Hasta ahora la aplicación solo sabía hablar con el proyecto de PRODUCCIÓN, y
+// eso obligaba a elegir entre dos malas opciones para probar cualquier pantalla
+// con sesión: crear usuarios de prueba en la academia real —que aparecerían en
+// los listados de quien está trabajando— o no probar.
+//
+// Con `VITE_FIREBASE_EMULADOR=1` en el `.env` local, Auth y Firestore apuntan
+// al emulador y no se toca nada real. Se siembra con:
+//
+//     npx firebase-tools@15 emulators:start --only auth,firestore
+//     node scripts/seed-usuarios-prueba.mjs --apply
+//
+// DOS CANDADOS para que esto no llegue jamás a producción:
+//   · `import.meta.env.DEV` — Vite lo sustituye por `false` al construir, así
+//     que la condición entera se pliega a `false` y el bloque NUNCA se ejecuta
+//     en producción. Se comprueba en `tests/emuladorFueraDeProduccion.test.mjs`.
+//   · la variable tiene que estar puesta a mano en el `.env` local, que no se
+//     versiona.
+//
+// La constante NO se exporta a propósito. Exportándola, el empaquetador no
+// puede demostrar que nadie la use y conserva la rama muerta en el bundle
+// —comprobado: seguía apareciendo la cadena del aviso—. Sin export, se elimina
+// entera. La importación es ESTÁTICA porque `await` de nivel superior no
+// compila con el target actual (es2020), como ya documenta App Check arriba.
+const usandoEmulador = import.meta.env.DEV
+  && import.meta.env.VITE_FIREBASE_EMULADOR === '1'
+
+if (usandoEmulador) {
+  connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true })
+  connectFirestoreEmulator(db, '127.0.0.1', 8080)
+  console.warn('[Firebase] EMULADOR LOCAL: no se está tocando ningún dato real.')
+}
+
 // La config se re-exporta para poder crear una app SECUNDARIA (crear usuarios
 // desde el dashboard sin cerrar la sesión del administrador).
 export { firebaseConfig }

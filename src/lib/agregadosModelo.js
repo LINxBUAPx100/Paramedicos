@@ -181,6 +181,7 @@ function fichaDeTema(tema) {
     // lecciones del índice de módulo. Se resuelve aquí, donde el tema entero
     // todavía está delante, y la lista pinta lo que se calculó.
     estadoEditorial: estadoEditorialDe(tema),
+    propietario: tema.propietario || '',
     revision: tema.revision || null,
     icono: tema.icono || '',
     resumen: tema.resumen || '',

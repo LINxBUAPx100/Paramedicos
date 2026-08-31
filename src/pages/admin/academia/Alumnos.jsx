@@ -67,9 +67,11 @@ export default function AcademiaAlumnos() {
 
       <GestionMiembros
         miembros={datos.miembros}
+        inactivos={datos.miembrosInactivos}
         grupos={datos.grupos}
         gestion="superadmin"
         miUid={miUid}
+        academiaId={academiaId}
         onCambio={datos.recargar}
       />
 

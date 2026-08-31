@@ -1,8 +1,13 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ETIQUETA_ROL, ROLES, ROLES_DIRECTOR } from '../../lib/roles.js'
 import { etiquetaPrueba } from '../../lib/accesoModelo.js'
+import {
+  estaDadaDeBaja, accionesDeCuenta, rolAlReactivar, avisoDeReactivacion,
+} from '../../lib/cuentaModelo.js'
 import { gruposDeUsuario } from '../../lib/gruposDeUsuario.js'
 import Icon from '../Icon.jsx'
+import FiltrosUsuarios from './FiltrosUsuarios.jsx'
+import { prepararLista, FILTRO_VACIO, ORDEN_DEFECTO } from '../../lib/listaUsuarios.js'
 
 // ============================================================
 //  Miembros y roles: cambio de rol, grupo y estado según jerarquía
@@ -14,21 +19,57 @@ import Icon from '../Icon.jsx'
 //  una tabla imposible de recorrer.
 // ============================================================
 
-export default function GestionMiembros({ miembros, grupos = [], gestion, miUid, onCambio }) {
+export default function GestionMiembros({
+  miembros, inactivos = [], grupos = [], gestion, miUid, academiaId, onCambio,
+}) {
   const [ocupado, setOcupado] = useState(null) // uid en proceso
   const [error, setError] = useState('')
-  const [filtro, setFiltro] = useState('')
+  const [filtro, setFiltro] = useState(FILTRO_VACIO)
+  const [orden, setOrden] = useState(ORDEN_DEFECTO)
+  // Las cuentas INACTIVAS —suspendidas y dadas de baja— no se listan con las
+  // demás. Ésta es la única pantalla que puede enseñarlas, porque es la única
+  // desde la que se levanta una suspensión o se reactiva una baja.
+  const [verInactivos, setVerInactivos] = useState(false)
 
   const rolesDisponibles = gestion === 'superadmin' ? ROLES : ROLES_DIRECTOR
 
-  const visibles = useMemo(() => {
-    const q = filtro.trim().toLowerCase()
-    if (!q) return miembros
-    return miembros.filter((m) =>
-      [m.nombre, m.email, ETIQUETA_ROL[m.rol] || m.rol, grupos.find((g) => g.id === m.grupoId)?.nombre]
-        .some((v) => String(v || '').toLowerCase().includes(q))
-    )
-  }, [miembros, grupos, filtro])
+  const nombreDeGrupo = useCallback(
+    (id) => grupos.find((g) => g.id === id)?.nombre || id, [grupos])
+
+  // Lista base: las activas, más las inactivas si se han pedido.
+  const base = useMemo(
+    () => (verInactivos ? [...miembros, ...inactivos] : miembros),
+    [miembros, inactivos, verInactivos]
+  )
+
+  // Filtrar y ordenar en una pasada. El orden es lo que arregla que la lista
+  // saliera como Firestore la devolviera: por nombre, en español, ignorando
+  // mayúsculas y acentos (ver `lib/listaUsuarios.js`).
+  const visibles = useMemo(
+    () => prepararLista(base, filtro, orden, { nombreDeGrupo }),
+    [base, filtro, orden, nombreDeGrupo]
+  )
+
+  // Reactivar una cuenta dada de baja devuelve algo que la baja quitó: su
+  // academia. Por eso no basta con poner `estado: 'activo'` como hace el botón
+  // de suspender — hay una función que lo hace entero y deja rastro.
+  const reactivar = async (m) => {
+    const quien = m.nombre || m.email || m.id
+    if (!window.confirm(
+      `¿Reactivar la cuenta de ${quien}?\n\n${avisoDeReactivacion()}`
+    )) return
+    setOcupado(m.id)
+    setError('')
+    try {
+      const { reactivarUsuario } = await import('../../lib/firebase/admin.js')
+      await reactivarUsuario(m.id, { academiaId, rol: rolAlReactivar(m) })
+      onCambio()
+    } catch {
+      setError('No se pudo reactivar la cuenta (revisa permisos o conexión).')
+    } finally {
+      setOcupado(null)
+    }
+  }
 
   // ¿Puede quien mira editar a este miembro?
   const editable = (m) => {
@@ -98,14 +139,29 @@ export default function GestionMiembros({ miembros, grupos = [], gestion, miUid,
       </p>
       {error && <p className="cuenta-error" role="alert">{error}</p>}
 
-      <input
-        type="search"
-        className="admin-buscar"
-        placeholder="Buscar por nombre, correo, rol o grupo…"
-        value={filtro}
-        onChange={(e) => setFiltro(e.target.value)}
-        aria-label="Buscar miembros"
+      <FiltrosUsuarios
+        usuarios={base}
+        filtro={filtro}
+        onFiltro={setFiltro}
+        orden={orden}
+        onOrden={setOrden}
+        grupos={grupos}
+        total={base.length}
+        mostrados={visibles.length}
       />
+
+      {/* Solo aparece si hay alguna. Una casilla que nunca cambia nada es
+          ruido en una pantalla que ya tiene mucho que mirar. */}
+      {inactivos.length > 0 && (
+        <label className="panel-ver-bajas">
+          <input
+            type="checkbox"
+            checked={verInactivos}
+            onChange={(e) => setVerInactivos(e.target.checked)}
+          />
+          Mostrar cuentas inactivas ({inactivos.length})
+        </label>
+      )}
 
       <div className="panel-tabla-wrap">
         <table className="panel-tabla panel-tabla--gestion">
@@ -121,7 +177,13 @@ export default function GestionMiembros({ miembros, grupos = [], gestion, miUid,
           <tbody>
             {visibles.map((m) => {
               const puede = editable(m)
-              const suspendido = m.estado && m.estado !== 'activo'
+              // `eliminado` NO es `suspendido`, y confundirlos tenía
+              // consecuencias: el botón de «Reactivar» ponía `estado: 'activo'`
+              // sobre una cuenta dada de baja, que se quedaba activa pero SIN
+              // academia —activa por dentro y rota por fuera, justo lo que
+              // `reactivarExigeAcademia` existe para evitar—.
+              const deBaja = estaDadaDeBaja(m)
+              const suspendido = !deBaja && m.estado && m.estado !== 'activo'
               const prueba = etiquetaPrueba(m)
               const quien = m.nombre || m.email || m.id
               const sinNombre = !m.nombre
@@ -197,24 +259,57 @@ export default function GestionMiembros({ miembros, grupos = [], gestion, miUid,
                     )}
                   </td>
                   <td data-label="Estado">
-                    {puede ? (
-                      <button
-                        type="button"
-                        className={`panel-estado-btn ${suspendido ? 'suspendido' : 'activo'}`}
-                        disabled={ocupado === m.id}
-                        onClick={() => {
-                          if (
-                            !suspendido
-                            && !window.confirm(
-                              `¿Suspender el acceso de ${quien}?\n\n` +
-                              'Ya no podrá ingresar, pero conservará sus datos y su avance.'
-                            )
-                          ) return
-                          aplicar(m.id, { estado: suspendido ? 'activo' : 'suspendido' })
-                        }}
-                      >
-                        {ocupado === m.id ? '…' : suspendido ? 'Reactivar' : 'Suspender'}
-                      </button>
+                    {deBaja ? (
+                      <span className="panel-baja-celda">
+                        <span className="panel-rol-tag rol-suspendido">Dada de baja</span>
+                        {accionesDeCuenta(m, { esSuperadmin: gestion === 'superadmin' })
+                          .includes('reactivar') ? (
+                            <button
+                              type="button"
+                              className="btn btn--sm btn--primario"
+                              disabled={ocupado === m.id}
+                              onClick={() => reactivar(m)}
+                            >
+                              {ocupado === m.id ? '…' : 'Reactivar'}
+                            </button>
+                          ) : (
+                            // Las reglas no dejan a un director tocar una cuenta
+                            // que ya no pertenece a su academia. Ofrecerle el
+                            // botón sería ofrecerle un fallo.
+                            <small className="panel-baja-nota">
+                              La reactiva el administrador de la plataforma.
+                            </small>
+                          )}
+                      </span>
+                    ) : puede ? (
+                      <span className="panel-baja-celda">
+                        {/* Una suspendida solo se ve con la casilla marcada, así
+                            que conviene decir en qué estado está además de qué
+                            se puede hacer con ella. */}
+                        {suspendido && (
+                          <span className="panel-rol-tag rol-suspendido">Suspendida</span>
+                        )}
+                        <button
+                          type="button"
+                          className={`panel-estado-btn ${suspendido ? 'suspendido' : 'activo'}`}
+                          disabled={ocupado === m.id}
+                          onClick={() => {
+                            if (
+                              !suspendido
+                              && !window.confirm(
+                                `¿Suspender el acceso de ${quien}?\n\n` +
+                                'Ya no podrá ingresar, pero conservará sus datos y su avance. '
+                                + 'Dejará de aparecer en los listados hasta que la reactives.'
+                              )
+                            ) return
+                            aplicar(m.id, { estado: suspendido ? 'activo' : 'suspendido' })
+                          }}
+                        >
+                          {ocupado === m.id
+                            ? '…'
+                            : suspendido ? 'Levantar suspensión' : 'Suspender'}
+                        </button>
+                      </span>
                     ) : (
                       <span className={`panel-rol-tag ${suspendido ? 'rol-suspendido' : 'rol-activo'}`}>
                         {suspendido ? 'Suspendido' : 'Activo'}
@@ -262,7 +357,7 @@ export default function GestionMiembros({ miembros, grupos = [], gestion, miUid,
       </div>
 
       {visibles.length === 0 && (
-        <p className="panel-vacio">Nadie coincide con «{filtro}».</p>
+        <p className="panel-vacio">Nadie coincide con los filtros puestos.</p>
       )}
     </section>
   )

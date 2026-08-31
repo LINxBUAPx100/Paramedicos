@@ -1,10 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Nota: la app usa HashRouter, así que hoy solo la home es una URL indexable.
-     Cuando se migre a BrowserRouter + prerender, añadir aquí cada /tema/… -->
+<!--
+  SOLO PORTADAS PÚBLICAS. Nunca se añade aquí una ruta de contenido.
+
+  La nota anterior decía «cuando se migre a BrowserRouter, añadir aquí cada
+  /tema/…». Eso es exactamente lo que NO debe hacerse: publicaría en Google el
+  índice completo del plan de estudios de R.E.S.C.A.T.E., que es contenido de
+  la academia y no material de captación. Se corrige el 30 de agosto de 2026.
+
+  Hoy la app usa HashRouter, así que la única URL que un buscador puede ver es
+  la raíz. Las direcciones de carrera que se listan abajo empiezan a existir
+  como URLs reales con el trabajo F1 (dominio propio + BrowserRouter); se dejan
+  ya escritas para que ese día no haya que acordarse, y mientras tanto
+  redirigen a la raíz sin causar daño.
+
+  Regla, por si alguien duda: aquí solo entra lo que quieres que un desconocido
+  encuentre en Google. Nada que cuelgue de RutaProtegida.
+-->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://linxbuapx100.github.io/Paramedicos/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://linxbuapx100.github.io/Paramedicos/paramedicos</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://linxbuapx100.github.io/Paramedicos/enfermeria</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://linxbuapx100.github.io/Paramedicos/tsu-paramedico</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://linxbuapx100.github.io/Paramedicos/licenciatura-paramedico</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://linxbuapx100.github.io/Paramedicos/proteccion-civil</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://linxbuapx100.github.io/Paramedicos/cursos</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://linxbuapx100.github.io/Paramedicos/creditos</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://linxbuapx100.github.io/Paramedicos/terminos-y-condiciones</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
 </urlset>

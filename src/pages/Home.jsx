@@ -4,6 +4,7 @@ import { useProgress } from '../context/ProgressContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useIndiceContenido, useCursos } from '../context/ContenidoContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
+import { motivoSinPrograma } from '../lib/programasModelo.js'
 import { idsVisiblesDeHome } from '../lib/homeModelo.js'
 import { gruposDelPanel } from '../lib/gruposDeUsuario.js'
 import Icon from '../components/Icon.jsx'
@@ -45,7 +46,7 @@ const HERO_SIZES = '(max-width: 880px) 90vw, 850px'
 // ============================================================
 export default function Home() {
   const { estado } = useProgress()
-  const { academia } = useAuth()
+  const { academia, rol, grupo, esSuperadmin } = useAuth()
   // Índice de LA academia del usuario (bundle para visitantes/legacy).
   const { modulos, stats } = useIndiceContenido()
   const { moduloVisible } = useVisibilidad()
@@ -54,6 +55,17 @@ export default function Home() {
   const progresoGlobal = Math.round((temasLeidos / stats.temas) * 100)
   // El carrusel solo muestra los módulos liberadas para el grupo del alumno.
   const modulosVisibles = modulos.filter((f) => moduloVisible(f.id))
+
+  // SIN PLAN DE ESTUDIOS NO HAY TEMARIO QUE ENSEÑAR, tampoco aquí.
+  //
+  // `/` no pasa por RutaProtegida —es la raíz—, así que un alumno con cuenta y
+  // academia pero SIN GRUPO llegaba a este Home y veía el carrusel con los
+  // siete módulos: títulos, subtítulos, descripciones y su número de temas. La
+  // página que sí está protegida le decía «necesitas un código de grupo»
+  // mientras el Home le enseñaba el índice del curso. Encontrado auditando con
+  // un usuario de prueba en ese estado.
+  const bloqueo = motivoSinPrograma({ rol, esSuperadmin, grupo })
+  if (bloqueo) return <SinPrograma bloqueo={bloqueo} />
 
   const secciones = idsVisiblesDeHome(academia)
   const SECCION = {
@@ -84,6 +96,23 @@ export default function Home() {
           {id === 'hero' && <SelectorGrupoProfesor />}
         </Fragment>
       ))}
+    </div>
+  )
+}
+
+// Alumno con cuenta y academia, pero sin grupo (o con un grupo sin plan). No
+// se le enseña NADA del temario —ni el carrusel, ni las cifras, ni el atlas—:
+// se le dice qué le falta y dónde conseguirlo. Es el mismo texto que usa
+// RutaProtegida, para que la explicación no cambie según por dónde llegue.
+function SinPrograma({ bloqueo }) {
+  return (
+    <div className="acceso-restringido" role="status">
+      <span className="acceso-ico"><Icon name="candado" size={30} /></span>
+      <h1>{bloqueo.titulo}</h1>
+      <p>{bloqueo.texto}</p>
+      <Link to={bloqueo.destino} className="btn btn--pildora btn--carbon">
+        {bloqueo.codigo === 'sin-grupo' ? 'Ingresar mi código de grupo' : 'Ir a mi cuenta'}
+      </Link>
     </div>
   )
 }
