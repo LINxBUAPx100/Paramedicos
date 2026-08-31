@@ -87,7 +87,7 @@ cuota gratuita de Spark da para ~173 cargas al día.
 
 | # | Trabajo | Duración | Depende de |
 |---|---|---|---|
-| **P10** | Regenerar los agregados de R.E.S.C.A.T.E. (hoy cada carga cuesta 288 lecturas en vez de 3) | corta | — · **destapado por P3** |
+| **P10** | Regenerar los agregados de R.E.S.C.A.T.E. (hoy cada carga cuesta 288 lecturas en vez de 3) | corta | **código hecho el 31-08** · falta que un director pulse el botón en Panel → Contenido |
 | **F1** | Dominio propio + Firebase Hosting + `BrowserRouter` | 1-2 días | — · **cabe en Spark** · las portadas de P4 ya existen y esperan sus URLs |
 | **P5** | Optimización del arranque (la no-indexación ya está en P8) | 1-2 días | — · **P2 hecho, ya no bloquea** |
 | **A** | Calidad editorial v2 | larga, por lotes | — · **P2 hecho, ya no bloquea** |
@@ -689,20 +689,38 @@ Ese segundo número es el que preocupa: 173 cargas al día con 10 profesores
 validando y dos alumnos todavía fuera. En cuanto entre un grupo real, se agota
 —y agotada la cuota, Firestore deja de responder hasta el día siguiente.
 
-Qué hay que hacer:
+#### La causa: un aviso que solo vivía en una consola
 
-1. Averiguar **por qué no se generaron**. `clonarPlantillaAAcademia` llama a
-   `escribirAgregadosDeCurso`; o el clonado de P1 no pasó por ahí, o falló sin
-   avisar. Si fue lo segundo, el clonado de la próxima academia repetirá el
-   fallo en silencio.
-2. Generarlos para `RES-2026__paramedico-tum` y comprobar que el sello
-   (`cursos/{id}.agregados`) queda al día y que `agregadosUtilizables` da true.
-3. Medir de nuevo las lecturas de una carga para confirmar que baja a 3.
-4. Una prueba que impida la regresión: un curso clonado sin agregados debería
-   ser un fallo visible, no un camino lento silencioso.
+`clonarPlantillaAAcademia` **sí** escribe los agregados, dentro de un try/catch
+que registraba el fallo con `console.warn` y marcaba la clonación como completa
+igual. Esa decisión —«un fallo aquí no invalida la clonación»— es defendible; lo
+que no lo es son sus consecuencias: la consola de quien clonó se cerró hace
+semanas, nadie vio nada, y el único síntoma tardó en salir a la luz por
+casualidad. **Un aviso que solo vive en una consola cerrada no es un aviso.**
 
-Duración: corta. No toca contenido ni firmas —los agregados se derivan de los
-temas, que ya pasaron sus reglas— y se puede rehacer las veces que haga falta.
+#### Hecho el 31-08-2026
+
+| | |
+|---|---|
+| El resultado se escribe en el curso | `clonacion.agregados` = `ok` / `fallo` y `clonacion.agregadosMotivo`. Ahora se puede consultar, no solo mirar mientras pasa |
+| El panel del director lo enseña | `src/pages/panel/Contenido.jsx` pinta el estado por curso con la cifra que hace actuar: cuántas cargas al día aguanta antes de agotar la cuota |
+| Y lo arregla | Un botón que llama a `regenerarAgregados`. Su comentario ya hablaba de «la acción manual del panel»: la acción no existía |
+| Lógica probada | `src/lib/estadoAgregados.js` + 7 pruebas, sin Firebase ni React |
+
+**Por qué un botón y no un script.** Un script contra producción necesita una
+clave de service account, y ésas son justo las que no conviene repartir ni
+dejar en un `Downloads`. Con el botón lo arregla el director desde su propia
+sesión, y las reglas ya lo permiten (`esAdminDe` + `academiaEditaContenido`,
+cubierto por `agregados.rules.test.mjs`).
+
+#### Lo que falta
+
+Que un director de R.E.S.C.A.T.E. entre a **Panel → Contenido** y pulse
+«Generar los índices» en `RES-2026__paramedico-tum`. Después hay que comprobar
+que el sello queda al día y que la carga baja a 3 lecturas.
+
+No lo puede hacer la IA: exige una sesión de director, y pedir esa contraseña
+sería exactamente el error que ya se cometió una vez con la clave de servicio.
 
 ### P5 — Optimización del arranque
 

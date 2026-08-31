@@ -1158,6 +1158,46 @@ textarea:focus-visible,
   font-size: var(--t-sm);
 }
 .pc-detalle { color: var(--texto-2); flex: 1; min-width: 140px; }
+
+/* --- Estado de los ÍNDICES de un curso (panel del director) ---
+   Ocupa la fila entera debajo del curso, no una columna más: es un aviso con
+   una acción, no un dato de la ficha. Solo se pinta cuando el sello ya se ha
+   consultado (ver CursoDelPanel), porque decir «sin índices» antes de mirar
+   sería mentir. */
+.pc-indices {
+  flex: 1 0 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--e-6);
+  margin-top: var(--e-8);
+  padding: var(--e-12);
+  border-radius: var(--radio-sm);
+  background: var(--bg-2);
+  border: 1px solid var(--borde);
+}
+/* Grave = nunca generados o caducados. El color entra por el borde y el
+   título, no por el fondo: un bloque ámbar entero al lado de cada curso
+   convierte un aviso útil en ruido que se aprende a ignorar. */
+.pc-indices.is-grave {
+  border-color: color-mix(in srgb, var(--alerta) 55%, var(--borde));
+}
+.pc-indices-tit {
+  display: flex;
+  align-items: center;
+  gap: var(--e-6);
+  margin: 0;
+  font-weight: 700;
+  color: var(--texto);
+}
+.pc-indices.is-grave .pc-indices-tit { color: color-mix(in srgb, var(--alerta) 70%, var(--texto)); }
+.pc-indices-txt { margin: 0; color: var(--texto-2); max-width: 72ch; }
+/* La cifra es lo que hace actuar: «faltan los agregados» no le dice nada a
+   nadie, «caben 173 cargas al día» sí. */
+.pc-indices-cifra { margin: 0; color: var(--texto-2); }
+.pc-indices-cifra strong { font-family: var(--fuente-cifra); color: var(--texto); }
+.pc-indices-ok { margin: 0; color: var(--exito); font-weight: 600; }
+.pc-indices-mal { margin: 0; color: var(--urgencia); font-weight: 600; }
 .pc-estado {
   padding: 2px var(--e-8);
   border-radius: 999px;

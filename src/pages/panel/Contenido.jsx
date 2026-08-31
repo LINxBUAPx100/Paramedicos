@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { usePanel } from '../../components/panel/PanelShell.jsx'
 import { registrar } from '../../lib/registro.js'
+import { resumenDeIndices, temasDeEstructura } from '../../lib/estadoAgregados.js'
 import Icon from '../../components/Icon.jsx'
 
 // ============================================================
@@ -12,6 +13,85 @@ import Icon from '../../components/Icon.jsx'
 //  últimamente. El historial ya se escribía desde la Fase 6: lo que faltaba
 //  era enseñarlo (mismo caso que `historialPermisos` en el Bloque M).
 // ============================================================
+
+// ---------- Un curso, con el estado de sus índices ----------
+//
+//  POR QUÉ ESTO EXISTE. El 31 de agosto de 2026 se descubrió que el temario de
+//  R.E.S.C.A.T.E. llevaba desde su migración sin índices. No estaba roto —el
+//  buscador, el glosario y los exámenes funcionan igual— y por eso nadie lo
+//  notó: el único síntoma era que cada carga costaba 288 lecturas de Firestore
+//  en vez de 3, y la cuota gratuita da para unas 173 cargas al día.
+//
+//  El fallo original está en la clonación, que se traga el error en un
+//  `console.warn`. Pero aunque eso se arregle, hacía falta una forma de
+//  REPARARLO sin credenciales de administrador, porque la alternativa era una
+//  clave de service account y ésas son justo las que no conviene repartir.
+//  Con este botón lo arregla el director desde su propia sesión.
+//
+//  El texto no dice «faltan los agregados»: eso no le dice nada a nadie. Dice
+//  cuántas cargas al día aguanta hoy, que es lo que hace actuar.
+function CursoDelPanel({ curso, academiaId, sello }) {
+  const [trabajando, setTrabajando] = useState(false)
+  const [resultado, setResultado] = useState(null)
+  // `undefined` = el sello aún no se ha consultado. Mientras tanto no se pinta
+  // nada del estado: decir «sin índices» antes de haber mirado sería mentir.
+  const consultado = sello !== undefined
+  const temas = temasDeEstructura(curso.estructura)
+  const r = consultado ? resumenDeIndices({ sello, temas }) : null
+
+  const generar = async () => {
+    setTrabajando(true)
+    setResultado(null)
+    try {
+      const api = await import('../../lib/firebase/contenido.js')
+      await api.regenerarAgregados(academiaId, curso.id)
+      setResultado({ ok: true, texto: 'Índices generados. Recarga para verlo reflejado.' })
+    } catch (err) {
+      registrar('panel:regenerar-agregados', err)
+      // El motivo importa: casi siempre será un permiso, y el director tiene
+      // que poder distinguirlo de un fallo pasajero.
+      setResultado({ ok: false, texto: `No se pudieron generar: ${err?.message || 'error desconocido'}` })
+    } finally {
+      setTrabajando(false)
+    }
+  }
+
+  return (
+    <li className={`pc-item ${curso.estado === 'publicado' ? 'activo' : 'inactivo'}`}>
+      <strong className="pg-nombre">{curso.titulo || curso.id}</strong>
+      <span className="pc-detalle">
+        {(Array.isArray(curso.estructura) ? curso.estructura.length : curso.estructura?.modulos?.length ?? 0)} módulo(s)
+        {temas ? ` · ${temas} temas` : ''}
+        {curso.version ? ` · versión ${curso.version}` : ''}
+      </span>
+      <span className={`pc-estado ${curso.estado === 'publicado' ? 'activo' : 'inactivo'}`}>
+        {curso.estado || 'borrador'}
+      </span>
+
+      {r && (
+        <div className={`pc-indices ${r.grave ? 'is-grave' : ''}`}>
+          <p className="pc-indices-tit">
+            <Icon name={r.grave ? 'alerta' : 'verificado'} size={16} /> {r.titulo}
+          </p>
+          <p className="pc-indices-txt">{r.detalle}</p>
+          <p className="pc-indices-cifra">
+            Hoy cada carga del temario cuesta <strong>{r.lecturasPorCarga}</strong> lectura(s):
+            caben unas <strong>{r.cargasAlDia.toLocaleString('es-MX')}</strong> al día
+            antes de agotar la cuota gratuita.
+          </p>
+          <button className="btn btn--pildora" onClick={generar} disabled={trabajando}>
+            {trabajando ? 'Generando…' : r.accion}
+          </button>
+          {resultado && (
+            <p className={resultado.ok ? 'pc-indices-ok' : 'pc-indices-mal'} role="status">
+              {resultado.texto}
+            </p>
+          )}
+        </div>
+      )}
+    </li>
+  )
+}
 
 const ETIQUETA_ACCION = {
   'crear-nodo': 'creó',
@@ -27,6 +107,9 @@ const ETIQUETA_ACCION = {
 export default function PanelContenido() {
   const { academiaId, academia, miembros } = usePanel()
   const [cursos, setCursos] = useState(null)
+  // Sello de índices por curso: `undefined` = todavía sin consultar,
+  // `null` = consultado y no existe (que es el caso que hay que enseñar).
+  const [sellos, setSellos] = useState({})
   const [historial, setHistorial] = useState(null) // null = cargando; [] = vacío
   const [sinHistorial, setSinHistorial] = useState(false)
 
@@ -39,6 +122,14 @@ export default function PanelContenido() {
       const lista = await api.cursosDeAcademia(academiaId, { soloPublicados: false })
         .catch((err) => { registrar('panel:cursos', err); return [] })
       if (vivo) setCursos(lista)
+
+      // El sello vive en la colección `agregados`, no en el curso, así que hay
+      // que pedirlo aparte: una lectura por curso, y son dos o tres.
+      const { selloDeAgregados } = await import('../../lib/firebase/agregados.js')
+      for (const c of lista) {
+        const s = await selloDeAgregados(c.id).catch(() => null)
+        if (vivo) setSellos((prev) => ({ ...prev, [c.id]: s || null }))
+      }
       try {
         const h = await api.historialDeAcademia(academiaId)
         if (vivo) setHistorial(h)
@@ -89,16 +180,7 @@ export default function PanelContenido() {
         ) : (
           <ul className="pc-lista">
             {cursos.map((c) => (
-              <li key={c.id} className={`pc-item ${c.estado === 'publicado' ? 'activo' : 'inactivo'}`}>
-                <strong className="pg-nombre">{c.titulo || c.id}</strong>
-                <span className="pc-detalle">
-                  {(c.estructura?.modulos?.length ?? 0)} modulo(s)
-                  {c.version ? ` · versión ${c.version}` : ''}
-                </span>
-                <span className={`pc-estado ${c.estado === 'publicado' ? 'activo' : 'inactivo'}`}>
-                  {c.estado || 'borrador'}
-                </span>
-              </li>
+              <CursoDelPanel key={c.id} curso={c} academiaId={academiaId} sello={sellos[c.id]} />
             ))}
           </ul>
         )}

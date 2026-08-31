@@ -150,6 +150,19 @@ export async function clonarPlantillaAAcademia({ academiaId, plantillaId, onProg
     // funciona por el camino completo. Se registra y se sigue; el sello que
     // escribe `escribirAgregadosDeCurso` es lo que activa el camino barato, y
     // sin él el resolutor no lo intenta.
+    // Un fallo aquí NO invalida la clonación, pero SÍ tiene que quedar escrito.
+    //
+    // Antes solo se registraba con `console.warn`, y eso resultó ser lo mismo
+    // que no registrarlo: R.E.S.C.A.T.E. se migró el 31-08-2026 y sus agregados
+    // nunca se escribieron. La clonación se dio por completa, nadie vio la
+    // consola de quien clonó, y el único síntoma —cada carga costando 288
+    // lecturas en vez de 3— tardó semanas en salir a la luz, y por casualidad.
+    //
+    // Ahora el resultado viaja en el documento del curso, así que se puede ver
+    // en el panel y consultar después. Un aviso que solo vive en una consola
+    // cerrada no es un aviso.
+    let resultadoAgregados = 'ok'
+    let motivoAgregados = null
     try {
       const temasPorId = new Map(temas.map((t) => [t.temaId, t]))
       const { modulos } = ensamblarModulos(curso.estructura, temasPorId, { incluirBorradores: true })
@@ -158,11 +171,15 @@ export async function clonarPlantillaAAcademia({ academiaId, plantillaId, onProg
         modulos: construirApi(modulos).modulos,
       })
     } catch (err) {
-      console.warn(`[contenido] Agregados no generados para ${cursoId}:`, err?.message || err)
+      resultadoAgregados = 'fallo'
+      motivoAgregados = String(err?.message || err).slice(0, 300)
+      console.warn(`[contenido] Agregados no generados para ${cursoId}:`, motivoAgregados)
     }
 
     await updateDoc(doc(db, 'cursos', cursoId), {
       'clonacion.completa': true,
+      'clonacion.agregados': resultadoAgregados,
+      'clonacion.agregadosMotivo': motivoAgregados,
       actualizado: serverTimestamp(),
     })
     await marcarEstadoContenido(academiaId, { estado: 'migrado', plantillaId, version })
