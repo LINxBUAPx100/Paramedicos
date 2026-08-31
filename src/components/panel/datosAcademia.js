@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { agregarIntentos } from '../../lib/panelModelo.js'
+import { separarInactivas } from '../../lib/cuentaModelo.js'
 import { registrar } from '../../lib/registro.js'
 
 // ============================================================
@@ -70,8 +71,19 @@ export function useDatosAcademia(academiaId) {
   // la tabla de avance y las estadísticas.
   const porAlumno = useMemo(() => agregarIntentos(datos?.intentos), [datos])
 
+  // Las cuentas INACTIVAS —suspendidas y dadas de baja— salen del listado
+  // general aquí, en el único punto por el que pasan todas las pantallas del
+  // panel. Filtrar en cada consumidor habría dejado alguno sin filtrar tarde o
+  // temprano, y de hecho pasó: «permisos de edición de profesores» seguía
+  // ofreciendo permisos a un profesor suspendido, que no puede ni entrar.
+  // Se devuelven aparte, no se tiran: la tabla de miembros las enseña bajo
+  // petición explícita para levantar la suspensión o reactivar la baja.
+  const { activos, inactivos } = useMemo(
+    () => separarInactivas(datos?.miembros), [datos])
+
   return {
-    miembros: datos?.miembros || [],
+    miembros: activos,
+    miembrosInactivos: inactivos,
     intentos: datos?.intentos || [],
     grupos: datos?.grupos || [],
     solicitudes: datos?.solicitudes || [],
