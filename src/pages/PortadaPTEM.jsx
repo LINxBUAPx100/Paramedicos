@@ -137,7 +137,6 @@ function CapacidadesPTEM() {
 // ---------- Alianza ----------
 function AliadoRescate() {
   return (
-<<<<<<< Updated upstream
     <section className="pt-aliado" aria-labelledby="pt-aliado-t">
       <div className="lp-wrap pt-aliado-in">
         <span className="lp-etiqueta">Alianza</span>
@@ -149,48 +148,6 @@ function AliadoRescate() {
           academia pone el programa, el cuerpo docente que lo valida y la formación
           presencial que ninguna pantalla sustituye.
         </p>
-=======
-    <section className="pt-voces" aria-labelledby="pt-voces-t">
-      {/* El hilo que serpentea detrás de las voces. Es la pieza que hace que
-          esto se lea como algo dibujado y no como cuatro tarjetas alineadas:
-          las voces cuelgan de él a alturas distintas. Decorativo puro, así que
-          va oculto al lector de pantalla. En pantalla estrecha desaparece —con
-          una sola columna no serpentea nada, solo mancha. */}
-      <svg className="pt-hilo" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M50 0 C 18 16, 82 32, 50 50 S 18 84, 50 100" vectorEffect="non-scaling-stroke" />
-      </svg>
-
-      <div className="lp-wrap pt-voces-in">
-        <div className="pt-voces-cab">
-          <h2 id="pt-voces-t">Cómo se vive PTEM</h2>
-          <p>
-            El contenido académico que vive aquí es el plan de estudios oficial de{' '}
-            <strong>R.E.S.C.A.T.E.</strong>, y le pertenece. La academia pone el programa,
-            el cuerpo docente que lo valida y la formación presencial que ninguna pantalla
-            sustituye; PTEM pone el sitio donde todo eso se estudia, se evalúa y se sigue.
-            Así se reparte el día a día:
-          </p>
-        </div>
-
-        <ul className="pt-voces-lista">
-          {VOCES.map((v, i) => (
-            <Reveal
-              as="li"
-              key={v.pie}
-              className="pt-voz"
-              delay={i * 90}
-              style={{ '--tono': v.tono }}
-            >
-              {/* Las comillas angulares van en el texto, no en un ::before
-                  decorativo: así se copian con la frase y el lector de pantalla
-                  las anuncia como lo que son, una cita. */}
-              <p className="pt-voz-cita">«{v.cita}»</p>
-              <p className="pt-voz-pie">{v.pie}</p>
-            </Reveal>
-          ))}
-        </ul>
-
->>>>>>> Stashed changes
         <a
           href="https://rescate.pro"
           target="_blank"
