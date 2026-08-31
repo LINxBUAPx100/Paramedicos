@@ -155,6 +155,11 @@ export function contenidoTema(tema) {
     // revisar salía sobre material ya trabajado y el banco de examen se
     // quedaba permanentemente vacío (`bancoExamen.js` solo admite avalado).
     estadoEditorial: tema.estadoEditorial || '',
+    // Sello de PROPIEDAD, por el mismo motivo que las dos claves de arriba: lo
+    // que no se copia aquí se pierde en el viaje a Firestore, y un tema sin
+    // dueño declarado vuelve a nacer como de la academia al leerse. Hoy eso es
+    // cierto; deja de serlo en cuanto exista material de la plataforma.
+    propietario: tema.propietario || '',
     revision: tema.revision || null,
     // Nodos de EVALUACIÓN: un examen o una práctica no se mide por material de
     // estudio sino por su configuración, y sin ella `estadoEditorialDe` los
@@ -247,6 +252,7 @@ export function docsClonadosParaAcademia({ academiaId, plantillaId, plantillaTem
       // estado editorial y la ficha de revisión, o la academia recibe el
       // temario sin saber qué está validado y qué no.
       estadoEditorial: t.estadoEditorial || '',
+      propietario: t.propietario || '',
       revision: clonProfundo(t.revision ?? null),
       evaluacion: clonProfundo(t.evaluacion ?? null),
       alcanceExamen: clonProfundo(t.alcanceExamen ?? null),

@@ -95,6 +95,7 @@ export const planRescate = [
         "titulo": "Introducción.",
         "tituloOficial": "Introducción.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -318,6 +319,7 @@ export const planRescate = [
         "titulo": "AVDI y activación del SMU.",
         "tituloOficial": "AVDI y activación del SMU.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -568,6 +570,7 @@ export const planRescate = [
         "titulo": "RCP legos en adulto.",
         "tituloOficial": "RCP legos en adulto.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -799,6 +802,7 @@ export const planRescate = [
         "titulo": "Uso del DEA.",
         "tituloOficial": "Uso del DEA.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -1012,6 +1016,7 @@ export const planRescate = [
         "titulo": "OVACE. En adultos",
         "tituloOficial": "OVACE. En adultos",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -1284,6 +1289,7 @@ export const planRescate = [
         "titulo": "Hemorragias.",
         "tituloOficial": "Hemorragias.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -1514,6 +1520,7 @@ export const planRescate = [
         "titulo": "Fracturas.",
         "tituloOficial": "Fracturas.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -1698,6 +1705,7 @@ export const planRescate = [
         "titulo": "Quemaduras.",
         "tituloOficial": "Quemaduras.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -1934,6 +1942,7 @@ export const planRescate = [
         "titulo": "Botiquín ideal.",
         "tituloOficial": "Botiquín ideal.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -2113,6 +2122,7 @@ export const planRescate = [
         "titulo": "Evaluación inicial y secundaria. (XABCDE)",
         "tituloOficial": "Evaluación inicial y secundaria. (XABCDE)",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -2371,6 +2381,7 @@ export const planRescate = [
         "titulo": "Toma de signos vitales.",
         "tituloOficial": "Toma de signos vitales.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -2686,6 +2697,7 @@ export const planRescate = [
         "titulo": "Heridas especiales. (evisceración, arma de fuego y amputación).",
         "tituloOficial": "Heridas especiales. (evisceración, arma de fuego y amputación).",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -2959,6 +2971,7 @@ export const planRescate = [
         "titulo": "RCP en pediátrico y lactante.",
         "tituloOficial": "RCP en pediátrico y lactante.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -3194,6 +3207,7 @@ export const planRescate = [
         "titulo": "OVACE en pediátrico y lactante.",
         "tituloOficial": "OVACE en pediátrico y lactante.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -3394,6 +3408,7 @@ export const planRescate = [
         "titulo": "Intoxicaciones.",
         "tituloOficial": "Intoxicaciones.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -3709,6 +3724,7 @@ export const planRescate = [
         "titulo": "Taller de férulas y vendajes.",
         "tituloOficial": "Taller de férulas y vendajes.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -3901,6 +3917,7 @@ export const planRescate = [
         "titulo": "Bienestar del TUM.",
         "tituloOficial": "Bienestar del TUM.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -4132,6 +4149,7 @@ export const planRescate = [
         "titulo": "Aspectos médico-legales.",
         "tituloOficial": "Aspectos médico-legales.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -4505,6 +4523,7 @@ export const planRescate = [
         "titulo": "Terminología médica (sufijos y prefijos).",
         "tituloOficial": "Terminología médica (sufijos y prefijos).",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -4768,6 +4787,7 @@ export const planRescate = [
         "titulo": "Posiciones, líneas anatómicas y cuadrantes.",
         "tituloOficial": "Posiciones, líneas anatómicas y cuadrantes.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -5117,6 +5137,7 @@ export const planRescate = [
         "titulo": "Aplicación de examen, calificación de examen y entrega de calificaciones.",
         "tituloOficial": "Aplicación de examen, calificación de examen y entrega de calificaciones.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -5320,6 +5341,7 @@ export const planRescate = [
         "titulo": "Célula función y organelos.",
         "tituloOficial": "Célula función y organelos.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -5675,6 +5697,7 @@ export const planRescate = [
         "titulo": "Líquidos y electrolitos.",
         "tituloOficial": "Líquidos y electrolitos.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -6006,6 +6029,7 @@ export const planRescate = [
         "titulo": "Electrofisiología.",
         "tituloOficial": "Electrofisiología.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -6273,6 +6297,7 @@ export const planRescate = [
         "titulo": "Equilibrio ácido base.",
         "tituloOficial": "Equilibrio ácido base.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -6549,6 +6574,7 @@ export const planRescate = [
         "titulo": "Metabolismo.",
         "tituloOficial": "Metabolismo.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -6873,6 +6899,7 @@ export const planRescate = [
         "titulo": "Sistema tegumentario.",
         "tituloOficial": "Sistema tegumentario.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -7181,6 +7208,7 @@ export const planRescate = [
         "titulo": "1er EXAMEN",
         "tituloOficial": "1er EXAMEN",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -7247,6 +7275,7 @@ export const planRescate = [
         "titulo": "Sistema óseo.",
         "tituloOficial": "Sistema óseo.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -7596,6 +7625,7 @@ export const planRescate = [
         "titulo": "Sistema muscular.",
         "tituloOficial": "Sistema muscular.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -7869,6 +7899,7 @@ export const planRescate = [
         "titulo": "Sistema cardiovascular.",
         "tituloOficial": "Sistema cardiovascular.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -8231,6 +8262,7 @@ export const planRescate = [
         "titulo": "Sistema nervioso.",
         "tituloOficial": "Sistema nervioso.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -8636,6 +8668,7 @@ export const planRescate = [
         "titulo": "Sistema digestivo.",
         "tituloOficial": "Sistema digestivo.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -8956,6 +8989,7 @@ export const planRescate = [
         "titulo": "Sistema urinario.",
         "tituloOficial": "Sistema urinario.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -9265,6 +9299,7 @@ export const planRescate = [
         "titulo": "2do EXAMEN",
         "tituloOficial": "2do EXAMEN",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -9331,6 +9366,7 @@ export const planRescate = [
         "titulo": "Sistema hematopoyético.",
         "tituloOficial": "Sistema hematopoyético.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -9630,6 +9666,7 @@ export const planRescate = [
         "titulo": "Sistema linfático e inmunitario.",
         "tituloOficial": "Sistema linfático e inmunitario.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -9954,6 +9991,7 @@ export const planRescate = [
         "titulo": "Sistema reproductor masculino y femenino.",
         "tituloOficial": "Sistema reproductor masculino y femenino.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -10312,6 +10350,7 @@ export const planRescate = [
         "titulo": "Órganos de los sentidos.",
         "tituloOficial": "Órganos de los sentidos.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -10675,6 +10714,7 @@ export const planRescate = [
         "titulo": "Sistema endocrino.",
         "tituloOficial": "Sistema endocrino.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -11017,6 +11057,7 @@ export const planRescate = [
         "titulo": "PRÁCTICA",
         "tituloOficial": "PRÁCTICA",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -11114,6 +11155,7 @@ export const planRescate = [
         "titulo": "EXAMEN FINAL",
         "tituloOficial": "EXAMEN FINAL",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -11331,6 +11373,7 @@ export const planRescate = [
         "titulo": "SSS.",
         "tituloOficial": "SSS.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -11572,6 +11615,7 @@ export const planRescate = [
         "titulo": "AVDI",
         "tituloOficial": "AVDI",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -11827,6 +11871,7 @@ export const planRescate = [
         "titulo": "Apertura de vía aérea y control de cervicales.",
         "tituloOficial": "Apertura de vía aérea y control de cervicales.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -12068,6 +12113,7 @@ export const planRescate = [
         "titulo": "Evaluación de la respiración.",
         "tituloOficial": "Evaluación de la respiración.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -12328,6 +12374,7 @@ export const planRescate = [
         "titulo": "Evaluación de la circulación.",
         "tituloOficial": "Evaluación de la circulación.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -12569,6 +12616,7 @@ export const planRescate = [
         "titulo": "Evaluación neurológica.",
         "tituloOficial": "Evaluación neurológica.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -12816,6 +12864,7 @@ export const planRescate = [
         "titulo": "Exploración dirigida",
         "tituloOficial": "Exploración dirigida",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -13074,6 +13123,7 @@ export const planRescate = [
         "titulo": "ABCDE",
         "tituloOficial": "ABCDE",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -13332,6 +13382,7 @@ export const planRescate = [
         "titulo": "SAMPLE.",
         "tituloOficial": "SAMPLE.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -13577,6 +13628,7 @@ export const planRescate = [
         "titulo": "Exploración física detallada.",
         "tituloOficial": "Exploración física detallada.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -13812,6 +13864,7 @@ export const planRescate = [
         "titulo": "1er EXAMEN",
         "tituloOficial": "1er EXAMEN",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -13883,6 +13936,7 @@ export const planRescate = [
         "titulo": "Repaso anatomía y fisiología pulmonar.",
         "tituloOficial": "Repaso anatomía y fisiología pulmonar.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -14219,6 +14273,7 @@ export const planRescate = [
         "titulo": "Levantamiento del mentón.",
         "tituloOficial": "Levantamiento del mentón.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -14454,6 +14509,7 @@ export const planRescate = [
         "titulo": "Triple maniobra mod.",
         "tituloOficial": "Triple maniobra mod.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -14670,6 +14726,7 @@ export const planRescate = [
         "titulo": "Levantamiento del mentón e inclinación de cervicales.",
         "tituloOficial": "Levantamiento del mentón e inclinación de cervicales.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -14912,6 +14969,7 @@ export const planRescate = [
         "titulo": "Cánulas orofaríngeas.",
         "tituloOficial": "Cánulas orofaríngeas.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -15161,6 +15219,7 @@ export const planRescate = [
         "titulo": "Cánulas nasofaríngeas.",
         "tituloOficial": "Cánulas nasofaríngeas.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -15397,6 +15456,7 @@ export const planRescate = [
         "titulo": "Técnica de Intubación.",
         "tituloOficial": "Técnica de Intubación.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -15692,6 +15752,7 @@ export const planRescate = [
         "titulo": "Tipos de hojas y tamaños de tubo endotraqueal.",
         "tituloOficial": "Tipos de hojas y tamaños de tubo endotraqueal.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -15987,6 +16048,7 @@ export const planRescate = [
         "titulo": "Mascarilla laríngea.",
         "tituloOficial": "Mascarilla laríngea.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -16302,6 +16364,7 @@ export const planRescate = [
         "titulo": "Obturador esofágico.",
         "tituloOficial": "Obturador esofágico.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -16523,6 +16586,7 @@ export const planRescate = [
         "tituloOficial": "CricotirotomÍa con aguja.",
         "tituloVisible": "Cricotirotomía con aguja",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -16787,6 +16851,7 @@ export const planRescate = [
         "titulo": "Dispositivos de oxigenoterapia. (puntas nasales y BVM).",
         "tituloOficial": "Dispositivos de oxigenoterapia. (puntas nasales y BVM).",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -17097,6 +17162,7 @@ export const planRescate = [
         "titulo": "Tipos de tanques de o2.",
         "tituloOficial": "Tipos de tanques de o2.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -17355,6 +17421,7 @@ export const planRescate = [
         "titulo": "Intubación de secuencia rápida o asistida farmacológicamente.",
         "tituloOficial": "Intubación de secuencia rápida o asistida farmacológicamente.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -17635,6 +17702,7 @@ export const planRescate = [
         "titulo": "Terapia intravenosa ventajas y desventajas.",
         "tituloOficial": "Terapia intravenosa ventajas y desventajas.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -17927,6 +17995,7 @@ export const planRescate = [
         "titulo": "Sitios de punción.",
         "tituloOficial": "Sitios de punción.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -18186,6 +18255,7 @@ export const planRescate = [
         "titulo": "Soluciones cristaloides.",
         "tituloOficial": "Soluciones cristaloides.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -18490,6 +18560,7 @@ export const planRescate = [
         "titulo": "Técnica de canalización y práctica.",
         "tituloOficial": "Técnica de canalización y práctica.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -18783,6 +18854,7 @@ export const planRescate = [
         "tituloOficial": "Osteólisis.",
         "tituloVisible": "Acceso intraóseo (osteoclisis)",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -19119,6 +19191,7 @@ export const planRescate = [
         "titulo": "Electrocardiografía básica.",
         "tituloOficial": "Electrocardiografía básica.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -19427,6 +19500,7 @@ export const planRescate = [
         "titulo": "Uso del monitor desfibrilador.",
         "tituloOficial": "Uso del monitor desfibrilador.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -19726,6 +19800,7 @@ export const planRescate = [
         "titulo": "Arritmias letales.",
         "tituloOficial": "Arritmias letales.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -20028,6 +20103,7 @@ export const planRescate = [
         "titulo": "Código mega. Y práctica.",
         "tituloOficial": "Código mega. Y práctica.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -20392,6 +20468,7 @@ export const planRescate = [
         "titulo": "EXAMEN FINAL Y ENTREGA DE CALIFICACIONES",
         "tituloOficial": "EXAMEN FINAL Y ENTREGA DE CALIFICACIONES",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -20746,6 +20823,7 @@ export const planRescate = [
         "titulo": "Conceptos básicos de epidemiología.",
         "tituloOficial": "Conceptos básicos de epidemiología.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -21040,6 +21118,7 @@ export const planRescate = [
         "titulo": "Urgencia y emergencia.",
         "tituloOficial": "Urgencia y emergencia.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -21408,6 +21487,7 @@ export const planRescate = [
         "titulo": "Agudas o crónicas, por frecuencia, por origen y por sistemas.",
         "tituloOficial": "Agudas o crónicas, por frecuencia, por origen y por sistemas.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -21734,6 +21814,7 @@ export const planRescate = [
         "titulo": "Generalidades de farmacología.",
         "tituloOficial": "Generalidades de farmacología.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -22148,6 +22229,7 @@ export const planRescate = [
         "titulo": "Fármacos usados en el SMU según la NOM 034.",
         "tituloOficial": "Fármacos usados en el SMU según la NOM 034.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -22736,6 +22818,7 @@ export const planRescate = [
         "titulo": "Medicamentos y sus dosis en la urgencia.",
         "tituloOficial": "Medicamentos y sus dosis en la urgencia.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -23049,6 +23132,7 @@ export const planRescate = [
         "titulo": "Manejo de infusiones y aminas.",
         "tituloOficial": "Manejo de infusiones y aminas.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -23355,6 +23439,7 @@ export const planRescate = [
         "titulo": "Taller de ejercicios de aminas.",
         "tituloOficial": "Taller de ejercicios de aminas.",
         "estadoEditorial": "bloqueado_por_decision",
+        "propietario": "rescate",
         "revision": {
           "estado": "bloqueado_por_decision",
           "procedencia": "sin_material",
@@ -23385,6 +23470,7 @@ export const planRescate = [
         "titulo": "Exploración de tórax dirigida.",
         "tituloOficial": "Exploración de tórax dirigida.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -23730,6 +23816,7 @@ export const planRescate = [
         "titulo": "Síndrome de insuficiencia respiratoria.",
         "tituloOficial": "Síndrome de insuficiencia respiratoria.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -24089,6 +24176,7 @@ export const planRescate = [
         "titulo": "EPOC agudizado",
         "tituloOficial": "EPOC agudizado",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -24445,6 +24533,7 @@ export const planRescate = [
         "titulo": "Edema agudo de pulmón.",
         "tituloOficial": "Edema agudo de pulmón.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -24751,6 +24840,7 @@ export const planRescate = [
         "titulo": "Neumotórax espontáneo.",
         "tituloOficial": "Neumotórax espontáneo.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -25077,6 +25167,7 @@ export const planRescate = [
         "titulo": "TEP",
         "tituloOficial": "TEP",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -25405,6 +25496,7 @@ export const planRescate = [
         "titulo": "Neumonía y Bronquitis.",
         "tituloOficial": "Neumonía y Bronquitis.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -25740,6 +25832,7 @@ export const planRescate = [
         "titulo": "Asma.",
         "tituloOficial": "Asma.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -26074,6 +26167,7 @@ export const planRescate = [
         "titulo": "Exploración abdominal y abdomen agudo.",
         "tituloOficial": "Exploración abdominal y abdomen agudo.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -26414,6 +26508,7 @@ export const planRescate = [
         "titulo": "Apendicitis.",
         "tituloOficial": "Apendicitis.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -26720,6 +26815,7 @@ export const planRescate = [
         "titulo": "Pancreatitis.",
         "tituloOficial": "Pancreatitis.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -27014,6 +27110,7 @@ export const planRescate = [
         "titulo": "Gastritis y colitis.",
         "tituloOficial": "Gastritis y colitis.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -27325,6 +27422,7 @@ export const planRescate = [
         "titulo": "Colelitiasis y colecistitis.",
         "tituloOficial": "Colelitiasis y colecistitis.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -27640,6 +27738,7 @@ export const planRescate = [
         "titulo": "Deshidratación.",
         "tituloOficial": "Deshidratación.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -28000,6 +28099,7 @@ export const planRescate = [
         "titulo": "Oclusión intestinal.",
         "tituloOficial": "Oclusión intestinal.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -28303,6 +28403,7 @@ export const planRescate = [
         "titulo": "Sangrado de tubo digestivo.",
         "tituloOficial": "Sangrado de tubo digestivo.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -28630,6 +28731,7 @@ export const planRescate = [
         "titulo": "Cirrosis y hepatitis.",
         "tituloOficial": "Cirrosis y hepatitis.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -28991,6 +29093,7 @@ export const planRescate = [
         "titulo": "Exploración cardiaca.",
         "tituloOficial": "Exploración cardiaca.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -29399,6 +29502,7 @@ export const planRescate = [
         "titulo": "Electrocardiografía básica.",
         "tituloOficial": "Electrocardiografía básica.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -29765,6 +29869,7 @@ export const planRescate = [
         "titulo": "Síndrome coronario agudo.",
         "tituloOficial": "Síndrome coronario agudo.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -30098,6 +30203,7 @@ export const planRescate = [
         "titulo": "Paro cardiorrespiratorio RCP avanzado. \"Mega code\"",
         "tituloOficial": "Paro cardiorrespiratorio RCP avanzado. \"Mega code\"",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -30483,6 +30589,7 @@ export const planRescate = [
         "titulo": "Bradiarritmias y taquiarritmias.",
         "tituloOficial": "Bradiarritmias y taquiarritmias.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -30839,6 +30946,7 @@ export const planRescate = [
         "titulo": "Insuficiencia cardiaca.",
         "tituloOficial": "Insuficiencia cardiaca.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -31169,6 +31277,7 @@ export const planRescate = [
         "titulo": "Hipertensión arterial.",
         "tituloOficial": "Hipertensión arterial.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -31531,6 +31640,7 @@ export const planRescate = [
         "titulo": "Diabetes mellitus.",
         "tituloOficial": "Diabetes mellitus.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -31860,6 +31970,7 @@ export const planRescate = [
         "titulo": "Complicaciones diabéticas.",
         "tituloOficial": "Complicaciones diabéticas.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -32256,6 +32367,7 @@ export const planRescate = [
         "titulo": "Desequilibrio ácido- base.",
         "tituloOficial": "Desequilibrio ácido- base.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -32592,6 +32704,7 @@ export const planRescate = [
         "titulo": "1er EXAMEN",
         "tituloOficial": "1er EXAMEN",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -32691,6 +32804,7 @@ export const planRescate = [
         "titulo": "Infección de vías urinarias.",
         "tituloOficial": "Infección de vías urinarias.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -33005,6 +33119,7 @@ export const planRescate = [
         "titulo": "Urolitiasis.",
         "tituloOficial": "Urolitiasis.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -33329,6 +33444,7 @@ export const planRescate = [
         "titulo": "Desequilibrio electrolítico.",
         "tituloOficial": "Desequilibrio electrolítico.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -33673,6 +33789,7 @@ export const planRescate = [
         "titulo": "Insuficiencia renal.",
         "tituloOficial": "Insuficiencia renal.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -34086,6 +34203,7 @@ export const planRescate = [
         "titulo": "Exploración neurológica dirigida.",
         "tituloOficial": "Exploración neurológica dirigida.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -34414,6 +34532,7 @@ export const planRescate = [
         "titulo": "Cefalea y migraña.",
         "tituloOficial": "Cefalea y migraña.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -34744,6 +34863,7 @@ export const planRescate = [
         "titulo": "Accidente cerebrovascular.",
         "tituloOficial": "Accidente cerebrovascular.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -35106,6 +35226,7 @@ export const planRescate = [
         "titulo": "Crisis convulsivas y status epiléptico.",
         "tituloOficial": "Crisis convulsivas y status epiléptico.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -35434,6 +35555,7 @@ export const planRescate = [
         "titulo": "Síncope.",
         "tituloOficial": "Síncope.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -35783,6 +35905,7 @@ export const planRescate = [
         "titulo": "Exploración ginecológica dirigida.",
         "tituloOficial": "Exploración ginecológica dirigida.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -36104,6 +36227,7 @@ export const planRescate = [
         "titulo": "Cambios fisiológicos en el embarazo.",
         "tituloOficial": "Cambios fisiológicos en el embarazo.",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -36436,6 +36560,7 @@ export const planRescate = [
         "titulo": "Atención al trabajo de parto.",
         "tituloOficial": "Atención al trabajo de parto.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -36776,6 +36901,7 @@ export const planRescate = [
         "titulo": "Atención a parto distócico.",
         "tituloOficial": "Atención a parto distócico.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -37080,6 +37206,7 @@ export const planRescate = [
         "titulo": "Sufrimiento fetal agudo",
         "tituloOficial": "Sufrimiento fetal agudo",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -37416,6 +37543,7 @@ export const planRescate = [
         "titulo": "Hemorragia del 2do y 3er trimestre",
         "tituloOficial": "Hemorragia del 2do y 3er trimestre",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -37727,6 +37855,7 @@ export const planRescate = [
         "titulo": "Aborto",
         "tituloOficial": "Aborto",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -38065,6 +38194,7 @@ export const planRescate = [
         "titulo": "Embarazo ectópico.",
         "tituloOficial": "Embarazo ectópico.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -38363,6 +38493,7 @@ export const planRescate = [
         "titulo": "Torsión ovárica.",
         "tituloOficial": "Torsión ovárica.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -38668,6 +38799,7 @@ export const planRescate = [
         "titulo": "Hemorragia postparto.",
         "tituloOficial": "Hemorragia postparto.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -38968,6 +39100,7 @@ export const planRescate = [
         "titulo": "Eclampsia y preeclampsia.",
         "tituloOficial": "Eclampsia y preeclampsia.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -39307,6 +39440,7 @@ export const planRescate = [
         "titulo": "Toxindromes e intoxicación por medicamentos.",
         "tituloOficial": "Toxindromes e intoxicación por medicamentos.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -39669,6 +39803,7 @@ export const planRescate = [
         "titulo": "Síndrome de abstinencia.",
         "tituloOficial": "Síndrome de abstinencia.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -40044,6 +40179,7 @@ export const planRescate = [
         "titulo": "Picadura de alacrán y mordedura de araña, serpientes y abejas.",
         "tituloOficial": "Picadura de alacrán y mordedura de araña, serpientes y abejas.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -40433,6 +40569,7 @@ export const planRescate = [
         "titulo": "Reacciones anafilácticas",
         "tituloOficial": "Reacciones anafilácticas",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -40768,6 +40905,7 @@ export const planRescate = [
         "titulo": "EXAMEN FINAL Y ENTREGA DE CALIFICACIONES",
         "tituloOficial": "EXAMEN FINAL Y ENTREGA DE CALIFICACIONES",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -41156,6 +41294,7 @@ export const planRescate = [
         "titulo": "Definición de trauma y cinemática.",
         "tituloOficial": "Definición de trauma y cinemática.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -41417,6 +41556,7 @@ export const planRescate = [
         "titulo": "Energía cinética.",
         "tituloOficial": "Energía cinética.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -41636,6 +41776,7 @@ export const planRescate = [
         "titulo": "Energía potencial.",
         "tituloOficial": "Energía potencial.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -41852,6 +41993,7 @@ export const planRescate = [
         "titulo": "Trauma abierto o cerrado.",
         "tituloOficial": "Trauma abierto o cerrado.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -42099,6 +42241,7 @@ export const planRescate = [
         "titulo": "Cavitación.",
         "tituloOficial": "Cavitación.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -42346,6 +42489,7 @@ export const planRescate = [
         "titulo": "Impacto por arma blanca y arma de fuego.",
         "tituloOficial": "Impacto por arma blanca y arma de fuego.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -42602,6 +42746,7 @@ export const planRescate = [
         "tituloOficial": "Tríada de Wadell.",
         "tituloVisible": "Tríada de Waddell",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -42853,6 +42998,7 @@ export const planRescate = [
         "titulo": "Tipos de impacto en desaceleración.",
         "tituloOficial": "Tipos de impacto en desaceleración.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -43092,6 +43238,7 @@ export const planRescate = [
         "titulo": "Tipos de impacto en vehículo automotor.",
         "tituloOficial": "Tipos de impacto en vehículo automotor.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -43323,6 +43470,7 @@ export const planRescate = [
         "titulo": "Lesiones en motocicleta.",
         "tituloOficial": "Lesiones en motocicleta.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -43577,6 +43725,7 @@ export const planRescate = [
         "titulo": "Tipos de impactos en explosiones.",
         "tituloOficial": "Tipos de impactos en explosiones.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -43846,6 +43995,7 @@ export const planRescate = [
         "titulo": "Definición.",
         "tituloOficial": "Definición.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -44057,6 +44207,7 @@ export const planRescate = [
         "titulo": "Tipos de hemorragias.",
         "tituloOficial": "Tipos de hemorragias.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -44311,6 +44462,7 @@ export const planRescate = [
         "titulo": "Control de hemorragias.",
         "tituloOficial": "Control de hemorragias.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -44557,6 +44709,7 @@ export const planRescate = [
         "titulo": "Uso del torniquete.",
         "tituloOficial": "Uso del torniquete.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -44811,6 +44964,7 @@ export const planRescate = [
         "titulo": "Definición y tipos de shock.",
         "tituloOficial": "Definición y tipos de shock.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -45061,6 +45215,7 @@ export const planRescate = [
         "titulo": "Fisiopatología del estado de shock.",
         "tituloOficial": "Fisiopatología del estado de shock.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -45370,6 +45525,7 @@ export const planRescate = [
         "titulo": "Shock hipovolémico, signos y síntomas y tratamiento.",
         "tituloOficial": "Shock hipovolémico, signos y síntomas y tratamiento.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -45613,6 +45769,7 @@ export const planRescate = [
         "titulo": "Shock cardiogénico.",
         "tituloOficial": "Shock cardiogénico.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -45793,6 +45950,7 @@ export const planRescate = [
         "titulo": "Shock neurogénico",
         "tituloOficial": "Shock neurogénico",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -46000,6 +46158,7 @@ export const planRescate = [
         "titulo": "Shock anafiláctico.",
         "tituloOficial": "Shock anafiláctico.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -46214,6 +46373,7 @@ export const planRescate = [
         "titulo": "Shock séptico.",
         "tituloOficial": "Shock séptico.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -46402,6 +46562,7 @@ export const planRescate = [
         "titulo": "Signos y síntomas y tratamiento prehospitalario.",
         "tituloOficial": "Signos y síntomas y tratamiento prehospitalario.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -46632,6 +46793,7 @@ export const planRescate = [
         "titulo": "Definición.",
         "tituloOficial": "Definición.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -46818,6 +46980,7 @@ export const planRescate = [
         "titulo": "Clasificación de abierto o cerrado.",
         "tituloOficial": "Clasificación de abierto o cerrado.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -47083,6 +47246,7 @@ export const planRescate = [
         "titulo": "Lesión de clavícula.",
         "tituloOficial": "Lesión de clavícula.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -47242,6 +47406,7 @@ export const planRescate = [
         "titulo": "Lesión de escápula.",
         "tituloOficial": "Lesión de escápula.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -47397,6 +47562,7 @@ export const planRescate = [
         "titulo": "Lesión de esófago.",
         "tituloOficial": "Lesión de esófago.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -47584,6 +47750,7 @@ export const planRescate = [
         "titulo": "Lesión de tráquea y laringe.",
         "tituloOficial": "Lesión de tráquea y laringe.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -47789,6 +47956,7 @@ export const planRescate = [
         "titulo": "Lesión de costilla.",
         "tituloOficial": "Lesión de costilla.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -48028,6 +48196,7 @@ export const planRescate = [
         "titulo": "Tórax inestable o batiente.",
         "tituloOficial": "Tórax inestable o batiente.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -48252,6 +48421,7 @@ export const planRescate = [
         "titulo": "Neumotórax simple.",
         "tituloOficial": "Neumotórax simple.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -48514,6 +48684,7 @@ export const planRescate = [
         "titulo": "Neumotórax abierto.",
         "tituloOficial": "Neumotórax abierto.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -48767,6 +48938,7 @@ export const planRescate = [
         "titulo": "Neumotórax a tensión.",
         "tituloOficial": "Neumotórax a tensión.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -48988,6 +49160,7 @@ export const planRescate = [
         "titulo": "Hemotórax.",
         "tituloOficial": "Hemotórax.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -49223,6 +49396,7 @@ export const planRescate = [
         "titulo": "Hemo neumotórax.",
         "tituloOficial": "Hemo neumotórax.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -49436,6 +49610,7 @@ export const planRescate = [
         "titulo": "Quilotórax.",
         "tituloOficial": "Quilotórax.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -49618,6 +49793,7 @@ export const planRescate = [
         "titulo": "Contusión pulmonar.",
         "tituloOficial": "Contusión pulmonar.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -49782,6 +49958,7 @@ export const planRescate = [
         "titulo": "Trauma traqueo bronquial.",
         "tituloOficial": "Trauma traqueo bronquial.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -49999,6 +50176,7 @@ export const planRescate = [
         "titulo": "Desgarro o disrupción aórtica.",
         "tituloOficial": "Desgarro o disrupción aórtica.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -50218,6 +50396,7 @@ export const planRescate = [
         "titulo": "Taponamiento cardiaco (triada de Beck).",
         "tituloOficial": "Taponamiento cardiaco (triada de Beck).",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -50472,6 +50651,7 @@ export const planRescate = [
         "titulo": "Contusión miocárdica.",
         "tituloOficial": "Contusión miocárdica.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -50697,6 +50877,7 @@ export const planRescate = [
         "titulo": "Asfixia traumática.",
         "tituloOficial": "Asfixia traumática.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -50890,6 +51071,7 @@ export const planRescate = [
         "titulo": "Ruptura diafragmática.",
         "tituloOficial": "Ruptura diafragmática.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -51089,6 +51271,7 @@ export const planRescate = [
         "titulo": "Definición.",
         "tituloOficial": "Definición.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -51308,6 +51491,7 @@ export const planRescate = [
         "titulo": "Abdomen agudo.",
         "tituloOficial": "Abdomen agudo.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -51573,6 +51757,7 @@ export const planRescate = [
         "titulo": "Cuadrantes y exploración física.",
         "tituloOficial": "Cuadrantes y exploración física.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -51771,6 +51956,7 @@ export const planRescate = [
         "titulo": "lesión de estómago.",
         "tituloOficial": "lesión de estómago.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -51959,6 +52145,7 @@ export const planRescate = [
         "titulo": "Lesión de páncreas.",
         "tituloOficial": "Lesión de páncreas.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -52146,6 +52333,7 @@ export const planRescate = [
         "titulo": "Lesión de bazo.",
         "tituloOficial": "Lesión de bazo.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -52340,6 +52528,7 @@ export const planRescate = [
         "titulo": "Lesión de hígado.",
         "tituloOficial": "Lesión de hígado.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -52520,6 +52709,7 @@ export const planRescate = [
         "titulo": "Lesión de intestino.",
         "tituloOficial": "Lesión de intestino.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -52678,6 +52868,7 @@ export const planRescate = [
         "titulo": "Lesión genitourinaria.",
         "tituloOficial": "Lesión genitourinaria.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -52868,6 +53059,7 @@ export const planRescate = [
         "titulo": "1er EXAMEN",
         "tituloOficial": "1er EXAMEN",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -52984,6 +53176,7 @@ export const planRescate = [
         "titulo": "Definición.",
         "tituloOficial": "Definición.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -53253,6 +53446,7 @@ export const planRescate = [
         "tituloOficial": "Doctrina de Kellie Monroe.",
         "tituloVisible": "Doctrina de Monro-Kellie",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -53508,6 +53702,7 @@ export const planRescate = [
         "titulo": "Fractura de cráneo.",
         "tituloOficial": "Fractura de cráneo.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -53779,6 +53974,7 @@ export const planRescate = [
         "titulo": "Escalpe o avulsión de cuero cabelludo.",
         "tituloOficial": "Escalpe o avulsión de cuero cabelludo.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -54011,6 +54207,7 @@ export const planRescate = [
         "titulo": "Lesiones difusas.",
         "tituloOficial": "Lesiones difusas.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -54255,6 +54452,7 @@ export const planRescate = [
         "titulo": "Lesiones focales.",
         "tituloOficial": "Lesiones focales.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -54537,6 +54735,7 @@ export const planRescate = [
         "titulo": "Lesiones intracraneales.",
         "tituloOficial": "Lesiones intracraneales.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -54780,6 +54979,7 @@ export const planRescate = [
         "titulo": "Escala de coma de Glasgow.",
         "tituloOficial": "Escala de coma de Glasgow.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -55100,6 +55300,7 @@ export const planRescate = [
         "titulo": "Aumentos de la PIC (nivel1, 2 y 3).",
         "tituloOficial": "Aumentos de la PIC (nivel1, 2 y 3).",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -55374,6 +55575,7 @@ export const planRescate = [
         "titulo": "Signos y síntomas.",
         "tituloOficial": "Signos y síntomas.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -55600,6 +55802,7 @@ export const planRescate = [
         "titulo": "Tratamiento prehospitalario.",
         "tituloOficial": "Tratamiento prehospitalario.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -55794,6 +55997,7 @@ export const planRescate = [
         "titulo": "Uso de manitol, anticonvulsivantes e intubación endotraqueal.",
         "tituloOficial": "Uso de manitol, anticonvulsivantes e intubación endotraqueal.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -56043,6 +56247,7 @@ export const planRescate = [
         "titulo": "Fracturas de cuerpo vertebral.",
         "tituloOficial": "Fracturas de cuerpo vertebral.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -56295,6 +56500,7 @@ export const planRescate = [
         "titulo": "Lesión medular anterior.",
         "tituloOficial": "Lesión medular anterior.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -56559,6 +56765,7 @@ export const planRescate = [
         "titulo": "Lesión medular posterior.",
         "tituloOficial": "Lesión medular posterior.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -56784,6 +56991,7 @@ export const planRescate = [
         "tituloOficial": "Síndrome de causa equina.",
         "tituloVisible": "Síndrome de cauda equina",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -57005,6 +57213,7 @@ export const planRescate = [
         "tituloOficial": "Síndrome de Brown sequard.",
         "tituloVisible": "Síndrome de Brown-Séquard",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -57189,6 +57398,7 @@ export const planRescate = [
         "titulo": "Exploración física.",
         "tituloOficial": "Exploración física.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -57380,6 +57590,7 @@ export const planRescate = [
         "titulo": "Signos y síntomas y tratamiento prehospitalario.",
         "tituloOficial": "Signos y síntomas y tratamiento prehospitalario.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -57580,6 +57791,7 @@ export const planRescate = [
         "titulo": "Inmovilización espinal e indicaciones de tabla rígida.",
         "tituloOficial": "Inmovilización espinal e indicaciones de tabla rígida.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -57786,6 +57998,7 @@ export const planRescate = [
         "tituloOficial": "Fracturas de lefort. 1, ,2 y 3.",
         "tituloVisible": "Fracturas de Le Fort I, II y III",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -58036,6 +58249,7 @@ export const planRescate = [
         "titulo": "Signos y síntomas y tratamiento.",
         "tituloOficial": "Signos y síntomas y tratamiento.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -58240,6 +58454,7 @@ export const planRescate = [
         "titulo": "Objeto empalado.",
         "tituloOficial": "Objeto empalado.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -58456,6 +58671,7 @@ export const planRescate = [
         "titulo": "Hemorragia conjuntival e hifema.",
         "tituloOficial": "Hemorragia conjuntival e hifema.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -58697,6 +58913,7 @@ export const planRescate = [
         "titulo": "Lesión muscular de ojo.",
         "tituloOficial": "Lesión muscular de ojo.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -58934,6 +59151,7 @@ export const planRescate = [
         "titulo": "Exploración y tratamiento.",
         "tituloOficial": "Exploración y tratamiento.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -59143,6 +59361,7 @@ export const planRescate = [
         "titulo": "Control de hemorragias.",
         "tituloOficial": "Control de hemorragias.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -59366,6 +59585,7 @@ export const planRescate = [
         "titulo": "Exploración física.",
         "tituloOficial": "Exploración física.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -59594,6 +59814,7 @@ export const planRescate = [
         "titulo": "Objeto empalado.",
         "tituloOficial": "Objeto empalado.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -59815,6 +60036,7 @@ export const planRescate = [
         "titulo": "Definición de Fracturas tipos de inmovilización.",
         "tituloOficial": "Definición de Fracturas tipos de inmovilización.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -60074,6 +60296,7 @@ export const planRescate = [
         "tituloOficial": "Esguinces, luxaciones, desagarres y sus tratamientos.",
         "tituloVisible": "Esguinces, luxaciones y desgarros: tratamiento",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -60320,6 +60543,7 @@ export const planRescate = [
         "titulo": "Lesión de cadera, signos y síntomas y tratamiento.",
         "tituloOficial": "Lesión de cadera, signos y síntomas y tratamiento.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -60548,6 +60772,7 @@ export const planRescate = [
         "titulo": "Síndrome compartimental.",
         "tituloOficial": "Síndrome compartimental.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -60821,6 +61046,7 @@ export const planRescate = [
         "titulo": "Síndrome de aplastamiento.",
         "tituloOficial": "Síndrome de aplastamiento.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -61057,6 +61283,7 @@ export const planRescate = [
         "titulo": "Férulas sager y hare.",
         "tituloOficial": "Férulas sager y hare.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -61284,6 +61511,7 @@ export const planRescate = [
         "titulo": "Fármacos usados en trauma de extremidades sin poli trauma y paciente estable. (AINE, opioide, cloruro de etilo.)",
         "tituloOficial": "Fármacos usados en trauma de extremidades sin poli trauma y paciente estable. (AINE, opioide, cloruro de etilo.)",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -61544,6 +61772,7 @@ export const planRescate = [
         "titulo": "Hipotermia.",
         "tituloOficial": "Hipotermia.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -61819,6 +62048,7 @@ export const planRescate = [
         "titulo": "Golpe de calor.",
         "tituloOficial": "Golpe de calor.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -62066,6 +62296,7 @@ export const planRescate = [
         "titulo": "Insolación.",
         "tituloOficial": "Insolación.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -62295,6 +62526,7 @@ export const planRescate = [
         "titulo": "Definición.",
         "tituloOficial": "Definición.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -62524,6 +62756,7 @@ export const planRescate = [
         "titulo": "Tipos de agentes térmicos.",
         "tituloOficial": "Tipos de agentes térmicos.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -62773,6 +63006,7 @@ export const planRescate = [
         "titulo": "Grados de quemaduras y sus signos y síntomas.",
         "tituloOficial": "Grados de quemaduras y sus signos y síntomas.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -63067,6 +63301,7 @@ export const planRescate = [
         "titulo": "Regla de los 9s.",
         "tituloOficial": "Regla de los 9s.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -63341,6 +63576,7 @@ export const planRescate = [
         "titulo": "Fórmula de parkland y sus indicaciones.",
         "tituloOficial": "Fórmula de parkland y sus indicaciones.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -63627,6 +63863,7 @@ export const planRescate = [
         "titulo": "Tratamiento de quemaduras: analgesia, hipotermia, reposición de líquidos y sonda Foley.",
         "tituloOficial": "Tratamiento de quemaduras: analgesia, hipotermia, reposición de líquidos y sonda Foley.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -63894,6 +64131,7 @@ export const planRescate = [
         "titulo": "Curación de quemaduras en extremidad única.",
         "tituloOficial": "Curación de quemaduras en extremidad única.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -64126,6 +64364,7 @@ export const planRescate = [
         "titulo": "PRÁCTICA",
         "tituloOficial": "PRÁCTICA",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -64214,6 +64453,7 @@ export const planRescate = [
         "titulo": "EXAMEN FINAL Y ENTREGA DE CALIFICACIONES",
         "tituloOficial": "EXAMEN FINAL Y ENTREGA DE CALIFICACIONES",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -64546,6 +64786,7 @@ export const planRescate = [
         "titulo": "Pediatría",
         "tituloOficial": "Pediatría",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -64790,6 +65031,7 @@ export const planRescate = [
         "titulo": "Anatomía y fisiología",
         "tituloOficial": "Anatomía y fisiología",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -65062,6 +65304,7 @@ export const planRescate = [
         "titulo": "Crecimiento y desarrollo",
         "tituloOficial": "Crecimiento y desarrollo",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -65300,6 +65543,7 @@ export const planRescate = [
         "titulo": "Impresión general",
         "tituloOficial": "Impresión general",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -65536,6 +65780,7 @@ export const planRescate = [
         "titulo": "Triángulo de evaluación pediátrica",
         "tituloOficial": "Triángulo de evaluación pediátrica",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -65787,6 +66032,7 @@ export const planRescate = [
         "titulo": "Evaluación de X, A, B, C, D, E.",
         "tituloOficial": "Evaluación de X, A, B, C, D, E.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -66050,6 +66296,7 @@ export const planRescate = [
         "titulo": "Asuntos familiares",
         "tituloOficial": "Asuntos familiares",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -66265,6 +66512,7 @@ export const planRescate = [
         "titulo": "Abuso infantil",
         "tituloOficial": "Abuso infantil",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -66514,6 +66762,7 @@ export const planRescate = [
         "titulo": "Síndrome de muerte súbita infantil.",
         "tituloOficial": "Síndrome de muerte súbita infantil.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -66731,6 +66980,7 @@ export const planRescate = [
         "titulo": "Lactantes y niños con necesidades especiales.",
         "tituloOficial": "Lactantes y niños con necesidades especiales.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -67013,6 +67263,7 @@ export const planRescate = [
         "titulo": "RCP neonatal y pediátrico",
         "tituloOficial": "RCP neonatal y pediátrico",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -67293,6 +67544,7 @@ export const planRescate = [
         "titulo": "OVACE.",
         "tituloOficial": "OVACE.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -67589,6 +67841,7 @@ export const planRescate = [
         "titulo": "1er PARCIAL",
         "tituloOficial": "1er PARCIAL",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -67663,6 +67916,7 @@ export const planRescate = [
         "titulo": "Infección de vías respiratorias.",
         "tituloOficial": "Infección de vías respiratorias.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -67923,6 +68177,7 @@ export const planRescate = [
         "titulo": "Sufrimiento fetal agudo",
         "tituloOficial": "Sufrimiento fetal agudo",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -68127,6 +68382,7 @@ export const planRescate = [
         "titulo": "Patología respiratoria del recién nacido.",
         "tituloOficial": "Patología respiratoria del recién nacido.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -68383,6 +68639,7 @@ export const planRescate = [
         "titulo": "Atención al recién nacido sano y con asfixia.",
         "tituloOficial": "Atención al recién nacido sano y con asfixia.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -68634,6 +68891,7 @@ export const planRescate = [
         "titulo": "Asma.",
         "tituloOficial": "Asma.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -68883,6 +69141,7 @@ export const planRescate = [
         "titulo": "Deshidratación",
         "tituloOficial": "Deshidratación",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -69150,6 +69409,7 @@ export const planRescate = [
         "titulo": "Apendicitis",
         "tituloOficial": "Apendicitis",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -69377,6 +69637,7 @@ export const planRescate = [
         "titulo": "Oclusión intestinal",
         "tituloOficial": "Oclusión intestinal",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -69609,6 +69870,7 @@ export const planRescate = [
         "titulo": "Sx febril y convulsiones.",
         "tituloOficial": "Sx febril y convulsiones.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -69845,6 +70107,7 @@ export const planRescate = [
         "titulo": "Meningitis.",
         "tituloOficial": "Meningitis.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -70085,6 +70348,7 @@ export const planRescate = [
         "titulo": "Cardiopatías congénitas",
         "tituloOficial": "Cardiopatías congénitas",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -70330,6 +70594,7 @@ export const planRescate = [
         "titulo": "Introducción al trauma pediátrico.",
         "tituloOficial": "Introducción al trauma pediátrico.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -70572,6 +70837,7 @@ export const planRescate = [
         "titulo": "Lesiones en sistemas corporales específicos.",
         "tituloOficial": "Lesiones en sistemas corporales específicos.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -70828,6 +71094,7 @@ export const planRescate = [
         "titulo": "Inmovilización.",
         "tituloOficial": "Inmovilización.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -71058,6 +71325,7 @@ export const planRescate = [
         "titulo": "Manejo de lesiones pediátricas.",
         "tituloOficial": "Manejo de lesiones pediátricas.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -71315,6 +71583,7 @@ export const planRescate = [
         "tituloOficial": "Osteólisis.",
         "tituloVisible": "Acceso intraóseo en pediatría (osteoclisis)",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -71593,6 +71862,7 @@ export const planRescate = [
         "titulo": "Definición de geriatría.",
         "tituloOficial": "Definición de geriatría.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -71823,6 +72093,7 @@ export const planRescate = [
         "titulo": "La comunicación con el adulto mayor.",
         "tituloOficial": "La comunicación con el adulto mayor.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -72064,6 +72335,7 @@ export const planRescate = [
         "titulo": "El diamante GEMS.",
         "tituloOficial": "El diamante GEMS.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -72317,6 +72589,7 @@ export const planRescate = [
         "titulo": "Cambios fisiológicos del paciente geriátrico.",
         "tituloOficial": "Cambios fisiológicos del paciente geriátrico.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -72601,6 +72874,7 @@ export const planRescate = [
         "titulo": "Causas principales de muerte.",
         "tituloOficial": "Causas principales de muerte.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -72840,6 +73114,7 @@ export const planRescate = [
         "titulo": "Polifarmacia.",
         "tituloOficial": "Polifarmacia.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -73101,6 +73376,7 @@ export const planRescate = [
         "titulo": "Impacto del envejecimiento en trauma.",
         "tituloOficial": "Impacto del envejecimiento en trauma.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -73354,6 +73630,7 @@ export const planRescate = [
         "titulo": "Impacto del envejecimiento en urgencias médicas.",
         "tituloOficial": "Impacto del envejecimiento en urgencias médicas.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -73624,6 +73901,7 @@ export const planRescate = [
         "titulo": "Impacto del envejecimiento en psiquiatría.",
         "tituloOficial": "Impacto del envejecimiento en psiquiatría.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -73910,6 +74188,7 @@ export const planRescate = [
         "titulo": "Abuso en personas mayores.",
         "tituloOficial": "Abuso en personas mayores.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -74146,6 +74425,7 @@ export const planRescate = [
         "titulo": "Evaluación y manejo del paciente geriátrico.",
         "tituloOficial": "Evaluación y manejo del paciente geriátrico.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -74392,6 +74672,7 @@ export const planRescate = [
         "titulo": "Traumatismo geriátrico.",
         "tituloOficial": "Traumatismo geriátrico.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -74608,6 +74889,7 @@ export const planRescate = [
         "titulo": "Emergencias médicas geriátricas.",
         "tituloOficial": "Emergencias médicas geriátricas.",
         "estadoEditorial": "borrador",
+        "propietario": "rescate",
         "revision": {
           "estado": "borrador",
           "procedencia": "redactado",
@@ -74862,6 +75144,7 @@ export const planRescate = [
         "titulo": "EXAMEN FINAL Y ENTREGA DE CALIFICACIONES",
         "tituloOficial": "EXAMEN FINAL Y ENTREGA DE CALIFICACIONES",
         "estadoEditorial": "en_revision",
+        "propietario": "rescate",
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
@@ -75036,6 +75319,7 @@ export const planRescate = [
         "titulo": "OPERACIONES DE AMBULANCIAS.",
         "tituloOficial": "OPERACIONES DE AMBULANCIAS.",
         "estadoEditorial": "bloqueado_por_decision",
+        "propietario": "rescate",
         "revision": {
           "estado": "bloqueado_por_decision",
           "procedencia": "sin_material",
@@ -75067,6 +75351,7 @@ export const planRescate = [
         "titulo": "OBTENCIÓN DE ACCESO Y EXTRACCIÓN.",
         "tituloOficial": "OBTENCIÓN DE ACCESO Y EXTRACCIÓN.",
         "estadoEditorial": "bloqueado_por_decision",
+        "propietario": "rescate",
         "revision": {
           "estado": "bloqueado_por_decision",
           "procedencia": "sin_material",
@@ -75098,6 +75383,7 @@ export const planRescate = [
         "titulo": "OPERACIONES ESPECIALES",
         "tituloOficial": "OPERACIONES ESPECIALES",
         "estadoEditorial": "bloqueado_por_decision",
+        "propietario": "rescate",
         "revision": {
           "estado": "bloqueado_por_decision",
           "procedencia": "sin_material",
@@ -75128,6 +75414,7 @@ export const planRescate = [
         "titulo": "MANEJO DE ESCENARIOS CON MÚLTIPLES VÍCTIMAS (TRIAGE).",
         "tituloOficial": "MANEJO DE ESCENARIOS CON MÚLTIPLES VÍCTIMAS (TRIAGE).",
         "estadoEditorial": "bloqueado_por_decision",
+        "propietario": "rescate",
         "revision": {
           "estado": "bloqueado_por_decision",
           "procedencia": "sin_material",

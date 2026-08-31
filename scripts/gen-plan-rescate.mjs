@@ -18,6 +18,7 @@ import { pathToFileURL } from 'node:url'
 
 import {
   estadoEditorialDe, validarRevision, esEstadoEditorial, esNodoDeEvaluacion, tieneMaterial,
+  propietarioDe, validarPropietario, repartoPorPropietario,
 } from '../src/lib/estadoEditorial.js'
 import {
   TITULOS_VISIBLES_TEMA, TITULOS_VISIBLES_UNIDAD, TITULOS_VISIBLES_MODULO,
@@ -44,6 +45,16 @@ for (const [temaId, rev] of Object.entries(REVISIONES)) {
   const error = validarRevision(rev)
   if (error) {
     console.error(`✗ Ficha de revisión inválida en "${temaId}": ${error}`)
+    process.exit(1)
+  }
+}
+
+// Un sello de propiedad mal escrito es peor que ninguno: haría pasar por
+// reutilizable material que es de la academia. Se aborta igual que arriba.
+for (const [temaId, mat] of Object.entries(MATERIAL)) {
+  const error = validarPropietario(mat?.propietario)
+  if (error) {
+    console.error(`✗ Sello de propiedad inválido en "${temaId}": ${error}`)
     process.exit(1)
   }
 }
@@ -180,6 +191,11 @@ const modulos = programa.modulos.map((m, i) => {
     tituloOficial: t.titulo,
     ...(TITULOS_VISIBLES_TEMA[t.id] ? { tituloVisible: TITULOS_VISIBLES_TEMA[t.id] } : {}),
     estadoEditorial,
+    // Sello de propiedad. Se ESCRIBE siempre, incluso en los temas vacíos: el
+    // objetivo es que ningún nodo quede sin dueño declarado, y un tema vacío
+    // hoy es un tema redactado mañana. El material puede declararlo; si no lo
+    // hace, es de la academia (ver PROPIETARIO_DEFECTO).
+    propietario: propietarioDe(mat),
     revision: rev,
     ...(alcances[t.id] ? { alcanceExamen: alcances[t.id] } : {}),
     ...(EVALUACIONES[t.id] ? { evaluacion: EVALUACIONES[t.id] } : {}),
@@ -263,6 +279,12 @@ const evaluaciones = todos.filter((t) => esNodoDeEvaluacion(t))
 const declaradosSinMaterial = REDACTADOS
   .filter((id) => !lecciones.some((t) => t.id === id))
 console.log(`  Lecciones con material estudiable: ${lecciones.length}`)
+// Reparto de PROPIEDAD. Se imprime siempre, aunque hoy la respuesta sea
+// aburrida (todo es de la academia): el día que deje de serlo, esta línea es
+// la que lo enseña sin que nadie tenga que ir a buscarlo.
+const reparto = repartoPorPropietario(todos)
+console.log('  Propiedad del contenido:', Object.entries(reparto)
+  .filter(([, n]) => n > 0).map(([p, n]) => `${p} ${n}`).join(' · '))
 console.log(`  Nodos de evaluación configurados: ${evaluaciones.filter((t) => t.evaluacion).length} de ${evaluaciones.length}`)
 if (declaradosSinMaterial.length) {
   console.log(`  Ids declarados sin material de estudio: ${declaradosSinMaterial.join(', ')}`)

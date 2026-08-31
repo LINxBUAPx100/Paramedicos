@@ -47,6 +47,7 @@ export function temaDesdeDoc(docTema) {
     tituloVisible: docTema.tituloVisible || '',
     tituloOficial: docTema.tituloOficial || '',
     estadoEditorial: docTema.estadoEditorial || '',
+    propietario: docTema.propietario || '',
     revision: docTema.revision || null,
     evaluacion: docTema.evaluacion || null,
     alcanceExamen: docTema.alcanceExamen || null,

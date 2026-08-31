@@ -254,3 +254,79 @@ export const ETIQUETA_ESTADO = {
   publicado: 'Publicado',
   bloqueado_por_decision: 'Bloqueado por decisión',
 }
+
+// ============================================================
+//  PROPIEDAD del contenido — de quién es cada tema
+// ------------------------------------------------------------
+//  Añadido el 30 de agosto de 2026, y añadido AHORA por un motivo concreto:
+//  hoy «contenido de PTEM» y «contenido de R.E.S.C.A.T.E.» son la misma cosa,
+//  porque solo hay una academia. El día que entre la segunda, separarlos
+//  exigiría revisar 287 nodos a mano y preguntarle a alguien, tema por tema,
+//  de quién era. Sellarlos mientras la respuesta es obvia cuesta un campo.
+//
+//  No confundir con el ESTADO EDITORIAL (¿está redactado y firmado?) ni con la
+//  PROCEDENCIA (¿de dónde salió el texto?). Aquí se responde una tercera
+//  pregunta, que es jurídica y comercial:
+//
+//      ¿a quién pertenece este material, y puede servirse a otra academia?
+//
+//    · `rescate` → plan oficial de R.E.S.C.A.T.E. Es suyo. NO se replica a
+//                  ninguna otra academia sin su autorización expresa.
+//    · `ptem`    → material de la plataforma (andamios, plantillas genéricas,
+//                  textos de ayuda). Se puede reutilizar.
+//    · `terceros`→ material licenciado de un tercero. Ni se replica ni se
+//                  edita sin mirar antes su licencia.
+//
+//  El defecto es `rescate` A PROPÓSITO. Todo el corpus actual es suyo, y si
+//  algún día alguien añade un tema sin sellarlo, el error seguro es tratarlo
+//  como ajeno y no replicarlo; el error caro es al revés.
+// ============================================================
+
+export const PROPIETARIOS = ['rescate', 'ptem', 'terceros']
+
+export const PROPIETARIO_DEFECTO = 'rescate'
+
+export const ETIQUETA_PROPIETARIO = {
+  rescate: 'R.E.S.C.A.T.E.',
+  ptem: 'PTEM (plataforma)',
+  terceros: 'Terceros (con licencia)',
+}
+
+export function esPropietario(v) {
+  return PROPIETARIOS.includes(v)
+}
+
+/** Dueño declarado de un tema. Nunca null: sin sello, es de la academia. */
+export function propietarioDe(tema) {
+  return esPropietario(tema?.propietario) ? tema.propietario : PROPIETARIO_DEFECTO
+}
+
+/**
+ * ¿Puede este material servirse a una academia distinta de su dueña?
+ *
+ * Solo lo de la plataforma. Es la pregunta que hará la replicación el día que
+ * haya dos academias, y la respuesta segura por defecto es «no».
+ */
+export function esReutilizable(tema) {
+  return propietarioDe(tema) === 'ptem'
+}
+
+/** Mensaje de error, o null. Se usa en el generador y en el editor. */
+export function validarPropietario(v) {
+  if (v == null) return null // sin declarar se resuelve con el defecto
+  if (!esPropietario(v)) {
+    return `Propietario desconocido: "${v}" (usa ${PROPIETARIOS.join(', ')}).`
+  }
+  return null
+}
+
+/**
+ * Reparto de un conjunto de temas por dueño. Lo usan el inventario y el
+ * informe de propiedad; devolver el conteo aquí evita que cada script lo
+ * calcule a su manera y den cifras distintas.
+ */
+export function repartoPorPropietario(temas) {
+  const cuenta = Object.fromEntries(PROPIETARIOS.map((p) => [p, 0]))
+  for (const t of temas || []) cuenta[propietarioDe(t)] += 1
+  return cuenta
+}
