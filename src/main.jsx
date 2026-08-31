@@ -5,6 +5,7 @@ import App from './App.jsx'
 import { AuthProvider } from './context/AuthContext.jsx'
 import { ContenidoProvider } from './context/ContenidoContext.jsx'
 import { ProgressProvider } from './context/ProgressContext.jsx'
+import { TutorialProvider } from './context/TutorialContext.jsx'
 import { vigilarVersionNueva, versionCargadaBien } from './lib/versionNueva.js'
 import './index.css'
 
@@ -19,7 +20,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <AuthProvider>
         <ContenidoProvider>
           <ProgressProvider>
-            <App />
+            {/* Dentro de Auth: necesita el uid para recordar los tutoriales
+                entre dispositivos. Sin sesión funciona igual contra
+                localStorage. */}
+            <TutorialProvider>
+              <App />
+            </TutorialProvider>
           </ProgressProvider>
         </ContenidoProvider>
       </AuthProvider>

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
+import { useTutoriales } from '../context/TutorialContext.jsx'
+import { conteoDeVistos } from '../lib/tutorialesModelo.js'
 import { registrarEmail, entrarEmail, entrarGoogle } from '../lib/firebase/auth.js'
 import { firebaseListo } from '../lib/firebase/init.js'
 import { errores as leerErrores, diagnostico, limpiar as limpiarRegistro } from '../lib/registro.js'
@@ -338,6 +340,8 @@ function Perfil({ user, perfil, salir, codigoInvitacion = '', onConsumir }) {
       </button>
       {editando && <EditarMisDatos user={user} perfil={perfil} />}
 
+      <RepetirTutoriales />
+
       {/* Fuera del desplegable a propósito: si algo falló, la persona tiene que
           verlo sin ir a buscarlo. Solo aparece cuando hay algo que enviar. */}
       <EnviarDiagnostico user={user} perfil={perfil} />
@@ -345,6 +349,42 @@ function Perfil({ user, perfil, salir, codigoInvitacion = '', onConsumir }) {
       <button className="btn btn--pildora btn--fantasma cuenta-salir" onClick={salir}>
         Cerrar sesión
       </button>
+    </div>
+  )
+}
+
+// --- Volver a ver las explicaciones de las pantallas ---
+//
+// El tutorial de cada pantalla sale UNA vez en la vida de la cuenta, y esa
+// regla no se toca. Pero «una vez» sin vuelta atrás es una trampa: quien lo
+// cierre sin querer el primer día se queda sin él para siempre. Esto no lo
+// vuelve a lanzar solo — lo repone para que salgan otra vez donde toque.
+function RepetirTutoriales() {
+  const { vistos, reiniciar } = useTutoriales()
+  const [hecho, setHecho] = useState(false)
+  const { vistos: n, total } = conteoDeVistos(vistos)
+
+  if (n === 0 && !hecho) return null
+
+  return (
+    <div className="cuenta-tutoriales">
+      <div>
+        <strong>Explicaciones de las pantallas</strong>
+        <p>
+          {hecho
+            ? 'Listo: volverán a salir la próxima vez que entres a cada pantalla.'
+            : `Has visto ${n} de ${total}. Cada una aparece sola la primera vez.`}
+        </p>
+      </div>
+      {!hecho && (
+        <button
+          type="button"
+          className="btn btn--sm btn--fantasma"
+          onClick={async () => { await reiniciar(); setHecho(true) }}
+        >
+          Volver a verlas
+        </button>
+      )}
     </div>
   )
 }

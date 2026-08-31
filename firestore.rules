@@ -1185,6 +1185,27 @@ service cloud.firestore {
       allow write: if esSuper() || esStaffDe(docId);
     }
 
+    // --- TUTORIALES ya vistos ---
+    //
+    // Un documento por usuario (`tutoriales/{uid}`), con el mapa
+    // `vistos: { clave: true }`. Cada pantalla se explica sola la primera vez y
+    // esto es lo que recuerda que ya ocurrió, para que no vuelva a ocurrir en
+    // otro dispositivo.
+    //
+    // POR QUÉ UNA COLECCIÓN PROPIA Y NO UN CAMPO EN `usuarios/{uid}`: la regla
+    // de actualización de `usuarios` tiene una lista blanca estricta porque
+    // cuando no la tenía, un alumno podía escribirse `modulosDesbloqueados` y
+    // abrirse los módulos que su grupo tenía ocultos. Ensanchar esa lista para
+    // guardar «ya vi el tutorial» sería abrir la puerta más sensible del
+    // proyecto por el motivo más trivial. Aquí el peor caso posible es que
+    // alguien se marque un tutorial como visto sin haberlo visto.
+    //
+    // Solo su dueño lo lee y lo escribe: no hay nada aquí que le interese a
+    // nadie más, ni siquiera al staff de su academia.
+    match /tutoriales/{uid} {
+      allow read, write: if esDueno(uid);
+    }
+
     // --- DICTÁMENES de revisión docente (validar / corregir) ---
     //
     // Un dictamen es la firma de un docente sobre un tema. Las de VALIDACIÓN
