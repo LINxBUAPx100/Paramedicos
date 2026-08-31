@@ -25,7 +25,9 @@
     "matriz": "node scripts/matriz-decisiones.mjs",
     "activos:importar": "node scripts/importar-activos-medicos.mjs",
     "activos:resellar": "node scripts/resellar-activos.mjs",
-    "activos:iconos": "node scripts/migrar-iconos-emoji.mjs"
+    "activos:iconos": "node scripts/migrar-iconos-emoji.mjs",
+    "emu": "firebase emulators:start --only auth,firestore --project ptem-a304f",
+    "seed:usuarios": "node scripts/seed-usuarios-prueba.mjs"
   },
   "dependencies": {
     "@fontsource/fira-sans": "^5.3.0",
