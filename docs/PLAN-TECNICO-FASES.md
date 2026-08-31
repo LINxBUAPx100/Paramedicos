@@ -39,7 +39,7 @@
 
 ## Estado en una tabla
 
-Veinte trabajos terminados y veintitrés pendientes. Los tachados no se vuelven a
+Veintiún trabajos terminados y veinticuatro pendientes. Los tachados no se vuelven a
 tocar salvo regresión demostrada.
 
 **El bloque P está cerrado.** P1 movió el contenido a Firestore, P2 lo sacó del
@@ -52,8 +52,10 @@ sigue viva —comprobado— y lee todo el proyecto saltándose P3. Rotarla es la
 mitad del blindaje, y solo puede hacerla el dueño del proyecto.
 
 Queda una decisión (comprar el dominio, para F1), una tarea de la academia
-(**meter a los dos alumnos en un grupo**) y una deuda destapada al desplegar:
-**la colección `agregados` está vacía en producción**.
+(**meter a los dos alumnos en un grupo**) y una deuda que destapó el despliegue:
+**P10**, los agregados vacíos. No rompe nada —el resolutor cae a un camino
+correcto— pero cada carga de contenido cuesta 288 lecturas en vez de 3, y la
+cuota gratuita de Spark da para ~173 cargas al día.
 
 ### Terminado
 
@@ -85,6 +87,7 @@ Queda una decisión (comprar el dominio, para F1), una tarea de la academia
 
 | # | Trabajo | Duración | Depende de |
 |---|---|---|---|
+| **P10** | Regenerar los agregados de R.E.S.C.A.T.E. (hoy cada carga cuesta 288 lecturas en vez de 3) | corta | — · **destapado por P3** |
 | **F1** | Dominio propio + Firebase Hosting + `BrowserRouter` | 1-2 días | — · **cabe en Spark** · las portadas de P4 ya existen y esperan sus URLs |
 | **P5** | Optimización del arranque (la no-indexación ya está en P8) | 1-2 días | — · **P2 hecho, ya no bloquea** |
 | **A** | Calidad editorial v2 | larga, por lotes | — · **P2 hecho, ya no bloquea** |
@@ -476,16 +479,11 @@ Criterio de terminado: `grep -c "correcta:"` sobre `dist/assets/*.js` devuelve 0
 > todo, sin excepción. Por eso rotar la credencial que se filtró no es una
 > tarea menor pendiente: es la otra mitad de este blindaje.
 
-#### Deuda destapada por el pre-vuelo: los agregados están vacíos
+#### Deuda destapada por el pre-vuelo: los agregados están vacíos → **P10**
 
-La colección `agregados` tiene **0 documentos** en producción. Son las vistas
-derivadas —glosario, buscador, banco de exámenes, mazo de flashcards, galería,
-contadores— que existen para que abrir UNA lección no obligue a leer las 287
-(Fase 1). Nunca se generaron para R.E.S.C.A.T.E. después de P1.
-
-No bloqueaba P3 —no hay documentos que cerrar— pero hay que comprobar qué ven
-hoy el buscador, el glosario y el banco de exámenes, y regenerarlos si están
-sirviendo vacío.
+La colección `agregados` tiene **0 documentos** en producción, y el campo
+`agregados` del curso está AUSENTE: nunca se generaron para R.E.S.C.A.T.E.
+después de P1. Detalle y coste en la sección **P10**.
 
 ### P3 — cómo estaba escrito (referencia)
 
@@ -667,6 +665,44 @@ reaparece solo si mañana se añade un enlace de cajón para visitantes.
 > siguió sirviendo la versión anterior. Revertido en `9d7a8f8` y rehecho.
 > La lección: después de cambiar de rama, mirar `git status` otra vez antes de
 > `add -A`, y no dar por bueno un diff leído hace tres comandos.
+
+### P10 — Regenerar los agregados de R.E.S.C.A.T.E.
+
+Destapado por el pre-vuelo de P3 el 31-08-2026.
+
+**No hay nada roto, y conviene decirlo primero** porque el nombre asusta. Sin
+agregados el resolutor no falla: cae al camino 2 de
+`src/lib/firebase/contenido.js` —academia migrada SIN agregados—, que descarga
+el curso entero de SU Firestore y construye las vistas derivadas en memoria. El
+glosario, el buscador, el banco de exámenes y las flashcards funcionan. Ese
+camino está escrito a propósito y es correcto.
+
+**Lo que se pierde es exactamente el objetivo de la Fase 1.** Abrir contenido
+vuelve a costar las 287 lecturas que la Fase 1 bajó a 3.
+
+| | Con agregados | Sin agregados (hoy) |
+|---|---|---|
+| Lecturas por sesión que abre contenido | ~3 | **~288** |
+| Sesiones al día antes de agotar la cuota gratuita de Spark (50 000 lecturas) | ~16 600 | **~173** |
+
+Ese segundo número es el que preocupa: 173 cargas al día con 10 profesores
+validando y dos alumnos todavía fuera. En cuanto entre un grupo real, se agota
+—y agotada la cuota, Firestore deja de responder hasta el día siguiente.
+
+Qué hay que hacer:
+
+1. Averiguar **por qué no se generaron**. `clonarPlantillaAAcademia` llama a
+   `escribirAgregadosDeCurso`; o el clonado de P1 no pasó por ahí, o falló sin
+   avisar. Si fue lo segundo, el clonado de la próxima academia repetirá el
+   fallo en silencio.
+2. Generarlos para `RES-2026__paramedico-tum` y comprobar que el sello
+   (`cursos/{id}.agregados`) queda al día y que `agregadosUtilizables` da true.
+3. Medir de nuevo las lecturas de una carga para confirmar que baja a 3.
+4. Una prueba que impida la regresión: un curso clonado sin agregados debería
+   ser un fallo visible, no un camino lento silencioso.
+
+Duración: corta. No toca contenido ni firmas —los agregados se derivan de los
+temas, que ya pasaron sus reglas— y se puede rehacer las veces que haga falta.
 
 ### P5 — Optimización del arranque
 
