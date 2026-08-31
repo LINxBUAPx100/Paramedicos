@@ -75,7 +75,23 @@ export async function leerAgregado(cursoId, tipo, moduloId = null) {
  */
 export async function selloDeAgregados(cursoId) {
   if (!cursoId) return null
-  const d = await leerDoc(cursoId, SELLO)
+  // NUNCA PROPAGA. Un fallo aquí solo debe significar «no puedo usar el camino
+  // barato», y el resolutor ya sabe qué hacer con eso: servir el curso completo.
+  //
+  // Sin este try/catch, el 31-08-2026 la plataforma entera se quedó cargando.
+  // Las reglas denegaban la lectura del sello porque el documento no existía
+  // —`resource.data` sobre un `resource` nulo es un error, y un error deniega—,
+  // la promesa se rechazaba, `bajoDemandaDeFirestore` no lo capturaba y con él
+  // caían el temario, el glosario y la página de logros. La regla ya está
+  // arreglada; esto es la red para la próxima, porque el resolutor no puede
+  // depender de que una regla sea perfecta para que la plataforma abra.
+  let d = null
+  try {
+    d = await leerDoc(cursoId, SELLO)
+  } catch (err) {
+    console.warn(`[agregados] No se pudo leer el sello de ${cursoId}; se sirve por el camino completo:`, err?.code || err?.message || err)
+    return null
+  }
   if (!d) return null
   return { version: d.version || 0, desactualizado: Boolean(d.desactualizado), documentos: d.documentos || 0 }
 }

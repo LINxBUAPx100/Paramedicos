@@ -1131,9 +1131,32 @@ service cloud.firestore {
     // por versión no aporta nada en datos derivados: dos regeneraciones
     // simultáneas escriben lo mismo.
     match /agregados/{docId} {
+      // EL DOCUMENTO QUE NO EXISTE. Leer un agregado ausente evaluaba
+      // `resource.data.academiaId` sobre un `resource` nulo: eso es un error de
+      // evaluación, y un error deniega. El cliente recibía `permission-denied`
+      // en vez de «no existe».
+      //
+      // Tumbó la plataforma el 31-08-2026. El resolutor pregunta SIEMPRE por
+      // `agregados/{curso}__sello` para decidir si puede servir por tema, y ese
+      // sello no existía (ver P10). La lectura lanzaba, el resolutor no lo
+      // capturaba, y todo lo que depende del contenido —abrir un tema, el
+      // glosario, la página de logros— se quedaba cargando para siempre.
+      //
+      // El id del documento lleva la academia por delante
+      // (`{academiaId}__{plantilla}__{tipo}`), así que cuando no hay documento
+      // se decide con ella y no hace falta abrir la puerta a cualquiera: quien
+      // pregunta tiene que ser staff de ESA academia, o alumno suyo. Lo único
+      // que puede averiguar así es que el agregado no está, que es justo lo que
+      // necesita saber para servir por el camino completo.
       allow get, list: if esSuper()
-        || esStaffDe(resource.data.academiaId)
-        || alumnoLeeCurso(resource.data.academiaId, resource.data.estado, resource.data.cursoId);
+        || (
+          resource == null
+            ? (esStaffDe(docId.split('__')[0]) || perteneceA(docId.split('__')[0]))
+            : (
+              esStaffDe(resource.data.academiaId)
+              || alumnoLeeCurso(resource.data.academiaId, resource.data.estado, resource.data.cursoId)
+            )
+        );
 
       allow create: if (esSuper()
           || (

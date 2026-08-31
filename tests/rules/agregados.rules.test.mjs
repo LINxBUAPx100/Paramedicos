@@ -20,6 +20,7 @@
 //  Sin emulador la suite se OMITE con el motivo; nunca da falso verde.
 // ============================================================
 import { test, after } from 'node:test'
+import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 
 const HOST = process.env.FIRESTORE_EMULATOR_HOST
@@ -219,4 +220,51 @@ test('un agregado no cambia de academia ni de curso', { skip }, async () => {
   // Borrar es solo del super-admin: un agregado perdido deja una pantalla vacía.
   await assertFails(deleteDoc(doc(como('dirA'), 'agregados/ACA-A__tum__preguntas__m1')))
   await assertFails(deleteDoc(doc(como('profA'), 'agregados/ACA-A__tum__preguntas__m1')))
+})
+
+// ============================================================
+//  EL AGREGADO QUE NO EXISTE — el fallo que tumbó la plataforma
+// ------------------------------------------------------------
+//  El 31 de agosto de 2026, con las reglas de P3 ya desplegadas, abrir
+//  cualquier tema se quedaba cargando para siempre. También el glosario y la
+//  página de logros. La causa no era el contenido: era ESTA colección.
+//
+//  El resolutor pregunta SIEMPRE por `agregados/{curso}__sello` para decidir
+//  si puede servir por tema. Ese sello no existía (los agregados nunca se
+//  generaron, ver P10). La regla evaluaba `resource.data.academiaId` sobre un
+//  `resource` nulo, eso es un error de evaluación, y un error DENIEGA: el
+//  cliente recibía `permission-denied` en vez de «no existe», la promesa se
+//  rechazaba y con ella caía todo lo que depende del contenido.
+//
+//  Estas pruebas no existían porque la suite SIEMPRE sembraba el sello antes
+//  de leerlo. Un agregado presente nunca podía reproducir el fallo.
+// ============================================================
+
+test('leer un agregado que NO EXISTE responde «no existe», no «no puedes»', { skip }, async () => {
+  await preparar()
+  const { doc, getDoc } = fsmod
+  const { assertSucceeds } = rut
+
+  // Éste es el documento exacto que pedía el resolutor y que no estaba.
+  const ausente = 'agregados/ACA-A__tum__sello-que-no-existe'
+  const snapStaff = await assertSucceeds(getDoc(doc(como('dirA'), ausente)))
+  assert.equal(snapStaff.exists(), false, 'debe poder comprobar que no está')
+
+  const snapProf = await assertSucceeds(getDoc(doc(como('profA'), ausente)))
+  assert.equal(snapProf.exists(), false)
+
+  // Y el alumno del programa, igual: sin esto se le queda la lección cargando.
+  const snapAlum = await assertSucceeds(getDoc(doc(como('alumA'), ausente)))
+  assert.equal(snapAlum.exists(), false)
+})
+
+test('un agregado ausente NO se le enseña a otra academia', { skip }, async () => {
+  await preparar()
+  const { doc, getDoc } = fsmod
+  const { assertFails } = rut
+
+  // La reparación no puede convertirse en una puerta abierta: cuando no hay
+  // documento, la academia se decide por el PREFIJO del id, no por «da igual».
+  await assertFails(getDoc(doc(como('dirB'), 'agregados/ACA-A__tum__sello-que-no-existe')))
+  await assertFails(getDoc(doc(como('alumB'), 'agregados/ACA-A__tum__sello-que-no-existe')))
 })
