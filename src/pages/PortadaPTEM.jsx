@@ -324,7 +324,6 @@ function ComoSeVive() {
 
       <div className="lp-wrap pt-voces-in">
         <div className="pt-voces-cab">
-          <span className="lp-etiqueta">Alianza</span>
           <h2 id="pt-voces-t">Cómo se vive PTEM</h2>
           <p>
             El contenido académico que vive aquí es el plan de estudios oficial de{' '}
