@@ -12,20 +12,32 @@
 > editorial y el incidente de imágenes). `CLAUDE.md` gobierna el trabajo
 > EDITORIAL —redactar el temario— y es otro proyecto: el software avanza sin él.
 >
-> Última actualización: **30 de agosto de 2026** — se añade el **bloque P
-> (blindaje del contenido y portada pública)**, que pasa al frente de la cola.
-> Antes ese mismo día se había añadido el **trabajo O (Dashboard de Recepción)**, se corrigen tres afirmaciones que ya no eran
-> ciertas (el cableado de `alcanceDeExamen`, la validación de `intentos` y el
-> número de lecciones vacías) y se aclara que los certificados con QR **no**
-> dependen de la migración a Next.js. Las fases 1-3 siguen integradas en `main`
-> (commit de fusión `ebfc963`).
+> **Última actualización: 31 de agosto de 2026.** Se ejecutaron **P4, P6, P7,
+> P8, T, U y V** —ver «Registro · sesión del 30 de agosto»— y esa misma sesión
+> destapó **tres fallos** que no estaban en ningún plan, el más grave de ellos
+> todavía por comprobar contra producción. El **bloque P** sigue al frente de la
+> cola: P1, P2 y P3 son lo único que queda del blindaje, y los tres esperan una
+> decisión del dueño del producto.
+>
+> Antes, el 30 de agosto, se había añadido el **trabajo O (Dashboard de
+> Recepción)**, se corrigieron tres afirmaciones que ya no eran ciertas —el
+> cableado de `alcanceDeExamen`, la validación de `intentos` y el número de
+> lecciones vacías— y se aclaró que los certificados con QR **no** dependen de
+> la migración a Next.js. Las fases 1-3 siguen integradas en `main` (commit de
+> fusión `ebfc963`); lo de esta sesión vive en la rama
+> `claude/blindaje-portada-tutoriales`, sin fusionar.
 
 ---
 
 ## Estado en una tabla
 
-Diez trabajos terminados y veinte pendientes. Los tachados no se vuelven a tocar
-salvo regresión demostrada.
+Diecisiete trabajos terminados y veinticinco pendientes. Los tachados no se
+vuelven a tocar salvo regresión demostrada.
+
+**Lo que bloquea todo lo demás son tres decisiones del dueño del producto**, no
+trabajo pendiente: autorizar **P1** (emulador o ventana en producción),
+desplegar `firestore.rules` y comprar el dominio. Mientras no lleguen, el
+blindaje real —**P2**— no puede empezar.
 
 ### Terminado
 
@@ -95,7 +107,29 @@ salvo regresión demostrada.
 
 ---
 
-## Sesión del 30 de agosto de 2026 — lo que se hizo y lo que se encontró
+## Lo que está esperando una decisión tuya
+
+Tres cosas, y ninguna es trabajo pendiente: son permisos. Mientras no lleguen,
+el blindaje de verdad no puede empezar.
+
+| Decisión | Por qué te toca | Desbloquea |
+|---|---|---|
+| **P1**: ¿emulador o ventana en producción? | Escribe en `ptem-a304f` mientras el cuerpo docente valida | **P2** y **P3** |
+| Desplegar `firestore.rules` | Toca producción | Que los tutoriales crucen de dispositivo, y luego P3 |
+| Comprar el dominio | Es una compra | **F1**, y con él las URLs sin `#` |
+
+Y una comprobación que no es una decisión pero corre prisa: **verificar contra
+producción el tercer fallo del registro de abajo** (el bloqueo «Tu programa
+todavía no está disponible»). Si estaba activo, ningún alumno con grupo podía
+abrir una lección.
+
+---
+
+## Registro · sesión del 30 de agosto de 2026
+
+> Esto es lo que YA ESTÁ HECHO, no trabajo por hacer. El plan vivo empieza en
+> «El orden lo manda la validación docente». Se conserva porque los tres fallos
+> que destapó explican por qué el orden es el que es.
 
 Además de P4 y P6, esta sesión cerró tres peticiones nuevas del dueño del
 producto y **destapó tres fallos que nadie había visto**. Los fallos importan
@@ -216,14 +250,16 @@ Dicho de otro modo: **el contenido se puede volver a sembrar desde el repo las
 veces que haga falta; la firma de un docente, no.** Es lo único irreemplazable
 del sistema, y es justo lo que la migración no toca.
 
-| Trabajo | ¿Estorba a quien está validando? |
-|---|---|
-| P4, P6 | **No.** Rutas nuevas y un campo nuevo. No tocan el panel ni el temario en revisión |
-| P1 | **Sí.** El contenido cambia de fuente bajo sus pies, y un clonado interrumpido deja temario parcial |
-| P2 | **Sí.** Es el punto de no retorno: si P1 quedó incompleto, no ven nada |
-| F1 | **Sí.** Les rompe los marcadores a `#/panel/contenido` |
+| Trabajo | ¿Estorba a quien está validando? | Estado |
+|---|---|---|
+| P4, P6, P7, P8, T, U | **No.** Rutas nuevas, campos nuevos y filtros. No tocan el panel ni el temario en revisión | Hechos |
+| V (emulador) | **No.** No toca producción: ésa es su razón de existir | Hecho |
+| P1 | **Sí.** El contenido cambia de fuente bajo sus pies, y un clonado interrumpido deja temario parcial | Espera ventana |
+| P2 | **Sí.** Es el punto de no retorno: si P1 quedó incompleto, no ven nada | Espera P1 |
+| P3 | **Sí.** Una regla mal puesta los deja fuera del material que revisan | Espera P1 |
+| F1 | **Sí.** Les rompe los marcadores a `#/panel/contenido` | Espera dominio |
 
-Por eso P4 y P6 se hicieron primero, con los profesores dentro, y P1-P2-P3
+Por eso todo lo que no los tocaba se hizo primero, con ellos dentro, y P1-P2-P3
 esperan una ventana acordada con vuelta atrás lista (basta desmarcar la academia
 como migrada para que vuelva a leer del bundle).
 
@@ -254,6 +290,13 @@ No es una fuga parcial ni un descuido de permisos: es la forma del despliegue.
 Un competidor descarga **un** archivo y tiene el curso entero y su banco de
 exámenes. Mientras el contenido se empaquete en el JS, cualquier otra medida de
 protección es decorativa.
+
+> **Por qué hay dos cifras.** Aquí se cuenta sobre el archivo MINIFICADO de
+> `dist/` (1 546 respuestas); la prueba `fugaDelBundle.test.mjs` cuenta sobre el
+> FUENTE (1 539). La diferencia son coincidencias que el minificador introduce,
+> y ninguna de las dos es más verdadera que la otra: la de `dist/` mide lo que
+> se sirve, la del fuente mide lo que se escribió. Se conservan las dos a
+> propósito, para que nadie las tome por un error de cuentas.
 
 ### P1 — Migrar RESCATE a su propio contenido en Firestore
 
@@ -358,27 +401,6 @@ esta fase, no a F1.
 Cabe con holgura. Y el consumo de red **baja**: hoy cada alumno se descarga
 3 MB de JavaScript aunque abra una sola lección.
 
-### P4 — Portada pública
-
-Cuatro capas, y solo la primera es nueva de verdad:
-
-1. **Home general de PTEM** (`/`): qué es la plataforma, qué se puede hacer en
-   ella y la alianza con RESCATE.pro. Es la portada de la empresa, no la de un
-   curso.
-2. **`/paramedicos`**: la Landing actual, que ya está escrita y probada
-   (`src/pages/Landing.jsx`), movida a su ruta propia.
-3. **Vitrinas por carrera**: enfermería, TSU en paramédico, licenciatura en
-   paramédico, cursos y protección civil. **Vitrina sin contenido**: qué es la
-   carrera, qué incluiría y cómo contactar. Cero temario, cero estructura.
-4. **Una sola ruta guiada por catálogo**, no cinco páginas a mano.
-   `META_PROGRAMA` en `src/lib/programasModelo.js` ya tiene los tipos `tum`,
-   `enfermeria`, `tsu`, `licenciatura`, `curso` y `certificacion`; añadir uno es
-   una entrada en ese objeto y nada más. Falta el tipo **protección civil**, que
-   no está en `TIPOS_PROGRAMA`.
-
-Regla que no se rompe: `/tema/:id` y `/modulo/:id` son la identidad pública del
-contenido y sobreviven a la migración de router.
-
 ### P4 — Portada pública · HECHO el 30-08-2026
 
 | Archivo | Qué es |
@@ -450,26 +472,16 @@ impide que la fuga se reabra.
 
 ---
 
-### P5 — Optimización y no-indexación
+### P5 — Optimización del arranque
 
-Dos cosas distintas que se hacen juntas porque tocan el mismo despliegue.
+Ya no incluye la no-indexación: eso se adelantó y está hecho en **P8**, porque
+no dependía de nada y dejarlo para después era publicar el temario en Google
+mientras se blindaba la puerta.
 
-Medido hoy: entrada 727 KB, SDK de Firebase 703 KB, `init` 215 KB. Con P2 el
-trozo de 3 MB desaparece solo; lo que queda es el arranque.
-
-Y al pasar a URLs reales hay que decidir qué ve un rastreador: `robots.txt` y
-`noindex` sobre todo lo que cuelga de `RutaProtegida`, sitemap **solo** de las
-portadas públicas. Sin esto, blindar la puerta y publicar el temario en Google
-es el mismo despliegue.
-
-### P6 — Sello de propiedad del contenido
-
-Hoy «contenido de PTEM» y «contenido de RESCATE» son la misma cosa. El día que
-entre la segunda academia, separarlos exige auditar 287 nodos a mano. Marcarlos
-ahora —propietario y licencia por nodo— es un script y una columna.
-
-Va en el bloque P por eso: es la única pieza cuyo costo se multiplica por
-esperar.
+Lo que queda es peso. Medido el 30-08-2026: entrada **733 KB**, SDK de Firebase
+**720 KB**, `init` **221 KB**. El trozo de 3 MB del temario desaparece solo con
+**P2**, así que esta fase empieza cuando P2 termine y se ocupa del arranque:
+el SDK de Firebase es la pieza gorda que queda.
 
 ### Lo que el bloque P NO incluye
 
@@ -477,6 +489,10 @@ esperar.
 - Contenido de las otras carreras. Las vitrinas no lo prometen.
 - Marca de agua por matrícula. Depende de **O1** y se hace ahí.
 - Migrar a Next.js. **G** sigue sin comprometerse.
+
+Y lo que P7 **no** arregla, dicho aquí para que no se confunda con estar
+resuelto: el temario **sigue viajando en el JavaScript publicado**. P7 blinda
+la interfaz; el archivo lo cierra **P2**.
 
 ---
 
@@ -578,9 +594,10 @@ completo: nunca el examen anterior al cambio.
 ### Pendiente de la Fase 1
 - [ ] **Caché en IndexedDB.** Hoy la caché es un `Map` que muere con la pestaña:
       refrescar vuelve a pagar las 3 lecturas. Pequeño comparado con lo hecho.
-- [ ] **Partir el chunk de datos del bundle** (3 MB / 702 KB gzip). Los
-      agregados no ayudan aquí: una academia sin migrar carga el temario entero
-      como JavaScript. Es un problema de empaquetado, no de Firestore.
+- [x] **Partir el chunk de datos del bundle** — ya tiene dueño: es **P2**, y
+      dejó de ser un asunto de peso para ser uno de seguridad. Medido en `dist/`
+      el 30-08-2026: **1 546 respuestas de examen** descargables sin cuenta. El
+      criterio de terminado y la prueba que lo vigila están en el bloque P.
 
 ---
 
@@ -643,9 +660,11 @@ acaba, tarde o temprano, delante de un alumno o dentro de un examen.
 `alumnoLeeCurso` exige `publicado`), lleva `esAndamio: true`, usa el prefijo
 `andamio-` en todos sus ids, y no se importa desde `src/data/index.js`.
 
-**Protección Civil** va de momento como tipo `licenciatura`. Si la academia
-decide que necesita reglas distintas, se añade a `META_PROGRAMA` y cambia una
-línea en `programasAndamio.js`.
+**Protección Civil ya tiene tipo propio** (`proteccion_civil`), desde el
+30-08-2026. Esta sección anunciaba que cambiaría en cuanto hiciera falta, y
+hizo falta con **P4**: la portada pública lista las carreras desde
+`META_PROGRAMA`, y anunciarla como «Licenciatura en Paramédicos» habría sido
+incorrecto. Las dos pruebas que guardaban el dato avisaron solas.
 
 **Cómo sembrarlo:**
 
@@ -771,6 +790,11 @@ eso ya está arreglado.
 
 ## Trabajo F (antes «Fase 5») — Hosting propio + Blaze · PENDIENTE
 
+> **Partido en dos el 30-08-2026.** **F1** (dominio + Firebase Hosting +
+> `BrowserRouter`) **cabe en el plan gratuito** y es lo único que el bloque P
+> necesita. **F2** (contratar Blaze) baja hasta donde de verdad hace falta:
+> antes de **L** y **C**. El detalle está arriba, en el bloque P.
+
 Se hace **después** de que la clase en vivo funcione, para contratar sabiendo
 cuánto consume de verdad. **2–3 días.**
 
@@ -889,7 +913,10 @@ certificado sigue descargable y su QR funciona para siempre.
 
 ---
 
-## Trabajo A — Calidad editorial v2 + partir el bundle · PENDIENTE · **va primero**
+## Trabajo A — Calidad editorial v2 · PENDIENTE
+
+> Partir el bundle ya NO es parte de A: se lo lleva **P2**, que además lo hace
+> por seguridad y no solo por peso. A pasa a depender de P2.
 
 Detalle completo en `PLAN-LMS.md` §25. Resumen y lo que cambió al unificar:
 
@@ -1279,9 +1306,12 @@ opaco** guardado junto al perfil, no la matrícula visible.
 - ¿Puede un alumno pertenecer a dos programas a la vez? Los grupos ya soportan
   «programas extra», pero nadie lo ha usado.
 - ¿Qué requisitos disparan la emisión automática de un certificado?
-- ¿Protección Civil necesita tipo de programa propio?
+- ~~¿Protección Civil necesita tipo de programa propio?~~ **Sí**, resuelto el
+  30-08-2026 con P4.
 - **¿Las academias reales están migradas o en `legacy`?** Determina si el ahorro
-  de la Fase 1 ya aplica o si primero hay que migrarlas (ahora que se puede).
+  de la Fase 1 ya aplica o si primero hay que migrarlas. **Es la misma pregunta
+  que responde P1**, así que deja de ser una duda suelta: se contesta al
+  ejecutarlo.
 
 ---
 
