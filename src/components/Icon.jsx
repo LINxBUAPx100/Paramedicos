@@ -60,6 +60,10 @@ const paths = {
   chispa: <path d="M12 3l1.8 4.9L19 9.7l-4.6 2.3L12 17l-2.4-5L5 9.7l5.2-1.8L12 3Z" />,
   flecha: <path d="M5 12h14M13 6l6 6-6 6" />,
   flechaIzq: <path d="M19 12H5M11 6l-6 6 6 6" />,
+  // Diagonal hacia arriba a la derecha. La usa la portada; existe como SVG y no
+  // como el carácter «↗» porque un glifo depende de la fuente del sistema, no
+  // hereda el grosor del resto de iconos y hay una prueba que lo prohíbe.
+  flechaDiagonal: <path d="M7 17 17 7M8 7h9v9" />,
   descarga: <path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14" />,
   // Compartir: tres nodos conectados (símbolo estándar).
   compartir: (

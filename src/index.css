@@ -96,7 +96,14 @@
   --radio-sm: 11px;
   --radio-lg: 24px;
   --sidebar-w: 290px;
-  --topbar-h: 62px;
+  /* Altura REAL de la barra superior. Decía 62 px mientras la regla del tema
+     charcoal la pintaba de 64: la variable mentía por 2 px a todo el que la
+     usaba (el alto del panel lateral, los `scroll-margin-top`…). Se notó en la
+     portada general, donde el héroe se sube `-var(--topbar-h)` para que la foto
+     empiece pegada arriba: quedaban 2 px de fondo de página asomando entre la
+     barra y la foto, y en tema claro eso es una raya blanca de lado a lado.
+     Un solo sitio manda; la regla del tema ya no repite el número. */
+  --topbar-h: 64px;
   --consola-riel: 216px; /* navegación fija de /admin y /panel */
 
   /* ============================================================
@@ -4747,7 +4754,7 @@ html[data-tema='oscuro'] .glosario-termino { color: var(--texto); }
 
 /* ---- Header / barra charcoal ---- */
 .topbar {
-  height: 64px;
+  height: var(--topbar-h);
   gap: var(--e-16);
   padding: 0 clamp(var(--e-12), 3vw, var(--e-32));
   background: var(--carbon);
@@ -5697,8 +5704,13 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   box-shadow: var(--sombra-lg);
   cursor: pointer;
   overflow: hidden;
+  /* El abanico se abre `--deck-paso` por cada tarjeta a cada lado. Es una
+     variable y no un número fijo porque la portada general la ensancha cuando
+     hay pantalla de sobra: con 104 px fijos la baraja se quedaba encogida en
+     mitad de un monitor ancho, con los laterales vacíos. */
+  --deck-paso: 104px;
   /* Apilado PLANO (sin 3D): el z-index manda → la activa queda al frente */
-  transform: translateX(-50%) translateX(calc(var(--offset, 0) * 104px)) scale(0.84);
+  transform: translateX(-50%) translateX(calc(var(--offset, 0) * var(--deck-paso))) scale(0.84);
   transition: transform var(--dur-lenta) var(--ease-out), filter var(--dur-lenta) var(--ease-out),
     opacity var(--dur-lenta) var(--ease-out), box-shadow var(--dur-lenta) var(--ease-out), visibility var(--dur-lenta);
 }
@@ -6320,7 +6332,8 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
     height: 466px;
     width: min(370px, 92vw);
     padding: var(--e-24) var(--e-24) var(--e-20);
-    transform: translateX(-50%) translateX(calc(var(--offset, 0) * 72px)) scale(0.85);
+    --deck-paso: 72px;
+    transform: translateX(-50%) translateX(calc(var(--offset, 0) * var(--deck-paso))) scale(0.85);
   }
   .deck-card.is-activo { transform: translateX(-50%) translateY(-10px) scale(1.06); }
   .deck-num { font-size: 4.4rem; }
@@ -9211,3 +9224,239 @@ html[data-tema='oscuro'] .dic-item--validar { border-left-color: #6ee7b7; }
 }
 .creditos-autoria-lista dd { margin: 0; color: var(--texto-2); }
 .creditos-sub { font-size: var(--t-md); margin-bottom: var(--e-8); }
+
+/* ============================================================
+   Portada a sangre de PTEM (src/pages/PortadaPTEM.jsx → PortadaHero)
+   ------------------------------------------------------------
+   Fotografía a ancho completo, titular encima y una banda inferior partida en
+   dos: blanca a la izquierda con el lema y la mochila, azul a la derecha con
+   la estrella de la vida y la descripción. Sigue la referencia del 31-08-2026.
+
+   La barra superior se vuelve transparente SOLO en esta pantalla
+   (`body[data-portada]`), para que la foto llegue arriba del todo sin que otra
+   pantalla herede el cambio.
+   ============================================================ */
+.pf {
+  position: relative;
+  isolation: isolate;
+  /* Se come la altura de la barra para que la foto empiece en el borde. */
+  margin-top: calc(-1 * var(--topbar-h));
+  min-height: min(92vh, 780px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  background: #0b1b2e; /* color de espera mientras carga la foto */
+}
+
+.pf-fondo,
+.pf-fondo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+}
+/* Centrado: a 62 % la ambulancia de la izquierda —que es media escena— se
+   quedaba fuera del encuadre en pantallas anchas. */
+.pf-fondo img { object-fit: cover; object-position: center; }
+
+/* Sin este velo el titular blanco cae sobre las pantallas iluminadas del fondo
+   y se pierde. Es más denso a la izquierda, que es donde va el texto. */
+.pf-velo {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(100deg,
+      rgba(6, 17, 30, 0.90) 0%,
+      rgba(6, 17, 30, 0.72) 34%,
+      rgba(6, 17, 30, 0.32) 62%,
+      rgba(6, 17, 30, 0.18) 100%),
+    linear-gradient(to bottom, rgba(6, 17, 30, 0.55) 0%, transparent 28%);
+}
+
+/* --- Titular --- */
+.pf-titular {
+  position: relative;
+  width: min(1240px, 100% - var(--e-32));
+  margin: 0 auto;
+  padding: calc(var(--topbar-h) + clamp(2rem, 7vh, 5rem)) 0 clamp(2rem, 6vh, 4rem);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: clamp(1.25rem, 3vh, 2.25rem);
+}
+
+.pf-h1 {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--fuente-display);
+  /* Interlineado muy cerrado: en la referencia las tres líneas casi se tocan y
+     eso es lo que hace que se lean como un bloque y no como tres frases. */
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35);
+  margin: 0;
+}
+.pf-h1-a,
+.pf-h1-c { font-weight: 800; font-size: clamp(2.9rem, 9.5vw, 7.5rem); }
+.pf-h1-b { font-weight: 700; font-size: clamp(2.4rem, 7.6vw, 6rem); }
+/* «Dedicada» translúcida: el contraste dentro de la misma línea es el ritmo
+   del titular. No baja de 0.42 para que siga siendo legible. */
+.pf-fantasma { color: rgba(255, 255, 255, 0.42); font-weight: 700; }
+
+/* --- Llamada a la acción --- */
+.pf-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e-12);
+  padding: var(--e-12) var(--e-24);
+  font-family: var(--fuente-display);
+  font-size: clamp(1rem, 1.9vw, 1.5rem);
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  background: rgba(10, 16, 26, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  /* Esquinas rectas, como la referencia: la portada usa ángulo, no píldora. */
+  border-radius: 2px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: background var(--dur-media) var(--ease-out), transform var(--dur-media) var(--ease-out);
+}
+.pf-cta:hover { background: rgba(10, 16, 26, 0.92); transform: translateY(-2px); }
+.pf-cta:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+
+/* --- Banda inferior, partida en dos --- */
+.pf-banda {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(360px, 0.42fr) 1fr;
+  align-items: stretch;
+}
+
+.pf-banda-izq {
+  display: flex;
+  align-items: center;
+  gap: var(--e-16);
+  padding: var(--e-20) var(--e-24);
+  background: #fff;
+}
+/* El lema y su línea legal van juntos y NO se encogen: el texto no se parte, y
+   lo que cede el espacio es la mochila, que es decorativa. Con `flex: 1` la
+   caja bajaba a 108 px y el texto —que no se parte— se salía por encima de la
+   mochila. */
+.pf-banda-texto {
+  flex: 0 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-8);
+}
+.pf-lema {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--fuente-display);
+  font-weight: 800;
+  font-size: clamp(0.95rem, 1.6vw, 1.6rem);
+  line-height: 1.12;
+  color: var(--primario);
+  margin: 0;
+}
+/* Cada línea entera o nada: antes se partía en cuatro trozos al estrecharse. */
+.pf-lema span { white-space: nowrap; }
+.pf-lema strong { font-weight: 800; }
+.pf-mochila { flex: 0 1 auto; min-width: 0; display: block; margin-left: auto; }
+.pf-mochila img { display: block; width: clamp(48px, 7.5vw, 104px); height: auto; }
+.pf-legal {
+  font-size: var(--t-xs);
+  color: var(--texto-3);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.pf-legal:hover { color: var(--texto); text-decoration: underline; }
+
+.pf-banda-der {
+  display: flex;
+  align-items: center;
+  gap: clamp(var(--e-16), 3vw, var(--e-32));
+  padding: var(--e-20) clamp(var(--e-20), 4vw, var(--e-48));
+  background: var(--primario);
+  color: #fff;
+}
+.pf-banda-estrella { flex: 0 0 auto; color: rgba(255, 255, 255, 0.92); }
+.pf-banda-der p {
+  margin: 0;
+  max-width: 68ch;
+  font-size: clamp(0.92rem, 1.35vw, 1.12rem);
+  line-height: 1.45;
+  text-align: justify;
+  text-wrap: pretty;
+}
+
+/* --- La barra superior sobre la foto: cristal, no ausencia ---
+   Primer intento: `background: transparent` y sin desenfoque. Se veía la foto
+   íntegra detrás de la barra y el resultado era que la barra no existía —no
+   había forma de saber dónde acaba la navegación y empieza la página.
+   Ahora es cristal de verdad: la foto se sigue viendo, pero desenfocada, más
+   oscura y más saturada. El desenfoque ES la separación; por eso aquí no hace
+   falta ninguna raya, y no la hay. */
+body[data-portada] .topbar {
+  background: linear-gradient(
+    180deg,
+    rgba(9, 15, 26, 0.72) 0%,
+    rgba(9, 15, 26, 0.52) 100%
+  );
+  border-bottom-color: transparent;
+  backdrop-filter: saturate(150%) blur(16px);
+  -webkit-backdrop-filter: saturate(150%) blur(16px);
+}
+/* Si el navegador no sabe desenfocar (Firefox con la opción apagada, motores
+   viejos), la barra tiene que seguir distinguiéndose: se opaca en su lugar. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  body[data-portada] .topbar { background: rgba(9, 15, 26, 0.9); }
+}
+body[data-portada] .topbar .marca,
+body[data-portada] .topbar .topnav-link,
+body[data-portada] .topbar .menu-btn { color: #fff; }
+
+/* --- Ancho: la portada ocupa la pantalla, no una columna centrada ---
+   `.lp-wrap` limita a 1120 px, que en un monitor de 1920 deja 400 px de vacío a
+   cada lado. Para una página de texto eso es deseable —una línea de 200
+   caracteres no se lee—, pero la portada es un escaparate: la baraja de
+   carreras y las bandas tienen que llegar a los bordes.
+   Se cambia el ANCHO del contenedor, no el de los párrafos: los bloques de
+   prosa conservan su `max-width` en ch y siguen leyéndose bien. */
+body[data-portada] .lp-wrap {
+  width: 100%;
+  padding-inline: clamp(var(--e-16), 4vw, var(--e-64));
+}
+/* Las secciones también respiran más cuando hay sitio: con el ancho completo,
+   el aire de 48 px se quedaba corto y todo parecía apretado contra los bordes. */
+body[data-portada] .pt-seccion { padding-block: clamp(var(--e-32), 5vw, var(--e-64)); }
+/* Y la baraja de carreras abre más el abanico cuando hay sitio: en un monitor
+   de 1600 px, un paso de 104 px dejaba las seis tarjetas apretadas en el centro
+   con 270 px de nada a cada lado. Pasado 1.7× el paso base las tarjetas dejan
+   de solaparse y esto deja de ser una baraja, de ahí el tope.
+   La baraja de módulos (/paramedicos) no cambia: la variable solo se redefine
+   aquí.
+   El `min-width` NO es decorativo: este selector gana en especificidad a la
+   regla de móvil (que baja el paso a 72 px para tarjetas más estrechas), así
+   que sin la barrera se colaría también en el teléfono y las sacaría de la
+   pantalla. */
+@media (min-width: 769px) {
+  body[data-portada] .deck-card { --deck-paso: clamp(104px, 8.5vw, 176px); }
+}
+
+@media (max-width: 880px) {
+  .pf { min-height: auto; }
+  .pf-titular { padding-bottom: clamp(1.5rem, 5vh, 3rem); }
+  /* En vertical la banda se apila: dos columnas de 300 px no caben, y partir el
+     texto en cuatro palabras por línea lo vuelve ilegible. */
+  .pf-banda { grid-template-columns: 1fr; }
+  .pf-banda-der p { text-align: left; }
+}

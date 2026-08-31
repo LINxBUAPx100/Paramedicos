@@ -42,14 +42,31 @@
     <link rel="preconnect" href="https://lh3.googleusercontent.com" crossorigin />
     <link rel="dns-prefetch" href="https://wsrv.nl" />
     <link rel="dns-prefetch" href="https://lh3.googleusercontent.com" />
-    <!-- Hero (LCP): precarga la imagen del paramédico ya optimizada -->
+    <!-- Hero (LCP): la foto a sangre de la portada general.
+         Hasta el 31-08-2026 aquí se precargaba la ilustración del paramédico.
+         Dejó de ser lo correcto cuando `/` pasó a ser la portada general de
+         PTEM: el paramédico ya no se pinta en la raíz, así que era una descarga
+         en prioridad alta que competía justo con la foto que sí es el LCP.
+
+         Se precarga UNA sola, y es la de la raíz: `/` es la dirección canónica,
+         la que apunta el Open Graph y por la que entra todo el mundo.
+         `/paramedicos` conserva su ilustración con `fetchpriority="high"` en su
+         propio <img> (ver src/pages/Home.jsx); pierde la ventaja de salida del
+         analizador de cabecera, y es el precio de no cargar las dos.
+
+         POR QUÉ NO SE ELIGE POR RUTA: el enrutado va por hash, así que la ruta
+         sí se conoce aquí, pero elegir exige un <script> en línea y la CSP del
+         build lo prohíbe a propósito (`script-src 'self'`, ver vite.config.js).
+         Abrir 'unsafe-inline' por un preload sería cambiar una defensa real por
+         unos milisegundos. Cuando llegue F1 (dominio propio y BrowserRouter),
+         cada ruta podrá llevar su <link> y esto se resuelve solo. -->
     <link
       rel="preload"
       as="image"
       type="image/avif"
-      href="./hero/paramedico-800.avif"
-      imagesrcset="./hero/paramedico-480.avif 480w, ./hero/paramedico-800.avif 800w, ./hero/paramedico-1200.avif 1200w"
-      imagesizes="(max-width: 880px) 90vw, 850px"
+      href="./portada/portada-fondo-1600.avif"
+      imagesrcset="./portada/portada-fondo-800.avif 800w, ./portada/portada-fondo-1200.avif 1200w, ./portada/portada-fondo-1600.avif 1600w, ./portada/portada-fondo-2000.avif 2000w, ./portada/portada-fondo-2560.avif 2560w"
+      imagesizes="100vw"
       fetchpriority="high"
     />
     <title>PTEM</title>

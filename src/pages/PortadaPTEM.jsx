@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Icon from '../components/Icon.jsx'
 import Reveal from '../components/Reveal.jsx'
@@ -54,6 +55,15 @@ const CAPACIDADES = [
 ]
 
 export default function PortadaPTEM() {
+  // Barra superior transparente SOLO aquí. La foto del hero llega hasta arriba
+  // y una barra opaca encima la cortaría en seco. Se marca el <body> en vez de
+  // tocar Layout: así ninguna otra pantalla hereda el cambio, y al salir de la
+  // portada la barra vuelve sola a como estaba.
+  useEffect(() => {
+    document.body.dataset.portada = '1'
+    return () => { delete document.body.dataset.portada }
+  }, [])
+
   return (
     <div className="lp">
       <PortadaHero />
@@ -66,27 +76,99 @@ export default function PortadaPTEM() {
 }
 
 // ---------- Hero ----------
+//
+//  Portada a sangre: la fotografía ocupa el ancho completo y el titular va
+//  encima. Sigue la referencia que dio el dueño del producto el 31-08-2026.
+//
+//  TRES DECISIONES QUE NO SON DECORATIVAS:
+//
+//   · La imagen se sirve en AVIF y WebP a cinco anchos (public/portada/), no
+//     como un JPG de 2,8 MB. Es el elemento más grande de la página y el
+//     primero que se descarga: a 800 px pesa 31 kB.
+//   · Lleva `fetchpriority="high"` y NO `loading="lazy"`. Es el LCP de la
+//     portada; diferirlo retrasaría justo lo que mide el navegador.
+//   · El velo oscuro no es un efecto: sin él, el titular blanco cae sobre las
+//     zonas claras de la foto —las pantallas del fondo— y deja de leerse.
+const ANCHOS_FONDO = [800, 1200, 1600, 2000, 2560]
+const fondoSet = (ext) => ANCHOS_FONDO
+  .map((w) => `${import.meta.env.BASE_URL}portada/portada-fondo-${w}.${ext} ${w}w`)
+  .join(', ')
+
+const ANCHOS_MOCHILA = [240, 480, 720]
+const mochilaSet = (ext) => ANCHOS_MOCHILA
+  .map((w) => `${import.meta.env.BASE_URL}portada/mochila-${w}.${ext} ${w}w`)
+  .join(', ')
+
 function PortadaHero() {
   return (
-    <header className="lp-portada pt-portada">
-      <IconoEstrella size={620} className="lp-marca-fondo" aria-hidden="true" />
-      <div className="lp-wrap pt-portada-in">
-        <span className="lp-kicker">Plataforma de Estudio · Urgencias Médicas</span>
-        <h1>
-          La plataforma donde tu academia <em>enseña</em> y tú estudias
+    <header className="pf">
+      <picture className="pf-fondo">
+        <source type="image/avif" srcSet={fondoSet('avif')} sizes="100vw" />
+        <source type="image/webp" srcSet={fondoSet('webp')} sizes="100vw" />
+        <img
+          src={`${import.meta.env.BASE_URL}portada/portada-fondo-1600.webp`}
+          alt="Personal de urgencias médicas trabajando en una central de coordinación, con una ambulancia al fondo"
+          width="3168"
+          height="1344"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </picture>
+      <div className="pf-velo" aria-hidden="true" />
+
+      <div className="pf-titular">
+        <h1 className="pf-h1">
+          <span className="pf-h1-a">Plataforma</span>
+          <span className="pf-h1-b">
+            {/* «Dedicada» va translúcida y «para» sólida, como en la referencia:
+                el contraste dentro de la misma línea es lo que le da el ritmo. */}
+            <span className="pf-fantasma">Dedicada</span> para
+          </span>
+          <span className="pf-h1-c">USTED</span>
         </h1>
-        <p className="lp-lede pt-lede">
-          PTEM reúne el temario, las evaluaciones y el avance de cada alumno en un solo
-          sitio. Lo usan academias de formación en urgencias médicas para dar clase con
-          material propio, revisado y firmado por su cuerpo docente.
-        </p>
-        <div className="lp-portada-acciones">
-          <Link to="/paramedicos" className="btn btn--pildora btn--carbon btn--lg">
-            Ver la carrera de paramédicos <Icon name="flecha" size={17} />
-          </Link>
-          <Link to="/cuenta" className="btn btn--pildora btn--fantasma btn--lg">
-            Entrar con mi código
-          </Link>
+
+        <Link to="/cuenta" className="pf-cta">
+          Usar código <Icon name="flechaDiagonal" size={20} />
+        </Link>
+      </div>
+
+      <div className="pf-banda">
+        <div className="pf-banda-izq">
+          {/* Dos líneas, y cada una entera: con un simple <br /> el navegador
+              seguía partiendo «Enfocada al estudio» en cuatro trozos cuando la
+              columna se estrechaba, y el lema dejaba de leerse como una frase.
+              Cada línea va en su propio span que no se parte; lo que cede es el
+              tamaño de letra, no la frase. */}
+          <div className="pf-banda-texto">
+            <p className="pf-lema">
+              <span>Enfocada al estudio</span>
+              <span>de la <strong>SALUD</strong></span>
+            </p>
+            <Link to="/terminos-y-condiciones" className="pf-legal">
+              Términos y condiciones
+            </Link>
+          </div>
+          <picture className="pf-mochila">
+            <source type="image/avif" srcSet={mochilaSet('avif')} sizes="150px" />
+            <source type="image/webp" srcSet={mochilaSet('webp')} sizes="150px" />
+            <img
+              src={`${import.meta.env.BASE_URL}portada/mochila-480.webp`}
+              alt=""
+              width="435"
+              height="535"
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
+        </div>
+
+        <div className="pf-banda-der">
+          <IconoEstrella size={72} className="pf-banda-estrella" />
+          <p>
+            PTEM reúne el temario, las evaluaciones y el avance de cada alumno en un solo
+            sitio. Lo usan academias de formación en urgencias médicas para dar clase con
+            material propio, revisado y firmado por su cuerpo docente.
+          </p>
         </div>
       </div>
     </header>

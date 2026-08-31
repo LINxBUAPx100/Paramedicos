@@ -51,6 +51,28 @@ const IMAGENES = [
   // archivo vertical (0.67) cuando su contenido real es cuadrado (1.01), y el
   // chico en uno horizontal (1.50) cuando él es vertical (0.89). Recortado, la
   // proporción del archivo ES la del dibujo y la caja se le puede ajustar.
+  // Portada general de PTEM (`/`). El fondo ocupa el ancho completo de la
+  // pantalla, así que necesita anchos grandes: es la imagen más visible del
+  // sitio y la primera que se descarga.
+  {
+    nombre: 'portada-fondo',
+    origen: 'scripts/img-src/portadaFondo.jpg',
+    destino: 'public/portada',
+    anchos: [800, 1200, 1600, 2000, 2560],
+    nota: 'fondo de la portada general (LCP de `/`)',
+  },
+  // La mochila de la banda inferior. Se ve a unos 130 px, así que 480 cubre de
+  // sobra las pantallas de alta densidad; el original son 11137 px de ancho y
+  // pedirle 2000 sería tirar peso a la basura. `recortar` quita el enorme
+  // margen transparente: sin él, la mochila sale diminuta dentro de su caja.
+  {
+    nombre: 'mochila',
+    origen: 'scripts/img-src/mochila.png',
+    destino: 'public/portada',
+    anchos: [240, 480, 720],
+    recortar: true,
+    nota: 'banda inferior de la portada',
+  },
   {
     nombre: 'ponte-a-prueba',
     origen: 'scripts/img-src/ponteAprueba.png',
