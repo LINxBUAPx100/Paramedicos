@@ -45,6 +45,15 @@ async function preparar() {
     // Se queda en el proyecto base, que comparte solo con capacidades/storage;
     // sus fixtures son disjuntos a propósito (academias y uids distintos) y hay
     // que mantenerlos así al añadir casos.
+    //
+    // Y HAY UN SEGUNDO PELIGRO, que costó un rato encontrar: `test:rules` corre
+    // con --test-concurrency=1. No es por lentitud ni por los fixtures.
+    // `withSecurityRulesDisabled` NO abre una sesión privilegiada: sustituye
+    // las reglas del proyecto por allow-all y las restaura al salir. Con dos
+    // suites del MISMO proyecto en paralelo, una restaura las reglas mientras
+    // la otra sigue dentro de su bloque, y el sembrado se cae con
+    // `storage/unauthorized`. Se veía como tres pruebas rojas de Storage que
+    // pasaban en verde al correr el archivo solo — el peor síntoma posible.
     projectId: process.env.GCLOUD_PROJECT || 'ptem-rules-test',
     firestore: { rules: readFileSync(new URL('../../firestore.rules', import.meta.url), 'utf8') },
     storage: { rules: readFileSync(new URL('../../storage.rules', import.meta.url), 'utf8') },
