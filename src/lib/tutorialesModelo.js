@@ -100,10 +100,14 @@ export const TUTORIALES = {
         texto: 'Aquí ves cuánto llevas estudiado, módulo por módulo.',
       },
       {
+        // El ancla existe para el ALUMNO. El staff ve otra pantalla —con
+        // pestañas, y la barra dentro de «Mi progreso»—, así que el paso sale
+        // centrado para ellos. Por eso el texto no dice «esta barra»: tenía que
+        // leerse igual de bien con foco y sin él.
         objetivo: '.barra-global',
         titulo: 'Tu avance total',
-        texto: 'Esta barra resume todo el recorrido. Sube cuando terminas de leer un tema '
-          + 'y cuando resuelves su repaso.',
+        texto: 'Un porcentaje resume todo el recorrido. Sube cuando terminas de leer un '
+          + 'tema y cuando resuelves su repaso.',
       },
       {
         titulo: 'Módulo por módulo',
@@ -170,10 +174,14 @@ export const TUTORIALES = {
         texto: 'Aquí se reúne lo que vas desbloqueando conforme avanzas en el recorrido.',
       },
       {
-        objetivo: '.atlas-grid',
+        // UNA tarjeta, no la rejilla. `.atlas-grid` mide casi 39 000 px de alto
+        // (medido el 31-08-2026): iluminarla sería iluminar la página entera y
+        // el foco perdería todo su sentido. Se apunta a la primera tarjeta, que
+        // es la que explica el concepto.
+        objetivo: '.atlas-card',
         titulo: 'Se abre estudiando',
-        texto: 'Lo que aparece con candado todavía no lo has alcanzado. No hay atajo: se '
-          + 'abre al avanzar en los temas correspondientes.',
+        texto: 'Cada pieza se desbloquea al avanzar en los temas que le corresponden. '
+          + 'Lo que sigue con candado todavía no lo has alcanzado, y no hay atajo.',
       },
     ],
   },

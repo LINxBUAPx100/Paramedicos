@@ -167,3 +167,55 @@ test('con acceso, todo vuelve a la normalidad', () => {
 test('sin declarar puedeAcceder se asume que sí (no rompe a quien ya lo llamaba)', () => {
   assert.equal(tutorialPendiente('/progreso', {}, { autenticado: true }), 'progreso')
 })
+
+// ============================================================
+//  Las anclas: verificadas una por una en pantalla
+// ------------------------------------------------------------
+//  Un `objetivo` es un selector CSS, y nada en el código impide apuntar a algo
+//  inútil. Pasó: `logros` apuntaba a `.atlas-grid`, la rejilla ENTERA, que mide
+//  casi 39 000 px de alto —medido el 31-08-2026 en el navegador—. El foco la
+//  abarcaba toda, así que el «agujero» del velo era la página completa y el
+//  paso no señalaba nada.
+//
+//  Esta lista es la de anclas COMPROBADAS en pantalla, con su tamaño real.
+//  Añadir un `objetivo` nuevo obliga a medirlo y a apuntarlo aquí; si no, la
+//  prueba falla. Es deliberadamente incómodo: es más barato que descubrirlo
+//  cuando ya lo está viendo un alumno.
+// ============================================================
+const ANCLAS_VERIFICADAS = {
+  '.menu-btn': '22x38 en /',
+  '.topbar-buscar': '213x40 en /',
+  '.topnav': '504x42 en /',
+  '.barra-global': 'existe para el ALUMNO en /progreso; el staff ve otra pantalla y el paso sale centrado',
+  '.atlas-card': '427x365 en /logros (una tarjeta, NO la rejilla)',
+  '.consola-nav': '216x353 en /admin y en /panel',
+}
+
+test('toda ancla del catálogo está en la lista de verificadas en pantalla', () => {
+  const usadas = new Set(
+    Object.values(TUTORIALES)
+      .flatMap((t) => t.pasos)
+      .map((p) => p.objetivo)
+      .filter(Boolean)
+  )
+  for (const sel of usadas) {
+    assert.ok(
+      Object.prototype.hasOwnProperty.call(ANCLAS_VERIFICADAS, sel),
+      `El ancla "${sel}" no está verificada. Ábrela en el navegador, mide el `
+      + 'elemento y añádelo a ANCLAS_VERIFICADAS con su tamaño. Un ancla que '
+      + 'abarca la pantalla entera no señala nada.'
+    )
+  }
+})
+
+test('no se apunta a contenedores que envuelven la página entera', () => {
+  // Los que ya se sabe que son demasiado grandes. `.atlas-grid` está aquí
+  // porque fue el fallo real, no por precaución.
+  const PROHIBIDOS = ['.atlas-grid', '.app', '.contenido', 'body', 'main', '.ph', '.lp']
+  const usadas = Object.values(TUTORIALES)
+    .flatMap((t) => t.pasos).map((p) => p.objetivo).filter(Boolean)
+  for (const sel of usadas) {
+    assert.ok(!PROHIBIDOS.includes(sel),
+      `"${sel}" envuelve la pantalla entera: el foco no señalaría nada.`)
+  }
+})
