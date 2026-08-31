@@ -170,8 +170,59 @@ function PortadaHero() {
             material propio, revisado y firmado por su cuerpo docente.
           </p>
         </div>
+
+        <BandaAlianza />
       </div>
     </header>
+  )
+}
+
+// ---------- Tercer panel de la banda: quién hace qué ----------
+//
+//  En un monitor ancho la banda se quedaba en dos bloques y sobraba casi medio
+//  metro de azul vacío a la derecha. Este panel lo ocupa contando lo único que
+//  la portada no decía todavía: que PTEM es de dos casas y cuál pone qué.
+//
+//  SOLO EN PANTALLA GRANDE, y no por capricho: por debajo de 1500 px la
+//  columna del medio bajaría de unos 55 caracteres por línea y el párrafo que
+//  explica qué es PTEM —que es el mensaje principal— quedaría troceado. Antes
+//  que apretar los tres, desaparece el tercero. Va con `display: none`, así que
+//  tampoco lo lee un lector de pantalla en móvil: sería el mismo contenido que
+//  la sección «PTEM y R.E.S.C.A.T.E.» de más abajo, repetido.
+//
+//  LO QUE NO DICE, a propósito: que el cuerpo docente «ya firmó» el temario.
+//  Hoy los profesores están validando y ninguna lección está publicada como
+//  definitiva. Se describe el reparto de papeles, que sí es cierto hoy.
+function BandaAlianza() {
+  return (
+    <aside className="pf-banda-alianza" aria-label="Quién está detrás de PTEM">
+      <span className="pf-al-tit">Dos casas, un producto</span>
+
+      <div className="pf-al-fila">
+        <Icon name="verificado" size={18} />
+        <p>
+          <strong>Academia R.E.S.C.A.T.E.</strong> pone el plan de estudios oficial, el
+          cuerpo docente que revisa y firma el contenido, y la formación presencial.
+        </p>
+      </div>
+
+      <div className="pf-al-fila">
+        <Icon name="capas" size={18} />
+        <p>
+          <strong>Riders.media</strong> desarrolla y mantiene PTEM: la plataforma, el
+          temario en línea, las evaluaciones y el panel del maestro.
+        </p>
+      </div>
+
+      <a
+        href="https://rescate.pro"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="pf-al-enlace"
+      >
+        rescate.pro <Icon name="compartir" size={13} />
+      </a>
+    </aside>
   )
 }
 

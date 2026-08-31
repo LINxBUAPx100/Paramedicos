@@ -9398,6 +9398,12 @@ html[data-tema='oscuro'] .dic-item--validar { border-left-color: #6ee7b7; }
   text-wrap: pretty;
 }
 
+/* --- Tercer panel: quién pone qué (solo en pantalla ancha) ---
+   Oculto por omisión. La regla que lo enseña vive abajo, en su consulta de
+   medios, junto al cambio de rejilla que le hace sitio: las dos cosas tienen
+   que entrar y salir a la vez o la banda se descuadra. */
+.pf-banda-alianza { display: none; }
+
 /* --- La barra superior sobre la foto: cristal, no ausencia ---
    Primer intento: `background: transparent` y sin desenfoque. Se veía la foto
    íntegra detrás de la barra y el resultado era que la barra no existía —no
@@ -9450,6 +9456,82 @@ body[data-portada] .pt-seccion { padding-block: clamp(var(--e-32), 5vw, var(--e-
    pantalla. */
 @media (min-width: 769px) {
   body[data-portada] .deck-card { --deck-paso: clamp(104px, 8.5vw, 176px); }
+}
+
+/* --- La banda, en tres bloques cuando la pantalla da de sí ---
+   Umbral de 1500 px, no un número redondo cualquiera: por debajo, la columna
+   del medio baja de unos 55 caracteres por línea y el párrafo que explica qué
+   es PTEM —el mensaje principal de la banda— se trocea. El tercer panel es lo
+   que sobra, así que es lo que desaparece.
+   La tercera columna se declara AQUÍ, en la misma consulta que enseña el
+   panel: si una de las dos reglas se moviera sin la otra, quedaría una columna
+   vacía o un panel aplastado. */
+@media (min-width: 1500px) {
+  .pf-banda { grid-template-columns: minmax(360px, 0.4fr) 1fr minmax(320px, 0.42fr); }
+
+  .pf-banda-alianza {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--e-8);
+    padding: var(--e-16) clamp(var(--e-24), 2.2vw, var(--e-40));
+    /* Mismo azul, un punto más hondo, y una línea de luz que lo separa del
+       bloque de al lado. Un color distinto haría de esto un cuarto elemento;
+       lo que se busca es que se lea como el mismo bloque, dividido. */
+    background: color-mix(in srgb, #000 16%, var(--primario));
+    border-left: 1px solid rgba(255, 255, 255, 0.22);
+    color: #fff;
+  }
+
+  .pf-al-tit {
+    font-family: var(--fuente-sub);
+    font-size: var(--t-xs);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  .pf-al-fila {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--e-12);
+  }
+  /* El icono no se encoge ni se estira con el texto, y se alinea con la
+     primera línea en vez de con el centro del párrafo. */
+  .pf-al-fila svg {
+    flex: 0 0 auto;
+    margin-top: 2px;
+    color: rgba(255, 255, 255, 0.8);
+  }
+  .pf-al-fila p {
+    margin: 0;
+    font-size: clamp(0.82rem, 0.92vw, 0.95rem);
+    line-height: 1.42;
+    color: rgba(255, 255, 255, 0.92);
+    text-wrap: pretty;
+  }
+  .pf-al-fila strong { color: #fff; font-weight: 700; }
+
+  .pf-al-enlace {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--e-6);
+    align-self: flex-start;
+    margin-top: var(--e-2);
+    font-family: var(--fuente-sub);
+    font-size: var(--t-xs);
+    letter-spacing: 0.04em;
+    color: rgba(255, 255, 255, 0.86);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+    padding-bottom: 1px;
+  }
+  .pf-al-enlace:hover {
+    color: #fff;
+    border-bottom-color: #fff;
+    text-decoration: none;
+  }
 }
 
 @media (max-width: 880px) {
