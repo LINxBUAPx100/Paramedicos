@@ -12,36 +12,44 @@
 > editorial y el incidente de imágenes). `CLAUDE.md` gobierna el trabajo
 > EDITORIAL —redactar el temario— y es otro proyecto: el software avanza sin él.
 >
-> **Última actualización: 31 de agosto de 2026.** Se ejecutó **P1** contra
-> producción (ver su sección) y antes **P4, P6, P7,
-> P8, T, U y V** —ver «Registro · sesión del 30 de agosto»— y esa misma sesión
-> destapó **tres fallos** que no estaban en ningún plan, el más grave de ellos
-> todavía por comprobar contra producción. El **bloque P** sigue al frente de la
-> cola: P1, P2 y P3 son lo único que queda del blindaje, y los tres esperan una
-> decisión del dueño del producto.
+> **Última actualización: 31 de agosto de 2026 (tarde).** Ese día se ejecutaron
+> **P1** y **P2** contra producción y se rehízo la portada central. Del blindaje
+> **solo queda P3**, y es el que importa: P1 movió el contenido a Firestore y P2
+> lo sacó del JavaScript publicado, pero **Firestore lo sigue entregando igual
+> de abierto**. Mientras P3 no esté puesto, el blindaje está a medias.
+>
+> Lo cerrado el 31 de agosto, en orden:
+>
+> | | Qué |
+> |---|---|
+> | **P1** | R.E.S.C.A.T.E. migrada a su propio contenido: 288 documentos sembrados, 288 clonados, `GRP-SCZD` reapuntado, 287/287 verificados |
+> | **P2** | El temario deja de compilarse en el JS. El trozo de entrada baja de 3 037 kB a 712 kB y las 1 546 respuestas de examen descargables pasan a **cero** |
+> | **Portada** | `/` pasa a ser una portada a sangre con foto, banda a tres bloques y la sección «Cómo se vive PTEM». El botón de menú desaparece cuando el cajón no tiene nada que abrir |
+>
+> Todo eso está fusionado y desplegado en `main` (`3db0a3d`). No queda ninguna
+> rama de trabajo sin fusionar.
 >
 > Antes, el 30 de agosto, se había añadido el **trabajo O (Dashboard de
 > Recepción)**, se corrigieron tres afirmaciones que ya no eran ciertas —el
 > cableado de `alcanceDeExamen`, la validación de `intentos` y el número de
 > lecciones vacías— y se aclaró que los certificados con QR **no** dependen de
-> la migración a Next.js. Las fases 1-3 siguen integradas en `main` (commit de
-> fusión `ebfc963`); lo de esta sesión vive en la rama
-> `claude/blindaje-portada-tutoriales`, sin fusionar.
+> la migración a Next.js.
 
 ---
 
 ## Estado en una tabla
 
-Dieciocho trabajos terminados y veinticuatro pendientes. Los tachados no se
-vuelven a tocar salvo regresión demostrada.
+Veinte trabajos terminados y veintitrés pendientes. Los tachados no se vuelven a
+tocar salvo regresión demostrada.
 
-**P1 está hecho, así que P2 ya no está bloqueado.** Apagar el bundle —el
-blindaje de verdad— puede empezar cuando se quiera.
+**P1 y P2 están hechos. Del bloque P solo queda P3**, y hasta que esté puesto el
+blindaje está a medias: el temario ya no viaja en el JavaScript, pero Firestore
+lo entrega a cualquiera que sepa pedirlo.
 
-Siguen esperando dos decisiones, y ninguna bloquea a P2: desplegar
-`firestore.rules` (para que los tutoriales crucen de dispositivo) y comprar el
-dominio (para F1). Y una tarea de la academia, no técnica: **meter a los dos
-alumnos en un grupo**, porque hoy no están en ninguno.
+Siguen esperando dos decisiones: desplegar `firestore.rules` (que ahora **sí**
+bloquea a P3, además de los tutoriales entre dispositivos) y comprar el dominio
+(para F1). Y una tarea de la academia, no técnica: **meter a los dos alumnos en
+un grupo**, porque hoy no están en ninguno.
 
 ### Terminado
 
@@ -65,16 +73,17 @@ alumnos en un grupo**, porque hoy no están en ninguno.
 | ~~**U** — Orden y filtros de las listas de personas~~ | pedido el 30-08-2026 |
 | ~~**V** — Emulador local + usuarios de prueba~~ | necesario para verificar |
 | ~~**P1** — Migrar R.E.S.C.A.T.E. a su propio contenido en Firestore~~ | bloque P · 31-08-2026 |
+| ~~**P2** — Apagar el bundle: el temario deja de viajar en el JS~~ | bloque P · 31-08-2026 |
+| ~~**P9** — Portada central rediseñada (foto a sangre, voces, menú)~~ | pedido el 31-08-2026 |
 
 ### Pendiente, en orden de ejecución
 
 | # | Trabajo | Duración | Depende de |
 |---|---|---|---|
-| **P2** | Apagar el bundle: el temario deja de compilarse en el JS | 3-5 días | — · **P1 hecho, ya no bloquea** |
-| **P3** | Reglas de lectura por academia, grupo y programa | 2-3 días | — · **P1 hecho, ya no bloquea** |
+| **P3** | Reglas de lectura por academia, grupo y programa | 2-3 días | **desplegar `firestore.rules`** · P1 y P2 hechos |
 | **F1** | Dominio propio + Firebase Hosting + `BrowserRouter` | 1-2 días | — · **cabe en Spark** · las portadas de P4 ya existen y esperan sus URLs |
-| **P5** | Optimización del arranque (la no-indexación ya está en P8) | 1-2 días | P2 |
-| **A** | Calidad editorial v2 | larga, por lotes | P2 (ya no incluye partir el bundle) |
+| **P5** | Optimización del arranque (la no-indexación ya está en P8) | 1-2 días | — · **P2 hecho, ya no bloquea** |
+| **A** | Calidad editorial v2 | larga, por lotes | — · **P2 hecho, ya no bloquea** |
 | **O1** | Matrícula secuencial del alumno | 1-2 días | — |
 | **B** | Mi Botiquín | corta | lista de artículos de la academia |
 | **O2** | Bloqueo por pago + bypass auditado | 3-5 días | O1 |
@@ -113,19 +122,20 @@ alumnos en un grupo**, porque hoy no están en ninguno.
 
 ## Lo que está esperando una decisión tuya
 
-Tres cosas, y ninguna es trabajo pendiente: son permisos. Mientras no lleguen,
-el blindaje de verdad no puede empezar.
+Ya no son tres: **P1 se autorizó y se ejecutó el 31 de agosto**, y con él salió
+P2. Quedan dos permisos y una tarea de la academia.
 
 | Decisión | Por qué te toca | Desbloquea |
 |---|---|---|
-| **P1**: ¿emulador o ventana en producción? | Escribe en `ptem-a304f` mientras el cuerpo docente valida | **P2** y **P3** |
-| Desplegar `firestore.rules` | Toca producción | Que los tutoriales crucen de dispositivo, y luego P3 |
+| **Desplegar `firestore.rules`** | Toca producción | **P3** —lo único que falta del blindaje— y que los tutoriales crucen de dispositivo |
 | Comprar el dominio | Es una compra | **F1**, y con él las URLs sin `#` |
+| Meter a los dos alumnos en `GRP-SCZD` | Es alta en la academia, no código | Que dejen de ver «Necesitas un código de grupo» |
 
-Y una comprobación que no es una decisión pero corre prisa: **verificar contra
-producción el tercer fallo del registro de abajo** (el bloqueo «Tu programa
-todavía no está disponible»). Si estaba activo, ningún alumno con grupo podía
-abrir una lección.
+Y una que no es una decisión sino seguridad, y corre prisa: **rotar la
+credencial del service account** cuyo contenido se pegó en un chat el 31 de
+agosto (id de clave `97418f440957b97713aed40e2679c01310ae2dda`). Sigue viva
+hasta que se rote desde la consola de Firebase, y da acceso de administrador al
+proyecto entero.
 
 ---
 
@@ -258,14 +268,21 @@ del sistema, y es justo lo que la migración no toca.
 |---|---|---|
 | P4, P6, P7, P8, T, U | **No.** Rutas nuevas, campos nuevos y filtros. No tocan el panel ni el temario en revisión | Hechos |
 | V (emulador) | **No.** No toca producción: ésa es su razón de existir | Hecho |
-| P1 | **Sí.** El contenido cambia de fuente bajo sus pies, y un clonado interrumpido deja temario parcial | Espera ventana |
-| P2 | **Sí.** Es el punto de no retorno: si P1 quedó incompleto, no ven nada | Espera P1 |
-| P3 | **Sí.** Una regla mal puesta los deja fuera del material que revisan | Espera P1 |
+| P1 | **Sí.** El contenido cambiaba de fuente bajo sus pies | **Hecho el 31-08-2026**, sin interrupción: 287/287 verificados y las firmas intactas |
+| P2 | **Sí.** Era el punto de no retorno: si P1 hubiera quedado incompleto, no verían nada | **Hecho el 31-08-2026**, después de comprobar P1 |
+| P9 (portada) | **No.** Solo toca `/`, que ellos no usan para validar | Hecho el 31-08-2026 |
+| P3 | **Sí.** Una regla mal puesta los deja fuera del material que revisan | Espera el despliegue de `firestore.rules` |
 | F1 | **Sí.** Les rompe los marcadores a `#/panel/contenido` | Espera dominio |
 
-Por eso todo lo que no los tocaba se hizo primero, con ellos dentro, y P1-P2-P3
-esperan una ventana acordada con vuelta atrás lista (basta desmarcar la academia
-como migrada para que vuelva a leer del bundle).
+Todo lo que no los tocaba se hizo primero, con ellos dentro. P1 y P2 se hicieron
+el 31 de agosto en ese orden y comprobando el primero antes de empezar el
+segundo, que es lo que hacía falta: la vuelta atrás de P1 era desmarcar la
+academia como migrada, y la de P2 ya no existe, porque el bundle se apagó.
+
+**Queda P3, y su riesgo es el contrario:** no borra nada, pero una regla mal
+puesta deja al cuerpo docente fuera del material que está revisando. La trampa
+ya está localizada —el staff no tiene grupo— y las reglas se prueban contra el
+emulador antes de tocar producción.
 
 **Y un incentivo real:** los bancos de examen solo toman temas `validado` o
 `publicado`. Cada firma que pongan antes de la migración es contenido que ya
@@ -363,7 +380,34 @@ nuevo necesita el mismo trato.
 Criterio de terminado: RESCATE abre cualquier lección por el camino de Firestore
 (3 lecturas) y ninguna pantalla cae al bundle.
 
-### P2 — Apagar el bundle
+### P2 — Apagar el bundle · HECHO el 31-08-2026
+
+> **Cerrado.** Criterio de terminado cumplido y medido sobre `dist/`:
+>
+> | | Antes | Después |
+> |---|---|---|
+> | Respuestas correctas descargables | 1 546 | **0** |
+> | Explicaciones | 1 539 | **0** |
+> | Tarjetas | 1 428 | **0** |
+> | Títulos del temario | 287 | **0** |
+> | Trozo de entrada | 3 037 kB | **712 kB** |
+>
+> Se hizo en tres frentes, no solo quitando el fallback:
+>
+> · El resolutor dejó de caer al bundle. Sin contenido propio no hay contenido
+>   (`src/lib/contenidoVacio.js`), y eso es lo correcto: el bundle ERA el
+>   temario de R.E.S.C.A.T.E., así que servírselo a otra academia le enseñaba
+>   material ajeno creyendo que era el suyo.
+> · La muestra de la portada pública salió del temario: ahora es un módulo
+>   generado de 3 kB (`scripts/gen-demo-portada.mjs`), sin respuestas ni
+>   tarjetas.
+> · `navIndice.js` dejó de publicar los 287 títulos. Eran contenido de la
+>   academia y estaban descargables aunque la interfaz no los pintara.
+>
+> `tests/fugaDelBundle.test.mjs` pasó de MEDIR la fuga a IMPEDIRLA: si alguien
+> vuelve a enlazar el temario desde la aplicación —por comodidad o por un
+> fallback «temporal»— esas pruebas fallan.
+
 
 `src/data/contenido/` deja de ser una dependencia de la aplicación y pasa a ser
 **material de siembra**: lo leen los scripts (`gen:plan`, `seed`, replicación) en
@@ -523,16 +567,64 @@ impide que la fuga se reabra.
 
 ---
 
+### P9 — Portada central rediseñada · HECHO el 31-08-2026
+
+No estaba en el plan: lo pidió el dueño del producto esa tarde, con una imagen
+de referencia. `/` deja de ser una página de secciones y pasa a ser una portada
+a sangre: fotografía a ancho completo, titular a tres alturas y banda inferior.
+
+Lo que no es decorativo:
+
+| Decisión | Por qué |
+|---|---|
+| Foto en AVIF/WebP a cinco anchos | El original pesaba 2,8 MB. A 800 px pesa 31 kB, y es el LCP de la raíz |
+| El `<link rel=preload>` del `<head>` cambia de imagen | Precargaba la ilustración del paramédico, que en `/` ya no se pinta: era una descarga en prioridad alta compitiendo con la foto que sí es el LCP |
+| No se elige la precarga por ruta | Exigiría un `<script>` en línea y la CSP del build lo prohíbe a propósito. Con F1 (BrowserRouter) cada ruta podrá llevar su `<link>` |
+| `--topbar-h` pasa de 62 px a 64 | La variable mentía: la regla del tema pintaba la barra de 64. Esos 2 px asomaban entre la barra y la foto como una raya blanca, y descuadraban también el panel lateral y los `scroll-margin-top` |
+| La barra sobre la foto es cristal, no transparencia | Transparente del todo, la barra dejaba de existir: no había forma de ver dónde acaba la navegación |
+
+**«Cómo se vive PTEM»** sustituye al bloque de alianza. Son cuatro voces de uso
+—alumno, docente, quien valida, la academia— y **no son testimonios**: no llevan
+nombre, foto, estrellas ni generación, y su pie dice lo que son («Así estudia…»).
+Una reseña inventada en la página que capta alumnos es publicidad falsa y el
+desprestigio se lo come la academia. El día que haya testimonios reales, con
+permiso de quien los firma, se cambia el arreglo `VOCES` y ya.
+
+Tampoco afirma que el temario esté firmado: hoy los profesores están validando y
+ninguna lección está publicada como definitiva.
+
+**El botón de menú desaparece cuando el cajón no tiene nada que abrir.** Sin
+sesión contenía un único enlace, «Inicio», que ya está en la barra de arriba. La
+regla vive en `src/lib/menuLateral.js` con siete pruebas, y no pregunta «¿hay
+sesión?» sino «¿ofrece el cajón algo que la barra no enseñe ya?»: así el botón
+reaparece solo si mañana se añade un enlace de cajón para visitantes.
+
+> **Lo que salió mal, para que no se repita.** Al fusionar, un `git checkout`
+> con un stash a medio aplicar dejó marcadores de conflicto en
+> `PortadaPTEM.jsx`, y un `git add -A` sin volver a mirar el estado los subió a
+> `main`. El build de CI falló, así que **no llegó a desplegarse** y producción
+> siguió sirviendo la versión anterior. Revertido en `9d7a8f8` y rehecho.
+> La lección: después de cambiar de rama, mirar `git status` otra vez antes de
+> `add -A`, y no dar por bueno un diff leído hace tres comandos.
+
 ### P5 — Optimización del arranque
 
 Ya no incluye la no-indexación: eso se adelantó y está hecho en **P8**, porque
 no dependía de nada y dejarlo para después era publicar el temario en Google
 mientras se blindaba la puerta.
 
-Lo que queda es peso. Medido el 30-08-2026: entrada **733 KB**, SDK de Firebase
-**720 KB**, `init` **221 KB**. El trozo de 3 MB del temario desaparece solo con
-**P2**, así que esta fase empieza cuando P2 termine y se ocupa del arranque:
-el SDK de Firebase es la pieza gorda que queda.
+Lo que queda es peso, y **P2 ya se llevó la mitad**: el trozo de entrada bajó de
+3 037 kB a 712 kB al sacar el temario. Medido sobre `dist/` el 31-08-2026, lo
+que queda es esto:
+
+| Trozo | Peso | Qué es |
+|---|---|---|
+| `index.esm` | 720 kB | SDK de Firebase. **La pieza gorda que queda** |
+| `index` (entrada) | 712 kB | La aplicación |
+| `init` | 221 kB | Arranque de Firebase |
+
+Esta fase ya no espera a nadie y se ocupa del SDK: hoy entra entero aunque el
+visitante de la portada no vaya a iniciar sesión.
 
 ### Lo que el bloque P NO incluye
 
@@ -541,9 +633,10 @@ el SDK de Firebase es la pieza gorda que queda.
 - Marca de agua por matrícula. Depende de **O1** y se hace ahí.
 - Migrar a Next.js. **G** sigue sin comprometerse.
 
-Y lo que P7 **no** arregla, dicho aquí para que no se confunda con estar
-resuelto: el temario **sigue viajando en el JavaScript publicado**. P7 blinda
-la interfaz; el archivo lo cierra **P2**.
+Y lo que el bloque P **todavía no** arregla, dicho aquí para que no se confunda
+con estar resuelto: **Firestore sigue entregando el temario a quien sepa
+pedirlo**. P7 blindó la interfaz, P2 cerró el archivo publicado, y la puerta del
+servidor la cierra **P3**, que es lo único que falta.
 
 ---
 
