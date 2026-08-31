@@ -92,7 +92,7 @@ cuota gratuita de Spark da para ~173 cargas al día.
 | **P5** | Optimización del arranque (la no-indexación ya está en P8) | 1-2 días | — · **P2 hecho, ya no bloquea** |
 | **A** | Calidad editorial v2 | larga, por lotes | — · **P2 hecho, ya no bloquea** |
 | **O1** | Matrícula secuencial del alumno | 1-2 días | — |
-| **B** | Mi Botiquín | corta | lista de artículos de la academia |
+| **B** | Mi Botiquín (inventario de videojuego) | lógica corta · media con la capa visual | lista de artículos de la academia · **comparte catálogo con M** |
 | **O2** | Bloqueo por pago + bypass auditado | 3-5 días | O1 |
 | **O3** | Check-in de 8 horas | 3-5 días | O1 |
 | **F2** | Contratar Blaze + alertas de gasto + RTDB + respaldos | 1 día | medir consumo real primero |
@@ -101,7 +101,7 @@ cuota gratuita de Spark da para ~173 cargas al día.
 | **O4** | Pantalla de Recepción (rol `recepcion`) | 1 semana | O1-O3 · L |
 | **C** | Clase en vivo con actividades calificables **(incluye el simulador de escenas)** | 2-3 semanas | A, **F2** · **O3** (la bandera «en clase» decide a quién se puede calificar) |
 | **D** | Entrenador de farmacología | media | catálogo de fármacos de la academia |
-| **M** | Tienda (uniformes e insumos) | 2 semanas | L · comparte catálogo con B |
+| **M** | Tienda (uniformes e insumos) | 2 semanas | L · **el catálogo se diseña en B y se reutiliza aquí** |
 | **O5** | Feed de logística de tienda en recepción | 3-5 días | M · O4 |
 | **O6** | Credencial con código + escáner USB | 1-2 días | O4 |
 | **N** | Inventario simple | 1 semana | M |
@@ -1210,7 +1210,7 @@ describe el momento en que se midieron los agregados, no el estado de hoy.
 
 ---
 
-## Trabajo B — Mi Botiquín · PENDIENTE
+## Trabajo B — Mi Botiquín · PENDIENTE · dirección visual decidida el 31-08-2026
 
 Detalle en `PLAN-LMS.md` §26. La función más barata y la que menos depende del
 temario.
@@ -1221,12 +1221,146 @@ se confunde) y tres estados —«en tu botiquín», «próximo a desbloquear» y
 «bloqueado» en silueta— **derivados del progreso que la app ya carga: cero
 lecturas y cero escrituras nuevas**. Ruta `/botiquin`.
 
-Las fotografías del equipo entran por el pipeline de activos médicos, con
-licencia, crédito, saneado y hash sellado, **no copiadas a mano en `public/`**
-(ver `PLAN-LMS.md` §33.6 y el incidente que lo motivó).
+El 31 de agosto de 2026 el dueño del producto fijó la dirección: **inventario de
+videojuego**. Botiquín abierto en el centro, artículos flotando dentro, y al
+pulsar uno se oscurece el fondo y sale su ficha.
+
+### B.1 — Dónde vive el catálogo (la decisión que lo condiciona todo)
+
+**En Firestore, por academia. Nunca en `src/data/`.**
+
+No es una preferencia. El catálogo del botiquín ES contenido de la academia:
+qué lleva su unidad, cómo lo revisan, con qué lo confunden sus alumnos. Meterlo
+compilado en la aplicación reabre exactamente el agujero que P2 acaba de cerrar
+—el temario viajaba dentro del JavaScript publicado y cualquiera lo descargaba
+sin cuenta— y lo reabre por la puerta de al lado.
+
+Colección `botiquin`, con la misma forma que el resto del contenido por
+academia: `academiaId`, `cursoId` cuando aplique, y las reglas de lectura de P3
+(pertenece a la academia + su programa). Se le añade su bloque a
+`firestore.rules` y su suite en `tests/rules/`, como todo lo demás.
+
+**Un solo documento con el arreglo de artículos, no un documento por artículo.**
+Con 40-80 artículos, un documento por pieza son 40-80 lecturas cada vez que un
+alumno abre `/botiquin`, y ya se sabe cómo acaba eso: es el mismo error que dejó
+el temario costando 288 lecturas por carga (ver **P10**). Uno solo cuesta 1
+lectura y cabe de sobra en el límite de 1 MB por documento si las fichas largas
+se guardan aparte y solo se cargan al abrir el modal.
+
+### B.2 — El catálogo es compartido con la Tienda (**M**), y se diseña una vez
+
+Ya estaba dicho en el trabajo M y se confirma: los insumos que se venden son los
+mismos artículos que se estudian. **Un catálogo, dos usos.** Los campos
+comerciales (precio, existencias, SKU) son opcionales y viven en el mismo
+artículo; un artículo que no se vende simplemente no los trae. Dos listas
+paralelas se desincronizan el primer mes.
+
+Campos mínimos por artículo:
+
+| Campo | Para qué |
+|---|---|
+| `id`, `nombre` | Identidad estable. El `id` es la llave que usan B, M y N |
+| `compartimento` | Dónde va dentro del botiquín. Ordena la pantalla |
+| `desbloqueaEn` | Módulo o tema que lo revela. Alimenta los tres estados |
+| `resumen` | Una o dos frases: qué es y para qué sirve |
+| `ficha` | El contenido largo. **Ver B.3: no es texto libre** |
+| `imagen` | Clave del activo, no una URL suelta. Ver B.4 |
+| `comercial` | Opcional: precio, SKU, existencias. Lo usa **M**, lo ignora **B** |
+
+### B.3 — «Modo de uso» es contenido clínico, y pasa por la misma puerta
+
+Esto es lo que hay que resolver antes de escribir una línea de interfaz.
+
+Un botiquín no lleva objetos decorativos: lleva torniquetes, cánulas, sellos de
+tórax y hemostáticos. **«Instrucciones paso a paso en viñetas cortas» para un
+torniquete es un procedimiento**, y en este proyecto los procedimientos tienen
+molde obligatorio (`CLAUDE.md` §7): objetivo, indicaciones, contraindicaciones,
+material, preparación y seguridad, técnica, confirmación de éxito,
+complicaciones y documentación. Con fuentes que declaren documento, edición y
+página.
+
+Dicho claro: **la ficha del botiquín no puede ser un resumen alegre de cómo se
+usa un dispositivo que detiene una hemorragia.** Un alumno que aprende la
+técnica de un modal gamificado en vez de la lección revisada es exactamente el
+fallo que toda la remediación de `CLAUDE.md` existe para evitar.
+
+La salida es la del §10 de `CLAUDE.md`: **una fuente canónica y un enlace.**
+
+- La ficha del botiquín lleva **identificación y reconocimiento**: qué es, cómo
+  distinguirlo de lo que se le parece, cómo se revisa antes del turno, con qué
+  se confunde, errores frecuentes. Eso no es procedimiento y no necesita el
+  molde completo.
+- La **técnica** vive en su lección, con su molde, sus fuentes y su firma
+  docente. La ficha enlaza ahí: «Cómo se aplica → *M5, Control de hemorragias*».
+- Ningún artículo cuyo uso sea un procedimiento invasivo se publica en el
+  botiquín antes de que su lección esté `validado` o `publicado`. Prueba
+  automática, igual que la de los bancos de examen.
+
+Sale ganando también el producto: el botiquín deja de ser una pantalla suelta y
+pasa a ser una puerta de entrada al temario.
+
+### B.4 — Las imágenes
+
+Estilo fijado por el dueño: **ilustración 3D estilo caricatura, colores vivos,
+luz suave, fondo transparente**, consistente entre artículos. Se genera con el
+mismo esqueleto de instrucción para los 40-80, porque la consistencia es lo que
+hace que parezcan del mismo juego y no un collage.
+
+**Dónde encaja con «fotos reales de bancos de imágenes».** El 30 de agosto se
+decidió sustituir muchas ilustraciones por fotografías con licencia. No se
+contradice, pero hay que trazar la raya y aquí queda trazada:
+
+> **La caricatura es para el inventario. La foto real es para enseñar el
+> dispositivo.** Una caricatura de torniquete con el molinete mal dibujado en la
+> lección enseña una forma equivocada; en la rejilla del botiquín, donde solo
+> hay que reconocerlo y pulsarlo, no enseña nada malo. Si un artículo solo puede
+> tener una imagen, gana la real.
+
+Proceso, sin excepciones (`PLAN-LMS.md` §33.6 y el incidente que lo motivó):
+
+1. Generar con el esqueleto común; recortar el fondo a PNG transparente.
+2. Entra por el **pipeline de activos médicos**: licencia, crédito, saneado y
+   hash sellado. **No se copian a mano en `public/`.**
+3. Optimizar con `scripts/optimizar-imagenes.mjs`, que ya recorta el margen
+   transparente y saca AVIF/WebP a varios anchos. Un icono de inventario se ve a
+   ~160 px: pedir 2000 es tirar peso.
+4. Se sirven **estáticas con el sitio**, no desde Firebase Storage. En Spark,
+   Storage tiene tope de descarga diaria y cuenta para el salto a Blaze; como
+   activos estáticos cuestan cero.
+
+**Coste, que el dueño pidió vigilar:** generar 40-80 ilustraciones tiene precio
+según la herramienta, y el recorte de fondo también si se automatiza. Es la
+única partida de este trabajo que cuesta dinero. Se puede hacer por lotes,
+empezando por un compartimento, y ver el resultado antes de pagar el resto.
+
+### B.5 — La pantalla
+
+- **Contenedor:** botiquín abierto, artículos colocados por compartimento.
+- **Micro-interacciones:** flotación leve; al pasar el cursor, escala ~10 %.
+- **Modal:** oscurece el fondo, imagen grande, «qué es», «cómo se revisa» y el
+  **enlace a la lección** que enseña la técnica.
+
+Tres cosas que este repositorio ya exige y no son negociables:
+
+| Regla | Por qué |
+|---|---|
+| `prefers-reduced-motion` apaga la flotación | Ya se respeta en `Reveal`; una rejilla entera de objetos flotando es de lo peor para quien tiene sensibilidad al movimiento |
+| El modal atrapa el foco, cierra con Escape y lo devuelve al abrirlo | El patrón ya está resuelto en el cajón de `Layout.jsx` (`inert` + Escape + foco de vuelta). Se reutiliza, no se reinventa |
+| Ni un pictograma Unicode | `sinEmojis.test.mjs` los rechaza. Los iconos salen de `Icon.jsx` |
+
+### B.6 — Lo que NO se hace
+
+- **No se construye para Next.js.** La nota de la que salió esta dirección
+  daba por hecha la migración (**G**), y G está explícitamente *sin
+  comprometer* en este plan: «reevaluar tras A». Se construye en el stack
+  actual —Vite + React— como todo lo demás. Si algún día se migra, se migra con
+  el resto.
+- No se inventa el catálogo. Sin la lista de la academia esto no empieza: es la
+  dependencia que ya figuraba en la tabla y sigue siéndolo.
 
 **Hace falta de la academia:** lista de artículos por compartimento, qué módulo
-desbloquea cada uno, tipo de unidad y las fotos.
+desbloquea cada uno, tipo de unidad, y para cada artículo cuya técnica sea un
+procedimiento, a qué lección enlaza.
 
 ---
 
