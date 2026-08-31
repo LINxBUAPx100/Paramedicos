@@ -38,9 +38,17 @@ import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { estadoContenido, academiaMigrada } from '../src/lib/contenidoApi.js'
+import { contenidoVacio } from '../src/lib/contenidoVacio.js'
 
 const RAIZ = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const leer = (...p) => readFileSync(path.join(RAIZ, ...p), 'utf8')
+
+// Comprobar sobre el CÓDIGO, no sobre los comentarios. El comentario que
+// explica por qué se retiró algo nombra ese algo, y una aserción ingenua lo
+// cuenta como si siguiera ahí. Pasó dos veces el mismo día.
+const SIN_BLOQUE = /\/\*[\s\S]*?\*\//g
+const SIN_LINEA = /(^|[^:])\/\/[^\n]*/g
+const codigo = (...p) => leer(...p).replace(SIN_BLOQUE, '').replace(SIN_LINEA, '$1')
 
 // ---------- el defecto ----------
 
@@ -66,30 +74,36 @@ test('solo `migrado` habilita leer su propio contenido', () => {
 
 // ---------- el fallback, mientras exista ----------
 
-test('el fallback al bundle SIGUE VIVO — es el riesgo, medido', () => {
-  const ctx = leer('src', 'context', 'ContenidoContext.jsx')
-  // Hoy: si la academia no está migrada, el índice del shell es el del bundle.
-  const elFallbackSigueVivo = ctx.includes('setIndice(INDICE_BUNDLE)')
-    && ctx.includes('if (!migrada) return undefined')
+test('el fallback al bundle ESTÁ APAGADO', () => {
+  const ctx = codigo('src', 'context', 'ContenidoContext.jsx')
 
-  assert.equal(elFallbackSigueVivo, true,
-    'Si esto falla, el fallback al bundle desapareció: es lo que persigue P2. '
-    + 'Invierte esta aserción y actualiza la cabecera de este archivo en vez de '
-    + 'volver a enlazar el bundle.')
+  // El índice de arranque del shell ya no lleva los títulos del temario: solo
+  // cifras. Una academia sin migrar arranca vacía, no con el plan de otra.
+  assert.match(ctx, /const INDICE_VACIO/,
+    'el shell volvió a tener un índice de reserva con contenido del bundle')
+  assert.doesNotMatch(ctx, /modulosNav/,
+    'ContenidoContext volvió a importar los 287 títulos del temario')
+
+  const resolutor = codigo('src', 'lib', 'firebase', 'contenido.js')
+  assert.match(resolutor, /contenidoVacio/,
+    'el resolutor debe caer a contenido vacío, nunca al temario de otra academia')
 })
 
-test('el bundle que se sirve por defecto ES el temario de R.E.S.C.A.T.E.', () => {
-  // No es un temario genérico ni de ejemplo: son las lecciones de la academia.
-  const plan = leer('src', 'data', 'planRescate.js')
-  for (const marca of ['OVACE', 'AVDI', 'PROPED']) {
-    assert.ok(plan.includes(marca),
-      `el plan del bundle debería contener "${marca}"`)
-  }
-  // Y por eso servirlo a otra academia es filtrar material ajeno, no dar un
-  // temario de muestra.
-  assert.ok(plan.length > 100000,
-    'el plan del bundle es el temario completo, no una muestra')
+test('una academia sin migrar recibe NADA, no el temario de la primera', () => {
+  // Ésta era la fuga: el defecto de `contenido.estado` es `legacy`, y legacy
+  // significaba «sírvele el bundle». El defecto no ha cambiado —cambiarlo
+  // rompería otras cosas— pero lo que se sirve sí: ahora, nada.
+  assert.equal(academiaMigrada({}), false, 'el defecto sigue siendo «no migrada»')
+
+  const vacio = contenidoVacio('sin migrar')
+  assert.equal(vacio.fuente, 'vacio')
+  assert.deepEqual(vacio.modulos, [])
+  assert.deepEqual(vacio.todosLosTemas, [])
+  assert.equal(vacio.getTema('m1-pab-avdi'), null,
+    'el contenido vacío no puede devolver una lección de nadie')
+  assert.equal(vacio.stats.temas, 0)
 })
+
 
 // ---------- lo que sí está protegido ----------
 

@@ -1,26 +1,28 @@
 // ============================================================
-//  La FUGA DEL BUNDLE — medida, fijada y con fecha de caducidad
+//  LA FUGA DEL BUNDLE, CERRADA — y este archivo la mantiene cerrada
 // ------------------------------------------------------------
-//  Hoy el temario completo viaja compilado dentro de la aplicación. Como el
-//  sitio se sirve estático, cualquiera puede descargar el archivo y quedarse
-//  con las 287 lecciones y el banco de exámenes entero, sin cuenta, sin
-//  academia y sin grupo. `RutaProtegida` no lo impide: es una comprobación de
-//  cliente sobre un archivo que ya está en el navegador de quien lo pidió.
+//  Durante meses el temario completo viajó compilado dentro de la aplicación.
+//  Como el sitio se sirve estático, cualquiera podía descargar un archivo y
+//  quedarse con las 287 lecciones y el banco de exámenes entero: sin cuenta,
+//  sin academia y sin grupo. Medido el 30-08-2026 sobre `dist/`: 1 546
+//  respuestas correctas, 1 539 explicaciones y 1 428 tarjetas.
 //
-//  ESTA PRUEBA NO ARREGLA LA FUGA. La mide y la deja escrita, que es lo que
-//  faltaba: hasta ahora el problema se discutía sin número.
+//  El trabajo P2 lo apagó el 31-08-2026, en tres frentes:
 //
-//  Está en VERDE a propósito. Afirma lo que hoy es cierto, no lo que debería
-//  ser: una prueba en rojo en `main` corta el despliegue, y los profesores
-//  están validando material en producción ahora mismo.
+//   · El resolutor dejó de caer al bundle cuando Firestore no responde. Sin
+//     contenido propio no hay contenido (ver lib/contenidoVacio.js).
+//   · La muestra de la portada pública salió del temario: ahora es un módulo
+//     de 3 kB con las dos secciones que de verdad enseña.
+//   · El índice de navegación dejó de publicar los 287 títulos. Eran contenido
+//     de la academia y estaban descargables aunque la interfaz no los pintara.
 //
-//  CUANDO SE HAGA EL TRABAJO P2 (apagar el bundle), esta prueba va a fallar.
-//  Ese fallo es la señal de que P2 funcionó. Entonces se invierten las dos
-//  aserciones: `assert.equal(alcanzable, false)` y `assert.equal(respuestas, 0)`.
-//  No se borra el archivo: pasa a ser el guardián que impide que la fuga
-//  vuelva a abrirse.
+//  ESTE ARCHIVO YA NO MIDE LA FUGA: LA IMPIDE. Si alguien vuelve a enlazar el
+//  temario desde la aplicación —por comodidad, por un fallback «temporal» o por
+//  una muestra nueva en la portada— estas pruebas fallan.
 //
-//  Ver `docs/PLAN-TECNICO-FASES.md`, bloque P.
+//  Lo que SÍ queda en el archivo publicado y no es una fuga: los nombres de
+//  campo «correcta», «explicacion» y «frente» aparecen en el CÓDIGO del editor
+//  y del quiz, que trabajan con esos objetos.
 // ============================================================
 import test from 'node:test'
 import assert from 'node:assert/strict'
@@ -31,11 +33,26 @@ import { fileURLToPath } from 'node:url'
 const RAIZ = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const ENTRADA = path.join(RAIZ, 'src', 'main.jsx')
 
-// El material de las lecciones. Es lo que no puede acabar en el navegador de
-// quien no ha entrado: prosa, preguntas con su respuesta correcta y tarjetas.
+// El material de las lecciones: prosa, preguntas con su respuesta y tarjetas.
 const MATERIAL = path.join(RAIZ, 'src', 'data', 'planRescate.js')
+const NAV = path.join(RAIZ, 'src', 'data', 'navIndice.js')
 
 const IMPORTA = /(?:from|import)\s*\(?\s*['"]([^'"]+)['"]/g
+
+/**
+ * Quita comentarios antes de buscar imports.
+ *
+ * Sin esto, un comentario que EXPLICA un import retirado se cuenta como el
+ * import mismo. Pasó exactamente eso: el comentario de `plantillas.js` que
+ * documenta por qué ya no se importa el temario hacía que esta suite siguiera
+ * viendo el temario como alcanzable, con el fallback ya apagado y `dist/` ya
+ * limpio. Una prueba que se cree su propio comentario no vale nada.
+ */
+function sinComentarios(fuente) {
+  return fuente
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/(^|[^:])\/\/[^\n]*/g, '$1')
+}
 
 function resolver(desde, especificador) {
   if (!especificador.startsWith('.')) return null // paquete de node_modules
@@ -64,7 +81,7 @@ function grafoDesde(entrada) {
     if (!archivo || vistos.has(archivo)) continue
     vistos.add(archivo)
     let fuente
-    try { fuente = readFileSync(archivo, 'utf8') } catch { continue }
+    try { fuente = sinComentarios(readFileSync(archivo, 'utf8')) } catch { continue }
     for (const m of fuente.matchAll(IMPORTA)) {
       const destino = resolver(archivo, m[1])
       if (destino && !vistos.has(destino)) cola.push(destino)
@@ -81,33 +98,41 @@ test('el grafo de la aplicación arranca y alcanza sus propios módulos', () => 
   assert.ok(grafo.has(path.join(RAIZ, 'src', 'App.jsx')))
 })
 
-test('HOY el temario completo viaja en la aplicación — ésta es la fuga que cierra P2', () => {
+test('el temario YA NO viaja en la aplicación', () => {
   const grafo = grafoDesde(ENTRADA)
-  const alcanzable = grafo.has(MATERIAL)
-
-  assert.equal(alcanzable, true,
-    'Si esto falla, el material dejó de viajar en el bundle: es lo que persigue '
-    + 'P2. Invierte las aserciones de este archivo (ver la cabecera) en vez de '
-    + 'volver a enlazar el temario.')
+  assert.equal(grafo.has(MATERIAL), false,
+    'Alguien volvió a enlazar `src/data/planRescate.js` desde la aplicación. Eso '
+    + 'publica el temario completo —287 lecciones y las respuestas de todos sus '
+    + 'exámenes— en un archivo que cualquiera puede descargar sin cuenta. Si '
+    + 'necesitas un fragmento para una portada, genéralo aparte, como hace '
+    + 'scripts/gen-demo-portada.mjs.')
 })
 
-test('la fuga tiene tamaño, y queda escrito cuál es', () => {
-  const fuente = readFileSync(MATERIAL, 'utf8')
-  const cuenta = (re) => (fuente.match(re) || []).length
+test('tampoco viajan los 287 títulos del temario', () => {
+  // `navIndice.js` SÍ se importa: publica las CIFRAS que enseña la portada
+  // pública (7 módulos, 287 temas…). Son números, no contenido. Lo que no puede
+  // volver a publicar son los títulos.
+  const fuente = readFileSync(NAV, 'utf8')
+  assert.doesNotMatch(fuente, /export const modulosNav/,
+    'navIndice.js volvió a publicar `modulosNav`: son los 287 títulos del '
+    + 'temario, y los títulos son contenido de la academia.')
+  assert.match(fuente, /export const stats/, 'las cifras sí deben seguir publicándose')
+})
 
-  const respuestas = cuenta(/"correcta":/g)
-  const explicaciones = cuenta(/"explicacion":/g)
-  const tarjetas = cuenta(/"frente":/g)
+test('la muestra de la portada es un fragmento, no un temario', () => {
+  const demo = path.join(RAIZ, 'src', 'data', 'demoPortada.js')
+  assert.ok(existsSync(demo), 'falta src/data/demoPortada.js — genéralo con npm run gen:demo')
+  const fuente = readFileSync(demo, 'utf8')
+  assert.doesNotMatch(fuente, /"correcta"/, 'la muestra no puede llevar respuestas de examen')
+  assert.doesNotMatch(fuente, /"frente"/, 'la muestra no puede llevar flashcards')
+  assert.ok(fuente.length < 40000,
+    `la muestra pesa ${fuente.length} bytes: debe ser un fragmento, no un temario`)
+})
 
-  // Cifras medidas el 30 de agosto de 2026. No se afirman como constantes: se
-  // comprueba que sean SUSTANCIALES, porque el temario sigue creciendo y una
-  // igualdad exacta rompería la suite en cada lote redactado.
-  assert.ok(respuestas > 1000,
-    `respuestas de examen expuestas: ${respuestas} (se esperaban más de 1000)`)
-  assert.ok(explicaciones > 1000, `explicaciones expuestas: ${explicaciones}`)
-  assert.ok(tarjetas > 1000, `tarjetas expuestas: ${tarjetas}`)
-
-  // Deja el número a la vista de quien corra la suite: es el argumento entero.
-  console.log(`    · fuga actual: ${respuestas} respuestas correctas, `
-    + `${explicaciones} explicaciones y ${tarjetas} tarjetas descargables sin cuenta`)
+test('el resolutor sirve contenido VACÍO, no el de otra academia', () => {
+  const resolutor = readFileSync(path.join(RAIZ, 'src', 'lib', 'firebase', 'contenido.js'), 'utf8')
+  assert.match(resolutor, /contenidoVacio/,
+    'el resolutor debe caer a `contenidoVacio`, nunca al temario del bundle')
+  assert.doesNotMatch(sinComentarios(resolutor), /import\(['"]\.\.\/\.\.\/data\/index\.js['"]\)/,
+    'el resolutor volvió a importar el temario del bundle')
 })

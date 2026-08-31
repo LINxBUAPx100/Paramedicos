@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "gen:nav": "node scripts/gen-nav-indice.mjs",
-    "prebuild": "node scripts/gen-plan-rescate.mjs && node scripts/gen-nav-indice.mjs",
+    "prebuild": "node scripts/gen-plan-rescate.mjs && node scripts/gen-nav-indice.mjs && npm run gen:demo",
     "build": "vite build",
     "preview": "vite preview",
     "test": "node --test \"tests/*.test.mjs\"",
@@ -27,7 +27,8 @@
     "activos:resellar": "node scripts/resellar-activos.mjs",
     "activos:iconos": "node scripts/migrar-iconos-emoji.mjs",
     "emu": "firebase emulators:start --only auth,firestore --project ptem-a304f",
-    "seed:usuarios": "node scripts/seed-usuarios-prueba.mjs"
+    "seed:usuarios": "node scripts/seed-usuarios-prueba.mjs",
+    "gen:demo": "node scripts/gen-demo-portada.mjs"
   },
   "dependencies": {
     "@fontsource/fira-sans": "^5.3.0",
