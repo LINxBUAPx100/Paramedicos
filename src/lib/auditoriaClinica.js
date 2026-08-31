@@ -14,7 +14,7 @@
 //
 //  Sin React y sin Firebase: se prueba con `npm test`.
 // ============================================================
-import { urlSegura } from './temaContenidoModelo.js'
+import { urlSegura, origenImagenValido } from './temaContenidoModelo.js'
 
 // ---------- texto plano de un tema ----------
 
@@ -300,10 +300,17 @@ export function enlacesInvalidos(temas) {
   for (const tema of temas || []) {
     for (const sec of tema.secciones || []) {
       for (const b of sec.bloques || []) {
+        // `src` de una imagen admite ADEMÁS una ruta propia del sitio
+        // (`imagenes/…`), que es lo que el modelo permite desde siempre en
+        // `origenImagenValido`. Este auditor solo miraba http(s), así que
+        // marcaba como enlace inválido cualquier imagen servida por el propio
+        // repositorio. No saltó antes porque hasta hoy no había ninguna: las
+        // primeras son las fotografías de contexto de src/data/fotosTemario.js.
+        // Los otros dos campos son enlaces de verdad y siguen exigiendo http(s).
         for (const campo of ['src', 'fuenteUrl', 'url']) {
-          if (b[campo] && !urlSegura(b[campo])) {
-            malos.push({ temaId: tema.id, campo, valor: b[campo] })
-          }
+          if (!b[campo]) continue
+          const valido = campo === 'src' ? origenImagenValido(b[campo]) : urlSegura(b[campo])
+          if (!valido) malos.push({ temaId: tema.id, campo, valor: b[campo] })
         }
       }
     }

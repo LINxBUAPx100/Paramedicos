@@ -74,6 +74,7 @@ import m6ge from './m6-geriatria.js'
 import bloqueos from './bloqueos.js'
 import evaluaciones from './evaluaciones.js'
 import REVISIONES_DECLARADAS from './revisiones.js'
+import { aplicarFotos } from '../fotosTemario.js'
 
 // Módulos con material redactado a mano. Añadir uno = una línea aquí.
 const REDACTADO = [m1, m1b, m1c, m3eval, m3va, m3vab, m3vac, m3vi, m3md, m3act, m2e, m2i, m2o, m4epi, m4far, m4resp, m4gi, m4card, m4met, m4uri, m4neu, m4gynA, m4gynB, m4tox, m4act, m5shock, m5torax, m5abdomen, m5cc, m5act, m5cin, m5hs, m5tb, m5ab, m5cb, m5cc2, m5occ, m5me, m5amb, m5que, m6pi, m6sv, m6ep, m6tp, m6ge]
@@ -116,7 +117,18 @@ for (const modulo of [...REDACTADO, ...DECLARADOS]) {
   }
 }
 
-export default contenido
+// FOTOGRAFÍAS DE CONTEXTO. Se inyectan aquí, en un solo sitio, en vez de
+// editar los veinte archivos de prosa escritos a mano: cambiar o retirar una
+// foto es tocar `src/data/fotosTemario.js` y nada más, y la prosa que un
+// docente revisó no se toca para colocar una imagen.
+//
+// `omitidas` no se ignora: si una foto apunta a un tema que no existe o que ya
+// trae imagen, `tests/fotosTemario.test.mjs` lo convierte en fallo. Una foto
+// mal dirigida que desaparece en silencio es peor que ninguna foto.
+const { contenido: conFotos, omitidas: FOTOS_OMITIDAS } = aplicarFotos(contenido)
+export { FOTOS_OMITIDAS }
+
+export default conFotos
 
 // Ficha editorial por tema (estado, procedencia, fecha, versión clínica,
 // revisor, observaciones y traza de fuentes). Lo consume el generador.

@@ -33,7 +33,7 @@ const POR_ID = new Map(ACTIVOS_MEDICOS.map((a) => [a.id, a]))
 
 // Directorios donde puede vivir una imagen médica. Cualquier ruta fuera de
 // aquí se rechaza: es la misma frontera que aplica el validador del editor.
-export const DIRECTORIOS_IMAGEN = ['imagenes/medical/', 'imagenes/m1/', 'imagenes/m2/', 'imagenes/m3/', 'imagenes/m4/', 'imagenes/m5/', 'imagenes/m6/', 'imagenes/m7/']
+export const DIRECTORIOS_IMAGEN = ['imagenes/medical/', 'imagenes/temario/', 'imagenes/m1/', 'imagenes/m2/', 'imagenes/m3/', 'imagenes/m4/', 'imagenes/m5/', 'imagenes/m6/', 'imagenes/m7/']
 
 export function activo(id) {
   return POR_ID.get(String(id || '')) || null

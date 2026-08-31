@@ -4,6 +4,22 @@ import Icon from './Icon.jsx'
 import TextoGlosario from './TextoGlosario.jsx'
 import { ATLAS_TEMAS } from '../data/imagenes.js'
 import { hrefSeguro } from '../lib/enlaceSeguro.js'
+import { juegoResponsivo } from '../lib/imagenLocal.js'
+import { ANCHOS as ANCHOS_FOTO, CARPETA as CARPETA_FOTO } from '../data/fotosTemario.js'
+
+// «imagenes/temario/<nombre>-<ancho>.webp» → el juego responsivo de esa foto.
+// Devuelve null para cualquier otra ruta, que es la mayoría.
+const RUTA_FOTO = new RegExp(`^imagenes/${CARPETA_FOTO}/(.+)-\\d+\\.webp$`)
+function juegoDeFotoTemario(src) {
+  const m = typeof src === 'string' && src.match(RUTA_FOTO)
+  if (!m) return null
+  return juegoResponsivo(m[1], {
+    carpeta: `imagenes/${CARPETA_FOTO}`,
+    anchos: ANCHOS_FOTO,
+    // La lección se lee en una columna de ~740 px; en móvil ocupa casi todo.
+    sizes: '(max-width: 880px) 92vw, 740px',
+  })
+}
 
 // Mapa clave → enlace de imagen del Atlas. Los bloques `diagrama` (antes SVG
 // dibujados) reutilizan las mismas imágenes reales del Atlas vía su `clave`.
@@ -115,11 +131,26 @@ function Bloque({ bloque }) {
         </div>
       )
 
-    case 'imagen':
+    case 'imagen': {
+      // Juego responsivo DERIVADO de la propia ruta, sin campo nuevo.
+      //
+      // Las fotografías de contexto (src/data/fotosTemario.js) se sirven en
+      // AVIF y WebP a varios anchos, y para aprovecharlo `Imagen` necesita
+      // `srcSet`. Se podría haber añadido un campo al bloque, pero el modelo
+      // de contenido prohíbe campos nuevos hasta implementarlos en editor,
+      // API, Firestore, reglas y pruebas — y aquí no hace falta: la ruta ya
+      // trae el nombre y el ancho («imagenes/temario/rcp-dea-maniqui-800.webp»),
+      // así que el juego se reconstruye de ella.
+      //
+      // Solo se aplica a esa carpeta. Una imagen suelta de otro sitio sigue
+      // sirviéndose tal cual, que es lo que se espera de ella.
+      const foto = !bloque.assetId && juegoDeFotoTemario(bloque.src)
       return (
         <Imagen
           assetId={bloque.assetId || undefined}
-          src={bloque.assetId ? undefined : bloque.src}
+          src={bloque.assetId ? undefined : (foto ? foto.src : bloque.src)}
+          srcSet={foto ? foto.srcSet : undefined}
+          srcSetAvif={foto ? foto.srcSetAvif : undefined}
           alt={bloque.alt}
           caption={bloque.caption}
           fuente={bloque.fuente}
@@ -128,6 +159,7 @@ function Bloque({ bloque }) {
           ratio={bloque.ratio || '16 / 10'}
         />
       )
+    }
 
     case 'fuentes':
       return (

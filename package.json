@@ -28,7 +28,8 @@
     "activos:iconos": "node scripts/migrar-iconos-emoji.mjs",
     "emu": "firebase emulators:start --only auth,firestore --project ptem-a304f",
     "seed:usuarios": "node scripts/seed-usuarios-prueba.mjs",
-    "gen:demo": "node scripts/gen-demo-portada.mjs"
+    "gen:demo": "node scripts/gen-demo-portada.mjs",
+    "optimizar:fotos": "node scripts/optimizar-fotos-temario.mjs"
   },
   "dependencies": {
     "@fontsource/fira-sans": "^5.3.0",

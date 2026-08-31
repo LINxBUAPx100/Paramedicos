@@ -147,6 +147,14 @@ export const planRescate = [
                 "variante": "clave",
                 "titulo": "El orden no es decorativo",
                 "texto": "Si el orden se invierte se pierde tiempo en lo cómodo en lugar de lo urgente. Una fractura evidente y aparatosa atrae la mirada; una vía aérea comprometida, no. La primera espera; la segunda, no."
+              },
+              {
+                "tipo": "imagen",
+                "src": "imagenes/temario/aula-clase-teorica-800.webp",
+                "alt": "Instructor frente a un grupo de alumnos en un aula de formación en urgencias médicas.",
+                "caption": "Formación en primeros auxilios: la teoría precede a la práctica supervisada.",
+                "fuente": "Imagen generada con IA para PTEM · escena ilustrativa",
+                "ratio": "16 / 10"
               }
             ]
           },
@@ -607,6 +615,14 @@ export const planRescate = [
                 "variante": "alerta",
                 "titulo": "Diez segundos, no más",
                 "texto": "La comprobación no debe superar los 10 segundos. Ante la duda, se asume paro y se comprime: el daño de comprimir a quien no lo necesitaba es mucho menor que el de no comprimir a quien sí."
+              },
+              {
+                "tipo": "imagen",
+                "src": "imagenes/temario/rcp-dea-maniqui-800.webp",
+                "alt": "Dos personas practican reanimación cardiopulmonar sobre un maniquí con un desfibrilador externo automático colocado.",
+                "caption": "Práctica de RCP con DEA sobre maniquí, con un instructor supervisando.",
+                "fuente": "Imagen generada con IA para PTEM · escena ilustrativa",
+                "ratio": "16 / 10"
               }
             ]
           },
@@ -1999,6 +2015,14 @@ export const planRescate = [
                 "variante": "clave",
                 "titulo": "Guantes: la pieza que nunca falta",
                 "texto": "La protección personal es lo primero que se coge y lo primero que se agota. Un botiquín sin guantes es un botiquín que no se puede usar con seguridad."
+              },
+              {
+                "tipo": "imagen",
+                "src": "imagenes/temario/botiquin-abierto-800.webp",
+                "alt": "Mochila de urgencias médicas abierta, con sus compartimentos desplegados y el material ordenado por secciones.",
+                "caption": "Mochila de urgencias abierta. El orden por compartimentos es lo que permite encontrar algo bajo presión.",
+                "fuente": "Imagen generada con IA para PTEM · escena ilustrativa",
+                "ratio": "16 / 10"
               }
             ]
           },
@@ -2433,6 +2457,14 @@ export const planRescate = [
                 "variante": "clave",
                 "titulo": "Una toma no es una tendencia",
                 "texto": "Un solo registro describe un instante. La información que cambia decisiones aparece al comparar dos tomas separadas en el tiempo: una frecuencia cardiaca de 110 lpm significa una cosa si antes era 95 y otra muy distinta si antes era 130."
+              },
+              {
+                "tipo": "imagen",
+                "src": "imagenes/temario/signos-vitales-ambulancia-800.webp",
+                "alt": "Paramédica toma la presión arterial a una paciente sentada, con el brazalete colocado y un estetoscopio.",
+                "caption": "Toma de signos vitales. La cifra vale lo que valga la técnica con que se obtuvo.",
+                "fuente": "Imagen generada con IA para PTEM · escena ilustrativa",
+                "ratio": "16 / 10"
               }
             ]
           },
@@ -3960,6 +3992,14 @@ export const planRescate = [
                 "variante": "clave",
                 "titulo": "La lesión más frecuente no es la más dramática",
                 "texto": "La espalda es lo que más carreras termina. Levantar con las piernas, acercar la carga al cuerpo, no girar el tronco cargando y pedir ayuda antes de intentarlo solo no es un consejo: es prevención de incapacidad."
+              },
+              {
+                "tipo": "imagen",
+                "src": "imagenes/temario/equipo-turno-ambulancia-800.webp",
+                "alt": "Cuatro tripulantes de ambulancia conversan junto a la unidad abierta, uno de ellos con una tableta.",
+                "caption": "El relevo y la revisión de la unidad son parte del turno, no un trámite.",
+                "fuente": "Imagen generada con IA para PTEM · escena ilustrativa",
+                "ratio": "16 / 10"
               }
             ]
           },
@@ -5384,6 +5424,14 @@ export const planRescate = [
                 "variante": "clave",
                 "titulo": "Por qué esto se estudia antes que nada",
                 "texto": "Casi todo lo que se aprende después —cómo se contrae un músculo, cómo late el corazón, cómo se transmite un impulso nervioso, por qué la falta de oxígeno daña un órgano— se explica en el nivel de la célula. Empezar aquí evita memorizar más adelante lo que se podría entender."
+              },
+              {
+                "tipo": "imagen",
+                "src": "imagenes/temario/aula-modelos-celula-800.webp",
+                "alt": "Alumnos observan modelos anatómicos de una célula junto a un torso desmontable en un aula.",
+                "caption": "Modelos de célula en el aula de anatomía.",
+                "fuente": "Imagen generada con IA para PTEM · escena ilustrativa",
+                "ratio": "16 / 10"
               }
             ]
           },
@@ -7341,6 +7389,14 @@ export const planRescate = [
                 "variante": "clave",
                 "titulo": "Protección y movilidad se compensan",
                 "texto": "Donde el esqueleto protege más, se mueve menos, y al revés. La caja torácica es rígida porque encierra órganos que no toleran el desplazamiento; el hombro es muy móvil porque su función es alcanzar, y esa movilidad se paga con menor estabilidad. Reconocer ese intercambio evita memorizar las regiones como una lista."
+              },
+              {
+                "tipo": "imagen",
+                "src": "imagenes/temario/anatomia-torso-esqueleto-800.webp",
+                "alt": "Instructor señala un torso anatómico desmontable junto a un esqueleto articulado y un atlas abierto.",
+                "caption": "Torso desmontable y esqueleto articulado: el material con el que se estudia la anatomía.",
+                "fuente": "Imagen generada con IA para PTEM · escena ilustrativa",
+                "ratio": "16 / 10"
               }
             ]
           },
@@ -8742,6 +8798,14 @@ export const planRescate = [
                 "variante": "clave",
                 "titulo": "El avance no es por gravedad",
                 "texto": "El alimento avanza por contracciones ordenadas de la pared del tubo, que es músculo liso e involuntario. Por eso se puede tragar acostado o boca abajo. Ese detalle conecta con la lección del sistema muscular: es el mismo músculo liso, con el mismo control involuntario."
+              },
+              {
+                "tipo": "imagen",
+                "src": "imagenes/temario/microscopio-atlas-800.webp",
+                "alt": "Alumna observa por un microscopio junto a modelos anatómicos de órganos y un atlas abierto.",
+                "caption": "Estudio de órganos con modelos y atlas.",
+                "fuente": "Imagen generada con IA para PTEM · escena ilustrativa",
+                "ratio": "16 / 10"
               }
             ]
           },
@@ -11909,6 +11973,14 @@ export const planRescate = [
                 "variante": "clave",
                 "titulo": "La causa más frecuente es la propia lengua",
                 "texto": "En el paciente con estado de conciencia deprimido, la relajación de la musculatura hace que la lengua caiga contra la pared posterior de la faringe. Es la obstrucción más frecuente y la que se resuelve con una maniobra manual, sin material alguno."
+              },
+              {
+                "tipo": "imagen",
+                "src": "imagenes/temario/control-cervical-camilla-800.webp",
+                "alt": "Dos paramédicos colocan un collarín cervical a un paciente inmovilizado sobre una camilla.",
+                "caption": "Control cervical manual y collarín durante la evaluación primaria.",
+                "fuente": "Imagen generada con IA para PTEM · escena ilustrativa",
+                "ratio": "16 / 10"
               }
             ]
           },
@@ -13456,6 +13528,14 @@ export const planRescate = [
                 "variante": "clinico",
                 "titulo": "La M cambia la lectura del paciente",
                 "texto": "Un paciente anticoagulado con un traumatismo craneal leve tiene un riesgo distinto al de quien no lo está. Un betabloqueador puede impedir la taquicardia compensadora y hacer que un paciente en shock mantenga una frecuencia engañosamente normal. La lista de medicamentos no es un dato administrativo."
+              },
+              {
+                "tipo": "imagen",
+                "src": "imagenes/temario/evaluacion-domicilio-800.webp",
+                "alt": "Dos paramédicos entrevistan y evalúan a una paciente sentada en la cama de su domicilio.",
+                "caption": "La entrevista al paciente es parte de la evaluación, no un trámite previo.",
+                "fuente": "Imagen generada con IA para PTEM · escena ilustrativa",
+                "ratio": "16 / 10"
               }
             ]
           },
@@ -16911,6 +16991,14 @@ export const planRescate = [
                 "variante": "alerta",
                 "titulo": "El error que hay que desterrar",
                 "texto": "A un paciente que no ventila, o que ventila de forma claramente insuficiente, no se le resuelve nada con una mascarilla de oxígeno: hay que ventilarlo. El oxígeno solo llega al alvéolo si alguien mueve el aire."
+              },
+              {
+                "tipo": "imagen",
+                "src": "imagenes/temario/bvm-oxigeno-maniqui-800.webp",
+                "alt": "Dos paramédicos ventilan con bolsa-válvula-mascarilla a un maniquí, junto a un tanque de oxígeno y una bandeja con dispositivos de vía aérea.",
+                "caption": "Ventilación con bolsa-válvula-mascarilla y material de vía aérea preparado.",
+                "fuente": "Imagen generada con IA para PTEM · escena ilustrativa",
+                "ratio": "16 / 10"
               }
             ]
           },
@@ -18612,6 +18700,14 @@ export const planRescate = [
                 "variante": "alerta",
                 "titulo": "El contenedor, antes que la aguja",
                 "texto": "El contenedor rígido de punzocortantes se coloca al alcance ANTES de puncionar. La mayoría de los pinchazos accidentales ocurren cuando alguien busca dónde depositar la aguja con ella todavía en la mano."
+              },
+              {
+                "tipo": "imagen",
+                "src": "imagenes/temario/material-esteril-canalizacion-800.webp",
+                "alt": "Personal prepara material estéril sobre una bandeja junto a un paciente en camilla.",
+                "caption": "Preparación del material antes del procedimiento.",
+                "fuente": "Imagen generada con IA para PTEM · escena ilustrativa",
+                "ratio": "16 / 10"
               }
             ]
           },
@@ -19576,6 +19672,14 @@ export const planRescate = [
               {
                 "tipo": "p",
                 "texto": "Cuáles de estas tres funciones están dentro del alcance del alumno, en qué unidades hay equipo para realizarlas y bajo qué indicación lo autoriza la dirección médica son cuestiones del protocolo del servicio. Esta lección las describe; no las autoriza."
+              },
+              {
+                "tipo": "imagen",
+                "src": "imagenes/temario/monitor-desfibrilador-electrodos-800.webp",
+                "alt": "Equipo coloca electrodos a un paciente conectado a un monitor desfibrilador mientras otra persona ventila.",
+                "caption": "Monitorización durante la reanimación.",
+                "fuente": "Imagen generada con IA para PTEM · escena ilustrativa",
+                "ratio": "16 / 10"
               }
             ]
           },
@@ -22307,6 +22411,14 @@ export const planRescate = [
                     "Sí, con su indicación y su población"
                   ]
                 ]
+              },
+              {
+                "tipo": "imagen",
+                "src": "imagenes/temario/interior-ambulancia-800.webp",
+                "alt": "Interior de una ambulancia vista desde las puertas traseras, con la camilla, el equipo fijado y los compartimentos.",
+                "caption": "Interior de una unidad. La dotación depende del tipo de ambulancia.",
+                "fuente": "Imagen generada con IA para PTEM · escena ilustrativa",
+                "ratio": "16 / 10"
               }
             ]
           },
@@ -23886,6 +23998,14 @@ export const planRescate = [
               {
                 "tipo": "p",
                 "texto": "Ambas formas coexisten con frecuencia y una puede evolucionar a la otra: un paciente que lleva horas respirando con esfuerzo máximo termina agotándose, y entonces el problema de oxigenación se acompaña de un problema de ventilación. Esa transición es el momento clínico más peligroso del cuadro."
+              },
+              {
+                "tipo": "imagen",
+                "src": "imagenes/temario/oxigenoterapia-paciente-sentado-800.webp",
+                "alt": "Paciente sentado con mascarilla de oxígeno conectada a un tanque, mientras dos paramédicos lo evalúan y le colocan un oxímetro.",
+                "caption": "Paciente con dificultad respiratoria: la posición sentada es parte del manejo.",
+                "fuente": "Imagen generada con IA para PTEM · escena ilustrativa",
+                "ratio": "16 / 10"
               }
             ]
           },
@@ -29572,6 +29692,14 @@ export const planRescate = [
                 "variante": "alerta",
                 "titulo": "Un ritmo organizado no implica pulso",
                 "texto": "Es el error más peligroso de este tema. Existen situaciones con actividad eléctrica ordenada en la pantalla y sin contracción eficaz. Por eso, ante un paciente que no responde, el trazo nunca sustituye a la comprobación del pulso: se mira al paciente y después al monitor."
+              },
+              {
+                "tipo": "imagen",
+                "src": "imagenes/temario/ecg-doce-derivaciones-800.webp",
+                "alt": "Paramédica coloca los electrodos de un electrocardiograma de doce derivaciones a un paciente en la ambulancia.",
+                "caption": "Colocación de un ECG de doce derivaciones a bordo.",
+                "fuente": "Imagen generada con IA para PTEM · escena ilustrativa",
+                "ratio": "16 / 10"
               }
             ]
           },
@@ -43282,6 +43410,14 @@ export const planRescate = [
                 "variante": "clave",
                 "titulo": "La tercera colisión no se ve",
                 "texto": "La deformidad del vehículo describe la primera. Las marcas en el interior y en el cuerpo describen la segunda. La tercera no deja huella externa, y es precisamente la que produce las lesiones internas que el ámbito prehospitalario debe sospechar y vigilar."
+              },
+              {
+                "tipo": "imagen",
+                "src": "imagenes/temario/estabilizacion-vehicular-800.webp",
+                "alt": "Bomberos estabilizan con calzos de madera un vehículo accidentado antes de trabajar sobre él.",
+                "caption": "Estabilización del vehículo: primero la escena, después el paciente.",
+                "fuente": "Imagen generada con IA para PTEM · escena ilustrativa",
+                "ratio": "16 / 10"
               }
             ]
           },
@@ -44764,6 +44900,14 @@ export const planRescate = [
                 "variante": "clinico",
                 "titulo": "Duele, y eso no es un fallo",
                 "texto": "Un torniquete correctamente apretado es doloroso. El dolor no es motivo para aflojarlo. La analgesia, si procede, se administra conforme al alcance autorizado y al protocolo del servicio."
+              },
+              {
+                "tipo": "imagen",
+                "src": "imagenes/temario/torniquete-extremidad-800.webp",
+                "alt": "Paramédica coloca un torniquete en el muslo de un paciente mientras su compañero registra la hora.",
+                "caption": "Colocación de torniquete. La hora de aplicación se registra siempre.",
+                "fuente": "Imagen generada con IA para PTEM · escena ilustrativa",
+                "ratio": "16 / 10"
               }
             ]
           },
@@ -57636,6 +57780,14 @@ export const planRescate = [
                 "variante": "clinico",
                 "titulo": "El anciano rompe las reglas",
                 "texto": "En una columna rígida y osteoporótica, una caída desde su propia altura puede fracturar vértebras cervicales. En el paciente mayor el umbral de sospecha debe ser mucho más bajo."
+              },
+              {
+                "tipo": "imagen",
+                "src": "imagenes/temario/collarin-camilla-traslado-800.webp",
+                "alt": "Paciente con collarín cervical asegurado con correas sobre una camilla, atendido por dos paramédicos.",
+                "caption": "Paciente asegurado para el traslado con sospecha de lesión de columna.",
+                "fuente": "Imagen generada con IA para PTEM · escena ilustrativa",
+                "ratio": "16 / 10"
               }
             ]
           },
@@ -57840,6 +57992,14 @@ export const planRescate = [
                 "variante": "clave",
                 "titulo": "El concepto nuevo",
                 "texto": "Se pasó de «inmovilizar» a **restringir el movimiento espinal**: mantener la alineación neutra y limitar el movimiento con el conjunto de medidas adecuado —collarín, camilla de cuchara, colchón de vacío, sujeciones y las propias instrucciones al paciente—, no necesariamente con una tabla."
+              },
+              {
+                "tipo": "imagen",
+                "src": "imagenes/temario/tabla-espinal-correas-800.webp",
+                "alt": "Tres paramédicos aseguran a un paciente sobre una tabla espinal con correas de colores e inmovilizadores de cabeza.",
+                "caption": "Inmovilización sobre tabla espinal con correas e inmovilizadores laterales.",
+                "fuente": "Imagen generada con IA para PTEM · escena ilustrativa",
+                "ratio": "16 / 10"
               }
             ]
           },
@@ -61346,6 +61506,14 @@ export const planRescate = [
                     "Se coloca entre las piernas, es más compacta y permite traccionar ambos fémures"
                   ]
                 ]
+              },
+              {
+                "tipo": "imagen",
+                "src": "imagenes/temario/ferula-extremidad-inferior-800.webp",
+                "alt": "Dos paramédicos colocan una férula rígida en la pierna de un paciente tendido en el suelo.",
+                "caption": "Ferulización de una extremidad inferior.",
+                "fuente": "Imagen generada con IA para PTEM · escena ilustrativa",
+                "ratio": "16 / 10"
               }
             ]
           },
@@ -61823,6 +61991,14 @@ export const planRescate = [
                 "variante": "alerta",
                 "titulo": "La hipotermia del traumatizado no espera al invierno",
                 "texto": "Un paciente de trauma se enfría dentro de una ambulancia templada: está expuesto, inmóvil, a veces mojado y con la piel vasoconstreñida. Como el frío empeora la coagulación, la hipotermia forma parte de la tríada que perpetúa la hemorragia. Cubrirlo desde el primer momento es una de las medidas más baratas y más eficaces del módulo."
+              },
+              {
+                "tipo": "imagen",
+                "src": "imagenes/temario/manta-termica-exterior-800.webp",
+                "alt": "Paciente envuelto en una manta térmica en un puesto de atención montado a la intemperie.",
+                "caption": "Aislamiento térmico del paciente en atención prehospitalaria a la intemperie.",
+                "fuente": "Imagen generada con IA para PTEM · escena ilustrativa",
+                "ratio": "16 / 10"
               }
             ]
           },
@@ -65836,6 +66012,14 @@ export const planRescate = [
                 "variante": "clave",
                 "titulo": "La apariencia es el lado que más informa",
                 "texto": "Refleja de forma indirecta si el cerebro está recibiendo oxígeno y glucosa suficientes. Un niño con apariencia alterada tiene un problema, aunque el resto parezca normal, y esa alteración obliga a buscar la causa: respiratoria, circulatoria, neurológica, metabólica o tóxica."
+              },
+              {
+                "tipo": "imagen",
+                "src": "imagenes/temario/aula-pediatria-triangulo-800.webp",
+                "alt": "Instructora explica el triángulo de evaluación pediátrica en una pantalla, junto a un maniquí de lactante en una cuna.",
+                "caption": "Clase sobre el triángulo de evaluación pediátrica con maniquí de lactante.",
+                "fuente": "Imagen generada con IA para PTEM · escena ilustrativa",
+                "ratio": "16 / 10"
               }
             ]
           },
@@ -66107,6 +66291,14 @@ export const planRescate = [
                 "variante": "clave",
                 "titulo": "Por qué la X va primero",
                 "texto": "La secuencia clásica empezaba por la vía aérea. Se antepuso la hemorragia exanguinante porque un sangrado masivo puede acabar con el paciente en menos tiempo del que se tarda en asegurar una vía aérea. En el niño ese argumento pesa aún más, porque su volumen total es pequeño y la reserva, mínima."
+              },
+              {
+                "tipo": "imagen",
+                "src": "imagenes/temario/pediatria-ambulancia-800.webp",
+                "alt": "Dos paramédicos evalúan a un maniquí pediátrico con oxígeno en el interior de una ambulancia.",
+                "caption": "Evaluación de un paciente pediátrico a bordo.",
+                "fuente": "Imagen generada con IA para PTEM · escena ilustrativa",
+                "ratio": "16 / 10"
               }
             ]
           },

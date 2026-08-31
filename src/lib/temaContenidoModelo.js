@@ -76,6 +76,8 @@ export function urlSegura(url) {
 //                      una imagen, es una página.
 const DIRECTORIOS_IMAGEN = [
   'imagenes/medical/',
+  // Fotografías de contexto del temario (src/data/fotosTemario.js).
+  'imagenes/temario/',
   'imagenes/m1/', 'imagenes/m2/', 'imagenes/m3/', 'imagenes/m4/',
   'imagenes/m5/', 'imagenes/m6/', 'imagenes/m7/',
   'imagenes/archivo/',
