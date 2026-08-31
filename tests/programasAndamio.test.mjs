@@ -130,11 +130,12 @@ test('cubre las cuatro carreras que la academia va a impartir', () => {
   assert.equal(PROGRAMAS_ANDAMIO.length, 4)
   const ids = PROGRAMAS_ANDAMIO.map((p) => p.id)
   assert.equal(new Set(ids).size, 4, 'hay ids de programa repetidos')
-  // Protección Civil va de momento como licenciatura: si algún día tiene tipo
-  // propio, esta prueba lo recuerda.
+  // Protección Civil ya tiene tipo propio desde el 30 de agosto de 2026. Esta
+  // prueba avisó del cambio, que es para lo que estaba: cada carrera del
+  // andamio declara el tipo con el que la portada pública la va a anunciar.
   assert.deepEqual(
     PROGRAMAS_ANDAMIO.map((p) => p.tipoPrograma),
-    ['enfermeria', 'tsu', 'licenciatura', 'licenciatura']
+    ['enfermeria', 'tsu', 'licenciatura', 'proteccion_civil']
   )
 })
 

@@ -57,7 +57,8 @@
  */
 
 export const TIPOS_PROGRAMA = [
-  'tum', 'enfermeria', 'tsu', 'licenciatura', 'curso', 'certificacion',
+  'tum', 'enfermeria', 'tsu', 'licenciatura', 'proteccion_civil',
+  'curso', 'certificacion',
 ]
 
 // Metadatos de cada tipo. Añadir un tipo = una entrada aquí y nada más:
@@ -99,6 +100,20 @@ export const META_PROGRAMA = {
     certificable: true,
     color: '#8b5cf6',
     icono: 'birrete',
+  },
+  // Protección Civil nació como `licenciatura` en los programas de andamio
+  // (Fase 3), que ya avisaba de que tendría tipo propio en cuanto hiciera
+  // falta. Hace falta ahora: la portada pública lista las carreras desde este
+  // catálogo, y presentarla como «Licenciatura en Paramédicos» sería mentir
+  // sobre lo que la academia ofrece.
+  proteccion_civil: {
+    id: 'proteccion_civil',
+    etiqueta: 'Protección Civil',
+    etiquetaCorta: 'Protección Civil',
+    esCarrera: true,
+    certificable: true,
+    color: '#f97316',
+    icono: 'alerta',
   },
   curso: {
     id: 'curso',
@@ -584,7 +599,9 @@ export function programasVisibles(programas, { rol, esSuperadmin = false, grupo 
  * Devuelve un objeto y no una cadena porque la ruta protegida necesita el
  * CÓDIGO para decidir a dónde mandar a la persona.
  */
-export function motivoSinPrograma({ rol, esSuperadmin = false, grupo = null, programasDeAcademia = [] }) {
+export function motivoSinPrograma({
+  rol, esSuperadmin = false, grupo = null, programasDeAcademia = null,
+}) {
   if (esSuperadmin || rol === 'instructor' || rol === 'admin_escuela') return null
   if (!grupo) {
     return {
@@ -604,7 +621,20 @@ export function motivoSinPrograma({ rol, esSuperadmin = false, grupo = null, pro
       destino: '/',
     }
   }
-  if (programasVisibles(programasDeAcademia, { rol, grupo }).length === 0) {
+  // OJO CON EL DEFECTO. Esta comprobación afirma que el programa del grupo
+  // «no está publicado», y para afirmarlo hay que CONOCER los programas de la
+  // academia. Con el defecto anterior (`= []`) se daba por probado justo lo que
+  // no se sabía: ningún llamador de la aplicación pasa `programasDeAcademia`
+  // —solo las pruebas—, así que la lista era siempre vacía y TODO alumno con
+  // grupo recibía «Tu programa todavía no está disponible» en todas las
+  // pantallas protegidas. Detectado el 30-08-2026 auditando con un usuario de
+  // prueba con grupo asignado.
+  //
+  // Ahora, sin lista, la comprobación no corre: no se puede demostrar que algo
+  // no esté publicado sin mirar. No abre ningún agujero —quién ve qué lo
+  // deciden `puedeVerPrograma` sobre cada contenido y las reglas de Firestore—;
+  // lo que se retira es un mensaje de diagnóstico que se estaba dando en falso.
+  if (programasDeAcademia && programasVisibles(programasDeAcademia, { rol, grupo }).length === 0) {
     return {
       codigo: 'programa-no-publicado',
       titulo: 'Tu programa todavía no está disponible',

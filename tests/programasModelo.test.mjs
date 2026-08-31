@@ -19,17 +19,29 @@ import {
 
 // ---------- catálogo ----------
 
-test('el catálogo cubre exactamente los seis tipos pedidos', () => {
+test('el catálogo cubre exactamente los siete tipos pedidos', () => {
   assert.deepEqual(TIPOS_PROGRAMA,
-    ['tum', 'enfermeria', 'tsu', 'licenciatura', 'curso', 'certificacion'])
+    ['tum', 'enfermeria', 'tsu', 'licenciatura', 'proteccion_civil',
+      'curso', 'certificacion'])
   for (const t of TIPOS_PROGRAMA) {
     assert.ok(META_PROGRAMA[t], `falta metadata de ${t}`)
     assert.equal(META_PROGRAMA[t].id, t)
     assert.ok(META_PROGRAMA[t].etiqueta.length > 0)
   }
-  // Las cuatro carreras y los dos formatos cortos.
+  // Las cinco carreras y los dos formatos cortos.
   assert.deepEqual(TIPOS_PROGRAMA.filter((t) => META_PROGRAMA[t].esCarrera),
-    ['tum', 'enfermeria', 'tsu', 'licenciatura'])
+    ['tum', 'enfermeria', 'tsu', 'licenciatura', 'proteccion_civil'])
+})
+
+// Protección Civil dejó de ser «una licenciatura disfrazada» el 30 de agosto de
+// 2026. La prueba fija el cambio: si alguien la devuelve a `licenciatura`, la
+// portada pública vuelve a anunciarla con el nombre de otra carrera.
+test('Protección Civil tiene tipo propio y no se confunde con licenciatura', () => {
+  assert.equal(META_PROGRAMA.proteccion_civil.etiqueta, 'Protección Civil')
+  assert.notEqual(META_PROGRAMA.proteccion_civil.etiqueta,
+    META_PROGRAMA.licenciatura.etiqueta)
+  assert.equal(tipoProgramaDe({ tipoPrograma: 'proteccion_civil' }), 'proteccion_civil')
+  assert.equal(validarTipoPrograma('proteccion_civil'), null)
 })
 
 test('un programa sin tipo se comporta como TUM (lo que la academia ya tenía)', () => {
@@ -295,4 +307,45 @@ test('sin campo `orden` se conserva la posición (sort estable) y no se muta nad
   tema.quiz.push({ id: 'q4' })
   assert.equal(o.quiz.length, 3)
   assert.equal(ordenarMaterialTema(null), null)
+})
+
+// ============================================================
+//  El bloqueo «programa no publicado» se estaba dando en falso
+// ------------------------------------------------------------
+//  Detectado el 30-08-2026 auditando con un usuario de prueba CON grupo: todas
+//  las pantallas protegidas le decían «Tu programa todavía no está disponible».
+//
+//  La causa: `programasDeAcademia` tenía por defecto `[]`, y NINGÚN llamador de
+//  la aplicación lo pasa —solo estas pruebas—. Así que la comprobación
+//  concluía «no está publicado» sin haber mirado nada, para todo alumno con
+//  grupo. Afirmar que algo no está publicado exige conocer la lista.
+// ============================================================
+test('sin la lista de programas NO se afirma que el programa no esté publicado', () => {
+  const alumnoConGrupo = { rol: 'alumno', grupo: { id: 'G', programaId: 'ACA__tum' } }
+  // Así es como lo llama la aplicación entera: sin `programasDeAcademia`.
+  assert.equal(motivoSinPrograma(alumnoConGrupo), null,
+    'Un alumno con grupo y programa asignado no puede quedar bloqueado solo '
+    + 'porque quien pregunta no aportó la lista de programas de la academia.')
+})
+
+test('con la lista SÍ se comprueba, y sigue distinguiendo los dos casos', () => {
+  // La lista se aporta y el programa del grupo no está: se bloquea, como debe.
+  const b = motivoSinPrograma({
+    rol: 'alumno',
+    grupo: { id: 'G', programaId: 'ACA__todavia-no' },
+    programasDeAcademia: PROGRAMAS,
+  })
+  assert.equal(b.codigo, 'programa-no-publicado')
+  // Y un grupo sin ningún programa asignado se sigue distinguiendo.
+  assert.equal(
+    motivoSinPrograma({ rol: 'alumno', grupo: { id: 'G' } }).codigo,
+    'grupo-sin-programa'
+  )
+})
+
+test('las dos primeras puertas siguen cerradas sin lista', () => {
+  // Que la tercera no corra sin datos no afloja las otras dos.
+  assert.equal(motivoSinPrograma({ rol: 'alumno', grupo: null }).codigo, 'sin-grupo')
+  assert.equal(motivoSinPrograma({ rol: 'alumno', grupo: { id: 'G' } }).codigo,
+    'grupo-sin-programa')
 })
