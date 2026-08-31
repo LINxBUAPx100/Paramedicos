@@ -264,9 +264,44 @@ function claveAlcance(acceso) {
 const claveContenido = (academiaId, acceso, cursoPreferido = null) =>
   `${academiaId}||${claveAlcance(acceso)}||${cursoPreferido || "auto"}`
 
-// Cursos de la academia que ESTA persona puede ver. Es el filtro de
-// aislamiento por programa en el cliente; la barrera real son las reglas
-// (firestore.rules), esto solo evita pedir lo que se va a rechazar.
+/**
+ * Cursos que esta persona puede leer, PIDIENDO SOLO LOS SUYOS.
+ *
+ * Antes se listaba `where(academiaId) + where(estado)` y se filtraba después en
+ * el cliente. Parecía inofensivo y no lo era: en Firestore, la regla de un
+ * `list` se evalúa contra CADA documento del resultado, y si UNO falla se
+ * deniega la consulta ENTERA. Basta con que la academia tenga publicado un
+ * curso en el que el alumno no está inscrito —el caso normal en cuanto haya
+ * más de una carrera— para que el alumno no pueda leer NINGUNO.
+ *
+ * Y el fallo era silencioso de la peor manera: el resolutor caía a legacy, o
+ * sea al bundle, o sea al temario de R.E.S.C.A.T.E. Medido el 31-08-2026 en el
+ * emulador con una academia migrada y verificada: la consulta se denegaba
+ * («Null value error» en la regla de `cursos`) y el alumno seguía viendo el
+ * temario del paquete creyendo que era el suyo.
+ *
+ * Ahora, si se sabe qué programas cursa, se piden UNO A UNO por id. Un `get`
+ * se evalúa contra su propio documento, así que no puede fallar por culpa de
+ * un curso ajeno. De paso son menos lecturas: un alumno tiene uno o dos
+ * programas, y la academia puede tener diez.
+ *
+ * El staff y el super-admin siguen listando: su regla (`esStaffDe`) sí es
+ * cierta para todos los documentos de su academia, y necesitan verlos todos.
+ */
+async function cursosVisibles(academiaId, acceso) {
+  const ids = acceso ? programasDeGrupo(acceso.grupo) : []
+  const esAlumno = acceso && !acceso.esSuperadmin && acceso.rol === 'alumno'
+
+  if (!esAlumno || ids.length === 0) return cursosDeAcademia(academiaId)
+
+  const docs = await Promise.all(ids.map((id) => obtenerCurso(id).catch(() => null)))
+  return docs
+    .filter((c) => c && c.academiaId === academiaId && c.estado === 'publicado')
+    .sort((a, b) => (a.orden ?? 1e9) - (b.orden ?? 1e9))
+}
+
+// Filtro de aislamiento por programa en el cliente; la barrera real son las
+// reglas (firestore.rules), esto solo evita servir lo que no toca.
 function cursosPermitidos(cursos, acceso) {
   if (!acceso) return cursos
   return programasVisibles(cursos, {
@@ -287,7 +322,7 @@ function contenidoLegacy() {
 }
 
 async function cargarDeFirestore(academiaId, acceso, cursoPreferido = null) {
-  const todos = await cursosDeAcademia(academiaId)
+  const todos = await cursosVisibles(academiaId, acceso)
   if (!todos.length) throw new Error(`La academia ${academiaId} no tiene cursos publicados.`)
   const cursos = cursosPermitidos(todos, acceso)
   if (!cursos.length) {
@@ -368,7 +403,7 @@ export async function indiceDeAcademia(academia, acceso = null, cursoPreferido =
     cacheIndices.set(
       clave,
       (async () => {
-        const todos = await cursosDeAcademia(academiaId)
+        const todos = await cursosVisibles(academiaId, acceso)
         if (!todos.length) throw new Error(`La academia ${academiaId} no tiene cursos publicados.`)
         // MISMO filtro que el contenido completo: si el nav mostrara módulos
         // de un programa ajeno, el alumno vería títulos que no puede abrir.
