@@ -12,6 +12,14 @@
 //    node scripts/migrar-contenido.mjs --academia=AEP-2026 --apply
 //    node scripts/migrar-contenido.mjs --verificar --academia=AEP-2026
 //  Opciones: --plantilla=paramedico-tum (default) · --produccion
+//            --tipo=basico|avanzado   fija tipoDestino (por omisión CONSERVA el remoto)
+//            --version=N              fija el contador (por omisión CONSERVA el remoto)
+//            --forzar-estructura      permite BORRAR módulos creados desde el editor
+//
+//  NO PISA lo que no es suyo: el repositorio manda sobre el contenido del plan,
+//  no sobre el tipo de academia destino, el contador de versión ni los módulos
+//  que alguien haya añadido desde el editor. Reescribirlos en cada resiembra
+//  rompió la plantilla oficial el 31-08-2026.
 //
 //  Conexión (sin credenciales en el repo):
 //    - Emulador: exporta FIRESTORE_EMULATOR_HOST (p. ej. 127.0.0.1:8080).
@@ -25,6 +33,9 @@ import {
   plantillaDesdeData, docsClonadosParaAcademia, cursoDesdePlantilla, lotes,
 } from '../src/lib/contenidoModelo.js'
 import { huellaTema } from '../src/lib/replicacionModelo.js'
+import {
+  metadatosDePlantilla, modulosQueSePerderian, versionesPublicadas, versionBloqueada,
+} from '../src/lib/seedPlantilla.js'
 
 const PLANTILLA_OFICIAL_ID = 'paramedico-tum'
 const PLANTILLA_OFICIAL_NOMBRE = 'Programa Paramédico (TUM)'
@@ -77,14 +88,25 @@ if (PRODUCCION && !EMULADOR && !process.env.GOOGLE_APPLICATION_CREDENTIALS) {
 }
 
 // ---------- documentos que TOCARÍA la operación (puro, sin conexión) ----------
+//
+// `tipoDestino` y `version` salen de aquí solo como VALOR INICIAL, para el caso
+// de que la plantilla todavía no exista. Si ya existe, se conservan los suyos
+// (ver `src/lib/seedPlantilla.js`). Antes iban fijos —'basico' y 1— y este
+// script los reescribía en cada ejecución: el 31-08-2026 eso dejó la plantilla
+// oficial marcada como «basico» frente a una academia «avanzado» —bloqueando su
+// replicación con un aviso de incompatibilidad que nadie había provocado— y
+// reinició el contador de versión a 1 cuando ya había una v7 publicada, con lo
+// que publicar la siguiente versión dejó de ser posible.
 const { plantilla, temas: temasPlantilla } = plantillaDesdeData({
   id: PLANTILLA === PLANTILLA_OFICIAL_ID ? PLANTILLA_OFICIAL_ID : PLANTILLA,
   nombre: PLANTILLA_OFICIAL_NOMBRE,
-  tipoDestino: 'basico',
-  version: 1,
+  tipoDestino: valor('tipo') || 'basico',
+  version: Number(valor('version')) || 1,
   modulos,
   todosLosTemas,
 })
+const TIPO_EXPLICITO = Boolean(valor('tipo'))
+const VERSION_EXPLICITA = Boolean(valor('version'))
 
 // ---------- conexión (solo si hay a dónde conectar) ----------
 let dba = null
@@ -124,13 +146,75 @@ async function seed() {
   resumen.aEscribir += docs.length
 
   if (conectar) {
-    const yaPlantilla = await existeDoc('plantillas', plantilla.id)
+    const refP = dba.collection('plantillas').doc(plantilla.id)
+    const snapP = await refP.get()
+    resumen.leidos++
+    const yaPlantilla = snapP.exists
+    const remota = yaPlantilla ? snapP.data() : null
+
+    // --- 1. Metadatos que NO son del repositorio ---
+    // El repositorio manda sobre el CONTENIDO del plan oficial. No manda sobre
+    // a qué tipo de academia va dirigida la plantilla ni por qué versión va:
+    // eso lo deciden desde el panel, y reescribirlo en cada resiembra es
+    // pisarle el trabajo a quien lo puso.
+    if (remota) {
+      Object.assign(plantilla, metadatosDePlantilla({
+        remota,
+        tipoInicial: plantilla.tipoDestino,
+        versionInicial: plantilla.version,
+        tipoExplicito: TIPO_EXPLICITO,
+        versionExplicita: VERSION_EXPLICITA,
+      }))
+    }
+
+    // --- 2. El contador de versión contra lo ya publicado ---
+    // `publicarVersionPlantilla` crea el snapshot `plantilla__vN` con la N que
+    // lleve la plantilla y se niega si ese documento ya existe. Si el contador
+    // quedó por debajo de una versión publicada, publicar la siguiente es
+    // imposible. Se detecta y se dice cómo arreglarlo; no se toca solo, porque
+    // mover un contador de versión a ciegas es peor que avisar.
+    const vs = await dba.collection('plantillasVersiones').get()
+    resumen.leidos += vs.size
+    const publicadas = versionesPublicadas(plantilla.id, vs.docs.map((d) => d.id))
+    const maxPublicada = publicadas.length ? Math.max(...publicadas) : 0
+    const bloqueo = versionBloqueada(plantilla.version, publicadas)
+    if (bloqueo) {
+      resumen.avisos.push(
+        `El contador de versión de la plantilla (${bloqueo.version}) NO supera a la mayor ` +
+        `versión publicada (v${bloqueo.mayorPublicada}). Publicar la siguiente versión ` +
+        `fallará. Corrígelo con --version=${bloqueo.sugerida}.`
+      )
+    }
+
+    // --- 3. Módulos creados desde el editor ---
+    // Éste es el que muerde en silencio: el seed hace `set()` de la estructura
+    // entera con los módulos del repositorio, así que un módulo añadido desde
+    // el editor de contenido desaparece sin dejar rastro. Pasó a un paso de
+    // pasar el 31-08-2026 con un módulo «NORMATIVAS» recién creado.
+    const soloRemotos = modulosQueSePerderian(plantilla.estructura, remota?.estructura)
+    if (soloRemotos.length && !flag('forzar-estructura')) {
+      console.error(
+        `\n✗ La plantilla remota tiene ${soloRemotos.length} módulo(s) que NO están en el ` +
+        `repositorio y que esta operación BORRARÍA:\n` +
+        soloRemotos.map((m) => `    · ${m.id} — ${m.titulo || '(sin título)'}`).join('\n') +
+        `\n\n  Se crearon desde el editor de contenido. Opciones:\n` +
+        `    · pásalos al repositorio y vuelve a ejecutar; o\n` +
+        `    · --forzar-estructura para borrarlos a sabiendas.\n`
+      )
+      process.exit(1)
+    }
+    if (soloRemotos.length) {
+      resumen.avisos.push(`--forzar-estructura: se BORRAN ${soloRemotos.length} módulo(s) creados desde el editor.`)
+    }
+
     const snap = await dba.collection('plantillasTemas')
       .where('plantillaId', '==', plantilla.id).get()
     resumen.leidos += snap.size
     const existentes = new Set(snap.docs.map((d) => d.id))
     const nuevos = temasPlantilla.filter((t) => !existentes.has(t.docId)).length
     console.log(`  Estado remoto: plantilla ${yaPlantilla ? 'YA existe (se reescribe)' : 'nueva'}; temas existentes ${existentes.size}, por crear ${nuevos}`)
+    console.log(`  Metadatos: tipoDestino=${plantilla.tipoDestino} version=${plantilla.version}` +
+      `${maxPublicada ? ` (mayor publicada: v${maxPublicada})` : ''}`)
     if (existentes.size > 0 && existentes.size < temasPlantilla.length) {
       resumen.avisos.push(`Seed parcial detectado (${existentes.size}/${temasPlantilla.length} temas): reejecutar con --apply lo completa.`)
     }
