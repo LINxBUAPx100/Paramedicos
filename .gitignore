@@ -24,3 +24,13 @@ firestore-debug.log
 ui-debug.log
 pubsub-debug.log
 .cache/
+
+# Credenciales de service account (Firebase Admin). NUNCA en el repositorio:
+# una clave así abre el proyecto entero saltándose las reglas de seguridad.
+# Lo correcto es guardarla FUERA del repo y apuntar GOOGLE_APPLICATION_CREDENTIALS
+# a esa ruta; estas reglas son solo la red por si alguien la copia aquí.
+*serviceAccount*.json
+*service-account*.json
+*-firebase-adminsdk-*.json
+credenciales/
+claves/
