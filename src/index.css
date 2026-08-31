@@ -4860,10 +4860,12 @@ html[data-tema='oscuro'] .glosario-termino { color: var(--texto); }
 .cuerpo { display: flex; flex-direction: column; align-items: stretch; flex: 1 0 auto; }
 .sidebar {
   position: fixed;
-  top: 64px;
+  /* El alto de la barra sale de la variable, no de un 64 repetido: era la
+     tercera copia del mismo número y la que ya se había desincronizado. */
+  top: var(--topbar-h);
   left: 0;
   width: min(330px, 86vw);
-  height: calc(100vh - 64px);
+  height: calc(100vh - var(--topbar-h));
   transform: translateX(-100%);
   transition: transform var(--dur-media) var(--ease-out);
   z-index: 60;
@@ -8979,10 +8981,146 @@ html[data-tema='oscuro'] .dic-item--validar { border-left-color: #6ee7b7; }
 .pt-capacidades h3 { font-size: var(--t-md); margin-bottom: var(--e-8); }
 
 /* --- Alianza con R.E.S.C.A.T.E. --- */
-.pt-aliado { padding-block: var(--e-48); background: var(--bg-2); border-block: 1px solid var(--borde); }
-.pt-aliado-in { display: flex; flex-direction: column; align-items: flex-start; gap: var(--e-12); max-width: 68ch; }
-.pt-aliado-in h2 { font-size: var(--t-xl); }
-.pt-aliado-in p { color: var(--texto-2); }
+/* --- «Cómo se vive PTEM»: voces colgadas de un hilo ---
+   Sustituye al bloque `.pt-aliado`, que era un párrafo solo en medio de mucho
+   blanco.
+
+   LA REGLA DE ESTA SECCIÓN ES QUE NO HAY CAJAS. Nada de cuatro tarjetas del
+   mismo alto en rejilla: eso es exactamente el aspecto que había que evitar.
+   Lo que la sostiene son tres cosas, y ninguna es un borde:
+     · un hilo curvo de fondo del que cuelgan las voces;
+     · alturas desiguales — cada voz arranca a un nivel distinto;
+     · manchas de color con las cuatro esquinas diferentes, sin borde ni sombra
+       de tarjeta, para que se lean como algo pintado y no como un contenedor. */
+.pt-voces {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding-block: clamp(var(--e-48), 6vw, var(--e-64));
+  background:
+    radial-gradient(120% 90% at 8% 0%, color-mix(in srgb, var(--primario) 7%, transparent), transparent 60%),
+    radial-gradient(90% 80% at 96% 100%, color-mix(in srgb, var(--cian) 8%, transparent), transparent 62%),
+    var(--bg-2);
+}
+
+/* El hilo. `preserveAspectRatio: none` lo estira a lo que mida la sección, y
+   `vector-effect` mantiene el trazo a 2 px pase lo que pase con esa deformación
+   — sin él, al estirar 100 unidades a 1200 px la línea saldría como una viga. */
+.pt-hilo {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: color-mix(in srgb, var(--primario) 22%, transparent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 3 11;
+}
+
+.pt-voces-in { display: flex; flex-direction: column; gap: var(--e-32); }
+.pt-voces-cab { display: flex; flex-direction: column; align-items: flex-start; gap: var(--e-12); max-width: 68ch; }
+.pt-voces-cab h2 { font-size: var(--t-xl); }
+.pt-voces-cab p { color: var(--texto-2); margin: 0; }
+
+.pt-voces-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(var(--e-24), 3vw, var(--e-48));
+}
+
+.pt-voz {
+  position: relative;
+  max-width: 46ch;
+  padding: clamp(var(--e-20), 2vw, var(--e-32));
+  /* Las cuatro esquinas distintas son la firma de la sección. Cambian por voz
+     (regla de abajo) para que no se repita el mismo recorte cuatro veces. */
+  border-radius: 34px 8px 30px 10px;
+  background: color-mix(in srgb, var(--tono, var(--primario)) 9%, var(--bg-2));
+  color: var(--texto);
+}
+/* La única línea recta que se permite: un trazo corto del color de la voz.
+   Hace de nudo, no de borde.
+   CUELGA DEL BORDE, no va dentro. Colocado por dentro caía justo encima de la
+   primera línea de la cita: el `top` y el relleno valen lo mismo, así que el
+   trazo y el texto arrancaban en el mismo píxel. */
+.pt-voz::before {
+  content: '';
+  position: absolute;
+  top: clamp(var(--e-20), 2vw, var(--e-32));
+  left: -11px;
+  width: 22px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--tono, var(--primario));
+}
+
+.pt-voz-cita {
+  margin: 0;
+  font-family: var(--fuente-display);
+  font-size: clamp(1rem, 1.5vw, 1.22rem);
+  font-weight: 500;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+.pt-voz-pie {
+  margin: var(--e-12) 0 0;
+  font-family: var(--fuente-sub);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  /* Sobre la mancha del 9 % hay que mezclar con el texto, no con el gris de
+     siempre, o el pie baja de contraste AA en las voces más saturadas. */
+  color: color-mix(in srgb, var(--tono, var(--primario)) 55%, var(--texto));
+}
+
+.pt-voces-enlace {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e-8);
+  font-family: var(--fuente-sub);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: var(--enlace);
+  text-decoration: none;
+  border-bottom: 2px solid color-mix(in srgb, var(--enlace) 35%, transparent);
+  padding-bottom: 2px;
+}
+.pt-voces-enlace:hover { border-bottom-color: var(--enlace); text-decoration: none; }
+
+/* En una sola columna el hilo no serpentea: solo mancha. Se apaga, y las voces
+   se alinean sin escalones —un escalón de 60 px en móvil es un hueco, no un
+   ritmo. */
+.pt-hilo { display: none; }
+
+@media (min-width: 861px) {
+  .pt-hilo { display: block; }
+  .pt-voces-lista { grid-template-columns: 1fr 1fr; align-items: start; }
+  /* El desnivel. Son cuatro valores a mano y no una fórmula porque lo que se
+     busca es que NO se note un patrón: con un escalón regular vuelve a
+     parecerse a una rejilla, que es justo lo que se está evitando. */
+  .pt-voz:nth-child(1) { margin-block-start: 0; }
+  .pt-voz:nth-child(2) { margin-block-start: var(--e-48); }
+  .pt-voz:nth-child(3) { margin-block-start: 0; }
+  .pt-voz:nth-child(4) { margin-block-start: var(--e-32); }
+  /* Cada voz con su propio recorte, y las de la derecha en espejo: si las
+     cuatro llevan el mismo, el recorte deja de leerse como algo dibujado. */
+  .pt-voz:nth-child(2) { border-radius: 8px 34px 10px 30px; }
+  .pt-voz:nth-child(3) { border-radius: 30px 12px 36px 8px; }
+  .pt-voz:nth-child(4) { border-radius: 10px 30px 8px 34px; }
+  /* El nudo sale hacia el hilo: la columna de la izquierda lo saca por su
+     derecha; la de la derecha lo deja donde está, a su izquierda. */
+  .pt-voz:nth-child(odd)::before { left: auto; right: -11px; }
+  /* Las de la derecha se pegan al hilo; las de la izquierda, también. Sin esto
+     las columnas quedan separadas y el hilo pasa por un vacío. */
+  .pt-voz:nth-child(odd) { justify-self: end; }
+  .pt-voz:nth-child(even) { justify-self: start; }
+}
 
 /* ============================================================
    Vitrina de una carrera (src/pages/CarreraPage.jsx)

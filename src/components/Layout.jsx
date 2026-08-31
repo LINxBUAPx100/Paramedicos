@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext.jsx'
 import { useIndiceContenido } from '../context/ContenidoContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
 import { motivoSinPrograma } from '../lib/programasModelo.js'
+import { hayMenuLateral } from '../lib/menuLateral.js'
 import { metaRobots } from '../lib/indexable.js'
 import { debeSubirAlInicio } from '../lib/saltoEnPagina.js'
 import Icon from './Icon.jsx'
@@ -90,6 +91,16 @@ export default function Layout({ children }) {
   const modulosVisibles = !veContenido ? [] : modulos
     .filter((f) => moduloVisible(f.id))
     .map((f) => ({ ...f, temas: f.temas.filter((t) => temaVisible(t.id)) }))
+
+  // ¿Vale la pena abrir el cajón? La regla vive en lib/menuLateral.js, con sus
+  // pruebas: el caso que hay que blindar —con temario, el botón SIGUE estando—
+  // no se puede comprobar abriendo la página sin credenciales.
+  const hayMenu = hayMenuLateral({ navDrawer, topnav, modulos: modulosVisibles.length })
+  // Estado EFECTIVO. Si el cajón se queda sin contenido con él abierto —cerrar
+  // sesión es el caso real—, `abierto` seguiría en true y quedaría el velo
+  // oscuro encima de la página sin nada que velar. Derivarlo aquí lo cierra en
+  // el mismo render, sin un efecto que persiga al estado.
+  const menuAbierto = hayMenu && abierto
 
   const esHome = location.pathname === '/'
   // Las consolas del super-admin y del director aprovechan todo el ancho: son
@@ -183,16 +194,18 @@ export default function Layout({ children }) {
       </a>
       <AnuncioBanner />
       <header className="topbar">
-        <button
-          ref={menuRef}
-          className="menu-btn"
-          aria-label={abierto ? 'Cerrar menú' : 'Abrir menú'}
-          aria-expanded={abierto}
-          aria-controls="menu-lateral"
-          onClick={() => setAbierto((v) => !v)}
-        >
-          <span /><span /><span />
-        </button>
+        {hayMenu && (
+          <button
+            ref={menuRef}
+            className="menu-btn"
+            aria-label={menuAbierto ? 'Cerrar menú' : 'Abrir menú'}
+            aria-expanded={menuAbierto}
+            aria-controls="menu-lateral"
+            onClick={() => setAbierto((v) => !v)}
+          >
+            <span /><span /><span />
+          </button>
+        )}
 
         <Link to="/" className="marca" onClick={cerrar} aria-label="PTEM — inicio">
           <LogoPTEM height={28} className="marca-svg" />
@@ -257,11 +270,12 @@ export default function Layout({ children }) {
             Ojo con React 18: no conoce `inert`, así que un booleano se
             serializaría como inert="false" — y en HTML un atributo booleano
             cuenta por estar PRESENTE. De ahí '' / undefined. */}
+        {hayMenu && (
         <aside
           id="menu-lateral"
           ref={drawerRef}
-          className={`sidebar ${abierto ? 'abierto' : ''}`}
-          inert={abierto ? undefined : ''}
+          className={`sidebar ${menuAbierto ? 'abierto' : ''}`}
+          inert={menuAbierto ? undefined : ''}
         >
           <nav className="nav">
             {navDrawer.map((item) => (
@@ -318,8 +332,9 @@ export default function Layout({ children }) {
             <IconoEstrella size={14} /> PTEM · Hecho para que comprendas el porqué.
           </div>
         </aside>
+        )}
 
-        {abierto && <div className="overlay" onClick={cerrar} />}
+        {menuAbierto && <div className="overlay" onClick={cerrar} />}
 
         <main
           id="contenido-principal"

@@ -69,7 +69,7 @@ export default function PortadaPTEM() {
       <PortadaHero />
       <CarrerasPTEM />
       <CapacidadesPTEM />
-      <AliadoRescate />
+      <ComoSeVive />
       <CierrePTEM />
     </div>
   )
@@ -267,25 +267,97 @@ function CapacidadesPTEM() {
   )
 }
 
-// ---------- Alianza ----------
-function AliadoRescate() {
+// ---------- Cómo se vive PTEM ----------
+//
+//  Sustituye al bloque «PTEM y R.E.S.C.A.T.E.», que era un párrafo suelto en
+//  medio de mucho blanco. La alianza no se pierde: pasa a la entradilla y al
+//  enlace del final, que es donde de verdad se lee.
+//
+//  ESTAS VOCES NO SON TESTIMONIOS. No son reseñas que alguien haya dado, y por
+//  eso no llevan nombre, foto, estrellas ni generación. Describen CÓMO SE USA
+//  la plataforma, y su pie lo dice en voz alta («Así estudia…», «Así prepara…»).
+//  La diferencia no es cosmética: una reseña inventada con nombre y apellido en
+//  la página que capta alumnos es publicidad falsa, y el desprestigio se lo
+//  come la academia, no el software.
+//
+//  El día que haya testimonios reales —con permiso de quien los firma— se
+//  cambia este arreglo y ya: el pie pasa a ser la persona y el componente no se
+//  entera. Por eso los datos viven aquí arriba y no incrustados en el JSX.
+const VOCES = [
+  {
+    cita: 'Dejé de memorizar para empezar a entender. Cuando comprendes la razón '
+      + 'detrás de un procedimiento, el conocimiento se queda para siempre.',
+    pie: 'Así estudia un alumno en su primer módulo',
+    tono: 'var(--primario)',
+  },
+  {
+    cita: 'Llego a clase sabiendo exactamente quién leyó y en qué temas hay dudas. '
+      + 'Mi clase se enfoca en resolver problemas reales, no en suposiciones.',
+    pie: 'Así prepara su clase un docente',
+    tono: 'var(--cian)',
+  },
+  {
+    cita: 'Todo el contenido está respaldado. Reviso cada lección, verifico las '
+      + 'fuentes y la firmo antes de que llegue a los alumnos.',
+    pie: 'Así se valida una lección',
+    tono: 'var(--verde)',
+  },
+  {
+    cita: 'El temario se abre cuando el grupo está listo. Llevamos un ritmo '
+      + 'constante para que nadie se atrase ni se adelante sin dominar las bases.',
+    pie: 'Así abre el temario la academia',
+    tono: 'var(--alerta)',
+  },
+]
+
+function ComoSeVive() {
   return (
-    <section className="pt-aliado" aria-labelledby="pt-aliado-t">
-      <div className="lp-wrap pt-aliado-in">
-        <span className="lp-etiqueta">Alianza</span>
-        <h2 id="pt-aliado-t">PTEM y R.E.S.C.A.T.E.</h2>
-        <p>
-          El contenido académico que hoy vive en PTEM es el plan de estudios oficial de
-          <strong> R.E.S.C.A.T.E.</strong>, y le pertenece. PTEM pone la plataforma: el
-          temario, las evaluaciones, el control de grupos y el panel del maestro. La
-          academia pone el programa, el cuerpo docente que lo valida y la formación
-          presencial que ninguna pantalla sustituye.
-        </p>
+    <section className="pt-voces" aria-labelledby="pt-voces-t">
+      {/* El hilo que serpentea detrás de las voces. Es la pieza que hace que
+          esto se lea como algo dibujado y no como cuatro tarjetas alineadas:
+          las voces cuelgan de él a alturas distintas. Decorativo puro, así que
+          va oculto al lector de pantalla. En pantalla estrecha desaparece —con
+          una sola columna no serpentea nada, solo mancha. */}
+      <svg className="pt-hilo" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M50 0 C 18 16, 82 32, 50 50 S 18 84, 50 100" vectorEffect="non-scaling-stroke" />
+      </svg>
+
+      <div className="lp-wrap pt-voces-in">
+        <div className="pt-voces-cab">
+          <span className="lp-etiqueta">Alianza</span>
+          <h2 id="pt-voces-t">Cómo se vive PTEM</h2>
+          <p>
+            El contenido académico que vive aquí es el plan de estudios oficial de{' '}
+            <strong>R.E.S.C.A.T.E.</strong>, y le pertenece. La academia pone el programa,
+            el cuerpo docente que lo valida y la formación presencial que ninguna pantalla
+            sustituye; PTEM pone el sitio donde todo eso se estudia, se evalúa y se sigue.
+            Así se reparte el día a día:
+          </p>
+        </div>
+
+        <ul className="pt-voces-lista">
+          {VOCES.map((v, i) => (
+            <Reveal
+              as="li"
+              key={v.pie}
+              className="pt-voz"
+              delay={i * 90}
+              style={{ '--tono': v.tono }}
+            >
+              {/* Las comillas angulares van en el texto, no en un ::before
+                  decorativo: así se copian con la frase y el lector de pantalla
+                  las anuncia como lo que son, una cita. */}
+              <p className="pt-voz-cita">«{v.cita}»</p>
+              <p className="pt-voz-pie">{v.pie}</p>
+            </Reveal>
+          ))}
+        </ul>
+
         <a
           href="https://rescate.pro"
           target="_blank"
           rel="noopener noreferrer"
-          className="btn btn--pildora btn--fantasma"
+          className="pt-voces-enlace"
         >
           Conocer R.E.S.C.A.T.E. <Icon name="compartir" size={15} />
         </a>
