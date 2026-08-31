@@ -146,13 +146,19 @@ function SeccionHero({ stats, primerModulo }) {
               <picture>
                 <source type="image/avif" srcSet={HERO_AVIF} sizes={HERO_SIZES} />
                 <source type="image/webp" srcSet={HERO_WEBP} sizes={HERO_SIZES} />
-                {/* La prioridad de descarga la da el <link rel="preload"> del
-                    index.html (React 18 no reconoce fetchpriority en el <img>). */}
+                {/* La prioridad la pide ahora el propio <img>. El preload del
+                    index.html se lo llevó la portada general: es una sola
+                    etiqueta para todas las rutas y `/` es la que recibe las
+                    visitas (ver el comentario del <head>). React sí pasa
+                    `fetchpriority` al DOM —comprobado— así que esta imagen
+                    sigue descargándose en prioridad alta; lo que pierde es el
+                    adelanto del analizador de cabecera. */}
                 <img
                   src={`${import.meta.env.BASE_URL}hero/paramedico-800.webp`}
                   alt="Paramédico de PTEM con uniforme y estetoscopio"
                   width="2000"
                   height="2000"
+                  fetchpriority="high"
                   decoding="async"
                 />
               </picture>

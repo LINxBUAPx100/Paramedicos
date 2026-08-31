@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Icon from '../components/Icon.jsx'
 import Reveal from '../components/Reveal.jsx'
@@ -54,42 +55,174 @@ const CAPACIDADES = [
 ]
 
 export default function PortadaPTEM() {
+  // Barra superior transparente SOLO aquí. La foto del hero llega hasta arriba
+  // y una barra opaca encima la cortaría en seco. Se marca el <body> en vez de
+  // tocar Layout: así ninguna otra pantalla hereda el cambio, y al salir de la
+  // portada la barra vuelve sola a como estaba.
+  useEffect(() => {
+    document.body.dataset.portada = '1'
+    return () => { delete document.body.dataset.portada }
+  }, [])
+
   return (
     <div className="lp">
       <PortadaHero />
       <CarrerasPTEM />
       <CapacidadesPTEM />
-      <AliadoRescate />
+      <ComoSeVive />
       <CierrePTEM />
     </div>
   )
 }
 
 // ---------- Hero ----------
+//
+//  Portada a sangre: la fotografía ocupa el ancho completo y el titular va
+//  encima. Sigue la referencia que dio el dueño del producto el 31-08-2026.
+//
+//  TRES DECISIONES QUE NO SON DECORATIVAS:
+//
+//   · La imagen se sirve en AVIF y WebP a cinco anchos (public/portada/), no
+//     como un JPG de 2,8 MB. Es el elemento más grande de la página y el
+//     primero que se descarga: a 800 px pesa 31 kB.
+//   · Lleva `fetchpriority="high"` y NO `loading="lazy"`. Es el LCP de la
+//     portada; diferirlo retrasaría justo lo que mide el navegador.
+//   · El velo oscuro no es un efecto: sin él, el titular blanco cae sobre las
+//     zonas claras de la foto —las pantallas del fondo— y deja de leerse.
+const ANCHOS_FONDO = [800, 1200, 1600, 2000, 2560]
+const fondoSet = (ext) => ANCHOS_FONDO
+  .map((w) => `${import.meta.env.BASE_URL}portada/portada-fondo-${w}.${ext} ${w}w`)
+  .join(', ')
+
+const ANCHOS_MOCHILA = [240, 480, 720]
+const mochilaSet = (ext) => ANCHOS_MOCHILA
+  .map((w) => `${import.meta.env.BASE_URL}portada/mochila-${w}.${ext} ${w}w`)
+  .join(', ')
+
 function PortadaHero() {
   return (
-    <header className="lp-portada pt-portada">
-      <IconoEstrella size={620} className="lp-marca-fondo" aria-hidden="true" />
-      <div className="lp-wrap pt-portada-in">
-        <span className="lp-kicker">Plataforma de Estudio · Urgencias Médicas</span>
-        <h1>
-          La plataforma donde tu academia <em>enseña</em> y tú estudias
+    <header className="pf">
+      <picture className="pf-fondo">
+        <source type="image/avif" srcSet={fondoSet('avif')} sizes="100vw" />
+        <source type="image/webp" srcSet={fondoSet('webp')} sizes="100vw" />
+        <img
+          src={`${import.meta.env.BASE_URL}portada/portada-fondo-1600.webp`}
+          alt="Personal de urgencias médicas trabajando en una central de coordinación, con una ambulancia al fondo"
+          width="3168"
+          height="1344"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </picture>
+      <div className="pf-velo" aria-hidden="true" />
+
+      <div className="pf-titular">
+        <h1 className="pf-h1">
+          <span className="pf-h1-a">Plataforma</span>
+          <span className="pf-h1-b">
+            {/* «Dedicada» va translúcida y «para» sólida, como en la referencia:
+                el contraste dentro de la misma línea es lo que le da el ritmo. */}
+            <span className="pf-fantasma">Dedicada</span> para
+          </span>
+          <span className="pf-h1-c">USTED</span>
         </h1>
-        <p className="lp-lede pt-lede">
-          PTEM reúne el temario, las evaluaciones y el avance de cada alumno en un solo
-          sitio. Lo usan academias de formación en urgencias médicas para dar clase con
-          material propio, revisado y firmado por su cuerpo docente.
-        </p>
-        <div className="lp-portada-acciones">
-          <Link to="/paramedicos" className="btn btn--pildora btn--carbon btn--lg">
-            Ver la carrera de paramédicos <Icon name="flecha" size={17} />
-          </Link>
-          <Link to="/cuenta" className="btn btn--pildora btn--fantasma btn--lg">
-            Entrar con mi código
-          </Link>
+
+        <Link to="/cuenta" className="pf-cta">
+          Usar código <Icon name="flechaDiagonal" size={20} />
+        </Link>
+      </div>
+
+      <div className="pf-banda">
+        <div className="pf-banda-izq">
+          {/* Dos líneas, y cada una entera: con un simple <br /> el navegador
+              seguía partiendo «Enfocada al estudio» en cuatro trozos cuando la
+              columna se estrechaba, y el lema dejaba de leerse como una frase.
+              Cada línea va en su propio span que no se parte; lo que cede es el
+              tamaño de letra, no la frase. */}
+          <div className="pf-banda-texto">
+            <p className="pf-lema">
+              <span>Enfocada al estudio</span>
+              <span>de la <strong>SALUD</strong></span>
+            </p>
+            <Link to="/terminos-y-condiciones" className="pf-legal">
+              Términos y condiciones
+            </Link>
+          </div>
+          <picture className="pf-mochila">
+            <source type="image/avif" srcSet={mochilaSet('avif')} sizes="150px" />
+            <source type="image/webp" srcSet={mochilaSet('webp')} sizes="150px" />
+            <img
+              src={`${import.meta.env.BASE_URL}portada/mochila-480.webp`}
+              alt=""
+              width="435"
+              height="535"
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
         </div>
+
+        <div className="pf-banda-der">
+          <IconoEstrella size={72} className="pf-banda-estrella" />
+          <p>
+            PTEM reúne el temario, las evaluaciones y el avance de cada alumno en un solo
+            sitio. Lo usan academias de formación en urgencias médicas para dar clase con
+            material propio, revisado y firmado por su cuerpo docente.
+          </p>
+        </div>
+
+        <BandaAlianza />
       </div>
     </header>
+  )
+}
+
+// ---------- Tercer panel de la banda: quién hace qué ----------
+//
+//  En un monitor ancho la banda se quedaba en dos bloques y sobraba casi medio
+//  metro de azul vacío a la derecha. Este panel lo ocupa contando lo único que
+//  la portada no decía todavía: que PTEM es de dos casas y cuál pone qué.
+//
+//  SOLO EN PANTALLA GRANDE, y no por capricho: por debajo de 1500 px la
+//  columna del medio bajaría de unos 55 caracteres por línea y el párrafo que
+//  explica qué es PTEM —que es el mensaje principal— quedaría troceado. Antes
+//  que apretar los tres, desaparece el tercero. Va con `display: none`, así que
+//  tampoco lo lee un lector de pantalla en móvil: sería el mismo contenido que
+//  la sección «PTEM y R.E.S.C.A.T.E.» de más abajo, repetido.
+//
+//  LO QUE NO DICE, a propósito: que el cuerpo docente «ya firmó» el temario.
+//  Hoy los profesores están validando y ninguna lección está publicada como
+//  definitiva. Se describe el reparto de papeles, que sí es cierto hoy.
+function BandaAlianza() {
+  return (
+    <aside className="pf-banda-alianza" aria-label="Quién está detrás de PTEM">
+      <span className="pf-al-tit">Dos casas, un producto</span>
+
+      <div className="pf-al-fila">
+        <Icon name="verificado" size={18} />
+        <p>
+          <strong>Academia R.E.S.C.A.T.E.</strong> pone el plan de estudios oficial, el
+          cuerpo docente que revisa y firma el contenido, y la formación presencial.
+        </p>
+      </div>
+
+      <div className="pf-al-fila">
+        <Icon name="capas" size={18} />
+        <p>
+          <strong>Riders.media</strong> desarrolla y mantiene PTEM: la plataforma, el
+          temario en línea, las evaluaciones y el panel del maestro.
+        </p>
+      </div>
+
+      <a
+        href="https://rescate.pro"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="pf-al-enlace"
+      >
+        rescate.pro <Icon name="compartir" size={13} />
+      </a>
+    </aside>
   )
 }
 
@@ -134,25 +267,97 @@ function CapacidadesPTEM() {
   )
 }
 
-// ---------- Alianza ----------
-function AliadoRescate() {
+// ---------- Cómo se vive PTEM ----------
+//
+//  Sustituye al bloque «PTEM y R.E.S.C.A.T.E.», que era un párrafo suelto en
+//  medio de mucho blanco. La alianza no se pierde: pasa a la entradilla y al
+//  enlace del final, que es donde de verdad se lee.
+//
+//  ESTAS VOCES NO SON TESTIMONIOS. No son reseñas que alguien haya dado, y por
+//  eso no llevan nombre, foto, estrellas ni generación. Describen CÓMO SE USA
+//  la plataforma, y su pie lo dice en voz alta («Así estudia…», «Así prepara…»).
+//  La diferencia no es cosmética: una reseña inventada con nombre y apellido en
+//  la página que capta alumnos es publicidad falsa, y el desprestigio se lo
+//  come la academia, no el software.
+//
+//  El día que haya testimonios reales —con permiso de quien los firma— se
+//  cambia este arreglo y ya: el pie pasa a ser la persona y el componente no se
+//  entera. Por eso los datos viven aquí arriba y no incrustados en el JSX.
+const VOCES = [
+  {
+    cita: 'Dejé de memorizar para empezar a entender. Cuando comprendes la razón '
+      + 'detrás de un procedimiento, el conocimiento se queda para siempre.',
+    pie: 'Así estudia un alumno en su primer módulo',
+    tono: 'var(--primario)',
+  },
+  {
+    cita: 'Llego a clase sabiendo exactamente quién leyó y en qué temas hay dudas. '
+      + 'Mi clase se enfoca en resolver problemas reales, no en suposiciones.',
+    pie: 'Así prepara su clase un docente',
+    tono: 'var(--cian)',
+  },
+  {
+    cita: 'Todo el contenido está respaldado. Reviso cada lección, verifico las '
+      + 'fuentes y la firmo antes de que llegue a los alumnos.',
+    pie: 'Así se valida una lección',
+    tono: 'var(--verde)',
+  },
+  {
+    cita: 'El temario se abre cuando el grupo está listo. Llevamos un ritmo '
+      + 'constante para que nadie se atrase ni se adelante sin dominar las bases.',
+    pie: 'Así abre el temario la academia',
+    tono: 'var(--alerta)',
+  },
+]
+
+function ComoSeVive() {
   return (
-    <section className="pt-aliado" aria-labelledby="pt-aliado-t">
-      <div className="lp-wrap pt-aliado-in">
-        <span className="lp-etiqueta">Alianza</span>
-        <h2 id="pt-aliado-t">PTEM y R.E.S.C.A.T.E.</h2>
-        <p>
-          El contenido académico que hoy vive en PTEM es el plan de estudios oficial de
-          <strong> R.E.S.C.A.T.E.</strong>, y le pertenece. PTEM pone la plataforma: el
-          temario, las evaluaciones, el control de grupos y el panel del maestro. La
-          academia pone el programa, el cuerpo docente que lo valida y la formación
-          presencial que ninguna pantalla sustituye.
-        </p>
+    <section className="pt-voces" aria-labelledby="pt-voces-t">
+      {/* El hilo que serpentea detrás de las voces. Es la pieza que hace que
+          esto se lea como algo dibujado y no como cuatro tarjetas alineadas:
+          las voces cuelgan de él a alturas distintas. Decorativo puro, así que
+          va oculto al lector de pantalla. En pantalla estrecha desaparece —con
+          una sola columna no serpentea nada, solo mancha. */}
+      <svg className="pt-hilo" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M50 0 C 18 16, 82 32, 50 50 S 18 84, 50 100" vectorEffect="non-scaling-stroke" />
+      </svg>
+
+      <div className="lp-wrap pt-voces-in">
+        <div className="pt-voces-cab">
+          <span className="lp-etiqueta">Alianza</span>
+          <h2 id="pt-voces-t">Cómo se vive PTEM</h2>
+          <p>
+            El contenido académico que vive aquí es el plan de estudios oficial de{' '}
+            <strong>R.E.S.C.A.T.E.</strong>, y le pertenece. La academia pone el programa,
+            el cuerpo docente que lo valida y la formación presencial que ninguna pantalla
+            sustituye; PTEM pone el sitio donde todo eso se estudia, se evalúa y se sigue.
+            Así se reparte el día a día:
+          </p>
+        </div>
+
+        <ul className="pt-voces-lista">
+          {VOCES.map((v, i) => (
+            <Reveal
+              as="li"
+              key={v.pie}
+              className="pt-voz"
+              delay={i * 90}
+              style={{ '--tono': v.tono }}
+            >
+              {/* Las comillas angulares van en el texto, no en un ::before
+                  decorativo: así se copian con la frase y el lector de pantalla
+                  las anuncia como lo que son, una cita. */}
+              <p className="pt-voz-cita">«{v.cita}»</p>
+              <p className="pt-voz-pie">{v.pie}</p>
+            </Reveal>
+          ))}
+        </ul>
+
         <a
           href="https://rescate.pro"
           target="_blank"
           rel="noopener noreferrer"
-          className="btn btn--pildora btn--fantasma"
+          className="pt-voces-enlace"
         >
           Conocer R.E.S.C.A.T.E. <Icon name="compartir" size={15} />
         </a>
