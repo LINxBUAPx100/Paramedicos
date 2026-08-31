@@ -18,16 +18,17 @@ const destino = argSalida
   ? path.resolve(process.cwd(), argSalida.slice(9))
   : path.join(raiz, 'src', 'data', 'navIndice.js')
 
-// Solo lo que el shell necesita para navegar (sin secciones/bloques/quiz/etc.).
-const modulosNav = modulos.map((f) => ({
-  id: f.id,
-  numero: f.numero,
-  titulo: f.titulo,
-  subtitulo: f.subtitulo,
-  descripcion: f.descripcion,
-  color: f.color,
-  temas: f.temas.map((t) => ({ id: t.id, numero: t.numero, titulo: t.titulo })),
-}))
+// YA NO SE ESCRIBE `modulosNav` (trabajo P2, 31-08-2026).
+//
+// Era la lista de los 7 módulos con los 287 títulos de tema: 50 kB que el shell
+// usaba como índice de reserva mientras llegaba el de Firestore. Los títulos
+// del plan SON contenido de la academia —son su índice, el resultado de ordenar
+// un programa completo—, y publicarlos en el JavaScript los dejaba
+// descargables por cualquiera aunque la interfaz no los pintara.
+//
+// El shell arranca ahora sin índice y lo rellena con el de la academia. No hace
+// falta reserva: una academia migrada trae el suyo, y una que no lo esté no
+// debe recibir el de otra.
 
 // Estado editorial por tema, en un mapa APARTE de `modulosNav`.
 //
@@ -42,9 +43,13 @@ const estadosEditoriales = Object.fromEntries(
 )
 
 const cuerpo = `// ARCHIVO GENERADO por scripts/gen-nav-indice.mjs — NO editar a mano.
-// Índice ligero de navegación (metadatos) para el shell, sin el contenido pesado.
-export const modulosNav = ${JSON.stringify(modulosNav, null, 2)}
+//
+// Solo CIFRAS y estados de gestión. Los títulos del temario NO se publican
+// aquí: son contenido de la academia y viajaban al navegador de cualquiera.
+// Ver el trabajo P2 en docs/PLAN-TECNICO-FASES.md.
 
+// Cuántos módulos, temas, preguntas y flashcards tiene el plan. Son números, no
+// contenido, y la portada pública los enseña a propósito.
 export const stats = ${JSON.stringify(stats, null, 2)}
 
 // temaId → estado editorial del temario oficial. Solo lo usa el panel de
@@ -53,4 +58,5 @@ export const estadosEditoriales = ${JSON.stringify(estadosEditoriales, null, 2)}
 `
 
 await writeFile(destino, cuerpo, 'utf8')
-console.log(`navIndice.js generado → ${modulosNav.length} modulos, ${stats.temas} temas`)
+console.log(`navIndice.js generado → cifras de ${stats.modulos} modulos y ${stats.temas} temas`)
+console.log('  sin títulos: los 287 nombres de tema ya NO se publican (P2)')

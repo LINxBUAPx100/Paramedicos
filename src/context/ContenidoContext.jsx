@@ -24,9 +24,18 @@ import { academiaMigrada } from '../lib/contenidoApi.js'
 import { programasDeGrupo } from '../lib/programasModelo.js'
 import { registrar } from '../lib/registro.js'
 import { apiConValidaciones } from '../lib/validacionesModelo.js'
-import { modulosNav, stats as statsBundle } from '../data/navIndice.js'
+import { stats as statsBundle } from '../data/navIndice.js'
 
-const INDICE_BUNDLE = { modulos: modulosNav, stats: statsBundle, fuente: 'legacy' }
+// Índice de ARRANQUE: cifras, sin un solo título.
+//
+// Antes esto llevaba `modulosNav`, los 7 módulos con sus 287 títulos, como
+// reserva mientras llegaba el índice de la academia. Se retiró en P2: los
+// títulos del plan son contenido de la academia y viajaban al navegador de
+// cualquiera, aunque la interfaz ya no los pintara sin permiso.
+//
+// El shell arranca vacío y se rellena en cuanto responde Firestore. Una
+// academia migrada trae el suyo; una que no lo esté no debe recibir el de otra.
+const INDICE_VACIO = { modulos: [], stats: statsBundle, fuente: 'vacio' }
 
 const ContenidoContext = createContext(null)
 
@@ -82,7 +91,7 @@ export function ContenidoProvider({ children }) {
 
   const clave = migrada ? `${academiaId}|${claveAcceso}|${cursoElegido || 'auto'}` : `legacy|${claveAcceso}`
 
-  const [indice, setIndice] = useState(INDICE_BUNDLE)
+  const [indice, setIndice] = useState(INDICE_VACIO)
   const [contenido, setContenido] = useState(null) // API completa | null
   const [api, setApi] = useState(null) // API BAJO DEMANDA | null
   const [error, setError] = useState(null)
@@ -104,7 +113,7 @@ export function ContenidoProvider({ children }) {
   useEffect(() => {
     setContenido(null)
     setError(null)
-    setIndice(INDICE_BUNDLE)
+    setIndice(INDICE_VACIO)
     if (!migrada) return undefined
     let activo = true
     ;(async () => {
@@ -114,7 +123,7 @@ export function ContenidoProvider({ children }) {
         if (activo && ind) {
           // preguntas/flashcards salen del bundle hasta cargar el contenido
           // completo (la estructura sola no las conoce): solo afinan contadores.
-          setIndice({ ...ind, stats: { ...INDICE_BUNDLE.stats, ...ind.stats } })
+          setIndice({ ...ind, stats: { ...INDICE_VACIO.stats, ...ind.stats } })
         }
       } catch (err) {
         /* sin red/permisos: el shell se queda con el índice del bundle */
@@ -141,7 +150,7 @@ export function ContenidoProvider({ children }) {
         setError(null)
         // El shell refleja EXACTAMENTE lo cargado; si la academia migrada
         // terminó cayendo a legacy (parcial/permisos), el índice vuelve al bundle.
-        setIndice(api.fuente === 'firestore' && api.indice ? api.indice : INDICE_BUNDLE)
+        setIndice(api.fuente === 'firestore' && api.indice ? api.indice : INDICE_VACIO)
       } catch (err) {
         // Falla hasta el fallback (p. ej. sin red para bajar el chunk de datos).
         registrar('contenido:completo', err, { academiaId })
@@ -432,7 +441,7 @@ export function useIndiceAcademia(academiaIdObjetivo) {
       try {
         const { indicePorAcademiaId } = await import('../lib/firebase/contenido.js')
         const ind = await indicePorAcademiaId(academiaIdObjetivo)
-        if (activo && ind) setRemoto({ ...ind, stats: { ...INDICE_BUNDLE.stats, ...ind.stats } })
+        if (activo && ind) setRemoto({ ...ind, stats: { ...INDICE_VACIO.stats, ...ind.stats } })
       } catch {
         /* academia legacy o sin permisos: bundle */
       }
@@ -440,7 +449,7 @@ export function useIndiceAcademia(academiaIdObjetivo) {
     return () => { activo = false }
   }, [esAjena, academiaIdObjetivo])
   if (!esAjena) return ctx.indice
-  return remoto || INDICE_BUNDLE
+  return remoto || INDICE_VACIO
 }
 
 // Estado de carga de las páginas de estudio. Es un ESQUELETO, no un spinner:

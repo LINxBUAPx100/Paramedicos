@@ -14,7 +14,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 
 import { modulos, todosLosTemas, stats } from '../src/data/index.js'
-import { modulosNav, stats as statsNav } from '../src/data/navIndice.js'
+import { stats as statsNav } from '../src/data/navIndice.js'
 import { estructuraDesdeModulos, contenidoTema } from '../src/lib/contenidoModelo.js'
 import {
   indiceDesdeEstructura, indiceDesdeModulos, ensamblarModulos, construirApi,
@@ -22,9 +22,17 @@ import {
 
 const estructuraOficial = estructuraDesdeModulos(modulos)
 
-test('índice: la estructura de la plantilla oficial reproduce navIndice.js', () => {
-  const { modulos: indice, stats: st } = indiceDesdeEstructura(estructuraOficial)
-  assert.deepEqual(indice, modulosNav)
+// `navIndice.js` ya no publica `modulosNav`: los 287 títulos del temario eran
+// contenido de la academia viajando en el JavaScript, y P2 los retiró. La
+// invariante que esta prueba defiende no cambia —una academia clonada navega
+// EXACTAMENTE igual que el temario de origen—, así que los dos lados se derivan
+// ahora de `src/data`, que una prueba sí puede importar.
+test('índice: la estructura de la plantilla oficial reproduce el del temario', () => {
+  const { modulos: desdeEstructura, stats: st } = indiceDesdeEstructura(estructuraOficial)
+  const { modulos: desdeElTemario } = indiceDesdeModulos(modulos)
+  assert.deepEqual(desdeEstructura, desdeElTemario)
+  // Las CIFRAS sí siguen publicándose (son números, no contenido) y tienen que
+  // seguir cuadrando con el temario real.
   assert.equal(st.modulos, statsNav.modulos)
   assert.equal(st.temas, statsNav.temas)
 })
