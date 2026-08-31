@@ -689,7 +689,21 @@ Ese segundo número es el que preocupa: 173 cargas al día con 10 profesores
 validando y dos alumnos todavía fuera. En cuanto entre un grupo real, se agota
 —y agotada la cuota, Firestore deja de responder hasta el día siguiente.
 
-#### La causa: un aviso que solo vivía en una consola
+#### La causa REAL: el script de migración no los genera, y punto
+
+> **Corrección del 31-08-2026 (tarde).** Esta sección atribuía primero el fallo
+> al `try/catch` de `clonarPlantillaAAcademia`, que se tragaba el error en un
+> `console.warn`. Eso es cierto y sigue arreglado, pero **no era lo que pasó**.
+> P1 no se ejecutó desde la aplicación: se ejecutó con
+> `scripts/migrar-contenido.mjs`, y ese script **no menciona los agregados ni
+> una sola vez**. No falló al generarlos: nunca lo intentó.
+>
+> Comprobado al repetir la clonación el 31-08 para llevar las fotografías del
+> temario: 288 documentos escritos, 287/287 verificados, y `agregados` sigue
+> en 0. Un fallo que se repite igual después de arreglar la causa equivocada es
+> la señal de que la causa era otra.
+
+#### Y además, un aviso que solo vivía en una consola
 
 `clonarPlantillaAAcademia` **sí** escribe los agregados, dentro de un try/catch
 que registraba el fallo con `console.warn` y marcaba la clonación como completa
@@ -715,8 +729,14 @@ cubierto por `agregados.rules.test.mjs`).
 
 #### Lo que falta
 
-Que un director de R.E.S.C.A.T.E. entre a **Panel → Contenido** y pulse
-«Generar los índices» en `RES-2026__paramedico-tum`. Después hay que comprobar
+Dos cosas, y la segunda salió al corregir la causa:
+
+1. Que un director de R.E.S.C.A.T.E. entre a **Panel → Contenido** y pulse
+   «Generar los índices» en `RES-2026__paramedico-tum`.
+2. Que `scripts/migrar-contenido.mjs` los genere al clonar, como hace la
+   aplicación. Mientras no lo haga, **cada vez que se resiembre una academia
+   desde el script los agregados vuelven a quedarse en cero**, y el botón del
+   panel habrá que pulsarlo otra vez. Después hay que comprobar
 que el sello queda al día y que la carga baja a 3 lecturas.
 
 No lo puede hacer la IA: exige una sesión de director, y pedir esa contraseña
