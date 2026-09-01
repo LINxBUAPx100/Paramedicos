@@ -13,13 +13,15 @@
 //               `peso` es NUEVO (ponderación, default 1) — aditivo.
 //   recursos  → { videos:[{titulo,url,canal}], fuentes:[{titulo,url,tipo}],
 //                 imagenes:[{src,busqueda,caption}],
-//                 archivos:[{titulo,url,path,tipo,tamano}] }  ← `archivos` es NUEVO
+//                 archivos:[{titulo,url,path,tipo,tamano}],
+//                 material:[{titulo,origen,url|path,formato}] }  ← material de clase
 //   actividades → { ordenar:{titulo,pasos[]},
 //                   completar:[{texto('…___…'),opciones[],correcta,explicacion}],
 //                   preguntas:[{pregunta,opciones[],correcta,explicacion}] }
 //   conceptosClave → [{termino,definicion}] · flashcards → [{frente,reverso}]
 // ============================================================
 import { clonProfundo } from './contenidoModelo.js'
+import { validarMaterial } from './materialTema.js'
 
 // ---------- catálogo de bloques ----------
 
@@ -300,6 +302,12 @@ export function validarRecursos(recursos) {
       return 'Cada imagen de recursos necesita enlace o una descripción de búsqueda.'
     }
   }
+  // MATERIAL DE CLASE: PDF y presentaciones para VER, no para repartir. Va
+  // aparte de  —los adjuntos descargables— porque se sirve con enlace
+  // firmado y marca de agua por alumno. Ver src/lib/materialTema.js.
+  const problemaMaterial = validarMaterial(recursos.material)
+  if (problemaMaterial) return problemaMaterial
+
   for (const a of recursos.archivos || []) {
     if (!textoValido(a?.titulo, 200)) return 'Cada archivo descargable necesita un título.'
     if (!urlSegura(a.url)) return `El enlace del archivo "${a.titulo}" no es válido.`

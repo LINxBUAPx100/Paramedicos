@@ -105,7 +105,14 @@ service firebase.storage {
       // Subir/reemplazar: solo editores de esa academia, solo en las
       // carpetas conocidas y solo tipos de la allowlist.
       allow create, update: if puedeEditar(academiaId)
-        && carpeta in ['archivos', 'imagenes']
+        // `material` es la carpeta del MATERIAL DE CLASE (PDF y presentaciones
+        // que se muestran, no que se reparten). Va aparte de `archivos` —los
+        // adjuntos descargables a propósito— porque la diferencia no es de
+        // orden: lo de `material` se sirve con enlace firmado y marca de agua
+        // por alumno, y lo de `archivos` se entrega tal cual. Mezclarlas haría
+        // que un descargable heredara una protección que no tiene, o al revés.
+        // Ver src/lib/materialTema.js.
+        && carpeta in ['archivos', 'imagenes', 'material']
         && archivoPermitido();
       // Borrar: solo editores de esa academia (limpieza de adjuntos).
       allow delete: if puedeEditar(academiaId);
