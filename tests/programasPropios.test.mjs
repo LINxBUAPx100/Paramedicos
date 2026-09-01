@@ -156,3 +156,24 @@ test('archivar sigue estando al alcance del instructor con permiso', () => {
 test('la lista de acciones reservadas no se queda vacía por accidente', () => {
   assert.ok(ACCIONES_RESERVADAS.includes('borrar-curso'))
 })
+
+test('el botón de borrar está cableado al manejador DEL CURSO, no al de nodos', async () => {
+  // Esto pasó: el bloque se insertó en `accionNodo` —el de módulos, unidades y
+  // temas— en vez de en `accionCurso`. El botón existía, se pintaba, y al
+  // pulsarlo no ocurría absolutamente nada, porque el manejador que recibe
+  // «borrar» para un curso no tenía esa rama. El build no lo detecta: las dos
+  // funciones son válidas.
+  const { readFileSync } = await import('node:fs')
+  const { fileURLToPath } = await import('node:url')
+  const path = await import('node:path')
+  const raiz = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+  const src = readFileSync(path.join(raiz, 'src', 'pages', 'EditorPage.jsx'), 'utf8')
+
+  const iNodo = src.indexOf('const accionNodo')
+  const iCurso = src.indexOf('const accionCurso')
+  const iBorrar = src.indexOf("accion === 'borrar'")
+  assert.ok(iNodo > 0 && iCurso > iNodo, 'no encuentro los dos manejadores')
+  assert.ok(iBorrar > 0, 'falta la rama de borrar')
+  assert.ok(iBorrar > iCurso,
+    'la rama «borrar» quedó en accionNodo: el botón del curso no hará nada')
+})

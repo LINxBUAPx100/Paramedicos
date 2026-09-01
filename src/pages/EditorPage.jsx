@@ -303,41 +303,6 @@ export default function EditorPage() {
       })
     } else if (accion === 'restaurar') {
       await ejecutar('restaurar-' + tipo, (e) => restaurarNodo(e, ref))
-    } else if (accion === 'borrar') {
-      // Se cuentan los temas ANTES de preguntar. «Se borrarán 290 temas» frena
-      // a cualquiera; «se borrará el curso» no frena a nadie, y es la misma
-      // operación. La cifra viaja a `borrarCursoEditor`, que se niega si para
-      // entonces ha cambiado: alguien pudo añadir temas mientras se leía el
-      // diálogo.
-      const ed = await editorLib()
-      const suyos = await ed.temasDeCursoEditor(destino, curso.id).catch(() => [])
-      setDialogo({
-        titulo: `Borrar “${curso.titulo}”`,
-        cuerpo: suyos.length
-          ? `Se borrarán el curso y sus ${suyos.length} tema(s), sin vuelta atrás. `
-            + 'El progreso y las calificaciones de los alumnos NO se borran. '
-            + 'Si solo quieres que deje de verse, usa Archivar.'
-          : 'El curso está vacío y se borrará sin vuelta atrás.',
-        confirmar: 'Borrar definitivamente',
-        tono: 'peligro',
-        accion: async () => {
-          setGuardado({ estado: 'guardando', mensaje: 'Borrando curso…' })
-          try {
-            const r = await ed.borrarCursoEditor(contexto, destino, curso, { confirmarTemas: suyos.length })
-            setCursoSelId(null)
-            setSeleccion({})
-            await recargar()
-            setGuardado({
-              estado: 'ok',
-              mensaje: r.temasBorrados
-                ? `Curso y ${r.temasBorrados} tema(s) borrados`
-                : 'Curso borrado',
-            })
-          } catch (err) {
-            setGuardado({ estado: 'error', mensaje: err?.message })
-          }
-        },
-      })
     } else if (accion === 'duplicar') {
       const r = await ejecutar('duplicar-' + tipo, (e) => duplicarNodo(e, ref))
       if (r?.ref) setSeleccion(r.ref)
@@ -422,6 +387,41 @@ export default function EditorPage() {
       })
     } else if (accion === 'restaurar') {
       await cambiarEstado('borrador', 'restaurar-curso')
+    } else if (accion === 'borrar') {
+      // Se cuentan los temas ANTES de preguntar. «Se borrarán 290 temas» frena
+      // a cualquiera; «se borrará el curso» no frena a nadie, y es la misma
+      // operación. La cifra viaja a `borrarCursoEditor`, que se niega si para
+      // entonces ha cambiado: alguien pudo añadir temas mientras se leía el
+      // diálogo.
+      const ed = await editorLib()
+      const suyos = await ed.temasDeCursoEditor(destino, curso.id).catch(() => [])
+      setDialogo({
+        titulo: `Borrar “${curso.titulo}”`,
+        cuerpo: suyos.length
+          ? `Se borrarán el curso y sus ${suyos.length} tema(s), sin vuelta atrás. `
+            + 'El progreso y las calificaciones de los alumnos NO se borran. '
+            + 'Si solo quieres que deje de verse, usa Archivar.'
+          : 'El curso está vacío y se borrará sin vuelta atrás.',
+        confirmar: 'Borrar definitivamente',
+        tono: 'peligro',
+        accion: async () => {
+          setGuardado({ estado: 'guardando', mensaje: 'Borrando curso…' })
+          try {
+            const r = await ed.borrarCursoEditor(contexto, destino, curso, { confirmarTemas: suyos.length })
+            setCursoSelId(null)
+            setSeleccion({})
+            await recargar()
+            setGuardado({
+              estado: 'ok',
+              mensaje: r.temasBorrados
+                ? `Curso y ${r.temasBorrados} tema(s) borrados`
+                : 'Curso borrado',
+            })
+          } catch (err) {
+            setGuardado({ estado: 'error', mensaje: err?.message })
+          }
+        },
+      })
     } else if (accion === 'duplicar') {
       setDialogo({
         titulo: 'Duplicar curso completo',

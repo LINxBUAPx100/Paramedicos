@@ -422,3 +422,38 @@ export async function reactivarUsuario(uid, { academiaId, rol = 'alumno' } = {})
     despues: { estado: 'activo', academiaId: destino, rol },
   }).catch(() => null)
 }
+
+/**
+ * Concede a una academia los TIPOS de programa que puede crear por su cuenta.
+ *
+ * Es la decisión del 31-08-2026 hecha operación: por omisión una academia no
+ * crea nada, y el super-admin le abre lo que crea pertinente. `tum` no entra
+ * por aquí ni forzándolo —lo filtra `tiposQuePuedeCrear` al leer y la regla de
+ * Firestore al escribir el curso—, porque el programa de R.E.S.C.A.T.E. se
+ * clona, no se regala.
+ *
+ * Escribe con merge sobre `capacidades` para no pisar el resto de excepciones
+ * que esa academia pueda tener.
+ */
+export async function concederProgramasPropios(academiaId, tipos) {
+  if (!academiaId) throw new Error('Falta la academia.')
+  const { TIPOS_CREABLES } = await import('../programasModelo.js')
+  const lista = Array.isArray(tipos) ? tipos : []
+  // Se guarda YA filtrado: aunque la lectura vuelva a filtrar, dejar basura
+  // guardada haría creer, al mirar la base de datos, que se concedió algo que
+  // nunca estuvo concedido.
+  const limpios = TIPOS_CREABLES.filter((t) => lista.includes(t))
+  await setDoc(
+    doc(db, 'academias', academiaId),
+    { capacidades: { programasPropios: limpios } },
+    { merge: true }
+  )
+  await registrarHistorial({
+    academiaId,
+    accion: 'conceder-programas',
+    coleccion: 'academias',
+    docId: academiaId,
+    despues: { programasPropios: limpios },
+  }).catch(() => null)
+  return limpios
+}

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useAcademiaAdmin } from '../../../components/admin/AcademiaShell.jsx'
 import PersonalizacionAcademia from '../../../components/PersonalizacionAcademia.jsx'
+import ConcederProgramas from '../../../components/admin/ConcederProgramas.jsx'
 
 // Academia · AJUSTES: identidad y presentación. Lo delicado —cambiar el código,
 // suspender, dar de baja— sigue en su ficha de /admin/academias: son
@@ -16,6 +17,10 @@ export default function AcademiaAjustes() {
       </header>
 
       <PersonalizacionAcademia academia={academia} onGuardado={refrescar} />
+
+      {/* Qué programas puede crear por su cuenta. Va aquí, en los ajustes de la
+          academia, porque es una propiedad suya y no una operación puntual. */}
+      <ConcederProgramas academia={academia} onGuardado={refrescar} />
 
       <p className="panel-nota">
         Cambiar el código, suspenderla o darla de baja se hace desde{' '}

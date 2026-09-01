@@ -9825,3 +9825,48 @@ body[data-portada] .pt-seccion { padding-block: clamp(var(--e-32), 5vw, var(--e-
   .prog-enlace { flex-wrap: wrap; }
   .prog-estados { flex-direction: row; align-items: center; width: 100%; }
 }
+
+/* ============================================================
+   CONCEDER PROGRAMAS (components/admin/ConcederProgramas.jsx)
+   ------------------------------------------------------------
+   Solo la ve el super-admin, en los ajustes de una academia. Cada opción
+   lleva el color de su tipo de programa, el mismo con el que aparecerá en
+   la lista de programas y en el Home del alumno: así se reconoce lo que se
+   está abriendo sin leer la etiqueta.
+   ============================================================ */
+.conceder { display: flex; flex-direction: column; gap: var(--e-12); }
+.conceder h2 { display: flex; align-items: center; gap: var(--e-8); font-size: var(--t-lg); margin: 0; }
+.conceder-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: var(--e-8);
+}
+.conceder-lista > li { --curso-color: var(--primario); }
+.conceder-opcion {
+  display: flex;
+  align-items: center;
+  gap: var(--e-10, var(--e-12));
+  padding: var(--e-12);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+  background: var(--bg-2);
+  cursor: pointer;
+  font-size: var(--t-sm);
+  transition: border-color var(--dur-rapida) var(--ease-out),
+    background var(--dur-rapida) var(--ease-out);
+}
+.conceder-opcion:hover { border-color: var(--borde-fuerte); }
+/* Marcado: el color del programa entra por el borde y el icono, no por el
+   fondo. Seis bloques de colores distintos serían imposibles de escanear. */
+.conceder-opcion.is-marcado {
+  border-color: var(--curso-color);
+  background: color-mix(in srgb, var(--curso-color) 8%, var(--bg-2));
+}
+.conceder-opcion input { flex: 0 0 auto; }
+.conceder-ico { display: grid; place-items: center; color: var(--curso-color); flex: 0 0 auto; }
+.conceder-texto { min-width: 0; }
+.conceder-pie { display: flex; align-items: center; gap: var(--e-12); flex-wrap: wrap; }
+.conceder-ok { margin: 0; color: var(--exito); font-size: var(--t-sm); font-weight: 600; }
