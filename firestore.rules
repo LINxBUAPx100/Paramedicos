@@ -177,6 +177,28 @@ service cloud.firestore {
     function academiaOtorgaPermisos(acaId) {
       return capsDe(acaId).get('permisosEditoriales', academiaPlanEfectivo(acaId) == 'pro');
     }
+    // --- PROGRAMAS PROPIOS -------------------------------------------------
+    // Qué TIPOS de programa puede crear una academia por su cuenta. Espejo de
+    // `tiposQuePuedeCrear` en src/lib/programasModelo.js.
+    //
+    // Por omisión NADA: una academia recibe lo que el super-admin le clone y no
+    // crea programas. Tener un plan caro no da derecho al contenido de otra
+    // academia, y ésa es justamente la decisión que protege el trabajo de
+    // R.E.S.C.A.T.E.
+    //
+    // `tum` NO se puede conceder por esta vía, ni escribiendo la lista a mano:
+    // es el programa insignia de R.E.S.C.A.T.E. y clonarlo es una operación del
+    // super-admin, no una capacidad que se regale. Por eso se comprueba aquí y
+    // no solo en la aplicación.
+    function tiposConcedidos(acaId) {
+      return capsDe(acaId).get('programasPropios', []);
+    }
+    function academiaCreaPrograma(acaId, tipo) {
+      return tipo is string
+        && tipo != 'tum'
+        && tipo in ['enfermeria', 'tsu', 'licenciatura', 'proteccion_civil', 'curso', 'certificacion']
+        && tipo in tiposConcedidos(acaId);
+    }
     // Permisos editoriales del solicitante (usuarios/{uid}.permisosEditor); un
     // mapa que SOLO escribe el director PRO o el super-admin.
     function permEditor() { return miDoc().get('permisosEditor', {}); }
@@ -1030,9 +1052,16 @@ service cloud.firestore {
       // Crear: super-admin, o el DIRECTOR de su academia si su plan permite
       // editar contenido (base NO edita). El doc nace con SU academiaId,
       // firmado por su autor y con versión 1 (Fase 3).
+      // Crear: el super-admin siempre. El DIRECTOR solo si su academia tiene
+      // concedido crear programas de ESE tipo — ver `academiaCreaPrograma`.
+      // Antes bastaba con que el plan permitiera editar contenido, así que
+      // cualquier academia Pro podía crearse los cursos que quisiera. Eso no es
+      // lo acordado: los programas propios se conceden uno a uno.
       allow create: if esSuper()
         || (esAdminDe(request.resource.data.academiaId)
             && academiaEditaContenido(request.resource.data.academiaId)
+            && academiaCreaPrograma(request.resource.data.academiaId,
+                                    request.resource.data.get('tipoPrograma', ''))
             && creacionContenidoValida());
       // Editar: mismo criterio + profesor con permiso sobre ESTE curso.
       // El academiaId es inmutable (nadie "adopta" cursos de otra academia)

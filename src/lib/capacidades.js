@@ -52,6 +52,11 @@ const POR_PLAN = {
     plantillas: true, // puede recibir clonaciones de plantillas oficiales
     multiCurso: true, // catálogo fijo (el oficial), varios cursos visibles
     maxCursos: null, // null = sin tope propio (usa el catálogo asignado)
+    // PROGRAMAS PROPIOS: qué tipos puede CREAR la academia por su cuenta.
+    // Vacío por omisión, y es la decisión importante: una academia nueva
+    // recibe lo que el super-admin le clone y no crea nada. El contenido de
+    // otra academia no se hereda por tener un plan caro.
+    programasPropios: [],
   },
   pro: {
     editorContenido: true,
@@ -65,6 +70,11 @@ const POR_PLAN = {
     plantillas: true,
     multiCurso: true,
     maxCursos: null,
+    // PROGRAMAS PROPIOS: qué tipos puede CREAR la academia por su cuenta.
+    // Vacío por omisión, y es la decisión importante: una academia nueva
+    // recibe lo que el super-admin le clone y no crea nada. El contenido de
+    // otra academia no se hereda por tener un plan caro.
+    programasPropios: [],
   },
   curso: {
     editorContenido: true, // limitado a su único curso (maxCursos)
@@ -78,6 +88,11 @@ const POR_PLAN = {
     plantillas: true,
     multiCurso: false,
     maxCursos: 1,
+    // PROGRAMAS PROPIOS: qué tipos puede CREAR la academia por su cuenta.
+    // Vacío por omisión, y es la decisión importante: una academia nueva
+    // recibe lo que el super-admin le clone y no crea nada. El contenido de
+    // otra academia no se hereda por tener un plan caro.
+    programasPropios: [],
   },
 }
 

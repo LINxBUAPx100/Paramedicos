@@ -666,3 +666,51 @@ export function gruposDelPrograma(grupos, programaId = null) {
     return Array.isArray(g.programasExtra) && g.programasExtra.includes(programaId)
   })
 }
+
+// ============================================================
+//  QUÉ PROGRAMAS PUEDE CREAR UNA ACADEMIA POR SU CUENTA
+// ------------------------------------------------------------
+//  Decisión del dueño del producto el 31-08-2026, y no es de interfaz:
+//
+//  «R.E.S.C.A.T.E. hizo un gran trabajo con su contenido, y a menos que yo lo
+//   crea pertinente nadie debería poder entrar a lo que es de R.E.S.C.A.T.E.»
+//
+//  De ahí salen tres reglas:
+//
+//   1. Por omisión, una academia NO crea nada. Recibe lo que el super-admin le
+//      clone. Tener un plan caro no da derecho al contenido de otra academia.
+//   2. El super-admin puede concederle crear programas propios, y elige de qué
+//      TIPOS. La concesión es una lista, no un interruptor, para poder abrir
+//      «cursos y certificaciones» sin abrir carreras completas.
+//   3. `tum` NO es concedible por esta vía. Es el programa insignia de
+//      R.E.S.C.A.T.E.; que otra academia se cree el suyo llamándolo igual
+//      confundiría dos cosas distintas, y clonar el de R.E.S.C.A.T.E. es una
+//      operación del super-admin, no una capacidad que se regale.
+// ============================================================
+
+/** Tipos que una academia puede llegar a crear. `tum` queda fuera a propósito. */
+export const TIPOS_CREABLES = TIPOS_PROGRAMA.filter((t) => t !== 'tum')
+
+/**
+ * Los tipos que ESTA academia tiene concedidos.
+ *
+ * Filtra contra `TIPOS_CREABLES` siempre: si alguien escribiera `tum` en la
+ * concesión —a mano en Firestore, o por un error de la consola— aquí se cae.
+ * La lista guardada no es la autoridad; esta función lo es.
+ */
+export function tiposQuePuedeCrear(academia) {
+  const concedidos = academia?.capacidades?.programasPropios
+  if (!Array.isArray(concedidos)) return []
+  return TIPOS_CREABLES.filter((t) => concedidos.includes(t))
+}
+
+/** ¿Puede esta academia crear un programa de este tipo? */
+export function puedeCrearPrograma(academia, tipo) {
+  if (!tipo) return false
+  return tiposQuePuedeCrear(academia).includes(tipo)
+}
+
+/** ¿Se le ha concedido algo? Decide si la consola ofrece siquiera el botón. */
+export function puedeCrearProgramas(academia) {
+  return tiposQuePuedeCrear(academia).length > 0
+}

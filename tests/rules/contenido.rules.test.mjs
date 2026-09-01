@@ -670,3 +670,103 @@ test('programa: un alumno no se auto-asigna otro plan de estudios', { skip }, as
     updateDoc(doc(como('alumA'), 'usuarios/alumA'), { grupoId: 'G-A3' })
   )
 })
+
+// ============================================================
+//  PROGRAMAS PROPIOS: lo que protege el contenido de R.E.S.C.A.T.E.
+// ------------------------------------------------------------
+//  «Nadie debería poder entrar a lo que es de R.E.S.C.A.T.E. a menos que yo lo
+//   decida.» — dueño del producto, 31-08-2026.
+//
+//  Antes bastaba con que el plan permitiera editar contenido: cualquier
+//  academia Pro podía crearse los cursos que quisiera. Ahora la creación se
+//  concede POR TIPO desde la consola del super-admin, y `tum` no se concede
+//  nunca por esa vía. Estas pruebas lo comprueban CONTRA LAS REGLAS, no contra
+//  la aplicación: la aplicación se puede saltar, las reglas no.
+// ============================================================
+
+test('sin concesión, un director Pro NO crea programas', { skip }, async () => {
+  await preparar()
+  const { doc, setDoc } = fsmod
+  const { assertFails } = rut
+  // ACA-A es plan pro y su director edita contenido, pero nadie le concedió
+  // crear programas propios. Tener plan caro no da derecho al de otra academia.
+  await assertFails(setDoc(doc(como('dirA'), 'cursos/ACA-A__nuevo'), {
+    academiaId: 'ACA-A', plantillaId: 'nuevo', titulo: 'Enfermería',
+    tipoPrograma: 'enfermeria', estado: 'borrador', version: 1,
+    creadoPor: 'dirA', estructura: [],
+  }))
+})
+
+test('con el tipo concedido, sí lo crea — y solo ése', { skip }, async () => {
+  await preparar()
+  const { doc, setDoc } = fsmod
+  const { assertSucceeds, assertFails } = rut
+
+  await env.withSecurityRulesDisabled(async (ctx) => {
+    await fsmod.setDoc(fsmod.doc(ctx.firestore(), 'academias/ACA-A'), {
+      nombre: 'A', estado: 'activo', planComercial: 'pro',
+      capacidades: { programasPropios: ['enfermeria'] },
+    })
+  })
+
+  const base = {
+    academiaId: 'ACA-A', estado: 'borrador', version: 1, creadoPor: 'dirA', estructura: [],
+  }
+  await assertSucceeds(setDoc(doc(como('dirA'), 'cursos/ACA-A__enf'), {
+    ...base, plantillaId: 'enf', titulo: 'Enfermería', tipoPrograma: 'enfermeria',
+  }))
+  // Un tipo que NO se le concedió, no.
+  await assertFails(setDoc(doc(como('dirA'), 'cursos/ACA-A__lic'), {
+    ...base, plantillaId: 'lic', titulo: 'Licenciatura', tipoPrograma: 'licenciatura',
+  }))
+})
+
+test('TUM NO SE CREA NUNCA por esta vía, ni con la concesión escrita a mano', { skip }, async () => {
+  await preparar()
+  const { doc, setDoc } = fsmod
+  const { assertFails } = rut
+
+  // El caso feo: alguien escribe 'tum' en la lista de concesiones directamente
+  // en la base de datos. Las reglas lo rechazan igual, porque el tipo está
+  // excluido en la propia regla y no solo en la lista.
+  await env.withSecurityRulesDisabled(async (ctx) => {
+    await fsmod.setDoc(fsmod.doc(ctx.firestore(), 'academias/ACA-A'), {
+      nombre: 'A', estado: 'activo', planComercial: 'pro',
+      capacidades: { programasPropios: ['tum', 'enfermeria'] },
+    })
+  })
+
+  await assertFails(setDoc(doc(como('dirA'), 'cursos/ACA-A__tum'), {
+    academiaId: 'ACA-A', plantillaId: 'tum', titulo: 'Programa Paramédico',
+    tipoPrograma: 'tum', estado: 'borrador', version: 1, creadoPor: 'dirA', estructura: [],
+  }))
+})
+
+test('un director NO crea programas en OTRA academia, tenga lo que tenga', { skip }, async () => {
+  await preparar()
+  const { doc, setDoc } = fsmod
+  const { assertFails } = rut
+  await env.withSecurityRulesDisabled(async (ctx) => {
+    await fsmod.setDoc(fsmod.doc(ctx.firestore(), 'academias/ACA-A'), {
+      nombre: 'A', estado: 'activo', planComercial: 'pro',
+      capacidades: { programasPropios: ['enfermeria'] },
+    })
+  })
+  // La concesión es de SU academia, no un pase para tocar la de al lado.
+  await assertFails(setDoc(doc(como('dirA'), 'cursos/ACA-B__enf'), {
+    academiaId: 'ACA-B', plantillaId: 'enf', titulo: 'Enfermería',
+    tipoPrograma: 'enfermeria', estado: 'borrador', version: 1,
+    creadoPor: 'dirA', estructura: [],
+  }))
+})
+
+test('el super-admin sí crea cualquier programa, incluido TUM', { skip }, async () => {
+  await preparar()
+  const { doc, setDoc } = fsmod
+  const { assertSucceeds } = rut
+  // Clonar el programa de R.E.S.C.A.T.E. sigue siendo una operación suya.
+  await assertSucceeds(setDoc(doc(como('super1'), 'cursos/ACA-B__tum'), {
+    academiaId: 'ACA-B', plantillaId: 'tum', titulo: 'Programa Paramédico',
+    tipoPrograma: 'tum', estado: 'borrador', version: 1, creadoPor: 'super1', estructura: [],
+  }))
+})
