@@ -16,7 +16,7 @@ export default function AcademiaRevision() {
         </p>
       </header>
 
-      <ColaDictamenes academiaId={academiaId} desplegada />
+      <ColaDictamenes academiaId={academiaId} cursoId={cursoId} desplegada />
     </div>
   )
 }

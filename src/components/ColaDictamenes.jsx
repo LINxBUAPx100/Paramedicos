@@ -32,7 +32,7 @@ const hoyISO = () => new Date().toISOString().slice(0, 10)
  * @param {boolean} [props.desplegada] Abre la lista sin tener que hacer clic:
  *   en una pantalla dedicada a revisar, el acordeón cerrado esconde el trabajo.
  */
-export default function ColaDictamenes({ academiaId, plataforma = false, desplegada = false }) {
+export default function ColaDictamenes({ academiaId, cursoId = null, plataforma = false, desplegada = false }) {
   const { user } = useAuth()
   const [lista, setLista] = useState(null) // null = sin cargar
   const [cargando, setCargando] = useState(false)
@@ -44,7 +44,18 @@ export default function ColaDictamenes({ academiaId, plataforma = false, despleg
     setError('')
     try {
       const api = await import('../lib/firebase/dictamenes.js')
-      setLista(plataforma ? await api.dictamenesTodos() : await api.dictamenesDeAcademia(academiaId))
+      const todos = plataforma
+        ? await api.dictamenesTodos()
+        : await api.dictamenesDeAcademia(academiaId)
+      // Filtrado POR PROGRAMA en el cliente, no en la consulta: llevar el curso
+      // al filtro de Firestore exigiría un índice compuesto nuevo, y la cola de
+      // una academia son decenas de documentos, no miles.
+      //
+      // Los dictámenes SIN cursoId se conservan a propósito: son los de antes
+      // de que la academia tuviera varios programas. Esconderlos haría
+      // desaparecer firmas docentes reales, que es lo único irreemplazable del
+      // sistema.
+      setLista(cursoId ? todos.filter((d) => !d.cursoId || d.cursoId === cursoId) : todos)
     } catch {
       setLista([])
       setError('No se pudo leer la cola de dictámenes.')

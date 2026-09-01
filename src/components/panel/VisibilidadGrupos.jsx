@@ -63,10 +63,12 @@ function SemaforoEditorial({ temaId, validaciones }) {
 
 // `academiaNombre` es opcional y solo se usa para rotular la imagen exportada:
 // si no llega, se rotula con el código de la academia, que siempre existe.
-export default function VisibilidadGrupos({ academiaId, academiaNombre = '', grupos, cabecera = null }) {
+export default function VisibilidadGrupos({ academiaId, academiaNombre = '', grupos, cursoId = null, cabecera = null }) {
   const { grupoId: miGrupoId, puedeVerCodigos, esSuperadmin } = useAuth()
-  // Temario de LA ACADEMIA gestionada: su copia si está migrada, bundle si no.
-  const { modulos: modulosTemario } = useIndiceAcademia(academiaId)
+  // Temario del PROGRAMA que se supervisa. Sin  salía siempre el
+  // primero, así que al entrar a enfermería se veían los ocho módulos de
+  // paramédicos como si fueran suyos.
+  const { modulos: modulosTemario } = useIndiceAcademia(academiaId, cursoId)
   // Firmas docentes vigentes: lo que hace que el semáforo se ponga en verde.
   const { validaciones } = useValidaciones()
 
