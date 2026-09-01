@@ -8,6 +8,7 @@ import PanelContenidoTema from '../components/editor/PanelContenidoTema.jsx'
 import DialogoConfirmar from '../components/editor/DialogoConfirmar.jsx'
 import ActivarCopia from '../components/editor/ActivarCopia.jsx'
 import VistaPrevia from '../components/editor/VistaPrevia.jsx'
+import { tiposOfrecidos, META_PROGRAMA } from '../lib/programasModelo.js'
 import { academiaMigrada } from '../lib/contenidoApi.js'
 import {
   localizar, tipoDeRef, permisoEdicion, validarTitulo, contarDescendientesActivos,
@@ -70,6 +71,9 @@ export default function EditorPage() {
     publicar: capsEditor.publicarContenido,
     crear: capsEditor.crearTemas,
     duplicarCurso: !esInstructor, // crear un curso completo es del director/super
+    // Borrar se lleva por delante los temas y no tiene vuelta atrás: nunca es
+    // del instructor, por mucho permiso fino que tenga (ver ACCIONES_RESERVADAS).
+    borrarCurso: !esInstructor,
   }), [capsEditor, esInstructor])
   const permisosContenido = useMemo(() => ({
     editar: capsEditor.editarContenido,
@@ -80,6 +84,16 @@ export default function EditorPage() {
 
   // ---------- estado principal ----------
   const [academiaObjetivo, setAcademiaObjetivo] = useState(null) // doc de la academia editada
+
+  // LOS TIPOS QUE SE PUEDEN CREAR AQUÍ. El super-admin los ve todos; una
+  // academia, solo los que se le concedieron (academias/{id}.capacidades.
+  // programasPropios). Si no se le concedió ninguno, la lista queda vacía y ni
+  // siquiera se ofrece «Nuevo curso»: una opción que el servidor va a rechazar
+  // no debe estar en pantalla. Ver lib/programasModelo.js.
+  const tiposParaCrear = useMemo(
+    () => tiposOfrecidos(academiaObjetivo || academia, esSuperadmin),
+    [academiaObjetivo, academia, esSuperadmin]
+  )
   const [cursos, setCursos] = useState(null)                     // null = cargando
   const [cursoSelId, setCursoSelId] = useState(null)
   const [seleccion, setSeleccion] = useState(null)               // {curso:true} | ref | null
@@ -289,6 +303,41 @@ export default function EditorPage() {
       })
     } else if (accion === 'restaurar') {
       await ejecutar('restaurar-' + tipo, (e) => restaurarNodo(e, ref))
+    } else if (accion === 'borrar') {
+      // Se cuentan los temas ANTES de preguntar. «Se borrarán 290 temas» frena
+      // a cualquiera; «se borrará el curso» no frena a nadie, y es la misma
+      // operación. La cifra viaja a `borrarCursoEditor`, que se niega si para
+      // entonces ha cambiado: alguien pudo añadir temas mientras se leía el
+      // diálogo.
+      const ed = await editorLib()
+      const suyos = await ed.temasDeCursoEditor(destino, curso.id).catch(() => [])
+      setDialogo({
+        titulo: `Borrar “${curso.titulo}”`,
+        cuerpo: suyos.length
+          ? `Se borrarán el curso y sus ${suyos.length} tema(s), sin vuelta atrás. `
+            + 'El progreso y las calificaciones de los alumnos NO se borran. '
+            + 'Si solo quieres que deje de verse, usa Archivar.'
+          : 'El curso está vacío y se borrará sin vuelta atrás.',
+        confirmar: 'Borrar definitivamente',
+        tono: 'peligro',
+        accion: async () => {
+          setGuardado({ estado: 'guardando', mensaje: 'Borrando curso…' })
+          try {
+            const r = await ed.borrarCursoEditor(contexto, destino, curso, { confirmarTemas: suyos.length })
+            setCursoSelId(null)
+            setSeleccion({})
+            await recargar()
+            setGuardado({
+              estado: 'ok',
+              mensaje: r.temasBorrados
+                ? `Curso y ${r.temasBorrados} tema(s) borrados`
+                : 'Curso borrado',
+            })
+          } catch (err) {
+            setGuardado({ estado: 'error', mensaje: err?.message })
+          }
+        },
+      })
     } else if (accion === 'duplicar') {
       const r = await ejecutar('duplicar-' + tipo, (e) => duplicarNodo(e, ref))
       if (r?.ref) setSeleccion(r.ref)
@@ -423,7 +472,10 @@ export default function EditorPage() {
       setGuardado({ estado: 'guardando', mensaje: 'Creando curso…' })
       try {
         const ed = await editorLib()
-        const nuevo = await ed.crearCursoEditor(contexto, destino, { titulo: c.titulo })
+        const nuevo = await ed.crearCursoEditor(contexto, destino, {
+          titulo: c.titulo,
+          tipoPrograma: c.tipoPrograma || tiposParaCrear[0] || 'tum',
+        })
         await recargar()
         setCursoSelId(nuevo.id)
         setSeleccion({ curso: true })
@@ -655,12 +707,15 @@ export default function EditorPage() {
             <section aria-label="Cursos de la academia">
               <div className="editor-lateral-cabecera">
                 <h2>Cursos</h2>
-                {destino.modo === 'academia' && (esSuperadmin || rol === 'admin_escuela') && (
+                {/* Sin tipos concedidos NO se ofrece crear: el servidor lo
+                    rechazaría y el director no entendería por qué. */}
+                {destino.modo === 'academia' && (esSuperadmin || rol === 'admin_escuela')
+                  && tiposParaCrear.length > 0 && (
                   <button
                     type="button"
                     className="btn btn--pildora"
                     disabled={ocupado}
-                    onClick={() => setCrear({ tipo: 'curso', titulo: '' })}
+                    onClick={() => setCrear({ tipo: 'curso', titulo: '', tipoPrograma: tiposParaCrear[0] || 'tum' })}
                   >
                     <Icon name="mas" size={14} /> Nuevo curso
                   </button>
@@ -842,6 +897,25 @@ export default function EditorPage() {
                 />
                 {crear.error && <p className="editor-error" id="crear-error">{crear.error}</p>}
               </div>
+
+              {/* TIPO DE PROGRAMA. Solo al crear un CURSO, y solo si hay más de
+                  una opción: con una sola, elegir es un trámite vacío. Las
+                  opciones son las CONCEDIDAS a esta academia, no el catálogo
+                  entero — ver `tiposParaCrear`. */}
+              {crear.tipo === 'curso' && tiposParaCrear.length > 1 && (
+                <div className="editor-campo">
+                  <label htmlFor="crear-tipo">Tipo de programa</label>
+                  <select
+                    id="crear-tipo"
+                    value={crear.tipoPrograma || tiposParaCrear[0]}
+                    onChange={(e) => setCrear({ ...crear, tipoPrograma: e.target.value })}
+                  >
+                    {tiposParaCrear.map((t) => (
+                      <option key={t} value={t}>{META_PROGRAMA[t]?.etiqueta || t}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
               <div className="dialogo-acciones">
                 <button type="button" className="btn btn--pildora" onClick={() => setCrear(null)}>Cancelar</button>
                 <button type="submit" className="btn btn--pildora btn--carbon">Crear</button>

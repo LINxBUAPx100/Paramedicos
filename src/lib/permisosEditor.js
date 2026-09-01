@@ -178,7 +178,24 @@ export function permisoDeAccion(accion) {
 // ¿Puede este usuario ejecutar esta acción del editor? Presupone que
 // permisoEdicion ya autorizó el acceso general (rol/academia/plan/curso).
 // Para el instructor, exige además el permiso fino de la acción.
+// Acciones que NO se delegan por permiso fino: son del director o del
+// super-admin y punto. Borrar un curso se lleva por delante sus temas y no
+// tiene vuelta atrás —para lo demás está «Archivar», que sí la tiene—, así que
+// no puede depender de una casilla marcada en el perfil de un profesor.
+//
+// `permisoDeAccion` devolvía null para «borrar-curso», y null significa «no
+// exige permiso fino»: un instructor con acceso al editor podía borrar un curso
+// entero. Se cierra aquí y no allí porque no es cuestión de qué permiso hace
+// falta, sino de que no hay permiso que valga.
+export const ACCIONES_RESERVADAS = ['borrar-curso']
+
 export function permisoAccionEditor({ esSuperadmin, rol, perfil, accion } = {}) {
+  if (ACCIONES_RESERVADAS.includes(String(accion || '')) && !esSuperadmin && rol !== 'admin_escuela') {
+    return {
+      permitido: false,
+      motivo: 'Borrar un curso lo hace el director de la academia o el administrador de la plataforma. Tú puedes archivarlo.',
+    }
+  }
   if (esSuperadmin || rol !== 'instructor') return { permitido: true, motivo: null }
   const permiso = permisoDeAccion(accion)
   if (!permiso) return { permitido: true, motivo: null }

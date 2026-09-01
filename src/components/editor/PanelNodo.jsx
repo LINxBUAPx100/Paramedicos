@@ -17,7 +17,7 @@ function fecha(ts) {
 //    + botón Guardar; el padre recibe onDirty para proteger cambios sin guardar.
 //  - Validación inline vinculada por aria-describedby.
 //  - Acciones según tipo y estado; las destructivas las confirma el padre.
-const PERMISOS_TODOS = { editar: true, publicar: true, crear: true, duplicarCurso: true }
+const PERMISOS_TODOS = { editar: true, publicar: true, crear: true, duplicarCurso: true, borrarCurso: true }
 
 export default function PanelNodo({
   tipo, nodo, meta, posicion, padre, temaDoc, cargandoTema,
@@ -30,6 +30,9 @@ export default function PanelNodo({
   // real son las reglas + la capa de datos.
   const puede = { ...PERMISOS_TODOS, ...permisos }
   const puedeDuplicar = tipo === 'curso' ? puede.duplicarCurso : puede.crear
+  // Borrar un curso NO es un permiso fino que se delegue: se lleva por delante
+  // sus temas y no tiene vuelta atrás. Lo hace el director o el super-admin.
+  const puedeBorrar = puede.borrarCurso
   const uid = useId()
   const [borrador, setBorrador] = useState({})
   const [destinoMover, setDestinoMover] = useState('')
@@ -170,6 +173,20 @@ export default function PanelNodo({
             {puedeDuplicar && (
               <button type="button" className="btn btn--pildora" disabled={ocupado} onClick={() => onAccion('duplicar')}>
                 <Icon name="copiar" size={16} /> Duplicar
+              </button>
+            )}
+            {/* BORRAR va aparte y en rojo: es lo único de esta barra que no
+                tiene vuelta atrás. Para lo demás está «Archivar», que sí la
+                tiene, y por eso sigue siendo lo primero que se ofrece. Solo
+                para cursos: un módulo o un tema se quitan desde su árbol. */}
+            {puedeBorrar && tipo === 'curso' && (
+              <button
+                type="button"
+                className="btn btn--pildora btn--peligro"
+                disabled={ocupado}
+                onClick={() => onAccion('borrar')}
+              >
+                <Icon name="basura" size={16} /> Borrar curso
               </button>
             )}
           </div>

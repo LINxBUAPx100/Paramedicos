@@ -714,3 +714,21 @@ export function puedeCrearPrograma(academia, tipo) {
 export function puedeCrearProgramas(academia) {
   return tiposQuePuedeCrear(academia).length > 0
 }
+
+/**
+ * Los tipos que ESTA persona puede ofrecer al crear un curso en ESTA academia.
+ *
+ * El super-admin ve todos, `tum` incluido: es quien decide qué se abre y quien
+ * clona el programa de R.E.S.C.A.T.E. cuando lo cree pertinente.
+ *
+ * Un director ve SOLO lo que se le concedió. No es cosmética: si se ofrecieran
+ * los seis botones a todo el mundo, un director pulsaría uno y recibiría un
+ * error del servidor —las reglas ya lo rechazan— sin entender por qué. Una
+ * opción que no se puede usar no debe estar en pantalla.
+ *
+ * Lista vacía significa que ni siquiera hay que ofrecer «Nuevo curso».
+ */
+export function tiposOfrecidos(academia, esSuperadmin = false) {
+  if (esSuperadmin) return [...TIPOS_PROGRAMA]
+  return tiposQuePuedeCrear(academia)
+}

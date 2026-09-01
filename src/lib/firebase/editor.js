@@ -17,7 +17,7 @@
 // ============================================================
 import { auth, db } from './init.js'
 import {
-  collection, doc, getDoc, getDocs, setDoc, query, where,
+  collection, doc, getDoc, getDocs, setDoc, deleteDoc, query, where,
   runTransaction, writeBatch, serverTimestamp,
 } from 'firebase/firestore'
 import {
@@ -401,7 +401,7 @@ export async function guardarContenidoTema(contexto, destino, cursoId, temaId, v
 
 // ---------- operaciones de curso ----------
 
-export async function crearCursoEditor(contexto, destino, { titulo, descripcion = '' }) {
+export async function crearCursoEditor(contexto, destino, { titulo, descripcion = '', tipoPrograma = 'tum' }) {
   exigirPermiso(contexto, destino)
   if (destino.modo === 'plantilla') {
     throw new Error('Las plantillas se crean desde el flujo de migración, no desde el editor.')
@@ -411,6 +411,11 @@ export async function crearCursoEditor(contexto, destino, { titulo, descripcion 
     academiaId: destino.academiaId,
     titulo,
     descripcion,
+    // EL TIPO SE PASA. No se pasaba, así que TODO curso creado desde el editor
+    // nacía como 'tum' —el default de nuevoCurso— por mucho que se llamara
+    // «Enfermería». El tipo decide su color, su etiqueta y, desde el 31-08-2026,
+    // si la academia tiene siquiera permiso para crearlo.
+    tipoPrograma,
     cursosExistentes: existentes,
     uid: auth.currentUser?.uid || null,
     maxCursos: contexto?.esSuperadmin ? null : contexto?.capacidades?.maxCursos ?? null,
@@ -551,4 +556,57 @@ export async function duplicarCursoEditor(contexto, destino, curso) {
     antes: { origen: curso.id }, despues: { titulo: datosCurso.titulo, temas: temas.length },
   })
   return { id: docId, ...datosCurso }
+}
+
+// ============================================================
+//  BORRAR un curso — irreversible, y por eso con dos frenos
+// ------------------------------------------------------------
+//  Ya existía «Archivar», que es el borrado blando: el curso desaparece para
+//  los alumnos y se puede restaurar. Esto es lo otro: para el curso creado por
+//  error, el duplicado que no debía existir, la prueba que ensucia la lista.
+//
+//  DOS FRENOS, porque un curso puede llevar 290 temas dentro:
+//
+//   1. Los TEMAS se borran primero, en lotes. Borrar solo el curso dejaría 290
+//      documentos huérfanos que nadie volvería a ver ni a limpiar, contando
+//      espacio y saliendo en cualquier consulta por academia.
+//   2. Quien llama tiene que confirmar cuántos temas se lleva por delante
+//      (`confirmarTemas`). No es una cortesía: es lo que impide que un clic mal
+//      dado borre un temario entero creyendo que borraba un borrador vacío.
+//
+//  Lo que NO borra: el progreso, los intentos y las calificaciones de los
+//  alumnos. Viven en sus propias colecciones y son suyos, no del curso.
+// ============================================================
+export async function borrarCursoEditor(contexto, destino, curso, { confirmarTemas = null } = {}) {
+  exigirPermiso(contexto, destino, curso?.id, 'borrar-curso')
+  if (destino.modo === 'plantilla') {
+    throw new Error('Las plantillas globales se archivan, no se borran desde el editor.')
+  }
+  if (!curso?.id) throw new Error('Falta el curso que hay que borrar.')
+
+  const temas = await temasDeCursoEditor(destino, curso.id)
+  if (confirmarTemas !== null && confirmarTemas !== temas.length) {
+    throw new Error(
+      `El curso tiene ${temas.length} tema(s), no ${confirmarTemas}. ` +
+      'Vuelve a abrir el diálogo para ver la cifra correcta.'
+    )
+  }
+
+  // Temas primero. Si se interrumpe a medias, el curso sigue existiendo y
+  // reintentar termina el trabajo; al revés quedarían huérfanos irrecuperables.
+  for (const grupo of lotes(temas, 20)) {
+    const batch = writeBatch(db)
+    for (const t of grupo) batch.delete(doc(db, 'temas', t.docId || t.id))
+    await batch.commit()
+  }
+  await deleteDoc(doc(db, 'cursos', curso.id))
+
+  await historialSeguro({
+    academiaId: destino.academiaId,
+    accion: 'borrar-curso',
+    coleccion: 'cursos',
+    docId: curso.id,
+    antes: { titulo: curso.titulo, tipoPrograma: curso.tipoPrograma, temas: temas.length },
+  })
+  return { temasBorrados: temas.length }
 }

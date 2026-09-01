@@ -92,3 +92,67 @@ test('concedido todo, se puede todo MENOS tum', () => {
   assert.equal(puedeCrearPrograma(aca, 'tum'), false)
   assert.equal(puedeCrearPrograma(aca, 'licenciatura'), true)
 })
+
+// ---------- qué botones se ven ----------
+import { tiposOfrecidos } from '../src/lib/programasModelo.js'
+
+test('el super-admin ve TODOS los tipos, incluido TUM', () => {
+  // Es quien decide qué se abre y quien clona el programa de R.E.S.C.A.T.E.
+  const todos = tiposOfrecidos({}, true)
+  assert.equal(todos.length, TIPOS_PROGRAMA.length)
+  assert.ok(todos.includes('tum'))
+})
+
+test('un director ve SOLO lo concedido, y nada si no hay concesión', () => {
+  // Ofrecer los seis botones a todo el mundo haría que un director pulsara uno
+  // y recibiera un error del servidor sin entender por qué. Una opción que no
+  // se puede usar no debe estar en pantalla.
+  const aca = { capacidades: { programasPropios: ['enfermeria', 'curso'] } }
+  assert.deepEqual(tiposOfrecidos(aca, false), ['enfermeria', 'curso'])
+  assert.deepEqual(tiposOfrecidos({}, false), [], 'sin concesión no se ofrece «Nuevo curso»')
+})
+
+test('un director nunca ve TUM, aunque se lo hayan escrito en la concesión', () => {
+  const aca = { capacidades: { programasPropios: ['tum'] } }
+  assert.deepEqual(tiposOfrecidos(aca, false), [])
+})
+
+// ---------- borrar un curso: quién puede y quién no ----------
+import { permisoAccionEditor, ACCIONES_RESERVADAS } from '../src/lib/permisosEditor.js'
+
+test('un INSTRUCTOR nunca borra un curso, tenga los permisos que tenga', () => {
+  // `permisoDeAccion` devolvía null para «borrar-curso», y null significa «no
+  // exige permiso fino»: un instructor con acceso al editor podía borrar un
+  // curso entero con sus temas. Se cierra por acción reservada, no por permiso,
+  // porque no hay permiso que deba habilitarlo.
+  const conTodo = {
+    rol: 'instructor',
+    perfil: { permisosEditor: {
+      editarContenido: true, crearTemas: true, publicarContenido: true,
+      editarActividades: true, editarExamenes: true, administrarRecursos: true,
+    } },
+    accion: 'borrar-curso',
+  }
+  const r = permisoAccionEditor(conTodo)
+  assert.equal(r.permitido, false)
+  assert.match(r.motivo, /archivarlo/, 'debe decirle qué SÍ puede hacer')
+})
+
+test('el director y el super-admin sí borran', () => {
+  assert.equal(permisoAccionEditor({ rol: 'admin_escuela', accion: 'borrar-curso' }).permitido, true)
+  assert.equal(permisoAccionEditor({ esSuperadmin: true, accion: 'borrar-curso' }).permitido, true)
+})
+
+test('archivar sigue estando al alcance del instructor con permiso', () => {
+  // Es la alternativa que se le ofrece, así que tiene que seguir funcionando.
+  const r = permisoAccionEditor({
+    rol: 'instructor',
+    perfil: { permisosEditor: { publicarContenido: true } },
+    accion: 'archivar-curso',
+  })
+  assert.equal(r.permitido, true)
+})
+
+test('la lista de acciones reservadas no se queda vacía por accidente', () => {
+  assert.ok(ACCIONES_RESERVADAS.includes('borrar-curso'))
+})
