@@ -43,22 +43,46 @@ test('las rutas de academia se construyen en un solo sitio', () => {
 
 test('el riel es el del contexto en el que estás', () => {
   assert.deepEqual(seccionesDeAdmin(null), SECCIONES_PLATAFORMA)
-  const deAcademia = seccionesDeAdmin('RES-2026')
-  assert.equal(deAcademia.length, SECCIONES_ACADEMIA.length)
-  for (const s of deAcademia) {
+
+  // CAMBIO DEL 31-08-2026: el riel de una academia depende ahora de si hay un
+  // PROGRAMA elegido. Antes salían las siete secciones siempre, y eso llevaba a
+  // «Resumen» y «Contenido» sin saber de qué plan de estudios: enseñaban el
+  // primero —paramédico— disfrazado de pantalla de la academia entera.
+  const soloAcademia = seccionesDeAdmin('RES-2026')
+  assert.deepEqual(soloAcademia.map((s) => s.id), ['alumnos', 'invitaciones', 'ajustes'])
+  for (const s of soloAcademia) {
+    assert.doesNotMatch(s.ruta, /\/c\//, `${s.id} es de la academia, no de un programa`)
+  }
+
+  const conPrograma = seccionesDeAdmin('RES-2026', 'RES-2026__enfermeria')
+  assert.equal(conPrograma.length, SECCIONES_ACADEMIA.length)
+  for (const s of conPrograma) {
     assert.match(s.ruta, /^\/admin\/aca\/RES-2026/, `${s.id} → ${s.ruta}`)
   }
-  assert.equal(deAcademia.find((s) => s.id === 'resumen').ruta, '/admin/aca/RES-2026')
-  assert.equal(deAcademia.find((s) => s.id === 'alumnos').ruta, '/admin/aca/RES-2026/alumnos')
+  assert.equal(
+    conPrograma.find((s) => s.id === 'resumen').ruta,
+    '/admin/aca/RES-2026/c/RES-2026__enfermeria'
+  )
+  assert.equal(conPrograma.find((s) => s.id === 'alumnos').ruta, '/admin/aca/RES-2026/alumnos')
 })
 
 test('el contexto se lee de la URL, que es la fuente de verdad', () => {
-  assert.deepEqual(contextoDeRuta('/admin'), { academiaId: null, seccion: 'resumen' })
-  assert.deepEqual(contextoDeRuta('/admin/usuarios'), { academiaId: null, seccion: 'usuarios' })
-  assert.deepEqual(contextoDeRuta('/admin/aca/RES-2026'), { academiaId: 'RES-2026', seccion: 'resumen' })
-  assert.deepEqual(contextoDeRuta('/admin/aca/RES-2026/grupos'), { academiaId: 'RES-2026', seccion: 'grupos' })
+  assert.deepEqual(contextoDeRuta('/admin'), { academiaId: null, cursoId: null, seccion: 'resumen' })
+  assert.deepEqual(contextoDeRuta('/admin/usuarios'), { academiaId: null, cursoId: null, seccion: 'usuarios' })
+  // La raíz de una academia ya NO es su resumen: es la lista de sus programas.
+  assert.deepEqual(
+    contextoDeRuta('/admin/aca/RES-2026'),
+    { academiaId: 'RES-2026', cursoId: null, seccion: 'programas' }
+  )
+  assert.deepEqual(
+    contextoDeRuta('/admin/aca/RES-2026/c/RES-2026__enfermeria/grupos'),
+    { academiaId: 'RES-2026', cursoId: 'RES-2026__enfermeria', seccion: 'grupos' }
+  )
   // Sección desconocida dentro de una academia: se sabe la academia, no la sección.
-  assert.deepEqual(contextoDeRuta('/admin/aca/RES-2026/inventada'), { academiaId: 'RES-2026', seccion: null })
+  assert.deepEqual(
+    contextoDeRuta('/admin/aca/RES-2026/inventada'),
+    { academiaId: 'RES-2026', cursoId: null, seccion: null }
+  )
   // Y un código con escape se devuelve descodificado, listo para usar.
   assert.equal(contextoDeRuta('/admin/aca/A%20B/grupos').academiaId, 'A B')
   assert.equal(contextoDeRuta('').academiaId, null)
@@ -66,15 +90,21 @@ test('el contexto se lee de la URL, que es la fuente de verdad', () => {
 
 test('cambiar de academia CONSERVA la sección en la que estabas', () => {
   assert.equal(
-    rutaAlCambiarAcademia('/admin/aca/RES-2026/grupos', 'OTRA-2027'),
-    '/admin/aca/OTRA-2027/grupos',
-    'si mirabas grupos, quieres los grupos de la otra, no su resumen',
+    rutaAlCambiarAcademia('/admin/aca/RES-2026/alumnos', 'OTRA-2027'),
+    '/admin/aca/OTRA-2027/alumnos',
+    'si mirabas los alumnos, quieres los de la otra, no su portada',
   )
   assert.equal(rutaAlCambiarAcademia('/admin/aca/RES-2026', 'OTRA-2027'), '/admin/aca/OTRA-2027')
-  // Desde una sección que solo existe en la plataforma, se cae al resumen.
+  // Desde una sección de PROGRAMA se aterriza en la lista de programas: el id de
+  // curso lleva el academiaId por delante, así que en el destino no existe.
+  assert.equal(
+    rutaAlCambiarAcademia('/admin/aca/RES-2026/c/RES-2026__enfermeria/grupos', 'OTRA-2027'),
+    '/admin/aca/OTRA-2027'
+  )
+  // Desde una sección que solo existe en la plataforma, se cae a la portada.
   assert.equal(rutaAlCambiarAcademia('/admin/facturacion', 'OTRA-2027'), '/admin/aca/OTRA-2027')
   // Y volver a «toda la plataforma» es volver al resumen general.
-  assert.equal(rutaAlCambiarAcademia('/admin/aca/RES-2026/grupos', null), RAIZ_ADMIN)
+  assert.equal(rutaAlCambiarAcademia('/admin/aca/RES-2026/alumnos', null), RAIZ_ADMIN)
 })
 
 test('el resumen de una academia cuenta solo lo suyo y no lo eliminado', () => {

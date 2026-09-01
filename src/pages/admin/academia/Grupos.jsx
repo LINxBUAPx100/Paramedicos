@@ -1,10 +1,11 @@
 import { useAcademiaAdmin } from '../../../components/admin/AcademiaShell.jsx'
 import { useDatosAcademia } from '../../../components/panel/datosAcademia.js'
 import GruposAcademia from '../../../components/panel/GruposAcademia.jsx'
+import { gruposDelPrograma } from '../../../lib/programasModelo.js'
 
 // Academia · GRUPOS: crearlos, asignarles su plan de estudios y su generación.
 export default function AcademiaGrupos() {
-  const { academiaId, academiaNombre, miUid } = useAcademiaAdmin()
+  const { academiaId, cursoId, academiaNombre, miUid } = useAcademiaAdmin()
   const datos = useDatosAcademia(academiaId)
 
   if (datos.cargando && !datos.hayDatos) {
@@ -16,20 +17,26 @@ export default function AcademiaGrupos() {
   }
   if (datos.error) return <p className="cuenta-error" role="alert">{datos.error}</p>
 
+  // SOLO LOS GRUPOS DE ESTE PROGRAMA. Un grupo cursa UN plan de estudios
+  // (), así que los de enfermería no pintan nada en la consola de
+  // paramédicos: mezclarlos es exactamente lo que hacía que el director no
+  // pudiera supervisar un programa sin ver los otros encima.
+  const grupos = gruposDelPrograma(datos.grupos, cursoId)
+
   return (
     <div className="cs-seccion">
       <header className="cs-cabecera">
         <h1>Grupos</h1>
         <p>
-          Cada grupo lleva su plan de estudios y su generación: eso decide qué contenido ven sus
-          alumnos y cómo se agrupan en las listas y en las invitaciones.
+          Los grupos de este programa. Cada uno lleva su generación, y su plan de estudios decide
+          qué contenido ven sus alumnos y cómo se agrupan en las listas y en las invitaciones.
         </p>
       </header>
 
       <GruposAcademia
         academiaId={academiaId}
         academiaNombre={academiaNombre}
-        grupos={datos.grupos}
+        grupos={grupos}
         miembros={datos.miembros}
         miUid={miUid}
         onCambio={datos.recargar}

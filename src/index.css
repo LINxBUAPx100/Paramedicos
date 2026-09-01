@@ -9732,3 +9732,96 @@ body[data-portada] .pt-seccion { padding-block: clamp(var(--e-32), 5vw, var(--e-
   .pf-banda { grid-template-columns: 1fr; }
   .pf-banda-der p { text-align: left; }
 }
+
+/* ============================================================
+   PROGRAMAS de una academia (pages/admin/academia/Programas.jsx)
+   ------------------------------------------------------------
+   La pantalla anterior al resumen. Cada fila es un programa —paramédico,
+   enfermería, un curso corto— y entra a SU consola: sus grupos, sus
+   calificaciones, su temario. El color lo pone el tipo de programa a través de
+   --curso-color, igual que en las tarjetas del Home, para que el mismo programa
+   se reconozca esté donde esté.
+   ============================================================ */
+.prog-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-8);
+}
+.prog-item { --curso-color: var(--primario); }
+.prog-enlace {
+  display: flex;
+  align-items: center;
+  gap: var(--e-16);
+  padding: var(--e-16);
+  border: 1px solid var(--borde);
+  /* El color entra por el filo, no por el fondo: una lista de bloques de
+     colores es difícil de recorrer, y aquí lo que se escanea son los nombres. */
+  border-left: 4px solid var(--curso-color);
+  border-radius: var(--radio-sm);
+  background: var(--bg-2);
+  color: var(--texto);
+  text-decoration: none;
+  transition: border-color var(--dur-rapida) var(--ease-out),
+    box-shadow var(--dur-rapida) var(--ease-out),
+    transform var(--dur-rapida) var(--ease-out);
+}
+.prog-enlace:hover {
+  text-decoration: none;
+  border-color: color-mix(in srgb, var(--curso-color) 45%, var(--borde));
+  border-left-color: var(--curso-color);
+  box-shadow: var(--sombra-md);
+  transform: translateY(-1px);
+}
+.prog-enlace:focus-visible {
+  outline: 2px solid var(--curso-color);
+  outline-offset: 2px;
+}
+
+.prog-ico {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  color: var(--curso-color);
+  background: color-mix(in srgb, var(--curso-color) 12%, transparent);
+}
+
+.prog-texto { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.prog-titulo { font-size: var(--t-md); font-weight: 700; }
+.prog-tipo {
+  font-family: var(--fuente-sub);
+  font-size: var(--t-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--curso-color);
+}
+.prog-cifras { font-size: var(--t-sm); color: var(--texto-2); font-variant-numeric: tabular-nums; }
+
+.prog-estados { display: flex; flex-direction: column; align-items: flex-end; gap: var(--e-4); flex: 0 0 auto; }
+.prog-estado {
+  padding: 2px var(--e-8);
+  border-radius: 999px;
+  font-family: var(--fuente-sub);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  color: var(--texto-3);
+  background: var(--bg-3);
+}
+.prog-estado.activo { color: var(--exito); background: color-mix(in srgb, var(--exito) 14%, transparent); }
+/* Copia incompleta: un curso a medio clonar no se puede supervisar como si
+   estuviera entero, porque sus cifras estarían truncadas sin avisar. */
+.prog-estado.alerta { color: var(--alerta-texto, var(--urgencia)); background: color-mix(in srgb, var(--urgencia) 12%, transparent); }
+.prog-flecha { flex: 0 0 auto; color: var(--texto-3); }
+.prog-enlace:hover .prog-flecha { color: var(--curso-color); }
+
+@media (max-width: 600px) {
+  .prog-enlace { flex-wrap: wrap; }
+  .prog-estados { flex-direction: row; align-items: center; width: 100%; }
+}

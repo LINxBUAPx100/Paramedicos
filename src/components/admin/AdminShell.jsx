@@ -33,8 +33,10 @@ export default function AdminShell() {
   const { cargando, esSuperadmin, user } = useAuth()
   const { pathname } = useLocation()
   // Contexto actual: null = toda la plataforma; un id = esa academia.
-  const { academiaId: academiaActiva } = contextoDeRuta(pathname)
-  const secciones = seccionesDeAdmin(academiaActiva)
+  const { academiaId: academiaActiva, cursoId: cursoActivo } = contextoDeRuta(pathname)
+  // El riel cambia con el PROGRAMA, no solo con la academia: sin curso elegido
+  // solo se ofrece lo que es de la academia entera (ver seccionesDeAdmin).
+  const secciones = seccionesDeAdmin(academiaActiva, cursoActivo)
   const [datos, setDatos] = useState(null) // { academias, usuarios, intentos }
   const [cargandoDatos, setCargandoDatos] = useState(true)
   const [error, setError] = useState('')

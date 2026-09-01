@@ -4,7 +4,7 @@ import ColaDictamenes from '../../../components/ColaDictamenes.jsx'
 // Academia · REVISIÓN DOCENTE: lo que sus profesores han firmado sobre el
 // contenido. La cola global de la plataforma está en /admin/contenido.
 export default function AcademiaRevision() {
-  const { academiaId } = useAcademiaAdmin()
+  const { academiaId, cursoId } = useAcademiaAdmin()
 
   return (
     <div className="cs-seccion">

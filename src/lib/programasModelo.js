@@ -645,3 +645,24 @@ export function motivoSinPrograma({
   }
   return null
 }
+
+/**
+ * Los grupos que cursan UN programa.
+ *
+ * Un grupo lleva su plan de estudios en `programaId`, y puede cursar alguno más
+ * en `programasExtra` (una carrera y una especialización a la vez). Los dos
+ * cuentan: si un grupo estudia enfermería como programa extra, sus alumnos ven
+ * ese contenido, así que tiene que aparecer al supervisar enfermería.
+ *
+ * Sin programa se devuelven todos: es la vista de la academia entera, no un
+ * descuido. Ésa es la diferencia entre «no he elegido» y «he elegido y no hay».
+ */
+export function gruposDelPrograma(grupos, programaId = null) {
+  const lista = grupos || []
+  if (!programaId) return lista
+  return lista.filter((g) => {
+    if (!g) return false
+    if (g.programaId === programaId) return true
+    return Array.isArray(g.programasExtra) && g.programasExtra.includes(programaId)
+  })
+}

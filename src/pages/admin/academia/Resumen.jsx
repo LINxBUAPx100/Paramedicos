@@ -10,8 +10,11 @@ import { rutaDeAcademia } from '../../../lib/adminModelo.js'
 // Academia · RESUMEN: cómo va y qué está esperando respuesta. Lo que se
 // administra tiene su propia sección en el riel, no más scroll infinito.
 export default function AcademiaResumen() {
-  const { academiaId, academiaNombre, miUid } = useAcademiaAdmin()
-  const { modulos } = useIndiceAcademia(academiaId)
+  const { academiaId, cursoId, academiaNombre, miUid } = useAcademiaAdmin()
+  // Módulos DEL PROGRAMA que se supervisa. Antes salía siempre el primero —el
+  // de paramédico— así que el «dominio por módulo» de enfermería enseñaba las
+  // barras de otra carrera.
+  const { modulos } = useIndiceAcademia(academiaId, cursoId)
   const datos = useDatosAcademia(academiaId)
 
   if (datos.cargando && !datos.hayDatos) {

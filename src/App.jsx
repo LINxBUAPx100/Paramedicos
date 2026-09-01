@@ -63,6 +63,7 @@ const AcademiaAdminPage = lazy(() => import('./pages/AcademiaAdminPage.jsx'))
 // Armazón y secciones de UNA academia dentro de la consola. Antes todo esto era
 // una sola página con once bloques apilados.
 const AcademiaShell = lazy(() => import('./components/admin/AcademiaShell.jsx'))
+const AcaProgramas = lazy(() => import('./pages/admin/academia/Programas.jsx'))
 const AcaResumen = lazy(() => import('./pages/admin/academia/Resumen.jsx'))
 const AcaAlumnos = lazy(() => import('./pages/admin/academia/Alumnos.jsx'))
 const AcaGrupos = lazy(() => import('./pages/admin/academia/Grupos.jsx'))
@@ -127,7 +128,11 @@ export default function App() {
   const location = useLocation()
   const { debeAceptarTerminos } = useAuth()
   const exentaDeTerminos = RUTAS_SIN_TERMINOS.some(
-    (r) => location.pathname === r || location.pathname.startsWith()
+    // El argumento faltaba: `startsWith()` sin nada compara contra la cadena
+    // «undefined» y siempre da falso, así que la exención valía solo para la
+    // ruta EXACTA. Una subruta de `/cuenta` quedaba atrapada tras la puerta de
+    // los términos, que es justo de donde tiene que poder salirse.
+    (r) => location.pathname === r || location.pathname.startsWith(`${r}/`)
   )
   return (
     <Layout>
@@ -222,14 +227,25 @@ export default function App() {
               {/* UNA ACADEMIA, por secciones. El contexto vive en la URL para que
                   el enlace se pueda compartir, el botón Atrás deshaga el cambio de
                   academia y una recarga no te devuelva a la plataforma. */}
+              {/* EL CURSO ES UN NIVEL DE LA RUTA (`/c/<cursoId>`), no un filtro.
+                  Una academia imparte varios programas y cada uno tiene sus
+                  alumnos, grupos, calificaciones y temario: es una academia
+                  dentro de la academia. Al entrar sin programa se aterriza en
+                  la lista, no en el de paramédicos. Las tres secciones que son
+                  de la academia entera —personas, invitaciones y ajustes— viven
+                  fuera del nivel del curso a propósito: un alumno puede cursar
+                  dos programas y su ficha no puede vivir dentro de uno. */}
               <Route path="aca/:academiaId" element={<AcademiaShell />}>
-                <Route index element={<AcaResumen />} />
+                <Route index element={<AcaProgramas />} />
                 <Route path="alumnos" element={<AcaAlumnos />} />
-                <Route path="grupos" element={<AcaGrupos />} />
                 <Route path="invitaciones" element={<AcaInvitaciones />} />
-                <Route path="contenido" element={<AcaContenido />} />
-                <Route path="revision" element={<AcaRevision />} />
                 <Route path="ajustes" element={<AcaAjustes />} />
+                <Route path="c/:cursoId">
+                  <Route index element={<AcaResumen />} />
+                  <Route path="grupos" element={<AcaGrupos />} />
+                  <Route path="contenido" element={<AcaContenido />} />
+                  <Route path="revision" element={<AcaRevision />} />
+                </Route>
               </Route>
               {/* La ficha de plataforma de una academia (código, plan, suspender,
                   dar de baja) sigue en su sitio: son operaciones globales. */}

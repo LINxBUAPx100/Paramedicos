@@ -24,7 +24,10 @@ export function useAcademiaAdmin() {
 }
 
 export default function AcademiaShell() {
-  const { academiaId } = useParams()
+  // El PROGRAMA que se supervisa viene de la RUTA, no de un estado: así el
+  // enlace se puede compartir, sobrevive a la recarga, y las pantallas de un
+  // programa no pueden acabar enseñando datos de otro.
+  const { academiaId, cursoId = null } = useParams()
   const { academias, usuarios, intentos, refrescar, miUid, cargandoDatos } = useAdmin()
   const [academia, setAcademia] = useState(undefined) // undefined = buscando; null = no existe
 
@@ -55,6 +58,10 @@ export default function AcademiaShell() {
   const contexto = useMemo(
     () => ({
       academiaId,
+      // El PROGRAMA que se supervisa, o null en la pantalla de programas. Las
+      // secciones que son de un plan de estudios —resumen, grupos, contenido,
+      // revisión— lo usan para no enseñar datos de otro.
+      cursoId,
       academia,
       academiaNombre: academia?.nombre || academiaId,
       // Personas de ESTA academia, incluidas las dadas de baja: cada sección
@@ -64,7 +71,7 @@ export default function AcademiaShell() {
       miUid,
       refrescar,
     }),
-    [academiaId, academia, suyos, intentos, miUid, refrescar]
+    [academiaId, cursoId, academia, suyos, intentos, miUid, refrescar]
   )
 
   if (academia === undefined) {

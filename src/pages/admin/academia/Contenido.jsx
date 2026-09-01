@@ -5,7 +5,7 @@ import VisibilidadGrupos from '../../../components/panel/VisibilidadGrupos.jsx'
 
 // Academia · CONTENIDO: qué ve cada grupo, y desde dónde se edita su copia.
 export default function AcademiaContenido() {
-  const { academiaId, academiaNombre } = useAcademiaAdmin()
+  const { academiaId, cursoId, academiaNombre } = useAcademiaAdmin()
   const datos = useDatosAcademia(academiaId)
 
   if (datos.cargando && !datos.hayDatos) {
