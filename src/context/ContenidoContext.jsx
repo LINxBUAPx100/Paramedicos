@@ -429,7 +429,7 @@ export function useCursos() {
 // Índice de UNA academia concreta (superadmin gestionando otra academia desde
 // /temario o /admin): si es la del usuario (o no hay id) usa el del contexto;
 // si es ajena, resuelve el suyo con fallback al bundle.
-export function useIndiceAcademia(academiaIdObjetivo) {
+export function useIndiceAcademia(academiaIdObjetivo, cursoId = null) {
   const ctx = usarContexto()
   const esAjena = Boolean(academiaIdObjetivo) && academiaIdObjetivo !== ctx.academiaId
   const [remoto, setRemoto] = useState(null)
@@ -440,14 +440,14 @@ export function useIndiceAcademia(academiaIdObjetivo) {
     ;(async () => {
       try {
         const { indicePorAcademiaId } = await import('../lib/firebase/contenido.js')
-        const ind = await indicePorAcademiaId(academiaIdObjetivo)
+        const ind = await indicePorAcademiaId(academiaIdObjetivo, cursoId)
         if (activo && ind) setRemoto({ ...ind, stats: { ...INDICE_VACIO.stats, ...ind.stats } })
       } catch {
         /* academia legacy o sin permisos: bundle */
       }
     })()
     return () => { activo = false }
-  }, [esAjena, academiaIdObjetivo])
+  }, [esAjena, academiaIdObjetivo, cursoId])
   if (!esAjena) return ctx.indice
   return remoto || INDICE_VACIO
 }
@@ -521,4 +521,35 @@ export function ErrorContenido({ onReintentar }) {
       <button className="btn btn--pildora btn--carbon" onClick={onReintentar}>Reintentar</button>
     </div>
   )
+}
+
+/**
+ * Cursos de UNA academia, para administrarla.
+ *
+ * Distinto de `useCursos`, que devuelve los cursos que la persona conectada
+ * puede ESTUDIAR. Aquí se administran: entran también los borradores, porque el
+ * panel tiene que dejar ver el programa que todavía se está armando —si no, un
+ * curso recién creado sería invisible hasta publicarlo y nadie sabría que está.
+ *
+ * Devuelve [] mientras carga y si algo falla: el panel ya sabe no pintar el
+ * selector con menos de dos cursos, así que un fallo degrada a la vista de
+ * siempre en vez de romper la pantalla.
+ */
+export function useCursosDeAcademia(academiaId) {
+  const [cursos, setCursos] = useState([])
+  useEffect(() => {
+    if (!academiaId) { setCursos([]); return undefined }
+    let vivo = true
+    ;(async () => {
+      try {
+        const { cursosDeAcademia } = await import('../lib/firebase/contenido.js')
+        const lista = await cursosDeAcademia(academiaId, { soloPublicados: false })
+        if (vivo) setCursos(lista || [])
+      } catch {
+        if (vivo) setCursos([])
+      }
+    })()
+    return () => { vivo = false }
+  }, [academiaId])
+  return cursos
 }

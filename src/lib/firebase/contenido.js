@@ -469,13 +469,17 @@ export async function indiceDeAcademia(academia, acceso = null, cursoPreferido =
 
 // Variante por ID (superadmin gestionando OTRA academia): baja su doc para
 // conocer el estado de migración y reutiliza indiceDeAcademia.
-export async function indicePorAcademiaId(academiaId) {
+export async function indicePorAcademiaId(academiaId, cursoPreferido = null) {
   if (!academiaId) return null
   const snap = await getDoc(doc(db, 'academias', academiaId))
   if (!snap.exists()) return null
   // Solo la usa el super-admin desde /admin y /temario: ve la academia entera,
   // sin filtro de programa (es quien la gestiona, no quien la cursa).
-  return indiceDeAcademia({ id: snap.id, ...snap.data() }, { esSuperadmin: true })
+  //
+  // `cursoPreferido` llegó cuando el panel de la academia pasó a poder
+  // administrar VARIOS cursos: sin él, el panel enseñaba siempre el primero
+  // —el de paramédico— y no había forma de mirar las cifras de enfermería.
+  return indiceDeAcademia({ id: snap.id, ...snap.data() }, { esSuperadmin: true }, cursoPreferido)
 }
 
 // Limpia la caché (logout, cambio de academia, después de clonar/editar).

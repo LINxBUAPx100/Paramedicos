@@ -7,6 +7,7 @@ import { useVisibilidad } from '../lib/useVisibilidad.js'
 import { motivoSinPrograma } from '../lib/programasModelo.js'
 import { idsVisiblesDeHome } from '../lib/homeModelo.js'
 import { gruposDelPanel } from '../lib/gruposDeUsuario.js'
+import { identidadDelHome } from '../lib/cursosDelUsuario.js'
 import Icon from '../components/Icon.jsx'
 import Reveal from '../components/Reveal.jsx'
 import Imagen from '../components/Imagen.jsx'
@@ -122,19 +123,21 @@ function SinPrograma({ bloqueo }) {
 // a reemplazar por el oficial de R.E.S.C.A.T.E. y cada academia puede tener el
 // suyo, así que ningún id de contenido debe vivir incrustado en el código.
 function SeccionHero({ stats, primerModulo }) {
-  // El subtítulo hablaba de Técnico en Urgencias Médicas en duro, porque
-  // cuando se escribió no había otra cosa. Ahora lo dice el contenido:
-  // varios cursos → se anuncian; uno solo → se nombra ese; sin academia
-  // migrada (visitante o temario del paquete) → el texto de siempre, que
-  // describe exactamente lo que esa persona va a encontrar.
-  const { cursos } = useCursos()
-  const sub = cursos.length > 1
-    ? `${cursos.length} programas en una sola plataforma: ${cursos.map((c) => c.etiquetaCorta).join(', ')}.`
-    : cursos.length === 1
-      ? `${cursos[0].etiqueta}.`
-      : 'Técnico en Urgencias Médicas.'
+  // EL HOME HABLA DEL CURSO QUE ESTA PERSONA ESTUDIA, no del catálogo.
+  //
+  // Antes enumeraba: «2 programas en una sola plataforma: TUM/TEM, Enfermería».
+  // Eso es la voz de la academia. Quien cursa enfermería abre su plataforma y
+  // tiene que ver Enfermería, no un catálogo donde lo suyo es una entrada más.
+  // El color del programa tiñe el acento del encabezado, así que cambiar de
+  // curso se nota sin necesidad de leer el subtítulo. Ver `identidadDelHome`.
+  const { cursos, cursoId } = useCursos()
+  const identidad = identidadDelHome(cursos, cursoId)
+  const sub = identidad.subtitulo
   return (
-    <section className="ph-hero">
+    <section
+      className="ph-hero"
+      style={identidad.color ? { '--curso-color': identidad.color } : undefined}
+    >
       <IconoEstrella size={680} className="ph-hero-marca" />
       <div className="ph-wrap ph-hero-in">
         <div className="ph-hero-foto reveal" style={{ '--d': '120ms' }}>

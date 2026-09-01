@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ETIQUETA_ROL, ROLES, ROLES_DIRECTOR } from '../../lib/roles.js'
 import { etiquetaPrueba } from '../../lib/accesoModelo.js'
 import {
@@ -393,13 +393,54 @@ function GruposDelProfesor({ profesor, grupos, ocupado, onGuardar }) {
     setSeleccion((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]))
   }
 
+  // EL DESPLEGABLE FLOTA SOBRE TODO, y no puede ser de otra forma.
+  //
+  // La tabla de personas vive dentro de «.panel-tabla-wrap», que lleva
+  // «overflow-x: auto» para poder desplazarse en pantallas estrechas. Cualquier
+  // valor de overflow distinto de «visible» RECORTA EN LOS DOS EJES, así que el
+  // panel, que iba en «position: absolute», salía cortado por el borde de la
+  // tabla y tapado por las filas de abajo. Reportado el 31-08-2026.
+  //
+  // Con «position: fixed» el recorte del contenedor deja de aplicar, pero
+  // entonces las coordenadas hay que calcularlas: se toman del propio resumen
+  // al abrir. Si no cabe debajo, se abre hacia arriba.
+  const resumenRef = useRef(null)
+  const [caja, setCaja] = useState(null)
+
+  const colocar = () => {
+    const el = resumenRef.current
+    if (!el) return
+    const r = el.getBoundingClientRect()
+    const ALTO = 260 // alto máximo del panel, el mismo que fija el CSS
+    const cabeAbajo = window.innerHeight - r.bottom > ALTO
+    setCaja({
+      left: Math.max(8, Math.min(r.left, window.innerWidth - 248)),
+      top: cabeAbajo ? r.bottom + 6 : undefined,
+      bottom: cabeAbajo ? undefined : window.innerHeight - r.top + 6,
+    })
+  }
+
+  // Recolocar mientras está abierto: si la página se desplaza o cambia de
+  // tamaño, un panel fijo se quedaría flotando lejos de su fila.
+  useEffect(() => {
+    if (!abierto) return undefined
+    colocar()
+    const alMover = () => colocar()
+    document.addEventListener('scroll', alMover, { capture: true, passive: true })
+    window.addEventListener('resize', alMover, { passive: true })
+    return () => {
+      document.removeEventListener('scroll', alMover, { capture: true })
+      window.removeEventListener('resize', alMover)
+    }
+  }, [abierto])
+
   return (
     <details
       className="panel-grupos-multi"
       open={abierto}
       onToggle={(e) => setAbierto(e.currentTarget.open)}
     >
-      <summary aria-label={`Grupos de ${quien}`}>
+      <summary ref={resumenRef} aria-label={`Grupos de ${quien}`}>
         {nombresAsignados.length === 0
           ? <span className="panel-celda-vacia">Sin grupos</span>
           : nombresAsignados.length === 1
@@ -407,7 +448,7 @@ function GruposDelProfesor({ profesor, grupos, ocupado, onGuardar }) {
             : <span className="panel-rol-tag">{nombresAsignados.length} grupos</span>}
       </summary>
 
-      <div className="panel-grupos-lista">
+      <div className="panel-grupos-lista" style={caja || undefined}>
         {grupos.map((g) => (
           <label key={g.id} className="panel-grupos-opcion">
             <input

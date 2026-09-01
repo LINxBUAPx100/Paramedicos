@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext.jsx'
-import { useIndiceAcademia } from '../context/ContenidoContext.jsx'
+import { useIndiceAcademia, useCursosDeAcademia } from '../context/ContenidoContext.jsx'
 import { pasaFiltroGrupo } from '../lib/panelModelo.js'
 import Icon from './Icon.jsx'
 import PermisosEditoriales from './PermisosEditoriales.jsx'
@@ -31,7 +31,18 @@ export default function PanelAcademia({ academiaId, academiaNombre = '', miUid =
   const { puedeVerCodigos } = useAuth()
   // Módulos de LA ACADEMIA gestionada (su copia si está migrada; bundle si no):
   // el avance por módulo debe alinearse con el contenido que ven SUS alumnos.
-  const { modulos } = useIndiceAcademia(academiaId)
+  // CURSO QUE SE ADMINISTRA. Una academia imparte varios programas —paramédico,
+  // enfermería, cursos cortos— y este panel enseñaba siempre el primero, así que
+  // no había forma de mirar las cifras de enfermería ni de ver su temario. El
+  // selector va ARRIBA del todo, antes que el de grupo, porque el curso decide
+  // qué grupos y qué módulos tienen sentido debajo.
+  //
+  // Cadena vacía = «el que resuelva la aplicación», que es lo de siempre.
+  const [cursoFiltro, setCursoFiltro] = useState('')
+  const cursos = useCursosDeAcademia(academiaId)
+  // Módulos de LA ACADEMIA y DEL CURSO elegido: el avance por módulo tiene que
+  // alinearse con el contenido que ven sus alumnos de ESE programa.
+  const { modulos } = useIndiceAcademia(academiaId, cursoFiltro || null)
   const datos = useDatosAcademia(academiaId)
   const [grupoFiltro, setGrupoFiltro] = useState('') // '' = todos; 'sin' = sin grupo
 
@@ -51,6 +62,21 @@ export default function PanelAcademia({ academiaId, academiaNombre = '', miUid =
 
   return (
     <>
+      {/* El curso manda sobre todo lo de abajo: por eso va primero. Con un solo
+          curso no se pinta — pedir elegir entre una opción es ruido. */}
+      {cursos.length > 1 && (
+        <label className="panel-selector panel-selector--curso">
+          Curso
+          <select value={cursoFiltro} onChange={(e) => setCursoFiltro(e.target.value)}>
+            {cursos.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.titulo}{c.estado !== 'publicado' ? ' (borrador)' : ''}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
+
       {grupos.length > 0 && (
         <label className="panel-selector panel-selector--grupo">
           Grupo

@@ -85,3 +85,41 @@ export function cursoAServir(cursosVisibles, preferido = null) {
 export function hayVariosCursos(cursosVisibles) {
   return (cursosVisibles || []).length > 1
 }
+
+/**
+ * Identidad del Home según el curso que esta persona está estudiando AHORA.
+ *
+ * El Home nació nombrando «Técnico en Urgencias Médicas» en duro. Cuando llegó
+ * el multi-curso se cambió por una enumeración —«2 programas en una sola
+ * plataforma: TUM/TEM, Enfermería»— y eso arregló la mentira pero introdujo
+ * otra: ésa es la voz de la ACADEMIA, no la del alumno. Quien cursa enfermería
+ * abre su plataforma y tiene que ver Enfermería, no un catálogo donde lo suyo
+ * es una entrada más.
+ *
+ * Devuelve siempre algo pintable, incluso sin cursos: el Home no puede quedarse
+ * sin encabezado porque el contenido todavía no cargue.
+ *
+ * @param {Array} cursos los de `cursosDelUsuario`
+ * @param {string|null} cursoId el que se está sirviendo
+ */
+export function identidadDelHome(cursos, cursoId = null) {
+  const lista = cursos || []
+  if (!lista.length) {
+    return { subtitulo: 'Técnico en Urgencias Médicas.', color: null, icono: null, otros: 0 }
+  }
+  // El activo manda. Si el que se sirve no está en la lista —caso raro, pero
+  // pasa mientras cambia el curso— se usa el primero antes que no decir nada.
+  const activo = lista.find((c) => c.id === cursoId) || lista[0]
+  const otros = lista.length - 1
+  return {
+    subtitulo: `${activo.etiqueta}.`,
+    // Se pasa al CSS como --curso-color: tiñe el acento del encabezado, así
+    // que cambiar de curso se NOTA sin tener que leer el subtítulo.
+    color: activo.color || null,
+    icono: activo.icono || null,
+    cursoId: activo.id,
+    // Cuántos más puede estudiar. Lo usa el Home para ofrecer el cambio sin
+    // enumerarlos: enumerar es lo que hacía que el suyo pareciera secundario.
+    otros: otros > 0 ? otros : 0,
+  }
+}
