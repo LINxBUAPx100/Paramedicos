@@ -37,7 +37,13 @@ function olvidarPerfil(email) {
 }
 
 export default function Cuenta() {
-  const { autenticado, cargando, user, perfil, salir } = useAuth()
+  const { autenticado, cargando, user, perfil, salir, encender } = useAuth()
+
+  // Esta es LA pantalla donde se inicia sesión, así que Firebase se enciende al
+  // llegar y no cuando alguien pulsa «entrar». Si el proveedor no estuviera
+  // observando a Auth, el inicio de sesión funcionaría y la aplicación no se
+  // enteraría: la sesión quedaría abierta con la pantalla diciendo que no.
+  useEffect(() => { encender() }, [encender])
   const [params, setParams] = useSearchParams()
   // La captura es SÍNCRONA, en el estado inicial: si se hiciera en un efecto,
   // el primer render pintaría el campo vacío (y con él, el aviso «no tienes

@@ -407,13 +407,24 @@ export default function Layout({ children }) {
   )
 }
 
-// Banner del anuncio global (lo publica el super-admin en /admin). Se muestra
-// a todos; cada anuncio se puede descartar y no reaparece hasta que cambie.
+// Banner del anuncio global (lo publica el super-admin en /admin). Se muestra a
+// todo el que haya iniciado sesión; cada anuncio se puede descartar y no
+// reaparece hasta que cambie.
+//
+// SOLO CON SESIÓN, desde el 02-09-2026. Antes se pedía en toda visita, y eso
+// tenía dos costes que no compraban nada: obligaba a descargar el SDK de
+// Firebase (~950 kB) en la portada pública —tirando por tierra la sonda de
+// `lib/sesionProbable.js`— y gastaba una lectura de Firestore por cada
+// visitante anónimo. El anuncio lo escribe el super-admin para quien USA la
+// plataforma («el sábado hay mantenimiento»); a quien está mirando la portada
+// para saber qué es PTEM no le dice nada.
 function AnuncioBanner() {
+  const { autenticado } = useAuth()
   const [anuncio, setAnuncio] = useState(null)
   const [cerrado, setCerrado] = useState(false)
 
   useEffect(() => {
+    if (!autenticado) return undefined
     let vivo = true
     ;(async () => {
       const { obtenerAnuncio } = await import('../lib/firebase/plataforma.js')
@@ -425,7 +436,7 @@ function AnuncioBanner() {
       if (!visto) setAnuncio({ ...a, clave })
     })()
     return () => { vivo = false }
-  }, [])
+  }, [autenticado])
 
   if (!anuncio || cerrado) return null
 

@@ -9,6 +9,7 @@ import {
   calcularAcceso, msHastaFinDePrueba, pertenenciaEfectiva, pruebaVigente,
 } from '../lib/accesoModelo.js'
 import { gruposDeUsuario, grupoActivoDe, puedeElegirGrupo } from '../lib/gruposDeUsuario.js'
+import { hayIndicioDeSesion } from '../lib/sesionProbable.js'
 
 const AuthContext = createContext(null)
 
@@ -34,6 +35,16 @@ function guardarGrupo(academiaId, grupoId) {
 // Expone usuario de Firebase Auth + perfil de Firestore (rol, academia, estado) +
 // la academia del usuario, y calcula el acceso al contenido. El SDK de Firebase se
 // carga de forma DIFERIDA (import dinámico) para no engordar el bundle inicial.
+//
+// Y DESDE EL 02-09-2026, SOLO CUANDO HACE FALTA. Antes se cargaba al montar, en
+// toda visita: era la única forma de saber si había sesión, y costaba ~950 kB
+// (240 comprimidos) también a quien solo abría la portada pública. Ahora se
+// pregunta primero a `lib/sesionProbable.js`, que mira lo que el propio SDK deja
+// escrito en el navegador y ante la duda dice que sí.
+//
+// Quien necesite sesión sin esperar a esa respuesta llama a `encender()` del
+// contexto: lo hacen la página de cuenta —donde se inicia sesión— y
+// `RutaProtegida`, que es donde equivocarse no es una opción.
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [perfil, setPerfil] = useState(null)
@@ -42,8 +53,39 @@ export function AuthProvider({ children }) {
   const [cargando, setCargando] = useState(true)
   const salirRef = useRef(() => Promise.resolve())
 
+  // ¿Se ha encendido ya Firebase en esta pestaña? El ref evita encenderlo dos
+  // veces cuando la sonda y una llamada a `encender()` coinciden.
+  const [encendido, setEncendido] = useState(false)
+  const encendidoRef = useRef(false)
+  const encender = useCallback(() => {
+    if (encendidoRef.current) return
+    encendidoRef.current = true
+    // Vuelve a «cargando»: si la sonda ya había dicho «sin sesión», la pantalla
+    // debe esperar a que Auth conteste de verdad en vez de afirmar que no hay
+    // nadie. Sin esto, una ruta protegida enseñaría «no has iniciado sesión»
+    // durante un instante a quien sí la tiene.
+    setCargando(true)
+    setEncendido(true)
+  }, [])
+
+  // La sonda. No carga nada: mira si este navegador tiene rastro de una sesión.
+  useEffect(() => {
+    let vivo = true
+    hayIndicioDeSesion()
+      .then((hay) => {
+        if (!vivo) return
+        if (hay) encender()
+        // Sin rastro de sesión no se espera a nadie: la app puede pintar ya, y
+        // el SDK entrará en cuanto alguien vaya a iniciar sesión.
+        else setCargando(false)
+      })
+      .catch(() => { if (vivo) encender() })
+    return () => { vivo = false }
+  }, [encender])
+
   // Sesión + perfil en vivo.
   useEffect(() => {
+    if (!encendido) return undefined
     let activo = true
     let unsubAuth = null
     let unsubPerfil = null
@@ -93,7 +135,7 @@ export function AuthProvider({ children }) {
       if (unsubAuth) unsubAuth()
       if (unsubPerfil) unsubPerfil()
     }
-  }, [])
+  }, [encendido])
 
   // --- VENCIMIENTO EN CALIENTE DE LA PRUEBA -------------------------------
   // Que una prueba venza no cambia ningún documento, así que no llega ningún
@@ -268,6 +310,8 @@ export function AuthProvider({ children }) {
     academia: academia || null,
     cargando,
     salir: (...args) => salirRef.current(...args),
+    // Enciende Firebase ahora. Lo llama quien va a necesitar sesión sí o sí.
+    encender,
     autenticado: Boolean(user),
     rol,
     // EFECTIVOS: null cuando la prueba venció, aunque el perfil los conserve.

@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import { motivoSinPrograma } from '../lib/programasModelo.js'
@@ -50,7 +51,13 @@ const MENSAJES = {
 }
 
 export default function RutaProtegida({ children }) {
-  const { puedeAcceder, accesoCargando, motivoBloqueo, rol, grupo, esSuperadmin } = useAuth()
+  const { puedeAcceder, accesoCargando, motivoBloqueo, rol, grupo, esSuperadmin, encender } = useAuth()
+
+  // Enciende Firebase sin esperar a la sonda. Detrás de esta puerta está todo
+  // lo que depende de quién eres, así que aquí se paga la descarga siempre:
+  // es el único sitio donde suponer «no hay sesión» sería inaceptable, y quien
+  // llega hasta aquí o tiene sesión o va a que se le pida.
+  useEffect(() => { encender() }, [encender])
 
   if (accesoCargando) {
     return (
