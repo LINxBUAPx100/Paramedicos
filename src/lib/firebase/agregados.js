@@ -25,11 +25,26 @@ import { auth, db } from './init.js'
 import { doc, getDoc, setDoc, writeBatch, serverTimestamp } from 'firebase/firestore'
 import { lotes } from '../contenidoModelo.js'
 import { SELLO, docIdAgregado, docsAgregadosDeCurso, datosDeDoc } from '../agregadosModelo.js'
+import { leerCache, escribirCache, limpiarCache, claveAgregado } from '../cacheContenido.js'
 
 // Caché por documento y por sesión: `${cursoId}||${tipo}||${moduloId}`.
 // Guarda la PROMESA, no el resultado, para que dos pantallas que piden el
 // mismo agregado a la vez compartan una sola lectura en vez de disparar dos.
 const cache = new Map()
+
+// Versión sellada de cada curso, tal como la leyó `selloDeAgregados`.
+//
+// Es lo que permite usar la caché de IndexedDB sin arriesgarse a servir
+// contenido viejo: una entrada guardada solo vale si su versión coincide con la
+// que el sello acaba de declarar. Sin esta anotación no se consulta la caché
+// —se va a la red—, así que el orden importa pero no puede romper nada: el
+// resolutor siempre pide el sello antes que ningún agregado.
+const selloPorCurso = new Map()
+
+export function versionSelladaDe(cursoId) {
+  const s = selloPorCurso.get(cursoId)
+  return s && s.version && !s.desactualizado ? s.version : null
+}
 
 const claveCache = (cursoId, tipo, moduloId) => `${cursoId}||${tipo}||${moduloId || '*'}`
 
@@ -39,8 +54,19 @@ async function leerDoc(cursoId, tipo, moduloId = null) {
     cache.set(
       clave,
       (async () => {
+        // El SELLO nunca se cachea: es el que dice si lo demás sirve, y una
+        // caché que se valida a sí misma no valida nada.
+        const version = tipo === SELLO ? null : versionSelladaDe(cursoId)
+        if (version) {
+          const guardado = await leerCache(claveAgregado(cursoId, tipo, moduloId), version)
+          if (guardado) return guardado
+        }
         const snap = await getDoc(doc(db, 'agregados', docIdAgregado(cursoId, tipo, moduloId)))
-        return snap.exists() ? snap.data() : null
+        const datos = snap.exists() ? snap.data() : null
+        // Sin `await`: guardar es una mejora para la próxima visita, no algo
+        // que deba retrasar la pantalla de ésta.
+        if (version && datos) escribirCache(claveAgregado(cursoId, tipo, moduloId), version, datos)
+        return datos
       })().catch((err) => {
         // Un fallo NO se queda cacheado como definitivo: se descarta la entrada
         // para poder reintentar en la siguiente navegación.
@@ -93,7 +119,15 @@ export async function selloDeAgregados(cursoId) {
     return null
   }
   if (!d) return null
-  return { version: d.version || 0, desactualizado: Boolean(d.desactualizado), documentos: d.documentos || 0 }
+  const sello = { version: d.version || 0, desactualizado: Boolean(d.desactualizado), documentos: d.documentos || 0 }
+  const anterior = selloPorCurso.get(cursoId)
+  selloPorCurso.set(cursoId, sello)
+  // Si el curso cambió de versión o quedó caducado, lo guardado en IndexedDB ya
+  // no se va a poder usar nunca —la versión no coincidiría— y solo ocupa sitio.
+  if (!sello.version || sello.desactualizado || (anterior && anterior.version !== sello.version)) {
+    limpiarCache(cursoId)
+  }
+  return sello
 }
 
 export function agregadosUtilizables(sello) {
@@ -183,10 +217,15 @@ export async function marcarAgregadosDesactualizados(academiaId, cursoId) {
  * de la sesión.
  */
 export function limpiarCacheAgregados(cursoId = null) {
+  // También la de IndexedDB: si no, la pestaña que acaba de editar seguiría
+  // encontrando el agregado anterior en disco en su próxima recarga.
+  limpiarCache(cursoId)
   if (!cursoId) {
     cache.clear()
+    selloPorCurso.clear()
     return
   }
+  selloPorCurso.delete(cursoId)
   const prefijo = `${cursoId}||`
   for (const clave of [...cache.keys()]) {
     if (clave.startsWith(prefijo)) cache.delete(clave)

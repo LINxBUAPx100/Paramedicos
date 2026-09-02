@@ -25,7 +25,9 @@ import {
 } from '../contenidoApi.js'
 import {
   leerAgregado, escribirAgregadosDeCurso, selloDeAgregados, agregadosUtilizables,
+  versionSelladaDe,
 } from './agregados.js'
+import { leerCache, escribirCache, claveTema } from '../cacheContenido.js'
 import { huellaTema } from '../replicacionModelo.js'
 import { programasVisibles, programasDeGrupo } from '../programasModelo.js'
 import { cursosDelUsuario, cursoAServir } from '../cursosDelUsuario.js'
@@ -253,8 +255,21 @@ export async function temasDeCurso(cursoId, { academiaId = null, soloPublicados 
 }
 
 export async function temaDeCurso(cursoId, temaId) {
+  // La lección se cachea con la MISMA versión que los agregados, y no con la
+  // suya: cuando alguien edita un tema, el editor marca el sello del curso como
+  // desactualizado, así que esa versión deja de servir para todo el curso a la
+  // vez. Es más conservador que mirar la versión del propio documento —a veces
+  // se descartará una lección que no había cambiado— y evita el caso que sí
+  // importa: seguir enseñando la lección anterior a una corrección.
+  const version = versionSelladaDe(cursoId)
+  if (version) {
+    const guardado = await leerCache(claveTema(cursoId, temaId), version)
+    if (guardado) return guardado
+  }
   const snap = await getDoc(doc(db, 'temas', `${cursoId}__${temaId}`))
-  return snap.exists() ? { docId: snap.id, ...snap.data() } : null
+  const datos = snap.exists() ? { docId: snap.id, ...snap.data() } : null
+  if (version && datos) escribirCache(claveTema(cursoId, temaId), version, datos)
+  return datos
 }
 
 // --- RESOLUTOR ------------------------------------------------------------
