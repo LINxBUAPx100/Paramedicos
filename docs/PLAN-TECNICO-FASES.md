@@ -12,13 +12,21 @@
 > editorial y el incidente de imágenes). `CLAUDE.md` gobierna el trabajo
 > EDITORIAL —redactar el temario— y es otro proyecto: el software avanza sin él.
 >
-> **Última actualización: 31 de agosto de 2026 (tarde).** Ese día se ejecutaron
-> **P1** y **P2** contra producción y se rehízo la portada central. Del blindaje
-> **solo queda P3**, y es el que importa: P1 movió el contenido a Firestore y P2
-> lo sacó del JavaScript publicado, pero **Firestore lo sigue entregando igual
-> de abierto**. Mientras P3 no esté puesto, el blindaje está a medias.
+> **Última actualización: 2 de septiembre de 2026.** El bloque P está cerrado
+> —P3 se desplegó el 31 de agosto— y ese día se trabajó en lo que no cuesta
+> dinero mientras el dueño contrata Blaze: la mitad de **P10** que le toca al
+> código y **P5** entero.
 >
-> Lo cerrado el 31 de agosto, en orden:
+> | | Qué | Medido |
+> |---|---|---|
+> | **P10 (script)** | `migrar-contenido.mjs` genera los agregados al clonar. No fallaba: **nunca lo intentaba**, y por eso cada resiembra devolvía el curso a 288 lecturas por carga | Verificado contra el emulador de Firestore: 288 docs + 38 agregados + sello; `--verificar` ahora dice si faltan |
+> | **P5** | El catálogo de activos se parte en dos y Firebase deja de encenderse en toda visita: una sonda lee si este navegador tiene sesión guardada, sin cargar el SDK | La portada anónima pasa de **5 archivos JS a 1**. El trozo de entrada baja de 731 a 461 kB (177 → 139 comprimido) y los ~950 kB del SDK dejan de descargarse |
+>
+> **P5 queda cerrado.** De P10 falta solo que un director pulse «Generar los
+> índices» en Panel → Contenido: no lo puede hacer una IA, exige su sesión.
+>
+> **El 31 de agosto (tarde)** se ejecutaron **P1** y **P2** contra producción y
+> se rehízo la portada central. Lo cerrado ese día, en orden:
 >
 > | | Qué |
 > |---|---|
@@ -39,8 +47,14 @@
 
 ## Estado en una tabla
 
-Veintiún trabajos terminados y veinticuatro pendientes. Los tachados no se vuelven a
-tocar salvo regresión demostrada.
+Veintinueve trabajos terminados y veintidós pendientes. Los tachados no se
+vuelven a tocar salvo regresión demostrada.
+
+Cuatro de esos veinticinco entraron en el repositorio el 31 de agosto por la
+noche y **este documento no los registraba** hasta el 2 de septiembre: la
+administración por programa, los programas propios, el borrado de cursos y las
+fotografías del temario. Un plan que no cuenta lo ya hecho miente por omisión, y
+esa omisión es la que hace que alguien vuelva a construirlo.
 
 **El bloque P está cerrado.** P1 movió el contenido a Firestore, P2 lo sacó del
 JavaScript publicado y P3 cerró la puerta del servidor: comprobado contra
@@ -51,11 +65,14 @@ administración**. La credencial de service account que se filtró el 31 de agos
 sigue viva —comprobado— y lee todo el proyecto saltándose P3. Rotarla es la otra
 mitad del blindaje, y solo puede hacerla el dueño del proyecto.
 
-Queda una decisión (comprar el dominio, para F1), una tarea de la academia
-(**meter a los dos alumnos en un grupo**) y una deuda que destapó el despliegue:
-**P10**, los agregados vacíos. No rompe nada —el resolutor cae a un camino
-correcto— pero cada carga de contenido cuesta 288 lecturas en vez de 3, y la
-cuota gratuita de Spark da para ~173 cargas al día.
+Lo que queda esperando no es código: comprar el dominio (**F1**), contratar
+Blaze (**F2**, en curso el 02-09) y meter a los dos alumnos en un grupo.
+
+**P10 se cerró el 2 de septiembre**, y lo cerró el dueño desde la consola de
+super-admin en cuanto la pantalla existió: los agregados de R.E.S.C.A.T.E. están
+generados y cada carga del temario bajó de **288 lecturas a 3** —de ~173 cargas
+al día a ~16 666—. Es el objetivo de la Fase 1, aplicado por fin al contenido
+real.
 
 ### Terminado
 
@@ -82,15 +99,21 @@ cuota gratuita de Spark da para ~173 cargas al día.
 | ~~**P2** — Apagar el bundle: el temario deja de viajar en el JS~~ | bloque P · 31-08-2026 |
 | ~~**P9** — Portada central rediseñada (foto a sangre, voces, menú)~~ | pedido el 31-08-2026 |
 | ~~**P3** — Reglas de lectura por academia, grupo y programa~~ | bloque P · 31-08-2026 · **el bloque P queda cerrado** |
+| ~~**W** — Administración por programa: cada curso es una academia dentro de la academia~~ | pedido el 31-08-2026 |
+| ~~**X** — Programas propios concedidos por tipo, TUM excluido, y borrado de cursos~~ | pedido el 31-08-2026 |
+| ~~24 fotografías de contexto en las lecciones~~ | material aportado el 31-08-2026 |
+| ~~**P10 (la mitad del código)** — el script de migración genera los agregados~~ | bloque P · 02-09-2026 · falta el botón del director |
+| ~~**P5** — Optimización del arranque: catálogo de activos partido y Firebase encendido solo cuando hace falta~~ | bloque P · 02-09-2026 |
+| ~~**E** — Editor de temas~~ | PLAN-LMS F5 · **ya estaba construido**; se comprobó y se cerró el 02-09-2026 |
+| ~~**Z** — Paridad del super-admin: puede todo lo que puede un director~~ | pedido el 02-09-2026 |
+| ~~**P10** — Agregados de R.E.S.C.A.T.E. regenerados: 288 lecturas por carga → 3~~ | bloque P · **cerrado el 02-09-2026** |
 
 ### Pendiente, en orden de ejecución
 
 | # | Trabajo | Duración | Depende de |
 |---|---|---|---|
-| **P10** | Regenerar los agregados de R.E.S.C.A.T.E. (hoy cada carga cuesta 288 lecturas en vez de 3) | corta | **código hecho el 31-08** · falta que un director pulse el botón en Panel → Contenido |
 | **F1** | Dominio propio + Firebase Hosting + `BrowserRouter` | 1-2 días | — · **cabe en Spark** · las portadas de P4 ya existen y esperan sus URLs |
-| **P5** | Optimización del arranque (la no-indexación ya está en P8) | 1-2 días | — · **P2 hecho, ya no bloquea** |
-| **A** | Calidad editorial v2 | larga, por lotes | — · **P2 hecho, ya no bloquea** |
+| **A** | Calidad editorial v2 | larga, por lotes | — · **P2 hecho, ya no bloquea** · **lote 1 de 6 entregado el 02-09** (M3 evaluación) |
 | **O1** | Matrícula secuencial del alumno | 1-2 días | — |
 | **B** | Mi Botiquín (inventario de videojuego) | lógica corta · media con la capa visual | lista de artículos de la academia · **comparte catálogo con M** |
 | **O2** | Bloqueo por pago + bypass auditado | 3-5 días | O1 |
@@ -105,7 +128,7 @@ cuota gratuita de Spark da para ~173 cargas al día.
 | **O5** | Feed de logística de tienda en recepción | 3-5 días | M · O4 |
 | **O6** | Credencial con código + escáner USB | 1-2 días | O4 |
 | **N** | Inventario simple | 1 semana | M |
-| **E** | Editor de temas (bloques, quiz, flashcards, actividades) | media | — |
+| **Y** | Visor de material por tema: PDF con la marca de agua incrustada, subida desde el editor y firma del enlace en servidor | media | **el modelo y sus reglas están hechos** (31-08-2026) · la firma necesita Functions ⇒ **F2** |
 | **H** | Certificados con QR verificable | 2-3 semanas | F1 (dominio) · F2 (Functions) |
 | **G** | Migración a Next.js | 3-5 semanas | F1 · **reevaluar tras A**, no comprometido |
 | **I** | Plan CURSO + directorio de capacitadores | media | — |
@@ -129,14 +152,15 @@ cuota gratuita de Spark da para ~173 cargas al día.
 
 ## Lo que está esperando una decisión tuya
 
-Ya no son tres: **P1 se autorizó y se ejecutó el 31 de agosto**, y con él salió
-P2. Quedan dos permisos y una tarea de la academia.
+**P1 se autorizó y se ejecutó el 31 de agosto**, y con él salió P2. Quedan dos
+contrataciones y dos tareas de la academia — ninguna es código.
 
 | Decisión | Por qué te toca | Desbloquea |
 |---|---|---|
 | ~~Desplegar `firestore.rules`~~ | — | **Hecho el 31-08-2026.** Cerró P3 y los tutoriales ya cruzan de dispositivo |
 | Comprar el dominio | Es una compra | **F1**, y con él las URLs sin `#` |
 | Meter a los dos alumnos en `GRP-SCZD` | Es alta en la academia, no código | Que dejen de ver «Necesitas un código de grupo». El grupo ya apunta al programa correcto |
+| Contratar Blaze | Es una contratación | **F2**, y con él **J**, **L** y la firma de enlaces de **Y**. *En curso el 02-09-2026* |
 
 ### La credencial filtrada SIGUE VIVA
 
@@ -159,6 +183,141 @@ gcloud iam service-accounts keys delete 97418f440957b97713aed40e2679c01310ae2dda
 
 Y después borrar el archivo de `Downloads`. Para comprobar que quedó muerta,
 pedirle un token: una clave revocada falla con `invalid_grant`.
+
+---
+
+## Trabajo Z — El super-admin puede todo lo que puede un director · HECHO el 02-09-2026
+
+Salió de una queja del dueño del producto al leer que el botón de regenerar los
+índices «solo lo puede hacer el director»:
+
+> «el super admin debe poder hacer TODO lo que hacen los demás usuarios»
+
+Tenía razón, pero **el diagnóstico era otro: las reglas nunca se lo
+impidieron.** `esSuper()` está en el `allow` de `agregados`, en el de
+`calificaciones` y en el de las solicitudes. Lo que faltaba era la PANTALLA.
+
+El director opera desde `/panel/*` y el super-admin desde `/admin/aca/:id/*`.
+Son dos árboles de rutas distintos, y tres secciones se habían quedado solo en
+el primero:
+
+| Sección | Qué pasaba |
+|---|---|
+| **Índices del temario** | La consola no enseñaba ni el estado. El dueño de la plataforma tenía que pedirle a un director que pulsara un botón que él mismo podía pulsar |
+| **Accesos** | No podía responder una solicitud de entrada ni de avance |
+| **Calificaciones** | No podía ver ni corregir una nota |
+
+Las tres están ahora en la consola, y **son las mismas pantallas, no copias**:
+
+- `components/panel/IndicesDeCursos.jsx` — la tarjeta de estado y el botón, que
+  antes vivían dentro del panel del director.
+- `pages/admin/academia/Accesos.jsx` — reutiliza `SolicitudesInternas` y
+  `SolicitudesDeAcceso`, que ya recibían props.
+- `LibroDeCalificaciones` — el libro dejó de leer `usePanel()` y recibe sus
+  datos por props; cada pantalla se los da desde donde los tenga.
+
+Duplicar cualquiera de las tres habría garantizado que las dos versiones
+divergieran a la primera corrección, y las notas no son un sitio donde
+permitirse dos verdades.
+
+**La lección, escrita para que gobierne lo que venga: una capacidad que existe
+en el servidor y no existe en la interfaz es una capacidad que no existe.**
+`tests/paridadSuperAdmin.test.mjs` lo hace cumplir: recorre los dos árboles de
+rutas y falla si una sección del panel del director no tiene equivalente en la
+consola. Comprobado que caza de verdad la regresión —quitando la ruta de accesos
+la prueba se pone en rojo—, no solo que pasa en verde.
+
+> **Lo que NO cubre.** La paridad al revés no se exige: la consola tiene
+> secciones que el panel no necesita (programas, revisión docente, ajustes de
+> plataforma) y eso es correcto. Y esto es paridad de PANTALLAS: que el
+> super-admin llegue a todas. Si en alguna pantalla concreta le falta un botón
+> que el director sí tiene, eso se descubre usándola.
+
+---
+
+## Registro · sesión del 31 de agosto de 2026 (noche)
+
+Cuatro entregas que estaban en el repositorio y no en este documento. Se anotan
+el 2 de septiembre, con su porqué, para que nadie las vuelva a planear.
+
+### W — Administración por programa · HECHO
+
+Una academia puede tener varios programas, y el panel los trataba como si
+tuviera uno. Al entrar al programa de enfermería —vacío— la sección Contenido
+enseñaba los ocho módulos de paramédicos con sus 290 temas, como si fueran
+suyos.
+
+La causa no fue que faltara el dato: el `cursoId` ya llegaba al contexto y esas
+dos secciones solo lo **recibían**. Recibir un dato y no aplicarlo es peor que no
+tenerlo, porque parece hecho.
+
+- **Contenido** saca el árbol del programa elegido y filtra los grupos por
+  `programaId`. Un programa vacío se ve vacío, que es su estado real.
+- **Revisión docente** filtra la cola por programa, pero **conserva los
+  dictámenes sin `cursoId`**: son los de antes de que la academia tuviera
+  varios programas, y esconderlos haría desaparecer firmas docentes reales, que
+  es lo único irreemplazable del sistema.
+- El **super-admin entra al editor** desde la consola con un botón. La ruta
+  `/editor/:academiaId` ya era suya, pero solo se ofrecía en una frase al pie:
+  acababa entrando con la cuenta del director porque no encontraba por dónde.
+
+### X — Programas propios, concedidos por tipo · HECHO
+
+> «R.E.S.C.A.T.E. hizo un gran trabajo con su contenido, y a menos que yo lo
+> crea pertinente nadie debería poder entrar a lo que es de R.E.S.C.A.T.E.»
+> — dueño del producto, 31-08-2026.
+
+Antes bastaba con que el plan permitiera editar contenido: cualquier academia
+Pro podía crearse los cursos que quisiera. Tres reglas, y las tres en el
+servidor, no solo en la pantalla:
+
+1. **Por omisión nadie crea nada.** `programasPropios` nace vacío en los tres
+   planes. Tener un plan caro no da derecho al contenido de otra academia.
+2. **La concesión es por tipo**, no un interruptor: se puede abrir «cursos y
+   certificaciones» sin abrir carreras completas, que son negocios distintos.
+3. **TUM no se concede por esta vía.** Es el programa insignia de R.E.S.C.A.T.E.
+   y se entrega clonándolo, que es una operación del super-admin. El tipo está
+   excluido en la propia regla, no solo en la lista: escribir `'tum'` a mano en
+   la base de datos no lo habilita.
+
+Una concesión mal escrita —`'todos'`, `true`, un número— se lee como lista
+**vacía**, nunca como acceso total: el modo de fallo peligroso sería abrir de
+más.
+
+De paso se cerró un agujero: `permisoDeAccion` devolvía `null` para
+«borrar-curso», y `null` significa «no exige permiso fino» — un instructor con
+acceso al editor podía borrar un curso entero con sus 290 temas. Ahora borrar un
+curso es acción reservada al director o al super-admin; al instructor se le
+ofrece archivar, que sí tiene vuelta atrás. Y el diálogo dice **cuántos temas**
+se borran antes de preguntar: «se borrarán 290 temas» frena a cualquiera, «se
+borrará el curso» no frena a nadie, y es la misma operación.
+
+### Y — Material por tema: el modelo, no la pantalla · A MEDIAS
+
+El encargo fue «que no puedan descargar ni robar el PDF». Eso, tal cual, no
+existe: si el navegador pinta el documento, los bytes están en la máquina de
+quien lo mira. Lo que sí se puede es servir solo a quien toca, **marcar cada
+copia** con el nombre y la matrícula de quien la abrió —no impide copiar, hace
+identificable al que copió— y dejar rastro de quién abrió qué.
+
+Dos orígenes, y la diferencia es de dinero además de control: un `enlace`
+externo cuesta cero en transferencia pero lo sirve otro, así que se guarda como
+`protegido: false` para que nadie crea que está blindado; un `archivo` propio se
+firma y se marca, y `costoEstimado` deja ver el gasto antes de subirlo.
+
+**Falta la pantalla**, y se dice para que no se dé por hecho: el visor que pinta
+el PDF con la marca incrustada, la subida desde el editor y la firma del enlace
+en servidor, que necesita Functions y por tanto **F2**. Es la fila **Y** de los
+pendientes.
+
+### 24 fotografías de contexto en las lecciones · HECHO
+
+De la carpeta aportada salen 30 imágenes únicas: 24 van a lecciones, 1 al
+botiquín y 4 quedan reservadas. Son fotografías de **contexto** —gente
+practicando—, no diagramas, y eso decide dónde se pueden poner: una foto de un
+aula no puede equivocarse de anatomía, pero tampoco explica nada, así que ningún
+pie afirma un dato clínico. Van declaradas como generadas con IA en su `fuente`,
+para que dentro de diez meses nadie las tome por documentación de la academia.
 
 ---
 
@@ -727,20 +886,42 @@ dejar en un `Downloads`. Con el botón lo arregla el director desde su propia
 sesión, y las reglas ya lo permiten (`esAdminDe` + `academiaEditaContenido`,
 cubierto por `agregados.rules.test.mjs`).
 
-#### Lo que falta
+#### El script, hecho el 02-09-2026
 
-Dos cosas, y la segunda salió al corregir la causa:
+Era la segunda mitad, y la que garantizaba que el problema volviera: mientras el
+script no los generase, **cada resiembra devolvía los agregados a cero** y había
+que acordarse de pulsar el botón otra vez.
 
-1. Que un director de R.E.S.C.A.T.E. entre a **Panel → Contenido** y pulse
-   «Generar los índices» en `RES-2026__paramedico-tum`.
-2. Que `scripts/migrar-contenido.mjs` los genere al clonar, como hace la
-   aplicación. Mientras no lo haga, **cada vez que se resiembre una academia
-   desde el script los agregados vuelven a quedarse en cero**, y el botón del
-   panel habrá que pulsarlo otra vez. Después hay que comprobar
-que el sello queda al día y que la carga baja a 3 lecturas.
+| | |
+|---|---|
+| Los genera al clonar | Espejo de `clonarPlantillaAAcademia` con el SDK de administración, desde los mismos temas que se acaban de escribir: releerlos serían 287 lecturas para producir lo que ya está en memoria |
+| El sello va al final | Si la escritura se corta, el sello no llega y el curso se sirve por el camino completo —correcto, solo más caro—. Sellar primero dejaría agregados incompletos marcados como buenos, y el examen saldría corto sin que nadie se enterara |
+| Un fallo no invalida la clonación, pero se escribe | `clonacion.agregados` y `clonacion.agregadosMotivo` en el documento del curso, más un aviso en el resumen. Es la misma lección del `console.warn` |
+| `--verificar` los mira | Antes decía «287/287 temas, faltantes: ninguno» sobre un curso que costaba 288 lecturas por carga. Ahora dice si hay sello, si está caducado y cuántos documentos faltan |
+| `--agregados` los regenera solos | Para el emulador y para academias de prueba. En producción **la vía es el botón del panel**: un script contra producción necesita una clave de service account, y ésas son justo las que no conviene repartir |
 
-No lo puede hacer la IA: exige una sesión de director, y pedir esa contraseña
-sería exactamente el error que ya se cometió una vez con la clave de servicio.
+Comprobado de punta a punta contra el emulador de Firestore, no leyendo el
+código: clonación completa (288 documentos de contenido + 38 agregados + sello),
+regeneración con `--agregados` (el sello sube a v2) y detección del hueco
+—borrado el sello, `--verificar` avisa y dice cómo arreglarlo—.
+
+#### Cerrado el 02-09-2026
+
+Lo pulsó el dueño desde la consola de super-admin —posible desde ese mismo día,
+ver el **trabajo Z**— y la tarjeta lo confirma en pantalla:
+
+| | |
+|---|---|
+| Estado | **Índices al día** |
+| Coste por carga | **3 lecturas** (eran 288) |
+| Cargas al día antes de agotar la cuota | **~16 666** (eran ~173) |
+| Curso | `Programa Paramédico (TUM)`, 8 módulos · 290 temas · versión 4 |
+
+Los 8 módulos y 290 temas no son un error: la academia creó su módulo
+**NORMATIVAS** desde el editor, y el curso de R.E.S.C.A.T.E. ya no coincide con
+los 7 módulos y 287 temas del repositorio. Es lo esperado —el editor existe para
+eso— y el seed lo respeta: `modulosQueSePerderian` aborta la resiembra antes de
+borrar un módulo que solo existe en remoto.
 
 ### P5 — Optimización del arranque
 
@@ -748,18 +929,97 @@ Ya no incluye la no-indexación: eso se adelantó y está hecho en **P8**, porqu
 no dependía de nada y dejarlo para después era publicar el temario en Google
 mientras se blindaba la puerta.
 
-Lo que queda es peso, y **P2 ya se llevó la mitad**: el trozo de entrada bajó de
-3 037 kB a 712 kB al sacar el temario. Medido sobre `dist/` el 31-08-2026, lo
-que queda es esto:
+Lo que queda es peso. **P2 se llevó la primera mitad** —el trozo de entrada bajó
+de 3 037 kB a 712 kB al sacar el temario— y el **02-09-2026 se llevó la
+segunda parte de la aplicación**.
 
-| Trozo | Peso | Qué es |
+#### El catálogo de activos, partido en dos · HECHO el 02-09-2026
+
+De los 1 401 kB de fuente del trozo de entrada, **499 eran
+`src/data/activosMedicos.js`**: la procedencia, la licencia, el hash y el texto
+de atribución de las 228 figuras del Atlas. Un 36 % de la entrada, descargado
+por todo el mundo —incluido el visitante de la portada pública, que no ve
+ninguna figura—.
+
+Nada de eso sobra: casi todo el material está bajo CC BY y la atribución es la
+condición de la licencia, no una cortesía. Lo que sobraba era **cuándo** se
+descargaba.
+
+| | |
+|---|---|
+| `src/data/activosLigeros.js` | Proyección generada del catálogo con lo que hace falta para PINTAR: ruta, texto alternativo, tipo y la licencia recortada a las dos banderas que deciden si hay que enseñar el botón de créditos |
+| `lib/creditosActivos.js` | La mitad pesada. La cargan /creditos, el selector del editor y el panel «Créditos», este último con import diferido al abrirlo |
+| La frontera | Va en el ligero lo que se necesita para pintar o para decidir si se pinta algo; se queda en el pesado lo que solo se lee cuando alguien PREGUNTA por la procedencia |
+| No se puede desincronizar | `npm run gen:activos` lo regenera, `npm run build` lo hace solo, el importador lo rehace al terminar y `tests/generadoAlDia.test.mjs` compara los dos archivos |
+
+Medido sobre `dist/`:
+
+| Trozo | Antes | Después |
 |---|---|---|
-| `index.esm` | 720 kB | SDK de Firebase. **La pieza gorda que queda** |
-| `index` (entrada) | 712 kB | La aplicación |
-| `init` | 221 kB | Arranque de Firebase |
+| `index` (entrada) | 731 kB · 177 kB gz | **461 kB · 139 kB gz** |
+| `creditosActivos` | — (dentro de la entrada) | 384 kB · 62 kB gz, **diferido** |
 
-Esta fase ya no espera a nadie y se ocupa del SDK: hoy entra entero aunque el
-visitante de la portada no vaya a iniciar sesión.
+Comprobado en el navegador y no solo en la báscula: la portada carga sin pedir
+`creditosActivos-*.js`, y /creditos lo pide y sigue listando sus 221
+ilustraciones, 9 autores y 4 licencias.
+
+`tests/pesoDeLaEntrada.test.mjs` impide la vuelta atrás recorriendo los imports
+ESTÁTICOS desde `main.jsx`: un `import` de más devuelve los 269 kB sin que nada
+falle ni se vea, que es exactamente como llegaron ahí.
+
+#### El SDK de Firebase, encendido solo cuando hace falta · HECHO el 02-09-2026
+
+`AuthProvider` pedía `init.js` nada más montarse, en toda visita y toda página,
+porque era la única forma que tenía de saber si había sesión. Con el SDK de
+Firestore detrás son **~950 kB (240 comprimidos)** que descargaba también quien
+solo abría la portada pública. Y el banner de anuncios remataba: una lectura de
+Firestore por cada visitante anónimo.
+
+Ahora se pregunta primero a `lib/sesionProbable.js`, que **no carga nada**: lee
+las claves que el propio SDK deja en `firebaseLocalStorageDb` (o en
+`localStorage`, cuando IndexedDB no está disponible).
+
+**La regla que gobierna la sonda: ante la duda, encender.** Equivocarse hacia
+«no hay sesión» dejaría a un alumno con sesión abierta viéndose como visitante
+anónimo, sin su temario; equivocarse hacia «sí hay» solo cuesta la descarga que
+se hacía siempre. Por eso devuelve `true` sin `indexedDB`, sin `databases()`,
+con el almacenamiento bloqueado, si la lectura tarda más de 400 ms o ante
+cualquier excepción. **Firefox no implementa `databases()`**, así que allí se
+enciende siempre y la visita anónima pesa lo que pesaba: es una consecuencia
+aceptada, no un descuido.
+
+Y dos puertas encienden sin esperar a la sonda: `RutaProtegida` —detrás está
+todo lo que depende de quién eres— y la página de cuenta, que es donde se inicia
+sesión. Sin lo segundo, alguien podría entrar y la aplicación no enterarse.
+
+> **Lo que se aprendió probándolo, y es el motivo de que esto funcione.** La
+> primera versión daba por buena la EXISTENCIA de `firebaseLocalStorageDb`.
+> Comprobado en el navegador: esa base **la crea el SDK al inicializarse**, no al
+> iniciar sesión, y estaba ahí con el almacén vacío en una pestaña que nunca
+> había entrado a ninguna cuenta. Con aquella versión, cualquiera que hubiera
+> abierto la web una vez habría vuelto a descargar el SDK para siempre: la
+> optimización no habría servido de nada y habría parecido que sí. Hay que leer
+> las claves de dentro.
+
+Cambio de comportamiento, dicho para que no sorprenda: **el banner de anuncios
+solo se pide con sesión iniciada.** Lo escribe el super-admin para quien USA la
+plataforma —«el sábado hay mantenimiento»—; a quien mira la portada para saber
+qué es PTEM no le dice nada, y pedirlo obligaba a encender Firebase de todos
+modos.
+
+Medido en el navegador sobre el build, no en la báscula:
+
+| Visita | Archivos JS descargados |
+|---|---|
+| Portada anónima, antes | 5 — `index`, `init`, `index.esm`, `auth`, `plataforma` |
+| Portada anónima, ahora | **1** — `index` |
+| Portada con sesión guardada | 4 — enciende en el arranque, como siempre |
+| `/cuenta` | 5 — enciende al llegar, que es donde se inicia sesión |
+
+Comprobados los tres casos de verdad: base borrada (visitante nuevo), base
+creada pero vacía (ya había abierto la web) y una clave de sesión inyectada a
+mano (alumno con sesión). 14 pruebas más sobre la sonda, la mitad dedicadas a
+que ante cualquier duda encienda.
 
 ### Lo que el bloque P NO incluye
 
@@ -1192,10 +1452,71 @@ certificado sigue descargable y su QR funciona para siempre.
 
 ---
 
-## Trabajo A — Calidad editorial v2 · PENDIENTE
+## Trabajo A — Calidad editorial v2 · EN CURSO · lote 1 entregado el 02-09-2026
 
 > Partir el bundle ya NO es parte de A: se lo lleva **P2**, que además lo hace
 > por seguridad y no solo por peso. A pasa a depender de P2.
+
+### La infraestructura de §25.2 ya no hace falta
+
+`PLAN-LMS.md` §25.2 abre la fase partiendo `gen-plan-rescate.mjs` en un archivo
+por módulo, porque enriquecer un bundle de 4.26 MB lo llevaría a 12-16 MB y eso
+no se le entrega a un alumno con datos móviles. **Ese paso está resuelto por
+otra vía.** Después de P2, `src/data/planRescate.js` ya no lo descarga nadie: no
+es alcanzable desde la aplicación —lo comprueban `fugaDelBundle.test.mjs`, que
+sigue también los imports diferidos, y `pesoDeLaEntrada.test.mjs`— y solo lo
+leen los scripts de siembra y las pruebas. El contenido que recibe el alumno
+viene de Firestore, tema a tema.
+
+Lo que sí hay que vigilar al enriquecer, y por eso se dice aquí:
+
+| Límite | Dónde muerde |
+|---|---|
+| ~35 kB por lección | Tope del molde. El lote 1 dejó la mayor en 13.4 kB |
+| 1 MiB por documento | Límite de Firestore para el documento del tema |
+| Agregados por módulo | La prosa NO entra en ellos —las fichas excluyen `secciones` a propósito—, así que solo crecen si suben quiz, flashcards o conceptos |
+
+### Lote 1 · M3, evaluación primaria y secundaria · 10 lecciones · HECHO
+
+Las diez lecciones `m3-ep-*` y `m3-es-*`: SSS, AVDI, apertura de vía aérea y
+control cervical, respiración, circulación, evaluación neurológica, exploración
+dirigida, ABCDE, SAMPLE y exploración detallada.
+
+**La regla del lote, y es la que lo hace seguro: ni un solo dato clínico nuevo.**
+Todo lo añadido se deriva de la prosa que la lección ya tenía y ya citaba. Un
+«repaso rápido» es un sitio comodísimo para colar una dosis sin fuente, y este
+temario no puede permitírselo.
+
+| Pieza | Cómo quedó |
+|---|---|
+| Errores frecuentes | Sección propia con 3-4 `callout` de alerta. En 9 de 10 lecciones: `m3-ep-via-aerea-cervicales` ya tenía su lista y no se le añadió una que diría lo mismo |
+| Repaso rápido | Sección con 8-12 viñetas, el resumen de una página |
+| Preguntas de repaso oral | Sección con 7-8 preguntas para responder hablando |
+| Mnemotecnias | 6 nuevas, todas re-codificando lo que la lección ya enseña: mirar-escuchar-sentir, piel-pulso-cabeza, cuatro H y tres I, IPPA, la misma escalera dos veces, PSM |
+| Lo que más se pregunta | 7 `callout` clave dentro de las secciones existentes |
+
+Los helpers del molde (`erroresFrecuentes`, `repasoRapido`, `preguntasOrales`,
+`mnemotecnia`, `masPreguntado`) están al principio de
+`src/data/contenido/m3-evaluacion.js` y se reutilizan tal cual en los lotes
+siguientes: así las diez lecciones tienen la misma forma y el archivo se sigue
+pudiendo leer.
+
+**Un hueco que encontró la pasada.** `m3-ep-via-aerea-cervicales` declaraba como
+objetivo «actuar sin recurrir al barrido digital a ciegas» y su prosa no lo
+mencionaba en ninguna parte: un objetivo sin contenido. Se añadió el `callout`
+que faltaba. Encontrar eso es para lo que sirve una pasada de calidad.
+
+Peso: 91.1 → 123.4 kB las diez juntas, la mayor en 13.4 kB de un tope de 35.
+`tests/loteM3Evaluacion.test.mjs` (5 pruebas) impide que las piezas
+desaparezcan en una regeneración y comprueba los topes del molde.
+
+### Lo que queda de A
+
+Cinco lotes, en este orden: **M3 vía aérea** (14 lecciones) y **M3 vía
+intravenosa y monitor** (9), **M5 trauma** (33), **M4** (58), **M6**, **M2** y
+**M1**. Los tres primeros son los que llevan dosis, tiempos y volúmenes: ahí el
+guardarraíl de cifras de `loteM3Evaluacion.test.mjs` deja de ser decorativo y
+hay que extenderlo al lote nuevo.
 
 Detalle completo en `PLAN-LMS.md` §25. Resumen y lo que cambió al unificar:
 
@@ -1402,11 +1723,30 @@ condicionada el bloqueo de `CLAUDE.md` §6 y §11.
 
 ---
 
-## Trabajo E — Editor de temas · PENDIENTE
+## Trabajo E — Editor de temas · HECHO · comprobado el 02-09-2026
 
-Era la Fase 5 de PLAN-LMS. Que el staff edite bloques, quiz, flashcards y
-actividades desde la interfaz, con borradores y vista previa. La capa de datos
-y las reglas ya existen desde la Fase 2 de aquel plan; falta la pantalla.
+Era la Fase 5 de PLAN-LMS y esta fila decía «falta la pantalla». **La pantalla
+existe y está completa desde antes de esta revisión.** Es
+`src/components/editor/PanelContenidoTema.jsx`, 738 líneas, montada en
+`/editor` y gateada por la matriz de permisos de `lib/permisosEditor.js`.
+
+| Lo que pedía la fila | Dónde está |
+|---|---|
+| Bloques | Editor por tipo, con la paleta completa de `TIPOS_BLOQUE` —párrafo, subtítulo, lista, pasos, tabla, callout con sus variantes, fórmula, imagen y fuentes—. `diagrama` se deja fuera a propósito: los del Atlas se editan como imagen |
+| Quiz | Preguntas con opciones, varias correctas y ponderación por pregunta |
+| Flashcards | Frente y reverso, en filas |
+| Actividades | Las tres: ordenar la secuencia, completar la frase y preguntas de repaso con explicación |
+| Borradores | Estado `sucio` con el aviso «Cambios sin guardar» |
+| Vista previa | `VistaPreviaTema`, con el botón del ojo en la propia barra del panel |
+
+Y además, que la fila no pedía: conceptos clave, y recursos con vídeos, fuentes
+y enlaces, imágenes del tema y archivos descargables.
+
+> **Cómo se comprobó, para que conste.** Leyendo el código y contrastándolo
+> contra la fila, no conduciendo el editor con una sesión de director: eso exige
+> credenciales que una IA no debe pedir. Si al usarlo aparece un hueco real, se
+> reabre la fila con el hueco concreto — pero no se vuelve a construir la
+> pantalla, que es lo que habría pasado de dejar la fila como estaba.
 
 ---
 
@@ -1706,12 +2046,41 @@ opaco** guardado junto al perfil, no la matrícula visible.
 
 | Qué | De qué fase | Nota |
 |---|---|---|
-| Caché en IndexedDB | 1 | Refrescar la pestaña vuelve a pagar 3 lecturas |
+| ~~Caché en IndexedDB~~ | 1 | **HECHA el 02-09-2026.** `src/lib/cacheContenido.js`: los agregados y las lecciones se guardan sellados con la versión del curso. Solo se paga la lectura del sello, que es la que hace segura a la caché. Detalle abajo |
 | Ver los flujos de profesor en navegador | 2 | Necesita un usuario de prueba |
 | Sembrar el andamio en producción | 3 | Decisión de la academia |
 | ~~2 pruebas en rojo por SVG modificados a mano~~ | — | **RESUELTO el 29 de agosto** (commit `09176cd`). Era el mismo fallo que tuvo `main` en rojo 11 horas y bloqueó el despliegue: los SVG se optimizaron sin regenerar el catálogo que sella su hash. El minificado es ahora parte del pipeline. Ver `PLAN-LMS.md` §33 |
 | Verificar el pipeline de activos con red a `smart.servier.com` | — | El minificado se integró, pero la reproducibilidad byte a byte **no está verificada**: desde el entorno de trabajo esa fuente da 403 y sin ella el importador deja fuera 48 activos. Correr una vez `npm i --no-save svgo && npm run activos:importar` |
 | Partir el chunk de 3 MB del bundle | 1 | Promovido: es el requisito previo del **trabajo A** |
+
+### La caché de contenido en IndexedDB · HECHA el 02-09-2026
+
+La Fase 1 bajó abrir contenido de 287 lecturas a 3. Lo que no resolvió es que
+esas 3 se volvían a pagar **en cada recarga de la pestaña**: la caché vivía en un
+`Map` en memoria y moría con la página. Y con las lecturas volvían a viajar los
+71 kB del agregado de enlaces del glosario, que pide cada lección.
+
+Ahora se guardan en IndexedDB los agregados y las lecciones ya leídas. De las
+tres lecturas por recarga queda **una**: la del sello.
+
+**Por qué esa lectura no se ahorra, y por qué es justo la que hace segura a la
+caché.** El sello se lee siempre de Firestore y trae la versión del curso. Cada
+entrada guardada lleva pegada la versión con la que se escribió, y no se sirve
+si no coincide. Si el sello viene `desactualizado` —lo pone el editor al
+guardar— la caché ni se consulta ni se escribe. La caché nunca decide si el
+contenido vale: solo guarda lo que el sello ya declaró válido.
+
+| Decisión | Motivo |
+|---|---|
+| El SELLO no se cachea | Es el que dice si lo demás sirve. Cachearlo sería validar la caché consigo misma |
+| La lección se sella con la versión del CURSO, no con la suya | Al editar un tema, el sello del curso queda desactualizado y con él cae la lección guardada. Es más conservador —a veces se descarta una lección que no cambió— y evita el único caso que importa: seguir enseñando la versión anterior a una corrección clínica |
+| Todo falla hacia la red | Sin IndexedDB, con el almacenamiento bloqueado, en ventana privada, con la base corrupta o si una operación pasa de 600 ms, se devuelve `null` y se va a Firestore, que es lo que se hacía antes |
+
+11 pruebas en `tests/cacheContenido.test.mjs`, y casi todas comprueban el camino
+en el que la caché se NIEGA a responder: ahorrar lecturas no vale nada si el
+precio es que alguien estudie material retirado.
+
+---
 
 ### Decisiones que faltan (ninguna bloquea)
 
