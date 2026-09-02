@@ -1,3 +1,10 @@
+// Las piezas de estudio del trabajo A (errores, repaso, preguntas orales,
+// mnemotecnias) salen del molde compartido: la forma tiene que ser la misma
+// en todas las unidades o el alumno reaprende dónde mirar en cada una.
+import {
+  erroresFrecuentes, repasoRapido, preguntasOrales, mnemotecnia, masPreguntado,
+} from './moldeV2.js'
+
 // ============================================================
 //  Módulo 3 · Manejo de vía aérea — repaso, métodos manuales y cánulas
 // ------------------------------------------------------------
@@ -101,6 +108,7 @@ export default {
             ],
           },
           { tipo: 'callout', variante: 'clinico', titulo: 'El bronquio derecho es más recto', texto: 'El bronquio principal derecho sale de la tráquea con un ángulo más vertical que el izquierdo. Por eso un tubo endotraqueal introducido de más suele alojarse en el derecho y dejar el pulmón izquierdo sin ventilar, y por eso los cuerpos extraños aspirados van con más frecuencia a ese lado.' },
+          mnemotecnia('CADA DISPOSITIVO TIENE SU PISO, y la anatomía dice cuál: la cánula nasofaríngea acaba en la nasofaringe, la orofaríngea en la orofaringe, el tubo endotraqueal pasa las cuerdas y la aguja del acceso transtraqueal entra por la membrana cricotiroidea. Si se recuerda el piso, no se confunde el dispositivo.'),
         ],
       },
       {
@@ -135,8 +143,39 @@ export default {
           { tipo: 'p', texto: 'En cada inspiración, una parte del aire se queda en las vías de conducción —nariz, faringe, tráquea y bronquios— donde no hay alvéolos y por tanto no hay intercambio. Ese volumen se llama espacio muerto anatómico y se llena en cada respiración, sirva o no.' },
           { tipo: 'p', texto: 'La consecuencia es directa: si el volumen de cada respiración es pequeño, una fracción mayor de ese aire se queda en el espacio muerto y llega menos aire fresco al alvéolo, aunque la frecuencia sea alta. Un patrón rápido y superficial mueve aire y ventila mal. Por eso, ante un paciente taquipneico y superficial, no basta con contar respiraciones: hay que valorar si esas respiraciones sirven.' },
           { tipo: 'callout', variante: 'alerta', titulo: 'Aplicación inmediata', texto: 'Al asistir la ventilación, la eficacia depende de conseguir un volumen suficiente en cada insuflación y una frecuencia adecuada, no de insuflar deprisa. Ventilar rápido y con poco volumen reproduce artificialmente el problema que se pretendía corregir.' },
+          masPreguntado('Tres puntos concentran las preguntas de esta lección, y los tres son distinciones, no listas: ventilar no es oxigenar, un patrón rápido y superficial ventila MAL por el espacio muerto, y el bronquio derecho es el que recibe lo que se introduce de más.'),
         ],
       },
+      erroresFrecuentes([
+        ['Leer solo el pulsioxímetro', 'Un paciente puede oxigenar aceptablemente y estar ventilando de forma insuficiente, acumulando dióxido de carbono. El número del pulsioxímetro no describe la ventilación, y la valoración respiratoria no se reduce a él.'],
+        ['Ventilar deprisa y con poco volumen', 'Reproduce artificialmente el problema del espacio muerto: mueve aire y no ventila. La eficacia depende de conseguir volumen suficiente en cada insuflación, no de insuflar rápido.'],
+        ['Olvidar que la presión positiva invierte la mecánica', 'Al ventilar con bolsa-mascarilla el aire entra empujado, no aspirado. Eso sube la presión dentro del tórax y puede reducir el retorno venoso si se ventila demasiado rápido o con volúmenes excesivos.'],
+        ['Introducir el tubo de más', 'El bronquio principal derecho sale con un ángulo más vertical, así que un tubo demasiado profundo se aloja ahí y deja el pulmón izquierdo sin ventilar.'],
+      ]),
+      repasoRapido([
+        'Recorrido: fosas nasales o boca, faringe, laringe, tráquea, bronquios, alvéolo.',
+        'La faringe tiene tres porciones —nasofaringe, orofaringe e hipofaringe— y cada una aloja un dispositivo distinto.',
+        'La lengua cae en la orofaringe: es la obstrucción más frecuente.',
+        'La membrana cricotiroidea es el sitio del acceso transtraqueal con aguja.',
+        'El bronquio derecho es más vertical: recibe el tubo demasiado profundo y los cuerpos extraños aspirados.',
+        'La inspiración es activa; la espiración en reposo, pasiva.',
+        'La presión negativa pleural mantiene el pulmón expandido; si se pierde, se colapsa.',
+        'La ventilación con presión positiva invierte la mecánica y puede reducir el retorno venoso.',
+        'Ventilar es mover aire; oxigenar es que el oxígeno llegue a la sangre.',
+        'El espacio muerto anatómico se llena en cada respiración, sirva o no.',
+        'Rápido y superficial mueve aire y ventila mal: hay que valorar si esas respiraciones sirven.',
+      ]),
+      preguntasOrales([
+        'Recorre en voz alta el camino del aire desde la nariz hasta el alvéolo.',
+        'Nombra las tres porciones de la faringe y qué dispositivo va en cada una.',
+        '¿Por qué el bronquio derecho recibe lo que se introduce de más?',
+        'Explica qué mantiene el pulmón expandido y qué pasa cuando eso se pierde.',
+        '¿Qué cambia en la mecánica al ventilar con bolsa-mascarilla?',
+        'Diferencia ventilación de oxigenación con un ejemplo de cada fallo.',
+        '¿Qué es el espacio muerto anatómico?',
+        'Un paciente taquipneico y superficial. ¿Está ventilando bien? Justifícalo.',
+      ]),
+
       { titulo: 'Fuentes', bloques: [{ tipo: 'fuentes', items: [MOORE, GUYTON, FISIO_RESP] }] },
     ],
     conceptosClave: [
@@ -261,6 +300,7 @@ export default {
         bloques: [
           { tipo: 'p', texto: 'En el paciente con el estado de conciencia deprimido, el tono de la musculatura de la lengua y de la faringe disminuye y la lengua se desplaza hacia atrás hasta contactar con la pared posterior de la faringe. La lengua se inserta en la mandíbula, de modo que desplazar la mandíbula hacia delante y hacia arriba arrastra la lengua consigo y despeja el espacio.' },
           { tipo: 'callout', variante: 'clave', titulo: 'Se mueve la mandíbula, no la lengua', texto: 'La maniobra no actúa sobre la lengua directamente. Actúa sobre el hueso donde la lengua está anclada. Entenderlo explica por qué el punto de apoyo tiene que ser óseo.' },
+          mnemotecnia('HUESO, NO BLANDO. Todo el error posible de esta maniobra cabe en dónde se apoyan los dedos: sobre la porción ósea del mentón abre; sobre los tejidos blandos de debajo, cierra. Si se palpa algo que cede, los dedos están mal puestos.'),
         ],
       },
       {
@@ -290,6 +330,36 @@ export default {
           { tipo: 'callout', variante: 'clinico', titulo: 'Una maniobra manual no es una vía aérea definitiva', texto: 'Mantiene la permeabilidad mientras alguien la sostiene. En cuanto se suelta, la lengua vuelve a caer. Por eso la maniobra se complementa con una cánula cuando está indicada, o con un dispositivo avanzado según el alcance del prestador y el protocolo del servicio.' },
         ],
       },
+      erroresFrecuentes([
+        ['Apoyar los dedos en los tejidos blandos', 'Es el error que agrava la obstrucción: presionar por dentro del arco mandibular empuja la base de la lengua hacia atrás y cierra la vía aérea que se pretendía abrir. El apoyo es sobre hueso.'],
+        ['Cerrar la boca del todo', 'La boca se mantiene ligeramente entreabierta. Cerrarla por completo puede obstruir de nuevo y anula el efecto de la maniobra.'],
+        ['Soltar y darla por hecha', 'Mantiene la permeabilidad mientras alguien la sostiene. En cuanto se suelta, la lengua vuelve a caer: no es una vía aérea definitiva.'],
+        ['Barrer con el dedo a ciegas', 'Solo se retira lo visible y alcanzable. Buscar a ciegas puede empujar el cuerpo extraño más adentro y provocar lesión y sangrado.'],
+      ]),
+      repasoRapido([
+        'El problema es la lengua, que al perderse el tono contacta con la pared posterior de la faringe.',
+        'La lengua se inserta en la mandíbula: desplazando el hueso se arrastra la lengua.',
+        'La maniobra no actúa sobre la lengua, actúa sobre el hueso donde está anclada.',
+        'Los dedos índice y medio van bajo la porción ÓSEA del mentón.',
+        'Se eleva hacia arriba y hacia delante, llevando la mandíbula al frente.',
+        'La boca queda ligeramente entreabierta.',
+        'Se comprueba el resultado mirando, escuchando y sintiendo.',
+        'Es la elección en el paciente SIN sospecha de lesión cervical.',
+        'Con sospecha cervical, la elección es la tracción mandibular.',
+        'No es una vía aérea definitiva: se complementa con cánula o dispositivo avanzado.',
+        'Solo se retira de la boca lo visible y alcanzable.',
+      ]),
+      preguntasOrales([
+        'Explica por qué se obstruye la vía aérea en un paciente con la conciencia deprimida.',
+        '¿Sobre qué estructura actúa realmente la maniobra y por qué funciona?',
+        'Describe paso a paso el levantamiento del mentón.',
+        '¿Dónde exactamente van los dedos y qué pasa si se apoyan mal?',
+        '¿Por qué la boca no se cierra del todo?',
+        '¿En qué paciente NO eliges esta maniobra y cuál usas en su lugar?',
+        '¿Por qué se dice que no es una vía aérea definitiva?',
+        'Aparece contenido en la boca al abrir. ¿Qué haces y qué no haces?',
+      ]),
+
       { titulo: 'Fuentes', bloques: [{ tipo: 'fuentes', items: [AHA_BLS, MOORE] }] },
     ],
     conceptosClave: [
@@ -377,6 +447,8 @@ export default {
           { tipo: 'p', texto: 'La llamada triple maniobra combina tres acciones: extensión de la cabeza, elevación del mentón y apertura de la boca. Abre bien la vía aérea, pero exige mover el cuello, algo que no se puede permitir cuando el mecanismo sugiere lesión de columna cervical.' },
           { tipo: 'p', texto: 'La versión modificada conserva el desplazamiento anterior de la mandíbula y la apertura de la boca, y suprime la extensión de la cabeza. Se conoce también como tracción mandibular o subluxación mandibular, y es la maniobra de elección en el paciente traumatizado.' },
           { tipo: 'callout', variante: 'clave', titulo: 'Qué se quita y qué se conserva', texto: 'Se elimina exactamente el componente que moviliza el cuello. Lo que abre la vía aérea —llevar la mandíbula hacia delante— se mantiene íntegro, y por eso la maniobra modificada sigue siendo eficaz.' },
+          mnemotecnia('SE QUITA LA EXTENSIÓN, SE CONSERVA EL ADELANTAMIENTO. Es toda la diferencia entre la triple maniobra y su versión modificada, y explica por qué la modificada sigue abriendo: lo que despeja la vía aérea es llevar la mandíbula hacia delante, no mover el cuello.'),
+          masPreguntado('La pregunta se repite en dos formas: cuál eliges ante mecanismo de trauma, y qué haces cuando la tracción mandibular NO abre. La segunda respuesta es siempre la misma jerarquía: una vía aérea cerrada mata en minutos, un movimiento mínimo y controlado no.'),
         ],
       },
       {
@@ -406,6 +478,34 @@ export default {
           { tipo: 'p', texto: 'La estabilización manual de la columna cervical durante toda la maniobra y los criterios de restricción del movimiento espinal se estudian en la evaluación primaria y en el Módulo 5; aquí interesa la ejecución de la maniobra.' },
         ],
       },
+      erroresFrecuentes([
+        ['Insistir con la maniobra mientras el paciente no ventila', 'Si la tracción mandibular no abre, no se repite indefinidamente. Se emplea la técnica que logre permeabilidad con el menor movimiento posible: dejar de ventilar por no mover el cuello no es una opción aceptable.'],
+        ['Extender o rotar la cabeza al abrir la boca', 'Es justo el componente que la versión modificada elimina. La boca se abre con los pulgares manteniendo la cabeza en posición neutra alineada.'],
+        ['Intentar ventilar solo', 'La maniobra ocupa las dos manos. Ventilar con bolsa-mascarilla mientras se sostiene requiere en la práctica un segundo reanimador: uno mantiene sello y mandíbula, el otro insufla.'],
+        ['Confundir la triple maniobra con su versión modificada', 'La triple clásica incluye la extensión de la cabeza y por eso no sirve ante sospecha de lesión cervical. La modificada suprime exactamente ese componente.'],
+      ]),
+      repasoRapido([
+        'La triple maniobra clásica combina extensión de la cabeza, elevación del mentón y apertura de la boca.',
+        'La versión modificada suprime la extensión y conserva el desplazamiento anterior de la mandíbula.',
+        'También se llama tracción mandibular o subluxación mandibular.',
+        'Es la maniobra de elección en el paciente traumatizado.',
+        'Se ejecuta desde la cabecera, alineado con el eje longitudinal del paciente.',
+        'Índice y medio bajo los ángulos de la mandíbula; pulgares en pómulos o mentón.',
+        'Se adelanta la mandíbula respecto del maxilar superior.',
+        'La cabeza permanece en posición neutra alineada durante toda la maniobra.',
+        'Ocupa las dos manos: ventilar a la vez exige un segundo reanimador.',
+        'Si no abre, prima la oxigenación con el menor movimiento posible, y se documenta.',
+      ]),
+      preguntasOrales([
+        '¿Qué tres acciones componen la triple maniobra clásica?',
+        '¿Qué se suprime en la versión modificada y por qué sigue funcionando?',
+        'Di los otros dos nombres con que se conoce la maniobra modificada.',
+        'Describe la técnica desde la posición del reanimador hasta la comprobación.',
+        '¿Por qué hacen falta dos personas para ventilar con esta maniobra?',
+        'La tracción mandibular no abre la vía aérea. ¿Qué haces y con qué argumento?',
+        'Explica la jerarquía de riesgos entre vía aérea cerrada y movimiento cervical.',
+      ]),
+
       { titulo: 'Fuentes', bloques: [{ tipo: 'fuentes', items: [PHTLS9, AHA_BLS] }] },
     ],
     conceptosClave: [
@@ -531,9 +631,40 @@ export default {
         bloques: [
           { tipo: 'p', texto: 'El grado de inclinación no es el mismo a todas las edades. En el lactante, la cabeza es proporcionalmente grande y el occipucio prominente, de modo que al acostarlo boca arriba el cuello queda flexionado y la vía aérea se cierra; en él basta una posición neutra, y una extensión excesiva vuelve a obstruir. En el niño mayor se emplea una extensión intermedia, y en el adulto la extensión es mayor.' },
           { tipo: 'callout', variante: 'clinico', titulo: 'Más no es mejor', texto: 'Forzar la extensión en un lactante o en un niño pequeño cierra la vía aérea en lugar de abrirla. La referencia práctica es el resultado: se ajusta la posición hasta que el aire entra, no hasta alcanzar un ángulo determinado.' },
+          mnemotecnia('UNA MANO EMPUJA, LA OTRA LEVANTA: la palma sobre la frente inclina, los dedos bajo el mentón elevan. Y el grado de inclinación lo dicta el paciente, no el reloj: neutra en el lactante, intermedia en el niño, mayor en el adulto.'),
+          masPreguntado('Lo que más se pregunta no es la técnica, son sus dos límites: que está DESCARTADA ante sospecha de lesión cervical, y que en el lactante la extensión excesiva cierra la vía aérea en vez de abrirla.'),
           { tipo: 'p', texto: 'Las particularidades completas de la vía aérea pediátrica y su manejo se estudian en el Módulo 6, dentro de poblaciones especiales.' },
         ],
       },
+      erroresFrecuentes([
+        ['Usarla con mecanismo compatible con lesión cervical', 'Esta maniobra moviliza el cuello por definición. Ante sospecha se sustituye por la triple maniobra modificada, que abre sin extender.'],
+        ['Forzar la extensión en un lactante', 'La cabeza es proporcionalmente grande y el occipucio prominente: al acostarlo boca arriba el cuello ya queda flexionado, y una extensión excesiva vuelve a cerrar la vía aérea.'],
+        ['Perseguir un ángulo en vez de un resultado', 'No hay un grado correcto de inclinación. Se ajusta la posición hasta que el aire entra, comprobando mirando, escuchando y sintiendo.'],
+        ['Apoyar los dedos en los tejidos blandos submandibulares', 'El mismo error que en el levantamiento del mentón aislado: empuja la base de la lengua hacia atrás. El apoyo del mentón es óseo.'],
+      ]),
+      repasoRapido([
+        'Son dos acciones sobre estructuras distintas: la frente inclina, el mentón eleva.',
+        'La inclinación alinea los ejes de la vía aérea y aleja la base de la lengua.',
+        'La elevación del mentón desplaza la mandíbula y con ella la lengua.',
+        'Cada componente por separado abre parcialmente; combinados abren mejor.',
+        'Es la técnica recomendada en soporte vital básico sin sospecha de lesión cervical.',
+        'Lo primero del procedimiento es confirmar que no hay mecanismo compatible con lesión cervical.',
+        'Los dedos van bajo la porción ósea del mentón; la boca queda entreabierta.',
+        'El grado de inclinación cambia con la edad: neutra en el lactante, intermedia en el niño, mayor en el adulto.',
+        'En el lactante, la extensión excesiva cierra la vía aérea.',
+        'La referencia práctica es el resultado, no un ángulo.',
+        'La vía aérea pediátrica completa se estudia en el Módulo 6.',
+      ]),
+      preguntasOrales([
+        '¿Qué hace cada uno de los dos componentes de la maniobra frente-mentón?',
+        '¿Por qué combinados abren mejor que por separado?',
+        'Describe la técnica paso a paso, empezando por lo que hay que confirmar antes.',
+        '¿En qué paciente está descartada esta maniobra y por qué?',
+        'Explica por qué en el lactante basta la posición neutra.',
+        '¿Cómo sabes que has alcanzado la inclinación correcta?',
+        '¿Qué error de apoyo comparte esta maniobra con el levantamiento del mentón aislado?',
+      ]),
+
       { titulo: 'Fuentes', bloques: [{ tipo: 'fuentes', items: [AHA_BLS, PHTLS9] }] },
     ],
     conceptosClave: [
@@ -620,6 +751,7 @@ export default {
         bloques: [
           { tipo: 'p', texto: 'La cánula orofaríngea es un dispositivo rígido y curvo que se aloja en la orofaringe y mantiene la base de la lengua separada de la pared posterior de la faringe. Su función es sostener la apertura que consiguió la maniobra manual, de modo que la permeabilidad no dependa de que alguien mantenga la posición.' },
           { tipo: 'callout', variante: 'alerta', titulo: 'Solo en el paciente sin reflejo nauseoso', texto: 'Un paciente con reflejo nauseoso conservado no tolera la cánula: puede provocar náusea, vómito y aspiración, y en algunos casos laringoespasmo. Si el paciente reacciona al intentar colocarla, se retira. Que la rechace es información clínica, no una técnica mal hecha.' },
+          masPreguntado('Dos cosas se preguntan siempre de la cánula orofaríngea: su contraindicación —reflejo nauseoso conservado— y que NO aísla la vía aérea. Mantener abierto y proteger del contenido gástrico son cosas distintas, y esta cánula solo hace la primera.'),
           { tipo: 'p', texto: 'La cánula mantiene la vía aérea abierta, pero no la aísla ni protege del contenido gástrico. Un paciente con cánula orofaríngea puede aspirar, así que la aspiración debe estar preparada y el paciente vigilado.' },
         ],
       },
@@ -656,9 +788,41 @@ export default {
             ],
           },
           { tipo: 'callout', variante: 'clinico', titulo: 'En el niño no se gira', texto: 'En pediatría la técnica del giro de 180 grados puede lesionar el paladar blando, que es más frágil. En el niño la cánula se introduce siguiendo la curvatura anatómica, ayudándose de un depresor lingual cuando se dispone de él. El manejo pediátrico completo corresponde al Módulo 6.' },
+          mnemotecnia('SE MIDE SOBRE EL PACIENTE, NUNCA SE CALCULA. De la comisura de los labios al ángulo de la mandíbula, o del centro de los incisivos al ángulo mandibular. La edad y la complexión aparente no eligen el tamaño: la cara del paciente sí.'),
           { tipo: 'p', texto: 'Después de colocarla se reevalúa: si el paciente empieza a rechazarla, si aparecen náuseas o si recupera el reflejo, se retira. La colocación se registra con su hora, igual que cualquier otra intervención.' },
         ],
       },
+      erroresFrecuentes([
+        ['Colocarla en un paciente que la rechaza', 'Un reflejo nauseoso conservado no tolera la cánula: puede provocar náusea, vómito y aspiración, o laringoespasmo. Si el paciente reacciona, se retira. Que la rechace es información clínica, no una técnica mal hecha.'],
+        ['Elegir el tamaño a ojo', 'Ni la edad ni la complexión aparente eligen la cánula. Demasiado corta empuja la lengua hacia atrás y agrava la obstrucción; demasiado larga alcanza la entrada de la laringe y estimula el vómito o el laringoespasmo.'],
+        ['Girar la cánula en un niño', 'El giro de 180 grados puede lesionar el paladar blando, más frágil en pediatría. En el niño se introduce siguiendo la curvatura anatómica, con depresor lingual si se dispone de él.'],
+        ['Creer que protege de la aspiración', 'Mantiene la vía aérea abierta pero no la aísla. Un paciente con cánula orofaríngea puede aspirar: la aspiración debe estar preparada y el paciente vigilado.'],
+      ]),
+      repasoRapido([
+        'Es un dispositivo rígido y curvo que se aloja en la orofaringe.',
+        'Mantiene la base de la lengua separada de la pared posterior de la faringe.',
+        'Su función es RELEVAR a la mano: que la permeabilidad no dependa de sostener la maniobra.',
+        'Solo en el paciente sin reflejo nauseoso.',
+        'No aísla la vía aérea ni protege del contenido gástrico.',
+        'El tamaño se mide sobre el paciente: comisura de los labios a ángulo de la mandíbula.',
+        'Demasiado corta: empuja la lengua y agrava la obstrucción.',
+        'Demasiado larga: alcanza la laringe, estimula vómito o laringoespasmo.',
+        'Se introduce con la concavidad hacia el paladar y se gira 180 grados a media inserción.',
+        'La brida queda apoyada sobre los labios.',
+        'En el niño NO se gira: se sigue la curvatura anatómica.',
+        'Si el paciente empieza a rechazarla o recupera el reflejo, se retira.',
+      ]),
+      preguntasOrales([
+        '¿Qué hace exactamente la cánula orofaríngea y por qué se dice que releva a la mano?',
+        '¿Cuál es su contraindicación principal y cómo la reconoces?',
+        '¿Cómo eliges el tamaño? Da las dos referencias.',
+        '¿Qué pasa si te quedas corto? ¿Y si te pasas?',
+        'Describe la técnica de inserción en el adulto.',
+        '¿Qué cambia en el niño y por qué?',
+        'Un paciente con cánula colocada vomita. ¿Estaba protegida su vía aérea?',
+        '¿Qué haces si el paciente empieza a rechazar la cánula?',
+      ]),
+
       { titulo: 'Fuentes', bloques: [{ tipo: 'fuentes', items: [AHA_BLS, PHTLS9] }] },
     ],
     conceptosClave: [
@@ -803,6 +967,8 @@ export default {
             ],
           },
           { tipo: 'callout', variante: 'alerta', titulo: 'La dirección importa', texto: 'La cánula avanza hacia atrás, siguiendo el piso de la fosa nasal, no hacia arriba. Dirigirla hacia arriba choca contra los cornetes, produce dolor y sangrado y no alcanza la nasofaringe.' },
+          mnemotecnia('HACIA ATRÁS, NUNCA HACIA ARRIBA: la cánula sigue el piso de la fosa nasal, perpendicular al plano de la cara. Y se mide de la punta de la nariz al lóbulo de la oreja. Dos gestos, y entre los dos evitan casi toda la epistaxis que provoca este dispositivo.'),
+          masPreguntado('Lo más preguntado es CUÁNDO se elige esta y no la oral —reflejo nauseoso conservado, trismo, lesión oral— y su precaución con la sospecha de fractura de la base del cráneo.'),
         ],
       },
       {
@@ -813,6 +979,37 @@ export default {
           { tipo: 'callout', variante: 'clinico', titulo: 'Anticoagulación y alteraciones de la coagulación', texto: 'En un paciente anticoagulado o con trastorno de la coagulación conocido, una epistaxis provocada puede ser difícil de controlar. Conviene valorar si la vía oral resuelve el problema antes de recurrir a la nasal.' },
         ],
       },
+      erroresFrecuentes([
+        ['Dirigirla hacia arriba', 'Choca contra los cornetes, produce dolor y sangrado y no alcanza la nasofaringe. Avanza hacia atrás, siguiendo el piso de la fosa nasal, perpendicular al plano de la cara.'],
+        ['Forzar cuando hay resistencia', 'Si no pasa, se retira y se intenta por la otra fosa. Forzar es la vía directa a una epistaxis que añade un problema de vía aérea al que el paciente ya tenía.'],
+        ['Saltarse el lubricante o pasarse de calibre', 'Son las dos causas evitables de lesión de la mucosa. El diámetro se elige de forma que entre sin forzar, y siempre con lubricante hidrosoluble.'],
+        ['Usar la vía nasal ante sospecha de fractura de la base del cráneo', 'Equimosis periorbitaria o retroauricular y salida de sangre o líquido claro por nariz u oídos obligan a evitarla, salvo que el protocolo del servicio la autorice expresamente. Se prefiere la vía oral.'],
+      ]),
+      repasoRapido([
+        'Es un tubo blando que llega a la nasofaringe, por detrás de la lengua.',
+        'Suele tolerarla el paciente con reflejo nauseoso conservado.',
+        'Se elige ante trismo, lesión oral o imposibilidad de abrir la boca.',
+        'Tampoco aísla la vía aérea: la vigilancia y la aspiración siguen siendo necesarias.',
+        'La longitud se mide de la punta de la nariz al lóbulo de la oreja o al trago.',
+        'El diámetro debe entrar sin forzar.',
+        'Se lubrica con lubricante hidrosoluble.',
+        'Se elige la fosa de mayor calibre aparente, habitualmente la derecha.',
+        'Se introduce con el bisel hacia el tabique y se avanza siguiendo el piso de la fosa.',
+        'Ante resistencia: retirar e intentar por la otra fosa, nunca forzar.',
+        'Complicación más frecuente: epistaxis por lesión de la mucosa.',
+        'Precaución añadida en el paciente anticoagulado o con trastorno de la coagulación.',
+      ]),
+      preguntasOrales([
+        '¿En qué pacientes eliges la cánula nasofaríngea en vez de la oral?',
+        '¿Por qué la tolera alguien con reflejo nauseoso conservado?',
+        '¿Cómo mides la longitud y cómo eliges el diámetro?',
+        'Describe la inserción, desde la lubricación hasta la comprobación.',
+        '¿En qué dirección avanza y qué pasa si la diriges hacia arriba?',
+        'Encuentras resistencia a mitad de camino. ¿Qué haces?',
+        '¿Qué signos te hacen sospechar fractura de la base del cráneo y qué cambian?',
+        '¿Por qué hay que pensárselo dos veces en un paciente anticoagulado?',
+      ]),
+
       { titulo: 'Fuentes', bloques: [{ tipo: 'fuentes', items: [AHA_BLS, PHTLS9] }] },
     ],
     conceptosClave: [

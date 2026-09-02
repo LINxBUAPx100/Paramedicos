@@ -1,3 +1,8 @@
+// Piezas de estudio del trabajo A, del molde compartido.
+import {
+  erroresFrecuentes, repasoRapido, preguntasOrales, mnemotecnia, masPreguntado,
+} from './moldeV2.js'
+
 // ============================================================
 //  Módulo 3 · Vía aérea — oxigenoterapia e intubación asistida
 // ------------------------------------------------------------
@@ -72,6 +77,7 @@ export default {
             ],
           },
           { tipo: 'callout', variante: 'alerta', titulo: 'El error que hay que desterrar', texto: 'A un paciente que no ventila, o que ventila de forma claramente insuficiente, no se le resuelve nada con una mascarilla de oxígeno: hay que ventilarlo. El oxígeno solo llega al alvéolo si alguien mueve el aire.' },
+          mnemotecnia('¿RESPIRA O NO RESPIRA? Esa pregunta elige la familia entera. Si respira, se le APORTA oxígeno —puntas, mascarilla—; si no respira o lo hace de forma claramente insuficiente, se le MUEVE el aire con bolsa-válvula-mascarilla. El oxígeno solo llega al alvéolo si alguien mueve el aire.'),
         ],
       },
       {
@@ -102,9 +108,42 @@ export default {
             ],
           },
           { tipo: 'callout', variante: 'alerta', titulo: 'Hiperventilar hace daño', texto: 'Insuflar demasiado rápido o con volumen excesivo aumenta la presión dentro del tórax, reduce el retorno venoso y favorece la insuflación gástrica, con el vómito y la aspiración que la acompañan. La referencia es la elevación visible del tórax, no la fuerza aplicada a la bolsa.' },
+          masPreguntado('Dos cosas se preguntan siempre: la diferencia entre aportar oxígeno y ventilar, y que la referencia de una insuflación correcta es la ELEVACIÓN VISIBLE del tórax, no la fuerza aplicada a la bolsa ni la prisa.'),
           { tipo: 'p', texto: 'La técnica de dos personas es preferible siempre que haya personal disponible: con un solo reanimador es difícil mantener a la vez el sello, la apertura de la vía aérea y una insuflación controlada.' },
         ],
       },
+      erroresFrecuentes([
+        ['Poner una mascarilla a quien no ventila', 'Es el error más frecuente de la unidad. A un paciente que no ventila, o que ventila de forma claramente insuficiente, una mascarilla de oxígeno no le resuelve nada: hay que ventilarlo.'],
+        ['Insuflar deprisa o con volumen excesivo', 'Sube la presión dentro del tórax, reduce el retorno venoso y favorece la insuflación gástrica, con el vómito y la aspiración que la acompañan. La referencia es la elevación visible del tórax.'],
+        ['Ignorar que el reservorio se colapsa', 'Un reservorio que se vacía durante la inspiración indica que el flujo es insuficiente para ese paciente. Hay que llenarlo antes de colocar la mascarilla y vigilar que no se colapse.'],
+        ['Sellar con una mano habiendo un segundo reanimador', 'Con un solo reanimador es difícil mantener a la vez el sello, la apertura de la vía aérea y una insuflación controlada. La técnica de dos personas es preferible siempre que haya personal.'],
+        ['Administrar oxígeno por rutina', 'La indicación y el objetivo de saturación dependen del cuadro y del protocolo. Dar oxígeno a todo paciente no es una conducta neutra.'],
+      ]),
+      repasoRapido([
+        'Dos familias: las que APORTAN oxígeno a quien respira y las que MUEVEN el aire por él.',
+        'Las puntas nasales aportan a bajo flujo y son bien toleradas.',
+        'La concentración que recibe el paciente no es fija: depende del flujo y de su patrón respiratorio.',
+        'Las mascarillas con reservorio consiguen las concentraciones más altas.',
+        'El reservorio se llena antes de colocar la mascarilla y no debe colapsarse al inspirar.',
+        'Los flujos concretos los fija la especificación del equipo, no una cifra memorizada.',
+        'La bolsa-válvula-mascarilla tiene bolsa autoinflable, válvula unidireccional y mascarilla.',
+        'Su dificultad no está en apretar: está en el sello facial manteniendo la vía aérea abierta.',
+        'Se coloca cánula si está indicada, y se sella ajustando primero el puente nasal.',
+        'Se insufla de forma lenta y progresiva hasta ver elevarse el tórax.',
+        'Hiperventilar reduce el retorno venoso y favorece la insuflación gástrica.',
+        'La técnica de dos personas es preferible siempre que haya personal disponible.',
+      ]),
+      preguntasOrales([
+        'Diferencia las dos familias de dispositivos y di qué corrige cada una.',
+        '¿Por qué la concentración que recibe alguien con puntas nasales no es fija?',
+        '¿Qué te dice un reservorio que se colapsa al inspirar?',
+        '¿Por qué esta lección no te da una tabla de litros por minuto?',
+        'Describe la ventilación con bolsa-válvula-mascarilla paso a paso.',
+        '¿Dónde está la verdadera dificultad de la técnica?',
+        'Explica qué daño hace hiperventilar y cuál es la referencia correcta.',
+        '¿Por qué es preferible la técnica de dos personas?',
+      ]),
+
       { titulo: 'Fuentes', bloques: [{ tipo: 'fuentes', items: [AHA_BLS, PHTLS9, NOM034] }] },
     ],
     conceptosClave: [
@@ -222,6 +261,7 @@ export default {
             ],
           },
           { tipo: 'callout', variante: 'clave', titulo: 'Presión no es volumen', texto: 'El manómetro indica presión, no litros. La presión restante permite estimar el contenido porque el cilindro tiene un volumen fijo, pero el dato que interesa —cuántos minutos quedan— depende además del flujo que se esté administrando y del tamaño del cilindro.' },
+          mnemotecnia('LO QUE MARCA LA AGUJA ES PRESIÓN, LO QUE IMPORTA SON MINUTOS. Y entre una cosa y otra hay tres datos que pone el servicio y no el temario: el factor del cilindro, la presión de reserva y el flujo que se está dando.'),
         ],
       },
       {
@@ -264,6 +304,39 @@ export default {
           { tipo: 'callout', variante: 'clinico', titulo: 'Ambiente enriquecido en oxígeno', texto: 'En un habitáculo cerrado con oxígeno a alto flujo, la concentración ambiental sube. Una chispa en ese entorno tiene consecuencias que no tendría al aire libre. Es una razón práctica para no administrar flujos altos sin indicación.' },
         ],
       },
+      erroresFrecuentes([
+        ['Leer el manómetro como si marcara litros', 'Marca presión. La presión permite estimar el contenido porque el cilindro tiene volumen fijo, pero los minutos dependen además del flujo administrado y del tamaño del cilindro.'],
+        ['Aplicar un factor de conversión de otro cilindro', 'El factor es una característica del cilindro y varía según el estándar del fabricante y del país. Aplicar el equivocado da una estimación falsamente tranquilizadora, que es peor que no calcular nada.'],
+        ['Planificar contando con vaciar el cilindro', 'Siempre se reserva margen para el imprevisto: una demora, un cambio a un dispositivo de mayor flujo o una espera en el hospital. Quedarse sin oxígeno con el paciente conectado es una emergencia evitable.'],
+        ['Comprobar en camino', 'La revisión se hace ANTES de salir: presión del fijo, presión del portátil, funcionamiento del regulador y existencia de repuesto. Forma parte de la revisión de la unidad al inicio del turno.'],
+        ['Usar grasa o aceite en las conexiones', 'El oxígeno a presión hace inflamables los derivados del petróleo. Y un cilindro suelto que cae y rompe su válvula se convierte en un proyectil.'],
+      ]),
+      repasoRapido([
+        'El sistema es una cadena: cilindro, regulador, manómetro, flujómetro, conexión y dispositivo.',
+        'El manómetro indica PRESIÓN, no litros.',
+        'Los cilindros se identifican por una letra que corresponde a su tamaño.',
+        'Cada tamaño tiene su propio factor de conversión, que aparece en su documentación técnica.',
+        'El servicio debe declarar por escrito qué cilindros usa, su factor y su presión de reserva.',
+        'Minutos disponibles = (presión actual − presión de reserva) × factor del cilindro ÷ flujo.',
+        'La reserva no es opcional: nunca se planifica vaciar el cilindro.',
+        'La comprobación se hace antes de salir, no en camino.',
+        'El cilindro va siempre sujeto en su soporte, nunca suelto.',
+        'Nada de grasas ni aceites derivados del petróleo en las conexiones.',
+        'El oxígeno no arde, pero hace que todo lo demás arda mucho más rápido.',
+        'Se comprueba la fecha de prueba hidrostática y se retira el cilindro caducado.',
+      ]),
+      preguntasOrales([
+        'Enumera los elementos que hay entre el cilindro y el paciente.',
+        '¿Qué indica exactamente el manómetro y qué no indica?',
+        '¿Por qué no basta la presión para saber cuántos minutos quedan?',
+        'Di la fórmula de la autonomía y de dónde sale cada dato.',
+        '¿Qué tres datos tiene que declarar el servicio por escrito?',
+        '¿Por qué la presión de reserva no es opcional?',
+        '¿Cuándo se comprueba el oxígeno de la unidad?',
+        'Enumera las medidas de seguridad en el manejo de cilindros.',
+        '¿Por qué preocupa un ambiente enriquecido en oxígeno dentro de la ambulancia?',
+      ]),
+
       { titulo: 'Fuentes', bloques: [{ tipo: 'fuentes', items: [NOM034, PHTLS9] }] },
     ],
     conceptosClave: [
@@ -377,6 +450,7 @@ export default {
           { tipo: 'p', texto: 'La intubación de secuencia rápida es la administración prácticamente simultánea de un fármaco que induce inconsciencia y de un bloqueador neuromuscular, con el fin de conseguir en poco tiempo condiciones óptimas para la laringoscopia en un paciente que conserva reflejos.' },
           { tipo: 'p', texto: 'Su diferencia con la intubación sin fármacos no es de técnica sino de consecuencias: al paralizar al paciente se elimina su respiración espontánea. Desde ese momento, la ventilación depende íntegramente del equipo. Si la intubación falla y además no se consigue ventilar, no hay marcha atrás posible hasta que el bloqueo revierta.' },
           { tipo: 'callout', variante: 'alerta', titulo: 'La decisión que precede a todo', texto: 'Antes de plantear una secuencia rápida hay que responder a una pregunta: si no consigo intubar, ¿puedo ventilar a este paciente? Si la respuesta no es claramente afirmativa, la secuencia rápida no es la opción segura.' },
+          masPreguntado('La pregunta que resume el tema entero: si no consigo intubar, ¿puedo VENTILAR a este paciente? Porque el bloqueo neuromuscular elimina la respiración espontánea y no hay marcha atrás hasta que revierta. Lo que se evalúa aquí es esa decisión, no la técnica.'),
         ],
       },
       {
@@ -420,6 +494,37 @@ export default {
           { tipo: 'p', texto: 'Mientras esas condiciones no estén declaradas, el contenido farmacológico de este tema permanece pendiente de la academia. Lo que sí se enseña —qué es la secuencia rápida, qué compromete, cómo se prepara y qué exige— es lo que permite entenderla y reconocer cuándo no debe intentarse.' },
         ],
       },
+      erroresFrecuentes([
+        ['Plantearla sin poder responder a la pregunta previa', 'Si no consigo intubar, ¿puedo ventilar a este paciente? Si la respuesta no es claramente afirmativa, la secuencia rápida no es la opción segura.'],
+        ['Valorar solo la dificultad para intubar', 'Lo que decide la seguridad es sobre todo la dificultad para VENTILAR: es lo único que queda cuando el bloqueo ya eliminó la respiración espontánea.'],
+        ['Empezar sin el plan de rescate acordado en voz alta', 'El reparto de funciones y qué se hace si falla se acuerdan ANTES de administrar nada. Improvisarlo con el paciente ya paralizado es improvisarlo en el peor momento.'],
+        ['Confundirla con una intubación más', 'La diferencia no es de técnica sino de consecuencias: no hay marcha atrás hasta que el bloqueo revierta.'],
+      ]),
+      repasoRapido([
+        'Es la administración prácticamente simultánea de un inductor y un bloqueador neuromuscular.',
+        'Busca condiciones óptimas para la laringoscopia en un paciente que conserva reflejos.',
+        'Su diferencia con la intubación sin fármacos es de consecuencias, no de técnica.',
+        'Al paralizar se elimina la respiración espontánea: la ventilación pasa a depender del equipo.',
+        'Si falla la intubación y además no se consigue ventilar, no hay marcha atrás hasta que revierta el bloqueo.',
+        'La pregunta previa: si no consigo intubar, ¿puedo ventilar a este paciente?',
+        'El resultado se decide antes de administrar nada.',
+        'Valoración de la vía aérea: dificultad para intubar y, sobre todo, para ventilar.',
+        'Material: aspiración, laringoscopio, dos calibres de tubo, supraglótico de rescate y acceso transtraqueal si se autoriza.',
+        'Equipo humano: funciones repartidas y plan de rescate en voz alta.',
+        'Preoxigenación para ganar margen antes de perder la respiración espontánea.',
+        'Optimización del paciente: posición, lo corregible y anticipar el deterioro hemodinámico.',
+      ]),
+      preguntasOrales([
+        'Define la intubación de secuencia rápida.',
+        '¿En qué se diferencia de una intubación sin fármacos? No hables de técnica.',
+        '¿Qué pierde el paciente en el momento en que actúa el bloqueador?',
+        '¿Cuál es la pregunta que hay que responder antes de plantearla?',
+        'Enumera las fases de preparación.',
+        '¿Por qué importa más anticipar la dificultad para ventilar que para intubar?',
+        '¿Para qué sirve la preoxigenación en esta secuencia?',
+        '¿Por qué el plan de rescate se dice en voz alta y antes de empezar?',
+      ]),
+
       { titulo: 'Fuentes', bloques: [{ tipo: 'fuentes', items: [VIA_DIFICIL, PHTLS9, NOM034] }] },
     ],
     conceptosClave: [

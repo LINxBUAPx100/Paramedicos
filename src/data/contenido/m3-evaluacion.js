@@ -1,3 +1,10 @@
+// El molde v2 vive en un módulo aparte desde que lo usa un segundo archivo
+// (la unidad de vía aérea): duplicar los helpers habría garantizado que las
+// secciones se pintaran distinto en cada unidad.
+import {
+  erroresFrecuentes, repasoRapido, preguntasOrales, mnemotecnia, masPreguntado,
+} from './moldeV2.js'
+
 // ============================================================
 //  Módulo 3 · Evaluación primaria y secundaria
 // ------------------------------------------------------------
@@ -41,41 +48,6 @@ const PENDIENTE_EDICION = 'Precisar capítulo y página de PHTLS cuando se revis
   + 'de la academia; confirmar además qué edición adopta oficialmente (el plan declara la 9.ª y la '
   + 'biblioteca contiene una traducción automática de la 10.ª que no es citable).'
 
-// ------------------------------------------------------------
-//  Molde v2 — las piezas de estudio que se añaden en el trabajo A
-// ------------------------------------------------------------
-//  No se toca el esquema ni se añade un solo dato clínico nuevo: todo lo que
-//  sale de aquí se DERIVA de la prosa que la lección ya tiene y ya cita. Son
-//  ayudas de estudio —repaso, errores, preguntas para decir en voz alta—, y por
-//  eso van como helpers y no escritas a mano lección por lección: así las diez
-//  quedan con la misma forma y el archivo se puede seguir leyendo.
-
-// Sección de errores. Van como callout y no como lista porque cada uno tiene
-// que poder leerse suelto: son lo que el alumno repasa la noche de antes.
-const erroresFrecuentes = (errores) => ({
-  titulo: 'Errores frecuentes',
-  bloques: errores.map(([titulo, texto]) => ({ tipo: 'callout', variante: 'alerta', titulo, texto })),
-})
-
-// Resumen de una página. Tope de 12 viñetas: pasado ese punto deja de ser un
-// repaso y vuelve a ser la lección.
-const repasoRapido = (items) => ({
-  titulo: 'Repaso rápido',
-  bloques: [{ tipo: 'lista', titulo: 'Lo que hay que llevarse de esta lección', items }],
-})
-
-// Evaluación oral. Se responden hablando, que es como se evalúa en la práctica
-// y como se detecta que algo se memorizó sin entenderse.
-const preguntasOrales = (items) => ({
-  titulo: 'Preguntas de repaso oral',
-  bloques: [
-    { tipo: 'p', texto: 'Para responder en voz alta y sin mirar la lección. Si una respuesta no sale con sus propias palabras, es la que hay que volver a leer.' },
-    { tipo: 'lista', items },
-  ],
-})
-
-const mnemotecnia = (texto) => ({ tipo: 'callout', variante: 'clave', titulo: 'Regla mnemotécnica', texto })
-const masPreguntado = (texto) => ({ tipo: 'callout', variante: 'clave', titulo: 'Lo que más se pregunta', texto })
 const ficha = (extra = [], versionClinica = 'PHTLS 9.ª ed.; AHA 2025 para paro y respiración') => ({
   estado: 'en_revision',
   procedencia: 'redactado',

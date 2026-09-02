@@ -14890,6 +14890,12 @@ export const planRescate = [
                 "variante": "clinico",
                 "titulo": "El bronquio derecho es más recto",
                 "texto": "El bronquio principal derecho sale de la tráquea con un ángulo más vertical que el izquierdo. Por eso un tubo endotraqueal introducido de más suele alojarse en el derecho y dejar el pulmón izquierdo sin ventilar, y por eso los cuerpos extraños aspirados van con más frecuencia a ese lado."
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Regla mnemotécnica",
+                "texto": "CADA DISPOSITIVO TIENE SU PISO, y la anatomía dice cuál: la cánula nasofaríngea acaba en la nasofaringe, la orofaríngea en la orofaringe, el tubo endotraqueal pasa las cuerdas y la aguja del acceso transtraqueal entra por la membrana cricotiroidea. Si se recuerda el piso, no se confunde el dispositivo."
               }
             ]
           },
@@ -14972,6 +14978,85 @@ export const planRescate = [
                 "variante": "alerta",
                 "titulo": "Aplicación inmediata",
                 "texto": "Al asistir la ventilación, la eficacia depende de conseguir un volumen suficiente en cada insuflación y una frecuencia adecuada, no de insuflar deprisa. Ventilar rápido y con poco volumen reproduce artificialmente el problema que se pretendía corregir."
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Lo que más se pregunta",
+                "texto": "Tres puntos concentran las preguntas de esta lección, y los tres son distinciones, no listas: ventilar no es oxigenar, un patrón rápido y superficial ventila MAL por el espacio muerto, y el bronquio derecho es el que recibe lo que se introduce de más."
+              }
+            ]
+          },
+          {
+            "titulo": "Errores frecuentes",
+            "bloques": [
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Leer solo el pulsioxímetro",
+                "texto": "Un paciente puede oxigenar aceptablemente y estar ventilando de forma insuficiente, acumulando dióxido de carbono. El número del pulsioxímetro no describe la ventilación, y la valoración respiratoria no se reduce a él."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Ventilar deprisa y con poco volumen",
+                "texto": "Reproduce artificialmente el problema del espacio muerto: mueve aire y no ventila. La eficacia depende de conseguir volumen suficiente en cada insuflación, no de insuflar rápido."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Olvidar que la presión positiva invierte la mecánica",
+                "texto": "Al ventilar con bolsa-mascarilla el aire entra empujado, no aspirado. Eso sube la presión dentro del tórax y puede reducir el retorno venoso si se ventila demasiado rápido o con volúmenes excesivos."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Introducir el tubo de más",
+                "texto": "El bronquio principal derecho sale con un ángulo más vertical, así que un tubo demasiado profundo se aloja ahí y deja el pulmón izquierdo sin ventilar."
+              }
+            ]
+          },
+          {
+            "titulo": "Repaso rápido",
+            "bloques": [
+              {
+                "tipo": "lista",
+                "titulo": "Lo que hay que llevarse de esta lección",
+                "items": [
+                  "Recorrido: fosas nasales o boca, faringe, laringe, tráquea, bronquios, alvéolo.",
+                  "La faringe tiene tres porciones —nasofaringe, orofaringe e hipofaringe— y cada una aloja un dispositivo distinto.",
+                  "La lengua cae en la orofaringe: es la obstrucción más frecuente.",
+                  "La membrana cricotiroidea es el sitio del acceso transtraqueal con aguja.",
+                  "El bronquio derecho es más vertical: recibe el tubo demasiado profundo y los cuerpos extraños aspirados.",
+                  "La inspiración es activa; la espiración en reposo, pasiva.",
+                  "La presión negativa pleural mantiene el pulmón expandido; si se pierde, se colapsa.",
+                  "La ventilación con presión positiva invierte la mecánica y puede reducir el retorno venoso.",
+                  "Ventilar es mover aire; oxigenar es que el oxígeno llegue a la sangre.",
+                  "El espacio muerto anatómico se llena en cada respiración, sirva o no.",
+                  "Rápido y superficial mueve aire y ventila mal: hay que valorar si esas respiraciones sirven."
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Preguntas de repaso oral",
+            "bloques": [
+              {
+                "tipo": "p",
+                "texto": "Para responder en voz alta y sin mirar la lección. Si una respuesta no sale con sus propias palabras, es la que hay que volver a leer."
+              },
+              {
+                "tipo": "lista",
+                "items": [
+                  "Recorre en voz alta el camino del aire desde la nariz hasta el alvéolo.",
+                  "Nombra las tres porciones de la faringe y qué dispositivo va en cada una.",
+                  "¿Por qué el bronquio derecho recibe lo que se introduce de más?",
+                  "Explica qué mantiene el pulmón expandido y qué pasa cuando eso se pierde.",
+                  "¿Qué cambia en la mecánica al ventilar con bolsa-mascarilla?",
+                  "Diferencia ventilación de oxigenación con un ejemplo de cada fallo.",
+                  "¿Qué es el espacio muerto anatómico?",
+                  "Un paciente taquipneico y superficial. ¿Está ventilando bien? Justifícalo."
+                ]
               }
             ]
           },
@@ -15169,6 +15254,12 @@ export const planRescate = [
                 "variante": "clave",
                 "titulo": "Se mueve la mandíbula, no la lengua",
                 "texto": "La maniobra no actúa sobre la lengua directamente. Actúa sobre el hueso donde la lengua está anclada. Entenderlo explica por qué el punto de apoyo tiene que ser óseo."
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Regla mnemotécnica",
+                "texto": "HUESO, NO BLANDO. Todo el error posible de esta maniobra cabe en dónde se apoyan los dedos: sobre la porción ósea del mentón abre; sobre los tejidos blandos de debajo, cierra. Si se palpa algo que cede, los dedos están mal puestos."
               }
             ]
           },
@@ -15215,6 +15306,79 @@ export const planRescate = [
                 "variante": "clinico",
                 "titulo": "Una maniobra manual no es una vía aérea definitiva",
                 "texto": "Mantiene la permeabilidad mientras alguien la sostiene. En cuanto se suelta, la lengua vuelve a caer. Por eso la maniobra se complementa con una cánula cuando está indicada, o con un dispositivo avanzado según el alcance del prestador y el protocolo del servicio."
+              }
+            ]
+          },
+          {
+            "titulo": "Errores frecuentes",
+            "bloques": [
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Apoyar los dedos en los tejidos blandos",
+                "texto": "Es el error que agrava la obstrucción: presionar por dentro del arco mandibular empuja la base de la lengua hacia atrás y cierra la vía aérea que se pretendía abrir. El apoyo es sobre hueso."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Cerrar la boca del todo",
+                "texto": "La boca se mantiene ligeramente entreabierta. Cerrarla por completo puede obstruir de nuevo y anula el efecto de la maniobra."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Soltar y darla por hecha",
+                "texto": "Mantiene la permeabilidad mientras alguien la sostiene. En cuanto se suelta, la lengua vuelve a caer: no es una vía aérea definitiva."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Barrer con el dedo a ciegas",
+                "texto": "Solo se retira lo visible y alcanzable. Buscar a ciegas puede empujar el cuerpo extraño más adentro y provocar lesión y sangrado."
+              }
+            ]
+          },
+          {
+            "titulo": "Repaso rápido",
+            "bloques": [
+              {
+                "tipo": "lista",
+                "titulo": "Lo que hay que llevarse de esta lección",
+                "items": [
+                  "El problema es la lengua, que al perderse el tono contacta con la pared posterior de la faringe.",
+                  "La lengua se inserta en la mandíbula: desplazando el hueso se arrastra la lengua.",
+                  "La maniobra no actúa sobre la lengua, actúa sobre el hueso donde está anclada.",
+                  "Los dedos índice y medio van bajo la porción ÓSEA del mentón.",
+                  "Se eleva hacia arriba y hacia delante, llevando la mandíbula al frente.",
+                  "La boca queda ligeramente entreabierta.",
+                  "Se comprueba el resultado mirando, escuchando y sintiendo.",
+                  "Es la elección en el paciente SIN sospecha de lesión cervical.",
+                  "Con sospecha cervical, la elección es la tracción mandibular.",
+                  "No es una vía aérea definitiva: se complementa con cánula o dispositivo avanzado.",
+                  "Solo se retira de la boca lo visible y alcanzable."
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Preguntas de repaso oral",
+            "bloques": [
+              {
+                "tipo": "p",
+                "texto": "Para responder en voz alta y sin mirar la lección. Si una respuesta no sale con sus propias palabras, es la que hay que volver a leer."
+              },
+              {
+                "tipo": "lista",
+                "items": [
+                  "Explica por qué se obstruye la vía aérea en un paciente con la conciencia deprimida.",
+                  "¿Sobre qué estructura actúa realmente la maniobra y por qué funciona?",
+                  "Describe paso a paso el levantamiento del mentón.",
+                  "¿Dónde exactamente van los dedos y qué pasa si se apoyan mal?",
+                  "¿Por qué la boca no se cierra del todo?",
+                  "¿En qué paciente NO eliges esta maniobra y cuál usas en su lugar?",
+                  "¿Por qué se dice que no es una vía aérea definitiva?",
+                  "Aparece contenido en la boca al abrir. ¿Qué haces y qué no haces?"
+                ]
               }
             ]
           },
@@ -15409,6 +15573,18 @@ export const planRescate = [
                 "variante": "clave",
                 "titulo": "Qué se quita y qué se conserva",
                 "texto": "Se elimina exactamente el componente que moviliza el cuello. Lo que abre la vía aérea —llevar la mandíbula hacia delante— se mantiene íntegro, y por eso la maniobra modificada sigue siendo eficaz."
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Regla mnemotécnica",
+                "texto": "SE QUITA LA EXTENSIÓN, SE CONSERVA EL ADELANTAMIENTO. Es toda la diferencia entre la triple maniobra y su versión modificada, y explica por qué la modificada sigue abriendo: lo que despeja la vía aérea es llevar la mandíbula hacia delante, no mover el cuello."
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Lo que más se pregunta",
+                "texto": "La pregunta se repite en dos formas: cuál eliges ante mecanismo de trauma, y qué haces cuando la tracción mandibular NO abre. La segunda respuesta es siempre la misma jerarquía: una vía aérea cerrada mata en minutos, un movimiento mínimo y controlado no."
               }
             ]
           },
@@ -15452,6 +15628,77 @@ export const planRescate = [
               {
                 "tipo": "p",
                 "texto": "La estabilización manual de la columna cervical durante toda la maniobra y los criterios de restricción del movimiento espinal se estudian en la evaluación primaria y en el Módulo 5; aquí interesa la ejecución de la maniobra."
+              }
+            ]
+          },
+          {
+            "titulo": "Errores frecuentes",
+            "bloques": [
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Insistir con la maniobra mientras el paciente no ventila",
+                "texto": "Si la tracción mandibular no abre, no se repite indefinidamente. Se emplea la técnica que logre permeabilidad con el menor movimiento posible: dejar de ventilar por no mover el cuello no es una opción aceptable."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Extender o rotar la cabeza al abrir la boca",
+                "texto": "Es justo el componente que la versión modificada elimina. La boca se abre con los pulgares manteniendo la cabeza en posición neutra alineada."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Intentar ventilar solo",
+                "texto": "La maniobra ocupa las dos manos. Ventilar con bolsa-mascarilla mientras se sostiene requiere en la práctica un segundo reanimador: uno mantiene sello y mandíbula, el otro insufla."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Confundir la triple maniobra con su versión modificada",
+                "texto": "La triple clásica incluye la extensión de la cabeza y por eso no sirve ante sospecha de lesión cervical. La modificada suprime exactamente ese componente."
+              }
+            ]
+          },
+          {
+            "titulo": "Repaso rápido",
+            "bloques": [
+              {
+                "tipo": "lista",
+                "titulo": "Lo que hay que llevarse de esta lección",
+                "items": [
+                  "La triple maniobra clásica combina extensión de la cabeza, elevación del mentón y apertura de la boca.",
+                  "La versión modificada suprime la extensión y conserva el desplazamiento anterior de la mandíbula.",
+                  "También se llama tracción mandibular o subluxación mandibular.",
+                  "Es la maniobra de elección en el paciente traumatizado.",
+                  "Se ejecuta desde la cabecera, alineado con el eje longitudinal del paciente.",
+                  "Índice y medio bajo los ángulos de la mandíbula; pulgares en pómulos o mentón.",
+                  "Se adelanta la mandíbula respecto del maxilar superior.",
+                  "La cabeza permanece en posición neutra alineada durante toda la maniobra.",
+                  "Ocupa las dos manos: ventilar a la vez exige un segundo reanimador.",
+                  "Si no abre, prima la oxigenación con el menor movimiento posible, y se documenta."
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Preguntas de repaso oral",
+            "bloques": [
+              {
+                "tipo": "p",
+                "texto": "Para responder en voz alta y sin mirar la lección. Si una respuesta no sale con sus propias palabras, es la que hay que volver a leer."
+              },
+              {
+                "tipo": "lista",
+                "items": [
+                  "¿Qué tres acciones componen la triple maniobra clásica?",
+                  "¿Qué se suprime en la versión modificada y por qué sigue funcionando?",
+                  "Di los otros dos nombres con que se conoce la maniobra modificada.",
+                  "Describe la técnica desde la posición del reanimador hasta la comprobación.",
+                  "¿Por qué hacen falta dos personas para ventilar con esta maniobra?",
+                  "La tracción mandibular no abre la vía aérea. ¿Qué haces y con qué argumento?",
+                  "Explica la jerarquía de riesgos entre vía aérea cerrada y movimiento cervical."
+                ]
               }
             ]
           },
@@ -15661,8 +15908,92 @@ export const planRescate = [
                 "texto": "Forzar la extensión en un lactante o en un niño pequeño cierra la vía aérea en lugar de abrirla. La referencia práctica es el resultado: se ajusta la posición hasta que el aire entra, no hasta alcanzar un ángulo determinado."
               },
               {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Regla mnemotécnica",
+                "texto": "UNA MANO EMPUJA, LA OTRA LEVANTA: la palma sobre la frente inclina, los dedos bajo el mentón elevan. Y el grado de inclinación lo dicta el paciente, no el reloj: neutra en el lactante, intermedia en el niño, mayor en el adulto."
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Lo que más se pregunta",
+                "texto": "Lo que más se pregunta no es la técnica, son sus dos límites: que está DESCARTADA ante sospecha de lesión cervical, y que en el lactante la extensión excesiva cierra la vía aérea en vez de abrirla."
+              },
+              {
                 "tipo": "p",
                 "texto": "Las particularidades completas de la vía aérea pediátrica y su manejo se estudian en el Módulo 6, dentro de poblaciones especiales."
+              }
+            ]
+          },
+          {
+            "titulo": "Errores frecuentes",
+            "bloques": [
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Usarla con mecanismo compatible con lesión cervical",
+                "texto": "Esta maniobra moviliza el cuello por definición. Ante sospecha se sustituye por la triple maniobra modificada, que abre sin extender."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Forzar la extensión en un lactante",
+                "texto": "La cabeza es proporcionalmente grande y el occipucio prominente: al acostarlo boca arriba el cuello ya queda flexionado, y una extensión excesiva vuelve a cerrar la vía aérea."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Perseguir un ángulo en vez de un resultado",
+                "texto": "No hay un grado correcto de inclinación. Se ajusta la posición hasta que el aire entra, comprobando mirando, escuchando y sintiendo."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Apoyar los dedos en los tejidos blandos submandibulares",
+                "texto": "El mismo error que en el levantamiento del mentón aislado: empuja la base de la lengua hacia atrás. El apoyo del mentón es óseo."
+              }
+            ]
+          },
+          {
+            "titulo": "Repaso rápido",
+            "bloques": [
+              {
+                "tipo": "lista",
+                "titulo": "Lo que hay que llevarse de esta lección",
+                "items": [
+                  "Son dos acciones sobre estructuras distintas: la frente inclina, el mentón eleva.",
+                  "La inclinación alinea los ejes de la vía aérea y aleja la base de la lengua.",
+                  "La elevación del mentón desplaza la mandíbula y con ella la lengua.",
+                  "Cada componente por separado abre parcialmente; combinados abren mejor.",
+                  "Es la técnica recomendada en soporte vital básico sin sospecha de lesión cervical.",
+                  "Lo primero del procedimiento es confirmar que no hay mecanismo compatible con lesión cervical.",
+                  "Los dedos van bajo la porción ósea del mentón; la boca queda entreabierta.",
+                  "El grado de inclinación cambia con la edad: neutra en el lactante, intermedia en el niño, mayor en el adulto.",
+                  "En el lactante, la extensión excesiva cierra la vía aérea.",
+                  "La referencia práctica es el resultado, no un ángulo.",
+                  "La vía aérea pediátrica completa se estudia en el Módulo 6."
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Preguntas de repaso oral",
+            "bloques": [
+              {
+                "tipo": "p",
+                "texto": "Para responder en voz alta y sin mirar la lección. Si una respuesta no sale con sus propias palabras, es la que hay que volver a leer."
+              },
+              {
+                "tipo": "lista",
+                "items": [
+                  "¿Qué hace cada uno de los dos componentes de la maniobra frente-mentón?",
+                  "¿Por qué combinados abren mejor que por separado?",
+                  "Describe la técnica paso a paso, empezando por lo que hay que confirmar antes.",
+                  "¿En qué paciente está descartada esta maniobra y por qué?",
+                  "Explica por qué en el lactante basta la posición neutra.",
+                  "¿Cómo sabes que has alcanzado la inclinación correcta?",
+                  "¿Qué error de apoyo comparte esta maniobra con el levantamiento del mentón aislado?"
+                ]
               }
             ]
           },
@@ -15868,6 +16199,12 @@ export const planRescate = [
                 "texto": "Un paciente con reflejo nauseoso conservado no tolera la cánula: puede provocar náusea, vómito y aspiración, y en algunos casos laringoespasmo. Si el paciente reacciona al intentar colocarla, se retira. Que la rechace es información clínica, no una técnica mal hecha."
               },
               {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Lo que más se pregunta",
+                "texto": "Dos cosas se preguntan siempre de la cánula orofaríngea: su contraindicación —reflejo nauseoso conservado— y que NO aísla la vía aérea. Mantener abierto y proteger del contenido gástrico son cosas distintas, y esta cánula solo hace la primera."
+              },
+              {
                 "tipo": "p",
                 "texto": "La cánula mantiene la vía aérea abierta, pero no la aísla ni protege del contenido gástrico. Un paciente con cánula orofaríngea puede aspirar, así que la aspiración debe estar preparada y el paciente vigilado."
               }
@@ -15927,8 +16264,88 @@ export const planRescate = [
                 "texto": "En pediatría la técnica del giro de 180 grados puede lesionar el paladar blando, que es más frágil. En el niño la cánula se introduce siguiendo la curvatura anatómica, ayudándose de un depresor lingual cuando se dispone de él. El manejo pediátrico completo corresponde al Módulo 6."
               },
               {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Regla mnemotécnica",
+                "texto": "SE MIDE SOBRE EL PACIENTE, NUNCA SE CALCULA. De la comisura de los labios al ángulo de la mandíbula, o del centro de los incisivos al ángulo mandibular. La edad y la complexión aparente no eligen el tamaño: la cara del paciente sí."
+              },
+              {
                 "tipo": "p",
                 "texto": "Después de colocarla se reevalúa: si el paciente empieza a rechazarla, si aparecen náuseas o si recupera el reflejo, se retira. La colocación se registra con su hora, igual que cualquier otra intervención."
+              }
+            ]
+          },
+          {
+            "titulo": "Errores frecuentes",
+            "bloques": [
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Colocarla en un paciente que la rechaza",
+                "texto": "Un reflejo nauseoso conservado no tolera la cánula: puede provocar náusea, vómito y aspiración, o laringoespasmo. Si el paciente reacciona, se retira. Que la rechace es información clínica, no una técnica mal hecha."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Elegir el tamaño a ojo",
+                "texto": "Ni la edad ni la complexión aparente eligen la cánula. Demasiado corta empuja la lengua hacia atrás y agrava la obstrucción; demasiado larga alcanza la entrada de la laringe y estimula el vómito o el laringoespasmo."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Girar la cánula en un niño",
+                "texto": "El giro de 180 grados puede lesionar el paladar blando, más frágil en pediatría. En el niño se introduce siguiendo la curvatura anatómica, con depresor lingual si se dispone de él."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Creer que protege de la aspiración",
+                "texto": "Mantiene la vía aérea abierta pero no la aísla. Un paciente con cánula orofaríngea puede aspirar: la aspiración debe estar preparada y el paciente vigilado."
+              }
+            ]
+          },
+          {
+            "titulo": "Repaso rápido",
+            "bloques": [
+              {
+                "tipo": "lista",
+                "titulo": "Lo que hay que llevarse de esta lección",
+                "items": [
+                  "Es un dispositivo rígido y curvo que se aloja en la orofaringe.",
+                  "Mantiene la base de la lengua separada de la pared posterior de la faringe.",
+                  "Su función es RELEVAR a la mano: que la permeabilidad no dependa de sostener la maniobra.",
+                  "Solo en el paciente sin reflejo nauseoso.",
+                  "No aísla la vía aérea ni protege del contenido gástrico.",
+                  "El tamaño se mide sobre el paciente: comisura de los labios a ángulo de la mandíbula.",
+                  "Demasiado corta: empuja la lengua y agrava la obstrucción.",
+                  "Demasiado larga: alcanza la laringe, estimula vómito o laringoespasmo.",
+                  "Se introduce con la concavidad hacia el paladar y se gira 180 grados a media inserción.",
+                  "La brida queda apoyada sobre los labios.",
+                  "En el niño NO se gira: se sigue la curvatura anatómica.",
+                  "Si el paciente empieza a rechazarla o recupera el reflejo, se retira."
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Preguntas de repaso oral",
+            "bloques": [
+              {
+                "tipo": "p",
+                "texto": "Para responder en voz alta y sin mirar la lección. Si una respuesta no sale con sus propias palabras, es la que hay que volver a leer."
+              },
+              {
+                "tipo": "lista",
+                "items": [
+                  "¿Qué hace exactamente la cánula orofaríngea y por qué se dice que releva a la mano?",
+                  "¿Cuál es su contraindicación principal y cómo la reconoces?",
+                  "¿Cómo eliges el tamaño? Da las dos referencias.",
+                  "¿Qué pasa si te quedas corto? ¿Y si te pasas?",
+                  "Describe la técnica de inserción en el adulto.",
+                  "¿Qué cambia en el niño y por qué?",
+                  "Un paciente con cánula colocada vomita. ¿Estaba protegida su vía aérea?",
+                  "¿Qué haces si el paciente empieza a rechazar la cánula?"
+                ]
               }
             ]
           },
@@ -16154,6 +16571,18 @@ export const planRescate = [
                 "variante": "alerta",
                 "titulo": "La dirección importa",
                 "texto": "La cánula avanza hacia atrás, siguiendo el piso de la fosa nasal, no hacia arriba. Dirigirla hacia arriba choca contra los cornetes, produce dolor y sangrado y no alcanza la nasofaringe."
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Regla mnemotécnica",
+                "texto": "HACIA ATRÁS, NUNCA HACIA ARRIBA: la cánula sigue el piso de la fosa nasal, perpendicular al plano de la cara. Y se mide de la punta de la nariz al lóbulo de la oreja. Dos gestos, y entre los dos evitan casi toda la epistaxis que provoca este dispositivo."
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Lo que más se pregunta",
+                "texto": "Lo más preguntado es CUÁNDO se elige esta y no la oral —reflejo nauseoso conservado, trismo, lesión oral— y su precaución con la sospecha de fractura de la base del cráneo."
               }
             ]
           },
@@ -16173,6 +16602,80 @@ export const planRescate = [
                 "variante": "clinico",
                 "titulo": "Anticoagulación y alteraciones de la coagulación",
                 "texto": "En un paciente anticoagulado o con trastorno de la coagulación conocido, una epistaxis provocada puede ser difícil de controlar. Conviene valorar si la vía oral resuelve el problema antes de recurrir a la nasal."
+              }
+            ]
+          },
+          {
+            "titulo": "Errores frecuentes",
+            "bloques": [
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Dirigirla hacia arriba",
+                "texto": "Choca contra los cornetes, produce dolor y sangrado y no alcanza la nasofaringe. Avanza hacia atrás, siguiendo el piso de la fosa nasal, perpendicular al plano de la cara."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Forzar cuando hay resistencia",
+                "texto": "Si no pasa, se retira y se intenta por la otra fosa. Forzar es la vía directa a una epistaxis que añade un problema de vía aérea al que el paciente ya tenía."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Saltarse el lubricante o pasarse de calibre",
+                "texto": "Son las dos causas evitables de lesión de la mucosa. El diámetro se elige de forma que entre sin forzar, y siempre con lubricante hidrosoluble."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Usar la vía nasal ante sospecha de fractura de la base del cráneo",
+                "texto": "Equimosis periorbitaria o retroauricular y salida de sangre o líquido claro por nariz u oídos obligan a evitarla, salvo que el protocolo del servicio la autorice expresamente. Se prefiere la vía oral."
+              }
+            ]
+          },
+          {
+            "titulo": "Repaso rápido",
+            "bloques": [
+              {
+                "tipo": "lista",
+                "titulo": "Lo que hay que llevarse de esta lección",
+                "items": [
+                  "Es un tubo blando que llega a la nasofaringe, por detrás de la lengua.",
+                  "Suele tolerarla el paciente con reflejo nauseoso conservado.",
+                  "Se elige ante trismo, lesión oral o imposibilidad de abrir la boca.",
+                  "Tampoco aísla la vía aérea: la vigilancia y la aspiración siguen siendo necesarias.",
+                  "La longitud se mide de la punta de la nariz al lóbulo de la oreja o al trago.",
+                  "El diámetro debe entrar sin forzar.",
+                  "Se lubrica con lubricante hidrosoluble.",
+                  "Se elige la fosa de mayor calibre aparente, habitualmente la derecha.",
+                  "Se introduce con el bisel hacia el tabique y se avanza siguiendo el piso de la fosa.",
+                  "Ante resistencia: retirar e intentar por la otra fosa, nunca forzar.",
+                  "Complicación más frecuente: epistaxis por lesión de la mucosa.",
+                  "Precaución añadida en el paciente anticoagulado o con trastorno de la coagulación."
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Preguntas de repaso oral",
+            "bloques": [
+              {
+                "tipo": "p",
+                "texto": "Para responder en voz alta y sin mirar la lección. Si una respuesta no sale con sus propias palabras, es la que hay que volver a leer."
+              },
+              {
+                "tipo": "lista",
+                "items": [
+                  "¿En qué pacientes eliges la cánula nasofaríngea en vez de la oral?",
+                  "¿Por qué la tolera alguien con reflejo nauseoso conservado?",
+                  "¿Cómo mides la longitud y cómo eliges el diámetro?",
+                  "Describe la inserción, desde la lubricación hasta la comprobación.",
+                  "¿En qué dirección avanza y qué pasa si la diriges hacia arriba?",
+                  "Encuentras resistencia a mitad de camino. ¿Qué haces?",
+                  "¿Qué signos te hacen sospechar fractura de la base del cráneo y qué cambian?",
+                  "¿Por qué hay que pensárselo dos veces en un paciente anticoagulado?"
+                ]
               }
             ]
           },
@@ -16358,6 +16861,12 @@ export const planRescate = [
                 "texto": "El objetivo es oxigenar y ventilar. Un paciente bien ventilado con bolsa-mascarilla y cánula está mejor atendido que uno con tres intentos de intubación fallidos y desaturación repetida. Si la ventilación con dispositivo básico es eficaz, intubar puede esperar al hospital."
               },
               {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Lo que más se pregunta",
+                "texto": "Lo que más se pregunta de este tema no es la secuencia: es que la intubación NO es el objetivo —oxigenar y ventilar lo son— y que ningún método aislado confirma la posición del tubo. Las dos son decisiones, y las decisiones son lo que se evalúa."
+              },
+              {
                 "tipo": "p",
                 "texto": "Su indicación, quién puede realizarla y en qué unidades se dispone del material dependen del alcance del prestador, del protocolo del servicio y del tipo de ambulancia. Esta lección enseña la técnica; no autoriza a ejecutarla."
               }
@@ -16389,6 +16898,12 @@ export const planRescate = [
                 "variante": "clinico",
                 "titulo": "Anticipar la vía aérea difícil",
                 "texto": "Antes de intentar conviene valorar los datos que anticipan dificultad: apertura bucal limitada, cuello corto o inmovilizado, obesidad, sangre o vómito en la vía aérea, trauma facial, edema o antecedente de dificultad previa. Reconocerlo cambia el plan; descubrirlo a mitad del intento, no."
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Regla mnemotécnica",
+                "texto": "PREPARAR, INTENTAR, CONFIRMAR — y de los tres, el que decide el resultado es el primero. La mayor parte de las complicaciones de la intubación prehospitalaria se originan ANTES del primer intento: material comprobado al alcance, paciente oxigenado y plan de rescate dicho en voz alta."
               }
             ]
           },
@@ -16448,6 +16963,87 @@ export const planRescate = [
               {
                 "tipo": "p",
                 "texto": "Si la entrada de aire es asimétrica y está disminuida en el hemitórax izquierdo, lo más probable es una intubación selectiva del bronquio derecho: se desinfla el globo, se retira el tubo unos centímetros, se vuelve a inflar y se reevalúa. Después de fijar, se registra la profundidad a la altura de los dientes para poder detectar un desplazamiento posterior."
+              }
+            ]
+          },
+          {
+            "titulo": "Errores frecuentes",
+            "bloques": [
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Hacer palanca sobre los incisivos",
+                "texto": "Es el error técnico más frecuente y el que rompe dientes. La tracción se hace en el eje del mango, no apoyándose en la arcada superior."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Prolongar el intento mientras el paciente dessatura",
+                "texto": "Alcanzado el límite de tiempo y de saturación acordado, se interrumpe, se ventila con bolsa-mascarilla y se replantea. Insistir en el mismo intento es la vía más rápida a una hipoxia grave."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Confirmar con un solo método",
+                "texto": "Ninguno confirma con certeza por sí solo. Se combinan visualización, auscultación en epigastrio y ambos campos, elevación torácica y capnografía cuando la hay. Una intubación esofágica no reconocida es una causa evitable de muerte."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Dar por buena la posición después de mover al paciente",
+                "texto": "Un tubo bien colocado puede desplazarse al pasar a la camilla o al subir a la unidad. La confirmación se repite tras cada movilización, y por eso se registra la profundidad a la altura de los dientes."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Descubrir la vía aérea difícil a mitad del intento",
+                "texto": "Apertura bucal limitada, cuello corto o inmovilizado, obesidad, sangre o vómito, trauma facial, edema o antecedente de dificultad se valoran ANTES. Reconocerlo cambia el plan; descubrirlo dentro, no."
+              }
+            ]
+          },
+          {
+            "titulo": "Repaso rápido",
+            "bloques": [
+              {
+                "tipo": "lista",
+                "titulo": "Lo que hay que llevarse de esta lección",
+                "items": [
+                  "Da vía aérea permeable, permite presión positiva controlada y reduce —sin eliminar— el riesgo de aspiración.",
+                  "Es el procedimiento de vía aérea con más complicaciones inmediatas del ámbito prehospitalario.",
+                  "El objetivo es oxigenar y ventilar: si el dispositivo básico es eficaz, intubar puede esperar.",
+                  "La mayor parte de las complicaciones se originan antes del primer intento.",
+                  "Se prepara aspiración, laringoscopio con luz, tubo previsto y uno menor, globo comprobado y bolsa conectada.",
+                  "El plan de rescate se acuerda EN VOZ ALTA antes de intentar.",
+                  "El laringoscopio va en la mano izquierda; la hoja entra por la comisura derecha.",
+                  "Se tracciona en la dirección del mango: nunca palanca sobre los dientes.",
+                  "El globo se infla con el volumen mínimo que selle.",
+                  "La confirmación combina métodos; la capnografía en onda es el más fiable.",
+                  "Ruidos en epigastrio sin entrada torácica: tubo en esófago, se retira y se ventila.",
+                  "Menos aire en el hemitórax izquierdo: probable intubación del bronquio derecho, se retira unos centímetros."
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Preguntas de repaso oral",
+            "bloques": [
+              {
+                "tipo": "p",
+                "texto": "Para responder en voz alta y sin mirar la lección. Si una respuesta no sale con sus propias palabras, es la que hay que volver a leer."
+              },
+              {
+                "tipo": "lista",
+                "items": [
+                  "¿Qué se gana con la intubación y qué se paga por ella?",
+                  "Explica por qué la intubación no es el objetivo.",
+                  "Enumera las comprobaciones previas a un intento.",
+                  "¿Qué datos anticipan una vía aérea difícil?",
+                  "Describe la secuencia de la laringoscopia hasta el paso del tubo.",
+                  "¿Qué haces cuando se alcanza el límite de tiempo o de saturación?",
+                  "Di los métodos de confirmación y por qué se combinan.",
+                  "Auscultas ruidos en epigastrio y el tórax no se eleva. ¿Qué ha pasado y qué haces?",
+                  "Entra menos aire en el hemitórax izquierdo. ¿Qué sospechas y cómo lo corriges?"
+                ]
               }
             ]
           },
@@ -16683,6 +17279,12 @@ export const planRescate = [
                 "texto": "La epiglotis del lactante es proporcionalmente más grande, más flexible y con una angulación distinta, de modo que cargarla directamente con una hoja recta suele dar mejor visión que intentar levantarla desde la valécula. Las particularidades pediátricas completas corresponden al Módulo 6."
               },
               {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Regla mnemotécnica",
+                "texto": "CURVA A LA VALÉCULA, RECTA A LA EPIGLOTIS. Ahí cabe toda la diferencia entre las dos hojas: la curva se apoya DELANTE de la epiglotis y la levanta tirando del ligamento; la recta la carga directamente con la punta."
+              },
+              {
                 "tipo": "p",
                 "texto": "El número de la hoja indica su longitud. La talla adecuada es la que permite alcanzar la valécula o la epiglotis sin quedarse corta ni introducirse en exceso, y se comprueba sobre el paciente. La disponibilidad de números concretos depende del inventario de cada unidad."
               }
@@ -16727,6 +17329,81 @@ export const planRescate = [
               {
                 "tipo": "p",
                 "texto": "Al inflar se emplea el volumen mínimo que consiga sellar. Un globo sobreinflado transmite presión a la mucosa traqueal y puede comprometer su irrigación; su control durante el traslado depende del equipo disponible y del protocolo del servicio."
+              }
+            ]
+          },
+          {
+            "titulo": "Errores frecuentes",
+            "bloques": [
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Memorizar una tabla de calibres que no coincide con la unidad",
+                "texto": "Las referencias varían entre fuentes y ediciones. Una tabla aprendida que no se corresponde con el material de la ambulancia produce errores: la academia declara qué referencia adopta y el prestador conoce su inventario."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "No preparar un calibre alternativo",
+                "texto": "Descubrir que el tubo no pasa cuando ya se está en laringoscopia obliga a interrumpir el intento. Con el calibre inferior listo, eso es un cambio de segundos."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Saltarse la comprobación del globo",
+                "texto": "Un globo que no sella, descubierto durante el procedimiento, obliga a repetir la intubación entera. Se comprueba inflándolo y desinflándolo antes de cada uso."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Sobreinflar el globo",
+                "texto": "Se emplea el volumen mínimo que consiga sellar. Un globo sobreinflado transmite presión a la mucosa traqueal y puede comprometer su irrigación."
+              }
+            ]
+          },
+          {
+            "titulo": "Repaso rápido",
+            "bloques": [
+              {
+                "tipo": "lista",
+                "titulo": "Lo que hay que llevarse de esta lección",
+                "items": [
+                  "El laringoscopio no abre la vía aérea: aparta la lengua y levanta la epiglotis.",
+                  "Hoja curva: la punta se apoya en la valécula, delante de la epiglotis.",
+                  "Hoja recta: la punta carga la epiglotis directamente.",
+                  "La curva es el perfil habitual del adulto; la recta, del lactante y el niño pequeño.",
+                  "También se elige recta en adultos con epiglotis larga o poco visible.",
+                  "El número de la hoja indica su longitud, y la talla se comprueba sobre el paciente.",
+                  "El calibre del tubo se expresa por su diámetro interno en milímetros.",
+                  "Demasiado grueso: lesiona, cuesta pasar, puede no atravesar la zona más estrecha.",
+                  "Demasiado fino: más resistencia al flujo, peor aspiración de secreciones y peor sello.",
+                  "Criterios: tamaño del paciente, estado de la vía aérea, indicación y disponibilidad real.",
+                  "Siempre se prepara un calibre alternativo, uno por debajo del previsto.",
+                  "El globo se comprueba antes de cada uso y se infla con el volumen mínimo que selle."
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Preguntas de repaso oral",
+            "bloques": [
+              {
+                "tipo": "p",
+                "texto": "Para responder en voz alta y sin mirar la lección. Si una respuesta no sale con sus propias palabras, es la que hay que volver a leer."
+              },
+              {
+                "tipo": "lista",
+                "items": [
+                  "¿Para qué sirve realmente el laringoscopio?",
+                  "Diferencia la hoja curva de la recta por su punto de apoyo.",
+                  "¿Por qué en el lactante suele elegirse la recta?",
+                  "¿Qué indica el número de una hoja y cómo compruebas la talla?",
+                  "¿En qué se expresa el calibre de un tubo endotraqueal?",
+                  "Di qué problemas da un tubo demasiado grueso y cuáles uno demasiado fino.",
+                  "¿Por qué esta lección no te da una tabla de calibres por edad?",
+                  "¿Por qué se prepara siempre un calibre alternativo?",
+                  "¿Con cuánto aire se infla el globo y qué pasa si te pasas?"
+                ]
               }
             ]
           },
@@ -16948,6 +17625,12 @@ export const planRescate = [
                 "variante": "clave",
                 "titulo": "Su ventaja es que no hace falta ver",
                 "texto": "Al colocarse a ciegas, no requiere laringoscopia ni visión de las cuerdas. Eso la hace más rápida, más fácil de aprender y menos dependiente de la posición de la cabeza, lo que resulta especialmente útil cuando el cuello no puede movilizarse."
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Lo que más se pregunta",
+                "texto": "Se pregunta por su LUGAR y por su límite: es rescate cuando la intubación falla o alternativa cuando no se está autorizado a intubar, y su protección frente a la aspiración es parcial y limitada. Rápida y a ciegas no significa segura frente al contenido gástrico."
               }
             ]
           },
@@ -17049,6 +17732,80 @@ export const planRescate = [
                 "variante": "alerta",
                 "titulo": "Vómito con dispositivo colocado",
                 "texto": "Si aparece contenido gástrico, la prioridad es proteger la vía aérea: se lateraliza al paciente si su situación lo permite, se aspira y se replantea el dispositivo según el protocolo. Un supraglótico no autoriza a bajar la vigilancia sobre la aspiración."
+              }
+            ]
+          },
+          {
+            "titulo": "Errores frecuentes",
+            "bloques": [
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Usar una cifra de inflado o de tamaño de otro modelo",
+                "texto": "Los supraglóticos no son intercambiables entre marcas: el tamaño por peso y el volumen de inflado varían. Se sigue la indicación impresa del dispositivo que hay en la unidad, no una cifra memorizada."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Confiar en que protege de la aspiración",
+                "texto": "No aísla la vía aérea; la protección es parcial y limitada. Si aparece contenido gástrico se lateraliza al paciente cuando su situación lo permite, se aspira y se replantea el dispositivo."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Insistir con presiones de ventilación altas",
+                "texto": "El sello puede perderse cuando se requieren presiones altas. Forzar la insuflación no mejora el sello: lo empeora y aumenta la insuflación gástrica."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Esperar que resuelva una obstrucción baja",
+                "texto": "Sella POR ENCIMA de la glotis. Una obstrucción por debajo no se resuelve con un dispositivo supraglótico, por bien colocado que esté."
+              }
+            ]
+          },
+          {
+            "titulo": "Repaso rápido",
+            "bloques": [
+              {
+                "tipo": "lista",
+                "titulo": "Lo que hay que llevarse de esta lección",
+                "items": [
+                  "Es un dispositivo supraglótico: se coloca por encima de la glotis, sin atravesar las cuerdas.",
+                  "El extremo distal se aloja en la hipofaringe y el manguito sella alrededor de la entrada de la laringe.",
+                  "Se coloca a ciegas: no necesita laringoscopia ni ver las cuerdas.",
+                  "Es más rápida, más fácil de aprender y menos dependiente de la posición de la cabeza.",
+                  "Especialmente útil cuando el cuello no puede movilizarse.",
+                  "Ocupa dos lugares: rescate cuando la intubación falla, o alternativa cuando no se está autorizado a intubar.",
+                  "Tamaño e inflado, según la referencia del fabricante del dispositivo de la unidad.",
+                  "Se lubrica la cara posterior y se sigue el paladar duro hacia la hipofaringe, sin forzar.",
+                  "Se avanza hasta notar la resistencia que indica la posición.",
+                  "La confirmación es la misma que en la intubación, y se repite tras cada movilización.",
+                  "Protección frente a la aspiración: parcial y limitada.",
+                  "Un reflejo nauseoso conservado impide tolerarla, igual que con la cánula orofaríngea."
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Preguntas de repaso oral",
+            "bloques": [
+              {
+                "tipo": "p",
+                "texto": "Para responder en voz alta y sin mirar la lección. Si una respuesta no sale con sus propias palabras, es la que hay que volver a leer."
+              },
+              {
+                "tipo": "lista",
+                "items": [
+                  "¿Dónde se aloja la mascarilla laríngea y cómo consigue el sello?",
+                  "¿Por qué se dice que su ventaja es no tener que ver?",
+                  "Sitúala frente a la bolsa-mascarilla y frente al tubo endotraqueal.",
+                  "¿Cuáles son sus dos posiciones posibles en el manejo prehospitalario?",
+                  "Describe la colocación paso a paso.",
+                  "¿Por qué no se puede usar el volumen de inflado de otro modelo?",
+                  "Enumera sus cuatro limitaciones.",
+                  "El paciente vomita con el dispositivo colocado. ¿Qué haces?"
+                ]
               }
             ]
           },
@@ -17298,8 +18055,79 @@ export const planRescate = [
                 "texto": "La función que buscaba el obturador —ventilar bien sin laringoscopia y sin el entrenamiento de la intubación— la cumplen hoy los dispositivos supraglóticos, que sellan sobre la entrada de la laringe en vez de obstruir el esófago. Esa es la comparación que este tema debe dejar clara."
               },
               {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Lo que más se pregunta",
+                "texto": "De este tema se pregunta la COMPARACIÓN, no el dispositivo: el obturador bloqueaba el esófago para desviar el aire; el supraglótico moderno sella sobre la entrada de la laringe. Ese cambio de estrategia es lo que hay que saber explicar."
+              },
+              {
                 "tipo": "p",
                 "texto": "Si un servicio conservara todavía este material, su uso dependería de que el protocolo lo autorizara expresamente. La academia debe declarar si el dispositivo se estudia únicamente como antecedente —que es lo que esta lección asume— o si además existe en alguna de sus unidades."
+              }
+            ]
+          },
+          {
+            "titulo": "Errores frecuentes",
+            "bloques": [
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Estudiarlo como una opción vigente",
+                "texto": "Aparece en el plan oficial y por eso se estudia, pero NO es un dispositivo estándar de la práctica actual. Confundir un antecedente con una alternativa disponible es el error que esta lección existe para evitar."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Confundir bloquear el esófago con sellar la laringe",
+                "texto": "Son estrategias opuestas. El obturador obstruía el esófago para que el aire subiera a la laringe; el supraglótico sella alrededor de la entrada de la laringe y deja el esófago en paz."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Suponer que aislaba la vía aérea",
+                "texto": "No evitaba la aspiración de contenido regurgitado por encima del globo, y su retirada podía acompañarse de vómito abundante justo en el peor momento."
+              }
+            ]
+          },
+          {
+            "titulo": "Repaso rápido",
+            "bloques": [
+              {
+                "tipo": "lista",
+                "titulo": "Lo que hay que llevarse de esta lección",
+                "items": [
+                  "Se estudia como ANTECEDENTE histórico, no como dispositivo vigente.",
+                  "Se introducía a ciegas y su extremo quedaba en el esófago.",
+                  "Un globo distal bloqueaba el esófago y una mascarilla facial sellaba boca y nariz.",
+                  "El aire, al no poder bajar, se dirigía a la laringe y la tráquea.",
+                  "Buscaba ventilar mejor que la bolsa-mascarilla sin exigir laringoscopia.",
+                  "Dependía por completo del sello facial: una fuga anulaba la ventilación.",
+                  "El globo esofágico se asoció a lesión de la mucosa y a rotura esofágica.",
+                  "No aislaba la vía aérea ni evitaba la aspiración por encima del globo.",
+                  "Su retirada podía acompañarse de vómito abundante.",
+                  "Su función la cumplen hoy los dispositivos supraglóticos, con mejor sello.",
+                  "Si un servicio conservara el material, su uso dependería del protocolo."
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Preguntas de repaso oral",
+            "bloques": [
+              {
+                "tipo": "p",
+                "texto": "Para responder en voz alta y sin mirar la lección. Si una respuesta no sale con sus propias palabras, es la que hay que volver a leer."
+              },
+              {
+                "tipo": "lista",
+                "items": [
+                  "¿Por qué se estudia hoy el obturador esofágico?",
+                  "Explica cómo conseguía que el aire llegara a la tráquea.",
+                  "¿Qué problema de su época pretendía resolver?",
+                  "Enumera las razones por las que se abandonó.",
+                  "¿Qué dispositivo ocupó su lugar y en qué se diferencia su estrategia?",
+                  "¿Protegía de la aspiración? Justifica la respuesta."
+                ]
               }
             ]
           },
@@ -17514,6 +18342,12 @@ export const planRescate = [
                 "texto": "Es el lugar donde la vía aérea está más cerca de la piel, con menos estructuras vasculares importantes por delante y con un plano firme por debajo. La anatomía de la región se estudia en el repaso de esta misma unidad."
               },
               {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Regla mnemotécnica",
+                "texto": "SE BAJA DESDE LA NUEZ HASTA CAER EN EL HUECO. El dedo parte de la prominencia del cartílago tiroides y desciende hasta la depresión blanda que precede al cricoides: esa depresión es la membrana. Dos cartílagos palpables y un hueco entre ellos, y no hace falta nada más para localizarla."
+              },
+              {
                 "tipo": "p",
                 "texto": "En el niño pequeño las referencias son menos evidentes y la anatomía es más frágil, de modo que las consideraciones pediátricas de este procedimiento corresponden al Módulo 6 y al protocolo del servicio."
               }
@@ -17544,6 +18378,12 @@ export const planRescate = [
                 "texto": "El acceso con aguja permite oxigenar durante un tiempo limitado, pero elimina mal el dióxido de carbono. No sustituye a una vía aérea definitiva y obliga a un traslado sin demora al centro que pueda proporcionarla."
               },
               {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Lo que más se pregunta",
+                "texto": "Tres respuestas se piden siempre: que es un procedimiento de RESCATE —cuando no se puede ventilar por ningún medio, no un peldaño más de la escalera—, dónde está el punto de punción, y que oxigena pero elimina mal el dióxido de carbono, así que no sustituye a una vía aérea definitiva."
+              },
+              {
                 "tipo": "p",
                 "texto": "El sistema de ventilación conectado al catéter, la presión empleada y los tiempos de insuflación y espiración dependen del equipo disponible y del protocolo del servicio; esta lección no fija cifras porque varían entre equipos y una cifra equivocada aquí produce barotrauma."
               }
@@ -17568,6 +18408,87 @@ export const planRescate = [
                 "variante": "clinico",
                 "titulo": "Vigilancia continua",
                 "texto": "Un catéter de este calibre se desplaza con facilidad. Se sujeta durante todo el procedimiento, se fija y se comprueba tras cada movilización del paciente; el enfisema subcutáneo creciente obliga a reevaluar de inmediato la posición."
+              }
+            ]
+          },
+          {
+            "titulo": "Errores frecuentes",
+            "bloques": [
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Tratarlo como un peldaño más de la escalera",
+                "texto": "No es una alternativa a la intubación: es lo que se hace cuando la escalera se agotó y el paciente sigue sin oxigenarse. Plantearlo antes de tiempo es tan grave como plantearlo tarde."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Dar por autorizado lo que solo está estudiado",
+                "texto": "La ejecución depende de la certificación del prestador, del equipamiento de la unidad y de la dirección médica. El temario describe la técnica; la autorización la dan la academia y el protocolo."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Soltar el catéter",
+                "texto": "Un catéter de ese calibre se desplaza con facilidad. Se sujeta durante todo el procedimiento, se fija y se comprueba tras cada movilización."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Insuflar sin vigilar el enfisema",
+                "texto": "Si el catéter quedó fuera de la luz traqueal, la insuflación produce enfisema subcutáneo. Un enfisema creciente obliga a reevaluar la posición de inmediato."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Aplicar una presión o unos tiempos memorizados",
+                "texto": "El sistema conectado, la presión y los tiempos de insuflación y espiración dependen del equipo y del protocolo. Una cifra equivocada aquí produce barotrauma."
+              }
+            ]
+          },
+          {
+            "titulo": "Repaso rápido",
+            "bloques": [
+              {
+                "tipo": "lista",
+                "titulo": "Lo que hay que llevarse de esta lección",
+                "items": [
+                  "Es un procedimiento de RESCATE: no se puede ventilar por ningún medio ni asegurar la vía aérea por vía oral o nasal.",
+                  "Situaciones: obstrucción supraglótica, trauma facial masivo, edema de vía aérea superior, fracaso de todo lo disponible.",
+                  "La membrana cricotiroidea está entre el cartílago tiroides (arriba) y el cricoides (abajo).",
+                  "El cricoides es el único anillo cartilaginoso completo de la vía aérea.",
+                  "Se localiza bajando el dedo desde la prominencia tiroidea hasta la depresión blanda.",
+                  "Es el punto donde la vía aérea está más cerca de la piel y con menos vasos importantes delante.",
+                  "La laringe se estabiliza con la mano no dominante durante todo el procedimiento.",
+                  "Se punciona en sentido caudal, aspirando: la entrada de aire indica que se alcanzó la luz.",
+                  "Se avanza el catéter, se retira la aguja y se sujeta en todo momento.",
+                  "Oxigena de forma temporal pero elimina mal el dióxido de carbono.",
+                  "No sustituye a una vía aérea definitiva: obliga a trasladar sin demora.",
+                  "Complicaciones: falsa vía con enfisema, acodamiento, hemorragia, lesión posterior y barotrauma."
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Preguntas de repaso oral",
+            "bloques": [
+              {
+                "tipo": "p",
+                "texto": "Para responder en voz alta y sin mirar la lección. Si una respuesta no sale con sus propias palabras, es la que hay que volver a leer."
+              },
+              {
+                "tipo": "lista",
+                "items": [
+                  "¿Qué situación clínica justifica un acceso transtraqueal de rescate?",
+                  "¿Por qué se dice que no es un peldaño más de la escalera?",
+                  "Describe cómo localizas la membrana cricotiroidea con los dedos.",
+                  "¿Por qué se eligió ese punto y no otro?",
+                  "Recorre la técnica con aguja paso a paso.",
+                  "¿Qué te confirma que has alcanzado la luz de la vía aérea?",
+                  "¿Por qué es una medida temporal? ¿Qué gas se elimina mal?",
+                  "Enumera las complicaciones inmediatas.",
+                  "Aparece enfisema subcutáneo creciente. ¿Qué significa y qué haces?"
+                ]
               }
             ]
           },
@@ -17772,6 +18693,12 @@ export const planRescate = [
                 "texto": "A un paciente que no ventila, o que ventila de forma claramente insuficiente, no se le resuelve nada con una mascarilla de oxígeno: hay que ventilarlo. El oxígeno solo llega al alvéolo si alguien mueve el aire."
               },
               {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Regla mnemotécnica",
+                "texto": "¿RESPIRA O NO RESPIRA? Esa pregunta elige la familia entera. Si respira, se le APORTA oxígeno —puntas, mascarilla—; si no respira o lo hace de forma claramente insuficiente, se le MUEVE el aire con bolsa-válvula-mascarilla. El oxígeno solo llega al alvéolo si alguien mueve el aire."
+              },
+              {
                 "tipo": "imagen",
                 "src": "imagenes/temario/bvm-oxigeno-maniqui-800.webp",
                 "alt": "Dos paramédicos ventilan con bolsa-válvula-mascarilla a un maniquí, junto a un tanque de oxígeno y una bandeja con dispositivos de vía aérea.",
@@ -17835,8 +18762,94 @@ export const planRescate = [
                 "texto": "Insuflar demasiado rápido o con volumen excesivo aumenta la presión dentro del tórax, reduce el retorno venoso y favorece la insuflación gástrica, con el vómito y la aspiración que la acompañan. La referencia es la elevación visible del tórax, no la fuerza aplicada a la bolsa."
               },
               {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Lo que más se pregunta",
+                "texto": "Dos cosas se preguntan siempre: la diferencia entre aportar oxígeno y ventilar, y que la referencia de una insuflación correcta es la ELEVACIÓN VISIBLE del tórax, no la fuerza aplicada a la bolsa ni la prisa."
+              },
+              {
                 "tipo": "p",
                 "texto": "La técnica de dos personas es preferible siempre que haya personal disponible: con un solo reanimador es difícil mantener a la vez el sello, la apertura de la vía aérea y una insuflación controlada."
+              }
+            ]
+          },
+          {
+            "titulo": "Errores frecuentes",
+            "bloques": [
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Poner una mascarilla a quien no ventila",
+                "texto": "Es el error más frecuente de la unidad. A un paciente que no ventila, o que ventila de forma claramente insuficiente, una mascarilla de oxígeno no le resuelve nada: hay que ventilarlo."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Insuflar deprisa o con volumen excesivo",
+                "texto": "Sube la presión dentro del tórax, reduce el retorno venoso y favorece la insuflación gástrica, con el vómito y la aspiración que la acompañan. La referencia es la elevación visible del tórax."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Ignorar que el reservorio se colapsa",
+                "texto": "Un reservorio que se vacía durante la inspiración indica que el flujo es insuficiente para ese paciente. Hay que llenarlo antes de colocar la mascarilla y vigilar que no se colapse."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Sellar con una mano habiendo un segundo reanimador",
+                "texto": "Con un solo reanimador es difícil mantener a la vez el sello, la apertura de la vía aérea y una insuflación controlada. La técnica de dos personas es preferible siempre que haya personal."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Administrar oxígeno por rutina",
+                "texto": "La indicación y el objetivo de saturación dependen del cuadro y del protocolo. Dar oxígeno a todo paciente no es una conducta neutra."
+              }
+            ]
+          },
+          {
+            "titulo": "Repaso rápido",
+            "bloques": [
+              {
+                "tipo": "lista",
+                "titulo": "Lo que hay que llevarse de esta lección",
+                "items": [
+                  "Dos familias: las que APORTAN oxígeno a quien respira y las que MUEVEN el aire por él.",
+                  "Las puntas nasales aportan a bajo flujo y son bien toleradas.",
+                  "La concentración que recibe el paciente no es fija: depende del flujo y de su patrón respiratorio.",
+                  "Las mascarillas con reservorio consiguen las concentraciones más altas.",
+                  "El reservorio se llena antes de colocar la mascarilla y no debe colapsarse al inspirar.",
+                  "Los flujos concretos los fija la especificación del equipo, no una cifra memorizada.",
+                  "La bolsa-válvula-mascarilla tiene bolsa autoinflable, válvula unidireccional y mascarilla.",
+                  "Su dificultad no está en apretar: está en el sello facial manteniendo la vía aérea abierta.",
+                  "Se coloca cánula si está indicada, y se sella ajustando primero el puente nasal.",
+                  "Se insufla de forma lenta y progresiva hasta ver elevarse el tórax.",
+                  "Hiperventilar reduce el retorno venoso y favorece la insuflación gástrica.",
+                  "La técnica de dos personas es preferible siempre que haya personal disponible."
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Preguntas de repaso oral",
+            "bloques": [
+              {
+                "tipo": "p",
+                "texto": "Para responder en voz alta y sin mirar la lección. Si una respuesta no sale con sus propias palabras, es la que hay que volver a leer."
+              },
+              {
+                "tipo": "lista",
+                "items": [
+                  "Diferencia las dos familias de dispositivos y di qué corrige cada una.",
+                  "¿Por qué la concentración que recibe alguien con puntas nasales no es fija?",
+                  "¿Qué te dice un reservorio que se colapsa al inspirar?",
+                  "¿Por qué esta lección no te da una tabla de litros por minuto?",
+                  "Describe la ventilación con bolsa-válvula-mascarilla paso a paso.",
+                  "¿Dónde está la verdadera dificultad de la técnica?",
+                  "Explica qué daño hace hiperventilar y cuál es la referencia correcta.",
+                  "¿Por qué es preferible la técnica de dos personas?"
+                ]
               }
             ]
           },
@@ -18079,6 +19092,12 @@ export const planRescate = [
                 "variante": "clave",
                 "titulo": "Presión no es volumen",
                 "texto": "El manómetro indica presión, no litros. La presión restante permite estimar el contenido porque el cilindro tiene un volumen fijo, pero el dato que interesa —cuántos minutos quedan— depende además del flujo que se esté administrando y del tamaño del cilindro."
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Regla mnemotécnica",
+                "texto": "LO QUE MARCA LA AGUJA ES PRESIÓN, LO QUE IMPORTA SON MINUTOS. Y entre una cosa y otra hay tres datos que pone el servicio y no el temario: el factor del cilindro, la presión de reserva y el flujo que se está dando."
               }
             ]
           },
@@ -18146,6 +19165,87 @@ export const planRescate = [
                 "variante": "clinico",
                 "titulo": "Ambiente enriquecido en oxígeno",
                 "texto": "En un habitáculo cerrado con oxígeno a alto flujo, la concentración ambiental sube. Una chispa en ese entorno tiene consecuencias que no tendría al aire libre. Es una razón práctica para no administrar flujos altos sin indicación."
+              }
+            ]
+          },
+          {
+            "titulo": "Errores frecuentes",
+            "bloques": [
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Leer el manómetro como si marcara litros",
+                "texto": "Marca presión. La presión permite estimar el contenido porque el cilindro tiene volumen fijo, pero los minutos dependen además del flujo administrado y del tamaño del cilindro."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Aplicar un factor de conversión de otro cilindro",
+                "texto": "El factor es una característica del cilindro y varía según el estándar del fabricante y del país. Aplicar el equivocado da una estimación falsamente tranquilizadora, que es peor que no calcular nada."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Planificar contando con vaciar el cilindro",
+                "texto": "Siempre se reserva margen para el imprevisto: una demora, un cambio a un dispositivo de mayor flujo o una espera en el hospital. Quedarse sin oxígeno con el paciente conectado es una emergencia evitable."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Comprobar en camino",
+                "texto": "La revisión se hace ANTES de salir: presión del fijo, presión del portátil, funcionamiento del regulador y existencia de repuesto. Forma parte de la revisión de la unidad al inicio del turno."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Usar grasa o aceite en las conexiones",
+                "texto": "El oxígeno a presión hace inflamables los derivados del petróleo. Y un cilindro suelto que cae y rompe su válvula se convierte en un proyectil."
+              }
+            ]
+          },
+          {
+            "titulo": "Repaso rápido",
+            "bloques": [
+              {
+                "tipo": "lista",
+                "titulo": "Lo que hay que llevarse de esta lección",
+                "items": [
+                  "El sistema es una cadena: cilindro, regulador, manómetro, flujómetro, conexión y dispositivo.",
+                  "El manómetro indica PRESIÓN, no litros.",
+                  "Los cilindros se identifican por una letra que corresponde a su tamaño.",
+                  "Cada tamaño tiene su propio factor de conversión, que aparece en su documentación técnica.",
+                  "El servicio debe declarar por escrito qué cilindros usa, su factor y su presión de reserva.",
+                  "Minutos disponibles = (presión actual − presión de reserva) × factor del cilindro ÷ flujo.",
+                  "La reserva no es opcional: nunca se planifica vaciar el cilindro.",
+                  "La comprobación se hace antes de salir, no en camino.",
+                  "El cilindro va siempre sujeto en su soporte, nunca suelto.",
+                  "Nada de grasas ni aceites derivados del petróleo en las conexiones.",
+                  "El oxígeno no arde, pero hace que todo lo demás arda mucho más rápido.",
+                  "Se comprueba la fecha de prueba hidrostática y se retira el cilindro caducado."
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Preguntas de repaso oral",
+            "bloques": [
+              {
+                "tipo": "p",
+                "texto": "Para responder en voz alta y sin mirar la lección. Si una respuesta no sale con sus propias palabras, es la que hay que volver a leer."
+              },
+              {
+                "tipo": "lista",
+                "items": [
+                  "Enumera los elementos que hay entre el cilindro y el paciente.",
+                  "¿Qué indica exactamente el manómetro y qué no indica?",
+                  "¿Por qué no basta la presión para saber cuántos minutos quedan?",
+                  "Di la fórmula de la autonomía y de dónde sale cada dato.",
+                  "¿Qué tres datos tiene que declarar el servicio por escrito?",
+                  "¿Por qué la presión de reserva no es opcional?",
+                  "¿Cuándo se comprueba el oxígeno de la unidad?",
+                  "Enumera las medidas de seguridad en el manejo de cilindros.",
+                  "¿Por qué preocupa un ambiente enriquecido en oxígeno dentro de la ambulancia?"
+                ]
               }
             ]
           },
@@ -18331,6 +19431,12 @@ export const planRescate = [
                 "variante": "alerta",
                 "titulo": "La decisión que precede a todo",
                 "texto": "Antes de plantear una secuencia rápida hay que responder a una pregunta: si no consigo intubar, ¿puedo ventilar a este paciente? Si la respuesta no es claramente afirmativa, la secuencia rápida no es la opción segura."
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Lo que más se pregunta",
+                "texto": "La pregunta que resume el tema entero: si no consigo intubar, ¿puedo VENTILAR a este paciente? Porque el bloqueo neuromuscular elimina la respiración espontánea y no hay marcha atrás hasta que revierta. Lo que se evalúa aquí es esa decisión, no la técnica."
               }
             ]
           },
@@ -18391,6 +19497,80 @@ export const planRescate = [
               {
                 "tipo": "p",
                 "texto": "Mientras esas condiciones no estén declaradas, el contenido farmacológico de este tema permanece pendiente de la academia. Lo que sí se enseña —qué es la secuencia rápida, qué compromete, cómo se prepara y qué exige— es lo que permite entenderla y reconocer cuándo no debe intentarse."
+              }
+            ]
+          },
+          {
+            "titulo": "Errores frecuentes",
+            "bloques": [
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Plantearla sin poder responder a la pregunta previa",
+                "texto": "Si no consigo intubar, ¿puedo ventilar a este paciente? Si la respuesta no es claramente afirmativa, la secuencia rápida no es la opción segura."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Valorar solo la dificultad para intubar",
+                "texto": "Lo que decide la seguridad es sobre todo la dificultad para VENTILAR: es lo único que queda cuando el bloqueo ya eliminó la respiración espontánea."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Empezar sin el plan de rescate acordado en voz alta",
+                "texto": "El reparto de funciones y qué se hace si falla se acuerdan ANTES de administrar nada. Improvisarlo con el paciente ya paralizado es improvisarlo en el peor momento."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Confundirla con una intubación más",
+                "texto": "La diferencia no es de técnica sino de consecuencias: no hay marcha atrás hasta que el bloqueo revierta."
+              }
+            ]
+          },
+          {
+            "titulo": "Repaso rápido",
+            "bloques": [
+              {
+                "tipo": "lista",
+                "titulo": "Lo que hay que llevarse de esta lección",
+                "items": [
+                  "Es la administración prácticamente simultánea de un inductor y un bloqueador neuromuscular.",
+                  "Busca condiciones óptimas para la laringoscopia en un paciente que conserva reflejos.",
+                  "Su diferencia con la intubación sin fármacos es de consecuencias, no de técnica.",
+                  "Al paralizar se elimina la respiración espontánea: la ventilación pasa a depender del equipo.",
+                  "Si falla la intubación y además no se consigue ventilar, no hay marcha atrás hasta que revierta el bloqueo.",
+                  "La pregunta previa: si no consigo intubar, ¿puedo ventilar a este paciente?",
+                  "El resultado se decide antes de administrar nada.",
+                  "Valoración de la vía aérea: dificultad para intubar y, sobre todo, para ventilar.",
+                  "Material: aspiración, laringoscopio, dos calibres de tubo, supraglótico de rescate y acceso transtraqueal si se autoriza.",
+                  "Equipo humano: funciones repartidas y plan de rescate en voz alta.",
+                  "Preoxigenación para ganar margen antes de perder la respiración espontánea.",
+                  "Optimización del paciente: posición, lo corregible y anticipar el deterioro hemodinámico."
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Preguntas de repaso oral",
+            "bloques": [
+              {
+                "tipo": "p",
+                "texto": "Para responder en voz alta y sin mirar la lección. Si una respuesta no sale con sus propias palabras, es la que hay que volver a leer."
+              },
+              {
+                "tipo": "lista",
+                "items": [
+                  "Define la intubación de secuencia rápida.",
+                  "¿En qué se diferencia de una intubación sin fármacos? No hables de técnica.",
+                  "¿Qué pierde el paciente en el momento en que actúa el bloqueador?",
+                  "¿Cuál es la pregunta que hay que responder antes de plantearla?",
+                  "Enumera las fases de preparación.",
+                  "¿Por qué importa más anticipar la dificultad para ventilar que para intubar?",
+                  "¿Para qué sirve la preoxigenación en esta secuencia?",
+                  "¿Por qué el plan de rescate se dice en voz alta y antes de empezar?"
+                ]
               }
             ]
           },

@@ -25,11 +25,25 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { getTema } from '../src/data/index.js'
 
-const LECCIONES = [
-  'm3-ep-sss', 'm3-ep-avdi', 'm3-ep-via-aerea-cervicales', 'm3-ep-respiracion',
-  'm3-ep-circulacion', 'm3-ep-neurologica', 'm3-ep-exploracion-dirigida',
-  'm3-es-abcde', 'm3-es-sample', 'm3-es-exploracion-detallada',
-]
+// Los lotes entregados, por unidad. Cada uno nuevo se añade aquí y hereda las
+// mismas comprobaciones: es la forma de que el molde no se relaje al tercer
+// lote, que es cuando se relajan las cosas.
+const LOTES = {
+  'M3 · evaluación primaria y secundaria': [
+    'm3-ep-sss', 'm3-ep-avdi', 'm3-ep-via-aerea-cervicales', 'm3-ep-respiracion',
+    'm3-ep-circulacion', 'm3-ep-neurologica', 'm3-ep-exploracion-dirigida',
+    'm3-es-abcde', 'm3-es-sample', 'm3-es-exploracion-detallada',
+  ],
+  'M3 · manejo de la vía aérea': [
+    'm3-va-repaso-anatomia', 'm3-va-levantamiento-menton', 'm3-va-triple-maniobra',
+    'm3-va-menton-inclinacion', 'm3-va-canulas-orofaringeas', 'm3-va-canulas-nasofaringeas',
+    'm3-va-tecnica-intubacion', 'm3-va-hojas-tubos', 'm3-va-mascarilla-laringea',
+    'm3-va-obturador-esofagico', 'm3-va-cricotirotomia', 'm3-va-dispositivos-o2',
+    'm3-va-tanques-o2', 'm3-va-isr',
+  ],
+}
+
+const LECCIONES = Object.values(LOTES).flat()
 
 // `m3-ep-via-aerea-cervicales` ya traía su propia lista de errores dentro de
 // «Control de la columna cervical», así que NO se le añadió una sección que
@@ -66,7 +80,7 @@ const textoDe = (bloques) => (bloques || [])
     .filter(Boolean).join(' '))
   .join(' ')
 
-test('las diez lecciones del lote conservan sus piezas nuevas', () => {
+test('las lecciones de los lotes conservan sus piezas nuevas', () => {
   for (const id of LECCIONES) {
     const t = getTema(id)
     assert.ok(t, `no existe la lección ${id}`)
@@ -112,7 +126,11 @@ test('las preguntas orales son preguntas, no afirmaciones con la respuesta dentr
     const orales = seccion(getTema(id), 'Preguntas de repaso oral').bloques.find((b) => b.tipo === 'lista')
     for (const q of orales.items) {
       const esPregunta = q.includes('?')
-      const esConsigna = /^(Enumera|Describe|Di |Recita|Recorre|Menciona|Explica|Nombra)/.test(q)
+      // Verbos en imperativo con los que se pide algo en voz alta. La lista
+      // crece con los lotes: es preferible ampliarla a relajar la comprobación,
+      // porque lo que vigila es que no se cuele una AFIRMACIÓN con la respuesta
+      // dentro disfrazada de pregunta.
+      const esConsigna = /^(Enumera|Describe|Di |Recita|Recorre|Menciona|Explica|Nombra|Diferencia|Sitúa|Define)/.test(q)
       assert.ok(esPregunta || esConsigna,
         `${id}: «${q}» no se lee como pregunta ni como consigna para responder en voz alta`)
     }
@@ -165,7 +183,7 @@ test('NINGUNA cifra aparece por primera vez en las secciones nuevas', () => {
   }
   // Sin esto la prueba pasaría en verde si un cambio de títulos dejara el
   // recorrido a cero secciones y no hubiera nada que revisar.
-  assert.ok(revisadas >= 29, `solo se revisaron ${revisadas} secciones nuevas`)
+  assert.ok(revisadas >= 70, `solo se revisaron ${revisadas} secciones nuevas`)
 
   // QUÉ DEMUESTRA ESTA PRUEBA HOY, DICHO SIN ADORNOS.
   //
