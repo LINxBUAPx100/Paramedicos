@@ -11,6 +11,7 @@
 //    node scripts/migrar-contenido.mjs --academia=AEP-2026       (dry-run de clonación)
 //    node scripts/migrar-contenido.mjs --academia=AEP-2026 --apply
 //    node scripts/migrar-contenido.mjs --verificar --academia=AEP-2026
+//    node scripts/migrar-contenido.mjs --agregados --academia=AEP-2026 --apply
 //  Opciones: --plantilla=paramedico-tum (default) · --produccion
 //            --tipo=basico|avanzado   fija tipoDestino (por omisión CONSERVA el remoto)
 //            --version=N              fija el contador (por omisión CONSERVA el remoto)
@@ -32,6 +33,8 @@ import { modulos, todosLosTemas, stats } from '../src/data/index.js'
 import {
   plantillaDesdeData, docsClonadosParaAcademia, cursoDesdePlantilla, lotes,
 } from '../src/lib/contenidoModelo.js'
+import { ensamblarModulos, construirApi } from '../src/lib/contenidoApi.js'
+import { SELLO, docIdAgregado, docsAgregadosDeCurso } from '../src/lib/agregadosModelo.js'
 import { huellaTema } from '../src/lib/replicacionModelo.js'
 import {
   metadatosDePlantilla, modulosQueSePerderian, versionesPublicadas, versionBloqueada,
@@ -51,18 +54,20 @@ const valor = (n) => {
 const APPLY = flag('apply')
 const SEED = flag('seed')
 const VERIFICAR = flag('verificar')
+const AGREGADOS = flag('agregados')
 const PRODUCCION = flag('produccion')
 const ACADEMIA = valor('academia')
 const PLANTILLA = valor('plantilla') || PLANTILLA_OFICIAL_ID
 const EMULADOR = process.env.FIRESTORE_EMULATOR_HOST || null
 const PROYECTO = process.env.FIREBASE_PROJECT_ID || PROYECTO_DEFAULT
 
-if (!SEED && !ACADEMIA && !VERIFICAR) {
+if (!SEED && !ACADEMIA && !VERIFICAR && !AGREGADOS) {
   console.log(`Migración de contenido PTEM — dry-run por defecto (usa --apply para escribir).
 
   --seed                 siembra la plantilla oficial (${PLANTILLA_OFICIAL_ID}) desde src/data
   --academia=CODIGO      clona la plantilla al namespace de esa academia
-  --verificar            junto con --academia: revisa si la clonación está completa
+  --verificar            junto con --academia: revisa la clonación Y sus agregados
+  --agregados            junto con --academia: SOLO regenera los agregados del curso
   --plantilla=ID         plantilla a usar (default ${PLANTILLA_OFICIAL_ID})
   --apply                ESCRIBE (sin esto solo se muestra el plan)
   --produccion           permite conectar a producción (requiere GOOGLE_APPLICATION_CREDENTIALS)
@@ -241,6 +246,93 @@ async function seed() {
   }
 }
 
+// ---------- AGREGADOS del curso ----------
+//
+// POR QUÉ ESTO ESTÁ AQUÍ, Y NO ESTABA.
+//
+// Los agregados son las vistas derivadas del temario —glosario, buscador, banco
+// de exámenes, mazo, galería y contadores— precalculadas en documentos pequeños
+// para que abrir UNA lección no cueste las 287 lecturas del curso entero. El
+// porqué completo está en `src/lib/agregadosModelo.js`.
+//
+// La aplicación los escribe al clonar (`clonarPlantillaAAcademia`). Este script
+// NO los mencionaba una sola vez: no falló al generarlos, nunca lo intentó. Por
+// eso R.E.S.C.A.T.E. quedó migrada sin ellos el 31-08-2026 —288 documentos
+// escritos, 287 verificados, `agregados` en cero— y cada carga de contenido
+// volvió a costar 288 lecturas en vez de 3. Nada se rompía: el resolutor cae al
+// camino completo, que es correcto. Solo se perdía el objetivo de la Fase 1, y
+// con él la cuota diaria del plan gratuito: ~173 cargas al día en vez de ~16 600.
+//
+// Espejo de `escribirAgregadosDeCurso` (src/lib/firebase/agregados.js) con el
+// SDK de administración. Dos invariantes que no se cambian:
+//   · el SELLO va al FINAL. Si la escritura se corta a medias no llega, y sin
+//     sello el resolutor ni intenta el camino barato: sirve el curso completo,
+//     más caro pero correcto. Sellar primero dejaría agregados incompletos
+//     marcados como buenos, y el examen saldría corto sin que nadie se enterara;
+//   · los ids son deterministas, así que reejecutar sobrescribe y nunca duplica.
+
+// Plan de agregados, sin conexión: qué documentos saldrían de esta estructura y
+// estos temas. Se calcula igual en dry-run que en apply, para que el dry-run
+// diga la cifra de verdad y no una estimación.
+function planAgregados({ academiaId, cursoId, estructura, temas, version }) {
+  const temasPorId = new Map((temas || []).map((t) => [t.temaId, t]))
+  const { modulos: ensamblados, faltantes } = ensamblarModulos(estructura, temasPorId, { incluirBorradores: true })
+  const docs = docsAgregadosDeCurso({
+    academiaId, cursoId, version,
+    modulos: construirApi(ensamblados).modulos,
+  })
+  return { docs, faltantes }
+}
+
+async function escribirAgregados({ academiaId, cursoId, estructura, temas, version }) {
+  const { docs, faltantes } = planAgregados({ academiaId, cursoId, estructura, temas, version })
+  if (faltantes.length) {
+    // No aborta: un tema declarado en la estructura sin documento ya es un
+    // problema anterior a los agregados, y generarlos sin él es mejor que no
+    // generarlos. Pero se dice, porque su examen y su glosario faltarán.
+    resumen.avisos.push(
+      `Agregados: ${faltantes.length} tema(s) de la estructura no tienen documento ` +
+      `(${faltantes.slice(0, 3).join(', ')}${faltantes.length > 3 ? ', …' : ''}). Se generan sin ellos.`
+    )
+  }
+  resumen.aEscribir += docs.length + 1 // + el sello
+  console.log(`  agregados: ${docs.length} documentos + sello (v${version})`)
+
+  if (!APPLY) {
+    console.log(`  DRY-RUN: se escribirían ${docs.length + 1} docs en agregados/.`)
+    return { escritos: 0, docs: docs.length }
+  }
+
+  for (const grupo of lotes(docs, 20)) {
+    const batch = dba.batch()
+    for (const d of grupo) {
+      const { docId, ...datos } = d
+      batch.set(dba.collection('agregados').doc(docId), {
+        ...datos,
+        actualizado: FieldValue.serverTimestamp(),
+        actualizadoPor: 'script:migrar-contenido',
+      })
+    }
+    await batch.commit()
+    resumen.escritos += grupo.length
+  }
+  await dba.collection('agregados').doc(docIdAgregado(cursoId, SELLO)).set({
+    academiaId,
+    cursoId,
+    tipo: SELLO,
+    moduloId: null,
+    estado: 'publicado',
+    version,
+    documentos: docs.length,
+    desactualizado: false,
+    actualizado: FieldValue.serverTimestamp(),
+    actualizadoPor: 'script:migrar-contenido',
+  })
+  resumen.escritos++
+  console.log(`  ✓ agregados escritos y sellados (${docs.length} + sello)`)
+  return { escritos: docs.length + 1, docs: docs.length }
+}
+
 // ---------- CLONACIÓN a una academia ----------
 async function clonar(academiaId) {
   const curso = cursoDesdePlantilla({ academiaId, plantilla })
@@ -273,7 +365,12 @@ async function clonar(academiaId) {
   }
 
   if (!APPLY) {
-    console.log(`  DRY-RUN: se escribirían ${1 + temas.length} docs + estado 'migrado' en academias/${academiaId}.contenido.`)
+    const { docs } = planAgregados({
+      academiaId, cursoId, estructura: curso.estructura, temas, version: plantilla.version ?? 1,
+    })
+    resumen.aEscribir += docs.length + 1
+    console.log(`  DRY-RUN: se escribirían ${1 + temas.length} docs de contenido + ${docs.length + 1} de agregados` +
+      ` + estado 'migrado' en academias/${academiaId}.contenido.`)
     return
   }
 
@@ -317,8 +414,33 @@ async function clonar(academiaId) {
       resumen.escritos += grupo.length
       console.log(`  temas escritos: ${resumen.escritos - 1}/${temas.length}`)
     }
+    // AGREGADOS desde los mismos temas que se acaban de escribir, no
+    // releyéndolos: serían 287 lecturas para producir lo que ya está en memoria.
+    //
+    // Un fallo aquí NO invalida la clonación —los temas ya están y el curso
+    // funciona por el camino completo— pero SÍ queda escrito en el documento del
+    // curso, para que el panel del director lo enseñe y se pueda consultar
+    // después. Un aviso que solo vive en una consola cerrada no es un aviso.
+    let resultadoAgregados = 'ok'
+    let motivoAgregados = null
+    try {
+      await escribirAgregados({
+        academiaId, cursoId, estructura: curso.estructura, temas, version: plantilla.version ?? 1,
+      })
+    } catch (err) {
+      resultadoAgregados = 'fallo'
+      motivoAgregados = String(err?.message || err).slice(0, 300)
+      resumen.avisos.push(
+        `Agregados NO generados para ${cursoId}: ${motivoAgregados}. El curso funciona, pero cada ` +
+        `carga costará ${temas.length + 1} lecturas en vez de 3. Regenéralos con --agregados o ` +
+        `desde Panel → Contenido.`
+      )
+    }
+
     await dba.collection('cursos').doc(cursoId).update({
       'clonacion.completa': true,
+      'clonacion.agregados': resultadoAgregados,
+      'clonacion.agregadosMotivo': motivoAgregados,
       actualizado: FieldValue.serverTimestamp(),
     })
     await marcar('migrado')
@@ -333,6 +455,47 @@ async function clonar(academiaId) {
     await marcar('error', { detalle: String(err?.message || err) }).catch(() => null)
     throw err
   }
+}
+
+// ---------- SOLO AGREGADOS de un curso ya clonado ----------
+//
+// Cuesta las 287 lecturas del curso, y por eso NO es la vía normal: en
+// producción esto lo arregla un director desde Panel → Contenido, con su propia
+// sesión y sin que nadie tenga que repartir una clave de service account —que
+// es justo el error que ya se cometió una vez—. Esta vía existe para el
+// emulador, para academias de prueba y para quien YA tiene la credencial porque
+// es el dueño del proyecto.
+async function soloAgregados(academiaId) {
+  if (!conectar) {
+    console.error('✗ --agregados necesita conexión (emulador o --produccion).')
+    process.exit(1)
+  }
+  const cursoId = `${academiaId}__${plantilla.id}`
+  const cursoSnap = await dba.collection('cursos').doc(cursoId).get()
+  resumen.leidos++
+  if (!cursoSnap.exists) {
+    console.error(`✗ No existe cursos/${cursoId}. Clona primero con --academia=${academiaId} --apply.`)
+    process.exit(1)
+  }
+  const curso = cursoSnap.data()
+  const temasSnap = await dba.collection('temas').where('cursoId', '==', cursoId).get()
+  resumen.leidos += temasSnap.size
+  const temas = temasSnap.docs.map((d) => d.data())
+  console.log(`Agregados de cursos/${cursoId} — ${temas.length} temas leídos`)
+
+  // Versión del sello: la siguiente a la que hubiera, igual que hace
+  // `regenerarAgregados` en la aplicación. El número solo tiene que subir.
+  const selloSnap = await dba.collection('agregados').doc(docIdAgregado(cursoId, SELLO)).get()
+  resumen.leidos++
+  const version = (selloSnap.exists ? selloSnap.data()?.version || 0 : 0) + 1
+
+  await escribirAgregados({ academiaId, cursoId, estructura: curso.estructura, temas, version })
+  if (!APPLY) return
+  await dba.collection('cursos').doc(cursoId).update({
+    'clonacion.agregados': 'ok',
+    'clonacion.agregadosMotivo': null,
+    actualizado: FieldValue.serverTimestamp(),
+  })
 }
 
 // ---------- VERIFICAR una clonación ----------
@@ -356,12 +519,42 @@ async function verificar(academiaId) {
   const presentes = new Set(snap.docs.map((d) => d.data().temaId))
   const faltantes = esperados.filter((id) => !presentes.has(id))
   console.log(`  cursos/${cursoId}: clonacion.completa=${Boolean(curso.clonacion?.completa)}; temas ${presentes.size}/${esperados.length}; faltantes: ${faltantes.length ? faltantes.join(', ') : 'ninguno'}`)
+
+  // Los AGREGADOS, que es lo que faltaba mirar aquí. Una clonación puede estar
+  // «completa» y correcta y aun así costar 288 lecturas por carga: eso es
+  // exactamente lo que pasó con R.E.S.C.A.T.E. y lo que nadie vio durante
+  // semanas, porque esta verificación no los miraba.
+  const selloSnap = await dba.collection('agregados').doc(docIdAgregado(cursoId, SELLO)).get()
+  resumen.leidos++
+  const agSnap = await dba.collection('agregados').where('cursoId', '==', cursoId).get()
+  resumen.leidos += agSnap.size
+  const sello = selloSnap.exists ? selloSnap.data() : null
+  if (!sello) {
+    console.log(`  agregados: SIN SELLO (${agSnap.size} docs). Cada carga de contenido cuesta ${esperados.length + 1} lecturas en vez de 3.`)
+    resumen.avisos.push(
+      `El curso ${cursoId} no tiene agregados sellados. Regenéralos desde Panel → Contenido ` +
+      `o con --agregados --academia=${academiaId} --apply.`
+    )
+  } else if (sello.desactualizado) {
+    console.log(`  agregados: sello v${sello.version} DESACTUALIZADO (${agSnap.size} docs presentes). Se sirve por el camino completo hasta regenerarlos.`)
+    resumen.avisos.push(`Los agregados de ${cursoId} están marcados como desactualizados tras una edición.`)
+  } else {
+    const esperadosAg = (sello.documentos || 0) + 1 // + el propio sello
+    const ok = agSnap.size >= esperadosAg
+    console.log(`  agregados: sello v${sello.version} al día; documentos ${agSnap.size}/${esperadosAg}${ok ? "" : " ← INCOMPLETO"}`)
+    if (!ok) resumen.avisos.push(`Faltan documentos de agregados en ${cursoId}: el sello dice ${esperadosAg} y hay ${agSnap.size}.`)
+  }
 }
 
 // ---------- ejecución ----------
 try {
+  if (AGREGADOS && !ACADEMIA) {
+    console.error('✗ --agregados necesita --academia=CODIGO.')
+    process.exit(1)
+  }
   if (SEED) await seed()
-  if (ACADEMIA && !VERIFICAR) await clonar(ACADEMIA)
+  if (ACADEMIA && AGREGADOS) await soloAgregados(ACADEMIA)
+  else if (ACADEMIA && !VERIFICAR) await clonar(ACADEMIA)
   if (VERIFICAR && ACADEMIA) await verificar(ACADEMIA)
 
   console.log('')
