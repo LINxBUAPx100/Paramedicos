@@ -19,11 +19,17 @@
 //   · NO SUGIERE RESPALDO. Se nombra al autor, al proveedor y a la licencia.
 //     Ni «en colaboración con» ni «con el apoyo de»: sería falso y la propia
 //     licencia lo prohíbe.
+//   · EL CRÉDITO SE CARGA AL ABRIR, no al pintar la figura. Los datos de
+//     procedencia viven en el catálogo completo, que son 500 kB; pedirlos para
+//     decidir el texto de un botón obligaba a descargarlos en cada página con
+//     imágenes —y en la portada, que no tiene ninguna—. Lo que hace falta ANTES
+//     de abrir es solo saber si la licencia exige atribución, y eso ya lo
+//     responde el catálogo ligero desde `requiereCreditoVisible`.
 // ============================================================
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Icon from './Icon.jsx'
-import { creditoDe } from '../lib/activosMedicos.js'
+import { existeActivo } from '../lib/activosMedicos.js'
 import { hrefSeguro } from '../lib/enlaceSeguro.js'
 
 function Enlace({ url, children }) {
@@ -39,8 +45,20 @@ function Enlace({ url, children }) {
 export default function CreditosActivo({ assetId, className = '' }) {
   const [abierto, setAbierto] = useState(false)
   const [copiado, setCopiado] = useState(false)
+  const [credito, setCredito] = useState(null)
   const caja = useRef(null)
-  const credito = creditoDe(assetId)
+
+  // El catálogo con la procedencia entra aquí, y solo cuando alguien abre el
+  // panel. Si la descarga falla, el panel se queda con su aviso y la página no
+  // se rompe: lo que se pierde es la ficha, no la figura.
+  useEffect(() => {
+    if (!abierto || credito) return undefined
+    let vivo = true
+    import('../lib/creditosActivos.js')
+      .then(({ creditoDe }) => { if (vivo) setCredito(creditoDe(assetId)) })
+      .catch(() => { /* sin catálogo no hay ficha; el aviso del panel lo dice */ })
+    return () => { vivo = false }
+  }, [abierto, credito, assetId])
 
   // Escape cierra, y el foco vuelve al botón: es el comportamiento que espera
   // quien navega con teclado y el que evita dejar el foco perdido en el panel.
@@ -51,7 +69,9 @@ export default function CreditosActivo({ assetId, className = '' }) {
     return () => document.removeEventListener('keydown', alPulsar)
   }, [abierto])
 
-  if (!credito) return null
+  // Un assetId que no existe no merece botón. Se comprueba con el catálogo
+  // ligero, que ya está cargado.
+  if (!existeActivo(assetId)) return null
 
   const copiar = async () => {
     try {
@@ -77,7 +97,13 @@ export default function CreditosActivo({ assetId, className = '' }) {
         Créditos
       </button>
 
-      {abierto && (
+      {abierto && !credito && (
+        <div className="creditos-panel" id={`creditos-${assetId}`}>
+          <p className="creditos-nota">Cargando la ficha de esta figura…</p>
+        </div>
+      )}
+
+      {abierto && credito && (
         <div className="creditos-panel" id={`creditos-${assetId}`}>
           <dl className="creditos-lista">
             <dt>Título</dt>

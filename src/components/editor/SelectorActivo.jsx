@@ -20,7 +20,7 @@
 // ============================================================
 import { useMemo, useState } from 'react'
 import MedicalIcon from '../MedicalIcon.jsx'
-import { todosLosActivos, creditoDe } from '../../lib/activosMedicos.js'
+import { todosLosActivos, creditoDe } from '../../lib/creditosActivos.js'
 
 const POR_PAGINA = 24
 

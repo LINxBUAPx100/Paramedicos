@@ -93,10 +93,13 @@ export const IMG = Object.fromEntries(
 //  `src` se mantiene por compatibilidad —`galeriaDeLogros` deduplica por `src`
 //  y `Contenido.jsx` resuelve los bloques `diagrama` por clave— pero la fuente
 //  de verdad es `assetId`.
-import { ACTIVOS_POR_TEMA, ACTIVOS_MEDICOS } from './activosMedicos.js'
+// Del catálogo LIGERO, no del completo: el Atlas necesita ruta, título y texto
+// alternativo, y este módulo lo importa la portada. El catálogo entero son
+// 500 kB y vive en lib/creditosActivos.js, para quien pregunta por la autoría.
+import { ACTIVOS_POR_TEMA, ACTIVOS_LIGEROS } from './activosLigeros.js'
 import { rutaImagen } from '../lib/img.js'
 
-const ACTIVO_POR_ID = new Map(ACTIVOS_MEDICOS.map((a) => [a.id, a]))
+const ACTIVO_POR_ID = new Map(ACTIVOS_LIGEROS.map((a) => [a.id, a]))
 
 // Tema canónico de cada activo: el PRIMER tema del plan que lo usa. Es a donde
 // lleva su tarjeta en Logros y con qué tema se bloquea o se descubre.
@@ -123,7 +126,9 @@ export const ATLAS_TEMAS = [...TEMA_CANONICO.entries()]
       alt: a.accesibilidad?.alt || a.title,
       descripcion: a.accesibilidad?.descripcion || '',
       licencia: a.license.id,
-      autor: a.originalCreator.name,
+      // Sin `autor`: nadie lo leía. La autoría se pide a creditosActivos.js,
+      // que la tiene entera; repetirla aquí obligaba a cargar el catálogo
+      // completo en la portada para un campo que no se pintaba en ningún sitio.
     }
   })
   .filter(Boolean)

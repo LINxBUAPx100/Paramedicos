@@ -29,7 +29,7 @@ import MedicalIcon from '../components/MedicalIcon.jsx'
 import {
   activosEnUso, agrupadosPorLicencia, autoresEnUso, avisosDeLicencia,
   BIOICONS_COMMIT, SMART_RECUPERADO,
-} from '../lib/activosMedicos.js'
+} from '../lib/creditosActivos.js'
 import { NOMBRE_PROVEEDOR, URL_PROVEEDOR } from '../lib/licenciasActivos.js'
 import { hrefSeguro } from '../lib/enlaceSeguro.js'
 

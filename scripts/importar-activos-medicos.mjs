@@ -34,10 +34,12 @@
 //  Salidas:
 //    public/imagenes/medical/{bioicons,smart,composiciones}/…
 //    src/data/activosMedicos.js              (catálogo, GENERADO)
+//    src/data/activosLigeros.js              (proyección para pintar, GENERADO)
 //    docs/INVENTARIO-ACTIVOS-MEDICOS.md      (inventario y reversión, GENERADO)
 // ============================================================
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, statSync } from 'node:fs'
 import { createHash } from 'node:crypto'
+import { execFileSync } from 'node:child_process'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -791,6 +793,18 @@ export const PRESUPUESTO_ICONO = ${PRESUPUESTO_ICONO}
 
 writeFileSync(CATALOGO, cuerpoJs)
 console.log(`\n  ${path.relative(RAIZ, CATALOGO)} escrito · ${fichas.length} activos`)
+
+// El catálogo LIGERO se rehace aquí mismo, no «cuando toque».
+//
+// `src/data/activosLigeros.js` es la proyección del catálogo que consume la
+// aplicación para pintar; el completo se quedó para los créditos. Si esto no se
+// regenerara en el mismo paso, una figura retirada seguiría teniendo ruta en la
+// web y una nueva no aparecería, sin ningún error a la vista. Hay una prueba que
+// compara los dos archivos (tests/generadoAlDia.test.mjs), pero fallar en CI es
+// peor que no dar ocasión de equivocarse.
+execFileSync(process.execPath, [path.join(RAIZ, 'scripts', 'gen-activos-ligeros.mjs')], {
+  cwd: RAIZ, stdio: 'inherit',
+})
 
 // ------------------------------------------------------------
 //  Inventario de migración y tabla de reversión

@@ -60,6 +60,13 @@ test('navIndice.js coincide con lo que genera su script', () => {
   generadoIgual('gen-nav-indice.mjs', 'navIndice.js', 'npm run gen:nav')
 })
 
+test('activosLigeros.js coincide con el catálogo del que se proyecta', () => {
+  // El ligero es una PROYECCIÓN del catálogo completo, no una copia editada a
+  // mano. Si el catálogo cambia y el ligero se queda atrás, la app pinta con
+  // datos viejos —una figura retirada seguiría teniendo ruta— y nada avisa.
+  generadoIgual('gen-activos-ligeros.mjs', 'activosLigeros.js', 'npm run gen:activos')
+})
+
 test('el catálogo de activos se puede regenerar sin red desde la caché', () => {
   // `--sin-red --dry-run` reconstruye el catálogo con lo que ya está en
   // `.cache/activos/` y no escribe nada. Si falla, el pipeline dejó de ser

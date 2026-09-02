@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "gen:nav": "node scripts/gen-nav-indice.mjs",
-    "prebuild": "node scripts/gen-plan-rescate.mjs && node scripts/gen-nav-indice.mjs && npm run gen:demo",
+    "prebuild": "node scripts/gen-plan-rescate.mjs && node scripts/gen-nav-indice.mjs && node scripts/gen-activos-ligeros.mjs && npm run gen:demo",
     "build": "vite build",
     "preview": "vite preview",
     "test": "node --test \"tests/*.test.mjs\"",
@@ -19,6 +19,7 @@
     "deploy": "npm run build",
     "seed:programas": "node scripts/seed-programas.mjs",
     "gen:plan": "node scripts/gen-plan-rescate.mjs",
+    "gen:activos": "node scripts/gen-activos-ligeros.mjs",
     "mapear:legado": "node scripts/mapear-legado.mjs",
     "inventario": "node scripts/inventario-contenido.mjs",
     "biblioteca": "node scripts/biblioteca.mjs",

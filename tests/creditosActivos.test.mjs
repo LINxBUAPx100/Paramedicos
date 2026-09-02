@@ -23,10 +23,17 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 
 import {
-  activo, creditoDe, requiereCreditoVisible, activosEnUso, agrupadosPorLicencia,
-  autoresEnUso, avisosDeLicencia, srcDeActivo, iconoDeTema, activoCanonicoDeTema,
+  activo, requiereCreditoVisible, srcDeActivo, iconoDeTema, activoCanonicoDeTema,
   activosDeTema, esIdentificadorDeActivo,
 } from '../src/lib/activosMedicos.js'
+// La mitad PESADA del catálogo vive aparte desde el 2 de septiembre de 2026:
+// `lib/activosMedicos.js` se quedó con lo que hace falta para PINTAR (sobre el
+// catálogo ligero) y todo lo que responde a «de dónde salió esta figura» está
+// en `lib/creditosActivos.js`, que solo carga quien lo pide. El motivo son
+// 269 kB que viajaban en el trozo de entrada de la aplicación.
+import {
+  creditoDe, activosEnUso, agrupadosPorLicencia, autoresEnUso, avisosDeLicencia,
+} from '../src/lib/creditosActivos.js'
 import { ACTIVOS_MEDICOS } from '../src/data/activosMedicos.js'
 import { textoAtribucion, LICENCIAS } from '../src/lib/licenciasActivos.js'
 
