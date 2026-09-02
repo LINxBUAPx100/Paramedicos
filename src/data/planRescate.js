@@ -11498,6 +11498,12 @@ export const planRescate = [
                 "variante": "clave",
                 "titulo": "Ponérselo después no sirve",
                 "texto": "La protección se coloca antes de acceder, porque el momento de mayor exposición es precisamente el primer contacto. Interrumpir una atención para buscar guantes es haber llegado tarde."
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Lo que más se pregunta",
+                "texto": "Tres puntos concentran casi todas las preguntas de esta lección: que la comprobación de seguridad se REPITE durante toda la atención, que entrar antes de comprobar es la causa más frecuente de lesión del personal, y que la tercera ese —Situación— es la que cuenta pacientes y pide recursos."
               }
             ]
           },
@@ -11511,6 +11517,71 @@ export const planRescate = [
               {
                 "tipo": "p",
                 "texto": "Por eso lo observado se registra y se transmite en la entrega. Un mecanismo de alta energía puede justificar un traslado a un centro de mayor capacidad aunque el paciente parezca estable, y esa decisión solo puede tomarse si alguien anotó lo que vio."
+              }
+            ]
+          },
+          {
+            "titulo": "Errores frecuentes",
+            "bloques": [
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "«No entrar» no es «no hacer nada»",
+                "texto": "Comprobar la escena y pedir recursos no equivale a quedarse quieto mirando. Mientras la escena no sea accesible se solicita apoyo, se organiza el acceso y se prepara el material: la espera es activa."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Elegir la protección por costumbre y no por riesgo",
+                "texto": "Ponerse siempre lo mismo falla en las dos direcciones: deja sin protección ocular una vía aérea con salpicaduras y hace perder tiempo con equipo innecesario en una consulta domiciliaria."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "No registrar lo que solo se ve una vez",
+                "texto": "La deformidad del vehículo, la altura de la caída o el frasco junto a la cama desaparecen cuando la ambulancia se marcha. Si no se anotan en la escena, no existen para el resto del sistema de salud."
+              }
+            ]
+          },
+          {
+            "titulo": "Repaso rápido",
+            "bloques": [
+              {
+                "tipo": "lista",
+                "titulo": "Lo que hay que llevarse de esta lección",
+                "items": [
+                  "La valoración de la escena precede a todo contacto con el paciente.",
+                  "Seguridad: ¿puedo acercarme sin ser la siguiente víctima?",
+                  "Escena: ¿qué ocurrió aquí? Es la pregunta del mecanismo de lesión.",
+                  "Situación: ¿cuántos pacientes hay y qué recursos necesito?",
+                  "La seguridad se reevalúa durante toda la atención, no una sola vez.",
+                  "Si la escena deja de ser segura, la conducta es retirarse.",
+                  "El equipo de protección se coloca ANTES de acceder: el primer contacto es la mayor exposición.",
+                  "Guantes siempre; ojos, mascarilla, bata, casco y reflejante según el riesgo previsible.",
+                  "El prestador es el único del sistema que ve la escena: lo observado se registra y se entrega.",
+                  "Un mecanismo de alta energía puede cambiar el destino del paciente aunque parezca estable."
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Preguntas de repaso oral",
+            "bloques": [
+              {
+                "tipo": "p",
+                "texto": "Para responder en voz alta y sin mirar la lección. Si una respuesta no sale con sus propias palabras, es la que hay que volver a leer."
+              },
+              {
+                "tipo": "lista",
+                "items": [
+                  "Enumera las tres eses y di qué pregunta responde cada una.",
+                  "¿Por qué la seguridad no se comprueba una sola vez? Da un ejemplo.",
+                  "La escena deja de ser segura a mitad de la atención. ¿Qué haces?",
+                  "¿En qué momento exacto se coloca el equipo de protección y por qué?",
+                  "Menciona cuatro datos que solo puede aportar quien estuvo en la escena.",
+                  "¿Qué diferencia hay entre no acceder a una escena y no hacer nada?",
+                  "¿Qué desencadena la solicitud de apoyo o la clasificación por múltiples víctimas?"
+                ]
               }
             ]
           },
@@ -11746,6 +11817,12 @@ export const planRescate = [
                 "variante": "clinico",
                 "titulo": "El estímulo doloroso se aplica con criterio",
                 "texto": "Se emplea una presión firme y controlada —por ejemplo, sobre el lecho ungueal o el borde del trapecio— y se retira en cuanto hay respuesta. No se pellizca la piel, no se aplica sobre zonas lesionadas y no se repite por costumbre: es una exploración, no un castigo."
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Lo que más se pregunta",
+                "texto": "Lo que más se pregunta de AVDI no son las cuatro letras, sino sus dos límites: que estar alerta no implica estar orientado, y que la escala describe el NIVEL de respuesta sin explicar nunca la causa."
               }
             ]
           },
@@ -11765,6 +11842,77 @@ export const planRescate = [
                 "variante": "alerta",
                 "titulo": "Una categoría baja obliga a buscar la causa",
                 "texto": "Un paciente que solo responde al dolor o que no responde tiene la vía aérea en riesgo y necesita que se busquen causas corregibles: hipoxia, hipoglucemia, hipoperfusión, intoxicación, traumatismo craneal o hipotermia. AVDI describe el nivel; no explica por qué."
+              }
+            ]
+          },
+          {
+            "titulo": "Errores frecuentes",
+            "bloques": [
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Pedirle a la escala que explique la causa",
+                "texto": "AVDI dice en qué nivel está el paciente, no por qué. Una I no es un diagnóstico: obliga a buscar hipoxia, hipoglucemia, hipoperfusión, intoxicación, traumatismo craneal o hipotermia."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Confundir alerta con orientado",
+                "texto": "Se puede estar alerta y no saber dónde se está. La categoría describe el nivel de respuesta; la orientación en persona, lugar y tiempo se explora y se registra aparte."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Repetir el estímulo doloroso por costumbre",
+                "texto": "Es una exploración, no un castigo. Se aplica una presión firme y breve sobre zona no lesionada y se retira en cuanto hay respuesta; repetirla sin necesidad no aporta información."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Registrar una sola toma",
+                "texto": "El valor de AVDI está en la comparación. Una letra suelta describe un instante; la tendencia entre dos tomas es la que avisa del deterioro."
+              }
+            ]
+          },
+          {
+            "titulo": "Repaso rápido",
+            "bloques": [
+              {
+                "tipo": "lista",
+                "titulo": "Lo que hay que llevarse de esta lección",
+                "items": [
+                  "A: ojos abiertos espontáneamente e interacción con el entorno.",
+                  "V: responde solo cuando se le habla o se le llama.",
+                  "D: responde solo a estímulo doloroso controlado.",
+                  "I: no responde a ningún estímulo.",
+                  "Alerta no es orientado; la orientación se registra por separado.",
+                  "El estímulo doloroso: presión firme y breve, zona no lesionada, se retira al obtener respuesta.",
+                  "Pasar de A a V es deterioro: reevaluar vía aérea, ventilación y perfusión.",
+                  "Un nivel bajo compromete la protección de la vía aérea.",
+                  "AVDI clasifica en segundos; Glasgow cuantifica por componentes y sigue la evolución con más resolución.",
+                  "AVDI describe el nivel; nunca explica la causa."
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Preguntas de repaso oral",
+            "bloques": [
+              {
+                "tipo": "p",
+                "texto": "Para responder en voz alta y sin mirar la lección. Si una respuesta no sale con sus propias palabras, es la que hay que volver a leer."
+              },
+              {
+                "tipo": "lista",
+                "items": [
+                  "Di las cuatro letras de AVDI y qué significa cada una.",
+                  "Un paciente conversa pero cree estar en su casa. ¿Cómo lo clasificas y qué anotas?",
+                  "¿Dónde y cómo se aplica un estímulo doloroso? ¿Cuándo se retira?",
+                  "¿Por qué en la evaluación primaria se prefiere AVDI a Glasgow?",
+                  "¿Qué aporta Glasgow que AVDI no da?",
+                  "Un paciente pasa de A a V en diez minutos. ¿Qué significa y qué haces?",
+                  "Enumera las causas corregibles que hay que buscar ante una categoría baja."
+                ]
               }
             ]
           },
@@ -11975,6 +12123,18 @@ export const planRescate = [
                 "texto": "En el paciente con estado de conciencia deprimido, la relajación de la musculatura hace que la lengua caiga contra la pared posterior de la faringe. Es la obstrucción más frecuente y la que se resuelve con una maniobra manual, sin material alguno."
               },
               {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "El barrido digital a ciegas no se hace",
+                "texto": "Introducir el dedo en la boca para buscar un cuerpo extraño que no se ve puede empujarlo más adentro, impactarlo o provocar una lesión y sangrado que empeoren la obstrucción. Solo se retira lo que se ve y se puede alcanzar; lo demás se maneja con aspiración y con las maniobras que correspondan."
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Lo que más se pregunta",
+                "texto": "Dos decisiones concentran las preguntas: QUÉ maniobra corresponde según haya o no sospecha de lesión cervical, y qué hacer cuando la tracción mandibular no abre la vía aérea. La respuesta a la segunda es siempre la misma: prima la oxigenación."
+              },
+              {
                 "tipo": "imagen",
                 "src": "imagenes/temario/control-cervical-camilla-800.webp",
                 "alt": "Dos paramédicos colocan un collarín cervical a un paciente inmovilizado sobre una camilla.",
@@ -12038,6 +12198,50 @@ export const planRescate = [
                 "variante": "clinico",
                 "titulo": "Por qué se dice esto expresamente",
                 "texto": "El material heredado había depositado aquí sedantes, bloqueadores neuromusculares y fuentes de farmacología avanzada. No es que fueran datos falsos: es que no correspondían al objetivo de esta lección ni al alcance que se enseña en este punto del plan."
+              }
+            ]
+          },
+          {
+            "titulo": "Repaso rápido",
+            "bloques": [
+              {
+                "tipo": "lista",
+                "titulo": "Lo que hay que llevarse de esta lección",
+                "items": [
+                  "La A responde a una sola pregunta: ¿la vía aérea está permeable y se mantendrá permeable?",
+                  "Quien habla con frase completa y voz normal tiene, en ese momento, la vía aérea permeable.",
+                  "En quien no habla: estridor, ronquido, gorgoteo, tórax que se mueve sin entrada de aire, cianosis, cuerpo extraño visible.",
+                  "La obstrucción más frecuente es la lengua, y se resuelve con las manos.",
+                  "Sin sospecha cervical: frente-mentón, elevando el mentón por su porción ósea.",
+                  "Con sospecha cervical: tracción mandibular desde la cabecera, sin extender el cuello.",
+                  "Si la tracción mandibular no abre la vía aérea, prima la oxigenación.",
+                  "La estabilización manual se aplica desde el primer contacto y no la releva el collarín.",
+                  "Se inmoviliza en la posición encontrada si hay dolor o resistencia al movimiento.",
+                  "No se hace barrido digital a ciegas: solo se retira lo que se ve y se alcanza.",
+                  "Dispositivos, ventilación con bolsa-válvula-mascarilla e intubación son otros temas de este módulo."
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Preguntas de repaso oral",
+            "bloques": [
+              {
+                "tipo": "p",
+                "texto": "Para responder en voz alta y sin mirar la lección. Si una respuesta no sale con sus propias palabras, es la que hay que volver a leer."
+              },
+              {
+                "tipo": "lista",
+                "items": [
+                  "¿Qué pregunta responde la A y con qué signos se contesta en un paciente que no habla?",
+                  "¿Por qué la lengua es la causa más frecuente de obstrucción y qué la resuelve?",
+                  "Describe la maniobra frente-mentón. ¿Dónde se apoyan los dedos y por qué ahí?",
+                  "¿Cuándo eliges tracción mandibular en vez de frente-mentón?",
+                  "La tracción mandibular no abre la vía aérea. ¿Qué haces y con qué argumento?",
+                  "¿Qué diferencia hay entre estabilización manual y collarín?",
+                  "¿Por qué no se hace barrido digital a ciegas?",
+                  "Un paciente refiere dolor al intentar la posición neutra. ¿Qué haces?"
+                ]
               }
             ]
           },
@@ -12233,6 +12437,18 @@ export const planRescate = [
                 "variante": "alerta",
                 "titulo": "La respiración agónica no es respiración",
                 "texto": "El jadeo aislado, boqueante e irregular que aparece en los primeros minutos del paro cardiaco se confunde con frecuencia con respiración presente. Un paciente que no responde y solo boquea está en paro: se inician compresiones. Dudar equivale a decidir que no."
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Regla mnemotécnica",
+                "texto": "MIRAR, ESCUCHAR Y SENTIR, y no más de diez segundos. Mirar si el tórax se mueve, escuchar si entra aire, sentirlo en la mejilla. Los tres a la vez y con el reloj corriendo: pasar de diez segundos no aclara la duda, solo retrasa las compresiones."
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Lo que más se pregunta",
+                "texto": "La pregunta que más se repite no es cómo se cuenta la frecuencia, sino distinguir la respiración agónica de una respiración presente. La regla que se pide de memoria: si no responde y solo boquea, está en paro y se inician compresiones."
               }
             ]
           },
@@ -12272,6 +12488,78 @@ export const planRescate = [
               {
                 "tipo": "p",
                 "texto": "Cada uno de estos hallazgos tiene su propio tema en el Módulo 5, dentro de trauma de tórax. Aquí interesa reconocerlos durante la evaluación primaria, porque son las alteraciones de la B que exigen intervención antes de continuar con la C."
+              }
+            ]
+          },
+          {
+            "titulo": "Errores frecuentes",
+            "bloques": [
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Contar el jadeo como respiración",
+                "texto": "Es el error con más consecuencias de la lección: el boqueo irregular de los primeros minutos del paro se registra como respiración presente y se retrasan las compresiones. Ante la duda en un paciente que no responde, se trata como paro."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Leer la calma súbita como mejoría",
+                "texto": "El paciente que se esforzaba mucho y de pronto deja de esforzarse rara vez ha mejorado: suele estar agotándose. Obliga a reevaluar de inmediato, no a relajarse."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Quedarse con la frecuencia",
+                "texto": "Una frecuencia dentro de rango con volumen mínimo no es ventilación eficaz. Frecuencia, profundidad, simetría y trabajo respiratorio se valoran juntos."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Buscar una cifra única de saturación",
+                "texto": "Los objetivos de saturación y las indicaciones de oxígeno dependen del cuadro y del protocolo del servicio. No hay un número que valga para todos los pacientes."
+              }
+            ]
+          },
+          {
+            "titulo": "Repaso rápido",
+            "bloques": [
+              {
+                "tipo": "lista",
+                "titulo": "Lo que hay que llevarse de esta lección",
+                "items": [
+                  "Vía aérea abierta no garantiza ventilación eficaz: la A permite el paso, la B comprueba el intercambio.",
+                  "Se mira, se escucha y se siente durante no más de diez segundos.",
+                  "Se valora frecuencia, profundidad, simetría, entrada de aire y trabajo respiratorio.",
+                  "Trabajo respiratorio: tiraje, músculos accesorios, aleteo nasal, posición de trípode.",
+                  "La respiración agónica no es respiración: si no responde y boquea, está en paro.",
+                  "Se asiste la ventilación cuando el paciente no mueve volumen suficiente por sí mismo.",
+                  "Los indicadores van en conjunto: frecuencia extrema con volumen escaso, cianosis, alteración mental, agotamiento o ausencia de esfuerzo.",
+                  "El paciente que se calma de repente puede estarse agotando.",
+                  "Hallazgos que exigen intervenir antes de pasar a la C: ausencia unilateral de ruidos, herida soplante, movimiento paradójico, enfisema subcutáneo, ingurgitación yugular con dificultad respiratoria.",
+                  "No hay un objetivo de saturación único: depende del cuadro y del protocolo."
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Preguntas de repaso oral",
+            "bloques": [
+              {
+                "tipo": "p",
+                "texto": "Para responder en voz alta y sin mirar la lección. Si una respuesta no sale con sus propias palabras, es la que hay que volver a leer."
+              },
+              {
+                "tipo": "lista",
+                "items": [
+                  "¿Por qué una vía aérea abierta no basta? ¿Qué comprueba la B que no comprueba la A?",
+                  "Enumera, en orden, lo que se valora en la B.",
+                  "Describe la respiración agónica y di qué se hace ante ella.",
+                  "¿Qué signos indican que hay que asistir la ventilación?",
+                  "Un paciente con dificultad intensa se tranquiliza de golpe. ¿Qué sospechas?",
+                  "Nombra los cinco hallazgos de la B que obligan a intervenir antes de seguir.",
+                  "¿Qué es el trabajo respiratorio y en qué signos se observa?",
+                  "¿Por qué no se puede dar una cifra única de saturación objetivo?"
+                ]
               }
             ]
           },
@@ -12504,6 +12792,18 @@ export const planRescate = [
                 "variante": "alerta",
                 "titulo": "La presión arterial llega tarde",
                 "texto": "Una presión arterial normal no descarta el shock. Los mecanismos compensadores —taquicardia y vasoconstricción— mantienen la cifra durante un tiempo a costa de la perfusión de los tejidos. Cuando la presión cae, la compensación ya falló. Reconocer el shock compensado es el objetivo de esta valoración."
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Regla mnemotécnica",
+                "texto": "PIEL, PULSO Y CABEZA. La piel dice cómo está la perfusión periférica; el pulso, si el corazón está compensando; y el estado mental, si al cerebro le está llegando sangre. Los tres se obtienen sin aparato y en segundos, y los tres se alteran antes que la presión arterial."
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Lo que más se pregunta",
+                "texto": "El punto que más se pregunta de toda la C es el mismo que más se falla en la calle: una presión arterial normal NO descarta el shock. Reconocer el shock compensado —taquicardia, piel pálida y fría, ansiedad, con presión todavía normal— es el objetivo de esta valoración."
               }
             ]
           },
@@ -12521,6 +12821,80 @@ export const planRescate = [
               {
                 "tipo": "p",
                 "texto": "El acceso vascular, la elección de soluciones y los volúmenes de reposición pertenecen a la unidad de vía intravenosa de este módulo y al protocolo del servicio; no se fijan aquí porque dependen del cuadro, de la edad y del alcance autorizado."
+              }
+            ]
+          },
+          {
+            "titulo": "Errores frecuentes",
+            "bloques": [
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Descartar el shock porque la presión es normal",
+                "texto": "La taquicardia y la vasoconstricción sostienen la cifra mientras los tejidos ya no se perfunden. Cuando la presión cae, la compensación ya falló: esperar a ese momento es llegar tarde."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Buscar la hemorragia solo donde se ve",
+                "texto": "La ropa oscura, la espalda y la superficie sobre la que está tumbado el paciente acumulan sangre sin que se aprecie. Y el tórax, el abdomen, el retroperitoneo, la pelvis y los huesos largos alojan volúmenes importantes sin sangrado externo."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Intervenir y no volver a mirar",
+                "texto": "Toda intervención obliga a reevaluar: si el sangrado cedió, si la perfusión mejoró y si apareció algo nuevo. Una hipoperfusión que no responde suele tener una causa que aún no se ha encontrado."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Apoyarse en el llenado capilar del adulto",
+                "texto": "Es un dato complementario y más fiable en el niño; el frío ambiental lo altera. No sustituye al pulso, a la piel ni al estado mental."
+              }
+            ]
+          },
+          {
+            "titulo": "Repaso rápido",
+            "bloques": [
+              {
+                "tipo": "lista",
+                "titulo": "Lo que hay que llevarse de esta lección",
+                "items": [
+                  "La hemorragia exanguinante va antes que la A: por eso la secuencia de trauma antepone la X.",
+                  "Se recorren cuello, axilas, tórax, abdomen, pelvis, periné, muslos y espalda.",
+                  "Se comprueban la ropa oscura y la superficie bajo el paciente.",
+                  "Tórax, abdomen, retroperitoneo, pelvis y huesos largos pueden sangrar sin que se vea.",
+                  "La hemorragia interna no se controla en la calle: se reconoce, se prioriza el traslado y se prealerta.",
+                  "Perfusión en segundos: pulso, piel, estado mental y llenado capilar.",
+                  "Ausencia de pulso radial con pulso central presente sugiere hipoperfusión.",
+                  "Piel pálida, fría y húmeda es un signo precoz.",
+                  "La ansiedad o la confusión pueden ser la primera manifestación de mala perfusión cerebral.",
+                  "Una presión arterial normal no descarta el shock.",
+                  "El control de hemorragia externa empieza por presión directa firme y sostenida.",
+                  "Toda intervención se reevalúa, y una hipoperfusión que no cede obliga a buscar la causa."
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Preguntas de repaso oral",
+            "bloques": [
+              {
+                "tipo": "p",
+                "texto": "Para responder en voz alta y sin mirar la lección. Si una respuesta no sale con sus propias palabras, es la que hay que volver a leer."
+              },
+              {
+                "tipo": "lista",
+                "items": [
+                  "¿Por qué la X va antes que la A en la secuencia de trauma?",
+                  "Enumera las regiones que se recorren buscando hemorragia y por qué se mira bajo el paciente.",
+                  "¿Qué cavidades pueden alojar una hemorragia importante sin sangrado externo?",
+                  "Di los cuatro datos de perfusión que se obtienen en segundos y qué informa cada uno.",
+                  "¿Qué significa que haya pulso central pero no radial?",
+                  "Explica por qué una presión arterial normal no descarta el shock.",
+                  "¿Qué es el shock compensado y con qué signos se reconoce?",
+                  "¿Qué se hace después de cada intervención sobre la circulación?"
+                ]
               }
             ]
           },
@@ -12735,6 +13109,12 @@ export const planRescate = [
                 "variante": "clave",
                 "titulo": "Lo que importa es el cambio",
                 "texto": "Una exploración neurológica aislada describe un momento. El deterioro entre dos exploraciones —descenso del nivel de conciencia, aparición de asimetría pupilar, pérdida de fuerza— es lo que indica lesión en evolución y modifica la conducta y el destino del paciente."
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Lo que más se pregunta",
+                "texto": "Dos exigencias se repiten en todas las preguntas de la D: registrar los TRES componentes de Glasgow además del total —porque un 10 puede ser cualquier cosa y el motor es el que mejor refleja la gravedad— y no atribuir al cerebro lo que todavía no se ha descartado fuera de él."
               }
             ]
           },
@@ -12750,6 +13130,12 @@ export const planRescate = [
                 "variante": "alerta",
                 "titulo": "La glucemia capilar",
                 "texto": "Comprobar la glucemia en todo paciente con alteración del estado mental es una de las intervenciones con mejor relación entre coste y beneficio de la atención prehospitalaria. Se realiza cuando el equipo está disponible y el procedimiento está dentro del alcance autorizado del prestador."
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Regla mnemotécnica",
+                "texto": "CUATRO H Y TRES I para las causas no neurológicas: Hipoxia, Hipoglucemia, Hipoperfusión e Hipotermia; Intoxicación, Iones (alteración electrolítica) e Infección. Es la lista de esta lección ordenada para que no se caiga ninguna al recitarla en voz alta."
               }
             ]
           },
@@ -12767,6 +13153,79 @@ export const planRescate = [
               {
                 "tipo": "p",
                 "texto": "Los síndromes medulares concretos, el manejo del traumatismo craneoencefálico y las escalas prehospitalarias de accidente cerebrovascular se estudian en sus propios temas, en los Módulos 4 y 5."
+              }
+            ]
+          },
+          {
+            "titulo": "Errores frecuentes",
+            "bloques": [
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Entregar solo el total de Glasgow",
+                "texto": "Un 10 puede corresponder a situaciones clínicas muy distintas según de dónde salgan los puntos. Se registran siempre los tres componentes —ocular, verbal y motor— además del total, y el motor es el que mejor refleja la gravedad."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Atribuir al cerebro antes de descartar fuera de él",
+                "texto": "Hipoxia, hipoglucemia, hipoperfusión, intoxicación, alteración electrolítica, hipotermia e infección alteran el estado mental y son tratables. Asumir origen cerebral sin descartarlas retrasa lo que sí tenía solución."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Explorar pupilas sin contexto",
+                "texto": "Se comparan ambos lados, en penumbra cuando es posible, y se anota si el paciente usa lentes de contacto, tiene prótesis ocular o antecedente de cirugía ocular: cualquiera de esos datos cambia la interpretación de una anisocoria."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Quedarse con una sola exploración",
+                "texto": "Una exploración aislada describe un momento. Lo que indica lesión en evolución y cambia la conducta y el destino es el DETERIORO entre dos exploraciones."
+              }
+            ]
+          },
+          {
+            "titulo": "Repaso rápido",
+            "bloques": [
+              {
+                "tipo": "lista",
+                "titulo": "Lo que hay que llevarse de esta lección",
+                "items": [
+                  "La D explora nivel de conciencia, pupilas, función motora gruesa, sensibilidad gruesa y lenguaje.",
+                  "AVDI en la primaria; Glasgow cuando el cuadro lo requiere.",
+                  "Glasgow se registra por sus tres componentes además del total.",
+                  "El componente motor es el que mejor refleja la gravedad.",
+                  "Lo que modifica la conducta es el cambio entre dos exploraciones, no el valor aislado.",
+                  "Causas no neurológicas: cuatro H —hipoxia, hipoglucemia, hipoperfusión, hipotermia— y tres I —intoxicación, iones, infección—.",
+                  "La glucemia capilar en toda alteración del estado mental, si hay equipo y está en el alcance autorizado.",
+                  "Pupilas: tamaño, simetría y reactividad, comparando lados y en penumbra.",
+                  "Anotar lentes de contacto, prótesis ocular o cirugía previa: alteran la lectura.",
+                  "Debilidad o pérdida sensitiva unilateral, nivel medular y asimetría facial cambian movilización y destino.",
+                  "Síndromes medulares, traumatismo craneoencefálico y escalas de ictus son otros temas, en los Módulos 4 y 5."
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Preguntas de repaso oral",
+            "bloques": [
+              {
+                "tipo": "p",
+                "texto": "Para responder en voz alta y sin mirar la lección. Si una respuesta no sale con sus propias palabras, es la que hay que volver a leer."
+              },
+              {
+                "tipo": "lista",
+                "items": [
+                  "Enumera los cinco apartados del examen breve de la D.",
+                  "¿Por qué no basta con dar el total de Glasgow?",
+                  "¿Cuál de los tres componentes refleja mejor la gravedad?",
+                  "Recita las cuatro H y las tres I de la alteración del estado mental.",
+                  "¿Por qué la glucemia capilar tiene tan buena relación entre coste y beneficio?",
+                  "¿Cómo se exploran las pupilas y qué antecedentes hay que anotar?",
+                  "¿Qué hallazgos orientan a lesión del sistema nervioso central o medular?",
+                  "Una exploración normal y la siguiente con anisocoria. ¿Qué significa?"
+                ]
               }
             ]
           },
@@ -13017,6 +13476,18 @@ export const planRescate = [
                 "variante": "alerta",
                 "titulo": "La exploración no retrasa lo urgente",
                 "texto": "En un paciente inestable, la exploración dirigida se limita a lo que va a cambiar una decisión ahora. Todo lo demás se hace durante el traslado. Completar una exploración exhaustiva en la escena de un paciente que se está deteriorando es un error de prioridades, no una virtud."
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Regla mnemotécnica",
+                "texto": "IPPA: Inspección, Palpación, Percusión y Auscultación. Son las mismas cuatro maniobras de siempre; lo que cambia en la exploración dirigida no es la técnica, sino DÓNDE se aplica: solo donde el mecanismo o el motivo de consulta le dan sentido."
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Lo que más se pregunta",
+                "texto": "Casi todas las preguntas de esta lección piden distinguir la dirigida de la detallada por cuatro ejes —cuándo, alcance, objetivo y duración— y reconocer el error de prioridades: completar una exploración exhaustiva en la escena de un paciente que se está deteriorando."
               }
             ]
           },
@@ -13036,6 +13507,78 @@ export const planRescate = [
                   "Usar mantas o sábanas y proteger de la vista de terceros.",
                   "Cortar la ropa cuando movilizarla suponga riesgo, respetando orificios y desgarros si la escena puede ser legal.",
                   "Vigilar activamente la hipotermia: en un paciente traumatizado agrava la hemorragia y empeora el pronóstico."
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Errores frecuentes",
+            "bloques": [
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Convertirla en una revisión de cabeza a pies",
+                "texto": "La dirigida busca, en la región implicada, lo que puede cambiar la conducta AHORA. La revisión completa es la exploración detallada, pertenece a la secundaria y se hace con el paciente estabilizado o durante el traslado."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Explorar sobre la ropa",
+                "texto": "No se explora lo que no se ve: la ropa oculta heridas, deformidades y hemorragias. Palpar por encima de la tela da una falsa tranquilidad que después nadie repite."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Exponer de más y no volver a cubrir",
+                "texto": "Se expone por regiones, lo necesario y el menor tiempo posible, y se cubre antes de pasar a la siguiente. La hipotermia en un paciente traumatizado agrava la hemorragia y empeora el pronóstico."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Cortar la ropa sin pensar en lo que viene después",
+                "texto": "Cuando la escena puede tener consecuencias legales, se respetan orificios y desgarros: la ropa también es información, y cortarla por ellos la destruye."
+              }
+            ]
+          },
+          {
+            "titulo": "Repaso rápido",
+            "bloques": [
+              {
+                "tipo": "lista",
+                "titulo": "Lo que hay que llevarse de esta lección",
+                "items": [
+                  "La dirigida es corta, se orienta por mecanismo o motivo de consulta y pertenece a la evaluación primaria.",
+                  "La detallada es de cabeza a pies, por sistemas, y pertenece a la secundaria.",
+                  "En trauma orienta el mecanismo; en patología médica, el motivo de consulta.",
+                  "Colisión frontal: cabeza, cervical, tórax, abdomen y miembros inferiores.",
+                  "Caída de altura: calcáneos, pelvis y columna.",
+                  "Se usan las mismas cuatro maniobras —inspección, palpación, percusión, auscultación— solo donde tienen sentido.",
+                  "En el paciente inestable se limita a lo que cambia una decisión ahora; el resto, durante el traslado.",
+                  "No se explora lo que no se ve: hay que exponer.",
+                  "Se expone por regiones y se vuelve a cubrir antes de seguir.",
+                  "Se explica lo que se va a hacer aunque el paciente parezca no entender.",
+                  "Se protege de la vista de terceros y se vigila activamente la hipotermia."
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Preguntas de repaso oral",
+            "bloques": [
+              {
+                "tipo": "p",
+                "texto": "Para responder en voz alta y sin mirar la lección. Si una respuesta no sale con sus propias palabras, es la que hay que volver a leer."
+              },
+              {
+                "tipo": "lista",
+                "items": [
+                  "Di cuatro diferencias entre la exploración dirigida y la detallada.",
+                  "¿Qué orienta la exploración en un paciente de trauma? ¿Y en uno médico?",
+                  "Una caída de altura. ¿Hacia dónde diriges la exploración y por qué?",
+                  "¿Qué se hace con la exploración cuando el paciente está inestable?",
+                  "¿Por qué hay que exponer, y qué precauciones exige hacerlo?",
+                  "¿Qué consecuencias tiene la hipotermia en un paciente traumatizado?",
+                  "¿Cuándo se corta la ropa y qué hay que respetar al hacerlo?"
                 ]
               }
             ]
@@ -13235,6 +13778,12 @@ export const planRescate = [
                 "variante": "clave",
                 "titulo": "La secundaria no retrasa al inestable",
                 "texto": "En un paciente inestable la evaluación secundaria se realiza durante el traslado, o no se realiza. Nunca se completa en la escena a costa de retrasar el transporte de alguien que necesita tratamiento definitivo."
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Regla mnemotécnica",
+                "texto": "LA MISMA ESCALERA, DOS VECES, CON DOS PREGUNTAS DISTINTAS. En la primaria cada letra pregunta «¿esto lo mata ahora?»; en la secundaria, «¿esto cambia el tratamiento, el destino o el pronóstico?». El orden se repite porque refleja la prioridad fisiológica, no porque haya que repetir el examen."
               }
             ]
           },
@@ -13289,6 +13838,78 @@ export const planRescate = [
               {
                 "tipo": "p",
                 "texto": "Terminar la evaluación secundaria no cierra la valoración. El paciente se reevalúa de forma periódica y siempre después de cada intervención, de cada movilización y ante cualquier cambio en su estado. Un paciente inestable se reevalúa con más frecuencia que uno estable, y toda reevaluación se registra con su hora."
+              }
+            ]
+          },
+          {
+            "titulo": "Errores frecuentes",
+            "bloques": [
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Completar la secundaria en la escena con un paciente inestable",
+                "texto": "En el inestable la evaluación secundaria se hace durante el traslado, o no se hace. Terminarla en la escena a costa de retrasar el tratamiento definitivo es el error de prioridades más caro de esta unidad."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Creer que es el mismo examen otra vez",
+                "texto": "El orden se repite porque refleja la prioridad fisiológica, no porque haya que repetir la valoración. Cada letra pregunta otra cosa: la primaria busca lo que mata ahora, la secundaria lo que cambia tratamiento, destino o pronóstico."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Dar la valoración por cerrada al terminar",
+                "texto": "Terminar la secundaria no cierra nada. El paciente se reevalúa periódicamente, después de cada intervención, de cada movilización y ante cualquier cambio."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Reevaluar sin registrar la hora",
+                "texto": "Una reevaluación sin hora no permite reconstruir la tendencia, que es justamente lo que el centro receptor necesita saber."
+              }
+            ]
+          },
+          {
+            "titulo": "Repaso rápido",
+            "bloques": [
+              {
+                "tipo": "lista",
+                "titulo": "Lo que hay que llevarse de esta lección",
+                "items": [
+                  "La primaria busca y resuelve amenazas vitales; termina cuando están identificadas y tratadas dentro del alcance disponible.",
+                  "La secundaria busca lo que no mata ahora pero cambia tratamiento, destino o pronóstico.",
+                  "El mismo orden en las dos porque refleja la prioridad fisiológica.",
+                  "A: de «¿está permeable?» a estabilidad en el tiempo y necesidad de dispositivo.",
+                  "B: de «¿ventila bien?» a auscultación completa, simetría fina y saturación seriada.",
+                  "C: de hemorragia e hipoperfusión a pulsos, presión arterial, perfusión distal y revisión de apósitos.",
+                  "D: del nivel de conciencia a Glasgow por componentes, pupilas y examen motor y sensitivo por regiones.",
+                  "E: de exposición y prevención de hipotermia a la exploración de cabeza a pies y la revisión de la espalda.",
+                  "La secundaria incluye la historia orientada (SAMPLE) y la exploración física detallada.",
+                  "En el inestable, la secundaria se hace durante el traslado o no se hace.",
+                  "Se reevalúa tras cada intervención, cada movilización y cada cambio, y se registra con su hora."
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Preguntas de repaso oral",
+            "bloques": [
+              {
+                "tipo": "p",
+                "texto": "Para responder en voz alta y sin mirar la lección. Si una respuesta no sale con sus propias palabras, es la que hay que volver a leer."
+              },
+              {
+                "tipo": "lista",
+                "items": [
+                  "¿Qué busca la evaluación primaria y cuándo se puede dar por terminada?",
+                  "¿Qué persigue la secundaria que no persigue la primaria?",
+                  "¿Por qué se repite el mismo orden si no es el mismo examen?",
+                  "Di qué añade la secundaria en cada una de las cinco letras.",
+                  "¿Qué dos piezas incluye la secundaria además del recorrido por letras?",
+                  "Paciente inestable. ¿Dónde y cuándo haces la evaluación secundaria?",
+                  "¿Cuándo se reevalúa a un paciente y qué se registra de cada reevaluación?"
+                ]
               }
             ]
           },
@@ -13530,6 +14151,12 @@ export const planRescate = [
                 "texto": "Un paciente anticoagulado con un traumatismo craneal leve tiene un riesgo distinto al de quien no lo está. Un betabloqueador puede impedir la taquicardia compensadora y hacer que un paciente en shock mantenga una frecuencia engañosamente normal. La lista de medicamentos no es un dato administrativo."
               },
               {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Lo que más se pregunta",
+                "texto": "La letra que más se pregunta es la M. Dos ejemplos se repiten: el paciente anticoagulado con un traumatismo craneal aparentemente leve, y el betabloqueado en shock que mantiene una frecuencia engañosamente normal porque no puede taquicardizarse."
+              },
+              {
                 "tipo": "imagen",
                 "src": "imagenes/temario/evaluacion-domicilio-800.webp",
                 "alt": "Dos paramédicos entrevistan y evalúan a una paciente sentada en la cama de su domicilio.",
@@ -13575,6 +14202,79 @@ export const planRescate = [
               {
                 "tipo": "p",
                 "texto": "Para caracterizar un síntoma concreto —sobre todo el dolor— suele añadirse una segunda nemotecnia, OPQRST, que explora inicio, factores que lo modifican, calidad, irradiación, intensidad y tiempo de evolución."
+              }
+            ]
+          },
+          {
+            "titulo": "Errores frecuentes",
+            "bloques": [
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Preguntar en lugar de tratar",
+                "texto": "Una historia completa en un paciente que no ha sido estabilizado es tiempo mal invertido. La información se recoge mientras alguien atiende, o después; nunca en lugar de atender."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "No anotar de dónde salió el dato",
+                "texto": "No es lo mismo un antecedente referido por el paciente que uno referido por un vecino. Quien recibe al paciente tiene derecho a saber la diferencia, y solo la sabe si se registró."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Tratar la lista de medicamentos como papeleo",
+                "texto": "Anticoagulantes, betabloqueadores, insulina y antiarrítmicos cambian la interpretación del cuadro y las decisiones del hospital. La M no es un dato administrativo."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Rendirse cuando el paciente no puede contarlo",
+                "texto": "Quedan los familiares y testigos, los envases y recetas del domicilio, las identificaciones médicas, el personal del centro y la propia escena. Un paciente inconsciente no es un paciente sin historia."
+              }
+            ]
+          },
+          {
+            "titulo": "Repaso rápido",
+            "bloques": [
+              {
+                "tipo": "lista",
+                "titulo": "Lo que hay que llevarse de esta lección",
+                "items": [
+                  "S: signos y síntomas. Qué siente y qué se observa.",
+                  "A: alergias. Condiciona lo que puede administrarse.",
+                  "M: medicamentos. Cambian la interpretación del cuadro.",
+                  "P: padecimientos previos, cirugías, ingresos y embarazo cuando corresponda.",
+                  "L: última ingesta. Relevante para anestesia y cuadros metabólicos.",
+                  "E: eventos previos. Qué hacía y qué ocurrió justo antes.",
+                  "Un anticoagulado con traumatismo craneal leve no tiene el mismo riesgo que quien no lo está.",
+                  "Un betabloqueador puede impedir la taquicardia compensadora y ocultar un shock.",
+                  "Fuentes cuando el paciente no puede hablar: familiares, envases, identificaciones médicas, personal del centro, la escena.",
+                  "Se registra siempre quién aportó la información.",
+                  "SAMPLE pertenece a la secundaria: después de resolver las amenazas vitales.",
+                  "Para caracterizar el dolor se añade OPQRST."
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Preguntas de repaso oral",
+            "bloques": [
+              {
+                "tipo": "p",
+                "texto": "Para responder en voz alta y sin mirar la lección. Si una respuesta no sale con sus propias palabras, es la que hay que volver a leer."
+              },
+              {
+                "tipo": "lista",
+                "items": [
+                  "Recita las seis letras de SAMPLE y qué se pregunta en cada una.",
+                  "¿Por qué la M puede cambiar por completo la lectura de un paciente? Da dos ejemplos.",
+                  "El paciente está inconsciente y solo. ¿De dónde sacas la historia?",
+                  "¿Por qué se registra quién aportó cada dato?",
+                  "¿En qué momento de la valoración se obtiene SAMPLE?",
+                  "Paciente inestable. ¿Cómo y cuándo recoges la historia?",
+                  "¿Para qué sirve OPQRST y qué explora cada letra?"
+                ]
               }
             ]
           },
@@ -13744,6 +14444,12 @@ export const planRescate = [
                 "variante": "clave",
                 "titulo": "La espalda existe",
                 "texto": "La región dorsal es la que más se olvida, y es donde con más frecuencia aparecen heridas por proyectil, hematomas y deformidades no advertidas. Se explora aprovechando una movilización en bloque, no como una maniobra aparte."
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Regla mnemotécnica",
+                "texto": "PSM en cada extremidad: Pulso, Sensibilidad y Movilidad distales. Y se comprueban DOS veces —antes y después de cualquier alineación, férula o movilización—, porque una férula bien puesta que compromete la circulación es peor que no haber inmovilizado."
               }
             ]
           },
@@ -13810,6 +14516,79 @@ export const planRescate = [
               {
                 "tipo": "p",
                 "texto": "Los hallazgos se registran con su hora y con su lateralidad, y se transmiten en la entrega. Una exploración detallada bien hecha y mal comunicada obliga a repetirla en el hospital, con el paciente pagando el tiempo."
+              }
+            ]
+          },
+          {
+            "titulo": "Errores frecuentes",
+            "bloques": [
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Repetir la exploración de la pelvis",
+                "texto": "Si ya hay dolor o inestabilidad, repetir la maniobra puede desplazar coágulos y reactivar una hemorragia. Se explora una vez, con suavidad, y el hallazgo se comunica para que nadie más lo repita."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Olvidar la espalda",
+                "texto": "Es la región que más se olvida y donde con más frecuencia aparecen heridas por proyectil, hematomas y deformidades no advertidas. Se explora aprovechando una movilización en bloque, no como maniobra aparte."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "No repetir pulso, sensibilidad y movilidad tras inmovilizar",
+                "texto": "Una férula bien colocada que compromete la circulación es peor que no haber inmovilizado. La comprobación distal se repite después de cada alineación, férula o movilización."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Explorar bien y comunicar mal",
+                "texto": "Una exploración detallada que no se registra con su hora y su lateralidad obliga a repetirla en el hospital, y el tiempo lo paga el paciente."
+              }
+            ]
+          },
+          {
+            "titulo": "Repaso rápido",
+            "bloques": [
+              {
+                "tipo": "lista",
+                "titulo": "Lo que hay que llevarse de esta lección",
+                "items": [
+                  "Siempre el mismo orden, de la cabeza a los pies: un orden fijo es lo único que impide olvidar una región.",
+                  "Inspección, palpación, percusión y auscultación, comparando siempre un lado con el otro.",
+                  "Cabeza y cara: heridas, hundimientos, salida de sangre o líquido por oídos o nariz, movilidad del macizo facial.",
+                  "Cuello: enfisema subcutáneo, desviación traqueal, ingurgitación yugular.",
+                  "Tórax: simetría, heridas, movimiento paradójico, crepitación, ruidos respiratorios y cardiacos.",
+                  "Abdomen: dolor, defensa, distensión, equimosis, huellas de cinturón.",
+                  "Pelvis: se explora UNA vez, con suavidad, y no se repite si ya hay dolor o inestabilidad.",
+                  "Extremidades: deformidad, herida, crepitación, y pulso, sensibilidad y movilidad distales.",
+                  "Espalda: se explora aprovechando la movilización en bloque.",
+                  "PSM antes y después de cualquier alineación, inmovilización o movilización.",
+                  "Los hallazgos se registran con hora y lateralidad y se transmiten en la entrega."
+                ]
+              }
+            ]
+          },
+          {
+            "titulo": "Preguntas de repaso oral",
+            "bloques": [
+              {
+                "tipo": "p",
+                "texto": "Para responder en voz alta y sin mirar la lección. Si una respuesta no sale con sus propias palabras, es la que hay que volver a leer."
+              },
+              {
+                "tipo": "lista",
+                "items": [
+                  "¿Por qué la exploración detallada se hace siempre en el mismo orden?",
+                  "Recorre las regiones y di qué buscas en cada una.",
+                  "¿Qué se busca en el cuello y por qué es una región crítica?",
+                  "¿Qué es el signo del cinturón y dónde se busca?",
+                  "¿Por qué la pelvis no se explora dos veces?",
+                  "¿Cómo y cuándo se explora la espalda?",
+                  "¿Qué significa PSM y cuándo se comprueba?",
+                  "¿Qué pasa si la exploración se hace bien pero no se comunica?"
+                ]
               }
             ]
           },

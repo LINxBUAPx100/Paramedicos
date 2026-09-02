@@ -14,18 +14,38 @@ Este archivo es obligatorio para cualquier sesión de Claude que trabaje en este
 
 La contención inicial ya fue implementada. **No vuelvas a empezar la arquitectura desde cero** y no restaures el fallback de `reutilizado.js`.
 
-Estado comprobado por Codex el 17 de agosto de 2026, después de que la sesión anterior de Claude agotó su contexto al terminar el lote restante del Módulo 4:
+> **LAS CIFRAS DE ESTA SECCIÓN ESTABAN DESFASADAS EN MÁS DE CIEN LECCIONES.**
+> Decían «107 temas vacíos, 161 lecciones con material», y eso llevaba a cada
+> sesión nueva a creer que quedaba medio temario por escribir. Medido con
+> `npm run inventario` el **2 de septiembre de 2026**, el temario está
+> prácticamente redactado y lo que queda es una pasada de CALIDAD, no de
+> relleno. Un mandato que miente sobre el estado del trabajo hace que se
+> reescriba lo que ya estaba hecho.
+
+Estado comprobado con `npm run inventario` el 2 de septiembre de 2026:
 
 - 7 módulos, 56 unidades y 287 nodos oficiales.
-- 107 temas están `vacio`.
-- 71 temas están en `borrador`.
-- 104 nodos están `en_revision`.
-- 5 temas están `bloqueado_por_decision`.
+- **268 lecciones con material estudiable** de 273 posibles; esta cifra mide presencia de material, no validación académica.
+- **19 temas sin material**, y ninguno es una lección por escribir: **14 son nodos de evaluación** —12 exámenes y 2 prácticas— que por diseño no llevan prosa, y **5 están `bloqueado_por_decision`** esperando a la academia (los cuatro del Módulo 7 y el taller de aminas del Módulo 4).
+- 178 temas en `borrador`, 104 en `en_revision`, 5 `bloqueado_por_decision`.
 - 0 temas están `validado` o `publicado`.
-- Hay 161 lecciones con material; esta cifra mide presencia de material, no validación académica.
+- Los 14 nodos de evaluación tienen su `alcanceDeExamen` cableado.
 - El corpus heredado quedó archivado y fuera del contenido que recibe el alumno.
 - Las 58 lecciones redactadas del Módulo 4 tienen actividad; su deuda pedagógica es cero.
-- Pasan 499 pruebas y el último build de producción verificado, pero eso **no equivale a validación académica**.
+- Pasan 1 045 pruebas y el último build de producción verificado, pero eso **no equivale a validación académica**.
+
+**Lo que queda editorialmente NO es escribir lecciones: es el trabajo A**, la
+pasada de calidad módulo por módulo descrita en `docs/PLAN-TECNICO-FASES.md` y
+en `PLAN-LMS.md` §25. Orden acordado: M3 y M5 primero —vía aérea, soporte vital
+y trauma, el material de más riesgo—, luego M4, M6, M2 y M1. A cada lección se
+le añaden, **derivadas de su propia prosa y sin un solo dato clínico nuevo**,
+tabla comparativa o algoritmo, mnemotecnia, «Lo que más se pregunta», «Errores
+frecuentes», «Repaso rápido» y «Preguntas de repaso oral».
+
+Hecho el 02-09-2026: la unidad de **evaluación primaria y secundaria del Módulo
+3** (10 lecciones, `m3-ep-*` y `m3-es-*`). Los helpers del molde v2 están al
+principio de `src/data/contenido/m3-evaluacion.js` y se reutilizan tal cual en
+los lotes siguientes.
 
 Para el relevo inmediato lee de principio a fin `docs/GUIA-REDACCION-M5-LOTE-A.md` y ejecuta `docs/PROMPT-CLAUDE-M5-LOTE-A.md`. `docs/RELEVO-CLAUDE-2026-08-17.md`, `docs/GUIA-REDACCION-M4-RESTANTE.md` y `docs/PROMPT-CLAUDE-M4-RESTANTE.md` son antecedentes de lotes ya terminados: consúltalos solo ante una discrepancia concreta. **No vuelvas a redactar, resumir ni reorganizar las 34 lecciones nuevas del Módulo 4 ni las actividades de las 33 lecciones existentes de M5.**
 
@@ -141,8 +161,9 @@ Los archivos `src/data/fase*.js`, `src/data/extraFase*.js` y `src/data/contenido
 - La primera auditoría encontró 81 nodos mecánicamente completos, 121 escasos y 85 vacíos. Esas cifras son históricas: describían el corpus contaminado antes de la cuarentena.
 - El corpus legado tiene 1,479 piezas: 152 se ubicaron solo por contexto y 52 quedaron sin ubicación.
 - 85 de los 202 temas poblados del corpus anterior mezclaban tres o más temas antiguos.
-- La situación editorial comprobada el 17 de agosto de 2026 es: 107 temas sin contenido, 71 borradores, 104 nodos en revisión y 5 bloqueados.
-- Hay 161 lecciones con material; ninguna ha sido validada o publicada por un docente.
+- La situación editorial comprobada el 2 de septiembre de 2026 con `npm run inventario` es: 268 lecciones con material, 19 temas sin material —14 nodos de evaluación y 5 bloqueados por decisión—, 178 borradores, 104 en revisión y 5 bloqueados.
+- Ninguna lección ha sido validada ni publicada por un docente.
+- Las cifras del 17 de agosto de 2026 que este archivo repetía (107 vacíos, 161 con material) quedaron desfasadas al terminarse los lotes de M4 y M5; no se usan como línea base.
 - Las 33 lecciones actualmente redactadas de M5 ya contienen actividad; el siguiente lote es producción de 33 páginas nuevas, no reparación de actividades.
 - Los 126 nodos sin material de estudio se explican por temas todavía vacíos, 14 nodos de evaluación sin prosa y 5 bloqueos explícitos; consulta el inventario generado para el desglose actual.
 - Los 14 nodos de evaluación son 12 exámenes y 2 prácticas.
@@ -563,7 +584,7 @@ El trabajo técnico y editorial solo puede considerarse completo cuando:
 
 - ningún contenido heredado no aprobado aparece al alumno;
 - los 287 nodos tienen un estado editorial explícito;
-- los 107 temas actualmente vacíos están redactados o bloqueados por una decisión concreta;
+- los 19 temas sin material son solo nodos de evaluación y temas bloqueados por una decisión concreta (comprobado el 02-09-2026);
 - los borradores resuelven las deudas bibliográficas registradas y pasan revisión docente;
 - las lecciones en revisión resuelven sus observaciones bibliográficas y clínicas;
 - las pruebas sensibles no pasan de forma vacía omitiendo temas que todavía deben redactarse;
