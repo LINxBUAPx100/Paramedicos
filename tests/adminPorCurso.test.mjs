@@ -84,7 +84,7 @@ test('sin curso elegido NO se ofrecen las secciones de programa', () => {
   assert.ok(!ids.includes('grupos'))
   assert.ok(!ids.includes('revision'))
   // Y sí las de la academia entera.
-  assert.deepEqual(ids, ['alumnos', 'invitaciones', 'ajustes'])
+  assert.deepEqual(ids, ['alumnos', 'accesos', 'invitaciones', 'ajustes'])
 })
 
 test('con curso elegido se ofrece todo, y cada cosa en su sitio', () => {

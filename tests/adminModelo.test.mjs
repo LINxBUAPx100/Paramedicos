@@ -49,7 +49,7 @@ test('el riel es el del contexto en el que estás', () => {
   // «Resumen» y «Contenido» sin saber de qué plan de estudios: enseñaban el
   // primero —paramédico— disfrazado de pantalla de la academia entera.
   const soloAcademia = seccionesDeAdmin('RES-2026')
-  assert.deepEqual(soloAcademia.map((s) => s.id), ['alumnos', 'invitaciones', 'ajustes'])
+  assert.deepEqual(soloAcademia.map((s) => s.id), ['alumnos', 'accesos', 'invitaciones', 'ajustes'])
   for (const s of soloAcademia) {
     assert.doesNotMatch(s.ruta, /\/c\//, `${s.id} es de la academia, no de un programa`)
   }

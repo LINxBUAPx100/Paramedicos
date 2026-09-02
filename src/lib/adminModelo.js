@@ -49,7 +49,9 @@ export const SECCIONES_ACADEMIA = [
   { id: 'grupos', sufijo: 'grupos', icono: 'capas', etiqueta: 'Grupos' },
   { id: 'contenido', sufijo: 'contenido', icono: 'herramientas', etiqueta: 'Contenido' },
   { id: 'revision', sufijo: 'revision', icono: 'check', etiqueta: 'Revisión docente' },
+  { id: 'calificaciones', sufijo: 'calificaciones', icono: 'progreso', etiqueta: 'Calificaciones' },
   { id: 'alumnos', sufijo: 'alumnos', icono: 'usuario', etiqueta: 'Alumnos y staff', deLaAcademia: true },
+  { id: 'accesos', sufijo: 'accesos', icono: 'usuario', etiqueta: 'Accesos', deLaAcademia: true },
   { id: 'invitaciones', sufijo: 'invitaciones', icono: 'llave', etiqueta: 'Invitaciones', deLaAcademia: true },
   { id: 'ajustes', sufijo: 'ajustes', icono: 'editar', etiqueta: 'Ajustes de la academia', deLaAcademia: true },
 ]

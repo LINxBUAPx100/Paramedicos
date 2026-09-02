@@ -67,9 +67,11 @@ const AcaProgramas = lazy(() => import('./pages/admin/academia/Programas.jsx'))
 const AcaResumen = lazy(() => import('./pages/admin/academia/Resumen.jsx'))
 const AcaAlumnos = lazy(() => import('./pages/admin/academia/Alumnos.jsx'))
 const AcaGrupos = lazy(() => import('./pages/admin/academia/Grupos.jsx'))
+const AcaAccesos = lazy(() => import('./pages/admin/academia/Accesos.jsx'))
 const AcaInvitaciones = lazy(() => import('./pages/admin/academia/Invitaciones.jsx'))
 const AcaContenido = lazy(() => import('./pages/admin/academia/Contenido.jsx'))
 const AcaRevision = lazy(() => import('./pages/admin/academia/Revision.jsx'))
+const AcaCalificaciones = lazy(() => import('./pages/admin/academia/Calificaciones.jsx'))
 const AcaAjustes = lazy(() => import('./pages/admin/academia/Ajustes.jsx'))
 const EditorPage = lazy(() => import('./pages/EditorPage.jsx'))
 const ReplicacionPage = lazy(() => import('./pages/ReplicacionPage.jsx'))
@@ -238,6 +240,7 @@ export default function App() {
               <Route path="aca/:academiaId" element={<AcademiaShell />}>
                 <Route index element={<AcaProgramas />} />
                 <Route path="alumnos" element={<AcaAlumnos />} />
+                <Route path="accesos" element={<AcaAccesos />} />
                 <Route path="invitaciones" element={<AcaInvitaciones />} />
                 <Route path="ajustes" element={<AcaAjustes />} />
                 <Route path="c/:cursoId">
@@ -245,6 +248,7 @@ export default function App() {
                   <Route path="grupos" element={<AcaGrupos />} />
                   <Route path="contenido" element={<AcaContenido />} />
                   <Route path="revision" element={<AcaRevision />} />
+                  <Route path="calificaciones" element={<AcaCalificaciones />} />
                 </Route>
               </Route>
               {/* La ficha de plataforma de una academia (código, plan, suspender,

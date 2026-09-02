@@ -19,8 +19,14 @@ import {
 //  puro y está probado. Esta página lee, pinta y escribe.
 // ============================================================
 
-export default function PanelCalificaciones() {
-  const { academiaId, alumnos, grupos, grupoFiltro, nombreGrupo, gestion } = usePanel()
+// EL LIBRO, sin saber de dónde salen sus datos.
+//
+// Estaba atado a `usePanel()`, el contexto del panel del director, y por eso el
+// super-admin no podía ver ni poner una calificación: él opera cada academia
+// desde /admin/academia/:id, donde ese contexto no existe. La regla es que el
+// super-admin puede todo lo que puede un director, así que el libro pasa a
+// recibir sus datos por props y cada pantalla se los da desde donde los tenga.
+export function LibroDeCalificaciones({ academiaId, alumnos, grupos, grupoFiltro, nombreGrupo, gestion }) {
   const { esSuperadmin } = useAuth()
   const [evaluaciones, setEvaluaciones] = useState(null)
   const [calificaciones, setCalificaciones] = useState([])
@@ -424,3 +430,15 @@ function CeldaNota({ valor, etiqueta, onGuardar }) {
     />
   )
 }
+
+// El panel del director: los datos salen de su contexto, como siempre.
+export default function PanelCalificaciones() {
+  const { academiaId, alumnos, grupos, grupoFiltro, nombreGrupo, gestion } = usePanel()
+  return (
+    <LibroDeCalificaciones
+      academiaId={academiaId} alumnos={alumnos} grupos={grupos}
+      grupoFiltro={grupoFiltro} nombreGrupo={nombreGrupo} gestion={gestion}
+    />
+  )
+}
+

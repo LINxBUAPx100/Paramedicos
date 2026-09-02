@@ -3,12 +3,17 @@ import Icon from '../../../components/Icon.jsx'
 import { useAcademiaAdmin } from '../../../components/admin/AcademiaShell.jsx'
 import { useDatosAcademia } from '../../../components/panel/datosAcademia.js'
 import VisibilidadGrupos from '../../../components/panel/VisibilidadGrupos.jsx'
+import { CursoConIndices, useCursosConSello } from '../../../components/panel/IndicesDeCursos.jsx'
 import { gruposDelPrograma } from '../../../lib/programasModelo.js'
 
 // Academia · CONTENIDO: qué ve cada grupo, y desde dónde se edita su copia.
 export default function AcademiaContenido() {
   const { academiaId, cursoId, academiaNombre } = useAcademiaAdmin()
   const datos = useDatosAcademia(academiaId)
+  const { cursos, sellos } = useCursosConSello(academiaId)
+  // Esta pantalla está dentro de UN programa, así que se enseña el suyo. El
+  // panel del director los lista todos porque él no navega por programa.
+  const delPrograma = (cursos || []).filter((c) => !cursoId || c.id === cursoId)
 
   if (datos.cargando && !datos.hayDatos) {
     return (
@@ -32,6 +37,23 @@ export default function AcademiaContenido() {
         grupos={gruposDelPrograma(datos.grupos, cursoId)}
         cursoId={cursoId}
       />
+
+      {/* ÍNDICES DEL CURSO. El botón para regenerarlos vivía SOLO en el panel
+          del director, y el super-admin no entra ahí. Las reglas siempre le
+          dejaron hacerlo —esSuper() está en el allow de agregados—, así que lo
+          que faltaba no era permiso: era la pantalla. El dueño de la plataforma
+          acababa pidiéndole a un director que pulsara un botón que él mismo
+          podía pulsar. */}
+      {delPrograma.length > 0 && (
+        <section className="panel-contenido-estado">
+          <h2><Icon name="capas" size={20} /> Estado del temario</h2>
+          <ul className="pc-lista">
+            {delPrograma.map((c) => (
+              <CursoConIndices key={c.id} curso={c} academiaId={academiaId} sello={sellos[c.id]} />
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* ENTRAR AL EDITOR DE ESTA ACADEMIA. Era una frase suelta al pie y se
           leía como una nota, no como la puerta que es: el super-admin acababa
