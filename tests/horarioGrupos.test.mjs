@@ -261,3 +261,15 @@ test('los siete días están y su índice coincide con el de Date', () => {
   assert.equal(esActivo(grupo()), true)
   assert.equal(esActivo(grupo({ estado: 'inactivo' })), false)
 })
+
+test('UN GRUPO DESACTIVADO NUNCA ESTÁ EN CLASE, aunque su horario cuadre', () => {
+  // Encontrado pintando las tarjetas: un grupo dado de baja de la generación
+  // pasada salía con el distintivo «En clase ahora» porque su horario seguía
+  // cuadrando con el sábado. El horario dice cuándo SE DABA esa clase; el
+  // estado dice si se sigue dando.
+  const g = conHorario(['sabado'], '08:00', '14:00', { estado: 'inactivo' })
+  assert.equal(enClaseAhora(g, sabado('10:00')), false)
+  assert.equal(estadoDeClase(g, sabado('10:00')).estado, 'inactivo')
+  // Y su horario se sigue pudiendo consultar: es lo que fue, no un dato roto.
+  assert.match(estadoDeClase(g, sabado('10:00')).etiqueta, /Sábado · 08:00-14:00/)
+})

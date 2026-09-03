@@ -120,6 +120,12 @@ export function resumenDeHorario(grupo) {
  *   'no-empieza-aun'
  */
 export function estadoDeClase(grupo, fecha = new Date()) {
+  // UN GRUPO DESACTIVADO NUNCA ESTÁ EN CLASE, aunque conserve su horario.
+  // Se descubrió pintando las tarjetas: un grupo dado de baja de la generación
+  // pasada salía con el distintivo «En clase ahora» porque su horario seguía
+  // cuadrando con el sábado. El horario describe cuándo SE DABA esa clase; el
+  // estado dice si se sigue dando.
+  if (!esActivo(grupo)) return { estado: 'inactivo', etiqueta: resumenDeHorario(grupo), orden: 6 }
   const h = normalizarHorario(grupo)
   if (!h.completo) return { estado: 'sin-horario', etiqueta: 'Sin horario', orden: 5 }
 

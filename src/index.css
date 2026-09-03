@@ -9951,3 +9951,106 @@ body[data-portada] .pt-seccion { padding-block: clamp(var(--e-32), 5vw, var(--e-
 .pg-choques { flex-direction: column; align-items: flex-start; gap: var(--e-6); }
 .pg-choques .pg-nombre { display: flex; align-items: center; gap: var(--e-6); color: color-mix(in srgb, var(--alerta) 70%, var(--texto)); }
 .pg-choques ul { margin: 0; padding-left: 1.1rem; color: var(--texto-2); font-size: var(--t-sm); }
+
+/* ============================================================
+   ELEGIR ESPACIO: academia → grupo, en tarjetas
+   ------------------------------------------------------------
+   Reemplazan a dos desplegables. Un <option> solo dice el nombre; una tarjeta
+   dice además a qué hora hay clase, quién lleva el grupo y si es AHORA, que es
+   la única pregunta con la que se entra a esta pantalla.
+   ============================================================ */
+.ee-rejilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  gap: var(--e-12);
+  list-style: none;
+  margin: 0 0 var(--e-16);
+  padding: 0;
+}
+.ee-tarjeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--e-6);
+  width: 100%;
+  height: 100%;
+  padding: var(--e-16);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--bg-2);
+  color: var(--texto-2);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .15s, transform .15s;
+}
+.ee-tarjeta:hover { border-color: var(--primario); transform: translateY(-2px); }
+.ee-tarjeta:focus-visible { outline: 2px solid var(--primario); outline-offset: 2px; }
+.ee-tarjeta.es-elegida { border-color: var(--primario); box-shadow: inset 0 0 0 1px var(--primario); }
+.ee-tarjeta.es-inactiva { opacity: .68; }
+.ee-tarjeta-tit { font-size: var(--t-md); font-weight: 700; color: var(--texto); }
+.ee-tarjeta-cod { font-family: var(--fuente-cifra); font-size: var(--t-xs); color: var(--texto-2); }
+.ee-tarjeta-linea { display: flex; align-items: center; gap: var(--e-6); font-size: var(--t-sm); flex-wrap: wrap; }
+.ee-tarjeta-pie { display: flex; align-items: center; gap: var(--e-6); margin-top: auto; padding-top: var(--e-6); flex-wrap: wrap; }
+.ee-tarjeta-nota { font-size: var(--t-xs); color: var(--texto-2); }
+.ee-chip {
+  padding: 1px var(--e-8);
+  border-radius: 999px;
+  background: var(--bg-3);
+  border: 1px solid var(--borde);
+  font-size: var(--t-xs);
+  font-weight: 700;
+}
+.ee-chip--aviso { color: color-mix(in srgb, var(--alerta) 70%, var(--texto)); border-color: color-mix(in srgb, var(--alerta) 45%, var(--borde)); }
+.ee-chip--apagado { color: var(--texto-2); }
+
+/* EN CLASE AHORA. Es lo primero que se lee de la tarjeta y por eso tiene color
+   propio: responde a la pregunta con la que se entra. */
+.ee-ahora {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px var(--e-8);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--exito) 16%, transparent);
+  color: color-mix(in srgb, var(--exito) 80%, var(--texto));
+  font-size: var(--t-xs);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+}
+.ee-tarjeta.estado-en-clase { border-color: color-mix(in srgb, var(--exito) 55%, var(--borde)); }
+.ee-tarjeta.estado-sin-horario .ee-tarjeta-linea:first-of-type { color: color-mix(in srgb, var(--alerta) 70%, var(--texto)); }
+
+.ee-generacion { margin-bottom: var(--e-8); }
+.ee-generacion-tit {
+  margin: 0 0 var(--e-8);
+  font-size: var(--t-sm);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--texto-2);
+}
+/* Los inactivos, plegados: existen y se consultan, pero no se tropieza con
+   ellos buscando el grupo de hoy. */
+.ee-inactivos { margin-top: var(--e-16); }
+.ee-inactivos > summary { cursor: pointer; color: var(--texto-2); font-weight: 600; margin-bottom: var(--e-12); }
+
+.ee-pasos { display: flex; align-items: center; gap: var(--e-6); flex-wrap: wrap; margin-bottom: var(--e-8); }
+.ee-paso {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px var(--e-8);
+  border: 1px solid var(--borde);
+  border-radius: 999px;
+  background: var(--bg-2);
+  color: var(--texto-2);
+  font: inherit;
+  font-size: var(--t-xs);
+  font-weight: 600;
+  cursor: pointer;
+}
+.ee-paso:disabled { cursor: default; opacity: .8; }
+.ee-paso:not(:disabled):hover { border-color: var(--primario); color: var(--texto); }
+.ee-paso-sep { color: var(--texto-2); }

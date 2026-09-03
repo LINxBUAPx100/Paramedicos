@@ -63,7 +63,13 @@ function SemaforoEditorial({ temaId, validaciones }) {
 
 // `academiaNombre` es opcional y solo se usa para rotular la imagen exportada:
 // si no llega, se rotula con el código de la academia, que siempre existe.
-export default function VisibilidadGrupos({ academiaId, academiaNombre = '', grupos, cursoId = null, cabecera = null }) {
+export default function VisibilidadGrupos({
+  academiaId, academiaNombre = '', grupos, cursoId = null, cabecera = null,
+  // Grupo ya elegido fuera, en las tarjetas. Cuando llega, el desplegable de
+  // aquí sobra: sería una segunda forma de hacer lo mismo, y las dos podrían
+  // decir cosas distintas. En su lugar se ofrece volver a elegir.
+  grupoForzado = null, onCambiarGrupo = null,
+}) {
   const { grupoId: miGrupoId, puedeVerCodigos, esSuperadmin } = useAuth()
   // Temario del PROGRAMA que se supervisa. Sin  salía siempre el
   // primero, así que al entrar a enfermería se veían los ocho módulos de
@@ -88,14 +94,16 @@ export default function VisibilidadGrupos({ academiaId, academiaNombre = '', gru
   // (p. ej. tras crear o borrar uno en la sección de al lado).
   useEffect(() => { setLista(grupos) }, [grupos])
 
-  // Preselección: el grupo propio del profesor si existe; si no, el primero.
+  // Preselección. Si viene un grupo elegido desde fuera, manda ese y no se
+  // discute: quien lo eligió acaba de hacerlo en la pantalla anterior.
   useEffect(() => {
     setGrupoSel((prev) => {
+      if (grupoForzado && lista.some((g) => g.id === grupoForzado)) return grupoForzado
       if (prev && lista.some((g) => g.id === prev)) return prev
       if (miGrupoId && lista.some((g) => g.id === miGrupoId)) return miGrupoId
       return lista[0]?.id || ''
     })
-  }, [lista, miGrupoId])
+  }, [lista, miGrupoId, grupoForzado])
 
   const grupo = useMemo(() => lista.find((g) => g.id === grupoSel) || null, [lista, grupoSel])
   useEffect(() => {
@@ -260,7 +268,15 @@ export default function VisibilidadGrupos({ academiaId, academiaNombre = '', gru
 
         <div className="tv-espacios-campos">
           {cabecera}
-          {lista.length > 0 && (
+          {/* Con el grupo elegido fuera no se pinta el desplegable: dos formas
+              de elegir lo mismo acaban contradiciéndose. */}
+          {grupoForzado ? (
+            onCambiarGrupo && (
+              <button type="button" className="btn btn--sm btn--suave" onClick={onCambiarGrupo}>
+                <Icon name="capas" size={15} /> Cambiar de grupo
+              </button>
+            )
+          ) : lista.length > 0 && (
             <label className="panel-selector">
               Grupo
               <select value={grupoSel} onChange={(e) => setGrupoSel(e.target.value)}>

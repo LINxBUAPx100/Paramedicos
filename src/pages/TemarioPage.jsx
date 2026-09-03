@@ -6,6 +6,7 @@ import { useIndiceAcademia } from '../context/ContenidoContext.jsx'
 import { totalTemas } from '../lib/panelModelo.js'
 import { hrefSeguro } from '../lib/enlaceSeguro.js'
 import VisibilidadGrupos from '../components/panel/VisibilidadGrupos.jsx'
+import { TarjetasDeAcademia, TarjetasDeGrupo, PasosDeEspacio } from '../components/panel/ElegirEspacio.jsx'
 import Icon from '../components/Icon.jsx'
 
 // ============================================================
@@ -17,10 +18,35 @@ import Icon from '../components/Icon.jsx'
 //  que hace. Esta página se queda como la entrada directa —enlazada en el menú
 //  y en marcadores— y añade lo que solo tiene sentido aquí: el selector de
 //  academia del super-admin y los recursos generales de estudio.
+//
+//  DESDE EL 02-09-2026 SE ENTRA POR PASOS: academia → grupo → temario.
+//
+//  Antes se entraba directamente al temario con dos desplegables arriba. Caben
+//  en una línea y por eso parecían suficientes, pero un `<option>` solo puede
+//  decir el nombre del grupo: ni a qué hora da clase, ni de qué generación es,
+//  ni quién lo lleva. Con varias generaciones abiertas a la vez, eso se elegía
+//  de memoria.
+//
+//  El paso de academia SE SALTA SOLO cuando hay una sola. Obligar a un director
+//  a elegir entre una opción no es un paso, es un obstáculo; el super-admin sí
+//  lo necesita porque opera varias.
 // ============================================================
 
+// El grupo elegido, recordado por navegador. Misma clave y mismo motivo que el
+// grupo activo de AuthContext: es una preferencia de lectura, no una credencial.
+const CLAVE_GRUPO = 'ptem:temario:grupo'
+const leerGrupoRecordado = () => {
+  try { return localStorage.getItem(CLAVE_GRUPO) || '' } catch { return '' }
+}
+const recordarGrupo = (id) => {
+  try {
+    if (id) localStorage.setItem(CLAVE_GRUPO, id)
+    else localStorage.removeItem(CLAVE_GRUPO)
+  } catch { /* almacenamiento bloqueado: la elección dura lo que la sesión */ }
+}
+
 export default function TemarioPage() {
-  const { cargando, esStaff, esSuperadmin, academiaId } = useAuth()
+  const { cargando, esStaff, esSuperadmin, academiaId, rol, user, puedeVerCodigos } = useAuth()
   const [params] = useSearchParams()
   const acaParam = (params.get('aca') || '').toUpperCase()
 
@@ -28,8 +54,14 @@ export default function TemarioPage() {
   const [acaSel, setAcaSel] = useState('')
   const [grupos, setGrupos] = useState([])
   const [error, setError] = useState('')
+  // El grupo elegido en las tarjetas. Vive en el navegador y no en el perfil
+  // porque es una preferencia de trabajo, no un permiso: perderla no rompe
+  // nada, y guardarla costaría una escritura cada vez que se cambia de grupo.
+  const [grupoSel, setGrupoSel] = useState(() => leerGrupoRecordado())
 
   const academiaActiva = esSuperadmin ? acaSel : academiaId
+  const grupoElegido = grupos.find((g) => g.id === grupoSel) || null
+  const nombreAcademia = academias.find((a) => a.id === academiaActiva)?.nombre || academiaActiva
   const { modulos: modulosTemario } = useIndiceAcademia(academiaActiva)
   const TOTAL_TEMAS = useMemo(() => totalTemas(modulosTemario), [modulosTemario])
 
@@ -44,14 +76,20 @@ export default function TemarioPage() {
         if (!activo) return
         setAcademias(lista)
         // Preselecciona la academia del enlace (?aca=CODE) si existe.
+        // Ya NO se preselecciona la primera de la lista: con tarjetas, entrar
+        // a una academia cualquiera «porque era la primera» es justo lo que
+        // este paso viene a evitar. Solo manda el enlace con ?aca=CODE.
         const preferida = lista.some((a) => a.id === acaParam) ? acaParam : ''
-        setAcaSel((prev) => prev || preferida || lista[0]?.id || '')
+        setAcaSel((prev) => prev || preferida || '')
       } catch {
         if (activo) setError('No se pudieron cargar las academias.')
       }
     })()
     return () => { activo = false }
   }, [esSuperadmin]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Cambiar de academia invalida el grupo elegido: era de la otra.
+  useEffect(() => { setGrupoSel('') }, [academiaActiva])
 
   // Grupos de la academia activa.
   useEffect(() => {
@@ -92,17 +130,58 @@ export default function TemarioPage() {
     )
   }
 
-  const selectorAcademia = esSuperadmin ? (
-    <label className="panel-selector">
-      Academia
-      <select value={acaSel} onChange={(e) => setAcaSel(e.target.value)}>
-        {academias.map((a) => (
-          <option key={a.id} value={a.id}>{a.id} — {a.nombre}</option>
-        ))}
-      </select>
-    </label>
-  ) : null
+  const elegirGrupo = (id) => {
+    setGrupoSel(id)
+    recordarGrupo(id)
+  }
 
+  // PASO 1 — academia. Solo cuando hay más de una que elegir.
+  if (esSuperadmin && !academiaActiva) {
+    return (
+      <div className="temario temario--staff">
+        <header className="temario-hero">
+          <h1>Elige una academia</h1>
+          <p className="temario-desc">
+            Operas varias academias. Elige en cuál vas a trabajar; después eliges el grupo.
+          </p>
+          {error && <p className="cuenta-error" role="alert">{error}</p>}
+        </header>
+        {academias.length === 0
+          ? <p className="panel-vacio">Todavía no hay academias en la plataforma.</p>
+          : <TarjetasDeAcademia academias={academias} onElegir={setAcaSel} />}
+      </div>
+    )
+  }
+
+  // PASO 2 — grupo.
+  if (!grupoElegido) {
+    return (
+      <div className="temario temario--staff">
+        <header className="temario-hero">
+          <PasosDeEspacio
+            academia={nombreAcademia}
+            onVolverAcademia={esSuperadmin ? () => setAcaSel('') : null}
+          />
+          <h1>Elige un grupo</h1>
+          <p className="temario-desc">
+            El grupo decide qué temario estás mirando y para quién ocultas o liberas contenido.
+            Si alguno tiene clase ahora mismo, aparece primero.
+          </p>
+          {error && <p className="cuenta-error" role="alert">{error}</p>}
+        </header>
+        <TarjetasDeGrupo
+          grupos={grupos}
+          rol={rol}
+          uid={user?.uid || null}
+          esSuperadmin={esSuperadmin}
+          verCodigo={puedeVerCodigos}
+          onElegir={elegirGrupo}
+        />
+      </div>
+    )
+  }
+
+  // PASO 3 — el temario del grupo elegido.
   return (
     <div className="temario temario--staff">
       <header className="temario-hero">
@@ -121,7 +200,16 @@ export default function TemarioPage() {
       <VisibilidadGrupos
         academiaId={academiaActiva}
         grupos={grupos}
-        cabecera={selectorAcademia}
+        grupoForzado={grupoElegido.id}
+        onCambiarGrupo={() => setGrupoSel('')}
+        cabecera={(
+          <PasosDeEspacio
+            academia={nombreAcademia}
+            grupo={grupoElegido.nombre || grupoElegido.id}
+            onVolverAcademia={esSuperadmin ? () => setAcaSel('') : null}
+            onVolverGrupo={() => setGrupoSel('')}
+          />
+        )}
       />
 
       {recursosGenerales.length > 0 && (
