@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext.jsx'
 import { useIndiceContenido } from '../context/ContenidoContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
 import { motivoSinPrograma } from '../lib/programasModelo.js'
+import { carrerasPublicas } from '../lib/carrerasModelo.js'
 import { hayMenuLateral } from '../lib/menuLateral.js'
 import { metaRobots } from '../lib/indexable.js'
 import { debeSubirAlInicio } from '../lib/saltoEnPagina.js'
@@ -102,7 +103,20 @@ export default function Layout({ children }) {
   // el mismo render, sin un efecto que persiga al estado.
   const menuAbierto = hayMenu && abierto
 
-  const esHome = location.pathname === '/'
+  // PORTADAS A SANGRE. Son las páginas de venta: ocupan el ancho entero, con
+  // su propia cabecera de foto y sus franjas de color de borde a borde.
+  //
+  // Esto miraba solo `pathname === '/'`, y se quedó atrás cuando la portada
+  // general se mudó a la raíz y la de paramédicos a `/paramedicos`: desde
+  // entonces la de paramédicos se pintaba dentro de la caja de 1100 px del
+  // contenido normal. El resultado era una portada con franjas oscuras
+  // recortadas a media pantalla y el pie a todo lo ancho debajo, como si la
+  // página estuviera rota por la mitad.
+  //
+  // Se resuelve desde el CATÁLOGO y no con una lista escrita a mano: añadir una
+  // carrera nueva no puede exigir acordarse de volver aquí.
+  const RUTAS_A_SANGRE = new Set(['/', ...carrerasPublicas().map((c) => `/${c.slug}`)])
+  const esHome = RUTAS_A_SANGRE.has(location.pathname)
   // Las consolas del super-admin y del director aprovechan todo el ancho: son
   // tablas y rejillas con su propia navegación lateral, no texto para leer.
   const esConsola = location.pathname.startsWith('/admin') || location.pathname.startsWith('/panel')

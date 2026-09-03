@@ -7348,7 +7348,19 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
   letter-spacing: 0.08em;
   color: var(--texto-2);
 }
-.lp-portada-foto img { width: 100%; height: auto; display: block; filter: drop-shadow(0 24px 48px rgba(15, 23, 42, 0.28)); }
+/* El recorte de la foto termina en un borde deshilachado —flecos rojos del
+   uniforme sobre el fondo— y el contenedor lo cortaba en seco, así que se veía
+   como una imagen rota por abajo. Se disuelve con una máscara: el mismo
+   recorte, pero acabando en nada en vez de en un filo. No se retoca el archivo
+   porque el problema no es la foto, es cómo termina. */
+.lp-portada-foto img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 24px 48px rgba(15, 23, 42, 0.28));
+  -webkit-mask-image: linear-gradient(to bottom, #000 74%, rgba(0, 0, 0, 0.55) 88%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 74%, rgba(0, 0, 0, 0.55) 88%, transparent 100%);
+}
 
 /* ---- Pilares ---- */
 .lp-pilares {
@@ -7465,6 +7477,17 @@ html[data-tema='oscuro'] .ph-stat-num { opacity: 0.32; }
 .lp-via h3 { font-size: var(--t-md); color: var(--carbon-texto); }
 .lp-via p { color: var(--carbon-texto-2); font-size: var(--t-sm); flex: 1; }
 .lp-via .btn { margin-top: var(--e-8); }
+/* EL BOTÓN QUE NO SE VEÍA. La sección tiene fondo `--carbon` y su llamada
+   principal usaba `.btn--carbon`, que es carbón sobre carbón: quedaba un texto
+   blanco flotando con una sombra debajo, mientras los otros dos botones sí se
+   veían. Parecía una decisión de diseño y era un botón invisible.
+   Sobre fondo oscuro, la llamada principal se invierte. */
+.lp-cierre .btn--carbon {
+  background: var(--carbon-texto);
+  color: var(--carbon);
+  box-shadow: none;
+}
+.lp-cierre .btn--carbon:hover { background: #fff; color: #000; }
 .lp-cierre .btn--fantasma { color: var(--carbon-texto); border-color: color-mix(in srgb, var(--carbon-texto) 40%, transparent); }
 .lp-cierre .btn--fantasma:hover { background: var(--carbon-texto); color: var(--carbon); border-color: var(--carbon-texto); }
 
