@@ -192,3 +192,27 @@ test('el traslado solo conserva el número si está POR ENCIMA del contador', ()
   assert.match(CAPA, /actual\.numero > ultimo/,
     'el traslado dejó de comprobar el contador del destino antes de conservar el número')
 })
+
+test('el DIRECTOR puede emitir una matrícula, nunca reescribirla', () => {
+  // Reescribir una ya emitida sería la forma de darle a dos personas el mismo
+  // número desde la interfaz, sin pasar por el contador. Cambiarla solo ocurre
+  // en un traslado, y los traslados son del super-admin.
+  const bloque = REGLAS.slice(REGLAS.indexOf("hasOnly(['rol', 'estado', 'grupoId'"))
+  const trozo = bloque.slice(0, 1400)
+  assert.match(trozo, /'matricula'\]/, 'el director no puede emitir matrícula')
+  assert.match(trozo, /resource\.data\.get\('matricula', ''\) == ''/,
+    'el director puede reescribir una matrícula ya emitida')
+  // Y la FORMA se comprueba en la regla: una regla que confía en que el
+  // cliente formatee bien no comprueba nada.
+  assert.match(trozo, /matches\('\^\[A-Z\]\{2\}\[0-9\]\{7\}\$'\)/,
+    'la regla dejó de exigir la forma de la matrícula')
+})
+
+test('la pantalla ofrece emitirla solo a los alumnos que no la tienen', () => {
+  const GESTION = readFileSync(new URL('../src/components/panel/GestionMiembros.jsx', import.meta.url), 'utf8')
+  assert.match(GESTION, /emitirMatricula/, 'desapareció el botón de emitir')
+  assert.match(GESTION, /m\.rol !== 'alumno'/,
+    'la matrícula se ofrece a quien no es alumno: es el número de expediente de quien cursa')
+  assert.match(GESTION, /esMatriculaValida\(m\.matricula\)/,
+    'la columna dejó de distinguir una matrícula válida de un campo con basura')
+})

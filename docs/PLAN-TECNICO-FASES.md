@@ -47,7 +47,7 @@
 
 ## Estado en una tabla
 
-Treinta y dos trabajos terminados y veintitrés pendientes. Los tachados no se
+Treinta y siete trabajos terminados y veintidós pendientes. Los tachados no se
 vuelven a tocar salvo regresión demostrada.
 
 Cuatro de esos veinticinco entraron en el repositorio el 31 de agosto por la
@@ -110,14 +110,17 @@ real.
 | ~~Horario de los grupos: días, horas, fecha de inicio y maestro a cargo~~ | pedido el 02-09-2026 |
 | ~~Entrar por tarjetas: academia → grupo → temario~~ | pedido el 02-09-2026 |
 | ~~El grupo sin plan de estudios ya no es invisible~~ | encontrado el 02-09-2026 |
+| ~~Aprobar a alguien es también decidir en qué grupo entra~~ | encontrado el 02-09-2026 |
+| ~~Las portadas públicas se pintan a sangre (y el botón invisible del cierre)~~ | reportado el 02-09-2026 |
+| ~~Las cuatro cifras del hero llevan a lo que cuentan~~ | pedido el 02-09-2026 |
+| ~~**O1** — Matrícula por academia: modelo, contador y emisión desde el panel~~ | pedido el 02-09-2026 · falta su hueco en recepción (**O4a**) |
 
 ### Pendiente, en orden de ejecución
 
 | # | Trabajo | Duración | Depende de |
 |---|---|---|---|
 | **F1** | Dominio propio + Firebase Hosting + `BrowserRouter` | 1-2 días | — · **cabe en Spark** · las portadas de P4 ya existen y esperan sus URLs |
-| **A** | Calidad editorial v2 | larga, por lotes | — · **P2 hecho, ya no bloquea** · **lote 1 de 6 entregado el 02-09** (M3 evaluación) |
-| **O1** | Matrícula secuencial del alumno | 1-2 días | **decidida y modelada el 02-09** · falta el relleno de los que ya existen y su hueco en las pantallas |
+| **A** | Calidad editorial v2 | larga, por lotes | — · **P2 hecho, ya no bloquea** · **lotes 1 y 2 entregados el 02-09**: M3 evaluación (10) y M3 vía aérea (14) |
 | **B** | Mi Botiquín (inventario de videojuego) | lógica corta · media con la capa visual | lista de artículos de la academia · **comparte catálogo con M** |
 | **O2** | Bloqueo por pago + bypass auditado | 3-5 días | O1 |
 | **O3** | Check-in de 8 horas | 3-5 días | O1 |
@@ -187,6 +190,36 @@ gcloud iam service-accounts keys delete 97418f440957b97713aed40e2679c01310ae2dda
 
 Y después borrar el archivo de `Downloads`. Para comprobar que quedó muerta,
 pedirle un token: una clave revocada falla con `invalid_grant`.
+
+---
+
+## O1 — Matrícula por academia · HECHO el 02-09-2026 (falta su hueco en recepción)
+
+Decidido por el dueño ese día: **individual por academia**, empieza con las dos
+primeras letras de la academia como dato interno, **recepción no las escribe
+nunca** —trabaja para una academia, así que su prefijo es contexto y no una
+decisión que tomar en cada alta— y al trasladar a alguien cambian las letras, o
+la matrícula entera si ese número ya está ocupado en el destino.
+
+| Decisión | Por qué |
+|---|---|
+| Las dos letras salen del **código** de la academia, no de su nombre | El código es inmutable. Si saliera del nombre, renombrar «R.E.S.C.A.T.E.» convertiría en mentira las matrículas ya impresas |
+| El **contador** manda, no la lista de alumnos | Contarlos cuesta una lectura por alumno y REUTILIZA el número de quien se dio de baja: su historial acabaría en el expediente de otro |
+| El traslado es **conservador** | Dentro de una transacción no se puede consultar la lista del destino, y leerla fuera se queda vieja. Conserva el número solo si está por encima del contador, donde con certeza está libre |
+| La emite el **staff**, no el alumno | La regla del contador solo deja moverlo al staff. Si un alumno pudiera avanzarlo al entrar, tendría en la mano la numeración de la academia entera |
+| El director la **emite**, nunca la reescribe | Reescribirla sería la forma de dar el mismo número a dos personas sin pasar por el contador. Cambiarla solo ocurre en un traslado, y los traslados son del super-admin |
+
+**Lo que falta:** su hueco en el alta de recepción (**O4a**). Mientras tanto se
+emite desde Panel → Miembros, con el botón que sale en la columna de matrícula
+de todo alumno que no la tenga.
+
+> **Un tropiezo que conviene no repetir.** Al poner la regla, el archivo
+> `firestore.rules` se rompió: la regla contiene `matches('...$')` y
+> `String.replace` interpreta `$'` en el texto de reemplazo como «lo que va
+> después de la coincidencia», así que insertó 653 líneas duplicadas dentro del
+> bloque. Se revirtió y se rehízo con una función de reemplazo. **Toda edición
+> automatizada de estos archivos debe usar función de reemplazo**, y el archivo
+> de reglas se valida cargándolo en el emulador antes de darlo por bueno.
 
 ---
 

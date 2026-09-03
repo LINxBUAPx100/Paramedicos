@@ -699,7 +699,27 @@ service cloud.firestore {
         && request.resource.data.rol in ['alumno', 'instructor']
         && request.resource.data.academiaId == resource.data.academiaId
         && request.resource.data.diff(resource.data).affectedKeys()
-             .hasOnly(['rol', 'estado', 'grupoId', 'grupoIds', 'puedeVerCodigos'])
+             .hasOnly(['rol', 'estado', 'grupoId', 'grupoIds', 'puedeVerCodigos', 'matricula'])
+        // MATRÍCULA: el director solo puede EMITIRLA, nunca reescribirla.
+        //
+        // Emitir es pasar de vacía a un número que la transacción del contador
+        // acaba de reservar. Reescribir una ya emitida es otra cosa: sería la
+        // forma de darle a dos personas el mismo número desde la interfaz, sin
+        // pasar por el contador y sin que nada lo impidiera. Cambiarla solo
+        // ocurre en un traslado de academia, y los traslados son del
+        // super-admin.
+        //
+        // La forma se comprueba aquí y no solo en el cliente: dos letras y
+        // siete dígitos. Una regla que confía en que el cliente formatee bien
+        // no está comprobando nada.
+        && (
+          request.resource.data.get('matricula', '') == resource.data.get('matricula', '')
+          || (
+            resource.data.get('matricula', '') == ''
+            && request.resource.data.matricula is string
+            && request.resource.data.matricula.matches('^[A-Z]{2}[0-9]{7}$')
+          )
+        )
         // Si asigna grupo, debe ser un grupo de SU academia (o quitarlo).
         && (
           request.resource.data.get('grupoId', null) == resource.data.get('grupoId', null)

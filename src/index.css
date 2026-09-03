@@ -10137,3 +10137,13 @@ a.ph-stat:hover .ph-stat-label,
 button.ph-stat:hover .ph-stat-label { color: var(--primario); }
 a.ph-stat:focus-visible,
 button.ph-stat:focus-visible { outline: 2px solid var(--primario); outline-offset: 4px; }
+
+/* Matrícula en la tabla de miembros. Va en tipografía de cifras para que dos
+   matrículas se comparen de un vistazo: en proporcional, RE0000011 y RE0000017
+   se leen casi iguales. */
+.panel-mat {
+  font-family: var(--fuente-cifra);
+  font-size: var(--t-xs);
+  letter-spacing: 0.02em;
+  color: var(--texto);
+}

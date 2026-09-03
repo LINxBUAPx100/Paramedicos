@@ -8,6 +8,7 @@ import { gruposDeUsuario } from '../../lib/gruposDeUsuario.js'
 import Icon from '../Icon.jsx'
 import FiltrosUsuarios from './FiltrosUsuarios.jsx'
 import { prepararLista, FILTRO_VACIO, ORDEN_DEFECTO } from '../../lib/listaUsuarios.js'
+import { esMatriculaValida } from '../../lib/matriculas.js'
 
 // ============================================================
 //  Miembros y roles: cambio de rol, grupo y estado según jerarquía
@@ -64,6 +65,31 @@ export default function GestionMiembros({
     () => (miembros || []).filter((m) => m.rol === 'alumno' && !m.grupoId),
     [miembros]
   )
+
+  // EMITIR LA MATRÍCULA.
+  //
+  // No se emite sola al unirse por código, y es a propósito: el contador de la
+  // academia solo lo pueden mover el staff y el super-admin (regla de
+  // `contadores`). Si un alumno pudiera avanzarlo al entrar, tendría en la mano
+  // la numeración de la academia entera.
+  //
+  // Así que la emite quien lo admite. Desde recepción irá dentro del alta; aquí
+  // está el botón para los que ya existían y para los que entraron por código.
+  const emitirMatricula = async (m) => {
+    setOcupado(m.id)
+    setError('')
+    try {
+      const { reservarMatricula } = await import('../../lib/firebase/matriculas.js')
+      const { actualizarUsuario } = await import('../../lib/firebase/usuarios.js')
+      const matricula = await reservarMatricula(academiaId)
+      await actualizarUsuario(m.id, { matricula })
+      onCambio?.()
+    } catch (err) {
+      setError(err?.message || 'No se pudo emitir la matrícula.')
+    } finally {
+      setOcupado(null)
+    }
+  }
 
   // Reactivar una cuenta dada de baja devuelve algo que la baja quitó: su
   // academia. Por eso no basta con poner `estado: 'activo'` como hace el botón
@@ -205,6 +231,7 @@ export default function GestionMiembros({
               <th scope="col">Miembro</th>
               <th scope="col">Correo</th>
               <th scope="col">Rol</th>
+              <th scope="col">Matrícula</th>
               <th scope="col">Grupo</th>
               <th scope="col">Estado</th>
             </tr>
@@ -232,6 +259,26 @@ export default function GestionMiembros({
                     {m.id === miUid && <span className="panel-tag-yo">tú</span>}
                   </td>
                   <td className="panel-correo" data-label="Correo">{m.email || '—'}</td>
+                  {/* MATRÍCULA. Solo los alumnos la llevan: es el número de
+                      expediente de quien cursa, no de quien da clase. */}
+                  <td className="panel-matricula" data-label="Matrícula">
+                    {m.rol !== 'alumno' ? (
+                      <span className="panel-celda-vacia">—</span>
+                    ) : esMatriculaValida(m.matricula) ? (
+                      <code className="panel-mat">{m.matricula}</code>
+                    ) : puede ? (
+                      <button
+                        type="button"
+                        className="pc-copiar"
+                        disabled={ocupado === m.id}
+                        onClick={() => emitirMatricula(m)}
+                      >
+                        {ocupado === m.id ? 'Emitiendo…' : 'Emitir'}
+                      </button>
+                    ) : (
+                      <span className="panel-celda-vacia">Sin matrícula</span>
+                    )}
+                  </td>
                   <td data-label="Rol">
                     {puede ? (
                       <select
