@@ -10108,3 +10108,32 @@ body[data-portada] .pt-seccion { padding-block: clamp(var(--e-32), 5vw, var(--e-
 }
 .gm-sin-grupo strong { color: color-mix(in srgb, var(--alerta) 70%, var(--texto)); }
 .gm-sin-grupo > button { margin-left: auto; }
+
+/* Las cuatro cifras del hero, ahora clicables SIN cambiar de aspecto.
+   ------------------------------------------------------------
+   Eran <div>; ahora son <a> y <button>, que llegan con estilos propios del
+   navegador —fondo, borde, tipografía, alineación— capaces de deshacer la
+   rejilla de `.ph-stat`. Se desactivan uno a uno en vez de confiar en que el
+   `display: grid` gane, porque lo que rompe no es el display: es la tipografía
+   del botón, que reduce la cifra a 13 px.
+   Lo único que se AÑADE al aspecto es el cursor, el foco de teclado y un
+   realce mínimo al pasar por encima: en reposo se ve exactamente igual. */
+a.ph-stat,
+button.ph-stat {
+  appearance: none;
+  background: none;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: var(--radio-sm);
+}
+/* El realce va en la ETIQUETA, no en la cifra: la cifra vive al 18 % de opacidad
+   a propósito —es una marca de agua detrás del texto— y subírsela al pasar por
+   encima cambiaría el peso visual de todo el bloque. */
+a.ph-stat:hover .ph-stat-label,
+button.ph-stat:hover .ph-stat-label { color: var(--primario); }
+a.ph-stat:focus-visible,
+button.ph-stat:focus-visible { outline: 2px solid var(--primario); outline-offset: 4px; }

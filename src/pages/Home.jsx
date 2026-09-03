@@ -20,12 +20,26 @@ import { IMG } from '../data/imagenes.js'
 import marcoUrl from '../assets/marco-paramedico.svg'
 import marcoFrenteUrl from '../assets/marco-paramedico - copia.svg'
 
+// Las cuatro cifras del hero, y a dónde lleva cada una.
+//
+// Eran texto muerto: cuatro números grandes que anuncian lo que hay dentro y no
+// dejaban entrar. Ahora cada una va a donde está eso que cuenta, y ninguna
+// cambia de aspecto por ello —la estética es la misma, lo único que se añade es
+// el cursor, el foco de teclado y un realce mínimo al pasar por encima—.
+//
+// `a` es la ruta; `modulos` es el caso distinto: lo que cuenta está en esta
+// misma página, así que se desplaza en vez de navegar. Si el director ocultó
+// esa sección del inicio, cae al primer módulo (ver SeccionHero).
 const STATS = [
-  { key: 'modulos', label: 'Módulos' },
-  { key: 'temas', label: 'Temas' },
-  { key: 'flashcards', label: 'Flashcards' },
-  { key: 'preguntas', label: 'Preguntas' },
+  { key: 'modulos', label: 'Módulos', ayuda: 'Ver los módulos' },
+  { key: 'temas', label: 'Temas', a: '/buscar', ayuda: 'Buscar entre todos los temas' },
+  { key: 'flashcards', label: 'Flashcards', a: '/flashcards', ayuda: 'Estudiar con las flashcards' },
+  { key: 'preguntas', label: 'Preguntas', a: '/examen', ayuda: 'Ponerte a prueba' },
 ]
+
+// Ancla de la sección de módulos del inicio. Vive aquí, junto a quien la usa
+// para desplazarse, y no escrita a mano en dos sitios.
+const ANCLA_MODULOS = 'inicio-modulos'
 
 // Hero optimizado: MISMA imagen del paramédico, servida en WebP/AVIF responsivos
 // (generadas por scripts/optimizar-imagenes.mjs → public/hero/). Idéntica a la vista;
@@ -70,7 +84,15 @@ export default function Home() {
 
   const secciones = idsVisiblesDeHome(academia)
   const SECCION = {
-    hero: <SeccionHero stats={stats} primerModulo={modulosVisibles[0] || null} />,
+    hero: (
+      <SeccionHero
+        stats={stats}
+        primerModulo={modulosVisibles[0] || null}
+        // Si el director quitó la sección de módulos del inicio, no hay a dónde
+        // desplazarse: entonces la cifra lleva al primer módulo.
+        haySeccionModulos={secciones.includes('modulos')}
+      />
+    ),
     progreso: temasLeidos > 0 ? (
       <SeccionProgreso temasLeidos={temasLeidos} total={stats.temas} pct={progresoGlobal} />
     ) : null,
@@ -122,7 +144,7 @@ function SinPrograma({ bloqueo }) {
 // `primerModulo` sale del ÍNDICE, no de un id escrito a mano: el temario se va
 // a reemplazar por el oficial de R.E.S.C.A.T.E. y cada academia puede tener el
 // suyo, así que ningún id de contenido debe vivir incrustado en el código.
-function SeccionHero({ stats, primerModulo }) {
+function SeccionHero({ stats, primerModulo, haySeccionModulos = true }) {
   // EL HOME HABLA DEL CURSO QUE ESTA PERSONA ESTUDIA, no del catálogo.
   //
   // Antes enumeraba: «2 programas en una sola plataforma: TUM/TEM, Enfermería».
@@ -191,14 +213,45 @@ function SeccionHero({ stats, primerModulo }) {
             </Link>
           </div>
           <div className="ph-stats">
-            {STATS.map((s, i) => (
-              <div className="ph-stat reveal" key={s.key} style={{ '--d': `${500 + i * 80}ms` }}>
-                <b className="ph-stat-num">
-                  <Contador valor={stats[s.key]} />
-                </b>
-                <span className="ph-stat-label">{s.label}</span>
-              </div>
-            ))}
+            {STATS.map((s, i) => {
+              const cifra = (
+                <>
+                  <b className="ph-stat-num">
+                    <Contador valor={stats[s.key]} />
+                  </b>
+                  <span className="ph-stat-label">{s.label}</span>
+                </>
+              )
+              const comunes = {
+                className: 'ph-stat reveal',
+                style: { '--d': `${500 + i * 80}ms` },
+                'aria-label': `${s.ayuda} (${stats[s.key]})`,
+              }
+              // La cifra de MÓDULOS apunta a esta misma página: se desplaza en
+              // vez de navegar. Va como <button> y no como enlace porque no
+              // lleva a otra dirección, y un enlace que no cambia de página es
+              // el tipo de cosa que rompe abrir en pestaña nueva.
+              if (!s.a) {
+                return haySeccionModulos ? (
+                  <button
+                    type="button"
+                    key={s.key}
+                    {...comunes}
+                    onClick={() => document.getElementById(ANCLA_MODULOS)
+                      ?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+                  >
+                    {cifra}
+                  </button>
+                ) : (
+                  // Sin sección de módulos en el inicio, la cifra lleva al
+                  // primero: desplazarse a algo que no está sería no hacer nada.
+                  <Link key={s.key} to={primerModulo ? `/modulo/${primerModulo.id}` : '/progreso'} {...comunes}>
+                    {cifra}
+                  </Link>
+                )
+              }
+              return <Link key={s.key} to={s.a} {...comunes}>{cifra}</Link>
+            })}
           </div>
         </div>
       </div>
@@ -234,7 +287,7 @@ function SeccionProgreso({ temasLeidos, total, pct }) {
 // ===== MODULOS (carrusel) =====
 function SeccionModulos({ modulos, leidos }) {
   return (
-    <section className="ph-modulos">
+    <section className="ph-modulos" id={ANCLA_MODULOS}>
       <div className="ph-wrap">
         <Reveal as="h2" className="ph-h2">
           <IconoEstrella size={26} /> Modulos
