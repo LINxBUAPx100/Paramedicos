@@ -464,6 +464,29 @@ service cloud.firestore {
     //  academia (pedir el siguiente módulo o ver códigos). Esta es de quien
     //  está fuera y quiere entrar, así que no puede compartir aquella regla:
     //  la suya exige que academiaId coincida con el del propio perfil.
+    // --- CONTADORES de matrícula, uno por academia ---
+    //
+    // Guardan el último número emitido y solo suben. Quien reparte matrículas
+    // es el staff de la academia —la recepción y la dirección— y el
+    // super-admin, que además necesita escribir en el contador de la academia
+    // de DESTINO al trasladar a alguien.
+    //
+    // La regla exige que el número no BAJE. Es la única forma de que un
+    // cliente manipulado no pueda rebobinar el contador y provocar que la
+    // siguiente alta repita una matrícula ya emitida.
+    match /contadores/{academiaId} {
+      allow read: if esSuper() || esStaffDe(academiaId);
+      allow create: if (esSuper() || esStaffDe(academiaId))
+        && request.resource.data.ultimaMatricula is int
+        && request.resource.data.ultimaMatricula >= 1;
+      allow update: if (esSuper() || esStaffDe(academiaId))
+        && request.resource.data.ultimaMatricula is int
+        && request.resource.data.ultimaMatricula > resource.data.ultimaMatricula;
+      // No se borran: borrar el contador reinicia la numeración de una
+      // academia y devuelve a la circulación matrículas ya repartidas.
+      allow delete: if false;
+    }
+
     match /solicitudesAcceso/{id} {
       // Crear: solo sobre uno mismo, con el ID DETERMINISTA (uid__academiaId),
       // siempre 'pendiente', y solo hacia una academia activa que esté en el

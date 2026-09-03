@@ -117,7 +117,7 @@ real.
 |---|---|---|---|
 | **F1** | Dominio propio + Firebase Hosting + `BrowserRouter` | 1-2 días | — · **cabe en Spark** · las portadas de P4 ya existen y esperan sus URLs |
 | **A** | Calidad editorial v2 | larga, por lotes | — · **P2 hecho, ya no bloquea** · **lote 1 de 6 entregado el 02-09** (M3 evaluación) |
-| **O1** | Matrícula secuencial del alumno | 1-2 días | — |
+| **O1** | Matrícula secuencial del alumno | 1-2 días | **decidida y modelada el 02-09** · falta el relleno de los que ya existen y su hueco en las pantallas |
 | **B** | Mi Botiquín (inventario de videojuego) | lógica corta · media con la capa visual | lista de artículos de la academia · **comparte catálogo con M** |
 | **O2** | Bloqueo por pago + bypass auditado | 3-5 días | O1 |
 | **O3** | Check-in de 8 horas | 3-5 días | O1 |
@@ -2141,6 +2141,10 @@ precio es que alguien estudie material retirado.
 
 ### Decisiones que faltan (ninguna bloquea)
 
+- ~~¿La matrícula es única por academia o por plataforma?~~ **Por academia**,
+  resuelto el 02-09-2026: empieza con las dos primeras letras de la academia,
+  recepción nunca las escribe, y al trasladar cambian las letras —y la
+  matrícula entera si el número ya está ocupado en el destino—.
 - ¿`sin_responder` vale 0 o 50? Configurable por academia; arranca en 0.
 - ¿Puede un alumno pertenecer a dos programas a la vez? Los grupos ya soportan
   «programas extra», pero nadie lo ha usado.
