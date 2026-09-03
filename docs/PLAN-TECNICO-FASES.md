@@ -47,7 +47,7 @@
 
 ## Estado en una tabla
 
-Veintinueve trabajos terminados y veintidós pendientes. Los tachados no se
+Treinta y dos trabajos terminados y veintitrés pendientes. Los tachados no se
 vuelven a tocar salvo regresión demostrada.
 
 Cuatro de esos veinticinco entraron en el repositorio el 31 de agosto por la
@@ -107,6 +107,9 @@ real.
 | ~~**E** — Editor de temas~~ | PLAN-LMS F5 · **ya estaba construido**; se comprobó y se cerró el 02-09-2026 |
 | ~~**Z** — Paridad del super-admin: puede todo lo que puede un director~~ | pedido el 02-09-2026 |
 | ~~**P10** — Agregados de R.E.S.C.A.T.E. regenerados: 288 lecturas por carga → 3~~ | bloque P · **cerrado el 02-09-2026** |
+| ~~Horario de los grupos: días, horas, fecha de inicio y maestro a cargo~~ | pedido el 02-09-2026 |
+| ~~Entrar por tarjetas: academia → grupo → temario~~ | pedido el 02-09-2026 |
+| ~~El grupo sin plan de estudios ya no es invisible~~ | encontrado el 02-09-2026 |
 
 ### Pendiente, en orden de ejecución
 
@@ -121,7 +124,8 @@ real.
 | **F2** | Contratar Blaze + alertas de gasto + RTDB + respaldos | 1 día | medir consumo real primero |
 | **J** | Paginación de `/admin` y auditoría | media | **va con F2**: en Blaze el exceso ya no se corta, se cobra |
 | **L** | Suscripción y cobro (pasarela, webhook, recepción, corte de caja) | 2 semanas | **F2** · O2 |
-| **O4** | Pantalla de Recepción (rol `recepcion`) | 1 semana | O1-O3 · L |
+| **O4a** | **Home de recepción sin Blaze**: alta de ficha con teléfono y correo, primer pago, «Dar bienvenida» por enlace de invitación, y primer inicio de sesión con Google o cambio de contraseña | 1 semana | O1 · **no espera a nada más** |
+| **O4b** | La Function que crea la cuenta con contraseña temporal y dispara el mensaje | 3-5 días | **F2** (Functions) · O4a |
 | **C** | Clase en vivo con actividades calificables **(incluye el simulador de escenas)** | 2-3 semanas | A, **F2** · **O3** (la bandera «en clase» decide a quién se puede calificar) |
 | **D** | Entrenador de farmacología | media | catálogo de fármacos de la academia |
 | **M** | Tienda (uniformes e insumos) | 2 semanas | L · **el catálogo se diseña en B y se reutiliza aquí** |
@@ -1978,7 +1982,60 @@ poder ser calificado. El profesor necesita una anulación manual, registrada.
 pasa si alguien hace check-in dos veces el mismo día? ¿Y si una clase pasa de
 medianoche?
 
-### O4 — Pantalla de Recepción · 1 semana · dificultad media
+### O4 — Pantalla de Recepción · 1-2 semanas · dificultad media
+
+> **Ampliado el 2 de septiembre de 2026 a petición del dueño.** Ya no es solo
+> una pantalla de consulta y cobro: es **el home del personal de recepción**, y
+> desde ahí se da de alta a un alumno de principio a fin. Lo que se pidió:
+>
+> 1. Crear el usuario desde recepción.
+> 2. Registrar su **primer pago**.
+> 3. Registrar su **teléfono y su correo**.
+> 4. Un botón **«Dar bienvenida»** —como los de compartir enlace, pero para
+>    recepción— que le haga llegar el enlace de la plataforma con su cuenta ya
+>    creada y una contraseña temporal. A futuro, por API de mensajería.
+> 5. En su **primer inicio de sesión**: vincular su cuenta con Google, o
+>    cambiar la contraseña temporal ahí mismo.
+
+#### Lo que se puede hacer sin Blaze, y lo que no
+
+Esto hay que decirlo antes de planear la pantalla, porque parte el trabajo en
+dos y una de las mitades está bloqueada por dinero:
+
+| Pieza | ¿Hoy? | Por qué |
+|---|---|---|
+| Alta de la ficha, teléfono y correo | **Sí** | Es escribir en `usuarios` con las reglas que ya existen |
+| Registrar el primer pago | **Sí** | Una colección `pagos` y su regla. Un cobro en mostrador no necesita pasarela: la pasarela es **L** |
+| «Dar bienvenida» con enlace personal | **Sí**, por invitación | El centro de invitaciones ya genera y comparte códigos. La persona pone su propia contraseña al entrar |
+| Vincular Google en el primer inicio | **Sí** | `linkWithPopup` sobre la cuenta ya creada; es puro cliente |
+| **Crear la cuenta CON contraseña temporal** | **No** | **Necesita Functions ⇒ F2 ⇒ Blaze** |
+
+**Por qué esa última no se puede hoy, dicho con precisión.** Crear una cuenta de
+Firebase Auth desde el navegador tiene un efecto que nadie quiere: deja la
+sesión iniciada COMO esa persona, es decir, echa a la recepcionista de su propia
+sesión a cada alta. La forma correcta es el SDK de administración dentro de una
+Cloud Function, y Functions exige plan Blaze. Cualquier atajo —crear y cerrar
+sesión, o mantener una segunda app de Firebase en la misma pestaña— es
+exactamente el tipo de apaño que después nadie se atreve a tocar.
+
+**Y el envío del mensaje también es de Blaze**, por otra razón: una API de
+WhatsApp o de SMS se llama con una credencial que no puede vivir en el
+navegador. Va en la misma Function.
+
+Así que la entrega se parte en dos:
+
+- **O4a, sin Blaze:** el home de recepción con alta de ficha, teléfono, correo,
+  primer pago y «Dar bienvenida» **por enlace de invitación** —el que ya
+  existe—, más el primer inicio de sesión con vinculación de Google y cambio de
+  contraseña.
+- **O4b, con Blaze:** la Function que crea la cuenta con contraseña temporal y
+  dispara el mensaje. La pantalla no cambia: cambia lo que hace el botón.
+
+Hacerlo en ese orden tiene una ventaja que no es menor: **O4a se puede usar
+mañana** y deja el flujo de recepción rodado antes de que haya una factura de
+Firebase de por medio.
+
+#### El resto de O4, como estaba
 
 Rol nuevo `recepcion` y ruta `/recepcion`. Buscador enfocado al abrir,
 operable **sin ratón**, con el resultado y sus tres botones —Check-in, Cobrar,
