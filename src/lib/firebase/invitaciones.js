@@ -145,12 +145,25 @@ export async function canjearInvitacion(uid, codigo) {
     grupo = { id: inv.grupoId, ...g.data() }
   }
 
+  // La ficha que capturó RECEPCIÓN, si esta invitación viene de un alta suya.
+  // El perfil no existía cuando se tomaron los datos, así que viajaban dentro
+  // de la invitación; aquí es donde aterrizan.
+  //
+  // Se escriben solo si vienen: una invitación normal —un enlace por rol— no
+  // trae ficha, y sobrescribir con vacío borraría el nombre que la persona
+  // acababa de poner al registrarse.
+  const deRecepcion = {}
+  if (inv.matricula) deRecepcion.matricula = inv.matricula
+  if (inv.telefono) deRecepcion.telefono = inv.telefono
+  if (inv.nombre) deRecepcion.nombre = inv.nombre
+
   await updateDoc(doc(db, 'usuarios', uid), {
     academiaId: inv.academiaId,
     grupoId: inv.grupoId || null,
     rol: inv.rol,
     esPrueba: false,
     invitacionUsada: cod,
+    ...deRecepcion,
   })
 
   // Contador de usos. Va DESPUÉS del alta y es best-effort: si falla, la

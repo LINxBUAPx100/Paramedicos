@@ -127,7 +127,7 @@ real.
 | **F2** | Contratar Blaze + alertas de gasto + RTDB + respaldos | 1 día | medir consumo real primero |
 | **J** | Paginación de `/admin` y auditoría | media | **va con F2**: en Blaze el exceso ya no se corta, se cobra |
 | **L** | Suscripción y cobro (pasarela, webhook, recepción, corte de caja) | 2 semanas | **F2** · O2 |
-| **O4a** | **Home de recepción sin Blaze**: alta de ficha con teléfono y correo, primer pago, «Dar bienvenida» por enlace de invitación, y primer inicio de sesión con Google o cambio de contraseña | 1 semana | O1 · **no espera a nada más** |
+| **O4a** | **Home de recepción sin Blaze** | 1 semana | O1 ✔ · **modelo, escritura y reglas hechos el 02-09**; falta la PANTALLA y el rol `recepcion` |
 | **O4b** | La Function que crea la cuenta con contraseña temporal y dispara el mensaje | 3-5 días | **F2** (Functions) · O4a |
 | **C** | Clase en vivo con actividades calificables **(incluye el simulador de escenas)** | 2-3 semanas | A, **F2** · **O3** (la bandera «en clase» decide a quién se puede calificar) |
 | **D** | Entrenador de farmacología | media | catálogo de fármacos de la academia |
