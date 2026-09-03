@@ -96,12 +96,33 @@ export async function solicitudesAccesoDeAcademia(academiaId) {
 // solicitud en 'aceptada'. El alta la completa el propio interesado
 // (aplicarSolicitudAceptada), y así no hace falta abrir en las reglas la
 // escritura del perfil de otra persona.
-export async function resolverSolicitudAcceso(id, { aceptar, resueltoPor, motivo = '' }) {
+/**
+ * Resuelve una solicitud, y al aceptar DECIDE EN QUÉ GRUPO ENTRA.
+ *
+ * POR QUÉ EL GRUPO VIAJA AQUÍ. Aceptar no mete a nadie en la academia: el alta
+ * la completa el propio interesado, y así no hay que abrir en las reglas la
+ * escritura del perfil de otra persona. El precio de esa decisión —buena— era
+ * que el director no tenía dónde decir a qué grupo entra, y el alta se
+ * completaba con `grupoId: null` escrito a mano.
+ *
+ * El resultado se vio el 02-09-2026: una persona aprobada, dentro de la
+ * academia, SIN grupo y por tanto sin plan de estudios y sin contenido. Ella no
+ * podía pedirlo —el directorio no pregunta por grupo— y dirección no podía
+ * dárselo, porque para entonces ya no había ninguna pantalla que la relacionara
+ * con su solicitud. Quedó, literalmente, en tierra de nadie.
+ *
+ * Ahora el grupo se elige al aprobar y viaja en la solicitud. El interesado lo
+ * aplica sobre su propio perfil, donde la regla exige que el grupo sea de esa
+ * academia: el director propone, la regla dispone.
+ */
+export async function resolverSolicitudAcceso(id, { aceptar, resueltoPor, motivo = '', grupoId = null }) {
   await updateDoc(doc(db, 'solicitudesAcceso', id), {
     estado: aceptar ? 'aceptada' : 'rechazada',
     resueltoPor: resueltoPor || null,
     resueltoEn: serverTimestamp(),
     motivo: String(motivo || '').trim().slice(0, 200),
+    // Solo al aceptar. Rechazar y de paso asignar un grupo no significa nada.
+    grupoAsignado: aceptar ? (grupoId || null) : null,
   })
 }
 
@@ -111,10 +132,12 @@ export async function cancelarSolicitudAcceso(id) {
 
 // Último paso del alta por aprobación, ejecutado por el propio interesado. Las
 // reglas lo permiten porque su solicitud está en 'aceptada'.
-export async function aplicarSolicitudAceptada(uid, academiaId) {
+export async function aplicarSolicitudAceptada(uid, academiaId, grupoId = null) {
   await updateDoc(doc(db, 'usuarios', uid), {
     academiaId,
-    grupoId: null,
+    // El grupo que decidió quien aprobó. Antes iba `null` fijo y la persona
+    // entraba a la academia sin plan de estudios y sin contenido.
+    grupoId: grupoId || null,
     esPrueba: false,
   })
 }

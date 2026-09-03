@@ -50,6 +50,21 @@ export default function GestionMiembros({
     [base, filtro, orden, nombreDeGrupo]
   )
 
+  // MIEMBROS SIN GRUPO.
+  //
+  // Un alumno sin grupo no tiene plan de estudios, y sin plan no ve contenido.
+  // Entra, inicia sesión y la plataforma está vacía para él. La tabla ya
+  // permitía asignarle uno, pero nada avisaba de que hiciera falta: había que
+  // recorrer la lista mirando la columna. El 02-09-2026 apareció así una
+  // persona aprobada desde el directorio, y nadie lo supo hasta que preguntó.
+  //
+  // Los profesores no cuentan: llevan sus grupos en una lista aparte y no
+  // dependen de uno para ver contenido.
+  const sinGrupo = useMemo(
+    () => (miembros || []).filter((m) => m.rol === 'alumno' && !m.grupoId),
+    [miembros]
+  )
+
   // Reactivar una cuenta dada de baja devuelve algo que la baja quitó: su
   // academia. Por eso no basta con poner `estado: 'activo'` como hace el botón
   // de suspender — hay una función que lo hace entero y deja rastro.
@@ -138,6 +153,26 @@ export default function GestionMiembros({
           : 'Como director puedes nombrar profesores entre tus alumnos (y viceversa) y suspender cuentas.'}
       </p>
       {error && <p className="cuenta-error" role="alert">{error}</p>}
+
+      {/* El aviso lleva a la acción en un clic: filtra la tabla y deja a la
+          vista solo a quien hay que colocar. Decir el número sin llevar a
+          ellos obligaría a buscarlos a mano, que es lo que no se hacía. */}
+      {sinGrupo.length > 0 && filtro.grupoId !== '__sin__' && (
+        <p className="gm-sin-grupo" role="status">
+          <Icon name="alerta" size={16} />
+          <span>
+            <strong>{sinGrupo.length} alumno(s) sin grupo.</strong> No ven contenido: el plan de
+            estudios lo define el grupo.
+          </span>
+          <button
+            type="button"
+            className="btn btn--sm btn--suave"
+            onClick={() => setFiltro((f) => ({ ...f, grupoId: '__sin__' }))}
+          >
+            Ver solo esos
+          </button>
+        </p>
+      )}
 
       <FiltrosUsuarios
         usuarios={base}

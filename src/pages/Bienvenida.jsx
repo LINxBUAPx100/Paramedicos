@@ -125,7 +125,7 @@ export default function Bienvenida() {
   const entrar = (sol) =>
     correr(async () => {
       const { aplicarSolicitudAceptada } = await import('../lib/firebase/directorio.js')
-      await aplicarSolicitudAceptada(user.uid, sol.academiaId)
+      await aplicarSolicitudAceptada(user.uid, sol.academiaId, sol.grupoAsignado || null)
     }, '¡Listo! Ya tienes acceso al contenido de tu academia.')
 
   const aceptadas = solicitudes.filter((s) => s.estado === 'aceptada')

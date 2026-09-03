@@ -46,6 +46,7 @@ export default function PanelAccesos() {
       {gestion && (
         <SolicitudesDeAcceso
           academiaId={academiaId}
+          grupos={grupos}
           academiaNombre={academiaNombre}
           miUid={miUid}
         />

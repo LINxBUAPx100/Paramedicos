@@ -60,6 +60,7 @@ export default function AcademiaAccesos() {
 
       <SolicitudesDeAcceso
         academiaId={academiaId}
+        grupos={datos.grupos}
         academiaNombre={academiaNombre}
         miUid={user?.uid || null}
       />

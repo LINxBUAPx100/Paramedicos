@@ -484,10 +484,17 @@ service cloud.firestore {
       // Aceptar NO mete al alumno en la academia: solo marca 'aceptada'. Es el
       // propio interesado quien completa su alta (regla de usuarios), así que
       // aquí no hace falta abrir escritura de un perfil ajeno.
+      // `grupoAsignado` viaja en la solicitud porque el alta la completa el
+      // interesado: es la única forma de que el director decida el grupo sin
+      // abrir la escritura del perfil de otra persona. No hace falta validarlo
+      // aquí a fondo — cuando el interesado lo escriba en su perfil, la regla
+      // de `usuarios` exige `grupoValido()` sobre su propia academia.
       allow update: if (esSuper() || esAdminDe(resource.data.academiaId))
         && request.resource.data.diff(resource.data).affectedKeys()
-             .hasOnly(['estado', 'resueltoPor', 'resueltoEn', 'motivo'])
-        && request.resource.data.estado in ['aceptada', 'rechazada'];
+             .hasOnly(['estado', 'resueltoPor', 'resueltoEn', 'motivo', 'grupoAsignado'])
+        && request.resource.data.estado in ['aceptada', 'rechazada']
+        && (request.resource.data.get('grupoAsignado', null) == null
+            || request.resource.data.grupoAsignado is string);
       // Borrar: el solicitante (se arrepiente) o el director (limpieza).
       allow delete: if esDueno(resource.data.uid)
         || esSuper()

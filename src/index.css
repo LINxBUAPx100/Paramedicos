@@ -10067,3 +10067,21 @@ body[data-portada] .pt-seccion { padding-block: clamp(var(--e-32), 5vw, var(--e-
   color: color-mix(in srgb, var(--alerta) 70%, var(--texto));
 }
 .pg-huerfanos .pc-item { border-color: color-mix(in srgb, var(--alerta) 40%, var(--borde)); }
+
+/* Aviso de alumnos sin grupo. Un alumno sin grupo no tiene plan de estudios y
+   la plataforma le sale vacía; la tabla ya dejaba asignarlo, pero nada decía
+   que hiciera falta. */
+.gm-sin-grupo {
+  display: flex;
+  align-items: center;
+  gap: var(--e-8);
+  flex-wrap: wrap;
+  margin: 0 0 var(--e-12);
+  padding: var(--e-12);
+  border: 1px solid color-mix(in srgb, var(--alerta) 45%, var(--borde));
+  border-radius: var(--radio-sm);
+  background: var(--bg-3);
+  color: var(--texto-2);
+}
+.gm-sin-grupo strong { color: color-mix(in srgb, var(--alerta) 70%, var(--texto)); }
+.gm-sin-grupo > button { margin-left: auto; }

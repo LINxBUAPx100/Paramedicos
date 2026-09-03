@@ -10,7 +10,7 @@ import Icon from '../Icon.jsx'
 //  de recibirlas y vuelve al acceso por código.
 // ============================================================
 
-export default function SolicitudesDeAcceso({ academiaId, academiaNombre = '', miUid }) {
+export default function SolicitudesDeAcceso({ academiaId, academiaNombre = '', miUid, grupos = [] }) {
   const [ficha, setFicha] = useState(undefined) // undefined = cargando, null = no publicada
   const [solicitudes, setSolicitudes] = useState([])
   const [descripcion, setDescripcion] = useState('')
@@ -71,13 +71,38 @@ export default function SolicitudesDeAcceso({ academiaId, academiaNombre = '', m
     }, 'Retirada del directorio. Vuelve a valer el código.')
   }
 
+  // ACEPTAR ES TAMBIÉN DECIDIR DÓNDE ENTRA.
+  //
+  // Antes se aceptaba y ya: la persona quedaba dentro de la academia sin grupo,
+  // y por tanto sin plan de estudios y sin contenido. No podía pedirlo —el
+  // directorio no pregunta por grupo— ni dirección podía dárselo, porque ya no
+  // había pantalla que la relacionara con su solicitud. Pasó el 02-09-2026.
+  //
+  // El grupo se elige aquí y viaja en la solicitud; el alta la sigue
+  // completando el interesado, que es lo que evita abrir la escritura de un
+  // perfil ajeno en las reglas.
+  const [grupoPara, setGrupoPara] = useState({}) // idSolicitud → grupoId
+
   const resolver = (sol, aceptar) => {
     const motivo = aceptar ? '' : (window.prompt('Motivo (opcional, lo verá quien solicitó):') || '')
+    const grupoId = aceptar ? (grupoPara[sol.id] || null) : null
+    // Se avisa, no se impide. Puede haber un motivo para aceptar a alguien y
+    // colocarlo después —una persona que aún no ha elegido turno—, y bloquear
+    // el botón obligaría a inventarse un grupo para poder aprobar.
+    if (aceptar && !grupoId) {
+      const sigue = window.confirm(
+        'Vas a aceptar sin asignar grupo.\n\n'
+        + 'Entrará a la academia pero NO verá contenido, porque el plan de estudios lo '
+        + 'define el grupo. Tendrás que asignárselo después en Miembros.\n\n'
+        + '¿Continuar?'
+      )
+      if (!sigue) return
+    }
     correr(async () => {
       const { resolverSolicitudAcceso } = await import('../../lib/firebase/directorio.js')
-      await resolverSolicitudAcceso(sol.id, { aceptar, resueltoPor: miUid, motivo })
+      await resolverSolicitudAcceso(sol.id, { aceptar, resueltoPor: miUid, motivo, grupoId })
     }, aceptar
-      ? `${sol.nombre || sol.email} fue aceptado. Entrará la próxima vez que abra la app.`
+      ? `${sol.nombre || sol.email} fue aceptado${grupoId ? '' : ' SIN grupo'}. Entrará la próxima vez que abra la app.`
       : 'Solicitud rechazada.')
   }
 
@@ -140,6 +165,21 @@ export default function SolicitudesDeAcceso({ academiaId, academiaNombre = '', m
                 {s.mensaje && <p className="psa-mensaje">«{s.mensaje}»</p>}
               </div>
               <div className="psa-acciones">
+                {grupos.length > 0 && (
+                  <label className="panel-selector">
+                    <span className="sr-only">Grupo para {s.nombre || s.email}</span>
+                    <select
+                      value={grupoPara[s.id] || ''}
+                      disabled={ocupado}
+                      onChange={(e) => setGrupoPara((prev) => ({ ...prev, [s.id]: e.target.value }))}
+                    >
+                      <option value="">— Sin grupo —</option>
+                      {grupos.filter((g) => (g.estado || 'activo') === 'activo').map((g) => (
+                        <option key={g.id} value={g.id}>{g.nombre || g.id}</option>
+                      ))}
+                    </select>
+                  </label>
+                )}
                 <button className="btn btn--sm btn--exito" disabled={ocupado} onClick={() => resolver(s, true)}>
                   Aceptar
                 </button>
