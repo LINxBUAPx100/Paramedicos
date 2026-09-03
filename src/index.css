@@ -9870,3 +9870,84 @@ body[data-portada] .pt-seccion { padding-block: clamp(var(--e-32), 5vw, var(--e-
 .conceder-texto { min-width: 0; }
 .conceder-pie { display: flex; align-items: center; gap: var(--e-12); flex-wrap: wrap; }
 .conceder-ok { margin: 0; color: var(--exito); font-size: var(--t-sm); font-weight: 600; }
+
+/* ============================================================
+   HORARIO DEL GRUPO  (pedido el 02-09-2026)
+   ------------------------------------------------------------
+   Vive dentro de la fila del grupo, plegado. Se abre solo cuando se va a
+   tocar: una fila de gestión con siete casillas y cuatro campos siempre
+   desplegados convierte la lista de grupos en un formulario.
+   ============================================================ */
+.hg { flex: 1 0 100%; margin-top: var(--e-8); }
+.hg-cabecera {
+  display: flex;
+  align-items: center;
+  gap: var(--e-8);
+  width: 100%;
+  padding: var(--e-8) var(--e-12);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+  background: var(--bg-2);
+  color: var(--texto-2);
+  font: inherit;
+  font-size: var(--t-sm);
+  text-align: left;
+  cursor: pointer;
+}
+.hg-cabecera:hover { border-color: var(--primario); }
+.hg-resumen { color: var(--texto); font-weight: 600; }
+/* El maestro a cargo se empuja a la derecha: es lo segundo que se busca. */
+.hg-titular { margin-left: auto; }
+.hg-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-12);
+  align-items: flex-start;
+  margin-top: var(--e-6);
+  padding: var(--e-12);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+  background: var(--bg-2);
+}
+.hg-dias { display: flex; gap: var(--e-6); border: 0; padding: 0; margin: 0; flex-wrap: wrap; }
+.hg-dias legend { font-size: var(--t-xs); color: var(--texto-2); margin-bottom: var(--e-6); }
+/* Cada día es un botón cuadrado con su inicial. Es lo que hace legible de un
+   vistazo «miércoles» frente a «sábado y domingo». */
+.hg-dia {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+  background: var(--bg-3);
+  color: var(--texto-2);
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+}
+.hg-dia input { position: absolute; opacity: 0; width: 0; height: 0; }
+.hg-dia.activo { background: var(--primario); border-color: var(--primario); color: #fff; }
+.hg-dia:focus-within { outline: 2px solid var(--primario); outline-offset: 2px; }
+.hg-fila { display: flex; gap: var(--e-12); align-items: flex-end; flex-wrap: wrap; }
+.hg-fila label { display: flex; flex-direction: column; gap: 4px; font-size: var(--t-xs); color: var(--texto-2); }
+.hg-turno {
+  margin: 0 0 var(--e-6);
+  padding: 2px var(--e-8);
+  border-radius: 999px;
+  background: var(--bg-3);
+  border: 1px solid var(--borde);
+  font-size: var(--t-xs);
+  font-weight: 700;
+  color: var(--texto-2);
+}
+.hg-nota { margin: 0; max-width: 62ch; font-size: var(--t-xs); color: var(--texto-2); }
+.hg-ok { margin: 0; color: var(--exito); font-weight: 600; }
+.hg-problemas { margin: 0; padding-left: 1.1rem; color: var(--urgencia); font-size: var(--t-xs); }
+
+/* Un choque es una relación ENTRE dos grupos, así que se pinta sobre la lista
+   y no dentro de una fila: enseñarlo en uno solo dejaría al otro pareciendo
+   correcto. */
+.pg-choques { flex-direction: column; align-items: flex-start; gap: var(--e-6); }
+.pg-choques .pg-nombre { display: flex; align-items: center; gap: var(--e-6); color: color-mix(in srgb, var(--alerta) 70%, var(--texto)); }
+.pg-choques ul { margin: 0; padding-left: 1.1rem; color: var(--texto-2); font-size: var(--t-sm); }

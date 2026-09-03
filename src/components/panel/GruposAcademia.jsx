@@ -4,6 +4,8 @@ import { mensajeError } from '../../lib/panelModelo.js'
 import { metaDePrograma } from '../../lib/programasModelo.js'
 import Icon from '../Icon.jsx'
 import CompartirCodigo from '../CompartirCodigo.jsx'
+import HorarioDelGrupo from './HorarioDelGrupo.jsx'
+import { choquesDeHorario } from '../../lib/horarioGrupos.js'
 import ConfirmacionReforzada from '../ConfirmacionReforzada.jsx'
 
 // ============================================================
@@ -33,6 +35,20 @@ export default function GruposAcademia({ academiaId, academiaNombre = '', grupos
   // los necesita, y son 1 lectura por apertura.
   const [programas, setProgramas] = useState(null) // null = cargando
 
+  // Los profesores, para el selector de «maestro a cargo». Salen de los
+  // miembros que el componente ya recibe: no hace falta una lectura más.
+  const profesores = (miembros || []).filter((m) => m.rol === 'instructor')
+
+  // CHOQUES DE HORARIO. Un maestro no da clase a dos grupos a la vez, pero esto
+  // avisa en vez de impedir: las academias reorganizan horarios a media semana,
+  // y bloquear el guardado obligaría a deshacer una asignación para poder
+  // arreglar la otra. Quien configura tiene que verlo, no pelearse con ello.
+  const choques = choquesDeHorario(grupos || [])
+  const nombreDe = (uid) => {
+    const m = (miembros || []).find((x) => x.id === uid)
+    return m?.nombre || m?.email || uid
+  }
+
   useEffect(() => {
     if (!academiaId) return undefined
     let activo = true
@@ -51,6 +67,14 @@ export default function GruposAcademia({ academiaId, academiaNombre = '', grupos
     })()
     return () => { activo = false }
   }, [academiaId])
+
+  // HORARIO Y MAESTRO A CARGO. Van en la misma escritura porque son las dos
+  // mitades de la misma pregunta: cuándo se da esa clase y quién la da.
+  const guardarHorario = (grupo, datos) =>
+    correr(async () => {
+      const { guardarHorarioGrupo } = await import('../../lib/firebase/grupos.js')
+      await guardarHorarioGrupo(grupo.id, datos)
+    })
 
   const asignarPrograma = (grupo, programaId) =>
     correr(async () => {
@@ -210,6 +234,25 @@ export default function GruposAcademia({ academiaId, academiaNombre = '', grupos
         <p className="panel-vacio">Aún no hay grupos en esta academia.</p>
       ) : (
         <ul className="pc-lista">
+          {/* Se pinta aquí y no dentro de cada fila porque un choque es una
+              relación ENTRE dos grupos: enseñarlo en uno solo dejaría al otro
+              pareciendo correcto. */}
+          {choques.length > 0 && (
+            <li className="pc-item pg-choques" role="status">
+              <strong className="pg-nombre">
+                <Icon name="alerta" size={16} /> Choque de horario
+              </strong>
+              <ul>
+                {choques.map((c, i) => (
+                  <li key={i}>
+                    <strong>{nombreDe(c.profesor)}</strong> tiene dos grupos a la vez:{' '}
+                    {c.grupos.map((g) => g.nombre || g.id).join(' y ')}
+                    {' · '}{c.dias.join(', ')}
+                  </li>
+                ))}
+              </ul>
+            </li>
+          )}
           {grupos.map((g) => {
             const c = cuentaDe(g.id)
             const activo = g.estado === 'activo'
@@ -268,6 +311,16 @@ export default function GruposAcademia({ academiaId, academiaNombre = '', grupos
                     )}
                   </span>
                 )}
+                {/* HORARIO del grupo. Va en la propia fila y no en otra pantalla
+                    porque es donde se mira el grupo: obligar a navegar para poner
+                    una hora es la razón por la que estos campos se quedan vacíos
+                    para siempre. */}
+                <HorarioDelGrupo
+                  grupo={g}
+                  profesores={profesores}
+                  deshabilitado={ocupado}
+                  onGuardar={(datos) => guardarHorario(g, datos)}
+                />
                 <span className={`pc-estado ${activo ? 'activo' : 'inactivo'}`}>{activo ? 'activo' : 'inactivo'}</span>
                 <span className="pc-acciones">
                   <button className="pc-copiar" onClick={() => copiar(g.id)}>Copiar</button>

@@ -13,6 +13,7 @@ import {
 } from 'firebase/firestore'
 import { normalizarGrupo, normalizarGrupos } from '../compatNombres.js'
 import { secretoAleatorio } from '../codigoSeguro.js'
+import { normalizarHorario, problemasDeHorario } from '../horarioGrupos.js'
 import { normalizarGeneracion } from '../invitacionesCentro.js'
 
 // Código tipo GRP-K3M9P2QR. El secreto sale de lib/codigoSeguro.js: entrar a un
@@ -99,6 +100,40 @@ export async function renombrarGrupo(id, nombre) {
   const limpio = String(nombre || '').trim()
   if (!limpio) throw new Error('Escribe el nombre del grupo.')
   await updateDoc(doc(db, 'grupos', id), { nombre: limpio })
+}
+
+/**
+ * Horario del grupo y maestro a cargo.
+ *
+ * POR QUÉ VAN JUNTOS EN UNA ESCRITURA. Son las dos mitades de la misma
+ * pregunta —cuándo se da esa clase y quién la da— y separarlas dejaría al
+ * detector de choques mirando un estado a medias: un grupo con horario nuevo
+ * y titular viejo produce avisos falsos hasta que alguien guarde la otra
+ * mitad.
+ *
+ * NO EXIGE UN HORARIO COMPLETO. Un grupo existe antes de que se decida su
+ * horario, y obligar a rellenarlo para poder guardar el titular metería fechas
+ * inventadas en la base de datos. Lo que sí se rechaza es un horario
+ * INCOHERENTE: eso no es un dato pendiente, es un dato mal.
+ *
+ * Las reglas ya cubren esto sin cambios: el director gobierna el documento
+ * entero de su grupo (el allow update de firestore.rules), y un profesor solo
+ * puede tocar la visibilidad del contenido.
+ */
+export async function guardarHorarioGrupo(id, { horario, profesorTitular }) {
+  if (!id) throw new Error('Falta el grupo.')
+  const problemas = problemasDeHorario(horario || {})
+  if (problemas.length) throw new Error(problemas.join(' '))
+  const limpio = normalizarHorario({ horario })
+  await updateDoc(doc(db, 'grupos', id), {
+    horario: {
+      inicio: limpio.inicio,
+      fin: limpio.fin,
+      dias: limpio.dias,
+      fechaInicio: limpio.fechaInicio,
+    },
+    profesorTitular: profesorTitular || null,
+  })
 }
 
 export async function alternarGrupo(id, estado) {
