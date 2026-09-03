@@ -15,7 +15,18 @@ import ConfirmacionReforzada from '../ConfirmacionReforzada.jsx'
 //  misma sección, justo debajo (Bloque O).
 // ============================================================
 
-export default function GruposAcademia({ academiaId, academiaNombre = '', grupos, miembros, miUid, onCambio }) {
+export default function GruposAcademia({
+  academiaId, academiaNombre = '', grupos, miembros, miUid, onCambio,
+  // Programa en cuyo contexto se está creando. Cuando se crea un grupo desde
+  // la pantalla de un curso, ese curso se le asigna SOLO: crear un grupo ahí y
+  // que nazca sin plan de estudios es la trampa que dejó a R.E.S.C.A.T.E. con
+  // un grupo invisible en su propia consola.
+  cursoPorDefecto = null,
+  // Grupos de la academia SIN plan de estudios. Llegan aparte porque la lista
+  // de arriba está filtrada por curso y ellos, por definición, no caen en
+  // ninguno: sin este bloque no existen para quien mira esta pantalla.
+  huerfanos = [],
+}) {
   const [nombre, setNombre] = useState('')
   // GENERACIÓN del grupo. Los ciclos empiezan en fechas distintas y la
   // academia los nombra así («generación 1», «la del 26»); sin el dato, las
@@ -117,8 +128,14 @@ export default function GruposAcademia({ academiaId, academiaNombre = '', grupos
     e.preventDefault()
     correr(async () => {
       const { crearGrupo } = await import('../../lib/firebase/grupos.js')
+      const curso = (programas || []).find((c) => c.id === cursoPorDefecto) || null
       const g = await crearGrupo({
         academiaId, nombre, creadoPor: miUid,
+        // El plan de estudios del contexto, si lo hay. El tipo viaja
+        // denormalizado junto al id para poder etiquetar el grupo sin leer la
+        // colección de cursos entera en cada pantalla.
+        programaId: curso?.id || null,
+        tipoPrograma: curso?.tipoPrograma || null,
         // Sin número no hay generación: el grupo se queda sin etiquetar, que
         // es exactamente lo que les pasa a los que ya existen.
         generacion: gen ? { numero: Number(gen), anio: Number(anio) } : null,
@@ -231,7 +248,13 @@ export default function GruposAcademia({ academiaId, academiaNombre = '', grupos
       {error && <p className="cuenta-error" role="alert">{error}</p>}
 
       {grupos.length === 0 ? (
-        <p className="panel-vacio">Aún no hay grupos en esta academia.</p>
+        <p className="panel-vacio">
+          {cursoPorDefecto && huerfanos.length > 0
+            ? 'Ningún grupo cursa este plan de estudios todavía. Abajo están los que existen sin plan asignado.'
+            : cursoPorDefecto
+              ? 'Ningún grupo cursa este plan de estudios todavía.'
+              : 'Aún no hay grupos en esta academia.'}
+        </p>
       ) : (
         <ul className="pc-lista">
           {/* Se pinta aquí y no dentro de cada fila porque un choque es una
@@ -345,6 +368,62 @@ export default function GruposAcademia({ academiaId, academiaNombre = '', grupos
             )
           })}
         </ul>
+      )}
+
+      {/* GRUPOS SIN PLAN DE ESTUDIOS.
+          ------------------------------------------------------------
+          La lista de arriba está filtrada por curso, así que un grupo sin plan
+          no cae en ninguna pantalla: existe, tiene alumnos y su código
+          funciona, pero para quien administra no está. Le pasó a
+          R.E.S.C.A.T.E. el 02-09-2026 — su único grupo, con alumnos dentro,
+          bajo un cartel que decía «Aún no hay grupos en esta academia».
+
+          No se arregla escondiéndolos mejor: se arregla enseñándolos donde se
+          les puede dar un plan o quitarlos de en medio. */}
+      {huerfanos.length > 0 && (
+        <div className="pg-huerfanos">
+          <h3>
+            <Icon name="alerta" size={17} /> Grupos sin plan de estudios ({huerfanos.length})
+          </h3>
+          <p className="panel-gestion-sub">
+            No aparecen en ninguna pestaña de programa porque no cursan ninguno, y sus alumnos
+            no ven contenido. Asígnales uno o bórralos.
+          </p>
+          <ul className="pc-lista">
+            {huerfanos.map((g) => (
+              <li key={g.id} className="pc-item inactivo">
+                <strong className="pg-nombre">{g.nombre || g.id}</strong>
+                <span className="pc-detalle">{g.id}</span>
+                {programas !== null && programas.length > 0 && (
+                  <span className="pg-programa pg-programa--vacio">
+                    <label className="sr-only" htmlFor={`hprog-${g.id}`}>
+                      Plan de estudios del grupo {g.nombre}
+                    </label>
+                    <select
+                      id={`hprog-${g.id}`}
+                      value=""
+                      disabled={ocupado}
+                      onChange={(e) => asignarPrograma(g, e.target.value)}
+                    >
+                      <option value="">— Elige un plan de estudios —</option>
+                      {programas.map((pr) => (
+                        <option key={pr.id} value={pr.id}>
+                          {pr.titulo} · {metaDePrograma(pr).etiquetaCorta}
+                        </option>
+                      ))}
+                    </select>
+                  </span>
+                )}
+                <span className="pc-acciones">
+                  <button className="pc-copiar" onClick={() => copiar(g.id)}>Copiar</button>
+                  <button className="pc-toggle pc-borrar" onClick={() => setBorrando(g)}>
+                    Borrar
+                  </button>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
 
       {borrando && (

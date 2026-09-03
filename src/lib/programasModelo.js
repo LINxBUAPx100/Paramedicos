@@ -657,6 +657,22 @@ export function motivoSinPrograma({
  * Sin programa se devuelven todos: es la vista de la academia entera, no un
  * descuido. Ésa es la diferencia entre «no he elegido» y «he elegido y no hay».
  */
+/**
+ * Los grupos que no cursan NINGÚN plan de estudios.
+ *
+ * Son el punto ciego de la administración por programa: la pestaña de cada
+ * curso filtra por , así que un grupo sin plan no cae en ninguna.
+ * Existe, tiene alumnos y su código funciona, pero para quien administra no
+ * está. Le pasó a R.E.S.C.A.T.E. el 02-09-2026: su único grupo, con alumnos
+ * dentro, bajo un cartel que decía que no había ninguno.
+ *
+ * Se listan aparte para poder darles un plan o borrarlos, que son las dos
+ * únicas salidas de ese estado.
+ */
+export function gruposSinPrograma(grupos) {
+  return (grupos || []).filter((g) => g && !g.programaId)
+}
+
 export function gruposDelPrograma(grupos, programaId = null) {
   const lista = grupos || []
   if (!programaId) return lista

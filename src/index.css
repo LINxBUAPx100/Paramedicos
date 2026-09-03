@@ -10054,3 +10054,16 @@ body[data-portada] .pt-seccion { padding-block: clamp(var(--e-32), 5vw, var(--e-
 .ee-paso:disabled { cursor: default; opacity: .8; }
 .ee-paso:not(:disabled):hover { border-color: var(--primario); color: var(--texto); }
 .ee-paso-sep { color: var(--texto-2); }
+
+/* Grupos sin plan de estudios: el punto ciego de la administración por
+   programa. Se pintan aparte y con aviso porque no caen en ninguna pestaña, y
+   un grupo invisible con alumnos dentro es peor que uno mal colocado. */
+.pg-huerfanos { margin-top: var(--e-24); }
+.pg-huerfanos > h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--e-6);
+  margin: 0 0 var(--e-6);
+  color: color-mix(in srgb, var(--alerta) 70%, var(--texto));
+}
+.pg-huerfanos .pc-item { border-color: color-mix(in srgb, var(--alerta) 40%, var(--borde)); }

@@ -1,7 +1,7 @@
 import { useAcademiaAdmin } from '../../../components/admin/AcademiaShell.jsx'
 import { useDatosAcademia } from '../../../components/panel/datosAcademia.js'
 import GruposAcademia from '../../../components/panel/GruposAcademia.jsx'
-import { gruposDelPrograma } from '../../../lib/programasModelo.js'
+import { gruposDelPrograma, gruposSinPrograma } from '../../../lib/programasModelo.js'
 
 // Academia · GRUPOS: crearlos, asignarles su plan de estudios y su generación.
 export default function AcademiaGrupos() {
@@ -22,6 +22,9 @@ export default function AcademiaGrupos() {
   // paramédicos: mezclarlos es exactamente lo que hacía que el director no
   // pudiera supervisar un programa sin ver los otros encima.
   const grupos = gruposDelPrograma(datos.grupos, cursoId)
+  // Los que no cursan NINGÚN plan. No caen en esta pestaña ni en ninguna otra,
+  // así que si no se enseñan aquí no existen para quien administra.
+  const huerfanos = gruposSinPrograma(datos.grupos)
 
   return (
     <div className="cs-seccion">
@@ -39,6 +42,8 @@ export default function AcademiaGrupos() {
         grupos={grupos}
         miembros={datos.miembros}
         miUid={miUid}
+        cursoPorDefecto={cursoId}
+        huerfanos={huerfanos}
         onCambio={datos.recargar}
       />
     </div>
