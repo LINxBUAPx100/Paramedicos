@@ -10,7 +10,7 @@
 //  errata documental que se conserva en la transcripción oficial y se corrige
 //  únicamente en el título visible.
 //
-//  Pauta temática: `docs/GUIA-REDACCION-M4-RESTANTE.md`. Fuentes asignadas por
+//  Pauta temática: `docs/archivo/GUIA-REDACCION-M4-RESTANTE.md`. Fuentes asignadas por
 //  el registro para `m4-urgencias-gineco-obstetricas`: WHO maternal 2025, WHO
 //  obstetricia, WHO intraparto 2018, WHO HPP 2025, WHO aborto 2022, NICE NG126
 //  y ACOG 783; AHA/AAP neonatal 2025; requiere protocolo local.

@@ -53,6 +53,9 @@ export const SECCIONES_ACADEMIA = [
   { id: 'alumnos', sufijo: 'alumnos', icono: 'usuario', etiqueta: 'Alumnos y staff', deLaAcademia: true },
   { id: 'accesos', sufijo: 'accesos', icono: 'usuario', etiqueta: 'Accesos', deLaAcademia: true },
   { id: 'invitaciones', sufijo: 'invitaciones', icono: 'llave', etiqueta: 'Invitaciones', deLaAcademia: true },
+  // Recepción es de la ACADEMIA, no de un programa: la matrícula sale del
+  // contador de la academia y la persona todavía no está en ningún curso.
+  { id: 'recepcion', sufijo: 'recepcion', icono: 'mas', etiqueta: 'Recepción', deLaAcademia: true },
   { id: 'ajustes', sufijo: 'ajustes', icono: 'editar', etiqueta: 'Ajustes de la academia', deLaAcademia: true },
 ]
 

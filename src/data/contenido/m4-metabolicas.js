@@ -4,7 +4,7 @@
 //  Unidad completa (1 semana, 5 horas), en el orden del PDF: diabetes mellitus,
 //  complicaciones diabéticas y desequilibrio ácido-base.
 //
-//  Pauta temática: `docs/GUIA-REDACCION-M4-RESTANTE.md`. Fuentes asignadas por
+//  Pauta temática: `docs/archivo/GUIA-REDACCION-M4-RESTANTE.md`. Fuentes asignadas por
 //  el registro para `m4-urgencias-metabolicas`: ADA 2026 y el consenso de
 //  crisis hiperglucémicas 2024 como primarias; AMLS y Guyton como apoyo;
 //  requiere protocolo local.

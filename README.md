@@ -93,7 +93,9 @@ Quién puede firmar: el director y el super-admin por su rol; un profesor, con u
 | `src/data/contenido/` | El temario redactado, un archivo por unidad |
 | `src/data/planRescate.js` | **Generado.** No se edita a mano |
 | `scripts/` | Generadores, inventario, matriz de decisiones y pipeline de activos |
-| `tests/` | 800+ pruebas con `node --test`; `tests/rules/` corre contra el emulador |
+| `tests/` | 1 100+ pruebas con `node --test`; `tests/rules/` corre contra el emulador |
+| `legado/` | **Archivo, no código.** El temario anterior, en cuarentena. Nada de ahí llega al alumno ni se importa desde `src/` — ver [`legado/README.md`](./legado/README.md) |
+| `docs/archivo/` | Documentos cumplidos. Explican por qué el proyecto es así; **no dan órdenes** |
 
 ---
 
@@ -158,6 +160,7 @@ Dos invariantes que no se rompen:
 
 | Documento | Qué gobierna |
 |---|---|
+| **[ONBOARDING.md](./ONBOARDING.md)** | **Empieza aquí si es tu primer día**: arrancarlo y las trampas que no se ven |
 | **[docs/PLAN-TECNICO-FASES.md](./docs/PLAN-TECNICO-FASES.md)** | El **único calendario**: qué se hace y en qué orden |
 | **[PLAN-LMS.md](./PLAN-LMS.md)** | Detalle de arquitectura, modelos de datos y decisiones |
 | **[CLAUDE.md](./CLAUDE.md)** | El trabajo **editorial**: cómo se redacta y valida el temario |

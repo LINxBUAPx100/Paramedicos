@@ -47,26 +47,28 @@ Hecho el 02-09-2026: la unidad de **evaluación primaria y secundaria del Módul
 principio de `src/data/contenido/m3-evaluacion.js` y se reutilizan tal cual en
 los lotes siguientes.
 
-Para el relevo inmediato lee de principio a fin `docs/GUIA-REDACCION-M5-LOTE-A.md` y ejecuta `docs/PROMPT-CLAUDE-M5-LOTE-A.md`. `docs/RELEVO-CLAUDE-2026-08-17.md`, `docs/GUIA-REDACCION-M4-RESTANTE.md` y `docs/PROMPT-CLAUDE-M4-RESTANTE.md` son antecedentes de lotes ya terminados: consúltalos solo ante una discrepancia concreta. **No vuelvas a redactar, resumir ni reorganizar las 34 lecciones nuevas del Módulo 4 ni las actividades de las 33 lecciones existentes de M5.**
+Para el relevo inmediato, el trabajo es el **trabajo A** descrito en `docs/PLAN-TECNICO-FASES.md` §«Trabajo A»: la pasada de calidad, lote a lote. Las guías y prompts de los lotes de redacción —M4 restante, M5 lote A, relevos de agosto— **están cumplidos y archivados en `docs/archivo/`**: son antecedentes, no instrucciones. Consúltalos solo ante una discrepancia concreta. **No vuelvas a redactar, resumir ni reorganizar las lecciones del Módulo 4 ni las del lote A del Módulo 5.**
 
 Antes de redactar nuevos temas debes verificar y preservar estos cuatro controles surgidos de la segunda auditoría. En el estado comprobado actual ya tienen pruebas de regresión; no rehagas la solución si sigue cumpliéndose:
 
 1. Los bancos de examen usan únicamente temas `validado` o `publicado`; `borrador` y `en_revision` quedan fuera.
 2. OVACE pediátrica cita AHA/AAP *Pediatric Basic Life Support 2025* y distingue lactante, niño y pérdida de respuesta.
 3. El tema médico-legal usa instrumentos jurídicos y sanitarios específicos, no solo NOM-034, y declara lo que depende del ámbito local.
-4. Inventario, generador y contenido servido cuentan lecciones con material estudiable, no IDs declarados ni nodos de evaluación. La cifra actual comprobada es 161.
+4. Inventario, generador y contenido servido cuentan lecciones con material estudiable, no IDs declarados ni nodos de evaluación. La cifra actual comprobada con `npm run inventario` el 05-09-2026 es **268**.
 
 Además, conserva los dos controles bibliográficos añadidos durante la auditoría de trauma: ningún tema puede citar como fuente la portada comercial de PHTLS y toda cita de PHTLS debe declarar edición, capítulo y página. La biblioteca aportada por el usuario ya contiene una copia identificada y consultable de PHTLS 9; por ello, Claude debe localizar las páginas reales en esa copia y dejar una deuda solo cuando una búsqueda concreta no permita comprobarlas. La copia de PHTLS 10 declara traducción automática y no es citable.
 
 Si alguno regresó, corrígelo primero. Después continúa la reconstrucción editorial real. No entregues solamente un plan, una lista de pendientes o más infraestructura: **redacta, integra y verifica el contenido faltante en los archivos que consume la aplicación**.
 
-### Cuota de producción acelerada obligatoria
+### Cuota de producción obligatoria
 
-La prioridad del usuario es llenar los temas. Cada ejecución de trabajo debe completar **por lo menos 15 lecciones nuevas o un módulo académico completo si contiene menos**, salvo bloqueo externo demostrado. Si un tema se bloquea, registra la pregunta concreta y continúa con el siguiente tema seguro. No detengas una ejecución para entregar solo inventarios, investigación, pruebas o infraestructura.
+> **Esta cuota cambió de objeto el 5 de septiembre de 2026.** Decía «15 lecciones nuevas por ejecución» porque quedaban más de cien temas por escribir. Ya no quedan: el inventario mide 268 lecciones con material y los 19 temas sin material son 14 nodos de evaluación y 5 bloqueos. Pedir lecciones nuevas hoy solo consigue que se reescriba lo que ya está hecho, que es exactamente el daño que este mandato existe para evitar.
 
-Al menos 90 % del trabajo nuevo debe reflejarse en lecciones redactadas e integradas. Al terminar, informa de forma visible: lecciones nuevas incorporadas, IDs terminados, lecciones con material antes/después y vacíos antes/después. Las pruebas y el build son controles de calidad, no el producto principal.
+La prioridad sigue siendo **producir, no planear**. Cada ejecución debe completar **un lote entero del trabajo A —entre 5 y 15 lecciones de una misma unidad—** o un módulo académico completo si contiene menos, salvo bloqueo externo demostrado. Si una lección se bloquea, registra la pregunta concreta y continúa con la siguiente. No detengas una ejecución para entregar solo inventarios, investigación, pruebas o infraestructura.
 
-La entrega de las **34 lecciones restantes del Módulo 4**, sus actividades y las 17 actividades antiguamente pendientes de M5 ya está integrada. La deuda pedagógica de las 33 lecciones existentes de M5 es cero. La siguiente sesión debe producir las **33 lecciones nuevas del Módulo 5, lote A**, siguiendo sin omisiones `docs/GUIA-REDACCION-M5-LOTE-A.md`; la investigación y los límites clínicos de ese lote ya fueron preparados por Codex.
+Al menos 90 % del trabajo nuevo debe reflejarse en lecciones mejoradas e integradas en los archivos que consume la aplicación. Al terminar, informa de forma visible: lecciones tocadas, IDs terminados y cifras del inventario antes/después. Las pruebas y el build son controles de calidad, no el producto principal.
+
+Lotes ya entregados, que **no se reabren** salvo hallazgo concreto: las 58 lecciones del Módulo 4 con sus actividades; las 33 lecciones existentes del Módulo 5 con sus actividades; las 33 lecciones nuevas del Módulo 5 (lote A); y, del trabajo A, la evaluación primaria y secundaria del Módulo 3 (10 lecciones) y la vía aérea del Módulo 3 (14 lecciones).
 
 Toda lección, nueva o ya redactada, debe incluir por lo menos una actividad de aprendizaje significativa y derivada de su propio contenido. No se exige una actividad motriz donde no corresponda: puede ser secuenciación clínica, completar relaciones causales, análisis de un caso breve, clasificación, interpretación o preguntas de aplicación. No sirven como actividad repetir el quiz, ordenar elementos arbitrariamente o pedir información que la lección no enseña.
 
@@ -164,8 +166,8 @@ Los archivos `src/data/fase*.js`, `src/data/extraFase*.js` y `src/data/contenido
 - La situación editorial comprobada el 2 de septiembre de 2026 con `npm run inventario` es: 268 lecciones con material, 19 temas sin material —14 nodos de evaluación y 5 bloqueados por decisión—, 178 borradores, 104 en revisión y 5 bloqueados.
 - Ninguna lección ha sido validada ni publicada por un docente.
 - Las cifras del 17 de agosto de 2026 que este archivo repetía (107 vacíos, 161 con material) quedaron desfasadas al terminarse los lotes de M4 y M5; no se usan como línea base.
-- Las 33 lecciones actualmente redactadas de M5 ya contienen actividad; el siguiente lote es producción de 33 páginas nuevas, no reparación de actividades.
-- Los 126 nodos sin material de estudio se explican por temas todavía vacíos, 14 nodos de evaluación sin prosa y 5 bloqueos explícitos; consulta el inventario generado para el desglose actual.
+- Las lecciones del Módulo 5 —las 33 auditadas y las 33 del lote A— están redactadas y todas contienen actividad. Ya no queda producción de páginas nuevas.
+- Los 19 nodos sin material de estudio se explican enteros por 14 nodos de evaluación sin prosa y 5 bloqueos explícitos; no queda ninguna lección por escribir. Consulta el inventario generado para el desglose actual.
 - Los 14 nodos de evaluación son 12 exámenes y 2 prácticas.
 - Se retiraron de la vista del alumno las contradicciones conocidas de dosis, fuentes fuera de tema y material de cuidados críticos colocado en páginas básicas. Varias correcciones todavía consisten en cuarentena, no en una lección nueva.
 
@@ -301,11 +303,12 @@ Orden recomendado:
 3. Módulo 3: conservar sus 33 lecciones ya redactadas en `en_revision`, incluidas vía aérea, vía intravenosa/intraósea y monitor/desfibrilador. Sus dos nodos de evaluación no requieren prosa. No reescribir ni elevar estos temas sin hallazgo concreto o revisión docente.
 4. Módulo 5: conservar los 33 borradores de trauma ya auditados. La decisión tema por tema está registrada; no repetir la auditoría ni promoverlos mientras falten las páginas/capítulos exactos de PHTLS y las demás fuentes señaladas.
 5. Módulo 4: sus 58 lecciones están redactadas y todas tienen actividad. Conservarlas; no reabrirlas salvo hallazgo concreto o regresión automatizada.
-6. Módulo 5: conservar sus 33 borradores actuales y completar primero la deuda de 17 actividades. La producción de las 66 lecciones nuevas se hará en dos lotes de 33 con guía de investigación específica preparada por Codex.
-7. Módulo 6: pediatría, trauma pediátrico y geriatría.
-8. Módulo 5: completar los 66 temas todavía vacíos sin reutilizar mezclas antiguas, únicamente cuando el lote tenga guía de investigación específica.
-9. Módulo 2: prioridad inmediata. Completar de una sola vez sus 17 temas anatómicos y fisiológicos, con actividad significativa en cada lección y sin introducir terapéutica avanzada fuera de lugar.
-10. Módulo 7: mantener los cuatro temas bloqueados hasta que la academia defina su alcance.
+6. Módulo 5: sus 102 temas están redactados —los 33 borradores auditados más el lote A de 33 y el resto— y todos con actividad. Conservarlos.
+7. Módulo 6: pediatría, trauma pediátrico y geriatría, redactados. Conservarlos.
+8. Módulo 2: sus 21 temas anatómicos y fisiológicos están redactados, con actividad y sin terapéutica avanzada fuera de lugar. Conservarlos.
+9. Módulo 7: mantener los cuatro temas bloqueados hasta que la academia defina su alcance.
+
+> **Los puntos 2 a 8 ya no son trabajo, son inventario.** Al 5 de septiembre de 2026 no queda ninguna lección por redactar: el trabajo editorial vivo es la **pasada de calidad (trabajo A)**, módulo por módulo, en el orden acordado —M3 y M5 primero, luego M4, M6, M2 y M1—. Esta lista se conserva porque dice qué **no** se reabre.
 
 Correcciones obligatorias al lote de epidemiología/farmacología antes de comenzar respiratorio:
 
@@ -576,7 +579,7 @@ No declares el proyecto terminado mientras quede contenido heredado visible como
 
 Cuando el usuario te pida iniciar la remediación, interpreta la tarea así:
 
-> Lee `CLAUDE.md` y `docs/RELEVO-CLAUDE-2026-08-17.md`. No repitas el Módulo 4: el lote de 34 lecciones ya quedó integrado y Codex confirmó 161 lecciones con material, 107 temas sin contenido, 58/58 lecciones de M4 con actividad, 495 pruebas aprobadas y build correcto. Verifica que esa línea base siga intacta y corrige únicamente una regresión demostrada. Después añade actividades a las 17 lecciones ya redactadas de M5 enumeradas en el relevo, derivándolas solo de su propia lección y sin reescribir su prosa. Ejecuta generación, pruebas, build, inventario y matriz una vez al final. Mantén `borrador` o `en_revision`; no valides, publiques, despliegues, escribas en Firebase, hagas commits ni borres el legado.
+> Lee `CLAUDE.md` entero y el apartado «Trabajo A» de `docs/PLAN-TECNICO-FASES.md`. **No redactes lecciones nuevas: no queda ninguna.** El inventario mide 268 lecciones con material y 19 nodos sin material que son 14 evaluaciones y 5 bloqueos; confirma esa línea base con `npm run inventario` y corrige únicamente una regresión demostrada. Después elige el siguiente lote de la pasada de calidad —entre 5 y 15 lecciones de una misma unidad, en el orden M3, M5, M4, M6, M2, M1— y añade a cada lección, **derivadas de su propia prosa y sin un solo dato clínico nuevo**, tabla comparativa o algoritmo, mnemotecnia, «Lo que más se pregunta», «Errores frecuentes», «Repaso rápido» y «Preguntas de repaso oral». Los helpers del molde v2 están al principio de `src/data/contenido/m3-evaluacion.js`. Ejecuta generación, pruebas, build, inventario y matriz una vez al final. Mantén `borrador` o `en_revision`; no valides, publiques, despliegues, escribas en Firebase, hagas commits ni borres el legado.
 
 ## 16. Condición de terminación
 

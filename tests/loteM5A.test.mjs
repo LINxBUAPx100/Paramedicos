@@ -1,7 +1,7 @@
 // ============================================================
 //  Módulo 5, lote A — controles editoriales del lote
 // ------------------------------------------------------------
-//  Los ocho controles que `docs/GUIA-REDACCION-M5-LOTE-A.md` exige para las 33
+//  Los ocho controles que `docs/archivo/GUIA-REDACCION-M5-LOTE-A.md` exige para las 33
 //  lecciones nuevas, más los del contrato de contenido:
 //
 //   1. existen exactamente los 33 ids y cada uno tiene actividad;

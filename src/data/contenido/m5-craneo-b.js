@@ -7,7 +7,7 @@
 //  PIC por niveles, manitol, lesiones intracraneales, fracturas vertebrales,
 //  medular anterior y cauda equina— corresponden al lote B.
 //
-//  Pauta editorial: `docs/GUIA-REDACCION-M5-LOTE-A.md`.
+//  Pauta editorial: `docs/archivo/GUIA-REDACCION-M5-LOTE-A.md`.
 //
 //  DOS ERRATAS DEL PLAN QUE SE MANEJAN AQUÍ:
 //  el plan escribe «Doctrina de Kellie Monroe»; la grafía correcta y la que se

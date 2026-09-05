@@ -2,7 +2,7 @@
 //  Módulo 4 · Actividades añadidas a lecciones ya redactadas
 // ------------------------------------------------------------
 //  Dieciséis lecciones del Módulo 4 estaban redactadas y sin actividad. Esa
-//  deuda quedó enumerada en `docs/ESTADO-PRODUCCION-ACELERADA.md`.
+//  deuda quedó enumerada en `docs/archivo/ESTADO-PRODUCCION-ACELERADA.md`.
 //
 //  Este archivo la resuelve SIN TOCAR nada más. Aporta únicamente el campo
 //  `actividades` de cada tema, y el punto de unión de `contenido/index.js`

@@ -6,7 +6,7 @@
 //  cardiorrespiratorio y RCP avanzada, bradiarritmias y taquiarritmias,
 //  insuficiencia cardiaca e hipertensión arterial.
 //
-//  Pauta temática: `docs/GUIA-REDACCION-M4-RESTANTE.md`. Fuentes primarias
+//  Pauta temática: `docs/archivo/GUIA-REDACCION-M4-RESTANTE.md`. Fuentes primarias
 //  asignadas por `docs/REGISTRO-FUENTES-ACADEMICAS.json` para
 //  `m4-urgencias-cardiologicas`: AHA BLS/ALS 2025, ACS 2025, HF 2022 y HBP
 //  2025; ACLS 2020 solo como correspondencia histórica; AMLS, Bibiano y

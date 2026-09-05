@@ -4,10 +4,11 @@ import { planRescate } from './planRescate.js'
 // scripts/seed/plan-rescate.json — ver scripts/gen-plan-rescate.mjs).
 //
 // Sustituye al temario ficticio que vivía en registro.js + faseN.js. Esos
-// archivos SIGUEN en el repo pero ya no se importan: se conservan porque
-// contienen el material redactado (374 preguntas, 457 flashcards) que puede
-// reaprovecharse al llenar los temas oficiales, y porque revertir esta fase es
-// cambiar esta línea por `import { REGISTRO } from './registro.js'`.
+// archivos SIGUEN en el repo, archivados en `legado/` y sin importarse desde
+// aquí: se conservan porque contienen el material redactado (374 preguntas,
+// 457 flashcards) que puede reaprovecharse al llenar los temas oficiales, y
+// porque revertir esta fase es cambiar esta línea por
+// `import { REGISTRO } from '../../legado/registro.js'`.
 const REGISTRO = planRescate.map((modulo, i) => ({ orden: i + 1, fase: modulo }))
 
 // Ensambla los MÓDULOS en ORDEN y con NUMERACIÓN AUTOMÁTICA (ver registro.js).
@@ -17,9 +18,9 @@ const REGISTRO = planRescate.map((modulo, i) => ({ orden: i + 1, fase: modulo })
 //  · El `id` de cada módulo/tema es identidad estable (URLs + progreso) y no se toca.
 //  · Cualquier `numero` escrito a mano en los archivos de datos se ignora aquí.
 //
-//  FRONTERA CON EL BUNDLE LEGACY: los archivos de `src/data/` (registro.js,
+//  FRONTERA CON EL TEMARIO LEGADO: los archivos de `legado/` (registro.js,
 //  faseN.js, extraFaseN.js) conservan a propósito la nomenclatura vieja —son el
-//  temario ficticio que el temario oficial R.E.S.C.A.T.E. va a reemplazar, y
+//  temario ficticio que el temario oficial R.E.S.C.A.T.E. reemplazó, y
 //  contienen la palabra "fase" dentro de TEXTO MÉDICO ("fase de shock"), así que
 //  renombrarlos sería a la vez inútil y peligroso. La traducción se hace aquí,
 //  en el único punto de entrada: `{ fase }` del registro → `modulo` de la API.

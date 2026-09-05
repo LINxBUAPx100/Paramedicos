@@ -12,7 +12,12 @@
 > editorial y el incidente de imágenes). `CLAUDE.md` gobierna el trabajo
 > EDITORIAL —redactar el temario— y es otro proyecto: el software avanza sin él.
 >
-> **Última actualización: 2 de septiembre de 2026.** El bloque P está cerrado
+> **Última actualización: 5 de septiembre de 2026** —ese día se limpió el
+> repositorio (el temario legado sale de `src/` a `legado/`, mueren los archivos
+> que no importaba nadie, los documentos cumplidos pasan a `docs/archivo/` y se
+> añade `ONBOARDING.md`) y se cerró **O4a**, la pantalla de Recepción.
+>
+> **Antes, el 2 de septiembre de 2026.** El bloque P está cerrado
 > —P3 se desplegó el 31 de agosto— y ese día se trabajó en lo que no cuesta
 > dinero mientras el dueño contrata Blaze: la mitad de **P10** que le toca al
 > código y **P5** entero.
@@ -113,7 +118,9 @@ real.
 | ~~Aprobar a alguien es también decidir en qué grupo entra~~ | encontrado el 02-09-2026 |
 | ~~Las portadas públicas se pintan a sangre (y el botón invisible del cierre)~~ | reportado el 02-09-2026 |
 | ~~Las cuatro cifras del hero llevan a lo que cuentan~~ | pedido el 02-09-2026 |
-| ~~**O1** — Matrícula por academia: modelo, contador y emisión desde el panel~~ | pedido el 02-09-2026 · falta su hueco en recepción (**O4a**) |
+| ~~**O1** — Matrícula por academia: modelo, contador y emisión desde el panel~~ | pedido el 02-09-2026 · su hueco en recepción se cerró con **O4a** |
+| ~~**O4a** — Pantalla de Recepción: el alta de mostrador de principio a fin, sin Blaze~~ | **05-09-2026** · probada contra el emulador: matrícula reservada, invitación personal y pago escritos |
+| ~~Limpieza del repositorio: el temario legado sale de `src/`, mueren los archivos huérfanos y se archivan los documentos cumplidos~~ | **05-09-2026** · pedido al entrar alguien nuevo al proyecto |
 
 ### Pendiente, en orden de ejecución
 
@@ -127,8 +134,7 @@ real.
 | **F2** | Contratar Blaze + alertas de gasto + RTDB + respaldos | 1 día | medir consumo real primero |
 | **J** | Paginación de `/admin` y auditoría | media | **va con F2**: en Blaze el exceso ya no se corta, se cobra |
 | **L** | Suscripción y cobro (pasarela, webhook, recepción, corte de caja) | 2 semanas | **F2** · O2 |
-| **O4a** | **Home de recepción sin Blaze** | 1 semana | O1 ✔ · **modelo, escritura y reglas hechos el 02-09**; falta la PANTALLA y el rol `recepcion` |
-| **O4b** | La Function que crea la cuenta con contraseña temporal y dispara el mensaje | 3-5 días | **F2** (Functions) · O4a |
+| **O4b** | La Function que crea la cuenta con contraseña temporal y dispara el mensaje | 3-5 días | **F2** (Functions) · O4a ✔ |
 | **C** | Clase en vivo con actividades calificables **(incluye el simulador de escenas)** | 2-3 semanas | A, **F2** · **O3** (la bandera «en clase» decide a quién se puede calificar) |
 | **D** | Entrenador de farmacología | media | catálogo de fármacos de la academia |
 | **M** | Tienda (uniformes e insumos) | 2 semanas | L · **el catálogo se diseña en B y se reutiliza aquí** |
@@ -209,9 +215,10 @@ la matrícula entera si ese número ya está ocupado en el destino.
 | La emite el **staff**, no el alumno | La regla del contador solo deja moverlo al staff. Si un alumno pudiera avanzarlo al entrar, tendría en la mano la numeración de la academia entera |
 | El director la **emite**, nunca la reescribe | Reescribirla sería la forma de dar el mismo número a dos personas sin pasar por el contador. Cambiarla solo ocurre en un traslado, y los traslados son del super-admin |
 
-**Lo que falta:** su hueco en el alta de recepción (**O4a**). Mientras tanto se
-emite desde Panel → Miembros, con el botón que sale en la columna de matrícula
-de todo alumno que no la tenga.
+**Su hueco en recepción se cerró el 05-09-2026** (**O4a**): un alta de mostrador
+reserva la matrícula sola. Sigue emitiéndose también desde Panel → Miembros, con
+el botón que sale en la columna de matrícula de todo alumno que no la tenga —es
+la vía para quien ya estaba en la academia antes de que existiera el contador.
 
 > **Un tropiezo que conviene no repetir.** Al poner la regla, el archivo
 > `firestore.rules` se rompió: la regla contiene `matches('...$')` y
@@ -2068,7 +2075,36 @@ Hacerlo en ese orden tiene una ventaja que no es menor: **O4a se puede usar
 mañana** y deja el flujo de recepción rodado antes de que haya una factura de
 Firebase de por medio.
 
-#### El resto de O4, como estaba
+#### O4a — HECHO el 5 de septiembre de 2026
+
+La pantalla existe y se probó contra el emulador de Firestore: un alta completa
+—Marisol Estrada Pineda, grupo Matutino 2026, 2 500 en efectivo— reservó la
+matrícula `PR0000001`, creó la invitación personal `INV-PRUE-A-T9V9N9MH` y
+escribió el pago en `pagos`. El mensaje de bienvenida sale ya redactado, con
+botones de copiar y de WhatsApp.
+
+| Qué | Dónde |
+|---|---|
+| El formulario | `src/components/panel/AltaDeRecepcion.jsx` |
+| La puerta del director | `src/pages/panel/Recepcion.jsx` → `/panel/recepcion` |
+| La puerta del super-admin | `src/pages/admin/academia/Recepcion.jsx` → `/admin/aca/:id/recepcion` |
+
+**Es un componente y no una página** porque lo montan las dos consolas: el
+director desde su panel y el super-admin desde la academia que esté mirando. Lo
+segundo no es un extra, es lo que exige `tests/paridadSuperAdmin.test.mjs`, y
+las reglas ya lo permitían —`esSuper()` está en el `allow` de invitaciones,
+pagos y del contador—: faltaba dónde pulsarlo.
+
+**Lo que NO trae, y sigue esperando a O4b:** la cuenta de Auth con contraseña
+temporal y el envío por API de mensajería. Hoy el botón manda un enlace de
+invitación y la persona pone su propia contraseña al entrar.
+
+**El rol `recepcion` tampoco está**, y es deliberado: la pantalla funciona desde
+el primer día con quien ya tiene permiso. Cuando se cree, entra por
+`seccionesPanel` y por un predicado propio en las reglas — ver el aviso de más
+abajo.
+
+#### El resto de O4, lo que sigue pendiente
 
 Rol nuevo `recepcion` y ruta `/recepcion`. Buscador enfocado al abrir,
 operable **sin ratón**, con el resultado y sus tres botones —Check-in, Cobrar,

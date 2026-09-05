@@ -550,7 +550,7 @@ test('las 17 lecciones del Módulo 2 nacieron con actividad', () => {
 })
 
 test('la deuda de actividades del Módulo 3 quedó en cero', () => {
-  // Los 17 ids que `docs/ESTADO-PRODUCCION-ACELERADA.md` enumeraba como deuda.
+  // Los 17 ids que `docs/archivo/ESTADO-PRODUCCION-ACELERADA.md` enumeraba como deuda.
   const DEUDA_M3 = [
     'm3-ep-sss', 'm3-ep-avdi', 'm3-ep-respiracion', 'm3-ep-circulacion',
     'm3-ep-neurologica', 'm3-ep-exploracion-dirigida', 'm3-es-abcde',
@@ -826,8 +826,8 @@ test('Módulo 4 restante: ninguna lección publica una dosis', () => {
 
 // ---------- 16. Módulo 5: la deuda de actividades ----------
 
-// Los 17 ids que `docs/RELEVO-CLAUDE-2026-08-17.md` y
-// `docs/ESTADO-PRODUCCION-ACELERADA.md` enumeraban como deuda del Módulo 5.
+// Los 17 ids que `docs/archivo/RELEVO-CLAUDE-2026-08-17.md` y
+// `docs/archivo/ESTADO-PRODUCCION-ACELERADA.md` enumeraban como deuda del Módulo 5.
 const DEUDA_M5 = [
   'm5-tt-definicion', 'm5-tt-clavicula', 'm5-tt-escapula', 'm5-tt-esofago',
   'm5-tt-hemoneumotorax', 'm5-tt-quilotorax', 'm5-tt-asfixia-traumatica',

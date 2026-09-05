@@ -5,7 +5,7 @@
 //  intoxicación por medicamentos, síndrome de abstinencia, picadura de alacrán
 //  y mordedura de araña, serpientes y abejas, y reacciones anafilácticas.
 //
-//  Pauta temática: `docs/GUIA-REDACCION-M4-RESTANTE.md`. Fuentes asignadas por
+//  Pauta temática: `docs/archivo/GUIA-REDACCION-M4-RESTANTE.md`. Fuentes asignadas por
 //  el registro para `m4-urgencias-toxicologicas`: AHA 2025 circunstancias
 //  especiales (intoxicación y anafilaxia), WHO alcohol/mhGAP, WAO anafilaxia
 //  2020, SSA ponzoñosos 2024, COFEPRIS/IPP y AHA primeros auxilios 2024; AMLS

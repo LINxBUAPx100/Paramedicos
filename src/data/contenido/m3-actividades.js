@@ -3,7 +3,7 @@
 // ------------------------------------------------------------
 //  Las 33 lecciones del Módulo 3 estaban redactadas y en revisión, pero 17 de
 //  ellas no tenían actividad. Esa deuda quedó enumerada en
-//  `docs/ESTADO-PRODUCCION-ACELERADA.md`.
+//  `docs/archivo/ESTADO-PRODUCCION-ACELERADA.md`.
 //
 //  Este archivo la resuelve SIN TOCAR nada más. Aporta únicamente el campo
 //  `actividades` de cada tema, y el punto de unión de `contenido/index.js`

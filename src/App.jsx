@@ -46,6 +46,7 @@ const TemarioPage = lazy(() => import('./pages/TemarioPage.jsx'))
 const Cuenta = lazy(() => import('./pages/Cuenta.jsx'))
 const PanelShell = lazy(() => import('./components/panel/PanelShell.jsx'))
 const PanelResumen = lazy(() => import('./pages/panel/Resumen.jsx'))
+const PanelRecepcion = lazy(() => import('./pages/panel/Recepcion.jsx'))
 const PanelMiembros = lazy(() => import('./pages/panel/Miembros.jsx'))
 const PanelGrupos = lazy(() => import('./pages/panel/Grupos.jsx'))
 const PanelInvitaciones = lazy(() => import('./pages/panel/Invitaciones.jsx'))
@@ -69,6 +70,7 @@ const AcaAlumnos = lazy(() => import('./pages/admin/academia/Alumnos.jsx'))
 const AcaGrupos = lazy(() => import('./pages/admin/academia/Grupos.jsx'))
 const AcaAccesos = lazy(() => import('./pages/admin/academia/Accesos.jsx'))
 const AcaInvitaciones = lazy(() => import('./pages/admin/academia/Invitaciones.jsx'))
+const AcaRecepcion = lazy(() => import('./pages/admin/academia/Recepcion.jsx'))
 const AcaContenido = lazy(() => import('./pages/admin/academia/Contenido.jsx'))
 const AcaRevision = lazy(() => import('./pages/admin/academia/Revision.jsx'))
 const AcaCalificaciones = lazy(() => import('./pages/admin/academia/Calificaciones.jsx'))
@@ -196,6 +198,7 @@ export default function App() {
                 datos de la academia una vez y los reparte por contexto. */}
             <Route path="/panel" element={<RutaProtegida><PanelShell /></RutaProtegida>}>
               <Route index element={<PanelResumen />} />
+              <Route path="recepcion" element={<PanelRecepcion />} />
               <Route path="miembros" element={<PanelMiembros />} />
               <Route path="grupos" element={<PanelGrupos />} />
               <Route path="invitaciones" element={<PanelInvitaciones />} />
@@ -242,6 +245,7 @@ export default function App() {
                 <Route path="alumnos" element={<AcaAlumnos />} />
                 <Route path="accesos" element={<AcaAccesos />} />
                 <Route path="invitaciones" element={<AcaInvitaciones />} />
+                <Route path="recepcion" element={<AcaRecepcion />} />
                 <Route path="ajustes" element={<AcaAjustes />} />
                 <Route path="c/:cursoId">
                   <Route index element={<AcaResumen />} />

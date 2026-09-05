@@ -2,8 +2,8 @@
 //  Módulo 5 · Actividades añadidas a lecciones ya redactadas
 // ------------------------------------------------------------
 //  De las 33 lecciones redactadas del Módulo 5, diecisiete no tenían
-//  actividad. Esa deuda quedó enumerada en `docs/ESTADO-PRODUCCION-ACELERADA.md`
-//  y en `docs/RELEVO-CLAUDE-2026-08-17.md`.
+//  actividad. Esa deuda quedó enumerada en `docs/archivo/ESTADO-PRODUCCION-ACELERADA.md`
+//  y en `docs/archivo/RELEVO-CLAUDE-2026-08-17.md`.
 //
 //  Este archivo la resuelve SIN TOCAR nada más. Aporta únicamente el campo
 //  `actividades` de cada tema, y el punto de unión de `contenido/index.js`

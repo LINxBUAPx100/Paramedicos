@@ -73,6 +73,7 @@ const EQUIVALE = {
   grupos: 'grupos',
   invitaciones: 'invitaciones',
   accesos: 'accesos',
+  recepcion: 'recepcion',  // el alta de mostrador, con el MISMO formulario
   calificaciones: 'calificaciones',
   contenido: 'contenido',
 }

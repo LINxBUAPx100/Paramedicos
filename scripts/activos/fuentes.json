@@ -6,7 +6,7 @@
     "mañana traería un archivo distinto —o ninguno— si el repositorio remoto cambia, y el",
     "catálogo de créditos quedaría afirmando una autoría que ya no corresponde al archivo.",
     "Para actualizar: cambiar `commit`, ejecutar con --dry-run, revisar el informe de hashes",
-    "y solo entonces ejecutar en firme. Ver docs/PLAN-IMAGENES-PTEM.md §Actualización."
+    "y solo entonces ejecutar en firme. Ver docs/archivo/PLAN-IMAGENES-PTEM.md §Actualización."
   ],
   "bioicons": {
     "proveedor": "bioicons",

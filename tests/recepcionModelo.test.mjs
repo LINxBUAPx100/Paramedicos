@@ -199,3 +199,51 @@ test('UN PAGO NO SE EDITA', () => {
   assert.match(hasta, /allow delete: if esSuper\(\)/, 'borrar un pago dejó de ser del super-admin')
   assert.match(hasta, /monto > 0/, 'la regla dejó de comprobar el importe')
 })
+
+// ---------- la PANTALLA (O4a, 05-09-2026) ----------
+//
+//  El modelo, la escritura y las reglas de arriba se entregaron el 2 de
+//  septiembre y se quedaron sin pantalla: existían, tenían pruebas, y no los
+//  llamaba nadie. Una capa de datos que no invoca ninguna interfaz es código
+//  muerto con buena letra, y `tests/limpieza.test.mjs` la habría marcado.
+//  Estas pruebas comprueban que la pantalla sigue enchufada.
+
+const PANTALLA = readFileSync(new URL('../src/components/panel/AltaDeRecepcion.jsx', import.meta.url), 'utf8')
+const PUERTA = readFileSync(new URL('../src/pages/panel/Recepcion.jsx', import.meta.url), 'utf8')
+const APP = readFileSync(new URL('../src/App.jsx', import.meta.url), 'utf8')
+
+test('la pantalla de recepción llama a la capa real, no a Firestore por su cuenta', () => {
+  // Toda escritura del proyecto pasa por src/lib/firebase/: es donde vive el
+  // orden de las tres escrituras del alta, y saltárselo desde un componente
+  // sería reimplementarlo mal.
+  assert.match(PANTALLA, /import\('\.\.\/\.\.\/lib\/firebase\/recepcion\.js'\)/)
+  assert.match(PANTALLA, /altaDeRecepcion\(/)
+  assert.doesNotMatch(PANTALLA, /from 'firebase\/firestore'/,
+    'la pantalla escribe en Firestore directamente, saltándose la capa')
+})
+
+test('la pantalla no inventa validaciones propias', () => {
+  // Si el formulario decidiera por su cuenta qué es un teléfono válido, habría
+  // dos reglas distintas para el mismo dato: la del navegador y la de la capa.
+  assert.match(PANTALLA, /problemasDelAlta/)
+  assert.match(PANTALLA, /problemasDelPago/)
+})
+
+test('el mensaje de bienvenida sale del modelo, no del componente', () => {
+  // El día que lo mande una API en vez de una persona, el texto tiene que ser
+  // el mismo.
+  assert.match(PANTALLA, /textoDeBienvenida/)
+  assert.match(PANTALLA, /enlaceWhatsApp/)
+})
+
+test('recepción está enrutada bajo el panel', () => {
+  assert.match(APP, /path="recepcion" element=\{<PanelRecepcion \/>\}/)
+  assert.match(APP, /const PanelRecepcion = lazy\(/, 'la pantalla dejó de cargarse bajo demanda')
+})
+
+test('recepción es del director: un profesor no la ve ni tecleando la ruta', () => {
+  // Reserva matrícula y emite invitación; las dos cosas son de dirección. En el
+  // menú lo decide `seccionesPanel`, y la propia pantalla lo vuelve a mirar
+  // porque la ruta se puede escribir a mano.
+  assert.match(PUERTA, /gestion !== 'director'/)
+})

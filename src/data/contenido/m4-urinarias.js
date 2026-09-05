@@ -4,7 +4,7 @@
 //  Unidad completa (1 semana, 5 horas), en el orden del PDF: infección de vías
 //  urinarias, urolitiasis, desequilibrio electrolítico e insuficiencia renal.
 //
-//  Pauta temática: `docs/GUIA-REDACCION-M4-RESTANTE.md`. Fuentes asignadas por
+//  Pauta temática: `docs/archivo/GUIA-REDACCION-M4-RESTANTE.md`. Fuentes asignadas por
 //  el registro para `m4-urgencias-urinarias`: IDSA cUTI 2025, EAU urolitiasis
 //  2026, UKKA hiperpotasemia 2023, NICE NG148 y KDIGO 2024; AMLS y Guyton como
 //  apoyo; requiere protocolo local.

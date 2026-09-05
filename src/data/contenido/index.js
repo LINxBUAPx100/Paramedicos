@@ -12,16 +12,17 @@
 //  Ahora la jerarquía es otra y solo tiene un escalón:
 //
 //    · PUBLICABLE  → únicamente los archivos redactados y declarados.
-//    · LEGADO      → `reutilizado.js` sigue en el repo y se exporta APARTE,
-//                    como fuente de borradores para quien reescriba un tema.
-//                    No entra en el objeto que consume el generador.
+//    · LEGADO      → `legado/reutilizado.js` sigue en el repo, fuera de
+//                    `src/`, y se exporta APARTE como fuente de borradores
+//                    para quien reescriba un tema. No entra en el objeto que
+//                    consume el generador.
 //
 //  El precio es visible y buscado: la cobertura cae de 202 temas «con algo» a
 //  los que de verdad se redactaron. Un tema sin material dice «Contenido aún
 //  no disponible», que es cierto, en vez de enseñar una mezcla que parece una
 //  lección.
 // ============================================================
-import legado from './reutilizado.js'
+import legado from '../../../legado/reutilizado.js'
 import m1 from './m1-propedeutico.js'
 import m1b from './m1-propedeutico-b.js'
 import m1c from './m1-propedeutico-c.js'
@@ -53,7 +54,7 @@ import m5abdomen from './m5-abdomen.js'
 import m5cc from './m5-craneo-columna.js'
 import m5act from './m5-actividades.js'
 // Lote A del Módulo 5: 33 lecciones nuevas (cinemática, hemorragia y shock,
-// tórax, abdomen agudo y cabeza). Ver `docs/GUIA-REDACCION-M5-LOTE-A.md`.
+// tórax, abdomen agudo y cabeza). Ver `docs/archivo/GUIA-REDACCION-M5-LOTE-A.md`.
 import m5cin from './m5-cinematica.js'
 import m5hs from './m5-hemorragia-shock.js'
 import m5tb from './m5-torax-b.js'

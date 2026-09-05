@@ -5,7 +5,7 @@
 //  neurológica dirigida, cefalea y migraña, accidente cerebrovascular, crisis
 //  convulsivas y estado epiléptico, y síncope.
 //
-//  Pauta temática: `docs/GUIA-REDACCION-M4-RESTANTE.md`. Fuentes asignadas por
+//  Pauta temática: `docs/archivo/GUIA-REDACCION-M4-RESTANTE.md`. Fuentes asignadas por
 //  el registro para `m4-urgencias-sistema-nervioso`: AHA/ASA 2026 para ictus
 //  isquémico, AHA/ASA 2022 para hemorragia intracerebral, ACEP 2019 para
 //  cefalea, ACC/AHA/HRS 2017 para síncope, WHO mhGAP 2023 y AES 2016 para

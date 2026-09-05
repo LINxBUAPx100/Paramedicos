@@ -15,7 +15,7 @@
 //  mano, y sobre todo un enlace de Drive no dice quién hizo el dibujo ni bajo
 //  qué licencia se puede publicar, así que no permitía atribuir nada.
 //
-//  Ver docs/PLAN-IMAGENES-PTEM.md y docs/INVENTARIO-ACTIVOS-MEDICOS.md.
+//  Ver docs/archivo/PLAN-IMAGENES-PTEM.md y docs/INVENTARIO-ACTIVOS-MEDICOS.md.
 // ============================================================
 import { juegoResponsivo } from '../lib/imagenLocal.js'
 

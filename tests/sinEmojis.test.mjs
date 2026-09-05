@@ -15,10 +15,9 @@
 //     🩸 (sangre) repetido en hemorragia y en hematopoyesis sin distinguirlas.
 //
 //  Alcance de la prueba: el contenido y los datos GENERADOS que la aplicación
-//  sirve, y los componentes de la interfaz. Los archivos del temario LEGADO
-//  (`fase*.js`, `extraFase*.js`, `registro.js`, `temarioOficial.js`,
-//  `reutilizado.js`) quedan fuera a propósito: están en cuarentena, no se
-//  importan desde la app y CLAUDE.md §4 prohíbe borrarlos.
+//  sirve, y los componentes de la interfaz. El temario LEGADO vive fuera de
+//  `src/`, en `legado/`, y esta prueba no lo recorre: está en cuarentena, no
+//  se importa desde la app y CLAUDE.md §4 prohíbe borrarlo.
 // ============================================================
 import test from 'node:test'
 import assert from 'node:assert/strict'
@@ -59,15 +58,11 @@ const RE_FLECHA_ICONO = new RegExp(
   'm'
 )
 
-// Archivos legados en cuarentena: no se importan desde la aplicación.
+// El temario legado ya no vive en `src/`: se archivó en `legado/`, carpeta que
+// esta prueba no recorre. Aquí solo queda la excepción que sigue dentro de src.
 const LEGADO = [
-  /^src\/data\/fase\d+\.js$/,
-  /^src\/data\/extraFase\d+\.js$/,
-  /^src\/data\/registro\.js$/,
-  /^src\/data\/temarioOficial\.js$/,
-  /^src\/data\/contenido\/reutilizado\.js$/,
-  // Registro de la propia migración: su razón de ser es CONSERVAR los emojis
-  // retirados, para poder revertir y para auditar los que estaban mal.
+  // Registro de la propia migración de iconos: su razón de ser es CONSERVAR
+  // los emojis retirados, para poder revertir y auditar los que estaban mal.
   /^src\/data\/contenido\/iconosTemas\.js$/,
 ]
 

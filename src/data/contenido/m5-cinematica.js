@@ -2,7 +2,7 @@
 //  MÓDULO 5 — Unidad «CINEMÁTICA DEL TRAUMA» (lote A)
 // ------------------------------------------------------------
 //  Los 11 temas de la unidad, en el orden del PDF. Pauta editorial:
-//  `docs/GUIA-REDACCION-M5-LOTE-A.md`.
+//  `docs/archivo/GUIA-REDACCION-M5-LOTE-A.md`.
 //
 //  IDEA QUE RECORRE LA UNIDAD ENTERA, y que la auditoría exige no perder:
 //  el mecanismo AUMENTA O REDUCE LA SOSPECHA y orienta el triaje y el destino.

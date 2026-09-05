@@ -20,7 +20,6 @@
     "seed:programas": "node scripts/seed-programas.mjs",
     "gen:plan": "node scripts/gen-plan-rescate.mjs",
     "gen:activos": "node scripts/gen-activos-ligeros.mjs",
-    "mapear:legado": "node scripts/mapear-legado.mjs",
     "inventario": "node scripts/inventario-contenido.mjs",
     "biblioteca": "node scripts/biblioteca.mjs",
     "matriz": "node scripts/matriz-decisiones.mjs",

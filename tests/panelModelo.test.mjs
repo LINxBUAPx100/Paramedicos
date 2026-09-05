@@ -18,7 +18,7 @@ const ids = (secciones) => secciones.map((s) => s.id)
 test('el director ve todo su panel; el editor depende del plan', () => {
   const pro = seccionesPanel({ rol: 'admin_escuela', capacidades: { editorContenido: true } })
   assert.deepEqual(ids(pro), [
-    'resumen', 'miembros', 'grupos', 'invitaciones', 'accesos', 'calificaciones',
+    'resumen', 'recepcion', 'miembros', 'grupos', 'invitaciones', 'accesos', 'calificaciones',
     'contenido', 'academia',
   ])
 
@@ -26,7 +26,7 @@ test('el director ve todo su panel; el editor depende del plan', () => {
   // lleve a una pantalla que le va a decir que no puede).
   const base = seccionesPanel({ rol: 'admin_escuela', capacidades: { editorContenido: false } })
   assert.deepEqual(ids(base), [
-    'resumen', 'miembros', 'grupos', 'invitaciones', 'accesos', 'calificaciones', 'academia',
+    'resumen', 'recepcion', 'miembros', 'grupos', 'invitaciones', 'accesos', 'calificaciones', 'academia',
   ])
 })
 
@@ -235,4 +235,22 @@ test('mensajeError nombra la colección cuando faltan reglas', () => {
   assert.match(mensajeError(denegado, 'No se pudo crear', 'grupos'), /colección "grupos"/)
   assert.match(mensajeError(denegado, 'No se pudo crear'), /colección "codigos"/)
   assert.equal(mensajeError(new Error('offline'), 'No se pudo crear'), 'No se pudo crear (revisa tu conexión).')
+})
+
+test('RECEPCIÓN solo la ve quien dirige la academia', () => {
+  // El alta de mostrador reserva una matrícula —el contador de la academia— y
+  // emite una invitación personal. Un profesor no hace ninguna de las dos, ni
+  // con el acceso a códigos aprobado: ese permiso le abre los códigos de
+  // academia y grupo, que no gastan numeración.
+  for (const rol of ['admin_escuela', 'superadmin']) {
+    assert.ok(ids(seccionesPanel({ rol })).includes('recepcion'), rol)
+  }
+  const profe = seccionesPanel({
+    rol: 'instructor',
+    puedeVerCodigos: true,
+    permisosEditor: { editarContenido: true },
+  })
+  assert.equal(ids(profe).includes('recepcion'), false)
+  assert.equal(ids(seccionesPanel({ rol: 'alumno' })).includes('recepcion'), false)
+  assert.equal(ids(seccionesPanel()).includes('recepcion'), false)
 })

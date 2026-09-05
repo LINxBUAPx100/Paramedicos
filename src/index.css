@@ -10147,3 +10147,157 @@ button.ph-stat:focus-visible { outline: 2px solid var(--primario); outline-offse
   letter-spacing: 0.02em;
   color: var(--texto);
 }
+
+/* ============================================================
+   RECEPCIÓN — el alta de mostrador (trabajo O4a)
+   ------------------------------------------------------------
+   Se opera de pie, a veces desde una tableta y con alguien delante. De ahí las
+   tres decisiones de esta hoja:
+
+    · los campos son GRANDES (44 px de alto): es la medida de un dedo, y aquí se
+      teclea deprisa mientras se habla con la persona que está enfrente;
+    · por debajo de 900 px todo cae a UNA columna, sin excepciones, porque el
+      formulario en dos columnas en una tableta vertical obliga a leer en zigzag;
+    · la ficha del alta terminada se pinta como una tarjeta aparte, en verde y
+      arriba del todo: es lo que se dicta en voz alta, y no puede confundirse
+      con el formulario vacío que queda debajo esperando a la siguiente persona.
+   ============================================================ */
+.rec-form { display: flex; flex-direction: column; gap: var(--e-20); }
+
+.rec-bloque {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-12);
+  padding: var(--e-16);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--bg-2);
+}
+.rec-bloque h2 {
+  display: flex;
+  align-items: center;
+  gap: var(--e-8);
+  font-family: var(--fuente-display);
+  font-size: var(--t-lg);
+}
+
+.rec-campos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--e-12);
+}
+.rec-campo { display: flex; flex-direction: column; gap: var(--e-4); }
+.rec-campo--ancho { grid-column: 1 / -1; }
+.rec-campo > input,
+.rec-campo > select {
+  min-height: 44px;
+  padding: var(--e-8) var(--e-12);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+  background: var(--bg);
+  color: var(--texto);
+  font: inherit;
+  font-size: var(--t-base);
+}
+.rec-campo > input:focus-visible,
+.rec-campo > select:focus-visible {
+  outline: 2px solid var(--primario);
+  outline-offset: 2px;
+}
+.rec-campo { font-size: var(--t-xs); font-weight: 600; color: var(--texto-2); }
+
+.rec-cobro { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-12); }
+.rec-check {
+  display: flex;
+  align-items: center;
+  gap: var(--e-8);
+  min-height: 44px;
+  font-size: var(--t-sm);
+  font-weight: 600;
+  cursor: pointer;
+}
+.rec-check input { width: 20px; height: 20px; accent-color: var(--primario); }
+
+.rec-pie { font-size: var(--t-xs); color: var(--texto-3); line-height: 1.5; }
+
+.rec-faltan {
+  padding: var(--e-12) var(--e-16);
+  border-radius: var(--radio);
+  background: var(--aviso-suave);
+  color: var(--aviso);
+  font-size: var(--t-sm);
+}
+.rec-faltan strong { display: flex; align-items: center; gap: var(--e-8); }
+.rec-faltan ul { margin: var(--e-8) 0 0; padding-left: var(--e-20); }
+.rec-faltan li { margin-top: var(--e-4); }
+
+.rec-error {
+  padding: var(--e-12) var(--e-16);
+  border-radius: var(--radio);
+  background: var(--peligro-suave);
+  color: var(--peligro);
+  font-size: var(--t-sm);
+}
+
+.rec-acciones { display: flex; flex-direction: column; gap: var(--e-8); align-items: flex-start; }
+
+/* --- la ficha del alta recién hecha --- */
+.rec-ficha {
+  display: flex;
+  flex-direction: column;
+  gap: var(--e-12);
+  margin-bottom: var(--e-24);
+  padding: var(--e-16);
+  border: 1px solid color-mix(in srgb, var(--exito) 40%, var(--borde));
+  border-radius: var(--radio);
+  background: var(--exito-suave);
+}
+.rec-ficha-cab {
+  display: flex;
+  align-items: center;
+  gap: var(--e-12);
+  flex-wrap: wrap;
+}
+.rec-ficha-cab > div { flex: 1; min-width: 220px; }
+.rec-ficha-cab h2 { font-family: var(--fuente-display); font-size: var(--t-lg); }
+.rec-ficha-cab p { margin-top: var(--e-4); font-size: var(--t-sm); color: var(--texto-2); }
+.rec-ficha-ok {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--exito-solido);
+  color: #fff;
+}
+.rec-mat {
+  font-family: var(--fuente-cifra);
+  font-weight: 700;
+  font-size: var(--t-base);
+  letter-spacing: 0.02em;
+  color: var(--texto);
+}
+
+.rec-bienvenida { display: flex; flex-wrap: wrap; align-items: center; gap: var(--e-8); }
+.rec-copiado { font-size: var(--t-xs); font-weight: 600; color: var(--exito); }
+
+/* El mensaje, tal como se va a enviar. Se enseña entero a propósito: quien lo
+   manda tiene derecho a leer lo que sale a su nombre antes de pulsar. */
+.rec-mensaje {
+  margin: 0;
+  padding: var(--e-12);
+  border-radius: var(--radio-sm);
+  background: var(--bg);
+  border: 1px solid var(--borde);
+  color: var(--texto-2);
+  font-family: var(--fuente-mono);
+  font-size: var(--t-xs);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+@media (max-width: 900px) {
+  .rec-campos { grid-template-columns: 1fr; }
+  .rec-acciones .btn { width: 100%; justify-content: center; }
+}

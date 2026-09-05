@@ -4,7 +4,7 @@
 //  El único tema que faltaba de la unidad: `m5-ta-abdomen-agudo`. Los ocho
 //  restantes ya estaban redactados y NO se tocan.
 //
-//  PRECISIÓN DE ALCANCE, indicada por `docs/GUIA-REDACCION-M5-LOTE-A.md`:
+//  PRECISIÓN DE ALCANCE, indicada por `docs/archivo/GUIA-REDACCION-M5-LOTE-A.md`:
 //  en esta unidad «abdomen agudo» significa la EMERGENCIA ABDOMINAL DE ORIGEN
 //  TRAUMÁTICO con irritación peritoneal o sangrado, no un repaso de patología
 //  médica. La apendicitis, la pancreatitis médica, la colelitiasis y la

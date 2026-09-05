@@ -6,7 +6,7 @@
 //  fisiopatología del shock. Los otros 7 temas de la unidad ya estaban
 //  redactados y no se tocan.
 //
-//  Pauta editorial: `docs/GUIA-REDACCION-M5-LOTE-A.md`.
+//  Pauta editorial: `docs/archivo/GUIA-REDACCION-M5-LOTE-A.md`.
 //
 //  DOS LÍMITES QUE LA AUDITORÍA EXIGE Y QUE ESTE ARCHIVO RESPETA:
 //

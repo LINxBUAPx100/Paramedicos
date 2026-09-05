@@ -7,7 +7,7 @@
 //  NO se tocan: este archivo aporta temas nuevos, y la fusión por campo del
 //  punto de unión respeta lo anterior.
 //
-//  Pauta editorial: `docs/GUIA-REDACCION-M5-LOTE-A.md`.
+//  Pauta editorial: `docs/archivo/GUIA-REDACCION-M5-LOTE-A.md`.
 //
 //  ACTUALIZACIÓN CLÍNICA QUE ESTE ARCHIVO INTRODUCE:
 //  en `m5-tt-neumotorax-abierto` NO se enseña el apósito oclusivo de tres
