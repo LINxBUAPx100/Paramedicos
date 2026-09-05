@@ -252,6 +252,35 @@ async function sembrar() {
       estado: 'publicado',
       version: 1,
       plantillaOrigenId: null,
+      // ESTOS DOS CAMPOS SON LO QUE HACÍA QUE EL SEMBRADO NO SIRVIERA PARA
+      // MIRAR NADA, que es para lo que existe. El resolutor pide las dos cosas
+      // y, sin ellas, se cae al índice vacío: los diez usuarios de PRUEBA y los
+      // tres de CRUZVERDE entraban a una aplicación sin temario, sin menú y sin
+      // logros. Se descubrió el 05-09-2026 al intentar ver el medallero.
+      //
+      //  · `clonacion.completa` — la pone el clonador real al terminar
+      //    (firebase/contenido.js). Aquí no hay clonación que esperar: los
+      //    temas se escriben abajo, en firme.
+      //  · `estructura` — el árbol módulo → unidad → tema. Los documentos de
+      //    `temas` son el CONTENIDO; sin este árbol nadie sabe en qué orden van
+      //    ni a qué módulo pertenecen, y `ensamblarModulos` devuelve cero.
+      //
+      // Ojo al filtro: una unidad en borrador oculta TODA su rama, así que la
+      // unidad va publicada y es cada tema el que lleva su propio estado —que
+      // es justo lo que se quiere probar con `tema-dos`.
+      clonacion: { plantillaId: null, version: 1, completa: true },
+      estructura: [{
+        id: 'mod-prueba',
+        titulo: 'Módulo de prueba',
+        subtitulo: a.nombre,
+        estado: 'publicado',
+        unidades: [{
+          id: 'uni-prueba',
+          titulo: 'Unidad de prueba',
+          estado: 'publicado',
+          temas: TEMAS.map((t) => ({ id: t.id, titulo: t.titulo, estado: t.estado })),
+        }],
+      }],
       creado: FieldValue.serverTimestamp(),
     }, { merge: true })
 
