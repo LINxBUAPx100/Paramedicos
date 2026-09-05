@@ -12,6 +12,17 @@
 > editorial y el incidente de imágenes). `CLAUDE.md` gobierna el trabajo
 > EDITORIAL —redactar el temario— y es otro proyecto: el software avanza sin él.
 >
+> **Encargado y medio entregado el 5 de septiembre de 2026:** rehacer la sección
+> de Logros con desbloqueo principal, medallas, rachas y retos entre compañeros.
+> Es el **trabajo R**, partido en dos. **R1 —desbloqueo, medallas y rachas— está
+> hecho**; **R2 —retar a un compañero— sigue pendiente** porque necesita Blaze
+> (tiempo real) y temas validados (sin banco no hay duelo).
+>
+> Ese día se encontró además que **el sembrado de usuarios de prueba nunca ha
+> servido contenido**: le faltaban `clonacion.completa` y la `estructura` del
+> curso, así que los trece usuarios de prueba entraban a una aplicación sin
+> temario, sin menú y sin logros. Arreglado en `scripts/seed-usuarios-prueba.mjs`.
+>
 > **Última actualización: 5 de septiembre de 2026** —ese día se limpió el
 > repositorio (el temario legado sale de `src/` a `legado/`, mueren los archivos
 > que no importaba nadie, los documentos cumplidos pasan a `docs/archivo/` y se
@@ -52,11 +63,12 @@
 
 ## Estado en una tabla
 
-Treinta y siete trabajos terminados y veintidós pendientes. Los tachados no se
+**Treinta y nueve trabajos terminados y veintiuno pendientes** —contados sobre
+las dos tablas de aquí abajo, el 5 de septiembre de 2026—. Los tachados no se
 vuelven a tocar salvo regresión demostrada.
 
-Cuatro de esos veinticinco entraron en el repositorio el 31 de agosto por la
-noche y **este documento no los registraba** hasta el 2 de septiembre: la
+Cuatro de los terminados entraron en el repositorio el 31 de agosto por la noche
+y **este documento no los registraba** hasta el 2 de septiembre: la
 administración por programa, los programas propios, el borrado de cursos y las
 fotografías del temario. Un plan que no cuenta lo ya hecho miente por omisión, y
 esa omisión es la que hace que alguien vuelva a construirlo.
@@ -120,6 +132,7 @@ real.
 | ~~Las cuatro cifras del hero llevan a lo que cuentan~~ | pedido el 02-09-2026 |
 | ~~**O1** — Matrícula por academia: modelo, contador y emisión desde el panel~~ | pedido el 02-09-2026 · su hueco en recepción se cerró con **O4a** |
 | ~~**O4a** — Pantalla de Recepción: el alta de mostrador de principio a fin, sin Blaze~~ | **05-09-2026** · probada contra el emulador: matrícula reservada, invitación personal y pago escritos |
+| ~~**R1** — Logros: desbloqueo principal, medallas y rachas~~ | **05-09-2026** · probado contra el emulador: leer una lección enciende la racha y concede tres medallas |
 | ~~Limpieza del repositorio: el temario legado sale de `src/`, mueren los archivos huérfanos y se archivan los documentos cumplidos~~ | **05-09-2026** · pedido al entrar alguien nuevo al proyecto |
 
 ### Pendiente, en orden de ejecución
@@ -129,6 +142,7 @@ real.
 | **F1** | Dominio propio + Firebase Hosting + `BrowserRouter` | 1-2 días | — · **cabe en Spark** · las portadas de P4 ya existen y esperan sus URLs |
 | **A** | Calidad editorial v2 | larga, por lotes | — · **P2 hecho, ya no bloquea** · **lotes 1 y 2 entregados el 02-09**: M3 evaluación (10) y M3 vía aérea (14) |
 | **B** | Mi Botiquín (inventario de videojuego) | lógica corta · media con la capa visual | lista de artículos de la academia · **comparte catálogo con M** |
+| **R2** | Retar a un compañero | 2-3 semanas | **R1** ✔ · **F2** (tiempo real) · **A** (sin temas validados no hay banco) |
 | **O2** | Bloqueo por pago + bypass auditado | 3-5 días | O1 |
 | **O3** | Check-in de 8 horas | 3-5 días | O1 |
 | **F2** | Contratar Blaze + alertas de gasto + RTDB + respaldos | 1 día | medir consumo real primero |
@@ -1746,6 +1760,229 @@ Tres cosas que este repositorio ya exige y no son negociables:
 **Hace falta de la academia:** lista de artículos por compartimento, qué módulo
 desbloquea cada uno, tipo de unidad, y para cada artículo cuya técnica sea un
 procedimiento, a qué lección enlaza.
+
+---
+
+## Trabajo R — Logros: desbloqueo, medallas, rachas y retos · R1 HECHO · R2 PENDIENTE
+
+Lo que se pidió, con esas palabras: **cambiar la sección de Logros**, añadir un
+**desbloqueo principal**, poner **medallas**, **rachas** y la capacidad de
+**retar a otros compañeros**.
+
+### Qué es Logros hoy, que no es lo que el nombre promete
+
+Conviene decirlo antes de planear encima. `/logros` es **una galería de imágenes
+y un glosario**. Se llamaba «Atlas» y se renombró porque lo que la define no es
+el tipo de material sino cómo se consigue: nada está abierto de entrada y se
+destapa conforme el profesor libera los temas.
+
+Eso significa que **el mecanismo de desbloqueo ya existe y funciona** —lo
+resuelve `useVisibilidad` contra lo que el grupo tiene liberado— y que lo que
+falta no es la puerta: es que al otro lado haya algo que se sienta ganado. Hoy
+lo que se destapa es una ilustración, y una ilustración no es un logro.
+
+**Así que R no tira nada.** La galería y el glosario se quedan donde están, como
+una de las cosas que se coleccionan. Lo que cambia es que dejan de ser la
+pantalla entera.
+
+### La pieza que no existe, y que lo condiciona todo: la fecha
+
+Una racha es «cuántos días seguidos». Para saberlo hace falta saber **qué día**
+pasó cada cosa, y ese dato **hoy no se guarda**.
+
+`progreso/{uid}` es así:
+
+| Campo | Qué guarda | ¿Lleva fecha? |
+|---|---|---|
+| `leidos` | `{ temaId: true }` | **No.** Un booleano, sin cuándo |
+| `quizzes` | `{ temaId: { aciertos, total, fecha } }` | Sí, la del último intento |
+| `examenes` | las 20 últimas, con `fecha` | Sí |
+| `updatedAt` | cuándo se guardó por última vez | Sí, pero es una sola para todo |
+
+De ahí salen dos consecuencias que hay que aceptar de entrada:
+
+1. **La racha empieza a contar el día que se despliegue R1, no antes.** No se
+   puede reconstruir hacia atrás sin inventar fechas, y una racha inventada es
+   exactamente el tipo de dato que desprestigia toda la sección. Se dice en
+   pantalla: «tu racha empezó a contarse el …».
+2. **Hay que añadir un campo, y eso toca las reglas.** La regla de `progreso`
+   usa `hasOnly(['leidos','quizzes','examenes','updatedAt'])`: un campo nuevo
+   **no se rechaza con un error visible, se rechaza en silencio** y el progreso
+   deja de sincronizarse sin que el alumno note nada. Ese fallo ya se previó ahí
+   —por eso hay un `registrar('progreso:guardar')` en el `catch`—, pero previsto
+   no es arreglado: **la regla se actualiza en el mismo commit que el campo, o
+   no se sube el campo.**
+
+Forma propuesta, pensada para no crecer sin freno:
+
+```js
+// dentro de progreso/{uid}
+actividad: {
+  '2026-09-05': 3,   // cuántas cosas hizo ese día (leer, quiz, examen)
+  '2026-09-06': 1,
+},
+racha: { actual: 2, mejor: 9, ultimoDia: '2026-09-06' },
+```
+
+Con un tope duro de días guardados (los últimos 400, un año y pico) por la misma
+razón por la que `examenes` se recorta a 20: **el cliente escribe este documento
+con debounce, y un documento de Firestore admite 1 MB.** Sin tope, la racha es
+un almacén arbitrario con otro nombre.
+
+**El día es el del alumno, no el del servidor.** Una racha que se rompe a las
+18:00 porque el servidor está en otro huso es un error que el alumno vive como
+una injusticia. Se calcula con la fecha local del dispositivo y se acepta el
+precio: alguien puede atrasar el reloj de su teléfono para no perder la racha.
+Que lo haga. El coste de blindarlo —una Function que selle la fecha— no lo vale
+para un contador de constancia.
+
+### R1 — Desbloqueo principal, medallas y rachas · HECHO el 05-09-2026
+
+Se entregó tal como estaba planeado abajo, con **tres correcciones que salieron
+al construirlo** y que valen más que el resto de esta sección:
+
+| Qué se cayó del plan | Por qué |
+|---|---|
+| Las medallas de **galería y glosario** | Destapar no lo hace el alumno: lo hace su profesor al liberar el tema. Una medalla por una acción ajena no premia a nadie, y la versión que sí depende del alumno —haber leído esos temas— **ya es** la medalla de lectura. Era la misma medalla dos veces |
+| Las medallas de **examen de módulo** | No por su coste: porque **hoy no se pueden aprobar**. El banco solo admite temas `validado` o `publicado` y hay cero. Una medalla inalcanzable es una casilla gris para siempre. Entra con el trabajo **A** |
+| Una medalla con **meta cero** | «Temario completo 0/0» llegó a verse en pantalla mientras el índice de la academia viajaba. Ahora esas medallas no se emiten |
+
+Y una regla nueva del catálogo, la cuarta: **una medalla solo puede depender de
+algo que el alumno controla.** Es la que descartó las dos primeras.
+
+**Dónde quedó:**
+
+| Qué | Dónde |
+|---|---|
+| La lógica (racha, catálogo, evaluación, desbloqueo) | `src/lib/logrosModelo.js` — puro, 35 pruebas |
+| La cabecera de la pantalla | `src/components/Medallero.jsx` |
+| El registro por día | `src/context/ProgressContext.jsx` (`actividad`, `racha`) |
+| La regla | `firestore.rules`, `match /progreso/{uid}` |
+
+**Coste: cero lecturas nuevas por carga.** Todo sale del progreso, que ya está
+en memoria, y del índice de módulos, que el shell ya tiene.
+
+**Sin índice no hay medallero, y lo dice.** `modulos` llega vacío mientras el
+índice viaja y en cualquier academia sin contenido propio —que desde **P2** es
+el estado por defecto—. Enseñar entonces medio catálogo haría saltar la cuenta
+de «0 de 8» a «0 de 15» un segundo después: la meta que se mueve que todo este
+trabajo evita. La racha sí se pinta: es del alumno, no de su academia.
+
+#### Cómo estaba planeado (se conserva por las decisiones que explica)
+
+#### El desbloqueo principal
+
+Es la cabecera de la pantalla y lo primero que se ve al entrar: **una sola cosa
+grande, la siguiente, con lo que falta para conseguirla.** No una rejilla de
+cuarenta medallas grises, que es la forma más rápida de que una sección de
+logros se lea como una lista de deberes.
+
+Qué la elige: la que esté **más cerca de completarse** entre las candidatas del
+módulo que el alumno tiene abierto. Si no hay ninguna en curso, la primera del
+módulo. Es una función pura y por tanto se prueba sin montar React, como
+`resumenAcademia` o `focoBaraja`.
+
+#### Las medallas
+
+Se derivan de datos que **ya existen**, y esa es la condición para que una
+medalla entre en el catálogo: si hace falta instrumentar la aplicación para
+concederla, no entra todavía.
+
+| De dónde sale | Medallas que permite |
+|---|---|
+| `leidos` | terminar una unidad, terminar un módulo, terminar el temario |
+| `quizzes` | un quiz perfecto; diez quizzes por encima del 80 % |
+| `intentos` (colección, con `fecha` y `porcentaje`) | aprobar un examen de módulo a la primera; los 12 exámenes aprobados |
+| `actividad` (nuevo) | 7, 30 y 100 días de racha |
+| galería y glosario (lo de hoy) | destapar todas las imágenes de un módulo; todo el glosario de un módulo |
+
+**Tres reglas del catálogo**, que son las que evitan que esto envejezca mal:
+
+- **Una medalla se concede, no se retira.** Si mañana cambia el criterio, la que
+  ya está concedida se queda. Un logro que desaparece es peor que no darlo.
+- **Nada de medallas por rapidez.** Es material clínico: premiar «terminó el
+  módulo de vía aérea en dos horas» es premiar exactamente la conducta que no se
+  quiere. Se premia constancia, cobertura y acierto.
+- **El catálogo es datos, no `if`s.** Un archivo con la lista y su condición, y
+  una función pura que la evalúa contra el progreso. Igual que `SECCIONES_PANEL`:
+  la lista se lee de un sitio y no de quince componentes.
+
+#### Dónde se calculan
+
+**En el cliente, al pintar la pantalla.** No hay documento de «medallas
+concedidas» que mantener sincronizado ni Function que las otorgue: el progreso
+ya está en memoria y la evaluación es aritmética. Lo único que se persiste es la
+racha, porque es lo único que no se puede recalcular (necesita el ayer).
+
+Eso mantiene R1 en **cero lecturas nuevas por carga**, que después de lo que
+costó bajar el temario de 288 lecturas a 3 no es un detalle menor.
+
+### R2 — Retar a un compañero · 2-3 semanas · necesita F2 y A
+
+Aquí está lo caro, y conviene verlo entero antes de empezarlo.
+
+#### Lo que hoy lo impide, en orden de dureza
+
+**1. Un alumno no puede leer el progreso de otro, y está bien así.**
+`match /progreso/{uid} { allow read: if esDueno(uid) || esSuper() }`. No es un
+descuido que haya que abrir: es el expediente de estudio de una persona. **Un
+reto no se construye leyendo el progreso ajeno.** Necesita una colección propia
+—`retos/{retoId}`— donde cada parte escribe SOLO su lado, y donde lo que se
+publica del otro es su nombre, su resultado en ese reto y nada más.
+
+> **Aviso de arquitectura, del mismo tipo que el de `esStaffDe()`.** La
+> tentación será añadir un `allow read: if mismoGrupo()` a `progreso` y
+> resolverlo en una tarde. Eso le entrega a cualquier alumno el expediente
+> completo de sus veinte compañeros —qué ha leído, qué ha fallado, cuántas veces
+> lo ha repetido— a cambio de una pantalla de duelos. No se hace.
+
+**2. El banco de preguntas de un reto está vacío hoy.** Un duelo se juega con
+preguntas, y la regla del proyecto es que **solo los temas `validado` o
+`publicado` aportan reactivos**. Ahora mismo hay **cero**. Un reto lanzado hoy o
+no tiene preguntas, o las toma de material sin firmar —y entonces un alumno le
+gana a otro con una pregunta que ningún docente avaló—. **R2 depende del trabajo
+A**, igual que los exámenes.
+
+**3. El tiempo real cuesta dinero.** Ver al rival responder en vivo es RTDB o
+Functions, y las dos son Blaze (**F2**). Hay una salida honesta y más barata que
+conviene considerar primero: el **reto asíncrono**. A lanza, contesta sus diez
+preguntas y el reto queda esperando; B lo abre cuando puede, contesta las mismas
+diez con la misma semilla, y se resuelve. Sin sockets, sin presencia, con la
+misma tensión y **sin una factura**. El duelo en vivo se puede añadir encima
+después, sin rehacer el modelo.
+
+> La semilla no es un detalle: es el mismo mecanismo que ya usa `intentos` para
+> poder regenerar el examen exacto que vio un alumno. Con ella, «las mismas diez
+> preguntas» no hay que copiarlas dentro del reto.
+
+#### Y una decisión que no es técnica
+
+**Un ranking del grupo no es lo mismo que un reto, y hace daño distinto.** El
+reto es entre dos que aceptaron; una tabla clasificatoria pone al último de la
+clase en una lista pública delante de los demás, todos los días. La propuesta es
+**retos sí, ranking público del grupo no**, y que lo que cada alumno vea de los
+demás sea únicamente lo de los retos que él mismo jugó.
+
+Si el dueño del producto quiere el ranking, se hace —es su producto—, pero se
+hace sabiendo eso y con la opción de que el profesor lo apague por grupo.
+
+### Lo que hace falta de la academia
+
+| Pregunta | Por qué bloquea |
+|---|---|
+| ¿El catálogo de medallas lo define la academia o lo propone el desarrollo? | Si es de la academia, R1 espera a la lista; si se propone, se entrega un catálogo inicial y ella lo corrige |
+| ¿Ranking del grupo, sí o no? | Cambia el modelo de datos de R2 y lo que ve cada alumno del resto |
+| ¿Un reto puede lanzarse entre grupos distintos de la misma academia? | Si sí, las reglas del reto se escriben por academia; si no, por grupo, que es más estrecho y más barato |
+
+### Lo que NO se hace
+
+- **No se toca el mecanismo de desbloqueo.** Lo que el grupo puede ver ya lo
+  decide el profesor liberando temas. Logros lo usa, no lo reinventa.
+- **No se guarda una lista de medallas concedidas** mientras se puedan derivar
+  del progreso. Un espejo que hay que mantener sincronizado se desincroniza.
+- **No se abre `progreso` a los compañeros.** Ver el aviso de arquitectura.
+- **No hay medallas por velocidad**, y ninguna medalla puede depender de un dato
+  que la aplicación todavía no registra.
 
 ---
 

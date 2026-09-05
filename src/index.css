@@ -10301,3 +10301,193 @@ button.ph-stat:focus-visible { outline: 2px solid var(--primario); outline-offse
   .rec-campos { grid-template-columns: 1fr; }
   .rec-acciones .btn { width: 100%; justify-content: center; }
 }
+
+/* ============================================================
+   MEDALLERO — la cabecera de Logros (trabajo R1)
+   ------------------------------------------------------------
+   Racha y próximo desbloqueo en una banda de dos columnas que cae a una por
+   debajo de 900 px; el medallero, debajo, en rejilla automática.
+
+   Una decisión que no es estética: la medalla NO CONSEGUIDA se pinta atenuada
+   pero LEGIBLE, con su barra y su cuenta. La tentación es dejarla en gris
+   ilegible «para que se note que falta», y eso convierte la pantalla en una
+   lista de deberes: quien no lleva ninguna no ve nada que quiera conseguir,
+   solo un muro de casillas apagadas.
+   ============================================================ */
+.medallero { margin-bottom: var(--e-40); }
+
+.medallero-cabecera {
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) minmax(300px, 1.6fr);
+  gap: var(--e-16);
+  margin-bottom: var(--e-32);
+}
+
+/* --- la racha --- */
+.mdl-racha {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--e-12);
+  padding: var(--e-16);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--bg-2);
+}
+.mdl-racha-ico {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--bg-3);
+  color: var(--texto-3);
+}
+/* La racha viva se enciende. Es el único acento fuerte de la pantalla: si todo
+   destaca, no destaca nada. */
+.mdl-racha--viva .mdl-racha-ico {
+  background: color-mix(in srgb, var(--ambar) 22%, transparent);
+  color: var(--ambar);
+}
+.mdl-racha-n {
+  display: block;
+  font-family: var(--fuente-cifra);
+  font-size: var(--t-2xl);
+  line-height: 1.1;
+  color: var(--texto);
+}
+.mdl-racha-n span { font-family: var(--fuente-cuerpo); font-size: var(--t-md); font-weight: 600; }
+.mdl-racha-txt { margin-top: var(--e-4); font-size: var(--t-sm); color: var(--texto-2); }
+.mdl-racha-nota { margin-top: var(--e-8); font-size: var(--t-xs); color: var(--texto-3); line-height: 1.5; }
+
+/* --- el próximo desbloqueo --- */
+.mdl-siguiente {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--e-16);
+  padding: var(--e-16) var(--e-20);
+  border: 1px solid color-mix(in srgb, var(--primario) 35%, var(--borde));
+  border-radius: var(--radio);
+  background: color-mix(in srgb, var(--primario) 7%, var(--bg-2));
+}
+.mdl-siguiente-cuerpo { flex: 1; min-width: 0; }
+.mdl-siguiente-ico {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  flex: none;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--primario) 18%, transparent);
+  color: var(--primario);
+}
+.mdl-siguiente-eti {
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--primario);
+}
+.mdl-siguiente h2 { margin-top: var(--e-2); font-size: var(--t-xl); color: var(--texto); }
+.mdl-siguiente-pista { margin-top: var(--e-4); font-size: var(--t-sm); color: var(--texto-2); }
+.mdl-siguiente-falta { margin-top: var(--e-8); font-size: var(--t-xs); color: var(--texto-3); }
+.mdl-siguiente--fin { align-items: center; }
+.mdl-siguiente--fin h2 { font-size: var(--t-lg); }
+.mdl-siguiente--fin p { font-size: var(--t-sm); color: var(--texto-2); }
+
+/* --- el medallero --- */
+.mdl-titulo {
+  display: flex;
+  align-items: baseline;
+  gap: var(--e-12);
+  margin-bottom: var(--e-16);
+  font-family: var(--fuente-display);
+  font-size: var(--t-lg);
+}
+.mdl-cuenta {
+  font-family: var(--fuente-cifra);
+  font-size: var(--t-sm);
+  font-weight: 700;
+  color: var(--texto-3);
+}
+.mdl-rejilla {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--e-12);
+}
+.mdl-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--e-12);
+  padding: var(--e-12) var(--e-16);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  background: var(--bg-2);
+}
+.mdl-card-cuerpo { flex: 1; min-width: 0; }
+.mdl-card h3 { font-family: var(--fuente-display); font-size: var(--t-base); color: var(--texto); }
+.mdl-card p { margin-top: var(--e-2); font-size: var(--t-xs); color: var(--texto-2); line-height: 1.5; }
+.mdl-card-ico {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--bg-3);
+  color: var(--texto-3);
+}
+.mdl-card--ok {
+  border-color: color-mix(in srgb, var(--exito) 40%, var(--borde));
+  background: var(--exito-suave);
+}
+.mdl-card--ok .mdl-card-ico { background: var(--exito-solido); color: #fff; }
+.mdl-card-ok-txt {
+  display: flex;
+  align-items: center;
+  gap: var(--e-4);
+  margin-top: var(--e-8);
+  font-size: var(--t-xs);
+  font-weight: 700;
+  color: var(--exito);
+}
+
+/* --- la barra de progreso --- */
+.mdl-barra { display: flex; align-items: center; gap: var(--e-8); margin-top: var(--e-8); }
+.mdl-barra-pista {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--bg-3);
+  overflow: hidden;
+}
+.mdl-barra--grande .mdl-barra-pista { height: 10px; }
+.mdl-barra-relleno {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: var(--primario);
+  transition: width var(--dur-media) var(--ease-out);
+}
+.mdl-barra-cifra {
+  font-family: var(--fuente-cifra);
+  font-size: var(--t-xs);
+  font-weight: 700;
+  color: var(--texto-3);
+}
+
+/* Encabezado de las secciones de /logros, para que la galería se distinga del
+   medallero ahora que comparten pantalla. */
+.logros-seccion-h2 {
+  display: flex;
+  align-items: center;
+  gap: var(--e-8);
+  margin-bottom: var(--e-16);
+  font-family: var(--fuente-display);
+  font-size: var(--t-lg);
+}
+
+@media (max-width: 900px) {
+  .medallero-cabecera { grid-template-columns: 1fr; }
+}

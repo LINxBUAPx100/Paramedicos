@@ -168,6 +168,11 @@ const progresoValido = () => ({
   leidos: { 't-1': true, 't-2': true },
   quizzes: { 't-1': { aciertos: 8, total: 10, fecha: 1 } },
   examenes: [{ aciertos: 40, total: 50, fecha: 1 }],
+  // Trabajo R1: el registro por día del que sale la racha. Si esta prueba deja
+  // de pasar tras tocar la regla, la aplicación estará escribiendo un documento
+  // que Firestore rechaza en silencio (ver el aviso en firestore.rules).
+  actividad: { '2026-09-04': 1, '2026-09-05': 3 },
+  racha: { actual: 2, mejor: 9, ultimoDia: '2026-09-05' },
   updatedAt: new Date(),
 })
 
@@ -200,6 +205,35 @@ test('progreso: se rechaza un historial de exámenes por encima del tope', { ski
   const examenes = Array.from({ length: 21 }, (_, i) => ({ aciertos: i, total: 50, fecha: 1 }))
   await assertFails(
     setDoc(doc(como('alumProgreso'), 'progreso/alumProgreso'), { ...progresoValido(), examenes })
+  )
+})
+
+test('progreso: se rechaza un historial de días por encima del tope', { skip }, async () => {
+  await preparar()
+  const { doc, setDoc } = fsmod
+  const { assertFails } = rut
+  // El tope de la app son 400 días (DIAS_GUARDADOS) y la regla deja 420 de
+  // holgura por si el recorte del cliente y el corte de medianoche se cruzan.
+  // Sin tope, este mapa es un almacén arbitrario dentro de un documento que el
+  // cliente escribe con debounce y que Firestore corta en 1 MB.
+  const actividad = {}
+  for (let i = 0; i < 500; i += 1) actividad[`d${i}`] = 1
+  await assertFails(
+    setDoc(doc(como('alumProgreso'), 'progreso/alumProgreso'), { ...progresoValido(), actividad })
+  )
+})
+
+test('progreso: la racha no admite campos inventados', { skip }, async () => {
+  await preparar()
+  const { doc, setDoc } = fsmod
+  const { assertFails } = rut
+  // Sin el `hasOnly` de dentro, `racha` sería el hueco por el que vuelve el
+  // almacenamiento arbitrario que la validación de este documento cerró.
+  await assertFails(
+    setDoc(doc(como('alumProgreso'), 'progreso/alumProgreso'), {
+      ...progresoValido(),
+      racha: { actual: 2, mejor: 9, ultimoDia: '2026-09-05', relleno: 'x'.repeat(2000) },
+    })
   )
 })
 

@@ -6,6 +6,7 @@ import Reveal from '../components/Reveal.jsx'
 import { ATLAS_TEMAS } from '../data/imagenes.js'
 import { galeriaDesdeAgregado } from '../lib/agregadosModelo.js'
 import Glosario from '../components/Glosario.jsx'
+import Medallero from '../components/Medallero.jsx'
 import {
   useApiContenido, useCargaDeAgregado, CargandoContenido, ErrorContenido,
 } from '../context/ContenidoContext.jsx'
@@ -62,9 +63,9 @@ export default function LogrosPage() {
       <header className="atlas-header">
         <h1 className="ph-h2"><Icon name="estrella" size={28} /> Logros</h1>
         <p>
-          Lo que vas descubriendo del temario: las imágenes de los sistemas del cuerpo y, al final,
-          el glosario con cada palabra que el temario define. Lo que tu profesor todavía no libera
-          aparece bloqueado.
+          Lo que llevas ganado y lo que vas descubriendo del temario: tus medallas y tu racha,
+          después las imágenes de los sistemas del cuerpo y, al final, el glosario con cada palabra
+          que el temario define. Lo que tu profesor todavía no libera aparece bloqueado.
         </p>
         {/* La app usa HashRouter, así que un href="#glosario" NO baja a la
             sección: el router lee ese fragmento como una RUTA y se lleva la
@@ -80,6 +81,15 @@ export default function LogrosPage() {
           <Icon name="libro" size={16} /> Ir al glosario
         </button>
       </header>
+
+      {/* Medallas y racha (R1). Van ANTES de la galería y no esperan por ella:
+          se calculan con el progreso, que ya está en memoria, mientras los dos
+          agregados de imágenes siguen viajando. */}
+      <Medallero />
+
+      <h2 className="logros-seccion-h2">
+        <Icon name="atlas" size={20} /> Galería del temario
+      </h2>
       {cargandoGaleria && <CargandoContenido />}
 
       <div className="atlas-grid">

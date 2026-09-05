@@ -837,19 +837,35 @@ service cloud.firestore {
     match /progreso/{uid} {
       allow read: if esDueno(uid) || esSuper();
       // El progreso solo lo escribe su dueño, y SOLO con la forma que produce
-      // ProgressContext (leidos/quizzes/examenes/updatedAt). Antes esto era un
-      // `write` sin validar: un doc de Firestore admite 1 MB y aquí escribe el
-      // cliente con debounce, así que cualquier autenticado podía usar su
-      // propio progreso como almacenamiento arbitrario. Los topes espejan la
-      // app: `examenes` se recorta a 20 en ProgressContext.registrarExamen, y
-      // `leidos`/`quizzes` van indexados por temaId (el temario no llega a 500).
+      // ProgressContext (leidos/quizzes/examenes/actividad/racha/updatedAt).
+      // Antes esto era un `write` sin validar: un doc de Firestore admite 1 MB y
+      // aquí escribe el cliente con debounce, así que cualquier autenticado
+      // podía usar su propio progreso como almacenamiento arbitrario. Los topes
+      // espejan la app: `examenes` se recorta a 20 en
+      // ProgressContext.registrarExamen, `leidos`/`quizzes` van indexados por
+      // temaId (el temario no llega a 500) y `actividad` se poda a
+      // DIAS_GUARDADOS en lib/logrosModelo.js.
       //   OJO: `tema` (claro/oscuro) es preferencia del DISPOSITIVO y nunca se
       //   sincroniza, por eso no está en la lista.
+      //
+      // AVISO PARA QUIEN AÑADA UN CAMPO (trabajo R1, 05-09-2026): este
+      // `hasOnly` no falla de forma visible. Si la aplicación empieza a mandar
+      // una clave que no está aquí, la escritura se rechaza, el progreso deja de
+      // sincronizarse y el alumno NO NOTA NADA porque el local sigue
+      // funcionando. Solo se ve en el registro de errores
+      // (`registrar('progreso:guardar')`). La regla se actualiza en el MISMO
+      // commit que el campo, o no se sube el campo.
       allow create, update: if esDueno(uid)
-        && request.resource.data.keys().hasOnly(['leidos', 'quizzes', 'examenes', 'updatedAt'])
+        && request.resource.data.keys().hasOnly(
+             ['leidos', 'quizzes', 'examenes', 'actividad', 'racha', 'updatedAt'])
         && request.resource.data.get('leidos', {}).keys().size() <= 500
         && request.resource.data.get('quizzes', {}).keys().size() <= 500
-        && request.resource.data.get('examenes', []).size() <= 20;
+        && request.resource.data.get('examenes', []).size() <= 20
+        // 400 días es el tope de DIAS_GUARDADOS; se deja holgura por si el
+        // recorte del cliente y el corte de medianoche se cruzan.
+        && request.resource.data.get('actividad', {}).keys().size() <= 420
+        && request.resource.data.get('racha', {}).keys().hasOnly(
+             ['actual', 'mejor', 'ultimoDia']);
       // Borrado: su dueño, o el super-admin al eliminar la cuenta
       // (admin.js:eliminarUsuario). En un `delete` no hay request.resource, por
       // eso va aparte de la validación de forma de arriba.
