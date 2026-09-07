@@ -83,6 +83,7 @@ function pista(valor) {
 //    wsrv.nl                   → proxy de imágenes externas (lib/img.js).
 //    firebasestorage           → descargables subidos por cada academia.
 //    *.googleapis.com          → Firestore, Identity Toolkit, Secure Token.
+//    cdn.jsdelivr.net          → Three.js y geometría versionada del atlas 3D.
 //    apis.google.com           → gapi: lo carga signInWithPopup ANTES de abrir
 //                                la ventana, para montar el iframe de Auth. Va
 //                                en script-src y en frame-src, y no depende de
@@ -114,14 +115,15 @@ function construirCSP({ conAppCheck }) {
   //
   // Si algún día se quita el botón de Google, esto se puede cerrar otra vez.
   const scriptGoogle = ' https://apis.google.com'
+  const scriptAtlas = ' https://cdn.jsdelivr.net'
   const frameGoogle = ' https://apis.google.com'
   return [
     "default-src 'self'",
-    `script-src 'self'${scriptGoogle}${scriptExtra}`,
+    `script-src 'self'${scriptGoogle}${scriptAtlas}${scriptExtra}`,
     "style-src 'self' 'unsafe-inline'",
     "font-src 'self'",
     "img-src 'self' data: blob: https://lh3.googleusercontent.com https://*.googleusercontent.com https://wsrv.nl https://firebasestorage.googleapis.com",
-    "connect-src 'self' https://*.googleapis.com wss://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com",
+    "connect-src 'self' https://*.googleapis.com wss://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://cdn.jsdelivr.net",
     `frame-src https://ptem-a304f.firebaseapp.com https://accounts.google.com${frameGoogle}${frameExtra}`,
     "base-uri 'none'",
     "object-src 'none'",
