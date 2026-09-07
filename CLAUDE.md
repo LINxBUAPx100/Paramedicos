@@ -32,29 +32,46 @@ Estado comprobado con `npm run inventario` el 2 de septiembre de 2026:
 - Los 14 nodos de evaluación tienen su `alcanceDeExamen` cableado.
 - El corpus heredado quedó archivado y fuera del contenido que recibe el alumno.
 - Las 58 lecciones redactadas del Módulo 4 tienen actividad; su deuda pedagógica es cero.
-- Pasan 1 045 pruebas y el último build de producción verificado, pero eso **no equivale a validación académica**.
+- Pasan **1 202 pruebas** y el último build de producción verificado (07-09-2026), pero eso **no equivale a validación académica**.
 
-**Lo que queda editorialmente NO es escribir lecciones: es el trabajo A**, la
-pasada de calidad módulo por módulo descrita en `docs/PLAN-TECNICO-FASES.md` y
-en `PLAN-LMS.md` §25. Orden acordado: M3 y M5 primero —vía aérea, soporte vital
-y trauma, el material de más riesgo—, luego M4, M6, M2 y M1. A cada lección se
-le añaden, **derivadas de su propia prosa y sin un solo dato clínico nuevo**,
-tabla comparativa o algoritmo, mnemotecnia, «Lo que más se pregunta», «Errores
-frecuentes», «Repaso rápido» y «Preguntas de repaso oral».
+**El trabajo A —la pasada de calidad v2— TERMINÓ el 7 de septiembre de 2026.**
+Las **268 lecciones con material** tienen el molde v2: «Errores frecuentes»,
+«Repaso rápido» y «Preguntas de repaso oral» como secciones propias, más una
+mnemotecnia y un «Lo que más se pregunta» dentro de las secciones que ya
+existían. Todo ello **derivado de la prosa que cada lección ya tenía y ya
+citaba, sin un solo dato clínico nuevo**. Se hizo módulo por módulo en el orden
+acordado —M3, M5, M4, M6, M2, M1— entre el 02 y el 07-09-2026, y el detalle por
+lote está en `docs/PLAN-TECNICO-FASES.md` §«Trabajo A».
 
-Hecho el 02-09-2026: la unidad de **evaluación primaria y secundaria del Módulo
-3** (10 lecciones, `m3-ep-*` y `m3-es-*`). Los helpers del molde v2 están al
-principio de `src/data/contenido/m3-evaluacion.js` y se reutilizan tal cual en
-los lotes siguientes.
+> **NO REABRAS LA PASADA.** Si una sesión nueva empieza a añadir mnemotecnias o
+> repasos, está reescribiendo lo que ya está hecho, que es exactamente el daño
+> que este mandato existe para evitar. Solo se toca una lección ante un hallazgo
+> concreto o una regresión demostrada por una prueba.
 
-Para el relevo inmediato, el trabajo es el **trabajo A** descrito en `docs/PLAN-TECNICO-FASES.md` §«Trabajo A»: la pasada de calidad, lote a lote. Las guías y prompts de los lotes de redacción —M4 restante, M5 lote A, relevos de agosto— **están cumplidos y archivados en `docs/archivo/`**: son antecedentes, no instrucciones. Consúltalos solo ante una discrepancia concreta. **No vuelvas a redactar, resumir ni reorganizar las lecciones del Módulo 4 ni las del lote A del Módulo 5.**
+Lo añadido, contado sobre el temario terminado: **803 secciones nuevas**, 1 071
+`callout` de error, 3 194 viñetas de repaso, 2 139 preguntas orales, 261
+mnemotecnias y 263 «lo que más se pregunta». Las dos últimas no llegan a 268
+porque unas pocas lecciones ya traían la pieza equivalente en su propia prosa.
+
+Un defecto real que encontró la pasada: **33 lecciones de M5** tenían su bloque
+`fuentes` colgando de la última sección de contenido en vez de en una sección
+«Fuentes» propia. Se corrigió en las 33 y quedó cerrado con una prueba que
+recorre el temario COMPLETO, no solo las unidades registradas.
+
+Los helpers del molde v2 ya NO están en `m3-evaluacion.js`: viven en
+`src/data/contenido/moldeV2.js` y se importan desde ahí. La prueba que impide
+que las piezas desaparezcan y que vigila que no se cuele una cifra nueva es
+`tests/moldeV2Lotes.test.mjs`, cuyo mapa `UNIDADES` cubre ya el temario entero;
+si algún día se añade una lección, se añade a su unidad ahí.
+
+Para el relevo inmediato **no queda trabajo editorial vivo**: el trabajo A está terminado y el temario espera revisión docente. Lo que sigue no es redacción, es validación: la academia decide qué temas pasan a `validado` o `publicado`, y esa decisión no la toma Claude. Si te piden avanzar en el proyecto, el trabajo vivo es TÉCNICO y está en `docs/PLAN-TECNICO-FASES.md` §«Pendiente, en orden de ejecución». Las guías y prompts de los lotes de redacción —M4 restante, M5 lote A, relevos de agosto— **están cumplidos y archivados en `docs/archivo/`**: son antecedentes, no instrucciones. Consúltalos solo ante una discrepancia concreta. **No vuelvas a redactar, resumir ni reorganizar ninguna lección**, y en particular no las del Módulo 4 ni las del lote A del Módulo 5.
 
 Antes de redactar nuevos temas debes verificar y preservar estos cuatro controles surgidos de la segunda auditoría. En el estado comprobado actual ya tienen pruebas de regresión; no rehagas la solución si sigue cumpliéndose:
 
 1. Los bancos de examen usan únicamente temas `validado` o `publicado`; `borrador` y `en_revision` quedan fuera.
 2. OVACE pediátrica cita AHA/AAP *Pediatric Basic Life Support 2025* y distingue lactante, niño y pérdida de respuesta.
 3. El tema médico-legal usa instrumentos jurídicos y sanitarios específicos, no solo NOM-034, y declara lo que depende del ámbito local.
-4. Inventario, generador y contenido servido cuentan lecciones con material estudiable, no IDs declarados ni nodos de evaluación. La cifra actual comprobada con `npm run inventario` el 05-09-2026 es **268**.
+4. Inventario, generador y contenido servido cuentan lecciones con material estudiable, no IDs declarados ni nodos de evaluación. La cifra actual comprobada con `npm run inventario` el 07-09-2026 es **268**.
 
 Además, conserva los dos controles bibliográficos añadidos durante la auditoría de trauma: ningún tema puede citar como fuente la portada comercial de PHTLS y toda cita de PHTLS debe declarar edición, capítulo y página. La biblioteca aportada por el usuario ya contiene una copia identificada y consultable de PHTLS 9; por ello, Claude debe localizar las páginas reales en esa copia y dejar una deuda solo cuando una búsqueda concreta no permita comprobarlas. La copia de PHTLS 10 declara traducción automática y no es citable.
 
@@ -64,11 +81,11 @@ Si alguno regresó, corrígelo primero. Después continúa la reconstrucción ed
 
 > **Esta cuota cambió de objeto el 5 de septiembre de 2026.** Decía «15 lecciones nuevas por ejecución» porque quedaban más de cien temas por escribir. Ya no quedan: el inventario mide 268 lecciones con material y los 19 temas sin material son 14 nodos de evaluación y 5 bloqueos. Pedir lecciones nuevas hoy solo consigue que se reescriba lo que ya está hecho, que es exactamente el daño que este mandato existe para evitar.
 
-La prioridad sigue siendo **producir, no planear**. Cada ejecución debe completar **un lote entero del trabajo A —entre 5 y 15 lecciones de una misma unidad—** o un módulo académico completo si contiene menos, salvo bloqueo externo demostrado. Si una lección se bloquea, registra la pregunta concreta y continúa con la siguiente. No detengas una ejecución para entregar solo inventarios, investigación, pruebas o infraestructura.
+La prioridad sigue siendo **producir, no planear**, pero **esta cuota quedó cumplida el 7 de septiembre de 2026**: el trabajo A terminó y no hay más lotes editoriales que entregar. Mientras el temario espere revisión docente, una ejecución no debe producir lecciones ni piezas del molde: debe atender lo que el usuario pida, y si es trabajo técnico, seguir `docs/PLAN-TECNICO-FASES.md`. Si en el futuro la academia autoriza contenido nuevo —el Módulo 7, un curso de especialización—, esta cuota vuelve a aplicarse con su regla original: un lote entero de una misma unidad por ejecución, entre 5 y 15 lecciones, salvo bloqueo externo demostrado. Si una lección se bloquea, registra la pregunta concreta y continúa con la siguiente.
 
 Al menos 90 % del trabajo nuevo debe reflejarse en lecciones mejoradas e integradas en los archivos que consume la aplicación. Al terminar, informa de forma visible: lecciones tocadas, IDs terminados y cifras del inventario antes/después. Las pruebas y el build son controles de calidad, no el producto principal.
 
-Lotes ya entregados, que **no se reabren** salvo hallazgo concreto: las 58 lecciones del Módulo 4 con sus actividades; las 33 lecciones existentes del Módulo 5 con sus actividades; las 33 lecciones nuevas del Módulo 5 (lote A); y, del trabajo A, la evaluación primaria y secundaria del Módulo 3 (10 lecciones) y la vía aérea del Módulo 3 (14 lecciones).
+Lotes ya entregados, que **no se reabren** salvo hallazgo concreto: las 58 lecciones del Módulo 4 con sus actividades; las 33 lecciones existentes del Módulo 5 con sus actividades; las 33 lecciones nuevas del Módulo 5 (lote A); y, del trabajo A, **el temario completo**: las 268 lecciones con material tienen el molde v2 —M5 (99), M4 (58), M6 (41), M3 (33), M1 (20) y M2 (17)—, cerrado el 07-09-2026.
 
 Toda lección, nueva o ya redactada, debe incluir por lo menos una actividad de aprendizaje significativa y derivada de su propio contenido. No se exige una actividad motriz donde no corresponda: puede ser secuenciación clínica, completar relaciones causales, análisis de un caso breve, clasificación, interpretación o preguntas de aplicación. No sirven como actividad repetir el quiz, ordenar elementos arbitrariamente o pedir información que la lección no enseña.
 
@@ -579,7 +596,7 @@ No declares el proyecto terminado mientras quede contenido heredado visible como
 
 Cuando el usuario te pida iniciar la remediación, interpreta la tarea así:
 
-> Lee `CLAUDE.md` entero y el apartado «Trabajo A» de `docs/PLAN-TECNICO-FASES.md`. **No redactes lecciones nuevas: no queda ninguna.** El inventario mide 268 lecciones con material y 19 nodos sin material que son 14 evaluaciones y 5 bloqueos; confirma esa línea base con `npm run inventario` y corrige únicamente una regresión demostrada. Después elige el siguiente lote de la pasada de calidad —entre 5 y 15 lecciones de una misma unidad, en el orden M3, M5, M4, M6, M2, M1— y añade a cada lección, **derivadas de su propia prosa y sin un solo dato clínico nuevo**, tabla comparativa o algoritmo, mnemotecnia, «Lo que más se pregunta», «Errores frecuentes», «Repaso rápido» y «Preguntas de repaso oral». Los helpers del molde v2 están al principio de `src/data/contenido/m3-evaluacion.js`. Ejecuta generación, pruebas, build, inventario y matriz una vez al final. Mantén `borrador` o `en_revision`; no valides, publiques, despliegues, escribas en Firebase, hagas commits ni borres el legado.
+> Lee `CLAUDE.md` entero y el apartado «Trabajo A» de `docs/PLAN-TECNICO-FASES.md`. **No redactes lecciones nuevas y no vuelvas a aplicar el molde v2: las dos cosas están terminadas.** El inventario mide 268 lecciones con material y 19 nodos sin material que son 14 evaluaciones y 5 bloqueos, y las 268 ya tienen el molde v2 —«Errores frecuentes», «Repaso rápido», «Preguntas de repaso oral», mnemotecnia y «Lo que más se pregunta»—. Confirma esa línea base con `npm run inventario` y con `node --test tests/moldeV2Lotes.test.mjs`, cuyo mapa `UNIDADES` cubre el temario entero. A partir de ahí **corrige únicamente una regresión demostrada por una prueba o un hallazgo concreto**, en la lección concreta que lo tenga, y no de nuevo módulo por módulo. Si el usuario quiere avanzar el proyecto, el trabajo vivo es técnico: `docs/PLAN-TECNICO-FASES.md` §«Pendiente, en orden de ejecución». Ejecuta generación, pruebas, build, inventario y matriz una vez al final. Mantén `borrador` o `en_revision`; no valides, publiques, despliegues, escribas en Firebase, hagas commits ni borres el legado.
 
 ## 16. Condición de terminación
 

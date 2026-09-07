@@ -109,5 +109,5 @@ export const demoPortada = {
       ]
     }
   ],
-  "seccionesRestantes": 3
+  "seccionesRestantes": 6
 }

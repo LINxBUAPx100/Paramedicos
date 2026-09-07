@@ -22,7 +22,17 @@
 //  un aparato que no existe en la unidad.
 //
 //  Nada de este archivo procede de `reutilizado.js`.
+//
+//  PASADA DE CALIDAD (trabajo A, lote 3 · 06-09-2026). Las cuatro lecciones
+//  recibieron el molde v2. Esta es la unidad donde la regla de «ni un dato
+//  clínico nuevo» más importa: el archivo declara que NO publica julios,
+//  frecuencias de estimulación ni intensidades de captura, y un «repaso
+//  rápido» es exactamente el sitio donde una cifra así se colaría sin que
+//  nadie la echara de menos.
 // ============================================================
+import {
+  erroresFrecuentes, repasoRapido, preguntasOrales, mnemotecnia, masPreguntado,
+} from './moldeV2.js'
 
 const HOY = '2026-08-16'
 
@@ -132,6 +142,7 @@ export default {
             ],
           },
           { tipo: 'callout', variante: 'alerta', titulo: 'La distinción que ordena toda la unidad', texto: 'Un trazo puede verse organizado y el paciente no tener pulso. La actividad eléctrica sin pulso existe precisamente por eso. La consecuencia práctica es absoluta y no admite matiz: la decisión de tratar nace de la exploración del paciente, y el monitor solo aporta el dato eléctrico.' },
+          masPreguntado('Lo más preguntado no es el nombre de las ondas: es que el trazo mide actividad eléctrica y no contracción, y que por eso un trazo organizado puede convivir con un paciente sin pulso. La segunda pregunta habitual es qué hacer ante una asistolia en pantalla con un paciente que conversa.'),
         ],
       },
       {
@@ -149,6 +160,7 @@ export default {
               '¿El complejo QRS es estrecho o ancho?',
             ],
           },
+          mnemotecnia('¿HAY? ¿CUÁNTO? ¿REGULAR? ¿HAY P? ¿ANCHO? Son las cinco preguntas y siempre en ese orden: actividad eléctrica, frecuencia, regularidad, ondas P y su relación con los complejos, anchura del QRS. El orden fijo es lo que impide reconocer una imagen de memoria y saltarse la comprobación.'),
           { tipo: 'p', texto: 'Estas cinco preguntas no producen un diagnóstico electrocardiográfico completo, y no pretenden hacerlo: producen la clasificación operativa que el ámbito prehospitalario necesita para decidir. El diagnóstico fino, con las doce derivaciones y su interpretación, corresponde al Módulo 4.' },
           { tipo: 'callout', variante: 'clinico', titulo: 'Calibración antes de medir', texto: 'Toda medición sobre el papel o la pantalla depende de la velocidad de barrido y de la amplitud configuradas en el equipo. La convención estándar es 25 mm por segundo y 10 mm por milivoltio, pero es un ajuste que puede cambiarse: se verifica en el propio monitor antes de medir nada, porque un trazo registrado a otra velocidad da frecuencias falsas.' },
         ],
@@ -172,6 +184,36 @@ export default {
           { tipo: 'callout', variante: 'alerta', titulo: 'La regla que resuelve la duda', texto: 'Ante un trazo que no encaja con lo que se ve en el paciente, se comprueba primero al paciente y después el equipo: contacto de electrodos, cables y derivación seleccionada. Una asistolia en pantalla con un paciente que conversa es un electrodo suelto, no un paro.' },
         ],
       },
+      erroresFrecuentes([
+        ['Tratar la pantalla en lugar del paciente', 'El monitor aporta el dato eléctrico; la decisión de tratar nace de la exploración. Un trazo organizado puede convivir con la ausencia de pulso, y eso es precisamente la actividad eléctrica sin pulso.'],
+        ['Reconocer la imagen y saltarse el orden', 'Es el error habitual del principiante. Las preguntas se hacen siempre en la misma secuencia, empezando por comprobar si hay actividad eléctrica.'],
+        ['Medir sin verificar la calibración', 'La correspondencia entre milímetros y tiempo depende de la velocidad de barrido y de la amplitud configuradas en el equipo, y son ajustes que pueden cambiarse. Un trazo registrado a otra velocidad da frecuencias falsas.'],
+        ['Interpretar un artefacto como ritmo', 'Se corrige la causa antes de interpretar: no se aumenta la ganancia ni se asume un ritmo. Y ante un trazo que no encaja con el paciente, primero se comprueba al paciente y después el equipo.'],
+      ]),
+      repasoRapido([
+        'El electrocardiograma registra diferencias de potencial: mide actividad eléctrica, no contracción, flujo ni presión.',
+        'Onda P, despolarización auricular; complejo QRS, despolarización ventricular; onda T, repolarización ventricular.',
+        'El intervalo PR va del inicio de la despolarización auricular al inicio de la ventricular.',
+        'Línea isoeléctrica: sin diferencia de potencial registrable.',
+        'Un trazo organizado no garantiza pulso: la decisión de tratar nace del paciente.',
+        'La lectura sigue cinco preguntas fijas: actividad, frecuencia, regularidad, ondas P y su relación, anchura del QRS.',
+        'Esas preguntas dan una clasificación operativa, no un diagnóstico electrocardiográfico completo.',
+        'La calibración se verifica en el propio monitor antes de medir, porque es un ajuste que puede cambiarse.',
+        'Los artefactos vienen de movimiento, temblor muscular, electrodo despegado o seco, interferencia eléctrica y compresiones torácicas.',
+        'Durante las compresiones el trazo se interpreta solo en la pausa de análisis.',
+        'Ante un trazo que no encaja con el paciente: primero el paciente, después el equipo.',
+        'El diagnóstico con las doce derivaciones corresponde al Módulo 4.',
+      ]),
+      preguntasOrales([
+        '¿Qué mide y qué no mide el electrocardiograma?',
+        'Relaciona cada onda del trazo con el fenómeno eléctrico que representa.',
+        'Enumera las cinco preguntas de la lectura ordenada, en su orden.',
+        '¿Por qué un trazo organizado no garantiza que haya pulso?',
+        '¿Por qué se verifica la calibración antes de medir sobre el trazo?',
+        'El trazo se vuelve tembloroso y el paciente tirita. ¿Qué es y qué haces?',
+        'Asistolia en pantalla y paciente que conversa. ¿Qué compruebas primero?',
+        '¿Hasta dónde llega esta lección y qué corresponde al Módulo 4?',
+      ]),
       FUENTES,
     ],
     conceptosClave: [
@@ -284,6 +326,7 @@ export default {
               ['Estimulación transcutánea', 'Bradicardia sintomática que no responde a las medidas previas, según protocolo', 'El equipo genera el estímulo a la frecuencia programada', 'Con pulso'],
             ],
           },
+          mnemotecnia('SIN PULSO SE DESFIBRILA; CON PULSO SE SINCRONIZA O SE ESTIMULA. El estado del paciente ordena las tres funciones antes que cualquier detalle del aparato: desfibrilación sin pulso y sin sincronizar, cardioversión con pulso y sincronizada con la onda R, estimulación con pulso y a la frecuencia que el equipo programa.'),
           { tipo: 'callout', variante: 'alerta', titulo: 'Por qué la sincronización importa', texto: 'La cardioversión se sincroniza para que la descarga no coincida con el periodo vulnerable de la repolarización ventricular. Una descarga no sincronizada en un paciente con pulso puede inducir fibrilación ventricular. Comprobar que el equipo está efectivamente en modo sincronizado, y que marca cada complejo, es parte de la maniobra y no un paso opcional.' },
           { tipo: 'p', texto: 'Cuáles de estas tres funciones están dentro del alcance del alumno, en qué unidades hay equipo para realizarlas y bajo qué indicación lo autoriza la dirección médica son cuestiones del protocolo del servicio. Esta lección las describe; no las autoriza.' },
         ],
@@ -294,6 +337,7 @@ export default {
           { tipo: 'p', texto: 'Las guías de soporte vital avanzado de la American Heart Association de 2025 son explícitas en este punto: no se ha identificado un ajuste óptimo de energía para la desfibrilación bifásica, ni fijo ni creciente, y la decisión se defiere al fabricante del desfibrilador. Cuando el ajuste indicado por el fabricante se desconoce, la alternativa que plantean es emplear la dosis máxima del dispositivo.' },
           { tipo: 'callout', variante: 'clave', titulo: 'Consecuencia para esta lección', texto: 'Por eso aquí no aparece ni un valor en julios. Memorizar una cifra tomada de otro equipo enseña a operar un aparato que no es el de la ambulancia. Lo que hay que saber es dónde está escrito el ajuste correcto: en el manual del monitor que usa tu servicio y en su protocolo.' },
           { tipo: 'p', texto: 'La misma regla se aplica a la cardioversión sincronizada y a la estimulación transcutánea: las energías, las frecuencias de estimulación y la intensidad de captura dependen del equipo y del protocolo, y no se publican en esta página.' },
+          masPreguntado('Dos preguntas se repiten siempre: por qué se sincroniza la cardioversión —para que la descarga no caiga en el periodo vulnerable de la repolarización ventricular— y quién determina la energía. La respuesta a la segunda es el fabricante del equipo, y ante ajuste desconocido, la dosis máxima del dispositivo.'),
         ],
       },
       {
@@ -328,6 +372,36 @@ export default {
           { tipo: 'p', texto: 'La disposición de los controles, los modos disponibles, las alarmas, los consumibles compatibles y las prestaciones del monitor varían por completo entre modelos. Esta lección no los describe: se aprenden en el equipo real, con su manual delante, y esa formación es responsabilidad del servicio.' },
         ],
       },
+      erroresFrecuentes([
+        ['Descargar sin sincronizar a un paciente con pulso', 'La descarga puede coincidir con el periodo vulnerable de la repolarización ventricular e inducir fibrilación. Comprobar que el modo sincronizado está activo y que marca cada complejo es parte de la maniobra, no un paso opcional.'],
+        ['Memorizar la energía de otro equipo', 'La guía de soporte vital avanzado de 2025 defiere el ajuste al fabricante del desfibrilador, así que una cifra tomada de otro modelo enseña a operar un aparato que no está en la unidad. Lo que hay que saber es dónde está escrito el ajuste correcto.'],
+        ['Avisar en voz alta y no mirar', 'Antes de pulsar se recorre al paciente con la mirada, de la cabeza a los pies, incluyendo a quien sostiene una bolsa de ventilación o una vía. Decirlo y no mirarlo es el origen de la mayoría de las descargas accidentales a un reanimador.'],
+        ['Descargar sin preparar la piel', 'Tórax mojado, vello abundante, parche de medicación transdérmica y dispositivo implantado obligan a actuar antes: secar, retirar el vello del área según lo permita el equipo, quitar el parche limpiando la piel y separar el parche de desfibrilación del dispositivo, sin colocarlo encima.'],
+      ]),
+      repasoRapido([
+        'Un mismo aparato cumple tres funciones que se parecen en la maniobra y en nada en su indicación.',
+        'Desfibrilación: ritmo desfibrilable en paro, paciente sin pulso, descarga NO sincronizada.',
+        'Cardioversión: taquiarritmia con pulso e inestabilidad, descarga SINCRONIZADA con la onda R del propio paciente.',
+        'Estimulación transcutánea: bradicardia sintomática que no responde a las medidas previas, paciente con pulso.',
+        'Se sincroniza para que la descarga no coincida con el periodo vulnerable de la repolarización ventricular.',
+        'Antes de cardiovertir se verifica que el modo sincronizado está activo y marca los complejos.',
+        'La energía la determina el fabricante del equipo; si su ajuste se desconoce, se plantea la dosis máxima del dispositivo.',
+        'La misma regla rige cardioversión y estimulación: energías, frecuencias e intensidades salen del equipo y del protocolo.',
+        'La comprobación de seguridad es visual, de la cabeza a los pies; avisar en voz alta no basta.',
+        'Piel descubierta y seca, sin parches transdérmicos en el área y sin contacto con superficies mojadas ni metálicas.',
+        'El parche se separa de un dispositivo implantado; nunca se coloca encima.',
+        'Modos, alarmas, controles y consumibles se aprenden en el equipo real, con su manual delante.',
+      ]),
+      preguntasOrales([
+        'Diferencia desfibrilación, cardioversión sincronizada y estimulación transcutánea.',
+        '¿Cuál de las tres funciones se aplica a un paciente sin pulso?',
+        '¿Por qué se sincroniza la cardioversión?',
+        '¿Quién determina la energía de la descarga, y qué se hace si su ajuste se desconoce?',
+        'Recorre en voz alta la secuencia de seguridad previa a una descarga.',
+        '¿Cómo se comprueba que nadie toca al paciente?',
+        'El paciente lleva un dispositivo implantado bajo la clavícula. ¿Qué haces con los parches?',
+        'Encuentras al paciente sobre el suelo encharcado de un baño. ¿Qué haces antes de descargar?',
+      ]),
       FUENTES,
     ],
     conceptosClave: [
@@ -454,6 +528,7 @@ export default {
               ['Actividad eléctrica sin pulso', 'Cualquier trazo con actividad organizada, sin pulso palpable', 'NO desfibrilable'],
             ],
           },
+          mnemotecnia('DOS CON DESCARGA Y DOS CON CAUSA. Con descarga: fibrilación ventricular y taquicardia ventricular sin pulso. Con causa: asistolia y actividad eléctrica sin pulso. El nombre fino del ritmo no cambia la rama; la clasificación sí.'),
           { tipo: 'callout', variante: 'clave', titulo: 'El nombre importa menos que la rama', texto: 'En el ámbito prehospitalario y en el momento del paro, distinguir con precisión el tipo exacto de taquicardia de complejo ancho no cambia lo que hay que hacer. Clasificar bien en desfibrilable o no desfibrilable, sí. La clasificación fina de las arritmias corresponde al Módulo 4.' },
         ],
       },
@@ -482,6 +557,7 @@ export default {
 
           { tipo: 'h3', texto: 'Actividad eléctrica sin pulso' },
           { tipo: 'p', texto: 'El monitor muestra actividad organizada —puede ser un trazo de aspecto casi normal— y el paciente no tiene pulso. No es un ritmo concreto sino una situación: actividad eléctrica que no se traduce en contracción eficaz. Su manejo se dirige a encontrar y corregir la causa, porque la descarga no aporta nada aquí.' },
+          masPreguntado('Lo más preguntado son dos trampas del trazo, no cuatro definiciones: que una taquicardia ventricular puede parecer un ritmo organizado y lo que la convierte en ritmo de paro es la ausencia de pulso, y que una fibrilación de ondas finas puede parecer una línea plana con la ganancia baja.'),
         ],
       },
       {
@@ -492,6 +568,36 @@ export default {
           { tipo: 'p', texto: 'Los fármacos que intervienen en cada rama, su momento de administración y su dosis pertenecen al algoritmo completo de soporte vital avanzado y al protocolo del servicio, y se estudian en el Módulo 4. Esta lección no los enumera porque su indicación depende del alcance autorizado del prestador y del formulario de la unidad.' },
         ],
       },
+      erroresFrecuentes([
+        ['Aceptar una asistolia sin comprobar el equipo', 'Una fibrilación ventricular de ondas muy finas puede parecer una línea plana con la ganancia baja. Antes de aceptarla se revisan electrodos, cables, derivación y ganancia, y se confirma la ausencia de pulso en el paciente.'],
+        ['Clasificar por la forma y no por el pulso', 'Una taquicardia ventricular de complejos anchos y regulares puede parecer un ritmo perfectamente organizado. Lo que la convierte en ritmo de paro es la ausencia de pulso; la misma imagen con pulso presente es otra situación clínica y se maneja de otra manera.'],
+        ['Descargar una actividad eléctrica sin pulso', 'Ya hay actividad organizada y la descarga no aporta nada. El esfuerzo va a compresiones de calidad y a encontrar y corregir la causa.'],
+        ['Reiniciar la reanimación al cambiar de rama', 'Cambiar de rama al reanalizar no reinicia la reanimación: la continúa. Compresiones de calidad, ventilación, análisis en los momentos previstos y búsqueda de causas reversibles son comunes a las dos.'],
+      ]),
+      repasoRapido([
+        'En el paro, el trazo responde una sola pregunta operativa: ¿va a servir de algo esta descarga?',
+        'Ritmos desfibrilables: fibrilación ventricular y taquicardia ventricular sin pulso.',
+        'Ritmos no desfibrilables: asistolia y actividad eléctrica sin pulso.',
+        'Fibrilación ventricular: ondulación caótica e irregular, sin complejos identificables.',
+        'Su aspecto puede ir de ondas amplias a ondas cada vez más finas conforme pasa el tiempo.',
+        'Taquicardia ventricular sin pulso: complejos anchos, regulares y rápidos; lo decisivo es que no hay pulso.',
+        'Asistolia: sin actividad eléctrica organizada, y se comprueba el equipo antes de aceptarla.',
+        'Actividad eléctrica sin pulso: no es un ritmo, es una situación; el manejo se dirige a la causa.',
+        'La desfibrilación es tanto más eficaz cuanto antes se administre tras el inicio del ritmo.',
+        'La reanudación inmediata de las compresiones tras la descarga forma parte de la maniobra.',
+        'Ambas ramas comparten compresiones de calidad, ventilación adecuada, análisis previsto y búsqueda de causas reversibles.',
+        'La clasificación fina de arritmias y la farmacología del algoritmo corresponden al Módulo 4.',
+      ]),
+      preguntasOrales([
+        '¿Qué pregunta operativa responde el trazo en el paro cardiaco?',
+        'Nombra los cuatro ritmos del paro y clasifícalos.',
+        'Describe cómo se ve una fibrilación ventricular en el trazo.',
+        '¿Qué convierte a una taquicardia ventricular en un ritmo de paro?',
+        '¿Qué compruebas antes de aceptar una asistolia, y por qué?',
+        'Explica qué es la actividad eléctrica sin pulso y hacia dónde se dirige su manejo.',
+        '¿Qué comparten las dos ramas del algoritmo?',
+        '¿Por qué esta lección no enumera los fármacos de cada rama?',
+      ]),
       FUENTES,
     ],
     conceptosClave: [
@@ -644,6 +750,7 @@ export default {
               'Avisa en voz alta de que la completó, y del resultado si lo hubo.',
             ],
           },
+          mnemotecnia('NOMBRE, ORDEN, ECO, HECHO. A quién —por su nombre o su función—, qué —una instrucción clara y completa—, la repetición en voz alta de quien la recibe, y el aviso de que se completó. Si falta el eco o falta el aviso, la instrucción no está dada.'),
           { tipo: 'callout', variante: 'clave', titulo: 'La instrucción al aire no existe', texto: 'Decir «que alguien tome el monitor» reparte la responsabilidad entre todos, que es lo mismo que no repartirla. Nombrar a la persona y esperar su confirmación cuesta dos segundos y elimina la duplicación y el olvido.' },
         ],
       },
@@ -684,8 +791,39 @@ export default {
             ],
           },
           { tipo: 'callout', variante: 'alerta', titulo: 'Lo que la academia debe fijar', texto: 'La calificación mínima de aprobación, el número de intentos, el tiempo asignado a la estación y el escenario concreto son decisiones académicas que el plan de estudios no define. Esta lección enumera qué se observa; cuánto se exige lo declara la academia.' },
+          masPreguntado('Se pregunta menos la lista de cotejo que dos cosas: qué acredita superar la estación —desempeño en un escenario simulado, y nada más: no amplía el alcance profesional— y cuáles son los errores críticos, los que comprometen el resultado por sí solos.'),
         ],
       },
+      erroresFrecuentes([
+        ['Dar instrucciones al aire', 'Decir «que alguien tome el monitor» reparte la responsabilidad entre todos, que es lo mismo que no repartirla. Se nombra a la persona por su nombre o su función y se espera su confirmación.'],
+        ['Dejar una función sin dueño', 'La mayoría de los fallos observados en las estaciones no son de técnica sino de coordinación: dos personas haciendo lo mismo, nadie llevando el tiempo, órdenes que nadie confirmó. Con poco personal una persona asume varias funciones, pero ninguna puede quedar sin dueño sin que nadie lo advierta.'],
+        ['Descargar sin la comprobación visual', 'Está clasificada como crítica porque su omisión puede lesionar a un reanimador: por sí sola compromete el resultado de la estación, por impecable que haya sido el resto del escenario.'],
+        ['Tomar la estación por una autorización', 'Superarla acredita desempeño en un escenario simulado. No amplía el alcance profesional del alumno, no autoriza procedimientos que su nivel no contemple y no sustituye la certificación ni la dirección médica.'],
+      ]),
+      repasoRapido([
+        'El código mega es una estación de integración: se ejecuta junto, y con el reloj corriendo, lo ya estudiado.',
+        'No introduce conocimiento nuevo y no es una lección adicional.',
+        'Integra escena y evaluación primaria, vía aérea y ventilación, compresiones, monitor y clasificación del ritmo, acceso vascular cuando esté indicado, y registro.',
+        'Superarla acredita desempeño simulado; no amplía el alcance profesional.',
+        'Funciones habituales: liderazgo, compresiones, vía aérea y ventilación, monitor y desfibrilación, acceso y medicación, registro y tiempos.',
+        'Repartir funciones en voz alta antes de empezar es la medida que más rendimiento aporta.',
+        'El número de funciones cubiertas depende del personal disponible; ninguna puede quedar sin dueño.',
+        'Circuito cerrado: instrucción dirigida a una persona, confirmación repitiéndola, ejecución y aviso de haberla completado.',
+        'La estación se observa con lista de cotejo, con puntos críticos y puntos observados.',
+        'Son críticos la seguridad de la escena, la comprobación de respuesta y respiración, la activación del recurso, el inicio de compresiones, la colocación del monitor con clasificación del ritmo, la comprobación visual antes de descargar y la reanudación inmediata tras la descarga.',
+        'También es error crítico ejecutar o simular un procedimiento fuera del alcance autorizado.',
+        'La calificación mínima, los intentos, el tiempo y el escenario los declara la academia.',
+      ]),
+      preguntasOrales([
+        '¿Qué es el código mega y qué NO es?',
+        'Enumera qué integra la estación y dónde se estudió cada pieza.',
+        '¿Qué queda acreditado al superarla?',
+        'Nombra las funciones habituales de un equipo de reanimación.',
+        '¿Qué se espera cuando el equipo cuenta solo con dos reanimadores?',
+        'Recita los pasos de la comunicación de circuito cerrado.',
+        '¿Por qué no sirve decir «que alguien tome el monitor»?',
+        'Menciona tres errores críticos de la estación.',
+      ]),
       FUENTES,
     ],
     conceptosClave: [

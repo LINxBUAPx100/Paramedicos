@@ -19,6 +19,10 @@
 //  Nada de este archivo procede de `reutilizado.js`.
 // ============================================================
 
+import {
+  erroresFrecuentes, repasoRapido, preguntasOrales, mnemotecnia, masPreguntado,
+} from './moldeV2.js'
+
 const HOY = '2026-08-17'
 
 const PHTLS_ABDOMEN = {
@@ -120,8 +124,40 @@ export default {
               'Traslado a centro con capacidad quirúrgica y prealerta con el mecanismo y la evolución.',
             ],
           },
+          mnemotecnia('SANGRE LIBRE O CONTENIDO VERTIDO. Si es sangre, domina la pérdida de volumen y el shock; si es contenido de víscera hueca, domina la irritación peritoneal y llega más tarde. Dos formas de producirlo, dos ritmos distintos.'),
+          masPreguntado('Que la exploración deja de ser fiable justo en los pacientes más graves, y la señal que no depende de la palpación: un traumatizado con signos de shock y sin hemorragia externa que lo explique tiene un abdomen sospechoso aunque la pared esté blanda. La respuesta fisiológica informa cuando la exploración calla.'),
         ],
       },
+      erroresFrecuentes([
+        ['Repetir una palpación profunda y agresiva', 'Duele mucho, no aporta y puede agravar la lesión. La palpación es suave y empieza por el cuadrante más alejado del dolor.'],
+        ['Administrar algo por vía oral', 'El paciente puede requerir cirugía, y existe riesgo de broncoaspiración.'],
+        ['Afirmar qué órgano está lesionado', 'El ámbito prehospitalario no lo puede saber, y tampoco necesita saberlo para decidir.'],
+        ['Explorar una sola vez', 'El abdomen cambia, y el cambio es el dato. La exploración se repite durante el traslado y se registra con la hora para poder comparar.'],
+      ]),
+      repasoRapido([
+        'Aquí «abdomen agudo» designa la emergencia abdominal de origen traumático, no la patología médica del Módulo 4.',
+        'Se produce por sangre libre —lesión de órgano sólido o de vasos— o por contenido vertido de víscera hueca.',
+        'La sangre libre hace dominar la pérdida de volumen; el contenido vertido, la irritación peritoneal, más tardía.',
+        'Signos de irritación peritoneal: dolor que aumenta con el movimiento, defensa, rigidez involuntaria y dolor a la descompresión.',
+        'También que el paciente evite moverse, permanezca quieto y flexione las piernas.',
+        'La distensión abdominal es tardía y poco sensible.',
+        'Los signos pueden aparecer tarde o no aparecer: la peritonitis por contenido intestinal necesita horas.',
+        'La exploración deja de ser fiable con alteración de conciencia, intoxicación, lesión medular o dolor distractor.',
+        'La señal que no depende de la palpación es el shock sin hemorragia externa que lo explique.',
+        'Exploración seriada: inspección, palpación suave desde el cuadrante más alejado, registro con la hora y repetición.',
+        'En paralelo se reevalúan conciencia, piel, pulso, relleno capilar y presión.',
+        'Conducta: soporte y shock según alcance, prevención de hipotermia, evisceración cubierta sin reintroducir, empalado en su posición, y traslado a centro quirúrgico con prealerta.',
+      ]),
+      preguntasOrales([
+        'Delimita qué significa «abdomen agudo» en esta unidad y qué no es.',
+        '¿Cuáles son las dos formas de producirlo y qué domina en cada una?',
+        'Enumera los signos de irritación peritoneal.',
+        '¿Por qué pueden aparecer tarde o no aparecer?',
+        '¿Cuál es la señal que no depende de la palpación?',
+        'Recorre la exploración seriada.',
+        'Di las tres cosas que no se hacen.',
+        '¿Qué haces con una evisceración y con un objeto empalado?',
+      ]),
       {
         titulo: 'Fuentes',
         bloques: [{ tipo: 'fuentes', items: [PHTLS_ABDOMEN, ACS_BEST, WHO_BEC] }],

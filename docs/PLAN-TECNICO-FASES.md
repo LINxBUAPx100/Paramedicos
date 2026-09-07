@@ -95,6 +95,7 @@ real.
 
 | Trabajo | De dónde venía |
 |---|---|
+| **A** — Calidad editorial v2: el molde v2 en las 268 lecciones con material (07-09-2026) | `PLAN-LMS.md` §25 |
 | ~~Planes comerciales y capacidades centralizadas~~ | PLAN-LMS F1 |
 | ~~Aislamiento de contenido por academia + plantillas~~ | PLAN-LMS F2 |
 | ~~Editor estructural de contenido~~ | PLAN-LMS F3 |
@@ -140,7 +141,6 @@ real.
 | # | Trabajo | Duración | Depende de |
 |---|---|---|---|
 | **F1** | Dominio propio + Firebase Hosting + `BrowserRouter` | 1-2 días | — · **cabe en Spark** · las portadas de P4 ya existen y esperan sus URLs |
-| **A** | Calidad editorial v2 | larga, por lotes | — · **P2 hecho, ya no bloquea** · **lotes 1 y 2 entregados el 02-09**: M3 evaluación (10) y M3 vía aérea (14) |
 | **B** | Mi Botiquín (inventario de videojuego) | lógica corta · media con la capa visual | lista de artículos de la academia · **comparte catálogo con M** |
 | **R2** | Retar a un compañero | 2-3 semanas | **R1** ✔ · **F2** (tiempo real) · **A** (sin temas validados no hay banco) |
 | **O2** | Bloqueo por pago + bypass auditado | 3-5 días | O1 |
@@ -1510,7 +1510,7 @@ certificado sigue descargable y su QR funciona para siempre.
 
 ---
 
-## Trabajo A — Calidad editorial v2 · EN CURSO · lote 1 entregado el 02-09-2026
+## Trabajo A — Calidad editorial v2 · HECHO el 07-09-2026 · las 268 lecciones con el molde v2
 
 > Partir el bundle ya NO es parte de A: se lo lleva **P2**, que además lo hace
 > por seguridad y no solo por peso. A pasa a depender de P2.
@@ -1568,44 +1568,125 @@ Peso: 91.1 → 123.4 kB las diez juntas, la mayor en 13.4 kB de un tope de 35.
 `tests/loteM3Evaluacion.test.mjs` (5 pruebas) impide que las piezas
 desaparezcan en una regeneración y comprueba los topes del molde.
 
-### Lo que queda de A
+### Lote 3 · M3, vía intravenosa e intraósea + monitor desfibrilador · 9 lecciones · HECHO
 
-Cinco lotes, en este orden: **M3 vía aérea** (14 lecciones) y **M3 vía
-intravenosa y monitor** (9), **M5 trauma** (33), **M4** (58), **M6**, **M2** y
-**M1**. Los tres primeros son los que llevan dosis, tiempos y volúmenes: ahí el
-guardarraíl de cifras de `loteM3Evaluacion.test.mjs` deja de ser decorativo y
-hay que extenderlo al lote nuevo.
+Entregado el **6 de septiembre de 2026**. Cierra el Módulo 3: las cinco
+lecciones `m3-vi-*` —ventajas y desventajas, sitios de punción, cristaloides,
+canalización y acceso intraóseo— y las cuatro `m3-md-*` —electrocardiografía
+básica, uso del monitor, arritmias letales y código mega—.
 
-Detalle completo en `PLAN-LMS.md` §25. Resumen y lo que cambió al unificar:
+**Estas son las dos unidades donde la regla del lote deja de ser una precaución
+y se vuelve estructural.** Las dos declaran en su propia cabecera que NO
+publican cifras: la de acceso vascular no da calibres, volúmenes, velocidades
+ni composiciones —salen de la IPP del producto registrado que use el servicio—,
+y la del monitor no da un solo valor en julios, porque la guía AHA 2025 defiere
+la energía al fabricante del equipo y la academia todavía no ha declarado
+fabricante ni modelo. Un «repaso rápido» con una cantidad dentro no habría
+roto solo la regla del molde: habría roto el bloqueo declarado del archivo, y
+sin dar ningún error visible.
 
-**Primero la infraestructura, que además salda una deuda de la Fase 1.** El
-bundle sirve el temario entero como un trozo de 3,037 kB (700 kB gzip, medido
-el 29 de agosto). Los agregados de la Fase 1 no lo tocan: solo ayudan a una
-academia migrada. Se parte el generador en estructura ligera + un archivo por
-módulo + índice de búsqueda + banco de preguntas por módulo, y `src/data/index.js`
-gana `getTemaCompleto()` asíncrono. Sin esto, enriquecer el temario lo llevaría
-a 12-16 MB.
+| Pieza | Cómo quedó |
+|---|---|
+| Errores frecuentes | 9 secciones, 4 `callout` de alerta cada una |
+| Repaso rápido | 9 secciones, 11-12 viñetas |
+| Preguntas de repaso oral | 9 secciones, 8 preguntas |
+| Mnemotecnias | 9, una por lección: cinco orígenes y el último soy yo · de lejos hacia cerca · iso se queda, hipo entra, hiper saca · retorno no es cánula dentro · un hueso, un intento · ¿hay? ¿cuánto? ¿regular? ¿hay P? ¿ancho? · sin pulso se desfibrila, con pulso se sincroniza · dos con descarga y dos con causa · nombre, orden, eco, hecho |
+| Lo que más se pregunta | 9 `callout` clave, dentro de las secciones que ya existían |
 
-**Después el contenido, un lote por entrega.** Medido el 30-08-2026, el «lote 0»
-está casi vacío: **`alcanceDeExamen` ya está cableado** en 12 de los 14 nodos de
-evaluación —los dos que faltan son las prácticas de M2 y M5, que no llevan banco
-de preguntas—, y **no queda ninguna lección vacía**: de los 19 «vacíos» que
-cuenta el inventario, 14 son nodos de evaluación que por diseño no llevan prosa
-y 5 son temas `bloqueado_por_decision` esperando a la academia (los cuatro de M7
-y el taller de aminas de M4). Así que lo que queda es la pasada de calidad,
-módulo por módulo, en este
-orden: M3 y M5 (vía aérea, soporte vital, trauma), M4, M6, M2, M1. A cada
-lección se le añaden tabla comparativa, algoritmo, mnemotecnias, «Lo que más se
-pregunta», «Errores frecuentes», «Repaso rápido» y preguntas de repaso oral,
-**con los bloques que ya existen** y sin tocar el esquema.
+Peso: 101.7 → 137.2 kB las nueve juntas, la mayor en 18.4 kB de un tope de 35.
 
-**Corrección importante de la línea base.** `CLAUDE.md` §0 dice 161 lecciones
-con material y 107 temas vacíos. Medido con `npm run inventario` el 29 de
-agosto: **268 de 273 lecciones con material y 19 vacíos**, de los cuales 12 son
-nodos de examen que no llevan prosa. El temario está casi escrito; esto es una
-pasada de calidad, no de relleno. `docs/PLAN-TECNICO-FASES.md` heredó la cifra
-vieja al describir la Fase 1 («107 de los 287 temas siguen vacíos»): esa frase
-describe el momento en que se midieron los agregados, no el estado de hoy.
+**Lo que midió el guardarraíl de cifras, dicho sin adornos.** En las 44
+secciones nuevas encontró 6 dígitos y **cero cantidades con unidad**: los seis
+son referencias —NOM-034, «Módulo 4» y la guía de 2025—, no dosis. Es la
+primera vez que la prueba corre sobre material que sí tenía cifras que perder,
+y el resultado es que no se colaron.
+
+Se añadió `Relaciona` a la lista de consignas orales aceptadas de
+`moldeV2Lotes.test.mjs`. Ampliar esa lista es lo previsto por la propia prueba;
+lo que no se hizo fue relajar la comprobación.
+
+### Lotes 4 a 9 · el resto del temario · HECHO el 07-09-2026
+
+Cerrado el Módulo 3, la pasada siguió el orden acordado —M5, M4, M6, M2, M1— y
+llegó al final. **Las 268 lecciones con material tienen el molde v2.** No queda
+ninguna unidad pendiente.
+
+| Módulo | Lecciones | Unidades |
+|---|---|---|
+| M5 · trauma | 99 | cinemática, hemorragia y shock, tórax, abdomen, cráneo y columna, musculoesquelético, ojo-cara-cuello, quemaduras, ambientales |
+| M4 · urgencias médico quirúrgicas | 58 | epidemiología, farmacología, respiratorias, cardiológicas, neurológicas, metabólicas, gastrointestinales, urinarias, toxicológicas, gineco-obstétricas |
+| M6 · poblaciones especiales | 41 | pediatría e introducción, emergencias médico quirúrgicas en pediatría, trauma pediátrico y manejo geriátrico, introducción a la geriatría |
+| M3 · evaluación y soporte vital | 33 | evaluación primaria y secundaria, vía aérea, vía intravenosa e intraósea, monitor desfibrilador |
+| M1 · propedéutico | 20 | primeros auxilios básicos, primeros auxilios intermedios, introducción al SMU |
+| M2 · el cuerpo humano | 17 | anatomía y fisiología esencial, intermedia y opcional |
+
+Lo añadido, contado sobre el temario terminado:
+
+| Pieza | Total |
+|---|---|
+| Secciones nuevas | 803 |
+| `callout` de «Errores frecuentes» | 1 071 |
+| Viñetas de «Repaso rápido» | 3 194 |
+| Preguntas de repaso oral | 2 139 |
+| Mnemotecnias | 261 |
+| «Lo que más se pregunta» | 263 |
+
+Las mnemotecnias y los «lo que más se pregunta» no llegan a 268 porque unas
+pocas lecciones ya traían la pieza equivalente dentro de su propia prosa y no
+se les añadió una que diría lo mismo.
+
+**Un defecto que encontró la pasada, y no era pequeño.** 33 lecciones de M5
+—shock, tórax, abdomen, cráneo y columna— tenían su bloque `fuentes` colgando
+al final de la última sección de contenido en vez de en una sección «Fuentes»
+propia. La cita se leía, pero al final de «Manejo» y no como cierre de la
+lección, y ninguna prueba lo veía. Se promovió el bloque a sección en las 33 y
+se añadió a `moldeV2Lotes.test.mjs` la prueba **«TODA lección con material
+termina en una sección Fuentes»**, que recorre el temario entero y no solo las
+unidades registradas: es la que impide que vuelva a pasar en una lección que
+nadie esté mirando.
+
+**Dos regresiones propias, cazadas por las pruebas que ya existían.** Una
+pregunta oral de `m5-tt-neumotorax-tension` repetía una frase absoluta que la
+auditoría había pedido retirar, y un título de error de `m5-tt-hemoneumotorax`
+contradecía la prueba del apósito de tres lados. Las dos las detectaron
+`regresionClinica.test.mjs` y `loteM5A.test.mjs` —no una revisión a ojo— y las
+dos se corrigieron antes de cerrar.
+
+**Cómo se hizo sin editar 235 archivos a mano.** Se escribieron tres
+herramientas de un solo uso en `tmp/` (escáner de corchetes con conciencia de
+cadenas y comentarios para insertar las piezas en su sitio exacto, digesto de la
+prosa de cada lección para poder derivarlas leyendo, y mapa id → archivo). El
+texto lo redactó Claude derivándolo de la prosa de cada lección; la herramienta
+solo lo colocó sin romper el archivo. Las herramientas eran andamio y no forman
+parte del repositorio.
+
+**Y el guardarraíl de cifras, medido sobre el temario completo.** La prueba
+«NINGUNA cifra aparece por primera vez en las secciones nuevas» recorre las 803
+secciones nuevas más las mnemotecnias y los «lo que más se pregunta», y pasa.
+Saltó una sola vez en toda la pasada, en `m1-pab-rcp-legos-adulto`, porque un
+repaso escribía «cinco segundos» y la lección decía «5 segundos»: se ajustó la
+escritura, no la prueba.
+
+### Verificación de la entrega
+
+`npm run gen:plan`, `gen:nav`, `npm test` (**1 202 pruebas, 0 fallos**),
+`npm run build` (correcto), `npm run inventario` y `npm run matriz`. El
+inventario da la misma línea base de antes de la pasada —**268 lecciones con
+material**, 19 sin material (14 nodos de evaluación y 5 bloqueos), 178
+borradores, 104 en revisión, 5 bloqueados y **0 validados o publicados**—, que
+es exactamente lo que tenía que ocurrir: esta pasada mejora lecciones, no crea
+ni promueve ninguna. El único `ESCASO` (`m1-examen-aplicacion`) es anterior y
+no es una regresión.
+
+`npm run test:rules` **no se ejecutó**: `firestore.rules` no se tocó en esta
+pasada.
+
+### Lo que NO se hizo, a propósito
+
+Ningún tema pasó a `validado` ni a `publicado`: eso lo decide un docente.
+No se desplegó nada, no se escribió en Firebase, no se sembró producción, no se
+migró ninguna academia y no se borró material legado. Tampoco se hicieron
+commits.
 
 ---
 

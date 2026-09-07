@@ -22,6 +22,10 @@
 //  Nada de este archivo procede de `reutilizado.js`.
 // ============================================================
 
+import {
+  erroresFrecuentes, repasoRapido, preguntasOrales, mnemotecnia, masPreguntado,
+} from './moldeV2.js'
+
 const HOY = '2026-08-17'
 
 const AHA_PBLS_2025 = {
@@ -146,8 +150,40 @@ export default {
               'Acompañar a la familia y permitir su presencia conforme al procedimiento del servicio.',
             ],
           },
+          mnemotecnia('«EFICAZ» SIGNIFICA QUE EL TÓRAX SE MUEVE. Si tras iniciar la ventilación el recién nacido no mejora, lo primero que se revisa no es la medicación: es el sellado de la mascarilla, la posición de la cabeza, la permeabilidad y la presión.'),
+          masPreguntado('Que el calor es la primera intervención y no un detalle: el recién nacido pierde calor con una rapidez extraordinaria, y la hipotermia empeora la transición, favorece la hipoglucemia y aumenta el consumo de oxígeno.'),
         ],
       },
+      erroresFrecuentes([
+        ['Aspirar de forma sistemática', 'Solo se despeja la vía aérea si hay obstrucción evidente: la aspiración sistemática no está indicada.'],
+        ['Buscar la medicación antes de revisar la ventilación', 'Si el recién nacido no mejora, lo primero que se revisa es la propia ventilación.'],
+        ['Tratar el calor como un detalle', 'Es una intervención de primera línea: la hipotermia empeora la transición y favorece la hipoglucemia.'],
+        ['Esperar el paro en el niño mayor', 'El paro pediátrico casi nunca es súbito: reconocer el deterioro antes es la intervención con más impacto del módulo.'],
+      ]),
+      repasoRapido([
+        'Al nacer, el pulmón lleno de líquido tiene que llenarse de aire y la circulación reorganizarse.',
+        'Casi todos los recién nacidos hacen esa transición solos; cuando no, el problema es respiratorio.',
+        'Pasos iniciales, en orden: calor —secar, retirar los paños húmedos y mantener la temperatura—.',
+        'Posición de la vía aérea: cabeza neutra, evitando flexión e hiperextensión.',
+        'Despejar la vía aérea solo si hay obstrucción evidente.',
+        'Estimulación suave: secar con energía moderada y frotar la espalda o las plantas.',
+        'Valorar respiración y frecuencia cardiaca, que son los dos parámetros que guían la decisión.',
+        'Si no respira o la frecuencia es insuficiente, iniciar ventilación con presión positiva según guía y protocolo.',
+        'Eficaz significa que el tórax se mueve.',
+        'En el niño, el paro suele ser el final de una insuficiencia respiratoria o de un shock que progresaron.',
+        'En el recién nacido lo que más resuelve es la ventilación eficaz; en el niño, el reconocimiento precoz y la corrección de la causa.',
+        'Siempre depende del equipo reconocer el deterioro antes del paro, ventilar bien, mantener el calor y medir la glucemia.',
+      ]),
+      preguntasOrales([
+        '¿Por qué la ventilación es la intervención central en el recién nacido?',
+        'Enumera los pasos iniciales en orden.',
+        '¿Cuándo se despeja la vía aérea?',
+        '¿Qué dos parámetros guían la decisión?',
+        '¿Qué significa que la ventilación sea eficaz?',
+        '¿Por qué el frío es un enemigo real?',
+        'Diferencia el enfoque neonatal del pediátrico.',
+        'Di lo que siempre depende del equipo.',
+      ]),
       F([AHA_NEONATAL_2025, AHA_PBLS_2025, AHA_PALS_2025, NALS_BLOQUEADO, PROTOCOLO_LOCAL]),
     ],
     conceptosClave: [
@@ -317,8 +353,40 @@ export default {
             ],
           },
           { tipo: 'callout', variante: 'clinico', titulo: 'Después de resolverla', texto: 'Todo paciente que ha sufrido una obstrucción grave debe ser valorado, aunque parezca recuperado por completo: puede quedar material residual en la vía aérea o haberse producido una lesión durante las maniobras. Si se aplicaron compresiones abdominales, se comunica de forma explícita en la entrega.' },
+          mnemotecnia('AL LACTANTE NO SE LE COMPRIME EL ABDOMEN. Su hígado y su bazo están menos cubiertos por la parrilla costal y quedan expuestos: en el lactante se combinan golpes dorsales y compresiones torácicas.'),
+          masPreguntado('La regla que evita hacer daño: mientras el paciente tosa con eficacia, la tos es más efectiva que cualquier maniobra. Y que nunca se busca a ciegas: solo se retira lo que se ve con claridad, porque el barrido puede empujar el cuerpo extraño más adentro.'),
         ],
       },
+      erroresFrecuentes([
+        ['Intervenir sobre una obstrucción leve', 'Mientras tosa con eficacia, la tos es más efectiva que cualquier maniobra, e intervenir puede desplazar el cuerpo extraño.'],
+        ['Aplicar compresiones abdominales al lactante', 'Su hígado y su bazo quedan expuestos: pueden lesionarse. En el lactante se combinan golpes dorsales y compresiones torácicas.'],
+        ['Hacer un barrido a ciegas', 'Puede empujar el cuerpo extraño más adentro y transformar una obstrucción parcial en completa. Solo se retira lo que se ve.'],
+        ['Dar de alta al paciente recuperado', 'Puede quedar material residual o haberse producido una lesión durante las maniobras: se valora siempre.'],
+      ]),
+      repasoRapido([
+        'Obstrucción leve: tos eficaz, fuerte y ruidosa; puede hablar o llorar y entra aire. NO se interviene.',
+        'Obstrucción grave: tos débil, silenciosa o ausente; no puede emitir sonido y no entra aire. Se interviene de inmediato.',
+        'Mientras tosa con eficacia, la tos es más efectiva que cualquier maniobra.',
+        'Nunca a ciegas: solo se retira lo que se ve con claridad y se puede extraer con seguridad.',
+        'Lactante que responde: sostenerlo con la cabeza más baja que el tronco, apoyando cabeza y mandíbula sin comprimir el cuello.',
+        'Se aplican golpes dorsales entre los omóplatos con el talón de la mano.',
+        'Se gira con cuidado y se aplican compresiones torácicas en el mismo punto que las de la reanimación.',
+        'Se alternan ambas series y se comprueba la boca entre ciclos.',
+        'Al lactante NO se le aplican compresiones abdominales.',
+        'Niño que responde: golpes dorsales y compresiones abdominales, alternando series y comprobando la boca.',
+        'Pérdida de respuesta: pedir ayuda, superficie firme e iniciar la secuencia de reanimación según guía y protocolo.',
+        'Al abrir la vía aérea para ventilar se mira la boca; si el tórax no se eleva, se recoloca la cabeza y se reintenta.',
+      ]),
+      preguntasOrales([
+        'Distingue obstrucción leve de grave por tos, voz y respiración.',
+        '¿Qué se hace en la leve, y por qué?',
+        'Recorre la secuencia en el lactante que responde.',
+        '¿Por qué al lactante no se le aplican compresiones abdominales?',
+        'Recorre la secuencia en el niño que responde.',
+        '¿Qué se hace si pierde la respuesta?',
+        '¿Por qué nunca se busca a ciegas?',
+        '¿Qué se hace después de resolverla?',
+      ]),
       F([AHA_PBLS_2025, AHA_PALS_2025, WHO_BEC, PROTOCOLO_LOCAL]),
     ],
     conceptosClave: [
