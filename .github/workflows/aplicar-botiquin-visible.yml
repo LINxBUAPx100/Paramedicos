@@ -64,6 +64,11 @@ jobs:
               "  'flashcards', 'logros', 'creditos', 'atlas', 'temario', 'progreso',",
               "  'flashcards', 'logros', 'creditos', 'atlas', 'botiquin', 'temario', 'progreso',",
           )
+          reemplazar(
+              'src/data/botiquin/catalogoInicial.js',
+              "id: calibre.toLowerCase(), nombre: `Catéter ${calibre}`, calibre, cantidad: null,",
+              "id: `calibre-${calibre.toLowerCase()}`, nombre: `Catéter ${calibre}`, calibre, cantidad: null,",
+          )
           PY
 
           rm -f scripts/.botiquin-archive-*.part scripts/.botiquin-payload-*.b64
