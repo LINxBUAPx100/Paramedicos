@@ -38,6 +38,7 @@ const NAV = [
   { to: '/temario', icon: 'temario', label: 'Temario (staff)', soloStaff: true },
   { to: '/examen', icon: 'examen', label: 'Examen general', soloConAcceso: true },
   { to: '/flashcards', icon: 'flashcards', label: 'Flashcards', soloConAcceso: true },
+  { to: '/atlas-anatomico', icon: 'atlas', label: 'Atlas anatómico 3D', soloConAcceso: true },
   { to: '/logros', icon: 'atlas', label: 'Logros', soloConAcceso: true },
   { to: '/progreso', icon: 'progreso', label: 'Mi progreso', soloConAcceso: true },
   { to: '/buscar', icon: 'buscar', label: 'Buscar', soloConAcceso: true },
@@ -69,7 +70,7 @@ export default function Layout({ children }) {
   // tiene que obedecer lo mismo que la página: enseñar el enlace y negar el
   // destino no protege nada, y además revela qué hay dentro.
   //
-  // `puedeAcceder` responde «¿tiene sesión y su academia está al corriente?».
+  // `puedeAcceder` responde «¿tiene sesión y su academia está al corriente?». 
   // `motivoSinPrograma` responde la otra mitad: «¿tiene un plan de estudios
   // asignado?». Un alumno con cuenta y academia pero SIN GRUPO pasa la primera
   // y falla la segunda — y con solo la primera puesta, el menú le enseñaba los
@@ -120,6 +121,9 @@ export default function Layout({ children }) {
   // Las consolas del super-admin y del director aprovechan todo el ancho: son
   // tablas y rejillas con su propia navegación lateral, no texto para leer.
   const esConsola = location.pathname.startsWith('/admin') || location.pathname.startsWith('/panel')
+  // El atlas es una superficie de trabajo visual: el lienzo necesita todo el
+  // ancho y controla su propio alto, paneles y márgenes.
+  const esAtlas = location.pathname.startsWith('/atlas-anatomico')
 
   // NO INDEXAR lo que no es público. Con una sola página, `robots.txt` apenas
   // decide nada: el rastreador descarga un documento y lo que lee después es lo
@@ -353,7 +357,7 @@ export default function Layout({ children }) {
         <main
           id="contenido-principal"
           tabIndex={-1}
-          className={`contenido ${esHome ? 'contenido--full' : ''} ${esConsola ? 'contenido--ancho' : ''}`}
+          className={`contenido ${esHome ? 'contenido--full' : ''} ${esConsola ? 'contenido--ancho' : ''} ${esAtlas ? 'contenido--atlas' : ''}`}
           key={location.pathname}
         >
           {children}
@@ -380,6 +384,7 @@ export default function Layout({ children }) {
               {esStaff && <Link to="/temario">Temario (staff)</Link>}
               <Link to="/examen">Examen</Link>
               <Link to="/flashcards">Flashcards</Link>
+              <Link to="/atlas-anatomico">Atlas anatómico 3D</Link>
               <Link to="/logros">Logros</Link>
             </div>
           )}
