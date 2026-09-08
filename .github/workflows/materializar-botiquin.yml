@@ -23,9 +23,33 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test -f scripts/.botiquin-archive-00.part
-          cat scripts/.botiquin-archive-*.part | tr -d '\r\n ' > /tmp/botiquin.b64
-          base64 --decode /tmp/botiquin.b64 > /tmp/botiquin.tar.gz
+          python - <<'PY'
+          from pathlib import Path
+          import base64
+          import gzip
+          import string
+
+          partes = sorted(Path('scripts').glob('.botiquin-archive-*.part'))
+          if not partes:
+              raise SystemExit('No se encontraron partes del paquete del botiquín.')
+
+          bruto = ''.join(parte.read_text(encoding='utf-8') for parte in partes)
+          compacto = ''.join(bruto.split())
+          alfabeto = set(string.ascii_letters + string.digits + '+/=')
+          invalidos = [(i, ord(caracter)) for i, caracter in enumerate(compacto) if caracter not in alfabeto]
+          print('Partes:', [(p.name, p.stat().st_size) for p in partes])
+          print('Longitud compacta:', len(compacto), 'resto:', len(compacto) % 4)
+          print('Caracteres fuera de base64:', invalidos[:20], 'total:', len(invalidos))
+
+          limpio = ''.join(caracter for caracter in compacto if caracter in alfabeto)
+          limpio += '=' * (-len(limpio) % 4)
+          comprimido = base64.b64decode(limpio, validate=False)
+          print('Bytes decodificados:', len(comprimido), 'cabecera:', comprimido[:4].hex())
+          if comprimido[:2] != b'\x1f\x8b':
+              raise SystemExit('El paquete reconstruido no comienza con una cabecera gzip.')
+          gzip.decompress(comprimido)
+          Path('/tmp/botiquin.tar.gz').write_bytes(comprimido)
+          PY
           echo "Contenido del paquete:"
           tar -tzf /tmp/botiquin.tar.gz
           tar -xzf /tmp/botiquin.tar.gz -C .
@@ -34,7 +58,7 @@ jobs:
       - name: Configurar Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Instalar dependencias
@@ -45,6 +69,13 @@ jobs:
 
       - name: Compilar producción
         run: npm run build
+        env:
+          VITE_FIREBASE_API_KEY: prueba-local
+          VITE_FIREBASE_AUTH_DOMAIN: ptem-a304f.firebaseapp.com
+          VITE_FIREBASE_PROJECT_ID: ptem-a304f
+          VITE_FIREBASE_STORAGE_BUCKET: ptem-a304f.firebasestorage.app
+          VITE_FIREBASE_MESSAGING_SENDER_ID: '000000000000'
+          VITE_FIREBASE_APP_ID: '1:000000000000:web:prueba'
 
       - name: Confirmar archivos materializados
         shell: bash
