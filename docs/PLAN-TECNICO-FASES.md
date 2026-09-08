@@ -141,7 +141,7 @@ real.
 | # | Trabajo | Duración | Depende de |
 |---|---|---|---|
 | **F1** | Dominio propio + Firebase Hosting + `BrowserRouter` | 1-2 días | — · **cabe en Spark** · las portadas de P4 ya existen y esperan sus URLs |
-| **B** | Mi Botiquín (inventario de videojuego) | lógica corta · media con la capa visual | lista de artículos de la academia · **comparte catálogo con M** |
+| **B** | Mi Botiquín (inventario de videojuego) | lógica corta · media con la capa visual | **concepto cerrado 07-09-2026** (`docs/BOTIQUIN-CONCEPTO.md`) · B.0-B.2 sin dependencias, empiezan ya · las imágenes esperan presupuesto · **comparte catálogo con M** |
 | **R2** | Retar a un compañero | 2-3 semanas | **R1** ✔ · **F2** (tiempo real) · **A** (sin temas validados no hay banco) |
 | **O2** | Bloqueo por pago + bypass auditado | 3-5 días | O1 |
 | **O3** | Check-in de 8 horas | 3-5 días | O1 |
@@ -1690,10 +1690,22 @@ commits.
 
 ---
 
-## Trabajo B — Mi Botiquín · PENDIENTE · dirección visual decidida el 31-08-2026
+## Trabajo B — Mi Botiquín · PENDIENTE · **concepto cerrado el 07-09-2026**
 
-Detalle en `PLAN-LMS.md` §26. La función más barata y la que menos depende del
-temario.
+> **Empieza por `docs/BOTIQUIN-CONCEPTO.md`.** Ese documento es el concepto
+> completo y listo para construir: resuelve la contradicción entre `PLAN-LMS.md`
+> §26.1 y el §B.1 de aquí sobre dónde vive el catálogo, unifica el modelo de
+> datos, define la puerta de validación con 0 temas firmados y —lo que levanta el
+> bloqueo— **entrega un catálogo candidato de 44 artículos DERIVADO del temario**,
+> cada uno con su lección canónica ya identificada. La academia corrige una lista
+> en vez de escribirla. Lo que queda aquí abajo es el registro de las decisiones
+> del 31 de agosto, que el concepto respeta y desarrolla.
+>
+> **Los tres primeros pasos (B.0, B.1, B.2 del concepto) no dependen de nada de
+> la academia. Se puede empezar hoy.**
+
+Detalle histórico en `PLAN-LMS.md` §26. La función más barata y la que menos
+depende del temario.
 
 Catálogo curado por compartimento, ficha por artículo (para qué sirve, cuándo
 se usa, cuándo no, cómo se revisa antes del turno, errores frecuentes, con qué

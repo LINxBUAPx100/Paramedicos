@@ -1283,6 +1283,15 @@ la lista la entrega el dueño.
 
 ## 26.1 Modelo de datos
 
+> **MATIZADO el 07-09-2026 — lee `docs/BOTIQUIN-CONCEPTO.md` §2 antes de esto.**
+> Lo que sigue dice «el catálogo es contenido curado en el repositorio, no datos
+> de Firestore», y el §B.1 de `docs/PLAN-TECNICO-FASES.md` dice lo contrario por
+> una razón de seguridad válida: compilarlo en la aplicación reabre el agujero
+> que P2 cerró. La contradicción era falsa. Se cura en el repositorio Y se sirve
+> desde Firestore, que es exactamente lo que ya hace el temario: se cura en
+> `src/data/contenido/`, se genera, se siembra por academia y no es alcanzable
+> desde el cliente. Los campos de abajo siguen valiendo; el destino, no.
+
 El catálogo es **contenido curado en el repositorio**, no datos de Firestore:
 es el mismo para todas las academias y así viaja con las mismas garantías de
 revisión que el temario.
