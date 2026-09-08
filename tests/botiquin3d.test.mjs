@@ -37,7 +37,7 @@ test('el catálogo inicial es ampliable, válido y conserva las cantidades confi
   assert.equal(cantidadTotalArticulo(vendas), 6)
   assert.equal(etiquetaCantidadArticulo(vendas), '6 rollos')
   assert.equal(cantidadTotalArticulo(cateteres), null)
-  assert.equal(etiquetaCantidadArticulo(cateteres), 'Por confirmar')
+  assert.equal(etiquetaCantidadArticulo(cateteres), 'Cantidad por confirmar')
 })
 
 test('el catálogo no incluye una segunda versión de la enseñanza clínica', () => {
