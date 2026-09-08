@@ -1,0 +1,103 @@
+name: Aplicar Botiquín 3D visible
+
+on:
+  push:
+    branches:
+      - fix/botiquin-visible-funcional
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  aplicar:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Cablear ruta, menú y superficie visual
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          def reemplazar(path, anterior, nuevo):
+              archivo = Path(path)
+              contenido = archivo.read_text(encoding='utf-8')
+              veces = contenido.count(anterior)
+              if veces != 1:
+                  raise SystemExit(f'{path}: se esperó 1 coincidencia y se encontraron {veces}')
+              archivo.write_text(contenido.replace(anterior, nuevo), encoding='utf-8')
+
+          reemplazar(
+              'src/App.jsx',
+              "const AtlasAnatomicoPage = lazy(() => import('./pages/AtlasAnatomicoPage.jsx'))",
+              "const AtlasAnatomicoPage = lazy(() => import('./pages/AtlasAnatomicoPage.jsx'))\n// Inventario visual: escena procedural y catálogo solo viajan al entrar.\nconst BotiquinPage = lazy(() => import('./pages/BotiquinPage.jsx'))",
+          )
+          reemplazar(
+              'src/App.jsx',
+              '            <Route path="/atlas-anatomico" element={<RutaProtegida><AtlasAnatomicoPage /></RutaProtegida>} />',
+              '            <Route path="/atlas-anatomico" element={<RutaProtegida><AtlasAnatomicoPage /></RutaProtegida>} />\n            <Route path="/botiquin" element={<RutaProtegida><BotiquinPage /></RutaProtegida>} />',
+          )
+          reemplazar(
+              'src/components/Layout.jsx',
+              "  { to: '/atlas-anatomico', icon: 'atlas', label: 'Atlas anatómico 3D', soloConAcceso: true },",
+              "  { to: '/atlas-anatomico', icon: 'atlas', label: 'Atlas anatómico 3D', soloConAcceso: true },\n  { to: '/botiquin', icon: 'cruz', label: 'Mi Botiquín 3D', soloConAcceso: true },",
+          )
+          reemplazar(
+              'src/components/Layout.jsx',
+              "  const esAtlas = location.pathname.startsWith('/atlas-anatomico')",
+              "  const esAtlas = location.pathname.startsWith('/atlas-anatomico')\n    || location.pathname.startsWith('/botiquin')",
+          )
+          reemplazar(
+              'src/components/Layout.jsx',
+              '              <Link to="/atlas-anatomico">Atlas anatómico 3D</Link>',
+              '              <Link to="/atlas-anatomico">Atlas anatómico 3D</Link>\n              <Link to="/botiquin">Mi Botiquín 3D</Link>',
+          )
+          reemplazar(
+              'src/lib/carrerasModelo.js',
+              "  'flashcards', 'logros', 'creditos', 'atlas', 'temario', 'progreso',",
+              "  'flashcards', 'logros', 'creditos', 'atlas', 'botiquin', 'temario', 'progreso',",
+          )
+          PY
+
+          rm -f scripts/.botiquin-archive-*.part scripts/.botiquin-payload-*.b64
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Ejecutar pruebas
+        run: npm test
+
+      - name: Compilar producción
+        run: npm run build
+        env:
+          VITE_FIREBASE_API_KEY: prueba-local
+          VITE_FIREBASE_AUTH_DOMAIN: ptem-a304f.firebaseapp.com
+          VITE_FIREBASE_PROJECT_ID: ptem-a304f
+          VITE_FIREBASE_STORAGE_BUCKET: ptem-a304f.firebasestorage.app
+          VITE_FIREBASE_MESSAGING_SENDER_ID: '000000000000'
+          VITE_FIREBASE_APP_ID: '1:000000000000:web:prueba'
+
+      - name: Confirmar integración materializada
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/aplicar-botiquin-visible.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git status --short
+          git commit -m "feat(botiquin): habilita inventario 3D interactivo en PTEM"
+          git push origin HEAD:fix/botiquin-visible-funcional
