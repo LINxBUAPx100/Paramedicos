@@ -76,6 +76,11 @@ export const CATEGORIAS_BOTIQUIN = [
 
 export const RIESGOS_BOTIQUIN = ['identificacion', 'tecnica', 'invasivo', 'farmacologia']
 export const CADUCIDADES_BOTIQUIN = ['no_aplica', 'revisar_fecha', 'esteril_sellado', 'por_definir']
+
+// Cómo se planta una pieza fotográfica en la bandeja. La lista vive aquí, en el
+// módulo puro, porque es el validador quien la hace cumplir; piezas.js la
+// importa para no tener dos verdades.
+export const ORIENTACIONES_PIEZA = ['sigue', 'fija', 'acostada']
 export const PRESETS_VISUALES_BOTIQUIN = [
   'botella', 'frasco', 'sobre', 'paquete', 'rollo', 'caja', 'guantes', 'cubrebocas',
   'baumanometro', 'estetoscopio', 'cabestrillo', 'compresa', 'ferula', 'termometro',
@@ -90,6 +95,11 @@ const IDS_RIESGOS = new Set(RIESGOS_BOTIQUIN)
 const IDS_CADUCIDAD = new Set(CADUCIDADES_BOTIQUIN)
 const IDS_PRESET = new Set(PRESETS_VISUALES_BOTIQUIN)
 const ID_VALIDO = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
+
+// Ruta relativa a public/imagenes/. Se valida la FORMA, no solo la presencia:
+// una ruta con `..` o con una extensión arbitraria saldría del directorio
+// servido o pediría al navegador un archivo que no sabe pintar.
+export const RUTA_IMAGEN_BOTIQUIN = /^[a-z0-9][a-z0-9-]*(?:\/[a-z0-9][a-z0-9-]*)*\.(?:png|webp|avif)$/
 
 export function normalizarTextoBotiquin(valor) {
   return String(valor || '')
@@ -179,6 +189,24 @@ export function problemasDeArticulo(articulo, indice = 0) {
   }
   if (!articulo.visual || !IDS_PRESET.has(articulo.visual.preset)) {
     problemas.push(`${prefijo}: preset visual desconocido.`)
+  }
+  const imagen = articulo.visual?.imagen
+  if (imagen != null && (typeof imagen !== 'string' || !RUTA_IMAGEN_BOTIQUIN.test(imagen))) {
+    problemas.push(`${prefijo}: la imagen debe ser una ruta servible bajo imagenes/ (png, webp o avif).`)
+  }
+  if (imagen != null) {
+    // Una pieza fotográfica sin tamaño real no se puede dibujar en proporción
+    // con las demás, que es justo para lo que existe la tabla de piezas.
+    const v = articulo.visual
+    if (!(typeof v.tamanoCm === 'number' && v.tamanoCm > 0)) {
+      problemas.push(`${prefijo}: la pieza con foto necesita tamanoCm mayor que cero.`)
+    }
+    if (!(typeof v.grosorCm === 'number' && v.grosorCm >= 0)) {
+      problemas.push(`${prefijo}: grosorCm debe ser un número (0 para una lámina sin volumen).`)
+    }
+    if (!ORIENTACIONES_PIEZA.includes(v.orientacion)) {
+      problemas.push(`${prefijo}: orientación desconocida (${ORIENTACIONES_PIEZA.join(', ')}).`)
+    }
   }
   if (articulo.temaId != null && typeof articulo.temaId !== 'string') problemas.push(`${prefijo}: temaId inválido.`)
   if (articulo.desbloqueaCon != null) {

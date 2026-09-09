@@ -1,0 +1,897 @@
+/* ============================================================
+   Mi Botiquín 3D — inventario inmersivo de PTEM
+   ============================================================ */
+
+/* El lienzo a sangre.
+   `Layout` marca <main> con `contenido--atlas` también en /botiquin, pero esa
+   regla vivía SOLO en anatomy3d.css, que se importa desde la página del atlas.
+   Las dos páginas son `lazy`, así que aquí no llegaba: <main> conservaba su
+   `max-width` y su `padding`, y como todos los hijos de .botiquin3d-page son
+   absolutos, el contenido medía 0 → main de 102px (puro padding), la página de
+   0px de ancho y `overflow: hidden` recortando la pantalla entera. En blanco.
+   Cada superficie inmersiva declara su propio contenedor. */
+.contenido--atlas {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+}
+
+.botiquin3d-page {
+  --bot-glass: color-mix(in srgb, var(--bg-2) 88%, transparent);
+  --bot-glass-strong: color-mix(in srgb, var(--bg-2) 96%, transparent);
+  --bot-line: color-mix(in srgb, var(--borde-fuerte) 72%, transparent);
+  position: relative;
+  width: 100%;
+  height: max(720px, calc(100dvh - var(--topbar-h)));
+  min-height: 720px;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 50% 38%, color-mix(in srgb, var(--primario) 12%, transparent), transparent 40%),
+    linear-gradient(180deg, color-mix(in srgb, var(--bg) 90%, #07101d), var(--bg));
+  color: var(--texto);
+}
+
+.botiquin3d-page.is-fullscreen {
+  height: 100dvh;
+  min-height: 100dvh;
+}
+
+.botiquin3d-page button,
+.botiquin3d-page input,
+.botiquin3d-page select { font: inherit; }
+
+.botiquin3d-page button { color: inherit; }
+
+.botiquin3d-page button:focus-visible,
+.botiquin3d-page input:focus-visible,
+.botiquin3d-page select:focus-visible,
+.botiquin3d-page a:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--primario-claro) 76%, white);
+  outline-offset: 3px;
+}
+
+.botiquin3d-scene,
+.botiquin3d-scene canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.botiquin3d-canvas {
+  display: block;
+  touch-action: none;
+  cursor: grab;
+}
+
+.botiquin3d-canvas:active { cursor: grabbing; }
+
+.botiquin3d-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 48%, transparent 30%, color-mix(in srgb, var(--bg) 24%, transparent) 100%),
+    linear-gradient(90deg, color-mix(in srgb, var(--bg) 44%, transparent), transparent 26%, transparent 74%, color-mix(in srgb, var(--bg) 48%, transparent));
+}
+
+.botiquin3d-identity {
+  position: absolute;
+  z-index: 5;
+  top: 24px;
+  left: 28px;
+  pointer-events: none;
+}
+
+.botiquin3d-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--e-8);
+  color: var(--texto-2);
+  font-family: var(--fuente-sub);
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.botiquin3d-eyebrow > i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--verde);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--verde) 16%, transparent);
+}
+
+.botiquin3d-identity h1 {
+  margin: 5px 0 0;
+  font-family: var(--fuente-display);
+  font-size: clamp(1.85rem, 3vw, 2.8rem);
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.botiquin3d-identity h1 b {
+  display: inline-flex;
+  margin-left: var(--e-8);
+  padding: 3px 7px;
+  translate: 0 -6px;
+  border: 1px solid var(--borde-fuerte);
+  border-radius: 999px;
+  font-family: var(--fuente-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+}
+
+.botiquin3d-identity p {
+  display: flex;
+  gap: var(--e-8);
+  margin: var(--e-8) 0 0;
+  color: var(--texto-2);
+  font-family: var(--fuente-mono);
+  font-size: var(--t-xs);
+}
+
+.botiquin3d-top-actions,
+.botiquin3d-compartments,
+.botiquin3d-inventory,
+.botiquin3d-challenge,
+.botiquin3d-status,
+.botiquin3d-loading,
+.botiquin3d-error,
+.botiquin3d-detail {
+  border: 1px solid var(--bot-line);
+  background: var(--bot-glass);
+  box-shadow: var(--sombra-md);
+  backdrop-filter: blur(18px) saturate(1.15);
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+}
+
+.botiquin3d-top-actions {
+  position: absolute;
+  z-index: 9;
+  top: 22px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px;
+  border-radius: 999px;
+}
+
+.botiquin3d-top-actions > button {
+  display: inline-flex;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--texto-2);
+  cursor: pointer;
+  transition: color var(--dur-rapida), background var(--dur-rapida), transform var(--dur-rapida);
+}
+
+.botiquin3d-top-actions > button:hover,
+.botiquin3d-top-actions > button.is-active {
+  background: color-mix(in srgb, var(--primario) 14%, var(--bg-2));
+  color: var(--primario-claro);
+}
+
+.botiquin3d-top-actions > button:active { transform: scale(0.94); }
+
+.botiquin3d-search {
+  display: flex;
+  min-width: 260px;
+  height: 40px;
+  align-items: center;
+  gap: var(--e-8);
+  padding: 0 var(--e-12);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg) 38%, transparent);
+  color: var(--texto-2);
+}
+
+.botiquin3d-search input {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--texto);
+}
+
+.botiquin3d-search input::placeholder { color: var(--texto-3); }
+
+.botiquin3d-search kbd {
+  padding: 1px 6px;
+  border: 1px solid var(--borde-fuerte);
+  border-radius: 5px;
+  color: var(--texto-3);
+  font-family: var(--fuente-mono);
+  font-size: 0.68rem;
+}
+
+.botiquin3d-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-12);
+  padding: var(--e-16);
+  border-bottom: 1px solid var(--borde);
+}
+
+.botiquin3d-panel-heading > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.botiquin3d-panel-heading strong {
+  font-family: var(--fuente-display);
+  font-size: var(--t-base);
+  font-weight: 800;
+}
+
+.botiquin3d-panel-heading small {
+  color: var(--texto-3);
+  font-size: var(--t-xs);
+}
+
+.botiquin3d-compartments {
+  position: absolute;
+  z-index: 7;
+  top: 136px;
+  left: 22px;
+  display: flex;
+  width: 236px;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--radio);
+}
+
+.botiquin3d-compartments > button {
+  display: grid;
+  grid-template-columns: 10px 1fr auto;
+  align-items: center;
+  gap: var(--e-12);
+  min-height: 45px;
+  padding: 0 var(--e-16);
+  border: 0;
+  border-top: 1px solid color-mix(in srgb, var(--borde) 72%, transparent);
+  background: transparent;
+  color: var(--texto-2);
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--dur-rapida), color var(--dur-rapida), padding var(--dur-rapida);
+}
+
+.botiquin3d-compartments > button:first-of-type { border-top: 0; }
+
+.botiquin3d-compartments > button:hover,
+.botiquin3d-compartments > button.is-active {
+  padding-left: 19px;
+  background: color-mix(in srgb, var(--primario) 11%, var(--bg-2));
+  color: var(--texto);
+}
+
+.botiquin3d-compartments > button > i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-comp);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-comp) 18%, transparent);
+}
+
+.botiquin3d-compartments > button span {
+  overflow: hidden;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.botiquin3d-compartments > button em {
+  min-width: 24px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--bg) 68%, transparent);
+  color: var(--texto-3);
+  font-family: var(--fuente-mono);
+  font-size: 0.68rem;
+  font-style: normal;
+  text-align: center;
+}
+
+.botiquin3d-inventory {
+  position: absolute;
+  z-index: 7;
+  top: 136px;
+  right: 22px;
+  bottom: 126px;
+  display: flex;
+  width: min(322px, 27vw);
+  min-width: 278px;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--radio);
+}
+
+.botiquin3d-inventory select {
+  max-width: 122px;
+  padding: 6px 27px 6px 9px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+  background: var(--bg);
+  color: var(--texto-2);
+  font-size: var(--t-xs);
+}
+
+.botiquin3d-list {
+  min-height: 0;
+  flex: 1;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+.botiquin3d-list-item {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 33px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--e-12);
+  min-height: 61px;
+  padding: 9px 12px;
+  border: 0;
+  border-bottom: 1px solid var(--borde);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--dur-rapida), transform var(--dur-rapida);
+}
+
+.botiquin3d-list-item:hover,
+.botiquin3d-list-item.is-active {
+  background: color-mix(in srgb, var(--primario) 11%, var(--bg-2));
+}
+
+.botiquin3d-list-item:active { transform: scale(0.985); }
+
+.botiquin3d-list-symbol {
+  display: inline-flex;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--verde) 13%, var(--bg));
+  color: var(--verde);
+}
+
+.botiquin3d-list-item.estado-proximo .botiquin3d-list-symbol {
+  background: color-mix(in srgb, #f59e0b 14%, var(--bg));
+  color: #f59e0b;
+}
+
+.botiquin3d-list-item.estado-bloqueado .botiquin3d-list-symbol,
+.botiquin3d-list-item.estado-silueta .botiquin3d-list-symbol {
+  background: color-mix(in srgb, var(--texto-3) 11%, var(--bg));
+  color: var(--texto-3);
+}
+
+.botiquin3d-list-item > span:nth-child(2) {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.botiquin3d-list-item strong {
+  overflow: hidden;
+  color: var(--texto);
+  font-size: var(--t-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.botiquin3d-list-item small {
+  overflow: hidden;
+  color: var(--texto-3);
+  font-size: 0.7rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.botiquin3d-list-item > em {
+  max-width: 72px;
+  color: var(--texto-3);
+  font-family: var(--fuente-mono);
+  font-size: 0.64rem;
+  font-style: normal;
+  line-height: 1.25;
+  text-align: right;
+}
+
+.botiquin3d-empty {
+  margin: 0;
+  padding: 28px 20px;
+  color: var(--texto-3);
+  font-size: var(--t-sm);
+  text-align: center;
+}
+
+.botiquin3d-challenge {
+  position: absolute;
+  z-index: 8;
+  bottom: 24px;
+  left: 50%;
+  display: flex;
+  width: min(610px, calc(100% - 660px));
+  min-width: 390px;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-16);
+  padding: 12px 14px 12px 17px;
+  border-radius: var(--radio);
+  transform: translateX(-50%);
+}
+
+.botiquin3d-challenge.is-active {
+  border-color: color-mix(in srgb, var(--primario-claro) 52%, var(--bot-line));
+}
+
+.botiquin3d-challenge > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.botiquin3d-challenge span {
+  color: var(--texto-3);
+  font-family: var(--fuente-mono);
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.botiquin3d-challenge strong {
+  overflow: hidden;
+  font-size: var(--t-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.botiquin3d-challenge small {
+  color: #f59e0b;
+  font-size: 0.7rem;
+}
+
+.botiquin3d-challenge small.is-success { color: var(--verde); }
+
+.botiquin3d-challenge > button,
+.botiquin3d-error > button {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: var(--e-8);
+  min-height: 39px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--primario);
+  color: #fff;
+  font-size: var(--t-sm);
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.botiquin3d-status {
+  position: absolute;
+  z-index: 6;
+  bottom: 24px;
+  left: 22px;
+  display: flex;
+  max-width: 236px;
+  flex-wrap: wrap;
+  gap: 7px 12px;
+  padding: 10px 12px;
+  border-radius: var(--radio-sm);
+}
+
+.botiquin3d-status span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--texto-3);
+  font-size: 0.66rem;
+}
+
+.botiquin3d-status i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.botiquin3d-status i.disponible { background: var(--verde); }
+.botiquin3d-status i.proximo { background: #f59e0b; }
+.botiquin3d-status i.bloqueado { background: var(--texto-3); }
+
+.botiquin3d-status b {
+  width: 100%;
+  color: var(--primario-claro);
+  font-family: var(--fuente-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.botiquin3d-loading,
+.botiquin3d-error {
+  position: absolute;
+  z-index: 15;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  min-width: 290px;
+  align-items: center;
+  gap: var(--e-12);
+  padding: 18px 20px;
+  border-radius: var(--radio);
+  transform: translate(-50%, -50%);
+}
+
+.botiquin3d-loading {
+  flex-direction: column;
+  text-align: center;
+}
+
+.botiquin3d-loading strong { font-family: var(--fuente-display); }
+.botiquin3d-loading small { color: var(--texto-3); }
+
+.botiquin3d-error {
+  max-width: 470px;
+  border-color: color-mix(in srgb, var(--rojo) 45%, var(--bot-line));
+  color: var(--rojo);
+}
+
+.botiquin3d-error > div { flex: 1; }
+.botiquin3d-error strong { color: var(--texto); }
+.botiquin3d-error p { margin: 3px 0 0; color: var(--texto-2); font-size: var(--t-sm); }
+
+.botiquin3d-detail-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  justify-content: flex-end;
+  padding: 18px;
+  background: color-mix(in srgb, #020617 64%, transparent);
+  animation: botiquin-capa var(--dur-rapida) ease both;
+}
+
+.botiquin3d-detail {
+  width: min(510px, 100%);
+  height: 100%;
+  overflow: auto;
+  border-radius: calc(var(--radio) + 4px);
+  background: var(--bot-glass-strong);
+  animation: botiquin-panel 260ms ease both;
+  scrollbar-width: thin;
+}
+
+.botiquin3d-detail > header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 22px 58px 18px 22px;
+  border-bottom: 1px solid var(--borde);
+  background: color-mix(in srgb, var(--bg-2) 96%, transparent);
+  backdrop-filter: blur(20px);
+}
+
+.botiquin3d-detail > header > button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: inline-flex;
+  width: 38px;
+  height: 38px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--borde);
+  border-radius: 50%;
+  background: var(--bg);
+  cursor: pointer;
+}
+
+.botiquin3d-detail h2 {
+  margin: var(--e-8) 0 3px;
+  font-family: var(--fuente-display);
+  font-size: clamp(1.55rem, 3vw, 2.2rem);
+  line-height: 1.05;
+}
+
+.botiquin3d-detail > header p {
+  margin: 0;
+  color: var(--texto-2);
+  font-size: var(--t-sm);
+}
+
+.botiquin3d-state {
+  display: inline-flex;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--verde) 14%, var(--bg));
+  color: var(--verde);
+  font-family: var(--fuente-mono);
+  font-size: 0.64rem;
+  font-weight: 750;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.botiquin3d-state.estado-proximo {
+  background: color-mix(in srgb, #f59e0b 14%, var(--bg));
+  color: #f59e0b;
+}
+
+.botiquin3d-state.estado-bloqueado,
+.botiquin3d-state.estado-silueta {
+  background: color-mix(in srgb, var(--texto-3) 12%, var(--bg));
+  color: var(--texto-3);
+}
+
+.botiquin3d-detail-content { padding: 20px 22px 28px; }
+
+.botiquin3d-quantity-card {
+  display: grid;
+  gap: 2px;
+  margin-bottom: 20px;
+  padding: 15px 16px;
+  border: 1px solid color-mix(in srgb, var(--primario) 30%, var(--borde));
+  border-radius: var(--radio-sm);
+  background: color-mix(in srgb, var(--primario) 8%, var(--bg));
+}
+
+.botiquin3d-quantity-card span,
+.botiquin3d-quantity-card small {
+  color: var(--texto-3);
+  font-size: 0.68rem;
+}
+
+.botiquin3d-quantity-card strong {
+  font-family: var(--fuente-display);
+  font-size: 1.35rem;
+}
+
+.botiquin3d-detail-section {
+  padding: 16px 0;
+  border-top: 1px solid var(--borde);
+}
+
+.botiquin3d-detail-section h3 {
+  margin: 0 0 8px;
+  font-family: var(--fuente-display);
+  font-size: var(--t-base);
+}
+
+.botiquin3d-detail-section p,
+.botiquin3d-detail-section li {
+  color: var(--texto-2);
+  font-size: var(--t-sm);
+  line-height: 1.55;
+}
+
+.botiquin3d-detail-section p { margin: 0; }
+.botiquin3d-detail-section ul { display: grid; gap: 7px; margin: 0; padding-left: 20px; }
+
+.botiquin3d-variants {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.botiquin3d-variants > span {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+  padding: 9px 10px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+  background: var(--bg);
+}
+
+.botiquin3d-variants strong { font-size: var(--t-xs); }
+.botiquin3d-variants small { color: var(--texto-3); font-size: 0.68rem; }
+
+.botiquin3d-safety-note {
+  display: flex;
+  gap: var(--e-12);
+  margin-top: 18px;
+  padding: 13px 14px;
+  border: 1px solid color-mix(in srgb, #f59e0b 32%, var(--borde));
+  border-radius: var(--radio-sm);
+  background: color-mix(in srgb, #f59e0b 8%, var(--bg));
+  color: #f59e0b;
+}
+
+.botiquin3d-safety-note p {
+  margin: 0;
+  color: var(--texto-2);
+  font-size: var(--t-xs);
+  line-height: 1.5;
+}
+
+.botiquin3d-safety-note strong { color: var(--texto); }
+
+.botiquin3d-lesson-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--e-12);
+  margin-top: 14px;
+  padding: 13px 15px;
+  border-radius: var(--radio-sm);
+  background: var(--primario);
+  color: #fff;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.botiquin3d-lesson-link:hover { color: #fff; text-decoration: none; filter: brightness(1.06); }
+
+.botiquin3d-pending-link {
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  border: 1px dashed var(--borde-fuerte);
+  border-radius: var(--radio-sm);
+  color: var(--texto-3);
+  font-size: var(--t-xs);
+  line-height: 1.5;
+}
+
+.botiquin3d-locked-card {
+  display: flex;
+  min-height: 360px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: var(--e-12);
+  padding: 32px;
+  color: var(--texto-3);
+  text-align: center;
+}
+
+.botiquin3d-locked-card h3 { margin: 0; color: var(--texto); font-family: var(--fuente-display); }
+.botiquin3d-locked-card p { max-width: 330px; margin: 0; line-height: 1.55; }
+
+@keyframes botiquin-capa {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes botiquin-panel {
+  from { opacity: 0; transform: translateX(28px) scale(0.985); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@media (max-width: 1180px) {
+  .botiquin3d-compartments { width: 210px; }
+  .botiquin3d-inventory { width: 280px; min-width: 260px; }
+  .botiquin3d-challenge { width: calc(100% - 530px); min-width: 330px; }
+  .botiquin3d-status { max-width: 210px; }
+}
+
+@media (max-width: 900px) {
+  .botiquin3d-page {
+    height: max(840px, calc(100dvh - var(--topbar-h)));
+    min-height: 840px;
+  }
+
+  .botiquin3d-identity { top: 18px; left: 18px; }
+  .botiquin3d-identity p { display: none; }
+  .botiquin3d-top-actions { top: 16px; right: 14px; }
+  .botiquin3d-search { min-width: 0; width: 42px; padding: 0 12px; }
+  .botiquin3d-search input,
+  .botiquin3d-search kbd { display: none; }
+  .botiquin3d-search:focus-within {
+    position: fixed;
+    z-index: 50;
+    top: calc(var(--topbar-h) + 10px);
+    left: 12px;
+    width: calc(100% - 24px);
+    background: var(--bg-2);
+  }
+  .botiquin3d-search:focus-within input { display: block; }
+
+  .botiquin3d-compartments {
+    top: 102px;
+    right: 12px;
+    left: 12px;
+    width: auto;
+    flex-direction: row;
+    overflow-x: auto;
+    border-radius: var(--radio-sm);
+  }
+  .botiquin3d-compartments .botiquin3d-panel-heading { display: none; }
+  .botiquin3d-compartments > button {
+    display: inline-flex;
+    min-width: max-content;
+    min-height: 40px;
+    padding: 0 12px;
+    border-top: 0;
+    border-left: 1px solid var(--borde);
+  }
+  .botiquin3d-compartments > button:hover,
+  .botiquin3d-compartments > button.is-active { padding-left: 12px; }
+  .botiquin3d-compartments > button em { display: none; }
+
+  .botiquin3d-inventory {
+    top: auto;
+    right: 12px;
+    bottom: 92px;
+    left: 12px;
+    width: auto;
+    min-width: 0;
+    height: 210px;
+  }
+  .botiquin3d-list {
+    display: grid;
+    grid-auto-columns: minmax(220px, 260px);
+    grid-auto-flow: column;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .botiquin3d-list-item { height: 100%; border-right: 1px solid var(--borde); }
+
+  .botiquin3d-challenge {
+    bottom: 20px;
+    left: 12px;
+    width: calc(100% - 24px);
+    min-width: 0;
+    transform: none;
+  }
+  .botiquin3d-status { display: none; }
+}
+
+@media (max-width: 620px) {
+  .botiquin3d-page {
+    height: max(810px, calc(100dvh - var(--topbar-h)));
+    min-height: 810px;
+  }
+  .botiquin3d-identity h1 { font-size: 1.55rem; }
+  .botiquin3d-eyebrow { font-size: 0.58rem; }
+  .botiquin3d-top-actions > button { width: 36px; height: 36px; }
+  .botiquin3d-search { width: 36px; height: 36px; padding: 0 9px; }
+  .botiquin3d-compartments { top: 86px; }
+  .botiquin3d-inventory { height: 225px; bottom: 112px; }
+  .botiquin3d-challenge { align-items: flex-end; bottom: 12px; }
+  .botiquin3d-challenge strong { white-space: normal; line-height: 1.3; }
+  .botiquin3d-challenge small { display: none; }
+  .botiquin3d-challenge > button { padding: 0 12px; }
+  .botiquin3d-detail-layer { padding: 0; }
+  .botiquin3d-detail { border: 0; border-radius: 0; }
+  .botiquin3d-detail-content { padding-right: 17px; padding-left: 17px; }
+  .botiquin3d-variants { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .botiquin3d-detail-layer,
+  .botiquin3d-detail { animation: none; }
+  .botiquin3d-page *,
+  .botiquin3d-page *::before,
+  .botiquin3d-page *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

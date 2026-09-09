@@ -230,7 +230,7 @@ export function contactoDeCarrera(carrera) {
 
 const RESERVADOS = [
   'cuenta', 'terminos-y-condiciones', 'modulo', 'fase', 'tema', 'examen',
-  'flashcards', 'logros', 'creditos', 'atlas', 'temario', 'progreso',
+  'flashcards', 'logros', 'creditos', 'atlas', 'botiquin', 'temario', 'progreso',
   'buscar', 'panel', 'editor', 'admin',
 ]
 

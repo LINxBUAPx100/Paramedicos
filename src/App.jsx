@@ -41,6 +41,8 @@ const LogrosPage = lazy(() => import('./pages/LogrosPage.jsx'))
 // El atlas carga su motor y geometría únicamente cuando el alumno entra. No
 // añade Three.js ni los modelos anatómicos al paquete inicial de PTEM.
 const AtlasAnatomicoPage = lazy(() => import('./pages/AtlasAnatomicoPage.jsx'))
+// Inventario visual: la escena procedural y el catálogo solo viajan al entrar.
+const BotiquinPage = lazy(() => import('./pages/BotiquinPage.jsx'))
 // Créditos del material visual. Es una obligación de las licencias CC BY del
 // Atlas, no una página informativa: va FUERA de RutaProtegida porque el crédito
 // tiene que poder consultarse sin haber entrado en una academia.
@@ -186,6 +188,7 @@ export default function App() {
             <Route path="/flashcards/:temaId" element={<RutaProtegida><FlashcardsPage /></RutaProtegida>} />
             <Route path="/logros" element={<RutaProtegida><LogrosPage /></RutaProtegida>} />
             <Route path="/atlas-anatomico" element={<RutaProtegida><AtlasAnatomicoPage /></RutaProtegida>} />
+            <Route path="/botiquin" element={<RutaProtegida><BotiquinPage /></RutaProtegida>} />
             <Route path="/creditos" element={<CreditosPage />} />
             {/* El Atlas pasó a llamarse Logros. La ruta vieja sigue viva porque
                 está en enlaces compartidos, en el historial de los alumnos y en

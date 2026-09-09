@@ -39,6 +39,7 @@ const NAV = [
   { to: '/examen', icon: 'examen', label: 'Examen general', soloConAcceso: true },
   { to: '/flashcards', icon: 'flashcards', label: 'Flashcards', soloConAcceso: true },
   { to: '/atlas-anatomico', icon: 'atlas', label: 'Atlas anatómico 3D', soloConAcceso: true },
+  { to: '/botiquin', icon: 'cruz', label: 'Mi Botiquín 3D', soloConAcceso: true },
   { to: '/logros', icon: 'atlas', label: 'Logros', soloConAcceso: true },
   { to: '/progreso', icon: 'progreso', label: 'Mi progreso', soloConAcceso: true },
   { to: '/buscar', icon: 'buscar', label: 'Buscar', soloConAcceso: true },
@@ -124,6 +125,7 @@ export default function Layout({ children }) {
   // El atlas es una superficie de trabajo visual: el lienzo necesita todo el
   // ancho y controla su propio alto, paneles y márgenes.
   const esAtlas = location.pathname.startsWith('/atlas-anatomico')
+    || location.pathname.startsWith('/botiquin')
 
   // NO INDEXAR lo que no es público. Con una sola página, `robots.txt` apenas
   // decide nada: el rastreador descarga un documento y lo que lee después es lo
@@ -385,6 +387,7 @@ export default function Layout({ children }) {
               <Link to="/examen">Examen</Link>
               <Link to="/flashcards">Flashcards</Link>
               <Link to="/atlas-anatomico">Atlas anatómico 3D</Link>
+              <Link to="/botiquin">Mi Botiquín 3D</Link>
               <Link to="/logros">Logros</Link>
             </div>
           )}
