@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useSearchParams } from 'react-router-dom'
 import {
   useApiContenido, useFichasDeModulo, CargandoContenido, ErrorContenido,
 } from '../context/ContenidoContext.jsx'
@@ -12,14 +12,24 @@ import { tituloVisibleDe } from '../data/contenido/titulosVisibles.js'
 
 export default function ModuloPage() {
   const { moduloId } = useParams()
+  const [parametros, setParametros] = useSearchParams()
+  const consulta = parametros.get('q') || ''
+  const lectura = parametros.get('lectura') || 'todos'
+  const cambiarFiltro = (clave, valor) => {
+    const siguientes = new URLSearchParams(parametros)
+    if (valor && valor !== 'todos') siguientes.set(clave, valor)
+    else siguientes.delete(clave)
+    setParametros(siguientes, { replace: true })
+  }
   // El módulo sale del índice (sin lecturas); sus lecciones, de UNA ficha.
   const { api, error, reintentar } = useApiContenido()
   const modulo = api?.getModulo(moduloId)
-  const { fichas, cargando } = useFichasDeModulo(moduloId)
+  const { fichas, cargando, error: errorFichas, reintentar: reintentarFichas } = useFichasDeModulo(moduloId)
   const { estado } = useProgress()
   const { moduloVisible, temaVisible } = useVisibilidad()
 
   if (error) return <ErrorContenido onReintentar={reintentar} />
+  if (errorFichas) return <ErrorContenido onReintentar={reintentarFichas} />
   if (cargando) return <CargandoContenido variante="modulo" />
   if (!modulo) return <NotFound />
 
@@ -36,6 +46,10 @@ export default function ModuloPage() {
   }
 
   const temas = fichas.filter((t) => temaVisible(t.id))
+  const normalizar = (texto) => String(texto || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('es')
+  const resultados = temas.filter((t) => normalizar(`${t.numero} ${tituloVisibleDe(t)} ${t.resumen || ''}`).includes(normalizar(consulta.trim()))
+    && (lectura === 'todos' || (lectura === 'leidos' ? Boolean(estado.leidos[t.id]) : !estado.leidos[t.id])))
+  const leidos = temas.filter((t) => estado.leidos[t.id]).length
 
   return (
     <div className="modulo-page" style={{ '--modulo-color': modulo.color }}>
@@ -54,8 +68,22 @@ export default function ModuloPage() {
 
       <p className="modulo-desc">{modulo.descripcion}</p>
 
+      <section className="ui-modulo-indice" aria-label="Encontrar un tema del módulo">
+        <div className="ui-herramientas">
+          <label className="ui-campo">Buscar en este módulo
+            <input type="search" value={consulta} onChange={(e) => cambiarFiltro('q', e.target.value)} placeholder="Título, número o concepto" />
+          </label>
+          <label className="ui-campo">Lectura
+            <select value={lectura} onChange={(e) => cambiarFiltro('lectura', e.target.value)}>
+              <option value="todos">Todos los temas</option><option value="pendientes">Pendientes de leer</option><option value="leidos">Ya leídos</option>
+            </select>
+          </label>
+        </div>
+        <p role="status">{resultados.length} de {temas.length} temas · {leidos} leídos</p>
+      </section>
+
       <div className="temas-lista">
-        {temas.map((tema) => {
+        {resultados.map((tema) => {
           const leido = estado.leidos[tema.id]
           const quiz = estado.quizzes[tema.id]
           // El listado dice el estado editorial ANTES de entrar: abrir cinco
@@ -92,6 +120,7 @@ export default function ModuloPage() {
           )
         })}
       </div>
+      {resultados.length === 0 && <p className="ui-estado">{temas.length ? 'No hay temas que coincidan con estos filtros.' : 'Tu profesor todavía no ha liberado temas de este módulo.'}</p>}
 
       <section className="modulo-examen-cta">
         <div className="modulo-examen-txt">

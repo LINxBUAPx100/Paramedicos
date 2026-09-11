@@ -142,8 +142,9 @@ export default function ExamenPage() {
             Todas ({preguntasDisponibles.length})
           </button>
         </div>
-        <button className="btn btn--primario btn--lg" onClick={() => iniciar(cantidad)}>
-          Comenzar examen de {cantidad} preguntas
+        {preguntasDisponibles.length === 0 && <p className="ui-estado" role="status">Todavía no hay preguntas avaladas disponibles. Puedes seguir estudiando los temas.</p>}
+        <button className="btn btn--primario btn--lg" disabled={!preguntasDisponibles.length} onClick={() => iniciar(cantidad)}>
+          Comenzar examen de {Math.min(cantidad, preguntasDisponibles.length)} preguntas
         </button>
       </div>
 

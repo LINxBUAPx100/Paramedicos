@@ -368,18 +368,27 @@ export function useTema(temaId) {
   return { tema: dato, api, cargando: Boolean(temaId) && cargando, error, reintentar }
 }
 
-/** Preguntas de un módulo (examen de módulo). Una lectura. */
+/** Preguntas contrastadas con fichas y validaciones efectivas de la academia. */
 export function usePreguntasDeModulo(moduloId) {
   const { dato, cargando, error, reintentar } = useCargaDeApi(
-    (a) => (moduloId ? a.preguntasDeModuloAsync(moduloId) : []),
+    async (a) => {
+      if (!moduloId) return []
+      const { preguntasAvaladasDeAgregado } = await import('../lib/bancoExamen.js')
+      const [preguntas, fichas] = await Promise.all([a.preguntasDeModuloAsync(moduloId), a.fichasDeModuloAsync(moduloId)])
+      return preguntasAvaladasDeAgregado(preguntas, fichas)
+    },
     [moduloId]
   )
   return { preguntas: dato || [], cargando, error, reintentar }
 }
 
-/** Banco completo (examen general). Una lectura por módulo. */
+/** Banco completo: preguntas y fichas por módulo, sin cargar lecciones. */
 export function useTodasLasPreguntas() {
-  const { dato, cargando, error, reintentar } = useCargaDeApi((a) => a.todasLasPreguntasAsync(), [])
+  const { dato, cargando, error, reintentar } = useCargaDeApi(async (a) => {
+    const { preguntasAvaladasDeAgregado } = await import('../lib/bancoExamen.js')
+    const [preguntas, fichas] = await Promise.all([a.todasLasPreguntasAsync(), a.todasLasFichasAsync()])
+    return preguntasAvaladasDeAgregado(preguntas, fichas)
+  }, [])
   return { preguntas: dato || [], cargando, error, reintentar }
 }
 

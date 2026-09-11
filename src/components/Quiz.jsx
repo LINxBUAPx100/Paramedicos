@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { barajarPreguntas } from '../lib/baraja.js'
 import Icon from './Icon.jsx'
 
@@ -21,9 +21,12 @@ export default function Quiz({ preguntas, onComplete, titulo, semilla = null, on
   const [aciertos, setAciertos] = useState(0)
   const [terminado, setTerminado] = useState(false)
   const [respuestas, setRespuestas] = useState([])
+  const encabezado = useRef(null)
+  useEffect(() => { if (indice > 0) encabezado.current?.focus() }, [indice])
 
   const pregunta = baraja[indice]
   const total = baraja.length
+  if (!total) return <section className="ui-estado" role="status"><h2>No hay preguntas disponibles</h2><p>Este material todavía no tiene preguntas para presentar. Vuelve al tema o al módulo desde la navegación.</p></section>
   const esCorrecta = (i) => pregunta.correcta.includes(i)
 
   function confirmar() {
@@ -116,7 +119,7 @@ export default function Quiz({ preguntas, onComplete, titulo, semilla = null, on
         />
       </div>
 
-      <h3 className="quiz-pregunta">{pregunta.pregunta}</h3>
+      <h3 className="quiz-pregunta" tabIndex={-1} ref={encabezado}>{pregunta.pregunta}</h3>
 
       <div className="quiz-opciones">
         {pregunta.opciones.map((op, i) => {
@@ -131,6 +134,7 @@ export default function Quiz({ preguntas, onComplete, titulo, semilla = null, on
             <button
               key={i}
               className={clase}
+              aria-pressed={seleccion === i}
               onClick={() => !confirmado && setSeleccion(i)}
               disabled={confirmado}
             >
@@ -148,7 +152,7 @@ export default function Quiz({ preguntas, onComplete, titulo, semilla = null, on
       </div>
 
       {confirmado && (
-        <div className={`quiz-explicacion ${esCorrecta(seleccion) ? 'ok' : 'mal'}`}>
+        <div role="status" className={`quiz-explicacion ${esCorrecta(seleccion) ? 'ok' : 'mal'}`}>
           <strong>
             <Icon name={esCorrecta(seleccion) ? 'check' : 'cerrar'} size={15} />{' '}
             {esCorrecta(seleccion) ? 'Correcto.' : 'Incorrecto.'}{' '}

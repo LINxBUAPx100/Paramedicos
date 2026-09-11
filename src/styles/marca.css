@@ -1,0 +1,172 @@
+:root {
+  --azul: #0ea5e9;
+  --verde: #10b981;
+  --ambar: #f59e0b;
+  --rojo: #ef4444;
+  --morado: #8b5cf6;
+  --cian: #06b6d4;
+
+  /* Azul de emergencias (Estrella de la Vida) — marca/identidad */
+  --primario: #0c5fc4;
+  --primario-claro: #3f8ef0;
+  --primario-oscuro: #08428c;
+
+  /* Rojo de emergencia (CTA / alertas / ambulancia) */
+  --urgencia: #e11d2a;
+  --urgencia-claro: #f8323f;
+  --urgencia-oscuro: #b30f1c;
+
+  /* Ámbar alta-visibilidad (acentos puntuales) */
+  --alerta: #ffb000;
+
+  /* Superficies del diseño PTEM */
+  --carbon: #16181d;          /* barra de nav y footer (charcoal) */
+  --carbon-2: #23262d;
+  --carbon-texto: #e9ecf1;    /* texto sobre charcoal */
+  --carbon-texto-2: #aab3c0;
+  --plata-1: #f4f6f8;         /* degradado plata del hero (claro) */
+  --plata-2: #d8dde3;
+
+  --modulo-color: var(--primario);
+  /* Color de la CARRERA en las portadas públicas. Lo sobrescribe cada página
+     con el de su tipo de programa (META_PROGRAMA); aquí solo vive el valor de
+     reserva, para que una vitrina sin color declarado no pierda los bordes. */
+  --carrera-color: var(--primario);
+
+  --fuente-display: 'Heebo', system-ui, -apple-system, 'Segoe UI', sans-serif; /* títulos */
+  --fuente-cifra: 'Cascadia Code', 'Heebo', ui-monospace, monospace;          /* números */
+  --fuente-sub: 'Oswald', 'Heebo', system-ui, sans-serif;                      /* subtítulos/labels */
+  --fuente-cuerpo: 'Fira Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; /* texto */
+  --fuente-mono: 'Cascadia Code', 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  /* Tema claro (por defecto) */
+  --bg: #eef2f7;
+  --bg-2: #ffffff;
+  --bg-3: #f4f7fb;
+  --texto: #0b1220;
+  --texto-2: #475569;
+  --texto-3: #616b7a;         /* AA: 5.4:1 sobre blanco (antes #8a98ab, 2.9:1) */
+  --enlace: #0c5fc4;          /* color de enlaces en texto — AA 6.1:1 sobre blanco */
+  --borde: #e3e9f1;
+  --borde-fuerte: #cbd5e1;
+  --sombra: 0 1px 2px rgba(15, 23, 42, 0.06), 0 2px 8px rgba(15, 23, 42, 0.05);
+  --sombra-md: 0 6px 18px rgba(15, 23, 42, 0.09);
+  --sombra-lg: 0 18px 44px rgba(15, 23, 42, 0.16);
+  --sombra-color: 0 10px 30px -8px color-mix(in srgb, var(--modulo-color) 45%, transparent);
+  --radio: 16px;
+  --radio-sm: 11px;
+  --radio-lg: 24px;
+  --sidebar-w: 290px;
+  /* Altura REAL de la barra superior. Decía 62 px mientras la regla del tema
+     charcoal la pintaba de 64: la variable mentía por 2 px a todo el que la
+     usaba (el alto del panel lateral, los `scroll-margin-top`…). Se notó en la
+     portada general, donde el héroe se sube `-var(--topbar-h)` para que la foto
+     empiece pegada arriba: quedaban 2 px de fondo de página asomando entre la
+     barra y la foto, y en tema claro eso es una raya blanca de lado a lado.
+     Un solo sitio manda; la regla del tema ya no repite el número. */
+  --topbar-h: 64px;
+  --consola-riel: 216px; /* navegación fija de /admin y /panel */
+
+  /* ============================================================
+     ESCALAS DEL SISTEMA
+     ------------------------------------------------------------
+     Antes no existían: había 123 valores únicos de padding, 25+ tamaños de
+     fuente y 15 duraciones de transición, todos escritos a ojo. Ese ruido de
+     1–3px entre componentes hermanos es lo que hace que la retícula "baile".
+     Regla: todo padding/margin/gap/font-size/transition sale de aquí.
+     ============================================================ */
+
+  /* Espaciado — rejilla de 4px con micro-pasos de 2 y 6. Los tokens se llaman
+     por su valor en px justamente para que `gap: var(--e-8)` se lea solo. */
+  --e-2: 2px;
+  --e-4: 4px;
+  --e-6: 6px;
+  --e-8: 8px;
+  --e-12: 12px;
+  --e-16: 16px;
+  --e-20: 20px;
+  --e-24: 24px;
+  --e-32: 32px;
+  --e-40: 40px;
+  --e-48: 48px;
+  --e-64: 64px;
+
+  /* Tipografía — 9 escalones. Elegidos para que los tamaños que ya dominaban
+     el archivo (1, 1.25, 1.5, 2rem) NO se muevan: la escala ordena el resto
+     sin repintar media app. */
+  --t-xs: 0.75rem;
+  --t-sm: 0.875rem;
+  --t-base: 1rem;
+  --t-md: 1.125rem;
+  --t-lg: 1.25rem;
+  --t-xl: 1.5rem;
+  --t-2xl: 2rem;
+  --t-3xl: 2.5rem;
+  --t-4xl: 3rem;
+
+  /* Motion — 3 duraciones. Había 15, la mayoría 0.15s y 0.18s: indistinguibles
+     entre sí pero aplicadas a componentes hermanos. */
+  --dur-rapida: 120ms;   /* respuesta táctil: hover, active, foco */
+  --dur-media: 220ms;    /* entradas y cambios de estado */
+  --dur-lenta: 420ms;    /* transiciones de layout */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* confirmaciones */
+
+  /* Color SEMÁNTICO — esto faltaba de verdad: el archivo ya usaba
+     `var(--exito)` en 8 sitios, con un token que NUNCA se definió.
+     Siempre ganaba el fallback, también en tema oscuro, donde ese verde da
+     ~3.1:1 sobre la superficie: falla AA justo en el feedback de "respuesta
+     correcta" de un quiz. Al definirlo aquí, los 8 usos se arreglan solos. */
+  --exito: #15803d;
+  --exito-suave: #dcfce7;
+  --peligro: #b91c1c;
+  --peligro-suave: #fee2e2;
+  --aviso: #b45309;
+  --aviso-suave: #fef3c7;
+
+  /* Versión SÓLIDA para rellenos con texto blanco encima. No se invierte por
+     tema a propósito: los tonos claros de arriba (#4ade80, #f87171) son para
+     TEXTO sobre fondo oscuro; usarlos como fondo de un botón con letra blanca
+     daría un contraste pésimo. Estos dos aguantan blanco en ambos temas. */
+  --exito-solido: #15803d;
+  --peligro-solido: #b91c1c;
+  /* Marcador del glosario: el trazo de plumón que señala un tecnicismo.
+     Azul claro translúcido para que el texto siga leyéndose encima. */
+  --marcador: rgba(56, 189, 248, 0.42);
+  --marcador-fuerte: rgba(56, 189, 248, 0.72);
+}
+
+html[data-tema='oscuro'] {
+  /* Sobre fondo oscuro el mismo azul se apaga: se sube la carga y se aclara
+     el texto marcado en la regla de .glosario-termino. */
+  --marcador: rgba(56, 189, 248, 0.30);
+  --marcador-fuerte: rgba(56, 189, 248, 0.55);
+  --bg: #070b14;
+  --bg-2: #0f1726;
+  --bg-3: #0b1322;
+  --plata-1: #161b27;
+  --plata-2: #0c1019;
+  --texto: #e9eef6;
+  --texto-2: #9fb0c6;
+  --texto-3: #7c8ba3;         /* AA: 5.2:1 sobre superficie oscura (antes #647389, 3.7:1) */
+  --enlace: #3f8ef0;          /* enlaces en oscuro — claro sobre fondo oscuro */
+  --borde: #1b2435;
+  --borde-fuerte: #2c3852;
+  --sombra: 0 1px 2px rgba(0, 0, 0, 0.5), 0 2px 10px rgba(0, 0, 0, 0.4);
+  --sombra-md: 0 8px 22px rgba(0, 0, 0, 0.55);
+  --sombra-lg: 0 22px 50px rgba(0, 0, 0, 0.65);
+  --sombra-color: 0 12px 34px -8px color-mix(in srgb, var(--modulo-color) 55%, transparent);
+
+  /* Color semántico en oscuro. Sin esto, el verde y el rojo del tema claro se
+     usaban tal cual sobre fondo oscuro (el fallo de contraste del quiz).
+     Ahora cada componente que use var(--exito)/var(--peligro) se adapta solo:
+     se acabaron los overrides `html[data-tema='oscuro'] .lo-que-sea`. */
+  --exito: #4ade80;
+  --exito-suave: #052e16;
+  --peligro: #f87171;
+  --peligro-suave: #450a0a;
+  --aviso: #fbbf24;
+  --aviso-suave: #451a03;
+}
+

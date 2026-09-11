@@ -94,6 +94,7 @@ function Acceso({ codigoInvitacion = '' }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [codigoError, setCodigoError] = useState('')
   const [aviso, setAviso] = useState('')
   const [ocupado, setOcupado] = useState(false)
   const [perfiles, setPerfiles] = useState(leerPerfiles)
@@ -101,10 +102,16 @@ function Acceso({ codigoInvitacion = '' }) {
   // Con invitación NO navegamos fuera: al autenticarse, Cuenta re-renderiza y
   // muestra el perfil con el código ya pre-llenado para activarlo.
   const trasEntrar = () => { if (!codigoInvitacion) navigate('/') }
+  const mostrarError = (err) => {
+    setError(traducirError(err))
+    // Solo el código conocido del SDK, nunca credenciales ni objetos de sesión.
+    setCodigoError(/^auth\/[a-z-]+$/.test(err?.code || '') ? err.code : '')
+  }
 
   const enviar = async (e) => {
     e.preventDefault()
     setError('')
+    setCodigoError('')
     setOcupado(true)
     try {
       let u
@@ -113,20 +120,21 @@ function Acceso({ codigoInvitacion = '' }) {
       recordarPerfil({ email: u.email, nombre: u.displayName || nombre })
       trasEntrar()
     } catch (err) {
-      setError(traducirError(err))
+      mostrarError(err)
       setOcupado(false)
     }
   }
 
   const conGoogle = async () => {
     setError('')
+    setCodigoError('')
     setOcupado(true)
     try {
       const u = await entrarGoogle()
       recordarPerfil({ email: u.email, nombre: u.displayName || '' })
       trasEntrar()
     } catch (err) {
-      setError(traducirError(err))
+      mostrarError(err)
       setOcupado(false)
     }
   }
@@ -138,18 +146,24 @@ function Acceso({ codigoInvitacion = '' }) {
 
   const olvidada = async () => {
     setError(''); setAviso('')
+    setCodigoError('')
     if (!email) { setError('Escribe tu correo y vuelve a tocar "¿Olvidaste tu contraseña?".'); return }
     try {
       const { enviarResetPassword } = await import('../lib/firebase/admin.js')
       await enviarResetPassword(email)
       setAviso(`Te enviamos un correo a ${email} para restablecer tu contraseña.`)
     } catch (err) {
-      setError(traducirError(err))
+      mostrarError(err)
     }
   }
 
   return (
     <div className="cuenta-card">
+      <header className="ui-acceso-cabecera">
+        <span className="ui-antetitulo">Tu espacio de estudio</span>
+        <h1>{modo === 'login' ? 'Entra a tu academia' : 'Crea tu cuenta'}</h1>
+        <p>{modo === 'login' ? 'Usa tu cuenta habitual para continuar con tu grupo y tu temario.' : 'Regístrate para ingresar con el código de tu academia.'}</p>
+      </header>
       {codigoInvitacion && (
         <div className="cuenta-invitacion" role="status">
           <span className="cuenta-invitacion-ico"><Icon name="pildora" size={18} /></span>
@@ -208,7 +222,10 @@ function Acceso({ codigoInvitacion = '' }) {
           />
         </label>
 
-        {error && <p className="cuenta-error" role="alert">{error}</p>}
+        {error && <div className="cuenta-error" role="alert">
+          <p>{error}</p>
+          {codigoError && <details className="ui-acceso-diagnostico"><summary>Datos para soporte</summary><p>Código: <code>{codigoError}</code></p></details>}
+        </div>}
         {aviso && <p className="cuenta-ok" role="status">{aviso}</p>}
 
         <button type="submit" className="btn btn--pildora btn--carbon" disabled={ocupado}>

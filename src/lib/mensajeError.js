@@ -29,7 +29,12 @@ export function mensajeDeError(e) {
   if (c.includes('email-already-in-use')) return 'Ese correo ya está registrado. Inicia sesión.'
   if (c.includes('weak-password')) return 'La contraseña debe tener al menos 6 caracteres.'
   if (c.includes('invalid-email')) return 'El correo no es válido.'
-  if (c.includes('popup-closed')) return 'Cerraste la ventana de Google antes de terminar.'
+  if (c === 'auth/unauthorized-domain') return 'Esta dirección de la aplicación no está autorizada para iniciar sesión. Abre la dirección habitual de PTEM o pide al administrador que revise los dominios autorizados de Firebase Authentication.'
+  if (c === 'auth/popup-blocked') return 'El navegador bloqueó la ventana de Google. Permite las ventanas emergentes para este sitio y vuelve a intentarlo, o abre PTEM en Chrome, Edge, Firefox o Safari.'
+  if (c === 'auth/web-storage-unsupported') return 'El navegador no permite guardar la sesión. Revisa sus permisos de almacenamiento o abre PTEM en tu navegador habitual.'
+  if (c === 'auth/operation-not-supported-in-this-environment') return 'Este entorno no admite este método de acceso. Abre PTEM en tu navegador habitual e inténtalo ahí.'
+  if (c === 'auth/operation-not-allowed') return 'Este método de acceso no está habilitado. Usa otro método disponible o avisa al administrador de tu academia.'
+  if (c.includes('popup-closed')) return 'La ventana de Google se cerró antes de completar el acceso. Vuelve a intentarlo en tu navegador habitual.'
   if (c.includes('requires-recent-login')) return 'Por seguridad, cierra sesión y vuelve a entrar antes de hacer este cambio.'
   if (c.includes('too-many-requests')) return 'Demasiados intentos seguidos. Espera unos minutos y vuelve a probar.'
 

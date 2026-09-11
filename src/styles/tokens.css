@@ -1,0 +1,20 @@
+/* Extensión semántica de la marca. La academia conserva --primario y sus fuentes. */
+:root {
+  --ui-papel: var(--bg-2);
+  --ui-lienzo: var(--bg);
+  --ui-tinta: var(--texto);
+  --ui-secundario: var(--texto-2);
+  --ui-linea: var(--borde-fuerte);
+  --ui-acento: var(--primario);
+  --ui-radio: 8px;
+  --ui-radio-panel: 12px;
+  --ui-lectura: 72ch;
+  --ui-interlineado: 1.75;
+  --ui-control: 44px;
+  --ui-foco: var(--enlace);
+  --ui-sombra: 0 8px 28px rgb(15 23 42 / 5%);
+  --ui-duracion: 160ms;
+}
+html[data-tema='oscuro'] {
+  --ui-sombra: 0 8px 28px rgb(0 0 0 / 16%);
+}

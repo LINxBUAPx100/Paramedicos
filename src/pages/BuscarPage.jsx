@@ -23,11 +23,12 @@ export default function BuscarPage() {
   return (
     <div className="buscar-page">
       <header className="buscar-header">
-        <h1>Buscar en la guía</h1>
+        <h1>Buscar en el temario</h1>
         <p>Encuentra temas y conceptos clave por palabra.</p>
       </header>
 
       <input
+        aria-label="Buscar tema o concepto en el temario"
         type="search"
         className="buscar-input"
         placeholder="Ej. shock, capnografía, lactato, sepsis…"
@@ -37,7 +38,7 @@ export default function BuscarPage() {
       />
 
       {query.trim() && (
-        <p className="buscar-conteo">
+        <p className="buscar-conteo" role="status">
           {resultados.length} {resultados.length === 1 ? 'resultado' : 'resultados'} para «{query}»
         </p>
       )}

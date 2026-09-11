@@ -76,6 +76,7 @@ const EQUIVALE = {
   recepcion: 'recepcion',  // el alta de mostrador, con el MISMO formulario
   calificaciones: 'calificaciones',
   contenido: 'contenido',
+  revision: 'revision', // ya existe por academia/curso con la gestión de dictámenes
 }
 
 test('el recorrido encuentra los dos árboles de rutas', () => {

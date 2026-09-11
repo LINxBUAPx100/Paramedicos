@@ -28,8 +28,8 @@ const ATLAS_SRC = Object.fromEntries(ATLAS_TEMAS.map((t) => [t.clave, t.src]))
 // `T` enlaza al glosario cada tecnicismo del texto (TextoGlosario). Sin estado
 // compartido entre bloques: el resultado de un bloque no depende de cuáles se
 // hayan pintado antes.
-function Bloque({ bloque }) {
-  const T = (texto) => <TextoGlosario texto={texto} />
+function Bloque({ bloque, enlazarGlosario = true }) {
+  const T = (texto) => enlazarGlosario ? <TextoGlosario texto={texto} /> : texto
   switch (bloque.tipo) {
     case 'p':
       return <p className="c-parrafo">{T(bloque.texto)}</p>
@@ -188,14 +188,14 @@ function Bloque({ bloque }) {
   }
 }
 
-export default function Contenido({ secciones }) {
+export default function Contenido({ secciones, enlazarGlosario = true }) {
   return (
     <div className="contenido-tema">
       {secciones.map((sec, i) => (
-        <section className="seccion" key={i}>
+        <section className="seccion" id={`leccion-seccion-${i}`} tabIndex={-1} key={i}>
           <h2 className="seccion-titulo">{sec.titulo}</h2>
           {sec.bloques.map((b, j) => (
-            <Bloque bloque={b} key={j} />
+            <Bloque bloque={b} key={j} enlazarGlosario={enlazarGlosario} />
           ))}
         </section>
       ))}

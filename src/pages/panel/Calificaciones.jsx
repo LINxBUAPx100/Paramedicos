@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
-import { usePanel } from '../../components/panel/PanelShell.jsx'
+import { usePanel, FiltroGrupo } from '../../components/panel/PanelShell.jsx'
 import { useAuth } from '../../context/AuthContext.jsx'
 import ConfirmacionReforzada from '../../components/ConfirmacionReforzada.jsx'
 import Icon from '../../components/Icon.jsx'
+import { filtrarFilasCalificaciones } from '../../lib/tablaCalificaciones.js'
 import {
   normalizarEvaluacion, indexarCalificaciones, resumenDelGrupo, resumenDeEvaluacion,
   validarValor, resumenPorGrupos, APROBADO,
@@ -36,6 +37,10 @@ export function LibroDeCalificaciones({ academiaId, alumnos, grupos, grupoFiltro
   const [ocupado, setOcupado] = useState(false)
   const [nueva, setNueva] = useState(null) // formulario de alta
   const [borrando, setBorrando] = useState(null)
+  const [consulta, setConsulta] = useState('')
+  const [evidencia, setEvidencia] = useState('todos')
+  const [orden, setOrden] = useState('nombre')
+  const [pagina, setPagina] = useState(1)
 
   useEffect(() => {
     if (!academiaId) return undefined
@@ -73,6 +78,11 @@ export function LibroDeCalificaciones({ academiaId, alumnos, grupos, grupoFiltro
 
   const indice = useMemo(() => indexarCalificaciones(calificaciones), [calificaciones])
   const resumen = useMemo(() => resumenDelGrupo(visibles, alumnos, indice), [visibles, alumnos, indice])
+  const filasFiltradas = useMemo(() => filtrarFilasCalificaciones(resumen.filas, { consulta, evidencia, orden }), [resumen.filas, consulta, evidencia, orden])
+  const paginas = Math.max(1, Math.ceil(filasFiltradas.length / 20))
+  const paginaActual = Math.min(pagina, paginas)
+  const filasPagina = filasFiltradas.slice((paginaActual - 1) * 20, paginaActual * 20)
+  useEffect(() => { setPagina(1) }, [consulta, evidencia, orden, grupoFiltro])
   // Retrato por grupos para quien dirige. Usa TODAS las evaluaciones, no las
   // filtradas: cada grupo se mide con las que le aplican, y eso lo decide el
   // módulo puro.
@@ -91,10 +101,10 @@ export function LibroDeCalificaciones({ academiaId, alumnos, grupos, grupoFiltro
       if (bruto === '') {
         await api.quitarCalificacion(evaluacion.id, alumno.id)
         setCalificaciones((prev) => prev.filter((c) => !(c.evaluacionId === evaluacion.id && c.uid === alumno.id)))
-        return
+        return true
       }
       const malo = validarValor(bruto)
-      if (malo) { setError(malo); return }
+      if (malo) { setError(malo); return false }
       await api.guardarCalificacion({
         evaluacionId: evaluacion.id,
         academiaId,
@@ -107,8 +117,10 @@ export function LibroDeCalificaciones({ academiaId, alumnos, grupos, grupoFiltro
         const resto = prev.filter((c) => !(c.evaluacionId === evaluacion.id && c.uid === alumno.id))
         return [...resto, { evaluacionId: evaluacion.id, uid: alumno.id, academiaId, valor: Number(bruto) }]
       })
+      return true
     } catch (err) {
       setError(err?.message || 'No se pudo guardar la calificación.')
+      return false
     }
   }
 
@@ -316,8 +328,16 @@ export function LibroDeCalificaciones({ academiaId, alumnos, grupos, grupoFiltro
       ) : alumnos.length === 0 ? (
         <p className="panel-vacio">No hay alumnos en este grupo a los que calificar.</p>
       ) : (
-        <div className="panel-tabla-wrap">
+        <section className="ui-libro" aria-label="Libro de calificaciones">
+        <div className="ui-herramientas">
+          <label className="ui-campo">Buscar alumno<input type="search" value={consulta} onChange={(e) => setConsulta(e.target.value)} placeholder="Nombre o correo" /></label>
+          <label className="ui-campo">Evaluación<select value={evidencia} onChange={(e) => setEvidencia(e.target.value)}><option value="todos">Todos los alumnos</option><option value="riesgo">En riesgo: menos de 70%</option><option value="sin-evidencia">Sin evidencia de evaluación</option><option value="pendientes">Con notas pendientes</option></select></label>
+          <label className="ui-campo">Ordenar<select value={orden} onChange={(e) => setOrden(e.target.value)}><option value="nombre">Nombre</option><option value="promedio">Menor promedio primero</option></select></label>
+        </div>
+        <p role="status">{filasFiltradas.length} alumnos · página {paginaActual} de {paginas}</p>
+        <div className="panel-tabla-wrap" tabIndex={0} role="region" aria-label="Calificaciones; desplázate horizontalmente para ver todas las evaluaciones">
           <table className="panel-tabla cal-tabla">
+            <caption>Evaluaciones del docente · las notas se guardan al salir de la celda.</caption>
             <thead>
               <tr>
                 <th scope="col">Alumno</th>
@@ -347,7 +367,7 @@ export function LibroDeCalificaciones({ academiaId, alumnos, grupos, grupoFiltro
               </tr>
             </thead>
             <tbody>
-              {resumen.filas.map((fila) => (
+              {filasPagina.map((fila) => (
                 <tr key={fila.alumno.id}>
                   <th scope="row" className="panel-alumno">
                     {fila.alumno.nombre || fila.alumno.email || fila.alumno.id}
@@ -365,13 +385,20 @@ export function LibroDeCalificaciones({ academiaId, alumnos, grupos, grupoFiltro
                     </td>
                   ))}
                   <td className={`cal-promedio ${fila.promedio === null ? '' : fila.aprobado ? 'ok' : 'mal'}`}>
-                    {fila.promedio === null ? '—' : `${fila.promedio}%`}
+                    {fila.promedio === null ? 'Sin evidencia' : `${fila.promedio}%`}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+        {filasFiltradas.length === 0 && <p className="ui-estado">Ningún alumno coincide con estos filtros.</p>}
+        <nav className="ui-paginacion" aria-label="Páginas de calificaciones">
+          <button className="btn btn--suave" disabled={paginaActual === 1} onClick={() => setPagina(paginaActual - 1)}>Anterior</button>
+          <span>{paginaActual} / {paginas}</span>
+          <button className="btn btn--suave" disabled={paginaActual === paginas} onClick={() => setPagina(paginaActual + 1)}>Siguiente</button>
+        </nav>
+        </section>
       )}
 
       <p className="panel-nota">
@@ -410,24 +437,32 @@ export function LibroDeCalificaciones({ academiaId, alumnos, grupos, grupoFiltro
 function CeldaNota({ valor, etiqueta, onGuardar }) {
   const inicial = Number.isFinite(Number(valor)) && valor !== undefined && valor !== null ? String(valor) : ''
   const [texto, setTexto] = useState(inicial)
+  const [guardado, setGuardado] = useState('')
   // Si la tabla se recarga por fuera, la celda refleja el valor nuevo.
   useEffect(() => { setTexto(inicial) }, [inicial])
 
-  const confirmar = () => { if (texto !== inicial) onGuardar(texto) }
+  const confirmar = async () => {
+    if (texto === inicial || guardado === 'pendiente') return
+    setGuardado('pendiente')
+    try { setGuardado(await onGuardar(texto) === false ? 'error' : 'ok') }
+    catch { setGuardado('error') }
+  }
 
   return (
-    <input
+    <span><input
       type="text"
       inputMode="numeric"
       className={`cal-input ${texto === '' ? 'vacia' : Number(texto) >= APROBADO ? 'ok' : 'mal'}`}
       value={texto}
       aria-label={etiqueta}
+      aria-invalid={guardado === 'error'}
+      disabled={guardado === 'pendiente'}
       placeholder="—"
       maxLength={3}
-      onChange={(e) => setTexto(e.target.value.replace(/[^0-9]/g, ''))}
+      onChange={(e) => { setTexto(e.target.value.replace(/[^0-9]/g, '')); setGuardado('') }}
       onBlur={confirmar}
       onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); e.currentTarget.blur() } }}
-    />
+    /><span className={`ui-nota-estado ${guardado === 'error' ? 'ui-nota-error' : ''}`} role="status">{guardado === 'pendiente' ? 'Guardando…' : guardado === 'ok' ? 'Guardado' : guardado === 'error' ? <><span>No guardado</span><button type="button" onClick={confirmar}>Reintentar</button></> : ''}</span></span>
   )
 }
 
@@ -435,10 +470,9 @@ function CeldaNota({ valor, etiqueta, onGuardar }) {
 export default function PanelCalificaciones() {
   const { academiaId, alumnos, grupos, grupoFiltro, nombreGrupo, gestion } = usePanel()
   return (
-    <LibroDeCalificaciones
+    <><FiltroGrupo /><LibroDeCalificaciones
       academiaId={academiaId} alumnos={alumnos} grupos={grupos}
       grupoFiltro={grupoFiltro} nombreGrupo={nombreGrupo} gestion={gestion}
-    />
+    /></>
   )
 }
-

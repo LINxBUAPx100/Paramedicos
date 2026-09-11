@@ -284,17 +284,16 @@ function SeccionProgreso({ temasLeidos, total, pct }) {
   )
 }
 
-// ===== MODULOS (carrusel) =====
+// ===== MÓDULOS (lista con búsqueda) =====
 function SeccionModulos({ modulos, leidos }) {
   return (
     <section className="ph-modulos" id={ANCLA_MODULOS}>
       <div className="ph-wrap">
         <Reveal as="h2" className="ph-h2">
-          <IconoEstrella size={26} /> Modulos
+          <IconoEstrella size={26} /> Tu recorrido de estudio
         </Reveal>
         <Reveal as="p" className="ph-h2-sub" delay={70}>
-          Modulos progresivas, del fundamento celular a la farmacología avanzada, las poblaciones
-          especiales y el marco normativo.
+          Encuentra tu módulo y entra al temario. Tu avance de lectura aparece junto a cada uno.
         </Reveal>
       </div>
       <ModulosCarrusel modulos={modulos} leidos={leidos} />

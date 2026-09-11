@@ -1,0 +1,49 @@
+/* Capa de migración: misma cascada en aplicación y laboratorio local. */
+.ui-cabecera { border-bottom: 1px solid var(--ui-linea); padding-bottom: var(--e-24); margin-bottom: var(--e-24); }
+.ui-antetitulo { font: 500 var(--t-sm) var(--fuente-sub); text-transform: uppercase; letter-spacing: .12em; color: var(--enlace); }
+.ui-cabecera h1 { font: 800 clamp(1.8rem, 3vw, 3rem)/1.15 var(--fuente-display); margin: var(--e-8) 0 var(--e-12); letter-spacing: -.025em; }
+.ui-cabecera p { color: var(--texto-2); max-width: 70ch; }
+.ui-panel { background: var(--ui-papel); border: 1px solid var(--ui-linea); border-radius: var(--ui-radio-panel); padding: var(--e-24); box-shadow: var(--ui-sombra); margin-block: var(--e-24); }
+.ui-estado { padding: var(--e-24); border: 1px solid var(--ui-linea); border-left: 4px solid var(--primario); border-radius: var(--ui-radio); background: var(--bg-2); }
+.ui-estado h2 { margin-top: 0; font-size: var(--t-xl); }
+.ui-herramientas { display: flex; align-items: end; flex-wrap: wrap; gap: var(--e-16); margin-block: var(--e-20); }
+.ui-campo { display: grid; gap: var(--e-6); color: var(--texto-2); font-size: var(--t-sm); flex: 1; min-width: min(220px, 100%); }
+.ui-campo input, .ui-campo select, .ui-campo textarea { min-height: var(--ui-control); padding: var(--e-8) var(--e-12); background: var(--bg-2); color: var(--texto); border: 1px solid var(--borde-fuerte); border-radius: var(--ui-radio); font: 400 var(--t-base) var(--fuente-cuerpo); width: 100%; }
+.ui-tabla-wrap { overflow: auto; border: 1px solid var(--ui-linea); border-radius: var(--ui-radio); }
+.ui-tabla { width: 100%; min-width: 580px; border-collapse: collapse; font-size: var(--t-sm); background: var(--bg-2); }
+.ui-tabla caption { text-align: left; padding: var(--e-16); color: var(--texto-2); }
+.ui-tabla th { text-align: left; font-weight: 600; background: var(--bg-3); }
+.ui-tabla th, .ui-tabla td { padding: var(--e-12) var(--e-16); border-bottom: 1px solid var(--borde); vertical-align: middle; }
+.ui-tabla tr:last-child td { border-bottom: 0; }
+.ui-tabla tr:focus-within, .ui-tabla tbody tr:hover { background: var(--bg-3); }
+.ui-enlace { color: var(--enlace); background: none; border: 0; text-decoration: underline; text-underline-offset: 3px; font: inherit; text-align: left; cursor: pointer; min-height: var(--ui-control); }
+.ui-paginacion { display: flex; gap: var(--e-12); justify-content: space-between; align-items: center; margin-top: var(--e-16); flex-wrap: wrap; }
+.ui-etiqueta { display: inline-block; padding: var(--e-4) var(--e-8); border: 1px solid var(--borde-fuerte); border-radius: 4px; font-size: var(--t-sm); background: var(--bg-3); }
+.ui-etiqueta--riesgo { color: var(--peligro); background: var(--peligro-suave); }
+.ui-detalle { border-left: 4px solid var(--primario); scroll-margin-top: 90px; }
+.ui-detalle h3 { margin-top: 0; }
+.ui-indice { border: 1px solid var(--ui-linea); background: var(--bg-2); border-radius: var(--ui-radio); padding: var(--e-16) var(--e-20); margin-block: var(--e-24); }
+.ui-indice summary { cursor: pointer; font: 600 var(--t-base) var(--fuente-display); min-height: 28px; }
+.ui-indice ol { columns: 2; padding-left: var(--e-24); margin-bottom: 0; }
+.ui-indice li { break-inside: avoid; margin-block: var(--e-6); }
+.ui-indice button { color: var(--enlace); background: none; border: 0; text-align: left; padding: var(--e-6); min-height: 32px; cursor: pointer; font: inherit; }
+.ui-atajos { display: flex; flex-wrap: wrap; gap: var(--e-8); margin-block: var(--e-20); }
+.ui-nota-estado { display: block; font-size: var(--t-xs); max-width: 150px; white-space: normal; }
+.ui-nota-error { color: var(--peligro); }
+.ui-nota-error button { display: block; min-height: 24px; color: inherit; text-decoration: underline; background: none; border: 0; cursor: pointer; }
+.btn { min-height: var(--ui-control); border-radius: var(--ui-radio); font-weight: 600; transition: background var(--ui-duracion), border-color var(--ui-duracion); }
+.btn--primario { background: var(--primario); color: #fff; box-shadow: none; }
+.btn--primario:hover { background: var(--primario-oscuro); transform: none; }
+.btn--sm { min-height: 32px; }
+.btn:disabled { cursor: not-allowed; }
+:where(button, a, input, select, textarea, summary):focus-visible { outline: 3px solid var(--ui-foco); outline-offset: 3px; }
+.cal-input.ok, .cal-promedio.ok { color: var(--exito); }
+.cal-input.mal, .cal-promedio.mal { color: var(--peligro); }
+.cal-input { min-height: var(--ui-control); border-radius: 4px; }
+@media (max-width: 600px) {
+  .ui-panel { padding: var(--e-16); }
+  .ui-indice ol { columns: 1; }
+  .ui-tabla th, .ui-tabla td { padding: var(--e-8); }
+  .ui-herramientas { align-items: stretch; }
+}
+@media (prefers-reduced-motion: reduce) { .btn { transition: none; } }

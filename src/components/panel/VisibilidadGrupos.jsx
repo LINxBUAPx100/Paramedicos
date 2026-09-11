@@ -6,6 +6,7 @@ import { contarTemasOcultos, estadoModulo, focoBaraja, totalTemas } from '../../
 import { semaforoDe, tituloSemaforo } from '../../lib/estadoEditorial.js'
 import { estadosEditoriales } from '../../data/navIndice.js'
 import Icon from '../Icon.jsx'
+import { alternarModuloConExcepciones } from '../../lib/visibilidadEdicion.js'
 
 // Semáforo de avance editorial del temario oficial. Solo se pinta para el
 // superadmin: a un profesor le diría que un tema «no está listo» sin que pueda
@@ -149,16 +150,9 @@ export default function VisibilidadGrupos({
   const temaOcultoSolo = (tid) => ocultas.temas.includes(tid)
 
   const toggleModulo = (modulo) => {
-    if (moduloOculta(modulo.id)) {
-      // Mostrar TODO el módulo: quita el módulo y sus temas individuales.
-      const idsTemas = modulo.temas.map((t) => t.id)
-      guardar({
-        modulos: ocultas.modulos.filter((f) => f !== modulo.id),
-        temas: ocultas.temas.filter((t) => !idsTemas.includes(t)),
-      })
-    } else {
-      guardar({ ...ocultas, modulos: [...ocultas.modulos, modulo.id] })
-    }
+    const accion = moduloOculta(modulo.id) ? 'Mostrar' : 'Ocultar'
+    if (!window.confirm(`${accion} ${modulo.titulo} para ${grupo.nombre || grupo.id}. Los temas ocultos individualmente conservarán su configuración.`)) return
+    guardar(alternarModuloConExcepciones(ocultas, modulo.id))
   }
 
   const toggleTema = (tid) => {
@@ -392,7 +386,7 @@ export default function VisibilidadGrupos({
                     className="btn btn--sm btn--fantasma tv-ojo-txt"
                     onClick={() => toggleModulo(modulo)}
                     disabled={guardando}
-                    aria-label={`${est.porModulo ? 'Mostrar' : 'Ocultar'} el módulo completo: Módulo ${modulo.numero}, ${modulo.titulo}`}
+                    aria-label={`${est.porModulo ? 'Mostrar' : 'Ocultar'} el módulo conservando excepciones: Módulo ${modulo.numero}, ${modulo.titulo}`}
                   >
                     <Icon name={est.porModulo ? 'ojoCerrado' : 'ojo'} size={16} />
                     {est.porModulo ? 'Mostrar módulo' : 'Ocultar módulo'}

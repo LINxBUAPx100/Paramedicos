@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import SeguimientoAlumnos from '../../components/panel/SeguimientoAlumnos.jsx'
 import { usePanel, FiltroGrupo } from '../../components/panel/PanelShell.jsx'
 import Estadisticas from '../../components/panel/Estadisticas.jsx'
 import { ETIQUETA_PLAN, ETIQUETA_TIPO, planEfectivo } from '../../lib/capacidades.js'
@@ -50,13 +51,18 @@ export default function PanelResumen() {
 
       <FiltroGrupo />
 
-      <Estadisticas
+      <SeguimientoAlumnos alumnos={alumnos} porAlumno={porAlumno} modulos={modulos} />
+
+      <details className="ui-resumen-ampliado">
+        <summary>Ver estadísticas de la academia y de cada módulo</summary>
+        <Estadisticas
         alumnos={alumnos}
         staff={staff}
         intentos={intentos}
         porAlumno={porAlumno}
         modulos={modulos}
-      />
+        />
+      </details>
     </div>
   )
 }

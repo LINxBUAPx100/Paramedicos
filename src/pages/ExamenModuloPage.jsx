@@ -140,7 +140,8 @@ export default function ExamenModuloPage() {
             Es una <strong>autoevaluación</strong> para saber qué repasar, no una calificación
             oficial.
           </p>
-          <button className="btn btn--primario btn--lg" onClick={() => setIniciado(true)}>
+          {preguntas.length === 0 && <p className="ui-estado" role="status">Todavía no hay preguntas avaladas disponibles para este examen. Puedes seguir estudiando el módulo.</p>}
+          <button className="btn btn--primario btn--lg" disabled={!preguntas.length} onClick={() => setIniciado(true)}>
             Comenzar ({preguntas.length} preguntas)
           </button>
           <Link to={`/modulo/${modulo.id}`} className="link-discreto"><Icon name="chevronIzq" size={15} /> Volver al módulo</Link>

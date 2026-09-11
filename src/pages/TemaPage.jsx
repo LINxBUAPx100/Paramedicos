@@ -23,6 +23,7 @@ import { estadoEditorialDe, muestraContenido, esNodoDeEvaluacion } from '../lib/
 import { bancoDeExamen, temasEsperandoValidacion } from '../lib/bancoExamen.js'
 import { tituloVisibleDe } from '../data/contenido/titulosVisibles.js'
 import NotFound from './NotFound.jsx'
+import IndiceLeccion from '../components/ui/IndiceLeccion.jsx'
 
 export default function TemaPage() {
   const { temaId } = useParams()
@@ -118,8 +119,6 @@ export default function TemaPage() {
         {tema.numero}
       </nav>
 
-      <RevisionDocente tema={tema} />
-
       <header className="tema-header">
         <span className="tema-header-ico"><MedicalIcon id={tema.icono} size={34} /></span>
         <div className="tema-header-info">
@@ -139,6 +138,14 @@ export default function TemaPage() {
       </header>
 
       <AvisoEditorial estado={estadoEd} revision={tema.revision} />
+      <RevisionDocente tema={tema} />
+      {hayContenido && <>
+        <div className="ui-atajos">
+          {tema.quiz.length > 0 && <Link className="btn btn--primario" to={`/tema/${temaId}/quiz`}>Hacer el quiz</Link>}
+          {tema.flashcards.length > 0 && <Link className="btn btn--suave" to={`/flashcards/${temaId}`}>Repasar flashcards</Link>}
+        </div>
+        <IndiceLeccion secciones={tema.secciones} />
+      </>}
       {!esEvaluacion && <CuerpoSinContenido estado={estadoEd} revision={tema.revision} />}
 
       {/* Un nodo de examen o de práctica no es una lección: se presenta como lo

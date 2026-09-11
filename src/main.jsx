@@ -8,6 +8,9 @@ import { ProgressProvider } from './context/ProgressContext.jsx'
 import { TutorialProvider } from './context/TutorialContext.jsx'
 import { vigilarVersionNueva, versionCargadaBien } from './lib/versionNueva.js'
 import './index.css'
+import './styles/tokens.css'
+import './styles/componentes.css'
+import './styles/pantallas.css'
 
 // Antes de montar: si un trozo de la aplicación no se puede traer porque se
 // publicó una versión nueva mientras esta pestaña estaba abierta, se recarga

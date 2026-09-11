@@ -1,6 +1,6 @@
 # PTEM — Fase 0: reconocimiento del código
 
-Fecha: 8 de septiembre de 2026. Alcance: reconocimiento, sin diseño ni cambios funcionales.
+Reconocimiento: 8 de septiembre de 2026. Cierre de verificación: 9 de septiembre de 2026. Alcance: reconocimiento, sin diseño ni cambios funcionales.
 
 ## Supuestos, acuerdos y límites
 
@@ -229,6 +229,39 @@ Antes de Fase 6 habrá que operacionalizar «lectura cómoda», «vendible» y �
 
 ## 10. Verificación y cierre de fase
 
-La salida de verificación se completa al terminar los comandos locales. Las pruebas de reglas requieren el CLI Firebase; el intento de esta fase falló porque el comando no está instalado. No se instalaron dependencias.
+La ejecución iniciada el 8 de septiembre terminó durante la interrupción de la sesión. Al retomar se recuperaron sus logs locales: las pruebas pasaron y el build había fallado por acceso de esbuild al directorio padre. Se reintentó únicamente el build, con permiso de ejecución ampliado, y se completó el inventario pendiente. No se modificó código para conseguir estos resultados.
+
+| Comando / comprobación | Salida real observada |
+|---|---|
+| `node --version` / `npm --version` | `v24.13.1` / `11.8.0` |
+| `npm run gen:plan` | Exit 0; 7 módulos, 56 unidades, 287 temas; 178 borrador, 104 en_revision, 5 bloqueado_por_decision; 268 lecciones con material estudiable; 14 de 14 nodos de evaluación configurados |
+| `npm run gen:nav` | Exit 0; cifras de 7 módulos y 287 temas, sin títulos en el índice público |
+| `npm test` | 1214 tests; pass 1214; fail 0; cancelled 0; skipped 0; todo 0; duration_ms 317641.6144 |
+| `npm run build`, primer intento | Falló: `Cannot read directory "../..": Acceso denegado` y `Could not resolve ...vite.config.js` |
+| `npm run build`, reintento con permiso ampliado | Exit 0; `built in 4.54s`. Aviso de chunks mayores de 500 kB; el mayor listado fue 720.23 kB minificado. No se publica el build |
+| `npm run inventario` | Exit 0; 287 temas: COMPLETO 267, ESCASO 1, VACÍO 19; 287 con observaciones editoriales abiertas. COMPLETO es el umbral del script, no aprobación docente |
+| `npm run test:rules` | Exit 1: `"firebase" no se reconoce como un comando interno o externo`. Java 21 está disponible, pero falta el CLI Firebase. Suite no ejecutada ni aprobada; no se instalaron dependencias |
+| Suma de `planRescate[].totales` con Node | `{"semanas":88,"horas":440}` |
+| `node docs/ux/inventariar-fase-0.mjs` | 59 declaraciones Route; 73 archivos de componentes; 322 button, 10 table, 21 form, 108 input, 54 select, 8 textarea; 9337 declaraciones CSS |
+| Revisión de enlaces locales de los dos informes con Node | `{"enlacesLocalesRotos":[]}` |
+
+Resumen del runner recuperado (formato real de Node 24):
+
+```text
+ℹ tests 1214
+ℹ suites 0
+ℹ pass 1214
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 317641.6144
+```
+
+Los logs de ejecución quedan en `%TEMP%/ptem-ux-fase0-*.log`; los resultados relevantes están transcritos arriba para que el informe no dependa de conservar temporales. Las lecturas exploratorias usaron Get-Content, rg y Git. Una consulta de procesos mediante Get-CimInstance recibió acceso denegado; no afecta estos resultados. Un comando exploratorio con comillas incompatibles terminó con exit 1 y se repitió corregido, sin modificar archivos.
+
+Al retomar, el commit `97c3451` ya contenía los tres entregables de esta fase y el trabajo concurrente de Botiquín. Este agente no ejecutó add, commit, push ni despliegue. El cierre de este informe queda como modificación local sin commitear. La regeneración del inventario no produjo diferencias. No se alteró `.claude/settings.local.json`, que continúa sin seguimiento.
+
+No cambia ninguna pantalla, ruta ni botón por esta fase. Los generadores ejecutados por la verificación reescribieron sus salidas locales sin dejar diferencias de código. El build produjo archivos locales ignorados en dist; no son el entregable. No se hicieron pruebas de navegador, de usabilidad ni certificación de accesibilidad: corresponden a las siguientes fases y no se sustituyen con el resultado de npm test.
 
 No se abre Fase 1 automáticamente. Decisión pendiente: después de revisar estos archivos, ¿autorizas continuar con Fase 1 sobre el alcance confirmado?

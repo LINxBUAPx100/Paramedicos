@@ -48,6 +48,7 @@ const NAV = [
 export default function Layout({ children }) {
   const [abierto, setAbierto] = useState(false)
   const [consulta, setConsulta] = useState('')
+  const [escritorio, setEscritorio] = useState(() => window.matchMedia('(min-width: 1100px)').matches)
   const menuRef = useRef(null)
   const drawerRef = useRef(null)
   const { estado, alternarTema } = useProgress()
@@ -103,7 +104,6 @@ export default function Layout({ children }) {
   // sesión es el caso real—, `abierto` seguiría en true y quedaría el velo
   // oscuro encima de la página sin nada que velar. Derivarlo aquí lo cierra en
   // el mismo render, sin un efecto que persiga al estado.
-  const menuAbierto = hayMenu && abierto
 
   // PORTADAS A SANGRE. Son las páginas de venta: ocupan el ancho entero, con
   // su propia cabecera de foto y sus franjas de color de borde a borde.
@@ -126,6 +126,15 @@ export default function Layout({ children }) {
   // ancho y controla su propio alto, paneles y márgenes.
   const esAtlas = location.pathname.startsWith('/atlas-anatomico')
     || location.pathname.startsWith('/botiquin')
+  const menuFijo = escritorio && veContenido && !esHome && !esConsola && !esAtlas && !location.pathname.startsWith('/editor')
+  const menuAbierto = hayMenu && abierto && !menuFijo
+
+  useEffect(() => {
+    const pantalla = window.matchMedia('(min-width: 1100px)')
+    const actualizar = () => { setEscritorio(pantalla.matches); setAbierto(false) }
+    pantalla.addEventListener('change', actualizar)
+    return () => pantalla.removeEventListener('change', actualizar)
+  }, [])
 
   // NO INDEXAR lo que no es público. Con una sola página, `robots.txt` apenas
   // decide nada: el rastreador descarga un documento y lo que lee después es lo
@@ -173,20 +182,20 @@ export default function Layout({ children }) {
 
   // Escape cierra, como cualquier capa superpuesta. No existía.
   useEffect(() => {
-    if (!abierto) return undefined
+    if (!menuAbierto) return undefined
     const alPulsar = (e) => {
       if (e.key === 'Escape') cerrar({ devolverFoco: true })
     }
     document.addEventListener('keydown', alPulsar)
     return () => document.removeEventListener('keydown', alPulsar)
-  }, [abierto])
+  }, [menuAbierto])
 
   // Al abrir, el foco entra en el drawer para que el teclado y el lector de
   // pantalla continúen ahí y no en el fondo, que ahora es inerte.
   useEffect(() => {
-    if (!abierto) return
+    if (!menuAbierto) return
     drawerRef.current?.querySelector('a, button')?.focus()
-  }, [abierto])
+  }, [menuAbierto])
   const buscar = (e) => {
     e.preventDefault()
     const q = consulta.trim()
@@ -195,7 +204,7 @@ export default function Layout({ children }) {
   }
 
   return (
-    <div className="app">
+    <div className={`app ${menuFijo ? 'app--estudio' : ''}`}>
       {/* La app usa HashRouter: un href="#…" cambiaría la RUTA, así que el
           salto se hace enfocando el <main> directamente. */}
       <a
@@ -214,7 +223,7 @@ export default function Layout({ children }) {
       </a>
       <AnuncioBanner />
       <header className="topbar">
-        {hayMenu && (
+        {hayMenu && !menuFijo && (
           <button
             ref={menuRef}
             className="menu-btn"
@@ -281,9 +290,9 @@ export default function Layout({ children }) {
       </header>
 
       <div className="cuerpo">
-        {/* `inert` en lugar de aria-hidden. La barra es un DRAWER en todos los
-            anchos (index.css: "Sidebar como drawer en TODOS los anchos"), así
-            que cerrada está fuera de pantalla. Con aria-hidden el lector no la
+        {/* `inert` en lugar de aria-hidden. En móvil el menú cerrado está
+            fuera de pantalla; en escritorio de estudio permanece visible.
+            Con aria-hidden el lector no la
             anunciaba pero sus enlaces SEGUÍAN siendo tabulables: el teclado
             entraba en enlaces invisibles y sin voz (WCAG 2.4.3). `inert` quita
             foco y semántica de una vez.
@@ -294,10 +303,10 @@ export default function Layout({ children }) {
         <aside
           id="menu-lateral"
           ref={drawerRef}
-          className={`sidebar ${menuAbierto ? 'abierto' : ''}`}
-          inert={menuAbierto ? undefined : ''}
+          className={`sidebar ${menuAbierto ? 'abierto' : ''} ${menuFijo ? 'sidebar--fija' : ''}`}
+          inert={menuAbierto || menuFijo ? undefined : ''}
         >
-          <nav className="nav">
+          <nav className="nav" aria-label="Estudio y herramientas">
             {navDrawer.map((item) => (
               <NavLink
                 key={item.to}
@@ -318,7 +327,8 @@ export default function Layout({ children }) {
               <div className="nav-titulo">Recorrido de estudio</div>
             )}
             {modulosVisibles.map((modulo) => (
-              <div key={modulo.id} className="nav-grupo">
+              <details key={modulo.id} className="nav-grupo" open={location.pathname === `/modulo/${modulo.id}` || modulo.temas.some((t) => location.pathname === `/tema/${t.id}` || location.pathname.startsWith(`/tema/${t.id}/`))}>
+                <summary className="ui-nav-modulo">Módulo {modulo.numero} · {modulo.titulo}</summary>
                 <NavLink
                   to={`/modulo/${modulo.id}`}
                   className="nav-modulo"
@@ -345,7 +355,7 @@ export default function Layout({ children }) {
                     </NavLink>
                   ))}
                 </div>
-              </div>
+              </details>
             ))}
           </nav>
           <div className="sidebar-pie">

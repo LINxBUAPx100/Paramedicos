@@ -30,6 +30,7 @@ import {
 
 export default function InvitacionesRol({
   academiaId, academiaNombre = '', miUid, grupos = [],
+  grupoInicial = '',
   // Quién mira: { rol, esSuperadmin, puedeVerCodigos, uid }. Sin él se asume
   // dirección, que es como se usaba desde el dashboard del super-admin.
   quienEmite = { rol: 'admin_escuela' },
@@ -38,7 +39,7 @@ export default function InvitacionesRol({
   const puedeElegirRol = rolesPosibles.length > 1
   const [lista, setLista] = useState(null)
   const [rol, setRol] = useState(rolesPosibles[0] || 'alumno')
-  const [grupoSel, setGrupoSel] = useState('')
+  const [grupoSel, setGrupoSel] = useState(grupos.some((g) => g.id === grupoInicial) ? grupoInicial : '')
   const [dias, setDias] = useState(14)
   const [maxUsos, setMaxUsos] = useState(maxUsosPorDefecto('alumno'))
   const [nota, setNota] = useState('')

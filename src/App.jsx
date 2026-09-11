@@ -51,6 +51,7 @@ const TemarioPage = lazy(() => import('./pages/TemarioPage.jsx'))
 const Cuenta = lazy(() => import('./pages/Cuenta.jsx'))
 const PanelShell = lazy(() => import('./components/panel/PanelShell.jsx'))
 const PanelResumen = lazy(() => import('./pages/panel/Resumen.jsx'))
+const PanelRevision = lazy(() => import('./pages/panel/Revision.jsx'))
 const PanelRecepcion = lazy(() => import('./pages/panel/Recepcion.jsx'))
 const PanelMiembros = lazy(() => import('./pages/panel/Miembros.jsx'))
 const PanelGrupos = lazy(() => import('./pages/panel/Grupos.jsx'))
@@ -205,6 +206,7 @@ export default function App() {
                 datos de la academia una vez y los reparte por contexto. */}
             <Route path="/panel" element={<RutaProtegida><PanelShell /></RutaProtegida>}>
               <Route index element={<PanelResumen />} />
+              <Route path="revision" element={<PanelRevision />} />
               <Route path="recepcion" element={<PanelRecepcion />} />
               <Route path="miembros" element={<PanelMiembros />} />
               <Route path="grupos" element={<PanelGrupos />} />

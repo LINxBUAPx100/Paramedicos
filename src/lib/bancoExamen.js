@@ -17,7 +17,14 @@
 //
 //  Sin React y sin Firebase: se prueba con `npm test`.
 // ============================================================
-import { estadoEditorialDe, estaAvalado } from './estadoEditorial.js'
+import { estadoEditorialDe, estadoEditorialDeFicha, estaAvalado } from './estadoEditorial.js'
+
+// Los agregados pueden contener borradores; contrastarlos con fichas ya
+// resueltas con las validaciones de la academia evita cargar cada lección.
+export function preguntasAvaladasDeAgregado(preguntas, fichas) {
+  const ids = new Set((fichas || []).filter((f) => estaAvalado(estadoEditorialDeFicha(f))).map((f) => f.id))
+  return (preguntas || []).filter((p) => ids.has(p.temaId))
+}
 
 /**
  * Temas del alcance que SÍ pueden aportar preguntas.

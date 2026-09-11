@@ -294,9 +294,9 @@ function FichaDelAlta({ ficha, academiaNombre, nombreGrupo, onOtra }) {
   })
   const whatsapp = enlaceWhatsApp(alta.telefono, mensaje)
 
-  const copiar = (texto, que) => {
+  const copiar = async (texto, que) => {
     try {
-      navigator.clipboard.writeText(texto)
+      await navigator.clipboard.writeText(texto)
       setCopiado(que)
     } catch { /* sin permisos de portapapeles: queda el texto a la vista */ }
   }

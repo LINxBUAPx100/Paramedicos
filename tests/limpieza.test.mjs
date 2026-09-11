@@ -140,6 +140,15 @@ test('no queda código muerto en src/', () => {
   const textoDeFuera = fuera.map((f) => fs.readFileSync(f, 'utf8')).join('\n')
 
   const ENTRADAS = new Set(['src/main.jsx', 'src/App.jsx'])
+  // Vite admite entradas HTML independientes. Solo cuentan si el archivo
+  // HTML realmente carga el módulo, no por añadirlo a una lista de excepciones.
+  for (const html of fs.readdirSync(RAIZ).filter((f) => f.endsWith('.html'))) {
+    const texto = fs.readFileSync(path.join(RAIZ, html), 'utf8')
+    for (const m of texto.matchAll(/<script\b[^>]*type="module"[^>]*src="\/?([^\"]+)"[^>]*>/g)) {
+      assert.ok(fs.existsSync(path.join(RAIZ, m[1])), `La entrada ${html} apunta a un módulo inexistente`)
+      ENTRADAS.add(m[1])
+    }
+  }
 
   const muertos = enSrc
     .map(rel)

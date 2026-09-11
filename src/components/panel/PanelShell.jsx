@@ -148,6 +148,7 @@ export default function PanelShell() {
             <span>{s.etiqueta}</span>
           </NavLink>
         ))}
+        <NavLink to="/panel/revision" className="consola-link"><Icon name="libro" size={17} /><span>Revisión docente</span></NavLink>
       </nav>
 
       <div className="consola-cuerpo">

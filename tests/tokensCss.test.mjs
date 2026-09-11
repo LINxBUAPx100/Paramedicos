@@ -22,7 +22,13 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 
-const css = readFileSync(new URL('../src/index.css', import.meta.url), 'utf8')
+// Los imports locales también forman parte de la hoja que carga el navegador.
+// Leerlos conserva la comprobación al separar tokens de componentes.
+function leerCss(url) {
+  const fuente = readFileSync(url, 'utf8')
+  return fuente.replace(/@import\s+['"](\.[^'"]+\.css)['"];?/g, (_, ruta) => leerCss(new URL(ruta, url)))
+}
+const css = leerCss(new URL('../src/index.css', import.meta.url))
 
 // Definiciones: `--token:` en cualquier bloque (:root, [data-tema], una clase…).
 const definidos = new Set(

@@ -5,6 +5,8 @@
   "type": "module",
   "description": "La Guía de Lin — Guía de estudio avanzada de Atención Prehospitalaria, Cuidados Críticos y Transición a Medicina",
   "scripts": {
+    "dev:rediseno": "vite --config vite.prototipo.config.js --host 127.0.0.1 --port 4175 --open /rediseno.html",
+    "build:rediseno": "vite build --config vite.prototipo.config.js",
     "dev": "vite",
     "gen:nav": "node scripts/gen-nav-indice.mjs",
     "prebuild": "node scripts/gen-plan-rescate.mjs && node scripts/gen-nav-indice.mjs && node scripts/gen-activos-ligeros.mjs && npm run gen:demo",
