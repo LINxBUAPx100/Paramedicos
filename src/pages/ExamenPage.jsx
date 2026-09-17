@@ -20,6 +20,8 @@ export default function ExamenPage() {
   const [config, setConfig] = useState(null) // { preguntas }
   const [cantidad, setCantidad] = useState(10)
   const [intentos, setIntentos] = useState(null) // null = cargando; [] = sin intentos / no disponible
+  const [errorIntentos, setErrorIntentos] = useState(false)
+  const [recargaIntentos, setRecargaIntentos] = useState(0)
 
   // Examen general: solo preguntas de temas visibles para el grupo del alumno.
   const preguntasDisponibles = useMemo(
@@ -36,17 +38,19 @@ export default function ExamenPage() {
   useEffect(() => {
     if (!user) { setIntentos([]); return }
     let activo = true
+    setIntentos(null)
+    setErrorIntentos(false)
     ;(async () => {
       try {
         const { intentosDeAlumno } = await import('../lib/firebase/intentos.js')
         const lista = await intentosDeAlumno(user.uid)
         if (activo) setIntentos(lista)
       } catch {
-        if (activo) setIntentos([]) // sin permisos/conexión: se muestra "sin intentos"
+        if (activo) { setIntentos([]); setErrorIntentos(true) }
       }
     })()
     return () => { activo = false }
-  }, [user])
+  }, [user, recargaIntentos])
 
   // Mejor puntuación e intentos por módulo.
   const porModulo = useMemo(() => {
@@ -111,8 +115,8 @@ export default function ExamenPage() {
         <span className="examen-hero-ico"><Icon name="examen" size={46} /></span>
         <h1>Ponte a prueba</h1>
         <p>
-          Practica con preguntas de todo el temario o de un módulo concreta. Tu mejor resultado
-          por módulo queda registrado para que tú y tu maestro veáis por dónde vais.
+          Practica con preguntas del temario disponible o de un módulo concreto. Consulta tu mejor resultado
+          por módulo para decidir qué repasar.
         </p>
         {/* Honestidad sobre lo que esto ES: las respuestas correctas viajan en la
             app, así que cualquiera puede consultarlas. Presentarlo como examen
@@ -126,17 +130,20 @@ export default function ExamenPage() {
       <div className="examen-config">
         <h3>Examen general — ¿cuántas preguntas?</h3>
         <div className="examen-opciones">
-          {[5, 10, 15, 20].map((n) => (
+          {[5, 10, 15, 20].filter((n) => n < preguntasDisponibles.length).map((n) => (
             <button
               key={n}
               className={`examen-cantidad ${cantidad === n ? 'activa' : ''}`}
+              aria-pressed={cantidad === n}
               onClick={() => setCantidad(n)}
             >
               {n}
             </button>
           ))}
           <button
-            className={`examen-cantidad ${cantidad === preguntasDisponibles.length ? 'activa' : ''}`}
+            className={`examen-cantidad ${cantidad >= preguntasDisponibles.length ? 'activa' : ''}`}
+            aria-pressed={cantidad >= preguntasDisponibles.length}
+            disabled={!preguntasDisponibles.length}
             onClick={() => setCantidad(preguntasDisponibles.length)}
           >
             Todas ({preguntasDisponibles.length})
@@ -151,8 +158,9 @@ export default function ExamenPage() {
       <section className="examen-modulos">
         <h2><span className="examen-modulos-ico"><Icon name="temario" size={22} /></span> Examen por módulo</h2>
         <p className="examen-modulos-sub">
-          Cada examen reúne todas las preguntas de su módulo. Se muestra tu mejor puntuación.
+          Abre un módulo para consultar su evaluación. Aquí se muestra tu mejor puntuación registrada.
         </p>
+        {errorIntentos && <div className="ui-estado" role="alert"><p>No se pudo cargar tu historial. Puedes practicar; tus resultados anteriores no están disponibles en este momento.</p><button className="btn btn--suave" onClick={() => setRecargaIntentos((valor) => valor + 1)}>Reintentar historial</button></div>}
         <div className="examen-modulos-lista">
           {modulosDisponibles.map((f) => {
             const m = porModulo[f.id]
@@ -167,7 +175,7 @@ export default function ExamenPage() {
                 <div className="ef-info">
                   <strong>{f.titulo}</strong>
                   <span className="ef-meta">
-                    {intentos === null
+                    {errorIntentos ? 'Historial no disponible' : intentos === null
                       ? 'Cargando…'
                       : m
                         ? `${m.n} intento${m.n > 1 ? 's' : ''} · último ${fecha(m.ultima)}`

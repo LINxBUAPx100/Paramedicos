@@ -21,8 +21,13 @@ export default function Quiz({ preguntas, onComplete, titulo, semilla = null, on
   const [aciertos, setAciertos] = useState(0)
   const [terminado, setTerminado] = useState(false)
   const [respuestas, setRespuestas] = useState([])
+  const [soloErrores, setSoloErrores] = useState(false)
   const encabezado = useRef(null)
-  useEffect(() => { if (indice > 0) encabezado.current?.focus() }, [indice])
+  const resultado = useRef(null)
+  useEffect(() => {
+    if (terminado) resultado.current?.focus()
+    else if (indice > 0) encabezado.current?.focus()
+  }, [indice, terminado])
 
   const pregunta = baraja[indice]
   const total = baraja.length
@@ -30,7 +35,7 @@ export default function Quiz({ preguntas, onComplete, titulo, semilla = null, on
   const esCorrecta = (i) => pregunta.correcta.includes(i)
 
   function confirmar() {
-    if (seleccion === null) return
+    if (seleccion === null || confirmado) return
     const correcto = esCorrecta(seleccion)
     setConfirmado(true)
     if (correcto) setAciertos((a) => a + 1)
@@ -59,6 +64,7 @@ export default function Quiz({ preguntas, onComplete, titulo, semilla = null, on
     setAciertos(0)
     setTerminado(false)
     setRespuestas([])
+    setSoloErrores(false)
   }
 
   if (terminado) {
@@ -72,20 +78,27 @@ export default function Quiz({ preguntas, onComplete, titulo, semilla = null, on
             {aciertos} de {total} correctas
           </div>
         </div>
-        <h3>{aprobado ? '¡Excelente trabajo!' : 'Sigue practicando'}</h3>
+        <h3 tabIndex={-1} ref={resultado}>{aprobado ? '¡Excelente trabajo!' : 'Sigue practicando'}</h3>
         <p className="quiz-resultado-msg">
           {aprobado
-            ? 'Dominas este contenido. Repasa las que fallaste para asegurar el 100%.'
-            : 'Estás cerca. Revisa el tema y vuelve a intentarlo: el objetivo es 70% o más.'}
+            ? 'Alcanzaste el objetivo de esta práctica. Revisa las explicaciones para reforzar lo aprendido.'
+            : 'Revisa las explicaciones y vuelve a practicar. El objetivo de esta autoevaluación es 70% o más.'}
         </p>
+        <div className="quiz-repaso-filtros">
+          <h4>Revisa tus respuestas</h4>
+          <button type="button" className="btn btn--suave" aria-pressed={soloErrores} onClick={() => setSoloErrores((valor) => !valor)}>Solo errores ({total - aciertos})</button>
+          <span role="status">{soloErrores ? total - aciertos : total} respuestas para repasar</span>
+        </div>
+        {soloErrores && aciertos === total && <p className="ui-estado">No hubo errores en este intento. Puedes ver todas las respuestas para repasar sus explicaciones.</p>}
         <div className="quiz-repaso">
           {respuestas.map((r, i) => (
-            <div key={i} className={`quiz-repaso-item ${r.correcto ? 'ok' : 'mal'}`}>
+            <div key={i} hidden={soloErrores && r.correcto} className={`quiz-repaso-item ${r.correcto ? 'ok' : 'mal'}`}>
               <span className="quiz-repaso-ico" aria-hidden="true">
                 <Icon name={r.correcto ? 'check' : 'cerrar'} size={16} />
               </span>
               <div>
-                <div className="quiz-repaso-preg">{r.pregunta.pregunta}</div>
+                <div className="quiz-repaso-preg">{i + 1}. {r.pregunta.pregunta}</div>
+                <p>Tu respuesta: <strong>{r.pregunta.opciones[r.seleccion]}</strong> · {r.correcto ? 'Correcta' : 'Incorrecta'}</p>
                 {!r.correcto && (
                   <div className="quiz-repaso-correcta">
                     Respuesta correcta:{' '}
@@ -112,7 +125,7 @@ export default function Quiz({ preguntas, onComplete, titulo, semilla = null, on
           Pregunta {indice + 1} / {total}
         </span>
       </div>
-      <div className="quiz-barra">
+      <div className="quiz-barra" role="progressbar" aria-label="Preguntas confirmadas" aria-valuemin={0} aria-valuemax={total} aria-valuenow={indice + (confirmado ? 1 : 0)}>
         <div
           className="quiz-barra-fill"
           style={{ width: `${((indice + (confirmado ? 1 : 0)) / total) * 100}%` }}

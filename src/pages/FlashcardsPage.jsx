@@ -1,165 +1,97 @@
-import { useParams, Link } from 'react-router-dom'
-import { useState, useMemo } from 'react'
-import {
-  useTema, useTodasLasFlashcards, CargandoContenido, ErrorContenido,
-} from '../context/ContenidoContext.jsx'
+import { useParams, Link, useSearchParams } from 'react-router-dom'
+import { useState } from 'react'
+import { useTema, useTodasLasFlashcards, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
 import Icon from '../components/Icon.jsx'
+import NotFound from './NotFound.jsx'
 
-function mezclar(arr) {
-  const a = [...arr]
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[a[i], a[j]] = [a[j], a[i]]
-  }
-  return a
-}
-
-// Puerta de carga: el estado inicial del mazo (orden barajable) se calcula al
-// montar, así que el componente interno solo se monta con el contenido listo.
 export default function FlashcardsPage() {
   const { temaId } = useParams()
-  // Un tema concreto cuesta UNA lectura; el repaso global, una por módulo.
-  const { tema, cargando: cargandoTema, error: errorTema, reintentar } = useTema(temaId)
-  const { flashcards, cargando: cargandoMazo, error: errorMazo } = useTodasLasFlashcards(!temaId)
-  const error = errorTema || errorMazo
-  // Con tema NO hace falta el mazo global: se espera solo a lo que se va a usar.
+  const { tema, cargando: cargandoTema, error: errorTema, reintentar: reintentarTema } = useTema(temaId)
+  const { flashcards, cargando: cargandoMazo, error: errorMazo, reintentar: reintentarMazo } = useTodasLasFlashcards(!temaId)
+  if (temaId ? errorTema : errorMazo) return <ErrorContenido onReintentar={temaId ? reintentarTema : reintentarMazo} />
   const cargando = temaId ? cargandoTema : cargandoMazo
-  if (error) return <ErrorContenido onReintentar={reintentar} />
   if (cargando) return <CargandoContenido />
+  if (temaId && !tema) return <NotFound />
   return <Flashcards tema={tema} flashcards={flashcards} />
 }
 
 function Flashcards({ tema, flashcards }) {
   const { temaVisible } = useVisibilidad()
+  const [params, setParams] = useSearchParams()
+  const temaFiltro = params.get('tema') || ''
+  const base = tema
+    ? tema.flashcards.map((carta, i) => ({ ...carta, id: `${tema.id}-${i}`, temaId: tema.id, temaTitulo: tema.titulo }))
+    : flashcards.filter((carta) => temaVisible(carta.temaId))
+  const temas = [...new Map(base.map((carta) => [carta.temaId, carta.temaTitulo])).entries()]
+  const cartas = tema || !temaFiltro ? base : base.filter((carta) => carta.temaId === temaFiltro)
+  if (tema && !temaVisible(tema.id)) return (
+    <div className="acceso-restringido" role="alert">
+      <h1>Flashcards no disponibles</h1>
+      <p>Tu profesor todavía no libera este tema para tu grupo.</p>
+      <Link to="/" className="btn btn--suave">Volver al inicio</Link>
+    </div>
+  )
+  return (
+    <div className="flashcards-page ui-repaso">
+      <nav className="migas" aria-label="Ubicación"><Link to="/">Inicio</Link><span>/</span>Flashcards</nav>
+      <header className="ui-cabecera">
+        <span className="ui-antetitulo">Repaso activo</span>
+        <h1>Flashcards</h1>
+        <p>{tema ? `Repaso de ${tema.titulo}` : 'Elige un tema o recorre las tarjetas disponibles para tu grupo.'}</p>
+      </header>
+      {!tema && <label className="ui-campo">Tema para repasar
+        <select value={temaFiltro} onChange={(e) => {
+          const siguiente = new URLSearchParams(params)
+          if (e.target.value) siguiente.set('tema', e.target.value)
+          else siguiente.delete('tema')
+          setParams(siguiente, { replace: true })
+        }}>
+          <option value="">Todos los temas disponibles</option>
+          {temas.map(([id, titulo]) => <option key={id} value={id}>{titulo}</option>)}
+        </select>
+      </label>}
+      {cartas.length
+        ? <SesionFlashcards key={cartas.map((c) => c.id).join('|')} cartas={cartas} />
+        : <div className="ui-estado"><h2>No hay tarjetas para este repaso</h2><p>{base.length ? 'Elige otro tema o vuelve a todos los temas disponibles.' : 'Puedes continuar estudiando el temario mientras se preparan las tarjetas.'}</p><Link to={tema ? `/tema/${tema.id}` : '/'} className="btn btn--suave">Volver al estudio</Link></div>}
+    </div>
+  )
+}
 
-  // Flashcards de un tema oculto para el grupo del alumno: no disponibles.
-  const bloqueado = tema && !temaVisible(tema.id)
-
-  const baseCartas = useMemo(() => {
-    if (tema) {
-      return tema.flashcards.map((f, i) => ({ ...f, id: `${tema.id}-${i}` }))
-    }
-    // Repaso global: excluye las flashcards de temas ocultos.
-    return flashcards.filter((f) => temaVisible(f.temaId))
-  }, [tema, temaVisible, flashcards])
-
-  const [orden, setOrden] = useState(() => baseCartas.map((_, i) => i))
+function SesionFlashcards({ cartas }) {
+  const [orden, setOrden] = useState(() => cartas.map((_, i) => i))
   const [indice, setIndice] = useState(0)
   const [volteada, setVolteada] = useState(false)
-
-  const cartas = orden.map((i) => baseCartas[i])
-  const carta = cartas[indice]
-
-  function avanzar(dir) {
-    setVolteada(false)
-    setIndice((i) => {
-      const next = i + dir
-      if (next < 0) return cartas.length - 1
-      if (next >= cartas.length) return 0
-      return next
-    })
-  }
-
-  function barajar() {
-    setOrden(mezclar(baseCartas.map((_, i) => i)))
-    setIndice(0)
+  const carta = cartas[orden[indice]]
+  const avanzar = (paso) => {
+    setIndice((actual) => Math.max(0, Math.min(cartas.length - 1, actual + paso)))
     setVolteada(false)
   }
-
-  if (bloqueado) {
-    return (
-      <div className="acceso-restringido" role="alert">
-        <span className="acceso-ico"><Icon name="candado" size={30} /></span>
-        <h1>Flashcards no disponibles</h1>
-        <p>Tu profesor todavía no libera este tema para tu grupo. Vuelve más adelante.</p>
-        <Link to={`/tema/${tema.id}`} className="btn btn--pildora btn--carbon">Volver al tema</Link>
-      </div>
-    )
+  const barajar = () => {
+    const nuevo = cartas.map((_, i) => i)
+    for (let i = nuevo.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[nuevo[i], nuevo[j]] = [nuevo[j], nuevo[i]]
+    }
+    setOrden(nuevo); setIndice(0); setVolteada(false)
   }
-
-  if (!baseCartas.length) {
-    return (
-      <div className="flashcards-page">
-        <p>No hay flashcards disponibles.</p>
-      </div>
-    )
-  }
-
   return (
-    <div className="flashcards-page">
-      <nav className="migas">
-        <Link to="/">Inicio</Link> <span>/</span> Flashcards
-        {tema && (
-          <>
-            {' '}
-            <span>/</span> {tema.titulo}
-          </>
-        )}
-      </nav>
-
-      <header className="flashcards-header">
-        <h1>Flashcards</h1>
-        <p>
-          {tema
-            ? `Repaso del tema ${tema.numero}: ${tema.titulo}`
-            : 'Repaso global de todos los conceptos de alto rendimiento'}
-        </p>
-      </header>
-
-      <div className="flashcards-barra">
-        <span className="flashcards-contador">
-          {indice + 1} / {cartas.length}
-        </span>
-        <button className="btn btn--suave btn--sm" onClick={barajar}>
-          Barajar
-        </button>
+    <section aria-label="Tarjetas de repaso">
+      <div className="ui-repaso-barra">
+        <span role="status">Tarjeta {indice + 1} de {cartas.length}</span>
+        <button className="btn btn--suave" onClick={barajar}>Barajar</button>
       </div>
-
-      <div
-        className={`flashcard ${volteada ? 'volteada' : ''}`}
-        onClick={() => setVolteada((v) => !v)}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') setVolteada((v) => !v)
-        }}
-      >
-        <div className="flashcard-inner">
-          <div className="flashcard-cara flashcard-frente">
-            <span className="flashcard-etiqueta">Pregunta</span>
-            <p>{carta.frente}</p>
-            <span className="flashcard-pista">Toca para ver la respuesta</span>
-            {!tema && carta.temaTitulo && (
-              <span className="flashcard-tema">{carta.temaTitulo}</span>
-            )}
-          </div>
-          <div className="flashcard-cara flashcard-reverso">
-            <span className="flashcard-etiqueta">Respuesta</span>
-            <p>{carta.reverso}</p>
-          </div>
-        </div>
+      <button type="button" className={`ui-tarjeta-repaso ${volteada ? 'ui-tarjeta-repaso--respuesta' : ''}`} aria-pressed={volteada} onClick={() => setVolteada((valor) => !valor)}>
+        <span className="ui-antetitulo">{volteada ? 'Respuesta' : 'Pregunta'}</span>
+        <span className="ui-tarjeta-texto">{volteada ? carta.reverso : carta.frente}</span>
+        <span className="ui-tarjeta-pista">{volteada ? 'Volver a la pregunta' : 'Mostrar respuesta'} · Enter, espacio o clic</span>
+      </button>
+      <div className="ui-repaso-barra">
+        <button className="btn btn--suave" disabled={indice === 0} onClick={() => avanzar(-1)}><Icon name="chevronIzq" size={15} /> Anterior</button>
+        <button className="btn btn--primario" disabled={indice === cartas.length - 1} onClick={() => avanzar(1)}>Siguiente <Icon name="chevronDer" size={15} /></button>
       </div>
-
-      <div className="flashcards-nav">
-        <button className="btn btn--suave" onClick={() => avanzar(-1)}>
-          <Icon name="chevronIzq" size={15} /> Anterior
-        </button>
-        <button className="btn btn--primario" onClick={() => setVolteada((v) => !v)}>
-          {volteada ? 'Ocultar' : 'Voltear'}
-        </button>
-        <button className="btn btn--suave" onClick={() => avanzar(1)}>
-          Siguiente <Icon name="chevronDer" size={15} />
-        </button>
-      </div>
-
-      {tema && (
-        <div className="quiz-page-pie">
-          <Link to={`/tema/${tema.id}`} className="link-discreto">
-            <Icon name="chevronIzq" size={15} /> Volver al tema
-          </Link>
-        </div>
-      )}
-    </div>
+      {indice === cartas.length - 1 && <p className="ui-estado" role="status">Esta es la última tarjeta. Puedes volver a la primera o barajar para repasar de nuevo.<button className="btn btn--suave" onClick={() => { setIndice(0); setVolteada(false) }}>Volver a la primera</button></p>}
+      <p className="ui-repaso-origen"><Link to={`/tema/${carta.temaId}`}>Volver a la lección: {carta.temaTitulo || 'abrir tema'}</Link></p>
+    </section>
   )
 }

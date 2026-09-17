@@ -59,7 +59,7 @@ export default function QuizPage() {
       </header>
 
       <Quiz
-        key={semilla}
+        key={`${temaId}-${semilla}`}
         preguntas={preguntas}
         titulo={`Tema ${tema.numero}`}
         semilla={semilla}
