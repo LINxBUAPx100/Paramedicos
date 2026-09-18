@@ -35,19 +35,34 @@ import {
   erroresFrecuentes, repasoRapido, preguntasOrales, mnemotecnia, masPreguntado,
 } from './moldeV2.js'
 
+// Citas con volumen, páginas y DOI, comprobadas una a una en PubMed el
+// 17-09-2026. Antes se citaban por el portal de la AHA, que es una página de
+// sección y cambia de contenido: no permitía volver al mismo texto.
 const AHA_PRIMEROS_AUXILIOS = {
-  nombre: '2024 American Heart Association and American Red Cross Guidelines for First Aid. '
-    + 'Circulation, 2024. DOI 10.1161/CIR.0000000000001281.',
-  url: 'https://cpr.heart.org/en/resuscitation-science/2024-first-aid-guidelines',
-  nota: 'Primera actualización completa de las recomendaciones de primeros auxilios desde 2010. '
-    + 'Respalda la conducta de este módulo en hemorragia, heridas, quemaduras y lesiones '
-    + 'ambientales en el nivel de primer respondiente.',
+  nombre: 'Hewett Brumberg EK, Douma MJ, Alibertis K, et al. 2024 American Heart Association and '
+    + 'American Red Cross Guidelines for First Aid. Circulation. 2024;150(24):e519-e579.',
+  url: 'https://doi.org/10.1161/CIR.0000000000001281',
+  nota: 'PMID 39540278. Primera actualización completa de las recomendaciones de primeros auxilios '
+    + 'desde 2010. Respalda la conducta de este módulo en hemorragia, heridas, quemaduras y '
+    + 'lesiones ambientales en el nivel de primer respondiente.',
 }
 const AHA_BLS_2025 = {
-  nombre: 'American Heart Association. 2025 Guidelines: Adult Basic Life Support.',
-  url: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/adult-basic-life-support',
-  nota: 'Parámetros de compresión, secuencia de RCP, uso del DEA y conducta ante la ausencia de '
-    + 'respuesta en el adulto.',
+  nombre: 'Kleinman ME, Buick JE, Huber N, et al. Part 7: Adult Basic Life Support: 2025 American '
+    + 'Heart Association Guidelines for Cardiopulmonary Resuscitation and Emergency Cardiovascular '
+    + 'Care. Circulation. 2025;152(16_suppl_2):S448-S478.',
+  url: 'https://doi.org/10.1161/CIR.0000000000001369',
+  nota: 'PMID 41122888. Parámetros de compresión, secuencia de RCP, uso del DEA, OVACE y conducta '
+    + 'ante la ausencia de respuesta en el adulto.',
+}
+// Evidencia que sostiene el cambio de secuencia de la OVACE en 2025. La
+// lección afirmaba el cambio sin el estudio que lo motivó.
+const DUNNE_OVACE_2024 = {
+  nombre: 'Dunne CL, Cirone J, Blanchard IE, et al. Evaluation of basic life support interventions '
+    + 'for foreign body airway obstructions: a population-based cohort study. '
+    + 'Resuscitation. 2024;201:110258.',
+  url: 'https://doi.org/10.1016/j.resuscitation.2024.110258',
+  nota: 'PMID 38825222. Cohorte poblacional de 709 casos de obstrucción por cuerpo extraño: es el '
+    + 'estudio que la guía de 2025 cita para anteponer los golpes dorsales.',
 }
 const OMS_BEC = {
   nombre: 'World Health Organization e International Committee of the Red Cross. Basic Emergency '
@@ -422,12 +437,13 @@ export default {
             headers: ['Parámetro', 'Objetivo'],
             filas: [
               ['Frecuencia', '100–120 compresiones por minuto'],
-              ['Profundidad', 'Al menos 5 cm, sin superar 6 cm'],
+              ['Profundidad', 'Al menos 5 cm'],
               ['Reexpansión', 'Completa entre compresiones: no apoyarse en el tórax'],
               ['Interrupciones', 'Menores de 10 segundos'],
               ['Punto de compresión', 'Mitad inferior del esternón'],
             ],
           },
+          { tipo: 'callout', variante: 'clave', titulo: 'Qué cambió en 2025 con la profundidad', texto: 'La guía de 2020 enunciaba la profundidad como un intervalo, «entre 5 y 6 cm». La de 2025 la enuncia como un umbral: al menos 5 cm. El techo no desapareció del conocimiento —comprimir por encima de 6 cm se asocia a menor supervivencia en estudios observacionales—, pero ya no forma parte de la recomendación. La consecuencia práctica para el alumno es que el error frecuente es quedarse corto, no pasarse: el objetivo que se vigila es alcanzar los 5 cm.' },
           { tipo: 'p', texto: 'La reexpansión completa es el parámetro que más se descuida. Si el reanimador se queda apoyado sobre el tórax, el corazón no vuelve a llenarse y la siguiente compresión mueve mucha menos sangre, por perfecta que sea la profundidad.' },
           { tipo: 'callout', variante: 'clave', titulo: 'Solo con las manos', texto: 'Un reanimador lego sin entrenamiento en ventilación debe hacer RCP únicamente con compresiones, continuas y sin pausas. Es preferible a una RCP interrumpida por intentos de ventilación mal ejecutados.' },
         ],
@@ -461,7 +477,7 @@ export default {
         'La respiración agónica es un signo de paro, no una respiración.',
         'La comprobación no debe superar los diez segundos, y ante la duda se asume paro y se comprime.',
         'La frecuencia objetivo en el adulto, según AHA 2025, es de cien a ciento veinte compresiones por minuto.',
-        'La profundidad objetivo es de al menos cinco centímetros, sin superar seis.',
+        'La profundidad objetivo, según AHA 2025, es de al menos cinco centímetros: la guía la enuncia como umbral, no como el intervalo de cinco a seis que usaba la de 2020, y aunque comprimir por encima de seis centímetros se asocia a menor supervivencia en estudios observacionales, ese techo ya no forma parte de la recomendación; el error frecuente es quedarse corto.',
         'La reexpansión debe ser completa entre compresiones: no hay que apoyarse en el tórax.',
         'Las interrupciones deben ser menores de diez segundos.',
         'El punto de compresión es la mitad inferior del esternón.',
@@ -489,7 +505,7 @@ export default {
     ],
     flashcards: [
       { frente: 'Frecuencia de compresión en el adulto', reverso: '100–120 por minuto.' },
-      { frente: 'Profundidad de compresión en el adulto', reverso: 'Al menos 5 cm, sin pasar de 6 cm.' },
+      { frente: 'Profundidad de compresión en el adulto', reverso: 'Al menos 5 cm (AHA 2025 la enuncia como umbral, no como intervalo de 5 a 6).' },
       { frente: '¿Qué es la respiración agónica?', reverso: 'Bocanadas irregulares propias del paro; NO es respiración eficaz.' },
       { frente: '¿Cada cuánto se releva al reanimador?', reverso: 'Cada 2 minutos aproximadamente, en menos de 5 segundos.' },
       { frente: '¿Cuánto puede durar la comprobación de si hay paro?', reverso: 'Un máximo de 10 segundos.' },
@@ -747,6 +763,7 @@ export default {
             ],
           },
           { tipo: 'callout', variante: 'alerta', titulo: 'Cambio respecto a lo que quizá aprendiste', texto: 'La enseñanza anterior aplicaba compresiones abdominales repetidas sin el ciclo inicial de golpes dorsales. El algoritmo vigente de la AHA (2025) indica 5 golpes en la espalda seguidos de 5 compresiones abdominales, y así se evalúa en este curso.' },
+          { tipo: 'p', texto: 'El cambio no es arbitrario y conviene saber en qué se apoya. Una cohorte poblacional de 709 casos de obstrucción por cuerpo extraño encontró que los golpes dorsales resolvían la obstrucción con más frecuencia y con menos lesiones que las compresiones abdominales: la probabilidad ajustada de resolver con compresiones abdominales frente a golpes dorsales fue de 0.49 (intervalo de confianza del 95 %: 0.30 a 0.80). A eso se sumaron casos publicados de lesión grave por compresión abdominal, como rotura gástrica y disección aórtica. La propia guía advierte, en cambio, que el número exacto —cinco y cinco— se eligió por coherencia con el algoritmo pediátrico y no porque exista un dato del adulto que fije esa cifra.' },
           { tipo: 'callout', variante: 'clinico', titulo: 'Cuándo NO se comprime el abdomen', texto: 'En embarazo avanzado y cuando no es posible rodear el abdomen, las compresiones abdominales se sustituyen por compresiones torácicas sobre la mitad inferior del esternón. Los golpes dorsales se mantienen igual.' },
         ],
       },
@@ -802,10 +819,12 @@ export default {
                 nota: 'Algoritmo del que se toma el ciclo de 5 golpes dorsales y 5 compresiones abdominales, y la sustitución por compresiones torácicas.',
               },
               {
-                nombre: 'American Heart Association. 2025 Guidelines: Adult Basic Life Support.',
-                url: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/adult-basic-life-support',
-                nota: 'Conducta ante la pérdida de respuesta durante la OVACE y retirada del cuerpo extraño solo si es visible.',
+                ...AHA_BLS_2025,
+                nota: 'PMID 41122888. Conducta ante la pérdida de respuesta durante la OVACE y '
+                  + 'retirada del cuerpo extraño solo si es visible. Clasifica el ciclo de golpes '
+                  + 'dorsales y compresiones abdominales como Clase 1, nivel de evidencia B-NR.',
               },
+              DUNNE_OVACE_2024,
             ],
           },
         ],

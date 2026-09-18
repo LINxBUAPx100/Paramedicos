@@ -1,0 +1,508 @@
+{
+  "schemaVersion": 1,
+  "aviso": "Libro de veredictos del contraste del temario contra evidencia externa. Se llena A MANO, con el resultado de una consulta real. OpenEvidence (o cualquier buscador que sintetice literatura) NO es una fuente citable: sirve para LOCALIZAR la guia o el articulo primario, que es lo que se abre, se lee y se cita en la leccion. Un veredicto aqui es un HALLAZGO, no una correccion: la correccion se hace despues, en la leccion concreta, y ningun veredicto sube el estado editorial de un tema.",
+  "actualizado": "2026-09-17",
+  "veredictos": {
+    "confirma": "La evidencia vigente respalda la afirmacion tal como esta redactada.",
+    "matiza": "La afirmacion es cierta, pero le falta poblacion, indicacion, via o condicion. Se precisa, no se retira.",
+    "contradice": "La evidencia vigente dice otra cosa. Es un hallazgo concreto: habilita corregir esa leccion.",
+    "no_concluyente": "La busqueda no resuelve el punto. Se registra la pregunta y se deja como esta.",
+    "fuera_de_alcance": "No lo resuelve literatura clinica: es norma mexicana, protocolo local o alcance del plan."
+  },
+  "acciones": {
+    "ninguna": "Nada que tocar.",
+    "precisar": "Anadir poblacion, indicacion, via, edicion o condicion a la frase existente.",
+    "corregir": "La cifra o la secuencia cambian.",
+    "citar": "La afirmacion se sostiene pero la leccion cita mal o cita de mas: se sustituye la referencia.",
+    "bloquear": "Depende de una decision de la academia: pasa a bloqueado_por_decision.",
+    "abrir_hallazgo": "Se registra en la ficha de revision del tema y se resuelve en otra pasada."
+  },
+  "entradas": [
+    {
+      "id": "af-1209d33db8",
+      "temaId": "m1-pab-rcp-legos-adulto",
+      "literal": "La frecuencia objetivo en el adulto, según AHA 2025, es de cien a ciento veinte compresiones por minuto.",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "confirma",
+      "resumen": "La guia 2025 de SVB del adulto mantiene 100-120 compresiones por minuto, con mejor supervivencia al alta en el rango 100-119/min frente a frecuencias menores o mayores.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Kleinman ME, Buick JE, Huber N, et al. Part 7: Adult Basic Life Support: 2025 American Heart Association Guidelines for CPR and ECC. Circulation. 2025;152(16_suppl_2):S448-S478.",
+          "doi": "10.1161/CIR.0000000000001369",
+          "pmid": "41122888"
+        }
+      ],
+      "accion": "ninguna",
+      "nota": ""
+    },
+    {
+      "id": "af-3d4557c8e5",
+      "temaId": "m1-pab-rcp-legos-adulto",
+      "literal": "Frecuencia de compresión en el adulto 100–120 por minuto.",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "confirma",
+      "resumen": "Misma cifra en formulacion de tabla. Confirmada por la guia 2025.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Kleinman ME, Buick JE, Huber N, et al. Part 7: Adult Basic Life Support: 2025 American Heart Association Guidelines for CPR and ECC. Circulation. 2025;152(16_suppl_2):S448-S478.",
+          "doi": "10.1161/CIR.0000000000001369",
+          "pmid": "41122888"
+        }
+      ],
+      "accion": "ninguna",
+      "nota": ""
+    },
+    {
+      "id": "af-df90f3eed1",
+      "temaId": "m1-pab-rcp-legos-adulto",
+      "literal": "Profundidad de compresión en el adulto Al menos 5 cm, sin pasar de 6 cm.",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "matiza",
+      "resumen": "La guia 2025 recomienda «al menos 5 cm» y, a diferencia de la de 2020, ya no fija el techo de 5-6 cm como parte de la recomendacion: el dano por encima de 6 cm procede de datos observacionales. La leccion presenta la formulacion de 2020 atribuida a 2025.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Kleinman ME, Buick JE, Huber N, et al. Part 7: Adult Basic Life Support: 2025 American Heart Association Guidelines for CPR and ECC. Circulation. 2025;152(16_suppl_2):S448-S478.",
+          "doi": "10.1161/CIR.0000000000001369",
+          "pmid": "41122888"
+        }
+      ],
+      "accion": "precisar",
+      "nota": "[APLICADO 17-09-2026, prueba en tests/correccionesEvidencia.test.mjs] Reescribir como «al menos 5 cm» siendo ese el umbral que manda, y presentar «no pasar de 6 cm» como senal observacional de exceso, no como parte de la recomendacion de 2025. Afecta tambien a la variante de tabla del mismo tema."
+    },
+    {
+      "id": "af-d14e46a12e",
+      "temaId": "m1-pab-ovace-adultos",
+      "literal": "El algoritmo vigente de la AHA (2025) indica 5 golpes en la espalda seguidos de 5 compresiones abdominales, y así se evalúa en este curso.",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "confirma",
+      "resumen": "La guia 2025 si invierte la secuencia: 5 golpes dorsales alternados con 5 compresiones abdominales (Clase 1, NDE B-NR). El ciclo 5-y-5 se eligio por coherencia con el algoritmo pediatrico, no por datos propios del adulto.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Kleinman ME, Buick JE, Huber N, et al. Part 7: Adult Basic Life Support: 2025 American Heart Association Guidelines for CPR and ECC. Circulation. 2025;152(16_suppl_2):S448-S478.",
+          "doi": "10.1161/CIR.0000000000001369",
+          "pmid": "41122888"
+        },
+        {
+          "cita": "Dunne CL, Cirone J, Blanchard IE, et al. Evaluation of basic life support interventions for foreign body airway obstructions: a population-based cohort study. Resuscitation. 2024;201:110258.",
+          "doi": "10.1016/j.resuscitation.2024.110258",
+          "pmid": "38825222"
+        }
+      ],
+      "accion": "citar",
+      "nota": "[APLICADO 17-09-2026, prueba en tests/correccionesEvidencia.test.mjs] Anadir el estudio de cohorte poblacional de Dunne (709 casos) que sostiene el cambio: alivio de la obstruccion con compresiones abdominales frente a golpes dorsales, OR ajustada 0.49 (IC 95 % 0.30-0.80). La leccion afirma el cambio sin la evidencia que lo respalda."
+    },
+    {
+      "id": "af-fb30799e3b",
+      "temaId": "m1-pab-hemorragias",
+      "literal": "La secuencia que recomiendan las guías de primeros auxilios de la AHA y la Cruz Roja de 2024 ante una hemorragia que amenaza la vida es aplicar presión directa y, a continuación, un torniquete o el empaquetamiento de la herida cuando su localización lo permita.",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "confirma",
+      "resumen": "La secuencia de la leccion coincide casi literalmente con la guia: presion directa seguida de torniquete o empaquetamiento de la herida si la localizacion lo permite.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Hewett Brumberg EK, Douma MJ, Alibertis K, et al. 2024 American Heart Association and American Red Cross Guidelines for First Aid. Circulation. 2024;150(24):e519-e579.",
+          "doi": "10.1161/CIR.0000000000001281",
+          "pmid": "39540278"
+        }
+      ],
+      "accion": "citar",
+      "nota": "[APLICADO 17-09-2026, prueba en tests/correccionesEvidencia.test.mjs] Sustituir la referencia por la cita exacta con volumen y paginas. La busqueda no pudo recuperar la clase de recomendacion: queda por comprobar en el documento."
+    },
+    {
+      "id": "af-d0415a5d69",
+      "temaId": "m1-pai-rcp-pediatrico",
+      "literal": "Profundidad · Un tercio del diámetro AP (~4 cm) · Un tercio del diámetro AP (~5 cm) · 5–6 cm",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "confirma",
+      "resumen": "Al menos un tercio del diametro anteroposterior en lactante y nino: unos 4 cm en lactante y unos 5 cm en nino.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Joyner BL Jr, Dewan M, Bavare A, et al. Part 6: Pediatric Basic Life Support: 2025 AHA/AAP Guidelines for CPR and ECC. Circulation. 2025;152(16_suppl_2):S424-S447.",
+          "doi": "10.1161/CIR.0000000000001370",
+          "pmid": "41122891"
+        }
+      ],
+      "accion": "ninguna",
+      "nota": ""
+    },
+    {
+      "id": "af-f539eaeb39",
+      "temaId": "m1-pai-rcp-pediatrico",
+      "literal": "Profundidad de compresión en lactante Un tercio del diámetro anteroposterior, unos 4 cm.",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "confirma",
+      "resumen": "Misma cifra en formulacion de tarjeta. Confirmada.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Joyner BL Jr, Dewan M, Bavare A, et al. Part 6: Pediatric Basic Life Support: 2025 AHA/AAP Guidelines for CPR and ECC. Circulation. 2025;152(16_suppl_2):S424-S447.",
+          "doi": "10.1161/CIR.0000000000001370",
+          "pmid": "41122891"
+        }
+      ],
+      "accion": "ninguna",
+      "nota": ""
+    },
+    {
+      "id": "af-c50111a37c",
+      "temaId": "m1-pai-rcp-pediatrico",
+      "literal": "Relación compresión-ventilación: Número de compresiones por cada par de ventilaciones: 30:2 con un reanimador y 15:2 con dos en lactante y niño.",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "matiza",
+      "resumen": "La guia 2025 declara que la relacion optima sigue siendo incierta; 15:2 con dos reanimadores y 30:2 con uno se mantienen por coherencia con objetivos previos, no como cifra demostrada.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Joyner BL Jr, Dewan M, Bavare A, et al. Part 6: Pediatric Basic Life Support: 2025 AHA/AAP Guidelines for CPR and ECC. Circulation. 2025;152(16_suppl_2):S424-S447.",
+          "doi": "10.1161/CIR.0000000000001370",
+          "pmid": "41122891"
+        }
+      ],
+      "accion": "precisar",
+      "nota": "[APLICADO 17-09-2026, prueba en tests/correccionesEvidencia.test.mjs] La leccion enuncia 30:2 / 15:2 como dato cerrado. Anadir que la guia lo mantiene sin haber establecido la relacion optima."
+    },
+    {
+      "id": "af-d1bde0ac9b",
+      "temaId": "m1-pai-rcp-pediatrico",
+      "literal": "Con dos reanimadores en lactante y niño la relación baja a 15:2, para aumentar la frecuencia de ventilaciones en un paro de origen habitualmente hipóxico.",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "matiza",
+      "resumen": "Igual que la anterior: el fundamento hipoxico es correcto, pero la guia no afirma superioridad demostrada de 15:2.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Joyner BL Jr, Dewan M, Bavare A, et al. Part 6: Pediatric Basic Life Support: 2025 AHA/AAP Guidelines for CPR and ECC. Circulation. 2025;152(16_suppl_2):S424-S447.",
+          "doi": "10.1161/CIR.0000000000001370",
+          "pmid": "41122891"
+        }
+      ],
+      "accion": "precisar",
+      "nota": "[APLICADO 17-09-2026, prueba en tests/correccionesEvidencia.test.mjs] Mismo ajuste de matiz que en la afirmacion hermana del mismo tema."
+    },
+    {
+      "id": "af-f3cccea351",
+      "temaId": "m1-pai-rcp-pediatrico",
+      "literal": "La guía pediátrica de la AHA y la AAP de 2025 retiró la técnica de DOS DEDOS en el lactante porque no alcanzaba de forma fiable la profundidad necesaria.",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "confirma",
+      "resumen": "La guia 2025 retiro explicitamente la tecnica de dos dedos en el lactante por no alcanzar la profundidad adecuada: con ella ningun segmento de compresion cumplio el objetivo de profundidad.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Joyner BL Jr, Dewan M, Bavare A, et al. Part 6: Pediatric Basic Life Support: 2025 AHA/AAP Guidelines for CPR and ECC. Circulation. 2025;152(16_suppl_2):S424-S447.",
+          "doi": "10.1161/CIR.0000000000001370",
+          "pmid": "41122891"
+        }
+      ],
+      "accion": "precisar",
+      "nota": "RECTIFICACION 17-09-2026: la nota anterior decia que la leccion no nombraba las tecnicas sustitutas. Era inexacta: si las nombraba. Lo que faltaba y se anadio es su jerarquia —el talon de una mano alcanzo mas profundidad que los dos pulgares en el lactante— y la condicion de no poder abarcar el torax. APLICADO."
+    },
+    {
+      "id": "af-c0ac02b44e",
+      "temaId": "m1-pai-rcp-pediatrico",
+      "literal": "Paro no presenciado o de causa probablemente respiratoria (ahogamiento, atragantamiento): dar 2 minutos de RCP y después llamar.",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "no_concluyente",
+      "resumen": "La busqueda NO encontro en la guia pediatrica 2025 la instruccion de dar unos 2 minutos de RCP antes de dejar al nino para activar el SEM; la situa como recomendacion previa a 2025, y el texto actual insiste en no retrasar las compresiones. La recuperacion fue parcial y declarada como tal, asi que no se concluye.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Joyner BL Jr, Dewan M, Bavare A, et al. Part 6: Pediatric Basic Life Support: 2025 AHA/AAP Guidelines for CPR and ECC. Circulation. 2025;152(16_suppl_2):S424-S447.",
+          "doi": "10.1161/CIR.0000000000001370",
+          "pmid": "41122891"
+        }
+      ],
+      "accion": "abrir_hallazgo",
+      "nota": "[APLICADO 17-09-2026, prueba en tests/correccionesEvidencia.test.mjs] PREGUNTA ABIERTA: comprobar en el texto completo de la Parte 6 si la secuencia «llamar rapido» sigue vigente para reanimador unico. Si se retiro, la leccion ensena un paso que ya no esta en la guia. No tocar la leccion hasta comprobarlo en el documento."
+    },
+    {
+      "id": "af-33f9eef940",
+      "temaId": "m3-md-uso-monitor",
+      "literal": "Las guías de soporte vital avanzado de la American Heart Association de 2025 son explícitas en este punto: no se ha identificado un ajuste óptimo de energía para la desfibrilación bifásica, ni fijo ni creciente, y la decisión se defiere al fabricante del desfibrilador.",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "confirma",
+      "resumen": "La guia 2025 de SVA del adulto no identifica una energia bifasica optima, fija o creciente, difiere el ajuste al fabricante y, si se desconoce, admite usar la dosis maxima del dispositivo.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Wigginton JG, Agarwal S, Bartos JA, et al. Part 9: Adult Advanced Life Support: 2025 American Heart Association Guidelines for CPR and ECC. Circulation. 2025;152(16_suppl_2):S538-S577.",
+          "doi": "10.1161/CIR.0000000000001376",
+          "pmid": "41122884"
+        }
+      ],
+      "accion": "ninguna",
+      "nota": ""
+    },
+    {
+      "id": "af-7d1d8702af",
+      "temaId": "m5-que-parkland",
+      "literal": "Fórmula de Parkland: Cálculo clásico del volumen de cristaloide en 24 horas a razón de 4 mL por kilogramo y por porcentaje de superficie quemada.",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "confirma",
+      "resumen": "La formula clasica de Parkland es en efecto 4 mL/kg/%SCQ en 24 horas. La leccion la presenta correctamente como calculo historico.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Greenhalgh DG, Cartotto R, Taylor SL, et al. Burn Resuscitation Practices in North America: Results of the Acute Burn ResUscitation Multicenter Prospective Trial (ABRUPT). Ann Surg. 2023;277(3):512-519.",
+          "pmid": "34417368"
+        }
+      ],
+      "accion": "ninguna",
+      "nota": ""
+    },
+    {
+      "id": "af-038ea699df",
+      "temaId": "m5-que-parkland",
+      "literal": "La guía de práctica clínica de la American Burn Association sobre reanimación del shock del quemado recomienda INICIAR la reposición en el adulto con quemadura extensa a razón de 2 mL/kg/%SCQ, y ajustar el ritmo a partir de ahí según la respuesta del paciente.",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "matiza",
+      "resumen": "El inicio en 2 mL/kg/%SCQ es correcto y procede de la formula de Brooke modificada. La busqueda devolvio como localizador un resumen de American Family Physician, pero la leccion ya citaba la guia primaria correcta (PMID 38051821), comprobada despues en PubMed. Lo que faltaba era completar la referencia y declarar el objetivo de titulacion: diuresis de 0.5 mL/kg/h.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Greenhalgh DG, Cartotto R, Taylor SL, et al. Burn Resuscitation Practices in North America: Results of the Acute Burn ResUscitation Multicenter Prospective Trial (ABRUPT). Ann Surg. 2023;277(3):512-519.",
+          "pmid": "34417368"
+        }
+      ],
+      "accion": "precisar",
+      "nota": "RECTIFICACION 17-09-2026: la nota anterior daba por supuesto que la leccion citaba el resumen de AFP. No era asi: citaba ya la guia de la ABA. APLICADO: referencia completada con autores, volumen y paginas, y anadida la diuresis objetivo."
+    },
+    {
+      "id": "af-8328e75764",
+      "temaId": "m5-que-parkland",
+      "literal": "Con la formulación clásica: 4 × 70 × 30 = 8 400 mL en 24 horas, de los cuales la mitad correspondería a las primeras 8 horas desde la quemadura.",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "confirma",
+      "resumen": "El calculo aritmetico del ejemplo y el reparto de la mitad en las primeras 8 horas corresponden a la formulacion clasica.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Greenhalgh DG, Cartotto R, Taylor SL, et al. Burn Resuscitation Practices in North America: Results of the Acute Burn ResUscitation Multicenter Prospective Trial (ABRUPT). Ann Surg. 2023;277(3):512-519.",
+          "pmid": "34417368"
+        }
+      ],
+      "accion": "ninguna",
+      "nota": ""
+    },
+    {
+      "id": "af-5937f7fc65",
+      "temaId": "m5-que-parkland",
+      "literal": "El motivo del cambio es conocido: administrar de entrada el volumen calculado con 4 mL/kg/%SCQ se asoció con frecuencia a una administración excesiva de líquido y a sus complicaciones.",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "matiza",
+      "resumen": "El «fluid creep» como motivo del cambio es correcto, pero la leccion lo presenta como asunto zanjado. El ensayo multicentrico ABRUPT encontro que, en quemaduras de mas del 20 % de SCQ, el objetivo clasico de 4 mL/kg/%SCQ en 24 h fue el que mejor estimo el liquido realmente necesario.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Greenhalgh DG, Cartotto R, Taylor SL, et al. Burn Resuscitation Practices in North America: Results of the Acute Burn ResUscitation Multicenter Prospective Trial (ABRUPT). Ann Surg. 2023;277(3):512-519.",
+          "pmid": "34417368"
+        }
+      ],
+      "accion": "precisar",
+      "nota": "[APLICADO 17-09-2026, prueba en tests/correccionesEvidencia.test.mjs] Anadir el contrapeso de ABRUPT. Sin el, la leccion deja al alumno con que 2 mL/kg/%SCQ es la respuesta correcta y 4 el error, y la literatura no dice eso."
+    },
+    {
+      "id": "af-d175ebbeb4",
+      "temaId": "m5-que-parkland",
+      "literal": "Punto de partida en el adulto · 4 mL × kg × % SCQ en 24 h · Iniciar en 2 mL × kg × % SCQ",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "matiza",
+      "resumen": "La tabla comparativa es correcta como punto de partida, pero omite que es una cifra de INICIO que se titula por diuresis y que sigue discutida para quemaduras extensas.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Greenhalgh DG, Cartotto R, Taylor SL, et al. Burn Resuscitation Practices in North America: Results of the Acute Burn ResUscitation Multicenter Prospective Trial (ABRUPT). Ann Surg. 2023;277(3):512-519.",
+          "pmid": "34417368"
+        }
+      ],
+      "accion": "precisar",
+      "nota": "[APLICADO 17-09-2026, prueba en tests/correccionesEvidencia.test.mjs] Mismo ajuste que en las afirmaciones hermanas del tema."
+    },
+    {
+      "id": "af-b9d9de11ed",
+      "temaId": "m1-pab-rcp-legos-adulto",
+      "literal": "Profundidad de compresión en el adulto Al menos 5 cm (AHA 2025 la enuncia como umbral, no como intervalo de 5 a 6).",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "confirma",
+      "resumen": "Enunciado REESCRITO el 17-09-2026 a partir del veredicto af-df90f3eed1. No es una afirmacion nueva sin comprobar: es la redaccion corregida de aquella. La guia 2025 recomienda «al menos 5 cm» y, a diferencia de la de 2020, ya no fija el techo de 5-6 cm como parte de la recomendacion: el dano por encima de 6 cm procede de datos observacionales. La leccion presenta la formulacion de 2020 atribuida a 2025.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Kleinman ME, Buick JE, Huber N, et al. Part 7: Adult Basic Life Support: 2025 American Heart Association Guidelines for CPR and ECC. Circulation. 2025;152(16_suppl_2):S448-S478.",
+          "doi": "10.1161/CIR.0000000000001369",
+          "pmid": "41122888"
+        }
+      ],
+      "accion": "ninguna",
+      "nota": "Sustituye al enunciado af-df90f3eed1. La correccion esta fijada por tests/correccionesEvidencia.test.mjs; si el texto vuelve a cambiar, el identificador cambiara tambien y la frase volvera a la cola, que es lo correcto."
+    },
+    {
+      "id": "af-c00dd899f1",
+      "temaId": "m1-pab-ovace-adultos",
+      "literal": "Una cohorte poblacional de 709 casos de obstrucción por cuerpo extraño encontró que los golpes dorsales resolvían la obstrucción con más frecuencia y con menos lesiones que las compresiones abdominales: la probabilidad ajustada de resolver con compresiones abdominales frente a golpes dorsales fue de 0.49 (intervalo de confianza del 95 %: 0.30 a 0.80).",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "confirma",
+      "resumen": "Enunciado REESCRITO el 17-09-2026 a partir del veredicto af-d14e46a12e. No es una afirmacion nueva sin comprobar: es la redaccion corregida de aquella. La guia 2025 si invierte la secuencia: 5 golpes dorsales alternados con 5 compresiones abdominales (Clase 1, NDE B-NR). El ciclo 5-y-5 se eligio por coherencia con el algoritmo pediatrico, no por datos propios del adulto.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Kleinman ME, Buick JE, Huber N, et al. Part 7: Adult Basic Life Support: 2025 American Heart Association Guidelines for CPR and ECC. Circulation. 2025;152(16_suppl_2):S448-S478.",
+          "doi": "10.1161/CIR.0000000000001369",
+          "pmid": "41122888"
+        },
+        {
+          "cita": "Dunne CL, Cirone J, Blanchard IE, et al. Evaluation of basic life support interventions for foreign body airway obstructions: a population-based cohort study. Resuscitation. 2024;201:110258.",
+          "doi": "10.1016/j.resuscitation.2024.110258",
+          "pmid": "38825222"
+        }
+      ],
+      "accion": "ninguna",
+      "nota": "Sustituye al enunciado af-d14e46a12e. La correccion esta fijada por tests/correccionesEvidencia.test.mjs; si el texto vuelve a cambiar, el identificador cambiara tambien y la frase volvera a la cola, que es lo correcto."
+    },
+    {
+      "id": "af-b9825b17bb",
+      "temaId": "m1-pai-rcp-pediatrico",
+      "literal": "Profundidad · Un tercio del diámetro AP (~4 cm) · Un tercio del diámetro AP (~5 cm) · Al menos 5 cm",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "confirma",
+      "resumen": "Enunciado REESCRITO el 17-09-2026 a partir del veredicto af-d0415a5d69. No es una afirmacion nueva sin comprobar: es la redaccion corregida de aquella. Al menos un tercio del diametro anteroposterior en lactante y nino: unos 4 cm en lactante y unos 5 cm en nino.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Joyner BL Jr, Dewan M, Bavare A, et al. Part 6: Pediatric Basic Life Support: 2025 AHA/AAP Guidelines for CPR and ECC. Circulation. 2025;152(16_suppl_2):S424-S447.",
+          "doi": "10.1161/CIR.0000000000001370",
+          "pmid": "41122891"
+        }
+      ],
+      "accion": "ninguna",
+      "nota": "Sustituye al enunciado af-d0415a5d69. La correccion esta fijada por tests/correccionesEvidencia.test.mjs; si el texto vuelve a cambiar, el identificador cambiara tambien y la frase volvera a la cola, que es lo correcto."
+    },
+    {
+      "id": "af-db3bc979e6",
+      "temaId": "m1-pai-rcp-pediatrico",
+      "literal": "La guía pediátrica de la AHA y la AAP de 2025 retiró la técnica de DOS DEDOS en el lactante porque no alcanzaba de forma fiable la profundidad necesaria: en los registros analizados, ningún segmento comprimido con dos dedos cumplió el objetivo de profundidad.",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "confirma",
+      "resumen": "Enunciado REESCRITO el 17-09-2026 a partir del veredicto af-f3cccea351. No es una afirmacion nueva sin comprobar: es la redaccion corregida de aquella. La guia 2025 retiro explicitamente la tecnica de dos dedos en el lactante por no alcanzar la profundidad adecuada: con ella ningun segmento de compresion cumplio el objetivo de profundidad.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Joyner BL Jr, Dewan M, Bavare A, et al. Part 6: Pediatric Basic Life Support: 2025 AHA/AAP Guidelines for CPR and ECC. Circulation. 2025;152(16_suppl_2):S424-S447.",
+          "doi": "10.1161/CIR.0000000000001370",
+          "pmid": "41122891"
+        }
+      ],
+      "accion": "ninguna",
+      "nota": "Sustituye al enunciado af-f3cccea351. La correccion esta fijada por tests/correccionesEvidencia.test.mjs; si el texto vuelve a cambiar, el identificador cambiara tambien y la frase volvera a la cola, que es lo correcto."
+    },
+    {
+      "id": "af-41f6b54870",
+      "temaId": "m1-pai-rcp-pediatrico",
+      "literal": "Solo y con un teléfono a mano, que es la situación habitual, se activa el 911 en altavoz y se inicia la RCP a la vez, sin interrumpir las compresiones para hablar.",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "no_concluyente",
+      "resumen": "Enunciado REESCRITO el 17-09-2026 a partir del veredicto af-c0ac02b44e. No es una afirmacion nueva sin comprobar: es la redaccion corregida de aquella. La busqueda NO encontro en la guia pediatrica 2025 la instruccion de dar unos 2 minutos de RCP antes de dejar al nino para activar el SEM; la situa como recomendacion previa a 2025, y el texto actual insiste en no retrasar las compresiones. La recuperacion fue parcial y declarada como tal, asi que no se concluye.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Joyner BL Jr, Dewan M, Bavare A, et al. Part 6: Pediatric Basic Life Support: 2025 AHA/AAP Guidelines for CPR and ECC. Circulation. 2025;152(16_suppl_2):S424-S447.",
+          "doi": "10.1161/CIR.0000000000001370",
+          "pmid": "41122891"
+        }
+      ],
+      "accion": "ninguna",
+      "nota": "Sustituye al enunciado af-c0ac02b44e. La correccion esta fijada por tests/correccionesEvidencia.test.mjs; si el texto vuelve a cambiar, el identificador cambiara tambien y la frase volvera a la cola, que es lo correcto."
+    },
+    {
+      "id": "af-4b897380af",
+      "temaId": "m5-que-parkland",
+      "literal": "Punto de partida en el adulto · 4 mL × kg × % SCQ en 24 h · Iniciar en 2 mL × kg × % SCQ (fórmula de Brooke modificada)",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "confirma",
+      "resumen": "Enunciado REESCRITO el 17-09-2026 a partir del veredicto af-d175ebbeb4. No es una afirmacion nueva sin comprobar: es la redaccion corregida de aquella. La tabla comparativa es correcta como punto de partida, pero omite que es una cifra de INICIO que se titula por diuresis y que sigue discutida para quemaduras extensas.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Greenhalgh DG, Cartotto R, Taylor SL, et al. Burn Resuscitation Practices in North America: Results of the Acute Burn ResUscitation Multicenter Prospective Trial (ABRUPT). Ann Surg. 2023;277(3):512-519.",
+          "pmid": "34417368"
+        }
+      ],
+      "accion": "ninguna",
+      "nota": "Sustituye al enunciado af-d175ebbeb4. La correccion esta fijada por tests/correccionesEvidencia.test.mjs; si el texto vuelve a cambiar, el identificador cambiara tambien y la frase volvera a la cola, que es lo correcto."
+    },
+    {
+      "id": "af-36697c9e6e",
+      "temaId": "m5-que-parkland",
+      "literal": "La guía de la ABA fija ese objetivo en 0.5 mL/kg/h en el adulto.",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "confirma",
+      "resumen": "Enunciado REESCRITO el 17-09-2026 a partir del veredicto af-038ea699df. No es una afirmacion nueva sin comprobar: es la redaccion corregida de aquella. El inicio en 2 mL/kg/%SCQ es correcto y procede de la formula de Brooke modificada. La busqueda devolvio como localizador un resumen de American Family Physician, pero la leccion ya citaba la guia primaria correcta (PMID 38051821), comprobada despues en PubMed. Lo que faltaba era completar la referencia y declarar el objetivo de titulacion: diuresis de 0.5 mL/kg/h.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Greenhalgh DG, Cartotto R, Taylor SL, et al. Burn Resuscitation Practices in North America: Results of the Acute Burn ResUscitation Multicenter Prospective Trial (ABRUPT). Ann Surg. 2023;277(3):512-519.",
+          "pmid": "34417368"
+        }
+      ],
+      "accion": "ninguna",
+      "nota": "Sustituye al enunciado af-038ea699df. La correccion esta fijada por tests/correccionesEvidencia.test.mjs; si el texto vuelve a cambiar, el identificador cambiara tambien y la frase volvera a la cola, que es lo correcto."
+    },
+    {
+      "id": "af-d8f8963af8",
+      "temaId": "m5-que-parkland",
+      "literal": "Lo que no está resuelto · — · En quemaduras > 20 % SCQ, ABRUPT halló que 4 mL/kg/%SCQ estimaba mejor el volumen finalmente necesario",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "confirma",
+      "resumen": "Enunciado REESCRITO el 17-09-2026 a partir del veredicto af-5937f7fc65. No es una afirmacion nueva sin comprobar: es la redaccion corregida de aquella. El «fluid creep» como motivo del cambio es correcto, pero la leccion lo presenta como asunto zanjado. El ensayo multicentrico ABRUPT encontro que, en quemaduras de mas del 20 % de SCQ, el objetivo clasico de 4 mL/kg/%SCQ en 24 h fue el que mejor estimo el liquido realmente necesario.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Greenhalgh DG, Cartotto R, Taylor SL, et al. Burn Resuscitation Practices in North America: Results of the Acute Burn ResUscitation Multicenter Prospective Trial (ABRUPT). Ann Surg. 2023;277(3):512-519.",
+          "pmid": "34417368"
+        }
+      ],
+      "accion": "ninguna",
+      "nota": "Sustituye al enunciado af-5937f7fc65. La correccion esta fijada por tests/correccionesEvidencia.test.mjs; si el texto vuelve a cambiar, el identificador cambiara tambien y la frase volvera a la cola, que es lo correcto."
+    },
+    {
+      "id": "af-721edcbc41",
+      "temaId": "m5-que-parkland",
+      "literal": "Sería cómodo aprender que 4 mL/kg/%SCQ es «el error» y 2 mL/kg/%SCQ «la respuesta», pero la literatura no dice eso.",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "confirma",
+      "resumen": "Enunciado REESCRITO el 17-09-2026 a partir del veredicto af-5937f7fc65. No es una afirmacion nueva sin comprobar: es la redaccion corregida de aquella. El «fluid creep» como motivo del cambio es correcto, pero la leccion lo presenta como asunto zanjado. El ensayo multicentrico ABRUPT encontro que, en quemaduras de mas del 20 % de SCQ, el objetivo clasico de 4 mL/kg/%SCQ en 24 h fue el que mejor estimo el liquido realmente necesario.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Greenhalgh DG, Cartotto R, Taylor SL, et al. Burn Resuscitation Practices in North America: Results of the Acute Burn ResUscitation Multicenter Prospective Trial (ABRUPT). Ann Surg. 2023;277(3):512-519.",
+          "pmid": "34417368"
+        }
+      ],
+      "accion": "ninguna",
+      "nota": "Sustituye al enunciado af-5937f7fc65. La correccion esta fijada por tests/correccionesEvidencia.test.mjs; si el texto vuelve a cambiar, el identificador cambiara tambien y la frase volvera a la cola, que es lo correcto."
+    },
+    {
+      "id": "af-780bed9ef2",
+      "temaId": "m5-que-parkland",
+      "literal": "El ensayo multicéntrico ABRUPT, que midió lo que realmente se administró a pacientes quemados en Norteamérica, encontró que en quemaduras de más del 20 % de superficie corporal el objetivo clásico de 4 mL/kg/%SCQ en 24 horas fue el que MEJOR estimó el líquido que el paciente terminó necesitando.",
+      "consultadoEl": "2026-09-17",
+      "consultadoPor": "Claude, consultando OpenEvidence en la sesion del usuario; localizadores comprobados uno a uno en PubMed",
+      "veredicto": "confirma",
+      "resumen": "Enunciado REESCRITO el 17-09-2026 a partir del veredicto af-5937f7fc65. No es una afirmacion nueva sin comprobar: es la redaccion corregida de aquella. El «fluid creep» como motivo del cambio es correcto, pero la leccion lo presenta como asunto zanjado. El ensayo multicentrico ABRUPT encontro que, en quemaduras de mas del 20 % de SCQ, el objetivo clasico de 4 mL/kg/%SCQ en 24 h fue el que mejor estimo el liquido realmente necesario.",
+      "fuentesPrimarias": [
+        {
+          "cita": "Greenhalgh DG, Cartotto R, Taylor SL, et al. Burn Resuscitation Practices in North America: Results of the Acute Burn ResUscitation Multicenter Prospective Trial (ABRUPT). Ann Surg. 2023;277(3):512-519.",
+          "pmid": "34417368"
+        }
+      ],
+      "accion": "ninguna",
+      "nota": "Sustituye al enunciado af-5937f7fc65. La correccion esta fijada por tests/correccionesEvidencia.test.mjs; si el texto vuelve a cambiar, el identificador cambiara tambien y la frase volvera a la cola, que es lo correcto."
+    }
+  ]
+}

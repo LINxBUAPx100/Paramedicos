@@ -302,9 +302,9 @@ export const planRescate = [
                     "nota": "Marco mexicano del servicio: personal, equipamiento y condiciones por tipo de ambulancia. No es un vademécum ni fija dosis."
                   },
                   {
-                    "nombre": "2024 American Heart Association and American Red Cross Guidelines for First Aid. Circulation, 2024. DOI 10.1161/CIR.0000000000001281.",
-                    "url": "https://cpr.heart.org/en/resuscitation-science/2024-first-aid-guidelines",
-                    "nota": "Primera actualización completa de las recomendaciones de primeros auxilios desde 2010. Respalda la conducta de este módulo en hemorragia, heridas, quemaduras y lesiones ambientales en el nivel de primer respondiente."
+                    "nombre": "Hewett Brumberg EK, Douma MJ, Alibertis K, et al. 2024 American Heart Association and American Red Cross Guidelines for First Aid. Circulation. 2024;150(24):e519-e579.",
+                    "url": "https://doi.org/10.1161/CIR.0000000000001281",
+                    "nota": "PMID 39540278. Primera actualización completa de las recomendaciones de primeros auxilios desde 2010. Respalda la conducta de este módulo en hemorragia, heridas, quemaduras y lesiones ambientales en el nivel de primer respondiente."
                   }
                 ]
               }
@@ -643,14 +643,14 @@ export const planRescate = [
                 "tipo": "fuentes",
                 "items": [
                   {
-                    "nombre": "American Heart Association. 2025 Guidelines: Adult Basic Life Support.",
-                    "url": "https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/adult-basic-life-support",
-                    "nota": "Parámetros de compresión, secuencia de RCP, uso del DEA y conducta ante la ausencia de respuesta en el adulto."
+                    "nombre": "Kleinman ME, Buick JE, Huber N, et al. Part 7: Adult Basic Life Support: 2025 American Heart Association Guidelines for Cardiopulmonary Resuscitation and Emergency Cardiovascular Care. Circulation. 2025;152(16_suppl_2):S448-S478.",
+                    "url": "https://doi.org/10.1161/CIR.0000000000001369",
+                    "nota": "PMID 41122888. Parámetros de compresión, secuencia de RCP, uso del DEA, OVACE y conducta ante la ausencia de respuesta en el adulto."
                   },
                   {
-                    "nombre": "2024 American Heart Association and American Red Cross Guidelines for First Aid. Circulation, 2024. DOI 10.1161/CIR.0000000000001281.",
-                    "url": "https://cpr.heart.org/en/resuscitation-science/2024-first-aid-guidelines",
-                    "nota": "Primera actualización completa de las recomendaciones de primeros auxilios desde 2010. Respalda la conducta de este módulo en hemorragia, heridas, quemaduras y lesiones ambientales en el nivel de primer respondiente."
+                    "nombre": "Hewett Brumberg EK, Douma MJ, Alibertis K, et al. 2024 American Heart Association and American Red Cross Guidelines for First Aid. Circulation. 2024;150(24):e519-e579.",
+                    "url": "https://doi.org/10.1161/CIR.0000000000001281",
+                    "nota": "PMID 39540278. Primera actualización completa de las recomendaciones de primeros auxilios desde 2010. Respalda la conducta de este módulo en hemorragia, heridas, quemaduras y lesiones ambientales en el nivel de primer respondiente."
                   }
                 ]
               }
@@ -754,12 +754,14 @@ export const planRescate = [
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
-          "actualizado": "2026-08-16",
+          "actualizado": "2026-09-17",
           "versionClinica": "AHA 2025 (BLS de adulto)",
           "observaciones": [
             "Auditado en la revisión del Módulo 1 (16 de agosto de 2026): se añadieron las fuentes asignadas por el registro académico y se corrigió únicamente lo encontrado.",
             "Parámetros de compresión cotejados con AHA 2025; la auditoría anterior ya los daba por alineados y no se modificaron.",
-            "PHTLS 9.ª ed. se cita por edición. Capítulo y página quedan PENDIENTES: solo puede precisarlos quien consulte la copia licenciada de la academia. No se simula haberlas consultado."
+            "PHTLS 9.ª ed. se cita por edición. Capítulo y página quedan PENDIENTES: solo puede precisarlos quien consulte la copia licenciada de la academia. No se simula haberlas consultado.",
+            "CORREGIDO (contraste 17-09-2026, af-df90f3eed1): la lección enunciaba la profundidad como «al menos 5 cm, sin superar 6 cm» y lo atribuía a AHA 2025. Esa es la formulación de 2020. La guía de 2025 la enuncia como umbral —al menos 5 cm— y el daño por encima de 6 cm queda como dato observacional, no como parte de la recomendación. Corregido en la tabla, en el repaso y en la tarjeta, y explicado en un apartado propio.",
+            "COMPROBADO: frecuencia de 100 a 120 por minuto, sin cambios. Part 7, Circulation 2025;152(16_suppl_2):S448-S478, PMID 41122888."
           ],
           "fuentes": [
             "American Heart Association. 2025 Guidelines: Adult Basic Life Support.",
@@ -815,7 +817,7 @@ export const planRescate = [
                   ],
                   [
                     "Profundidad",
-                    "Al menos 5 cm, sin superar 6 cm"
+                    "Al menos 5 cm"
                   ],
                   [
                     "Reexpansión",
@@ -830,6 +832,12 @@ export const planRescate = [
                     "Mitad inferior del esternón"
                   ]
                 ]
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Qué cambió en 2025 con la profundidad",
+                "texto": "La guía de 2020 enunciaba la profundidad como un intervalo, «entre 5 y 6 cm». La de 2025 la enuncia como un umbral: al menos 5 cm. El techo no desapareció del conocimiento —comprimir por encima de 6 cm se asocia a menor supervivencia en estudios observacionales—, pero ya no forma parte de la recomendación. La consecuencia práctica para el alumno es que el error frecuente es quedarse corto, no pasarse: el objetivo que se vigila es alcanzar los 5 cm."
               },
               {
                 "tipo": "p",
@@ -914,7 +922,7 @@ export const planRescate = [
                   "La respiración agónica es un signo de paro, no una respiración.",
                   "La comprobación no debe superar los diez segundos, y ante la duda se asume paro y se comprime.",
                   "La frecuencia objetivo en el adulto, según AHA 2025, es de cien a ciento veinte compresiones por minuto.",
-                  "La profundidad objetivo es de al menos cinco centímetros, sin superar seis.",
+                  "La profundidad objetivo, según AHA 2025, es de al menos cinco centímetros: la guía la enuncia como umbral, no como el intervalo de cinco a seis que usaba la de 2020, y aunque comprimir por encima de seis centímetros se asocia a menor supervivencia en estudios observacionales, ese techo ya no forma parte de la recomendación; el error frecuente es quedarse corto.",
                   "La reexpansión debe ser completa entre compresiones: no hay que apoyarse en el tórax.",
                   "Las interrupciones deben ser menores de diez segundos.",
                   "El punto de compresión es la mitad inferior del esternón.",
@@ -955,14 +963,14 @@ export const planRescate = [
                 "tipo": "fuentes",
                 "items": [
                   {
-                    "nombre": "American Heart Association. 2025 Guidelines: Adult Basic Life Support.",
-                    "url": "https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/adult-basic-life-support",
-                    "nota": "Parámetros de compresión, secuencia de RCP, uso del DEA y conducta ante la ausencia de respuesta en el adulto."
+                    "nombre": "Kleinman ME, Buick JE, Huber N, et al. Part 7: Adult Basic Life Support: 2025 American Heart Association Guidelines for Cardiopulmonary Resuscitation and Emergency Cardiovascular Care. Circulation. 2025;152(16_suppl_2):S448-S478.",
+                    "url": "https://doi.org/10.1161/CIR.0000000000001369",
+                    "nota": "PMID 41122888. Parámetros de compresión, secuencia de RCP, uso del DEA, OVACE y conducta ante la ausencia de respuesta en el adulto."
                   },
                   {
-                    "nombre": "2024 American Heart Association and American Red Cross Guidelines for First Aid. Circulation, 2024. DOI 10.1161/CIR.0000000000001281.",
-                    "url": "https://cpr.heart.org/en/resuscitation-science/2024-first-aid-guidelines",
-                    "nota": "Primera actualización completa de las recomendaciones de primeros auxilios desde 2010. Respalda la conducta de este módulo en hemorragia, heridas, quemaduras y lesiones ambientales en el nivel de primer respondiente."
+                    "nombre": "Hewett Brumberg EK, Douma MJ, Alibertis K, et al. 2024 American Heart Association and American Red Cross Guidelines for First Aid. Circulation. 2024;150(24):e519-e579.",
+                    "url": "https://doi.org/10.1161/CIR.0000000000001281",
+                    "nota": "PMID 39540278. Primera actualización completa de las recomendaciones de primeros auxilios desde 2010. Respalda la conducta de este módulo en hemorragia, heridas, quemaduras y lesiones ambientales en el nivel de primer respondiente."
                   }
                 ]
               }
@@ -990,7 +998,7 @@ export const planRescate = [
           },
           {
             "frente": "Profundidad de compresión en el adulto",
-            "reverso": "Al menos 5 cm, sin pasar de 6 cm."
+            "reverso": "Al menos 5 cm (AHA 2025 la enuncia como umbral, no como intervalo de 5 a 6)."
           },
           {
             "frente": "¿Qué es la respiración agónica?",
@@ -1271,14 +1279,14 @@ export const planRescate = [
                 "tipo": "fuentes",
                 "items": [
                   {
-                    "nombre": "American Heart Association. 2025 Guidelines: Adult Basic Life Support.",
-                    "url": "https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/adult-basic-life-support",
-                    "nota": "Parámetros de compresión, secuencia de RCP, uso del DEA y conducta ante la ausencia de respuesta en el adulto."
+                    "nombre": "Kleinman ME, Buick JE, Huber N, et al. Part 7: Adult Basic Life Support: 2025 American Heart Association Guidelines for Cardiopulmonary Resuscitation and Emergency Cardiovascular Care. Circulation. 2025;152(16_suppl_2):S448-S478.",
+                    "url": "https://doi.org/10.1161/CIR.0000000000001369",
+                    "nota": "PMID 41122888. Parámetros de compresión, secuencia de RCP, uso del DEA, OVACE y conducta ante la ausencia de respuesta en el adulto."
                   },
                   {
-                    "nombre": "2024 American Heart Association and American Red Cross Guidelines for First Aid. Circulation, 2024. DOI 10.1161/CIR.0000000000001281.",
-                    "url": "https://cpr.heart.org/en/resuscitation-science/2024-first-aid-guidelines",
-                    "nota": "Primera actualización completa de las recomendaciones de primeros auxilios desde 2010. Respalda la conducta de este módulo en hemorragia, heridas, quemaduras y lesiones ambientales en el nivel de primer respondiente."
+                    "nombre": "Hewett Brumberg EK, Douma MJ, Alibertis K, et al. 2024 American Heart Association and American Red Cross Guidelines for First Aid. Circulation. 2024;150(24):e519-e579.",
+                    "url": "https://doi.org/10.1161/CIR.0000000000001281",
+                    "nota": "PMID 39540278. Primera actualización completa de las recomendaciones de primeros auxilios desde 2010. Respalda la conducta de este módulo en hemorragia, heridas, quemaduras y lesiones ambientales en el nivel de primer respondiente."
                   }
                 ]
               }
@@ -1380,10 +1388,12 @@ export const planRescate = [
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
-          "actualizado": "2026-08-16",
+          "actualizado": "2026-09-17",
           "versionClinica": "AHA 2025 (Adult BLS y algoritmo de OVACE del adulto)",
           "observaciones": [
-            "Sustituye la enseñanza previa de compresiones abdominales aisladas por el ciclo de 5 golpes dorsales y 5 compresiones abdominales."
+            "Sustituye la enseñanza previa de compresiones abdominales aisladas por el ciclo de 5 golpes dorsales y 5 compresiones abdominales.",
+            "COMPROBADO (contraste 17-09-2026, af-d14e46a12e): el ciclo de 5 golpes dorsales y 5 compresiones abdominales es Clase 1, nivel de evidencia B-NR en la guía de 2025.",
+            "AÑADIDO: la lección afirmaba el cambio sin la evidencia que lo motivó. Se incorporó la cohorte poblacional de Dunne (Resuscitation 2024;201:110258, PMID 38825222) con su magnitud de efecto, y la advertencia de la propia guía de que el número «cinco y cinco» se eligió por coherencia con el algoritmo pediátrico y no por datos del adulto."
           ],
           "fuentes": [
             "American Heart Association. Adult Foreign-Body Airway Obstruction Algorithm, 2025.",
@@ -1470,6 +1480,10 @@ export const planRescate = [
                 "variante": "alerta",
                 "titulo": "Cambio respecto a lo que quizá aprendiste",
                 "texto": "La enseñanza anterior aplicaba compresiones abdominales repetidas sin el ciclo inicial de golpes dorsales. El algoritmo vigente de la AHA (2025) indica 5 golpes en la espalda seguidos de 5 compresiones abdominales, y así se evalúa en este curso."
+              },
+              {
+                "tipo": "p",
+                "texto": "El cambio no es arbitrario y conviene saber en qué se apoya. Una cohorte poblacional de 709 casos de obstrucción por cuerpo extraño encontró que los golpes dorsales resolvían la obstrucción con más frecuencia y con menos lesiones que las compresiones abdominales: la probabilidad ajustada de resolver con compresiones abdominales frente a golpes dorsales fue de 0.49 (intervalo de confianza del 95 %: 0.30 a 0.80). A eso se sumaron casos publicados de lesión grave por compresión abdominal, como rotura gástrica y disección aórtica. La propia guía advierte, en cambio, que el número exacto —cinco y cinco— se eligió por coherencia con el algoritmo pediátrico y no porque exista un dato del adulto que fije esa cifra."
               },
               {
                 "tipo": "callout",
@@ -1598,9 +1612,14 @@ export const planRescate = [
                     "nota": "Algoritmo del que se toma el ciclo de 5 golpes dorsales y 5 compresiones abdominales, y la sustitución por compresiones torácicas."
                   },
                   {
-                    "nombre": "American Heart Association. 2025 Guidelines: Adult Basic Life Support.",
-                    "url": "https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/adult-basic-life-support",
-                    "nota": "Conducta ante la pérdida de respuesta durante la OVACE y retirada del cuerpo extraño solo si es visible."
+                    "nombre": "Kleinman ME, Buick JE, Huber N, et al. Part 7: Adult Basic Life Support: 2025 American Heart Association Guidelines for Cardiopulmonary Resuscitation and Emergency Cardiovascular Care. Circulation. 2025;152(16_suppl_2):S448-S478.",
+                    "url": "https://doi.org/10.1161/CIR.0000000000001369",
+                    "nota": "PMID 41122888. Conducta ante la pérdida de respuesta durante la OVACE y retirada del cuerpo extraño solo si es visible. Clasifica el ciclo de golpes dorsales y compresiones abdominales como Clase 1, nivel de evidencia B-NR."
+                  },
+                  {
+                    "nombre": "Dunne CL, Cirone J, Blanchard IE, et al. Evaluation of basic life support interventions for foreign body airway obstructions: a population-based cohort study. Resuscitation. 2024;201:110258.",
+                    "url": "https://doi.org/10.1016/j.resuscitation.2024.110258",
+                    "nota": "PMID 38825222. Cohorte poblacional de 709 casos de obstrucción por cuerpo extraño: es el estudio que la guía de 2025 cita para anteponer los golpes dorsales."
                   }
                 ]
               }
@@ -1739,13 +1758,15 @@ export const planRescate = [
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
-          "actualizado": "2026-08-16",
+          "actualizado": "2026-09-17",
           "versionClinica": "AHA/Cruz Roja 2024 (primeros auxilios)",
           "observaciones": [
             "Auditado en la revisión del Módulo 1 (16 de agosto de 2026): se añadieron las fuentes asignadas por el registro académico y se corrigió únicamente lo encontrado.",
             "CORREGIDO: se eliminó el umbral de «3 minutos de presión directa» antes del torniquete, que ninguna fuente sostiene. La guía AHA/Cruz Roja 2024 indica presión directa seguida de torniquete o empaquetamiento cuando la localización lo permite, sin fijar un tiempo.",
             "CORREGIDO: la colocación del torniquete deja de expresarse como «5–7 cm» y pasa a criterio anatómico, remitiendo a las instrucciones del dispositivo de cada servicio.",
-            "PHTLS 9.ª ed. se cita por edición. Capítulo y página quedan PENDIENTES: solo puede precisarlos quien consulte la copia licenciada de la academia. No se simula haberlas consultado."
+            "PHTLS 9.ª ed. se cita por edición. Capítulo y página quedan PENDIENTES: solo puede precisarlos quien consulte la copia licenciada de la academia. No se simula haberlas consultado.",
+            "COMPROBADO (contraste 17-09-2026, af-fb30799e3b): la secuencia de presión directa seguida de torniquete o empaquetamiento coincide con la guía. La referencia pasa de la página de sección del portal de la AHA a la cita del documento: Circulation 2024;150(24):e519-e579, PMID 39540278.",
+            "ABIERTO: no se pudo recuperar la clase de recomendación de esa secuencia. Queda por comprobar en el documento completo."
           ],
           "fuentes": [
             "2024 AHA and American Red Cross Guidelines for First Aid. Circulation, 2024.",
@@ -1940,9 +1961,9 @@ export const planRescate = [
                 "tipo": "fuentes",
                 "items": [
                   {
-                    "nombre": "2024 American Heart Association and American Red Cross Guidelines for First Aid. Circulation, 2024. DOI 10.1161/CIR.0000000000001281.",
-                    "url": "https://cpr.heart.org/en/resuscitation-science/2024-first-aid-guidelines",
-                    "nota": "Primera actualización completa de las recomendaciones de primeros auxilios desde 2010. Respalda la conducta de este módulo en hemorragia, heridas, quemaduras y lesiones ambientales en el nivel de primer respondiente."
+                    "nombre": "Hewett Brumberg EK, Douma MJ, Alibertis K, et al. 2024 American Heart Association and American Red Cross Guidelines for First Aid. Circulation. 2024;150(24):e519-e579.",
+                    "url": "https://doi.org/10.1161/CIR.0000000000001281",
+                    "nota": "PMID 39540278. Primera actualización completa de las recomendaciones de primeros auxilios desde 2010. Respalda la conducta de este módulo en hemorragia, heridas, quemaduras y lesiones ambientales en el nivel de primer respondiente."
                   },
                   {
                     "nombre": "NAEMT. PHTLS: Soporte Vital de Trauma Prehospitalario, 9.ª ed.",
@@ -2218,9 +2239,9 @@ export const planRescate = [
                 "tipo": "fuentes",
                 "items": [
                   {
-                    "nombre": "2024 American Heart Association and American Red Cross Guidelines for First Aid. Circulation, 2024. DOI 10.1161/CIR.0000000000001281.",
-                    "url": "https://cpr.heart.org/en/resuscitation-science/2024-first-aid-guidelines",
-                    "nota": "Primera actualización completa de las recomendaciones de primeros auxilios desde 2010. Respalda la conducta de este módulo en hemorragia, heridas, quemaduras y lesiones ambientales en el nivel de primer respondiente."
+                    "nombre": "Hewett Brumberg EK, Douma MJ, Alibertis K, et al. 2024 American Heart Association and American Red Cross Guidelines for First Aid. Circulation. 2024;150(24):e519-e579.",
+                    "url": "https://doi.org/10.1161/CIR.0000000000001281",
+                    "nota": "PMID 39540278. Primera actualización completa de las recomendaciones de primeros auxilios desde 2010. Respalda la conducta de este módulo en hemorragia, heridas, quemaduras y lesiones ambientales en el nivel de primer respondiente."
                   },
                   {
                     "nombre": "NAEMT. PHTLS: Soporte Vital de Trauma Prehospitalario, 9.ª ed.",
@@ -2535,9 +2556,9 @@ export const planRescate = [
                 "tipo": "fuentes",
                 "items": [
                   {
-                    "nombre": "2024 American Heart Association and American Red Cross Guidelines for First Aid. Circulation, 2024. DOI 10.1161/CIR.0000000000001281.",
-                    "url": "https://cpr.heart.org/en/resuscitation-science/2024-first-aid-guidelines",
-                    "nota": "Primera actualización completa de las recomendaciones de primeros auxilios desde 2010. Respalda la conducta de este módulo en hemorragia, heridas, quemaduras y lesiones ambientales en el nivel de primer respondiente."
+                    "nombre": "Hewett Brumberg EK, Douma MJ, Alibertis K, et al. 2024 American Heart Association and American Red Cross Guidelines for First Aid. Circulation. 2024;150(24):e519-e579.",
+                    "url": "https://doi.org/10.1161/CIR.0000000000001281",
+                    "nota": "PMID 39540278. Primera actualización completa de las recomendaciones de primeros auxilios desde 2010. Respalda la conducta de este módulo en hemorragia, heridas, quemaduras y lesiones ambientales en el nivel de primer respondiente."
                   },
                   {
                     "nombre": "World Health Organization e International Committee of the Red Cross. Basic Emergency Care: approach to the acutely ill and injured, 2018.",
@@ -2832,9 +2853,9 @@ export const planRescate = [
                 "tipo": "fuentes",
                 "items": [
                   {
-                    "nombre": "2024 American Heart Association and American Red Cross Guidelines for First Aid. Circulation, 2024. DOI 10.1161/CIR.0000000000001281.",
-                    "url": "https://cpr.heart.org/en/resuscitation-science/2024-first-aid-guidelines",
-                    "nota": "Primera actualización completa de las recomendaciones de primeros auxilios desde 2010. Respalda la conducta de este módulo en hemorragia, heridas, quemaduras y lesiones ambientales en el nivel de primer respondiente."
+                    "nombre": "Hewett Brumberg EK, Douma MJ, Alibertis K, et al. 2024 American Heart Association and American Red Cross Guidelines for First Aid. Circulation. 2024;150(24):e519-e579.",
+                    "url": "https://doi.org/10.1161/CIR.0000000000001281",
+                    "nota": "PMID 39540278. Primera actualización completa de las recomendaciones de primeros auxilios desde 2010. Respalda la conducta de este módulo en hemorragia, heridas, quemaduras y lesiones ambientales en el nivel de primer respondiente."
                   },
                   {
                     "nombre": "World Health Organization e International Committee of the Red Cross. Basic Emergency Care: approach to the acutely ill and injured, 2018.",
@@ -3145,9 +3166,9 @@ export const planRescate = [
                     "nota": "Marco público de evaluación inicial del paciente agudo y del traumatizado."
                   },
                   {
-                    "nombre": "2024 American Heart Association and American Red Cross Guidelines for First Aid. Circulation, 2024. DOI 10.1161/CIR.0000000000001281.",
-                    "url": "https://cpr.heart.org/en/resuscitation-science/2024-first-aid-guidelines",
-                    "nota": "Conducta de primeros auxilios en lesiones, exposiciones tóxicas y emergencias ambientales."
+                    "nombre": "Hewett Brumberg EK, Douma MJ, Alibertis K, et al. 2024 American Heart Association and American Red Cross Guidelines for First Aid. Circulation. 2024;150(24):e519-e579.",
+                    "url": "https://doi.org/10.1161/CIR.0000000000001281",
+                    "nota": "PMID 39540278. Conducta de primeros auxilios en lesiones, exposiciones tóxicas y emergencias ambientales."
                   }
                 ]
               }
@@ -4039,13 +4060,17 @@ export const planRescate = [
         "revision": {
           "estado": "en_revision",
           "procedencia": "redactado",
-          "actualizado": "2026-08-16",
+          "actualizado": "2026-09-17",
           "versionClinica": "AHA/AAP 2025, Part 6: Pediatric Basic Life Support",
           "observaciones": [
             "Auditado en la revisión del Módulo 1 (16 de agosto de 2026): se añadieron las fuentes asignadas por el registro académico y se corrigió únicamente lo encontrado.",
             "CORREGIDO: la tabla enseñaba la técnica de DOS DEDOS en el lactante. La guía pediátrica de 2025 la retiró por no alcanzar de forma fiable la profundidad necesaria; se sustituyó por dos pulgares rodeando el tórax o el talón de una mano, y se añadió el aviso del cambio.",
             "La fuente pasa de la guía de adulto a la pediátrica primaria.",
-            "PHTLS 9.ª ed. se cita por edición. Capítulo y página quedan PENDIENTES: solo puede precisarlos quien consulte la copia licenciada de la academia. No se simula haberlas consultado."
+            "PHTLS 9.ª ed. se cita por edición. Capítulo y página quedan PENDIENTES: solo puede precisarlos quien consulte la copia licenciada de la academia. No se simula haberlas consultado.",
+            "MATIZADO (contraste 17-09-2026, af-c50111a37c y af-d1bde0ac9b): la lección enunciaba 30:2 y 15:2 como dato cerrado. La guía de 2025 declara que la relación ÓPTIMA sigue sin establecerse y mantiene ambas por coherencia con los objetivos previos de entrenamiento. Lo demostrado es que ventilar mejora el resultado frente a comprimir solamente.",
+            "AMPLIADO (af-f3cccea351): la retirada de la técnica de dos dedos ya estaba en la lección y era correcta; se añadió qué la sustituye con su jerarquía —el talón de una mano alcanzó más profundidad que los dos pulgares en el lactante— y la condición de no poder abarcar el tórax.",
+            "CORREGIDO (af-c0ac02b44e): la lección enseñaba «dar 2 minutos de RCP y después llamar» como regla para el reanimador solo, incluida una pregunta que la daba por correcta. Esa cifra no se localizó en el texto de 2025, que pide activar el servicio de emergencias e iniciar la RCP sin demora, con el altavoz del móvil. Se reescribió la conducta, el repaso, la tarjeta y la pregunta.",
+            "ABIERTO Y DECLARADO EN LA PROPIA LECCIÓN: el algoritmo pediátrico va en las figuras 8 a 10 del artículo y no se ha leído en la figura publicada. Hasta que un docente lo coteje, este punto queda señalado como pendiente dentro del texto que ve el alumno."
           ],
           "fuentes": [
             "AHA/AAP. Part 6: Pediatric Basic Life Support. 2025 Guidelines. Circulation, 2025. DOI 10.1161/CIR.0000000000001370.",
@@ -4099,7 +4124,7 @@ export const planRescate = [
                     "Profundidad",
                     "Un tercio del diámetro AP (~4 cm)",
                     "Un tercio del diámetro AP (~5 cm)",
-                    "5–6 cm"
+                    "Al menos 5 cm"
                   ],
                   [
                     "Frecuencia",
@@ -4129,9 +4154,19 @@ export const planRescate = [
               },
               {
                 "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Qué está establecido y qué no en la relación 30:2 / 15:2",
+                "texto": "Estas dos relaciones son las que hay que saber y las que se evalúan, pero conviene saber en qué se apoyan. La guía de 2025 declara que la relación ÓPTIMA sigue siendo desconocida: lo que muestran los estudios de paro pediátrico extrahospitalario es que la RCP con compresiones y ventilaciones da mejores resultados que la RCP solo con compresiones, tanto a 15:2 como a 30:2. Las cifras se mantienen por coherencia con los objetivos previos de entrenamiento, no porque se haya demostrado que una sea superior a la otra. Lo demostrado es que hay que ventilar."
+              },
+              {
+                "tipo": "callout",
                 "variante": "alerta",
                 "titulo": "Cambio de 2025 en el lactante",
-                "texto": "La guía pediátrica de la AHA y la AAP de 2025 retiró la técnica de DOS DEDOS en el lactante porque no alcanzaba de forma fiable la profundidad necesaria. Las técnicas recomendadas son los dos pulgares rodeando el tórax o el talón de una mano. Si aprendiste la técnica de dos dedos, esa es la parte que hay que actualizar."
+                "texto": "La guía pediátrica de la AHA y la AAP de 2025 retiró la técnica de DOS DEDOS en el lactante porque no alcanzaba de forma fiable la profundidad necesaria: en los registros analizados, ningún segmento comprimido con dos dedos cumplió el objetivo de profundidad. Las técnicas recomendadas son el talón de una mano o los dos pulgares rodeando el tórax, y el talón de una mano cuando el reanimador no puede abarcar el tórax. Si aprendiste la técnica de dos dedos, esa es la parte que hay que actualizar."
+              },
+              {
+                "tipo": "p",
+                "texto": "Entre las dos técnicas admitidas no hay empate: en esos mismos registros, la técnica del talón de una mano alcanzó más profundidad que la de dos pulgares en el lactante. En el niño de uno a ocho años, la comparación equivalente favoreció las dos manos frente a una. La regla práctica que se deduce es simple: ante la duda, la técnica que permite más profundidad es la preferible, porque el error habitual en pediatría es comprimir poco."
               }
             ]
           },
@@ -4140,15 +4175,22 @@ export const planRescate = [
             "bloques": [
               {
                 "tipo": "p",
-                "texto": "Con dos reanimadores, uno llama al 911 y consigue el DEA mientras el otro empieza. Solo, el orden depende de lo que se sospeche."
+                "texto": "Con dos reanimadores no hay dilema: uno llama al 911 y consigue el DEA mientras el otro empieza. Solo, la pregunta clásica era si llamar antes o reanimar antes — y el teléfono móvil la ha vuelto casi siempre innecesaria."
               },
               {
                 "tipo": "lista",
                 "titulo": "Reanimador solo",
                 "items": [
-                  "Colapso presenciado y súbito (sospecha de causa cardiaca): llamar primero y conseguir el DEA, luego reanimar.",
-                  "Paro no presenciado o de causa probablemente respiratoria (ahogamiento, atragantamiento): dar 2 minutos de RCP y después llamar."
+                  "Con un teléfono a mano, que es la situación habitual: activar el 911 en altavoz e iniciar la RCP a la vez, sin interrumpir las compresiones para hablar. Esto vale tanto para el colapso súbito como para el de causa respiratoria, y es lo que la guía de 2025 pide como norma.",
+                  "Sin teléfono a mano y con colapso presenciado y súbito, con sospecha de causa cardiaca: ir a pedir ayuda y conseguir el DEA primero, porque lo que decide el pronóstico es la desfibrilación temprana.",
+                  "Sin teléfono a mano y con paro no presenciado o de causa probablemente respiratoria (ahogamiento, atragantamiento): reanimar primero y dejar al niño lo más tarde posible, porque lo que le falta es oxígeno y no una descarga."
                 ]
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Lo que cambió y lo que queda por comprobar",
+                "texto": "La enseñanza anterior resumía este punto como «dos minutos de RCP y después llamar». La guía de 2025 ya no lo plantea así: pide activar el servicio de emergencias e iniciar la RCP sin demora, y la separación entre «llamar primero» y «reanimar primero» queda reducida al caso raro de no tener teléfono. La cifra concreta de dos minutos no se ha localizado en el texto de 2025. PENDIENTE de comprobación docente: el algoritmo pediátrico va en las figuras 8 a 10 del artículo y hay que leerlo en la figura publicada antes de dar este punto por cerrado."
               },
               {
                 "tipo": "callout",
@@ -4211,13 +4253,13 @@ export const planRescate = [
                   "Si el paro pediátrico es casi siempre hipóxico, la ventilación deja de ser accesoria, y la RCP solo con las manos es la opción de último recurso.",
                   "En el lactante menor de un año la técnica es dos pulgares rodeando el tórax o el talón de una mano.",
                   "En el niño de un año a la pubertad se usa el talón de una mano, o dos si hace falta; en el adulto, dos manos.",
-                  "La profundidad en lactante y niño es un tercio del diámetro anteroposterior del tórax; en el adulto, de cinco a seis centímetros.",
+                  "La profundidad en lactante y niño es un tercio del diámetro anteroposterior del tórax; en el adulto, al menos cinco centímetros.",
                   "La frecuencia es de cien a ciento veinte por minuto en las tres edades.",
-                  "Con un reanimador la relación es treinta a dos en lactante, niño y adulto.",
-                  "Con dos reanimadores la relación pasa a quince a dos en lactante y niño, y se mantiene en treinta a dos en el adulto.",
+                  "Con un reanimador la relación es treinta a dos en las tres edades; con dos reanimadores pasa a quince a dos en lactante y niño y se mantiene en treinta a dos en el adulto.",
                   "Con dos reanimadores, uno llama al 911 y consigue el DEA mientras el otro empieza.",
-                  "Solo y ante un colapso presenciado y súbito, con sospecha de causa cardiaca, se llama primero y se consigue el DEA, y después se reanima.",
-                  "Solo y ante un paro no presenciado o de causa probablemente respiratoria, como ahogamiento o atragantamiento, se dan dos minutos de RCP y después se llama."
+                  "Solo y con un teléfono a mano, que es la situación habitual, se activa el 911 en altavoz y se inicia la RCP a la vez, sin interrumpir las compresiones para hablar.",
+                  "Solo y SIN teléfono a mano, el orden depende de la causa: ante un colapso presenciado y súbito de sospecha cardiaca se va a pedir ayuda y a conseguir el DEA primero, porque lo que decide el pronóstico es la desfibrilación temprana; ante un paro no presenciado o de causa probablemente respiratoria se reanima primero y se deja al niño lo más tarde posible, porque lo que le falta es oxígeno y no una descarga.",
+                  "La guía de 2025 ya no enuncia este punto como «dos minutos de RCP y después llamar»: pide activar el servicio de emergencias e iniciar la RCP sin demora."
                 ]
               }
             ]
@@ -4238,7 +4280,8 @@ export const planRescate = [
                   "¿Cuál es la referencia real de profundidad en pediatría y por qué los centímetros solo orientan?",
                   "Compara la relación compresión-ventilación con uno y con dos reanimadores en las tres edades.",
                   "¿Qué técnica retiró la guía de 2025 en el lactante y por qué?",
-                  "Con un solo reanimador, ¿cuándo se llama primero y cuándo se reanima primero?",
+                  "Con un solo reanimador y un teléfono a mano, ¿qué se hace, y por qué ya casi no se plantea elegir entre llamar y reanimar?",
+                  "Sin teléfono a mano, ¿cuándo se va a pedir ayuda primero y cuándo se reanima primero? Explica el porqué de cada caso.",
                   "¿Qué número único de emergencias se usa en México y qué papel cumplen los CRUM?"
                 ]
               }
@@ -4251,9 +4294,9 @@ export const planRescate = [
                 "tipo": "fuentes",
                 "items": [
                   {
-                    "nombre": "American Heart Association y American Academy of Pediatrics. Part 6: Pediatric Basic Life Support. 2025 Guidelines for Cardiopulmonary Resuscitation and Emergency Cardiovascular Care. Circulation, 2025. DOI 10.1161/CIR.0000000000001370.",
-                    "url": "https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/pediatric-basic-life-support",
-                    "nota": "Parámetros de reanimación del lactante y del niño y secuencia de la obstrucción por cuerpo extraño. Fuente pediátrica primaria: no se usa el algoritmo de adulto."
+                    "nombre": "Joyner BL Jr, Dewan M, Bavare A, et al. Part 6: Pediatric Basic Life Support: 2025 American Heart Association and American Academy of Pediatrics Guidelines for Cardiopulmonary Resuscitation and Emergency Cardiovascular Care. Circulation. 2025;152(16_suppl_2):S424-S447.",
+                    "url": "https://doi.org/10.1161/CIR.0000000000001370",
+                    "nota": "PMID 41122891. Parámetros de reanimación del lactante y del niño y secuencia de la obstrucción por cuerpo extraño. Fuente pediátrica primaria: no se usa el algoritmo de adulto. Los algoritmos van en las figuras 8 a 10 del artículo: cualquier paso tomado de ellas debe comprobarse en la figura publicada."
                   },
                   {
                     "nombre": "World Health Organization e International Committee of the Red Cross. Basic Emergency Care: approach to the acutely ill and injured, 2018.",
@@ -4272,7 +4315,7 @@ export const planRescate = [
           },
           {
             "termino": "Relación compresión-ventilación",
-            "definicion": "Número de compresiones por cada par de ventilaciones: 30:2 con un reanimador y 15:2 con dos en lactante y niño."
+            "definicion": "Número de compresiones por cada par de ventilaciones: 30:2 con un reanimador y 15:2 con dos en lactante y niño. La guía de 2025 mantiene ambas sin haber establecido cuál es la óptima; lo demostrado es que ventilar mejora el resultado frente a comprimir solamente."
           },
           {
             "termino": "Diámetro anteroposterior",
@@ -4294,20 +4337,20 @@ export const planRescate = [
           },
           {
             "frente": "Reanimador solo ante un niño que se ahogó: ¿llama o reanima?",
-            "reverso": "Reanima 2 minutos y después llama: la causa es respiratoria."
+            "reverso": "Con teléfono a mano, las dos cosas: 911 en altavoz y RCP a la vez. Sin teléfono, reanima primero, porque lo que falta es oxígeno."
           }
         ],
         "quiz": [
           {
-            "pregunta": "Estás solo con un lactante que no responde y no respira tras atragantarse. ¿Qué haces primero?",
+            "pregunta": "Estás solo con un lactante que no responde y no respira tras atragantarse. Llevas el teléfono en el bolsillo. ¿Qué haces?",
             "opciones": [
-              "Llamar al 911 y esperar indicaciones.",
-              "Dar 2 minutos de RCP y después llamar al 911.",
-              "Buscar un DEA antes de empezar.",
-              "Colocarlo en posición de recuperación."
+              "Llamar al 911 y esperar indicaciones antes de tocarlo.",
+              "Iniciar la RCP y activar el 911 en altavoz a la vez, sin interrumpir las compresiones.",
+              "Dar 2 minutos de RCP, dejar al lactante e ir a buscar un teléfono.",
+              "Buscar un DEA antes de empezar."
             ],
             "correcta": 1,
-            "explicacion": "El origen es respiratorio: dos minutos de RCP corrigen la hipoxia antes de dejar al niño para ir a pedir ayuda. En el colapso súbito de causa cardiaca el orden sería el inverso."
+            "explicacion": "Teniendo teléfono no hay que elegir: el altavoz permite activar el 911 sin dejar de comprimir, y la guía de 2025 pide activar e iniciar la RCP sin demora. Dejar al niño para ir a llamar solo tiene sentido cuando no hay teléfono a mano, y en un paro de causa respiratoria se retrasa cuanto se pueda."
           },
           {
             "pregunta": "Dos reanimadores atienden a un niño de 6 años en paro. La relación correcta es:",
@@ -4318,7 +4361,7 @@ export const planRescate = [
               "Solo compresiones"
             ],
             "correcta": 1,
-            "explicacion": "Con dos reanimadores en lactante y niño la relación baja a 15:2, para aumentar la frecuencia de ventilaciones en un paro de origen habitualmente hipóxico."
+            "explicacion": "Con dos reanimadores en lactante y niño la relación baja a 15:2, para aumentar la frecuencia de ventilaciones en un paro de origen habitualmente hipóxico. La guía mantiene esta cifra por coherencia con los objetivos de entrenamiento: lo demostrado es que ventilar mejora el resultado, no que 15:2 supere a 30:2."
           },
           {
             "pregunta": "¿Cuál es la referencia correcta de profundidad en el paciente pediátrico?",
@@ -4935,9 +4978,9 @@ export const planRescate = [
                 "tipo": "fuentes",
                 "items": [
                   {
-                    "nombre": "2024 American Heart Association and American Red Cross Guidelines for First Aid. Circulation, 2024. DOI 10.1161/CIR.0000000000001281.",
-                    "url": "https://cpr.heart.org/en/resuscitation-science/2024-first-aid-guidelines",
-                    "nota": "Conducta de primeros auxilios en lesiones, exposiciones tóxicas y emergencias ambientales."
+                    "nombre": "Hewett Brumberg EK, Douma MJ, Alibertis K, et al. 2024 American Heart Association and American Red Cross Guidelines for First Aid. Circulation. 2024;150(24):e519-e579.",
+                    "url": "https://doi.org/10.1161/CIR.0000000000001281",
+                    "nota": "PMID 39540278. Conducta de primeros auxilios en lesiones, exposiciones tóxicas y emergencias ambientales."
                   },
                   {
                     "nombre": "Secretaría de Salud. Manual de Procedimientos Estandarizados para la Vigilancia Epidemiológica de las Intoxicaciones por Animales Ponzoñosos, 2024.",
@@ -5237,9 +5280,9 @@ export const planRescate = [
                     "nota": "Marco público de evaluación inicial del paciente agudo y del traumatizado."
                   },
                   {
-                    "nombre": "2024 American Heart Association and American Red Cross Guidelines for First Aid. Circulation, 2024. DOI 10.1161/CIR.0000000000001281.",
-                    "url": "https://cpr.heart.org/en/resuscitation-science/2024-first-aid-guidelines",
-                    "nota": "Conducta de primeros auxilios en lesiones, exposiciones tóxicas y emergencias ambientales."
+                    "nombre": "Hewett Brumberg EK, Douma MJ, Alibertis K, et al. 2024 American Heart Association and American Red Cross Guidelines for First Aid. Circulation. 2024;150(24):e519-e579.",
+                    "url": "https://doi.org/10.1161/CIR.0000000000001281",
+                    "nota": "PMID 39540278. Conducta de primeros auxilios en lesiones, exposiciones tóxicas y emergencias ambientales."
                   }
                 ]
               }
@@ -81841,9 +81884,9 @@ export const planRescate = [
                 "tipo": "fuentes",
                 "items": [
                   {
-                    "nombre": "American Burn Association. Clinical Practice Guideline on Burn Shock Resuscitation, 2024.",
-                    "url": "https://pubmed.ncbi.nlm.nih.gov/38051821/",
-                    "nota": "Guía primaria actual de la reanimación con líquidos del paciente quemado. Sostiene el inicio en 2 mL/kg/%SCQ en el adulto y la titulación según respuesta. PENDIENTE: apartado y página exactos del documento completo."
+                    "nombre": "Cartotto R, Johnson LS, Savetamal A, et al. American Burn Association Clinical Practice Guidelines on Burn Shock Resuscitation. J Burn Care Res. 2024;45(3):565-589.",
+                    "url": "https://doi.org/10.1093/jbcr/irad125",
+                    "nota": "PMID 38051821. Guía primaria actual de la reanimación con líquidos del paciente quemado. Sostiene el inicio en 2 mL/kg/%SCQ en el adulto y la titulación según respuesta, con la diuresis de 0.5 mL/kg/h como objetivo. PENDIENTE: apartado y página exactos dentro del documento completo."
                   },
                   {
                     "nombre": "NAEMT. PHTLS: Soporte Vital de Trauma Prehospitalario, 9.ª ed., 2020 (ISBN 978-1-284-10330-4).",
@@ -82547,9 +82590,9 @@ export const planRescate = [
                 "tipo": "fuentes",
                 "items": [
                   {
-                    "nombre": "American Burn Association. Clinical Practice Guideline on Burn Shock Resuscitation, 2024.",
-                    "url": "https://pubmed.ncbi.nlm.nih.gov/38051821/",
-                    "nota": "Guía primaria actual de la reanimación con líquidos del paciente quemado. Sostiene el inicio en 2 mL/kg/%SCQ en el adulto y la titulación según respuesta. PENDIENTE: apartado y página exactos del documento completo."
+                    "nombre": "Cartotto R, Johnson LS, Savetamal A, et al. American Burn Association Clinical Practice Guidelines on Burn Shock Resuscitation. J Burn Care Res. 2024;45(3):565-589.",
+                    "url": "https://doi.org/10.1093/jbcr/irad125",
+                    "nota": "PMID 38051821. Guía primaria actual de la reanimación con líquidos del paciente quemado. Sostiene el inicio en 2 mL/kg/%SCQ en el adulto y la titulación según respuesta, con la diuresis de 0.5 mL/kg/h como objetivo. PENDIENTE: apartado y página exactos dentro del documento completo."
                   },
                   {
                     "nombre": "NAEMT. PHTLS: Soporte Vital de Trauma Prehospitalario, 9.ª ed., 2020 (ISBN 978-1-284-10330-4).",
@@ -82905,9 +82948,9 @@ export const planRescate = [
                 "tipo": "fuentes",
                 "items": [
                   {
-                    "nombre": "American Burn Association. Clinical Practice Guideline on Burn Shock Resuscitation, 2024.",
-                    "url": "https://pubmed.ncbi.nlm.nih.gov/38051821/",
-                    "nota": "Guía primaria actual de la reanimación con líquidos del paciente quemado. Sostiene el inicio en 2 mL/kg/%SCQ en el adulto y la titulación según respuesta. PENDIENTE: apartado y página exactos del documento completo."
+                    "nombre": "Cartotto R, Johnson LS, Savetamal A, et al. American Burn Association Clinical Practice Guidelines on Burn Shock Resuscitation. J Burn Care Res. 2024;45(3):565-589.",
+                    "url": "https://doi.org/10.1093/jbcr/irad125",
+                    "nota": "PMID 38051821. Guía primaria actual de la reanimación con líquidos del paciente quemado. Sostiene el inicio en 2 mL/kg/%SCQ en el adulto y la titulación según respuesta, con la diuresis de 0.5 mL/kg/h como objetivo. PENDIENTE: apartado y página exactos dentro del documento completo."
                   },
                   {
                     "nombre": "NAEMT. PHTLS: Soporte Vital de Trauma Prehospitalario, 9.ª ed., 2020 (ISBN 978-1-284-10330-4).",
@@ -83074,7 +83117,10 @@ export const planRescate = [
             "ALCANCE Y PROTOCOLO: solución, ritmo de infusión, analgesia, apósitos, oxígeno y destino dependen del alcance autorizado, del material disponible y del protocolo del servicio. No se publica ninguna dosis de fármaco en esta unidad.",
             "DEUDA BIBLIOGRÁFICA: capítulo y página de PHTLS 9 pendientes de localizar para esta unidad.",
             "CONTROL CLÍNICO APLICADO: la fórmula clásica de 4 mL/kg/%SCQ se enseña como ANTECEDENTE que pide el plan y se contrasta con la recomendación de la American Burn Association de 2024 de iniciar en 2 mL/kg/%SCQ y titular. No se presenta como dosis fija.",
-            "La solución concreta, el ritmo de infusión y la pauta pediátrica se remiten al protocolo del servicio y al Módulo 6; la lección no los fija."
+            "La solución concreta, el ritmo de infusión y la pauta pediátrica se remiten al protocolo del servicio y al Módulo 6; la lección no los fija.",
+            "CONTRASTE CONTRA EVIDENCIA EXTERNA (17-09-2026, af-038ea699df, af-5937f7fc65 y af-d175ebbeb4). La referencia de la ABA se completó con autores, volumen y páginas: Cartotto R, et al. J Burn Care Res. 2024;45(3):565-589, PMID 38051821, y se añadió su objetivo de titulación, diuresis de 0.5 mL/kg/h en el adulto.",
+            "MATIZADO: la lección presentaba el paso de 4 a 2 mL/kg/%SCQ como asunto zanjado. Se añadió el contrapeso —el ensayo multicéntrico ABRUPT (Ann Surg 2023;277(3):512-519, PMID 34417368) halló que en quemaduras de más del 20 % de SCQ el objetivo clásico de 4 mL/kg/%SCQ estimaba MEJOR el volumen finalmente necesario— y se nombró la procedencia de la cifra de inicio: la fórmula de Brooke modificada. Sin ese contrapeso la lección dejaba al alumno con que 2 es la respuesta correcta y 4 el error, que no es lo que dice la literatura.",
+            "PENDIENTE: apartado y página exactos dentro del documento completo de la ABA."
           ],
           "fuentes": [
             "American Burn Association. Burn Shock Resuscitation, 2024.",
@@ -83136,7 +83182,7 @@ export const planRescate = [
                   [
                     "Punto de partida en el adulto",
                     "4 mL × kg × % SCQ en 24 h",
-                    "Iniciar en 2 mL × kg × % SCQ"
+                    "Iniciar en 2 mL × kg × % SCQ (fórmula de Brooke modificada)"
                   ],
                   [
                     "Naturaleza del número",
@@ -83146,12 +83192,17 @@ export const planRescate = [
                   [
                     "Cómo se ajusta",
                     "Reparto fijo por horas",
-                    "Titulación según la respuesta del paciente"
+                    "Titulación según la respuesta; diuresis objetivo 0.5 mL/kg/h en el adulto"
                   ],
                   [
                     "Riesgo asociado",
                     "Administración excesiva de líquido",
                     "Requiere reevaluación continua"
+                  ],
+                  [
+                    "Lo que no está resuelto",
+                    "—",
+                    "En quemaduras > 20 % SCQ, ABRUPT halló que 4 mL/kg/%SCQ estimaba mejor el volumen finalmente necesario"
                   ]
                 ]
               },
@@ -83159,7 +83210,13 @@ export const planRescate = [
                 "tipo": "callout",
                 "variante": "clave",
                 "titulo": "Titular quiere decir esto",
-                "texto": "La cifra calculada marca por dónde empezar. A partir de ahí, el ritmo sube o baja según cómo responde el paciente: el estado mental, la perfusión periférica, la frecuencia cardiaca, la presión arterial y, en el medio hospitalario, la diuresis horaria, que es el parámetro de referencia de la titulación. Ninguna fórmula sustituye a esa reevaluación."
+                "texto": "La cifra calculada marca por dónde empezar. A partir de ahí, el ritmo sube o baja según cómo responde el paciente: el estado mental, la perfusión periférica, la frecuencia cardiaca, la presión arterial y, en el medio hospitalario, la diuresis horaria, que es el parámetro de referencia de la titulación. La guía de la ABA fija ese objetivo en 0.5 mL/kg/h en el adulto. Ninguna fórmula sustituye a esa reevaluación."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "El cambio no está zanjado, y conviene saberlo",
+                "texto": "Sería cómodo aprender que 4 mL/kg/%SCQ es «el error» y 2 mL/kg/%SCQ «la respuesta», pero la literatura no dice eso. El ensayo multicéntrico ABRUPT, que midió lo que realmente se administró a pacientes quemados en Norteamérica, encontró que en quemaduras de más del 20 % de superficie corporal el objetivo clásico de 4 mL/kg/%SCQ en 24 horas fue el que MEJOR estimó el líquido que el paciente terminó necesitando. La cifra de 2 mL/kg/%SCQ —que procede de la fórmula de Brooke modificada— es un punto de partida deliberadamente bajo para no pasarse de entrada; no es un techo ni una predicción del total. Quien lo entienda así no se asustará cuando el paciente acabe recibiendo más."
               }
             ]
           },
@@ -83235,13 +83292,13 @@ export const planRescate = [
                 "items": [
                   "La quemadura extensa hace que el plasma escape de los vasos hacia el tejido: eso produce el shock del quemado.",
                   "La fórmula clásica calcula el volumen a partir del peso del paciente y de la superficie quemada.",
-                  "Su distribución clásica reparte la mitad en las primeras horas contadas desde el momento de la quemadura.",
-                  "Y la otra mitad en el resto del primer día.",
+                  "Su distribución clásica reparte la mitad en las primeras horas contadas desde el momento de la quemadura, y la otra mitad en el resto del primer día.",
                   "Ese detalle importa: si han pasado horas hasta el contacto, el tiempo disponible para la primera mitad se ha reducido.",
                   "La American Burn Association recomienda desde 2024 iniciar en la mitad del valor clásico por kilogramo y porcentaje en el adulto.",
-                  "El motivo del cambio es que partir del valor clásico se asoció con frecuencia a administración excesiva de líquido.",
+                  "El motivo del cambio es que partir del valor clásico se asoció con frecuencia a administración excesiva de líquido; la cifra de inicio más baja procede de la fórmula de Brooke modificada y es un punto de partida prudente, no un techo ni una predicción del total.",
+                  "El cambio no está zanjado: el ensayo ABRUPT halló que en quemaduras de más del veinte por ciento de superficie el objetivo clásico estimaba mejor el líquido finalmente necesario.",
                   "La fórmula clásica se conserva como antecedente y referencia de cálculo, no como pauta vigente.",
-                  "Titular significa que la cifra marca por dónde empezar y el ritmo se ajusta según la respuesta.",
+                  "Titular significa que la cifra marca por dónde empezar y el ritmo se ajusta según la respuesta, con la diuresis de medio mililitro por kilogramo y hora como objetivo en el adulto.",
                   "Se valoran estado mental, perfusión periférica, frecuencia cardiaca, presión arterial y, en el hospital, la diuresis horaria.",
                   "Al ámbito prehospitalario le corresponde estimar la superficie, anotar el peso y registrar la hora de la quemadura.",
                   "Y establecer accesos, administrar lo que indique el protocolo, reevaluar, comunicar todo en la entrega y prevenir la hipotermia."
@@ -83278,9 +83335,14 @@ export const planRescate = [
                 "tipo": "fuentes",
                 "items": [
                   {
-                    "nombre": "American Burn Association. Clinical Practice Guideline on Burn Shock Resuscitation, 2024.",
-                    "url": "https://pubmed.ncbi.nlm.nih.gov/38051821/",
-                    "nota": "Guía primaria actual de la reanimación con líquidos del paciente quemado. Sostiene el inicio en 2 mL/kg/%SCQ en el adulto y la titulación según respuesta. PENDIENTE: apartado y página exactos del documento completo."
+                    "nombre": "Cartotto R, Johnson LS, Savetamal A, et al. American Burn Association Clinical Practice Guidelines on Burn Shock Resuscitation. J Burn Care Res. 2024;45(3):565-589.",
+                    "url": "https://doi.org/10.1093/jbcr/irad125",
+                    "nota": "PMID 38051821. Guía primaria actual de la reanimación con líquidos del paciente quemado. Sostiene el inicio en 2 mL/kg/%SCQ en el adulto y la titulación según respuesta, con la diuresis de 0.5 mL/kg/h como objetivo. PENDIENTE: apartado y página exactos dentro del documento completo."
+                  },
+                  {
+                    "nombre": "Greenhalgh DG, Cartotto R, Taylor SL, et al. Burn Resuscitation Practices in North America: Results of the Acute Burn ResUscitation Multicenter Prospective Trial (ABRUPT). Ann Surg. 2023;277(3):512-519.",
+                    "url": "https://pubmed.ncbi.nlm.nih.gov/34417368/",
+                    "nota": "PMID 34417368. Ensayo multicéntrico prospectivo: en quemaduras de más del 20 % de SCQ, el objetivo clásico de 4 mL/kg/%SCQ estimó mejor el líquido realmente administrado. Es la razón por la que el inicio en 2 mL/kg/%SCQ se enseña como punto de partida y no como cifra definitiva."
                   },
                   {
                     "nombre": "NAEMT. PHTLS: Soporte Vital de Trauma Prehospitalario, 9.ª ed., 2020 (ISBN 978-1-284-10330-4).",
@@ -83646,9 +83708,9 @@ export const planRescate = [
                 "tipo": "fuentes",
                 "items": [
                   {
-                    "nombre": "American Burn Association. Clinical Practice Guideline on Burn Shock Resuscitation, 2024.",
-                    "url": "https://pubmed.ncbi.nlm.nih.gov/38051821/",
-                    "nota": "Guía primaria actual de la reanimación con líquidos del paciente quemado. Sostiene el inicio en 2 mL/kg/%SCQ en el adulto y la titulación según respuesta. PENDIENTE: apartado y página exactos del documento completo."
+                    "nombre": "Cartotto R, Johnson LS, Savetamal A, et al. American Burn Association Clinical Practice Guidelines on Burn Shock Resuscitation. J Burn Care Res. 2024;45(3):565-589.",
+                    "url": "https://doi.org/10.1093/jbcr/irad125",
+                    "nota": "PMID 38051821. Guía primaria actual de la reanimación con líquidos del paciente quemado. Sostiene el inicio en 2 mL/kg/%SCQ en el adulto y la titulación según respuesta, con la diuresis de 0.5 mL/kg/h como objetivo. PENDIENTE: apartado y página exactos dentro del documento completo."
                   },
                   {
                     "nombre": "2024 American Heart Association and American Red Cross Guidelines for First Aid.",
@@ -83989,9 +84051,9 @@ export const planRescate = [
                     "nota": "Guía primaria actual para el cuidado inicial de la quemadura en el ámbito de primeros auxilios. PENDIENTE: apartado exacto."
                   },
                   {
-                    "nombre": "American Burn Association. Clinical Practice Guideline on Burn Shock Resuscitation, 2024.",
-                    "url": "https://pubmed.ncbi.nlm.nih.gov/38051821/",
-                    "nota": "Guía primaria actual de la reanimación con líquidos del paciente quemado. Sostiene el inicio en 2 mL/kg/%SCQ en el adulto y la titulación según respuesta. PENDIENTE: apartado y página exactos del documento completo."
+                    "nombre": "Cartotto R, Johnson LS, Savetamal A, et al. American Burn Association Clinical Practice Guidelines on Burn Shock Resuscitation. J Burn Care Res. 2024;45(3):565-589.",
+                    "url": "https://doi.org/10.1093/jbcr/irad125",
+                    "nota": "PMID 38051821. Guía primaria actual de la reanimación con líquidos del paciente quemado. Sostiene el inicio en 2 mL/kg/%SCQ en el adulto y la titulación según respuesta, con la diuresis de 0.5 mL/kg/h como objetivo. PENDIENTE: apartado y página exactos dentro del documento completo."
                   },
                   {
                     "nombre": "American College of Surgeons. Trauma Quality Programs, Best Practices Guidelines.",

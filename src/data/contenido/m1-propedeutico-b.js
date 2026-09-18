@@ -28,19 +28,26 @@ import {
   erroresFrecuentes, repasoRapido, preguntasOrales, mnemotecnia, masPreguntado,
 } from './moldeV2.js'
 
+// Citas con volumen, páginas y DOI, comprobadas en PubMed el 17-09-2026. Antes
+// se citaban por el portal de la AHA, que es una página de sección y cambia de
+// contenido: no permitía volver al mismo texto.
 const AHA_PRIMEROS_AUXILIOS = {
-  nombre: '2024 American Heart Association and American Red Cross Guidelines for First Aid. '
-    + 'Circulation, 2024. DOI 10.1161/CIR.0000000000001281.',
-  url: 'https://cpr.heart.org/en/resuscitation-science/2024-first-aid-guidelines',
-  nota: 'Conducta de primeros auxilios en lesiones, exposiciones tóxicas y emergencias ambientales.',
+  nombre: 'Hewett Brumberg EK, Douma MJ, Alibertis K, et al. 2024 American Heart Association and '
+    + 'American Red Cross Guidelines for First Aid. Circulation. 2024;150(24):e519-e579.',
+  url: 'https://doi.org/10.1161/CIR.0000000000001281',
+  nota: 'PMID 39540278. Conducta de primeros auxilios en lesiones, exposiciones tóxicas y '
+    + 'emergencias ambientales.',
 }
 const AHA_PBLS_2025 = {
-  nombre: 'American Heart Association y American Academy of Pediatrics. Part 6: Pediatric Basic '
-    + 'Life Support. 2025 Guidelines for Cardiopulmonary Resuscitation and Emergency Cardiovascular '
-    + 'Care. Circulation, 2025. DOI 10.1161/CIR.0000000000001370.',
-  url: 'https://cpr.heart.org/en/resuscitation-science/cpr-and-ecc-guidelines/pediatric-basic-life-support',
-  nota: 'Parámetros de reanimación del lactante y del niño y secuencia de la obstrucción por cuerpo '
-    + 'extraño. Fuente pediátrica primaria: no se usa el algoritmo de adulto.',
+  nombre: 'Joyner BL Jr, Dewan M, Bavare A, et al. Part 6: Pediatric Basic Life Support: 2025 '
+    + 'American Heart Association and American Academy of Pediatrics Guidelines for '
+    + 'Cardiopulmonary Resuscitation and Emergency Cardiovascular Care. '
+    + 'Circulation. 2025;152(16_suppl_2):S424-S447.',
+  url: 'https://doi.org/10.1161/CIR.0000000000001370',
+  nota: 'PMID 41122891. Parámetros de reanimación del '
+    + 'lactante y del niño y secuencia de la obstrucción por cuerpo extraño. Fuente pediátrica '
+    + 'primaria: no se usa el algoritmo de adulto. Los algoritmos van en las figuras 8 a 10 del '
+    + 'artículo: cualquier paso tomado de ellas debe comprobarse en la figura publicada.',
 }
 const OMS_BEC = {
   nombre: 'World Health Organization e International Committee of the Red Cross. Basic Emergency '
@@ -126,28 +133,32 @@ export default {
             headers: ['', 'Lactante (< 1 año)', 'Niño (1 año a pubertad)', 'Adulto'],
             filas: [
               ['Técnica', 'Dos pulgares rodeando el tórax, o el talón de una mano', 'Talón de una mano, o dos si hace falta', 'Dos manos'],
-              ['Profundidad', 'Un tercio del diámetro AP (~4 cm)', 'Un tercio del diámetro AP (~5 cm)', '5–6 cm'],
+              ['Profundidad', 'Un tercio del diámetro AP (~4 cm)', 'Un tercio del diámetro AP (~5 cm)', 'Al menos 5 cm'],
               ['Frecuencia', '100–120/min', '100–120/min', '100–120/min'],
               ['Un reanimador', '30:2', '30:2', '30:2'],
               ['Dos reanimadores', '15:2', '15:2', '30:2'],
             ],
           },
           { tipo: 'callout', variante: 'clinico', titulo: 'El tercio, no los centímetros', texto: 'La referencia real en pediatría es «un tercio del diámetro anteroposterior del tórax». Los centímetros son una orientación: un lactante prematuro y uno de once meses no tienen el mismo tórax.' },
-          { tipo: 'callout', variante: 'alerta', titulo: 'Cambio de 2025 en el lactante', texto: 'La guía pediátrica de la AHA y la AAP de 2025 retiró la técnica de DOS DEDOS en el lactante porque no alcanzaba de forma fiable la profundidad necesaria. Las técnicas recomendadas son los dos pulgares rodeando el tórax o el talón de una mano. Si aprendiste la técnica de dos dedos, esa es la parte que hay que actualizar.' },
+          { tipo: 'callout', variante: 'clave', titulo: 'Qué está establecido y qué no en la relación 30:2 / 15:2', texto: 'Estas dos relaciones son las que hay que saber y las que se evalúan, pero conviene saber en qué se apoyan. La guía de 2025 declara que la relación ÓPTIMA sigue siendo desconocida: lo que muestran los estudios de paro pediátrico extrahospitalario es que la RCP con compresiones y ventilaciones da mejores resultados que la RCP solo con compresiones, tanto a 15:2 como a 30:2. Las cifras se mantienen por coherencia con los objetivos previos de entrenamiento, no porque se haya demostrado que una sea superior a la otra. Lo demostrado es que hay que ventilar.' },
+          { tipo: 'callout', variante: 'alerta', titulo: 'Cambio de 2025 en el lactante', texto: 'La guía pediátrica de la AHA y la AAP de 2025 retiró la técnica de DOS DEDOS en el lactante porque no alcanzaba de forma fiable la profundidad necesaria: en los registros analizados, ningún segmento comprimido con dos dedos cumplió el objetivo de profundidad. Las técnicas recomendadas son el talón de una mano o los dos pulgares rodeando el tórax, y el talón de una mano cuando el reanimador no puede abarcar el tórax. Si aprendiste la técnica de dos dedos, esa es la parte que hay que actualizar.' },
+          { tipo: 'p', texto: 'Entre las dos técnicas admitidas no hay empate: en esos mismos registros, la técnica del talón de una mano alcanzó más profundidad que la de dos pulgares en el lactante. En el niño de uno a ocho años, la comparación equivalente favoreció las dos manos frente a una. La regla práctica que se deduce es simple: ante la duda, la técnica que permite más profundidad es la preferible, porque el error habitual en pediatría es comprimir poco.' },
         ],
       },
       {
         titulo: 'Activación del SMU: quién llama y cuándo',
         bloques: [
-          { tipo: 'p', texto: 'Con dos reanimadores, uno llama al 911 y consigue el DEA mientras el otro empieza. Solo, el orden depende de lo que se sospeche.' },
+          { tipo: 'p', texto: 'Con dos reanimadores no hay dilema: uno llama al 911 y consigue el DEA mientras el otro empieza. Solo, la pregunta clásica era si llamar antes o reanimar antes — y el teléfono móvil la ha vuelto casi siempre innecesaria.' },
           {
             tipo: 'lista',
             titulo: 'Reanimador solo',
             items: [
-              'Colapso presenciado y súbito (sospecha de causa cardiaca): llamar primero y conseguir el DEA, luego reanimar.',
-              'Paro no presenciado o de causa probablemente respiratoria (ahogamiento, atragantamiento): dar 2 minutos de RCP y después llamar.',
+              'Con un teléfono a mano, que es la situación habitual: activar el 911 en altavoz e iniciar la RCP a la vez, sin interrumpir las compresiones para hablar. Esto vale tanto para el colapso súbito como para el de causa respiratoria, y es lo que la guía de 2025 pide como norma.',
+              'Sin teléfono a mano y con colapso presenciado y súbito, con sospecha de causa cardiaca: ir a pedir ayuda y conseguir el DEA primero, porque lo que decide el pronóstico es la desfibrilación temprana.',
+              'Sin teléfono a mano y con paro no presenciado o de causa probablemente respiratoria (ahogamiento, atragantamiento): reanimar primero y dejar al niño lo más tarde posible, porque lo que le falta es oxígeno y no una descarga.',
             ],
           },
+          { tipo: 'callout', variante: 'alerta', titulo: 'Lo que cambió y lo que queda por comprobar', texto: 'La enseñanza anterior resumía este punto como «dos minutos de RCP y después llamar». La guía de 2025 ya no lo plantea así: pide activar el servicio de emergencias e iniciar la RCP sin demora, y la separación entre «llamar primero» y «reanimar primero» queda reducida al caso raro de no tener teléfono. La cifra concreta de dos minutos no se ha localizado en el texto de 2025. PENDIENTE de comprobación docente: el algoritmo pediátrico va en las figuras 8 a 10 del artículo y hay que leerlo en la figura publicada antes de dar este punto por cerrado.' },
           { tipo: 'callout', variante: 'alerta', titulo: 'México: 911', texto: 'El número único nacional de emergencias es el 911. Los CRUM (Centros Reguladores de Urgencias Médicas) coordinan el recurso y el hospital de destino; en muchas entidades el operador puede guiar la RCP por teléfono.' },
           mnemotecnia('EN EL ADULTO FALLA EL CORAZÓN, EN EL NIÑO FALLA LA RESPIRACIÓN: por eso en el adulto lo que salva es la desfibrilación temprana y en el niño la ventilación deja de ser accesoria. La RCP solo con las manos es aquí el último recurso, no la recomendada.'),
           masPreguntado('Que la referencia real de profundidad en pediatría es un tercio del diámetro anteroposterior del tórax, y los centímetros son solo una orientación. Un lactante prematuro y uno de once meses no tienen el mismo tórax.'),
@@ -165,13 +176,13 @@ export default {
         'Si el paro pediátrico es casi siempre hipóxico, la ventilación deja de ser accesoria, y la RCP solo con las manos es la opción de último recurso.',
         'En el lactante menor de un año la técnica es dos pulgares rodeando el tórax o el talón de una mano.',
         'En el niño de un año a la pubertad se usa el talón de una mano, o dos si hace falta; en el adulto, dos manos.',
-        'La profundidad en lactante y niño es un tercio del diámetro anteroposterior del tórax; en el adulto, de cinco a seis centímetros.',
+        'La profundidad en lactante y niño es un tercio del diámetro anteroposterior del tórax; en el adulto, al menos cinco centímetros.',
         'La frecuencia es de cien a ciento veinte por minuto en las tres edades.',
-        'Con un reanimador la relación es treinta a dos en lactante, niño y adulto.',
-        'Con dos reanimadores la relación pasa a quince a dos en lactante y niño, y se mantiene en treinta a dos en el adulto.',
+        'Con un reanimador la relación es treinta a dos en las tres edades; con dos reanimadores pasa a quince a dos en lactante y niño y se mantiene en treinta a dos en el adulto.',
         'Con dos reanimadores, uno llama al 911 y consigue el DEA mientras el otro empieza.',
-        'Solo y ante un colapso presenciado y súbito, con sospecha de causa cardiaca, se llama primero y se consigue el DEA, y después se reanima.',
-        'Solo y ante un paro no presenciado o de causa probablemente respiratoria, como ahogamiento o atragantamiento, se dan dos minutos de RCP y después se llama.',
+        'Solo y con un teléfono a mano, que es la situación habitual, se activa el 911 en altavoz y se inicia la RCP a la vez, sin interrumpir las compresiones para hablar.',
+        'Solo y SIN teléfono a mano, el orden depende de la causa: ante un colapso presenciado y súbito de sospecha cardiaca se va a pedir ayuda y a conseguir el DEA primero, porque lo que decide el pronóstico es la desfibrilación temprana; ante un paro no presenciado o de causa probablemente respiratoria se reanima primero y se deja al niño lo más tarde posible, porque lo que le falta es oxígeno y no una descarga.',
+        'La guía de 2025 ya no enuncia este punto como «dos minutos de RCP y después llamar»: pide activar el servicio de emergencias e iniciar la RCP sin demora.',
       ]),
       preguntasOrales([
         'Explica por qué el paro pediátrico es distinto del paro del adulto en su causa habitual.',
@@ -180,39 +191,40 @@ export default {
         '¿Cuál es la referencia real de profundidad en pediatría y por qué los centímetros solo orientan?',
         'Compara la relación compresión-ventilación con uno y con dos reanimadores en las tres edades.',
         '¿Qué técnica retiró la guía de 2025 en el lactante y por qué?',
-        'Con un solo reanimador, ¿cuándo se llama primero y cuándo se reanima primero?',
+        'Con un solo reanimador y un teléfono a mano, ¿qué se hace, y por qué ya casi no se plantea elegir entre llamar y reanimar?',
+        'Sin teléfono a mano, ¿cuándo se va a pedir ayuda primero y cuándo se reanima primero? Explica el porqué de cada caso.',
         '¿Qué número único de emergencias se usa en México y qué papel cumplen los CRUM?',
       ]),
       FUENTES_PEDIATRIA_BASICA,
     ],
     conceptosClave: [
       { termino: 'Paro hipóxico', definicion: 'Paro cardiaco secundario a insuficiencia respiratoria, mecanismo predominante en la edad pediátrica.' },
-      { termino: 'Relación compresión-ventilación', definicion: 'Número de compresiones por cada par de ventilaciones: 30:2 con un reanimador y 15:2 con dos en lactante y niño.' },
+      { termino: 'Relación compresión-ventilación', definicion: 'Número de compresiones por cada par de ventilaciones: 30:2 con un reanimador y 15:2 con dos en lactante y niño. La guía de 2025 mantiene ambas sin haber establecido cuál es la óptima; lo demostrado es que ventilar mejora el resultado frente a comprimir solamente.' },
       { termino: 'Diámetro anteroposterior', definicion: 'Grosor del tórax de adelante hacia atrás; la profundidad pediátrica se define como un tercio de esa medida.' },
     ],
     flashcards: [
       { frente: 'Relación compresión-ventilación en niño con DOS reanimadores', reverso: '15:2 (con un solo reanimador, 30:2).' },
       { frente: 'Profundidad de compresión en lactante', reverso: 'Un tercio del diámetro anteroposterior, unos 4 cm.' },
       { frente: '¿Por qué la ventilación importa más en pediatría?', reverso: 'Porque el paro suele ser hipóxico: primero falla la respiración.' },
-      { frente: 'Reanimador solo ante un niño que se ahogó: ¿llama o reanima?', reverso: 'Reanima 2 minutos y después llama: la causa es respiratoria.' },
+      { frente: 'Reanimador solo ante un niño que se ahogó: ¿llama o reanima?', reverso: 'Con teléfono a mano, las dos cosas: 911 en altavoz y RCP a la vez. Sin teléfono, reanima primero, porque lo que falta es oxígeno.' },
     ],
     quiz: [
       {
-        pregunta: 'Estás solo con un lactante que no responde y no respira tras atragantarse. ¿Qué haces primero?',
+        pregunta: 'Estás solo con un lactante que no responde y no respira tras atragantarse. Llevas el teléfono en el bolsillo. ¿Qué haces?',
         opciones: [
-          'Llamar al 911 y esperar indicaciones.',
-          'Dar 2 minutos de RCP y después llamar al 911.',
+          'Llamar al 911 y esperar indicaciones antes de tocarlo.',
+          'Iniciar la RCP y activar el 911 en altavoz a la vez, sin interrumpir las compresiones.',
+          'Dar 2 minutos de RCP, dejar al lactante e ir a buscar un teléfono.',
           'Buscar un DEA antes de empezar.',
-          'Colocarlo en posición de recuperación.',
         ],
         correcta: 1,
-        explicacion: 'El origen es respiratorio: dos minutos de RCP corrigen la hipoxia antes de dejar al niño para ir a pedir ayuda. En el colapso súbito de causa cardiaca el orden sería el inverso.',
+        explicacion: 'Teniendo teléfono no hay que elegir: el altavoz permite activar el 911 sin dejar de comprimir, y la guía de 2025 pide activar e iniciar la RCP sin demora. Dejar al niño para ir a llamar solo tiene sentido cuando no hay teléfono a mano, y en un paro de causa respiratoria se retrasa cuanto se pueda.',
       },
       {
         pregunta: 'Dos reanimadores atienden a un niño de 6 años en paro. La relación correcta es:',
         opciones: ['30:2', '15:2', '5:1', 'Solo compresiones'],
         correcta: 1,
-        explicacion: 'Con dos reanimadores en lactante y niño la relación baja a 15:2, para aumentar la frecuencia de ventilaciones en un paro de origen habitualmente hipóxico.',
+        explicacion: 'Con dos reanimadores en lactante y niño la relación baja a 15:2, para aumentar la frecuencia de ventilaciones en un paro de origen habitualmente hipóxico. La guía mantiene esta cifra por coherencia con los objetivos de entrenamiento: lo demostrado es que ventilar mejora el resultado, no que 15:2 supere a 30:2.',
       },
       {
         pregunta: '¿Cuál es la referencia correcta de profundidad en el paciente pediátrico?',

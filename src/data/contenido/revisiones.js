@@ -290,4 +290,71 @@ REVISIONES_DECLARADAS['m1-pai-ovace-pediatrico'] = {
 // es una evaluación y su configuración —con su propia ficha— vive en
 // evaluaciones.js, junto a la de los otros diez exámenes del plan.
 
+// ---------- contraste contra evidencia externa (17-09-2026) ----------
+//
+// Estas observaciones NO nacen de una relectura del texto: nacen de haber
+// contrastado sus cifras con la literatura vigente y de haber comprobado cada
+// localizador en PubMed. El veredicto que las justifica, con su cita primaria,
+// está en `docs/CONTRASTE-EVIDENCIA.json`, y cada corrección tiene su prueba
+// en `tests/correccionesEvidencia.test.mjs`.
+//
+// El estado NO cambia. `en_revision` ya significa «redactado y trazable»; lo
+// que falta para `validado` es la firma de un docente, y contrastar no la
+// sustituye. Lo que estas líneas aportan es que el docente que firme sepa
+// exactamente qué se comprobó y qué sigue abierto.
+
+const CONTRASTE = '2026-09-17'
+
+const OBSERVACIONES_DEL_CONTRASTE = {
+  'm1-pab-rcp-legos-adulto': [
+    'CORREGIDO (contraste 17-09-2026, af-df90f3eed1): la lección enunciaba la profundidad como '
+      + '«al menos 5 cm, sin superar 6 cm» y lo atribuía a AHA 2025. Esa es la formulación de 2020. '
+      + 'La guía de 2025 la enuncia como umbral —al menos 5 cm— y el daño por encima de 6 cm queda '
+      + 'como dato observacional, no como parte de la recomendación. Corregido en la tabla, en el '
+      + 'repaso y en la tarjeta, y explicado en un apartado propio.',
+    'COMPROBADO: frecuencia de 100 a 120 por minuto, sin cambios. Part 7, Circulation '
+      + '2025;152(16_suppl_2):S448-S478, PMID 41122888.',
+  ],
+  'm1-pab-ovace-adultos': [
+    'COMPROBADO (contraste 17-09-2026, af-d14e46a12e): el ciclo de 5 golpes dorsales y 5 '
+      + 'compresiones abdominales es Clase 1, nivel de evidencia B-NR en la guía de 2025.',
+    'AÑADIDO: la lección afirmaba el cambio sin la evidencia que lo motivó. Se incorporó la cohorte '
+      + 'poblacional de Dunne (Resuscitation 2024;201:110258, PMID 38825222) con su magnitud de '
+      + 'efecto, y la advertencia de la propia guía de que el número «cinco y cinco» se eligió por '
+      + 'coherencia con el algoritmo pediátrico y no por datos del adulto.',
+  ],
+  'm1-pab-hemorragias': [
+    'COMPROBADO (contraste 17-09-2026, af-fb30799e3b): la secuencia de presión directa seguida de '
+      + 'torniquete o empaquetamiento coincide con la guía. La referencia pasa de la página de '
+      + 'sección del portal de la AHA a la cita del documento: Circulation 2024;150(24):e519-e579, '
+      + 'PMID 39540278.',
+    'ABIERTO: no se pudo recuperar la clase de recomendación de esa secuencia. Queda por comprobar '
+      + 'en el documento completo.',
+  ],
+  'm1-pai-rcp-pediatrico': [
+    'MATIZADO (contraste 17-09-2026, af-c50111a37c y af-d1bde0ac9b): la lección enunciaba 30:2 y '
+      + '15:2 como dato cerrado. La guía de 2025 declara que la relación ÓPTIMA sigue sin '
+      + 'establecerse y mantiene ambas por coherencia con los objetivos previos de entrenamiento. '
+      + 'Lo demostrado es que ventilar mejora el resultado frente a comprimir solamente.',
+    'AMPLIADO (af-f3cccea351): la retirada de la técnica de dos dedos ya estaba en la lección y era '
+      + 'correcta; se añadió qué la sustituye con su jerarquía —el talón de una mano alcanzó más '
+      + 'profundidad que los dos pulgares en el lactante— y la condición de no poder abarcar el tórax.',
+    'CORREGIDO (af-c0ac02b44e): la lección enseñaba «dar 2 minutos de RCP y después llamar» como '
+      + 'regla para el reanimador solo, incluida una pregunta que la daba por correcta. Esa cifra no '
+      + 'se localizó en el texto de 2025, que pide activar el servicio de emergencias e iniciar la '
+      + 'RCP sin demora, con el altavoz del móvil. Se reescribió la conducta, el repaso, la tarjeta '
+      + 'y la pregunta.',
+    'ABIERTO Y DECLARADO EN LA PROPIA LECCIÓN: el algoritmo pediátrico va en las figuras 8 a 10 del '
+      + 'artículo y no se ha leído en la figura publicada. Hasta que un docente lo coteje, este '
+      + 'punto queda señalado como pendiente dentro del texto que ve el alumno.',
+  ],
+}
+
+for (const [temaId, extra] of Object.entries(OBSERVACIONES_DEL_CONTRASTE)) {
+  const ficha = REVISIONES_DECLARADAS[temaId]
+  if (!ficha) continue
+  ficha.actualizado = CONTRASTE
+  ficha.observaciones = [...(ficha.observaciones || []), ...extra]
+}
+
 export default REVISIONES_DECLARADAS

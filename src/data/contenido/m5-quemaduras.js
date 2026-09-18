@@ -28,12 +28,28 @@ import {
 
 const HOY = '2026-08-17'
 
+// Referencia completada el 17-09-2026 contra PubMed: antes se citaba por
+// título y año, sin autores, volumen ni páginas.
 const ABA_2024 = {
-  nombre: 'American Burn Association. Clinical Practice Guideline on Burn Shock Resuscitation, 2024.',
-  url: 'https://pubmed.ncbi.nlm.nih.gov/38051821/',
-  nota: 'Guía primaria actual de la reanimación con líquidos del paciente quemado. Sostiene el inicio '
-    + 'en 2 mL/kg/%SCQ en el adulto y la titulación según respuesta. PENDIENTE: apartado y página '
-    + 'exactos del documento completo.',
+  nombre: 'Cartotto R, Johnson LS, Savetamal A, et al. American Burn Association Clinical Practice '
+    + 'Guidelines on Burn Shock Resuscitation. J Burn Care Res. 2024;45(3):565-589.',
+  url: 'https://doi.org/10.1093/jbcr/irad125',
+  nota: 'PMID 38051821. Guía primaria actual de la reanimación con líquidos del paciente quemado. '
+    + 'Sostiene el inicio en 2 mL/kg/%SCQ en el adulto y la titulación según respuesta, con la '
+    + 'diuresis de 0.5 mL/kg/h como objetivo. PENDIENTE: apartado y página exactos dentro del '
+    + 'documento completo.',
+}
+// El contrapeso que faltaba: el ensayo multicéntrico que impide presentar el
+// cambio de 4 a 2 mL/kg/%SCQ como asunto zanjado.
+const ABRUPT_2023 = {
+  nombre: 'Greenhalgh DG, Cartotto R, Taylor SL, et al. Burn Resuscitation Practices in North '
+    + 'America: Results of the Acute Burn ResUscitation Multicenter Prospective Trial (ABRUPT). '
+    + 'Ann Surg. 2023;277(3):512-519.',
+  url: 'https://pubmed.ncbi.nlm.nih.gov/34417368/',
+  nota: 'PMID 34417368. Ensayo multicéntrico prospectivo: en quemaduras de más del 20 % de SCQ, el '
+    + 'objetivo clásico de 4 mL/kg/%SCQ estimó mejor el líquido realmente administrado. Es la razón '
+    + 'por la que el inicio en 2 mL/kg/%SCQ se enseña como punto de partida y no como cifra '
+    + 'definitiva.',
 }
 const PHTLS = {
   nombre: 'NAEMT. PHTLS: Soporte Vital de Trauma Prehospitalario, 9.ª ed., 2020 (ISBN 978-1-284-10330-4).',
@@ -782,13 +798,15 @@ export default {
             tipo: 'tabla',
             headers: ['', 'Formulación clásica', 'Recomendación ABA 2024'],
             filas: [
-              ['Punto de partida en el adulto', '4 mL × kg × % SCQ en 24 h', 'Iniciar en 2 mL × kg × % SCQ'],
+              ['Punto de partida en el adulto', '4 mL × kg × % SCQ en 24 h', 'Iniciar en 2 mL × kg × % SCQ (fórmula de Brooke modificada)'],
               ['Naturaleza del número', 'Volumen calculado a administrar', 'Punto de partida que se ajusta'],
-              ['Cómo se ajusta', 'Reparto fijo por horas', 'Titulación según la respuesta del paciente'],
+              ['Cómo se ajusta', 'Reparto fijo por horas', 'Titulación según la respuesta; diuresis objetivo 0.5 mL/kg/h en el adulto'],
               ['Riesgo asociado', 'Administración excesiva de líquido', 'Requiere reevaluación continua'],
+              ['Lo que no está resuelto', '—', 'En quemaduras > 20 % SCQ, ABRUPT halló que 4 mL/kg/%SCQ estimaba mejor el volumen finalmente necesario'],
             ],
           },
-          { tipo: 'callout', variante: 'clave', titulo: 'Titular quiere decir esto', texto: 'La cifra calculada marca por dónde empezar. A partir de ahí, el ritmo sube o baja según cómo responde el paciente: el estado mental, la perfusión periférica, la frecuencia cardiaca, la presión arterial y, en el medio hospitalario, la diuresis horaria, que es el parámetro de referencia de la titulación. Ninguna fórmula sustituye a esa reevaluación.' },
+          { tipo: 'callout', variante: 'clave', titulo: 'Titular quiere decir esto', texto: 'La cifra calculada marca por dónde empezar. A partir de ahí, el ritmo sube o baja según cómo responde el paciente: el estado mental, la perfusión periférica, la frecuencia cardiaca, la presión arterial y, en el medio hospitalario, la diuresis horaria, que es el parámetro de referencia de la titulación. La guía de la ABA fija ese objetivo en 0.5 mL/kg/h en el adulto. Ninguna fórmula sustituye a esa reevaluación.' },
+          { tipo: 'callout', variante: 'alerta', titulo: 'El cambio no está zanjado, y conviene saberlo', texto: 'Sería cómodo aprender que 4 mL/kg/%SCQ es «el error» y 2 mL/kg/%SCQ «la respuesta», pero la literatura no dice eso. El ensayo multicéntrico ABRUPT, que midió lo que realmente se administró a pacientes quemados en Norteamérica, encontró que en quemaduras de más del 20 % de superficie corporal el objetivo clásico de 4 mL/kg/%SCQ en 24 horas fue el que MEJOR estimó el líquido que el paciente terminó necesitando. La cifra de 2 mL/kg/%SCQ —que procede de la fórmula de Brooke modificada— es un punto de partida deliberadamente bajo para no pasarse de entrada; no es un techo ni una predicción del total. Quien lo entienda así no se asustará cuando el paciente acabe recibiendo más.' },
         ],
       },
       {
@@ -819,13 +837,13 @@ export default {
       repasoRapido([
         'La quemadura extensa hace que el plasma escape de los vasos hacia el tejido: eso produce el shock del quemado.',
         'La fórmula clásica calcula el volumen a partir del peso del paciente y de la superficie quemada.',
-        'Su distribución clásica reparte la mitad en las primeras horas contadas desde el momento de la quemadura.',
-        'Y la otra mitad en el resto del primer día.',
+        'Su distribución clásica reparte la mitad en las primeras horas contadas desde el momento de la quemadura, y la otra mitad en el resto del primer día.',
         'Ese detalle importa: si han pasado horas hasta el contacto, el tiempo disponible para la primera mitad se ha reducido.',
         'La American Burn Association recomienda desde 2024 iniciar en la mitad del valor clásico por kilogramo y porcentaje en el adulto.',
-        'El motivo del cambio es que partir del valor clásico se asoció con frecuencia a administración excesiva de líquido.',
+        'El motivo del cambio es que partir del valor clásico se asoció con frecuencia a administración excesiva de líquido; la cifra de inicio más baja procede de la fórmula de Brooke modificada y es un punto de partida prudente, no un techo ni una predicción del total.',
+        'El cambio no está zanjado: el ensayo ABRUPT halló que en quemaduras de más del veinte por ciento de superficie el objetivo clásico estimaba mejor el líquido finalmente necesario.',
         'La fórmula clásica se conserva como antecedente y referencia de cálculo, no como pauta vigente.',
-        'Titular significa que la cifra marca por dónde empezar y el ritmo se ajusta según la respuesta.',
+        'Titular significa que la cifra marca por dónde empezar y el ritmo se ajusta según la respuesta, con la diuresis de medio mililitro por kilogramo y hora como objetivo en el adulto.',
         'Se valoran estado mental, perfusión periférica, frecuencia cardiaca, presión arterial y, en el hospital, la diuresis horaria.',
         'Al ámbito prehospitalario le corresponde estimar la superficie, anotar el peso y registrar la hora de la quemadura.',
         'Y establecer accesos, administrar lo que indique el protocolo, reevaluar, comunicar todo en la entrega y prevenir la hipotermia.',
@@ -840,7 +858,7 @@ export default {
         'Enumera lo que corresponde al ámbito prehospitalario.',
         '¿Qué no autoriza esta lección?',
       ]),
-      F([ABA_2024, PHTLS, ACS_BEST, PROTOCOLO_LOCAL]),
+      F([ABA_2024, ABRUPT_2023, PHTLS, ACS_BEST, PROTOCOLO_LOCAL]),
     ],
     conceptosClave: [
       { termino: 'Fórmula de Parkland', definicion: 'Cálculo clásico del volumen de cristaloide en 24 horas a razón de 4 mL por kilogramo y por porcentaje de superficie quemada.' },
@@ -924,6 +942,18 @@ export default {
       extra: [
         'CONTROL CLÍNICO APLICADO: la fórmula clásica de 4 mL/kg/%SCQ se enseña como ANTECEDENTE que pide el plan y se contrasta con la recomendación de la American Burn Association de 2024 de iniciar en 2 mL/kg/%SCQ y titular. No se presenta como dosis fija.',
         'La solución concreta, el ritmo de infusión y la pauta pediátrica se remiten al protocolo del servicio y al Módulo 6; la lección no los fija.',
+        'CONTRASTE CONTRA EVIDENCIA EXTERNA (17-09-2026, af-038ea699df, af-5937f7fc65 y '
+          + 'af-d175ebbeb4). La referencia de la ABA se completó con autores, volumen y páginas: '
+          + 'Cartotto R, et al. J Burn Care Res. 2024;45(3):565-589, PMID 38051821, y se añadió su '
+          + 'objetivo de titulación, diuresis de 0.5 mL/kg/h en el adulto.',
+        'MATIZADO: la lección presentaba el paso de 4 a 2 mL/kg/%SCQ como asunto zanjado. Se añadió '
+          + 'el contrapeso —el ensayo multicéntrico ABRUPT (Ann Surg 2023;277(3):512-519, PMID '
+          + '34417368) halló que en quemaduras de más del 20 % de SCQ el objetivo clásico de '
+          + '4 mL/kg/%SCQ estimaba MEJOR el volumen finalmente necesario— y se nombró la '
+          + 'procedencia de la cifra de inicio: la fórmula de Brooke modificada. Sin ese contrapeso '
+          + 'la lección dejaba al alumno con que 2 es la respuesta correcta y 4 el error, que no es '
+          + 'lo que dice la literatura.',
+        'PENDIENTE: apartado y página exactos dentro del documento completo de la ABA.',
       ],
     }),
   },
