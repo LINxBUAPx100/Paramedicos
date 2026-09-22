@@ -4,33 +4,134 @@
       "collectionGroup": "cursos",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "academiaId", "order": "ASCENDING" },
-        { "fieldPath": "estado", "order": "ASCENDING" }
+        {
+          "fieldPath": "academiaId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "estado",
+          "order": "ASCENDING"
+        }
       ]
     },
     {
       "collectionGroup": "temas",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "cursoId", "order": "ASCENDING" },
-        { "fieldPath": "estado", "order": "ASCENDING" }
+        {
+          "fieldPath": "cursoId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "estado",
+          "order": "ASCENDING"
+        }
       ]
     },
     {
       "collectionGroup": "temas",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "cursoId", "order": "ASCENDING" },
-        { "fieldPath": "academiaId", "order": "ASCENDING" },
-        { "fieldPath": "estado", "order": "ASCENDING" }
+        {
+          "fieldPath": "cursoId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "academiaId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "estado",
+          "order": "ASCENDING"
+        }
       ]
     },
     {
       "collectionGroup": "calificaciones",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "academiaId", "order": "ASCENDING" },
-        { "fieldPath": "uid", "order": "ASCENDING" }
+        {
+          "fieldPath": "academiaId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "uid",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "pagos",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "academiaId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "creado",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "pagos",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "academiaId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "matricula",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "creado",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "adeudos",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "academiaId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "uid",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "adeudos",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "academiaId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "estado",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "adeudos",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "academiaId",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "origen.id",
+          "order": "ASCENDING"
+        }
       ]
     }
   ],

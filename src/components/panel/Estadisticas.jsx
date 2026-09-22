@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { APROBADO, resumenAcademia } from '../../lib/panelModelo.js'
+import BotonPersona from '../usuarios/BotonPersona.jsx'
 
 // Retrato de la academia (o del grupo filtrado). Toda la aritmética está en
 // `lib/panelModelo.js`: aquí solo se pinta lo que ese módulo decide.
@@ -73,7 +74,7 @@ export default function Estadisticas({ alumnos, staff, intentos, porAlumno, modu
               <ul className="pe-actividad">
                 {stats.recientes.map((it) => (
                   <li key={it.id}>
-                    <span className="pe-act-nombre">{it.nombre || '—'}</span>
+                    <span className="pe-act-nombre"><BotonPersona persona={it.uid ? { uid: it.uid, nombre: it.nombre } : null}>{it.nombre || '—'}</BotonPersona></span>
                     <span className="pe-act-modulo">F{it.moduloNumero}</span>
                     <b className={it.porcentaje >= APROBADO ? 'ok' : 'mal'}>{it.porcentaje}%</b>
                     <small>{fechaTxt(it.fecha)}</small>
@@ -91,7 +92,7 @@ export default function Estadisticas({ alumnos, staff, intentos, porAlumno, modu
               <ul className="pe-riesgo">
                 {stats.enRiesgo.map((al) => (
                   <li key={al.id}>
-                    <span>{al.nombre || al.email}</span>
+                    <span><BotonPersona persona={{ ...al, uid: al.id }} /></span>
                     <b>{al.prom}%</b>
                     <small>{al.modulos} modulo{al.modulos !== 1 ? 's' : ''}</small>
                   </li>

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { filasSeguimiento } from '../../lib/seguimientoModelo.js'
+import BotonPersona from '../usuarios/BotonPersona.jsx'
 
 const etiquetas = { riesgo: 'Promedio menor de 70', 'sin-evidencia': 'Sin evidencia de evaluación', 'con-evidencia': 'Promedio de 70 o más' }
 
@@ -32,7 +33,7 @@ export default function SeguimientoAlumnos({ alumnos = [], porAlumno = {}, modul
       <caption>Resultados de exámenes de módulo; no incluye el libro de calificaciones docentes.</caption>
       <thead><tr><th scope="col">Alumno</th><th scope="col">Evidencia</th><th scope="col">Promedio</th><th scope="col">Módulos</th></tr></thead>
       <tbody>{filas.slice(actual * 20, actual * 20 + 20).map((f) => <tr key={f.alumno.id}>
-        <th scope="row"><button className="ui-enlace" aria-expanded={abierto === f.alumno.id} aria-controls="seguimiento-detalle" onClick={(e) => { disparador.current = e.currentTarget; setAbierto(f.alumno.id) }}>{f.alumno.nombre || f.alumno.email || f.alumno.id}</button></th>
+        <th scope="row"><button className="ui-enlace" aria-expanded={abierto === f.alumno.id} aria-controls="seguimiento-detalle" onClick={(e) => { disparador.current = e.currentTarget; setAbierto(f.alumno.id) }}>{f.alumno.nombre || f.alumno.email || f.alumno.id}</button><BotonPersona persona={{ ...f.alumno, uid: f.alumno.id }} variante="icono" /></th>
         <td><span className={`ui-etiqueta ${f.categoria === 'riesgo' ? 'ui-etiqueta--riesgo' : ''}`}>{etiquetas[f.categoria]}</span></td><td>{f.promedio === null ? '—' : `${f.promedio}%`}</td><td>{f.modulos}</td>
       </tr>)}</tbody></table></div> : <div className="ui-estado">{alumnos.length ? 'No hay coincidencias. Cambia la búsqueda o el filtro.' : 'Este grupo todavía no tiene alumnos.'}</div>}
     <div className="ui-paginacion"><button className="btn btn--suave btn--sm" disabled={actual === 0} onClick={() => { setPagina(actual - 1); setAbierto(null) }}>Anterior</button><span>Página {actual + 1} de {ultima + 1}</span><button className="btn btn--suave btn--sm" disabled={actual >= ultima} onClick={() => { setPagina(actual + 1); setAbierto(null) }}>Siguiente</button></div>

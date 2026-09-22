@@ -6,6 +6,7 @@ import { AuthProvider } from './context/AuthContext.jsx'
 import { ContenidoProvider } from './context/ContenidoContext.jsx'
 import { ProgressProvider } from './context/ProgressContext.jsx'
 import { TutorialProvider } from './context/TutorialContext.jsx'
+import { FichaUsuarioProvider } from './context/FichaUsuarioContext.jsx'
 import { vigilarVersionNueva, versionCargadaBien } from './lib/versionNueva.js'
 import './index.css'
 import './styles/tokens.css'
@@ -27,7 +28,14 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 entre dispositivos. Sin sesión funciona igual contra
                 localStorage. */}
             <TutorialProvider>
-              <App />
+              {/* La ficha de persona se monta UNA vez por encima de todo, para
+                  que cualquier lista de cualquier consola pueda abrirla sin
+                  montar un modal propio. Es lo que hace posible el «en el
+                  100 % de los sitios» que se pidió: ver
+                  `context/FichaUsuarioContext.jsx`. */}
+              <FichaUsuarioProvider>
+                <App />
+              </FichaUsuarioProvider>
             </TutorialProvider>
           </ProgressProvider>
         </ContenidoProvider>

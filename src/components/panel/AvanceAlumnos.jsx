@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { APROBADO } from '../../lib/panelModelo.js'
 import ModulosDeAlumno from './ModulosDeAlumno.jsx'
+import BotonPersona from '../usuarios/BotonPersona.jsx'
 
 // ============================================================
 //  Avance por alumno y por módulo + habilitar/retroceder módulos
@@ -121,6 +122,7 @@ export default function AvanceAlumnos({
                         {abierto ? ' — cerrar su historial' : ' — abrir su historial de intentos'}
                       </span>
                     </button>
+                    <BotonPersona persona={{ ...al, uid: al.id }} variante="icono" />
                     {al.grupoId && !grupoFiltro && (
                       <span className="panel-tag-grupo">{nombreGrupo(al.grupoId)}</span>
                     )}

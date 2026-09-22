@@ -40,6 +40,7 @@ const NAV = [
   { to: '/flashcards', icon: 'flashcards', label: 'Flashcards', soloConAcceso: true },
   { to: '/atlas-anatomico', icon: 'atlas', label: 'Atlas anatómico 3D', soloConAcceso: true },
   { to: '/botiquin', icon: 'cruz', label: 'Mi Botiquín 3D', soloConAcceso: true },
+  { to: '/tienda', icon: 'carpeta', label: 'Tienda', soloConAcceso: true },
   { to: '/logros', icon: 'atlas', label: 'Logros', soloConAcceso: true },
   { to: '/progreso', icon: 'progreso', label: 'Mi progreso', soloConAcceso: true },
   { to: '/buscar', icon: 'buscar', label: 'Buscar', soloConAcceso: true },
@@ -53,20 +54,24 @@ export default function Layout({ children }) {
   const drawerRef = useRef(null)
   const { estado, alternarTema } = useProgress()
   const {
-    autenticado, perfil, user, esStaff, esSuperadmin, puedeAcceder, rol, grupo,
+    autenticado, perfil, user, esStaff, esSuperadmin, esRecepcion, puedeAcceder, rol, grupo,
   } = useAuth()
   const { modulos } = useIndiceContenido() // índice de LA academia (bundle si legacy)
   const { moduloVisible, temaVisible } = useVisibilidad()
   const location = useLocation()
   const navigate = useNavigate()
 
-  // El personal ve su Panel; el super-admin ve su Dashboard general.
+  // El personal ve su Panel; el super-admin ve su Dashboard general; recepción
+  // ve SOLO su mostrador. Los tres son excluyentes a propósito: mezclarlos fue
+  // exactamente el fallo que se corrigió el 20-09-2026.
   const extraTop = esSuperadmin
     ? [{ to: '/admin', label: 'Dashboard' }]
-    : esStaff ? [{ to: '/panel', label: 'Panel' }] : []
+    : esRecepcion ? [{ to: '/recepcion', label: 'Mostrador', end: true }]
+      : esStaff ? [{ to: '/panel', label: 'Panel' }] : []
   const extraDrawer = esSuperadmin
     ? [{ to: '/admin', icon: 'capas', label: 'Dashboard general' }]
-    : esStaff ? [{ to: '/panel', icon: 'progreso', label: 'Panel de avance' }] : []
+    : esRecepcion ? [{ to: '/recepcion', icon: 'usuario', label: 'Mostrador', end: true }]
+      : esStaff ? [{ to: '/panel', icon: 'progreso', label: 'Panel de avance' }] : []
   const soloStaff = (item) => !item.soloStaff || esStaff
   // DOS PUERTAS, las mismas que RutaProtegida, y hacen falta las dos. El menú
   // tiene que obedecer lo mismo que la página: enseñar el enlace y negar el
@@ -82,8 +87,14 @@ export default function Layout({ children }) {
   const veContenido = puedeAcceder && !bloqueoDePrograma
   const conAcceso = (item) => !item.soloConAcceso || veContenido
   const visible = (item) => soloStaff(item) && conAcceso(item)
-  const topnav = [...TOPNAV.filter(visible), ...extraTop]
-  const navDrawer = [...NAV.filter(visible), ...extraDrawer]
+  // A RECEPCIÓN NO LE QUEDA NADA DE LAS DOS LISTAS BASE, ni siquiera «Inicio»:
+  // su inicio ES el mostrador —la raíz la redirige— y un segundo enlace al
+  // mismo sitio solo ocupa espacio en una barra que se mira de pie. `veContenido`
+  // ya se lleva por delante todo lo marcado `soloConAcceso`; esto quita también
+  // lo que no lleva marca.
+  const deAlumno = (lista) => (esRecepcion ? [] : lista.filter(visible))
+  const topnav = [...deAlumno(TOPNAV), ...extraTop]
+  const navDrawer = [...deAlumno(NAV), ...extraDrawer]
 
   // Recorrido de estudio filtrado por la visibilidad del grupo del alumno.
   //

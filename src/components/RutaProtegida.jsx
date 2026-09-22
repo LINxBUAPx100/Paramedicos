@@ -82,7 +82,12 @@ export default function RutaProtegida({ children }) {
         <h1>{bloqueo.titulo}</h1>
         <p>{bloqueo.texto}</p>
         <Link to={bloqueo.destino} className="btn btn--pildora btn--carbon">
-          {bloqueo.codigo === 'sin-grupo' ? 'Ingresar mi código de grupo' : 'Volver al inicio'}
+          {/* `cta` manda cuando el bloqueo trae el suyo. Sin esto, cualquier
+              motivo nuevo heredaba el botón «Volver al inicio» aunque su
+              destino no fuera el inicio: a recepción le decía eso y la llevaba
+              a su mostrador. */}
+          {bloqueo.cta
+            || (bloqueo.codigo === 'sin-grupo' ? 'Ingresar mi código de grupo' : 'Volver al inicio')}
         </Link>
         {bloqueo.destino !== '/' && (
           <Link to="/" className="link-discreto"><Icon name="chevronIzq" size={15} /> Volver al inicio</Link>

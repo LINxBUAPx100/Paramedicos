@@ -8,7 +8,9 @@ import { gruposDeUsuario } from '../../lib/gruposDeUsuario.js'
 import Icon from '../Icon.jsx'
 import FiltrosUsuarios from './FiltrosUsuarios.jsx'
 import { prepararLista, FILTRO_VACIO, ORDEN_DEFECTO } from '../../lib/listaUsuarios.js'
-import { esMatriculaValida } from '../../lib/matriculas.js'
+import { esMatriculaConocida } from '../../lib/matriculas.js'
+import { resumenDeEmision, useMatriculasAlDia } from '../usuarios/useMatriculasAlDia.js'
+import BotonPersona from '../usuarios/BotonPersona.jsx'
 
 // ============================================================
 //  Miembros y roles: cambio de rol, grupo y estado según jerarquía
@@ -25,6 +27,10 @@ export default function GestionMiembros({
 }) {
   const [ocupado, setOcupado] = useState(null) // uid en proceso
   const [error, setError] = useState('')
+  // Qué pasó con su matrícula al moverlo de grupo. Va aparte del error porque
+  // no es un fallo: es el resultado de la operación, y hay que poder leérselo
+  // al alumno («tu matrícula ahora es otra»).
+  const [avisoMatricula, setAvisoMatricula] = useState('')
   const [filtro, setFiltro] = useState(FILTRO_VACIO)
   const [orden, setOrden] = useState(ORDEN_DEFECTO)
   // Las cuentas INACTIVAS —suspendidas y dadas de baja— no se listan con las
@@ -66,30 +72,24 @@ export default function GestionMiembros({
     [miembros]
   )
 
-  // EMITIR LA MATRÍCULA.
+  // LA MATRÍCULA NO TIENE BOTÓN (21-09-2026, pedido por el dueño del producto).
   //
-  // No se emite sola al unirse por código, y es a propósito: el contador de la
-  // academia solo lo pueden mover el staff y el super-admin (regla de
-  // `contadores`). Si un alumno pudiera avanzarlo al entrar, tendría en la mano
-  // la numeración de la academia entera.
-  //
-  // Así que la emite quien lo admite. Desde recepción irá dentro del alta; aquí
-  // está el botón para los que ya existían y para los que entraron por código.
-  const emitirMatricula = async (m) => {
-    setOcupado(m.id)
-    setError('')
-    try {
-      const { reservarMatricula } = await import('../../lib/firebase/matriculas.js')
-      const { actualizarUsuario } = await import('../../lib/firebase/usuarios.js')
-      const matricula = await reservarMatricula(academiaId)
-      await actualizarUsuario(m.id, { matricula })
-      onCambio?.()
-    } catch (err) {
-      setError(err?.message || 'No se pudo emitir la matrícula.')
-    } finally {
-      setOcupado(null)
-    }
-  }
+  // Se emite sola en cuanto la persona tiene un grupo que cumple los
+  // parámetros: si se lo asigna alguien desde aquí, va en la misma escritura
+  // (`moverDeGrupo`); si lo consiguió por su cuenta —código de grupo,
+  // invitación, solicitud aceptada—, la emite esta pantalla al abrirse, que es
+  // lo más automático que se puede ser sin Cloud Functions. El porqué está en
+  // `useMatriculasAlDia` y en `lib/firebase/matriculas.js`.
+  const emision = useMatriculasAlDia({
+    personas: miembros,
+    grupos,
+    academiaId,
+    // Un profesor no puede emitirlas —la regla de `contadores` es de staff—, y
+    // pedirlo solo produciría un error en su pantalla.
+    activo: gestion === 'director' || gestion === 'superadmin',
+    alEmitir: () => onCambio?.(),
+  })
+  const avisoEmision = resumenDeEmision(emision)
 
   // Reactivar una cuenta dada de baja devuelve algo que la baja quitó: su
   // academia. Por eso no basta con poner `estado: 'activo'` como hace el botón
@@ -129,6 +129,34 @@ export default function GestionMiembros({
       onCambio()
     } catch {
       setError('No se pudo aplicar el cambio (revisa permisos o conexión).')
+    } finally {
+      setOcupado(null)
+    }
+  }
+
+  // CAMBIAR DE GRUPO a un alumno. Va aparte de `aplicar` porque no es un campo
+  // suelto: la matrícula la dicta el grupo, así que moverlo de grupo y dejarle
+  // el número viejo le deja una matrícula que dice que entró en un grupo en el
+  // que ya no está. `moverAlumnoDeGrupo` escribe las dos cosas a la vez —la
+  // regla exige que vayan juntas— y contesta si hubo cambio, para poder
+  // decírselo a quien lo movió.
+  const moverDeGrupo = async (m, grupoId) => {
+    setOcupado(m.id)
+    setError('')
+    setAvisoMatricula('')
+    try {
+      const { moverAlumnoDeGrupo, actualizarUsuario } = await import('../../lib/firebase/usuarios.js')
+      if (!grupoId) {
+        // Quitarle el grupo es legítimo (una baja temporal, un traslado a
+        // medias) y no toca su matrícula: la conserva hasta que entre en otro.
+        await actualizarUsuario(m.id, { grupoId: null })
+      } else {
+        const r = await moverAlumnoDeGrupo({ alumno: m, grupoId, academiaId })
+        setAvisoMatricula(`${m.nombre || 'Esa persona'}: ${r.motivo}`)
+      }
+      onCambio()
+    } catch (err) {
+      setError(err?.message || 'No se pudo cambiar de grupo (revisa permisos o conexión).')
     } finally {
       setOcupado(null)
     }
@@ -179,6 +207,8 @@ export default function GestionMiembros({
           : 'Como director puedes nombrar profesores entre tus alumnos (y viceversa) y suspender cuentas.'}
       </p>
       {error && <p className="cuenta-error" role="alert">{error}</p>}
+      {avisoMatricula && <p className="staff-aviso" role="status">{avisoMatricula}</p>}
+      {avisoEmision && <p className="staff-aviso" role="status">{avisoEmision}</p>}
 
       {/* El aviso lleva a la acción en un clic: filtra la tabla y deja a la
           vista solo a quien hay que colocar. Decir el número sin llevar a
@@ -255,7 +285,7 @@ export default function GestionMiembros({
                   <td className="panel-alumno" data-label="Miembro">
                     {sinNombre
                       ? <span className="panel-sin-nombre">Sin nombre registrado</span>
-                      : <strong>{m.nombre}</strong>}
+                      : <strong><BotonPersona persona={{ ...m, uid: m.id }} /></strong>}
                     {m.id === miUid && <span className="panel-tag-yo">tú</span>}
                   </td>
                   <td className="panel-correo" data-label="Correo">{m.email || '—'}</td>
@@ -264,19 +294,17 @@ export default function GestionMiembros({
                   <td className="panel-matricula" data-label="Matrícula">
                     {m.rol !== 'alumno' ? (
                       <span className="panel-celda-vacia">—</span>
-                    ) : esMatriculaValida(m.matricula) ? (
+                    ) : esMatriculaConocida(m.matricula) ? (
                       <code className="panel-mat">{m.matricula}</code>
-                    ) : puede ? (
-                      <button
-                        type="button"
-                        className="pc-copiar"
-                        disabled={ocupado === m.id}
-                        onClick={() => emitirMatricula(m)}
-                      >
-                        {ocupado === m.id ? 'Emitiendo…' : 'Emitir'}
-                      </button>
                     ) : (
-                      <span className="panel-celda-vacia">Sin matrícula</span>
+                      // Ya no hay botón: o se está emitiendo sola, o le falta el
+                      // grupo del que sale. Decir cuál de las dos cosas es lo
+                      // único útil aquí.
+                      <span className="panel-celda-vacia">
+                        {m.grupoId
+                          ? (emision.trabajando ? 'Emitiendo…' : 'Pendiente de su grupo')
+                          : 'Al asignarle grupo'}
+                      </span>
                     )}
                   </td>
                   <td data-label="Rol">
@@ -327,7 +355,11 @@ export default function GestionMiembros({
                         value={m.grupoId || ''}
                         disabled={ocupado === m.id}
                         aria-label={`Grupo de ${quien}`}
-                        onChange={(e) => aplicar(m.id, { grupoId: e.target.value || null })}
+                        onChange={(e) => (
+                          m.rol === 'alumno'
+                            ? moverDeGrupo(m, e.target.value || null)
+                            : aplicar(m.id, { grupoId: e.target.value || null })
+                        )}
                       >
                         <option value="">Sin grupo</option>
                         {grupos.map((g) => (

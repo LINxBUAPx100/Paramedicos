@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import Icon from './Icon.jsx'
+import BotonPersona from './usuarios/BotonPersona.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import {
   ETIQUETA_ACCION, resumenDictamenes, comprobarAplicacion,
@@ -184,7 +185,7 @@ function Dictamen({ dictamen, porUid, onResuelto }) {
       </div>
 
       <p className="dic-firma">
-        Firma: <strong>{dictamen.revisadoPor || dictamen.nombre || dictamen.email || '—'}</strong>
+        Firma: <strong><BotonPersona persona={dictamen.uid ? { uid: dictamen.uid, nombre: dictamen.nombre, email: dictamen.email } : null}>{dictamen.revisadoPor || dictamen.nombre || dictamen.email || '—'}</BotonPersona></strong>
       </p>
 
       {dictamen.comentario && <p className="dic-comentario">{dictamen.comentario}</p>}

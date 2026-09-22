@@ -4,6 +4,7 @@ import { usePanel } from '../../components/panel/PanelShell.jsx'
 import { registrar } from '../../lib/registro.js'
 import { CursoConIndices, useCursosConSello } from '../../components/panel/IndicesDeCursos.jsx'
 import Icon from '../../components/Icon.jsx'
+import BotonPersona from '../../components/usuarios/BotonPersona.jsx'
 
 // ============================================================
 //  Panel del director · CONTENIDO (Bloque O)
@@ -51,6 +52,12 @@ export default function PanelContenido() {
     })()
     return () => { vivo = false }
   }, [academiaId])
+
+  // El objeto entero, para abrir su ficha desde el historial.
+  const personaDe = (uid) => {
+    const m = miembros.find((x) => x.id === uid)
+    return m ? { ...m, uid: m.id } : (uid ? { uid } : null)
+  }
 
   const nombreDe = (uid) => {
     const m = miembros.find((x) => x.id === uid)
@@ -107,7 +114,7 @@ export default function PanelContenido() {
           <ul className="pe-historial-lista">
             {historial.map((h) => (
               <li key={h.id}>
-                <strong>{nombreDe(h.usuario)}</strong>{' '}
+                <strong><BotonPersona persona={personaDe(h.usuario)}>{nombreDe(h.usuario)}</BotonPersona></strong>{' '}
                 {ETIQUETA_ACCION[h.accion] || h.accion}{' '}
                 <span className="peh-detalle">{h.coleccion}/{h.docId}</span>
                 <small> · {fechaTxt(h.fecha)}</small>

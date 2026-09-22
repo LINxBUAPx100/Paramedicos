@@ -3,9 +3,11 @@ import { normalizarGeneracion, etiquetaGeneracion } from '../../lib/invitaciones
 import { mensajeError } from '../../lib/panelModelo.js'
 import { metaDePrograma } from '../../lib/programasModelo.js'
 import Icon from '../Icon.jsx'
+import BotonPersona from '../usuarios/BotonPersona.jsx'
 import CompartirCodigo from '../CompartirCodigo.jsx'
 import HorarioDelGrupo from './HorarioDelGrupo.jsx'
 import { choquesDeHorario } from '../../lib/horarioGrupos.js'
+import { serieDeGrupo } from '../../lib/matriculas.js'
 import ConfirmacionReforzada from '../ConfirmacionReforzada.jsx'
 
 // ============================================================
@@ -268,7 +270,7 @@ export default function GruposAcademia({
               <ul>
                 {choques.map((c, i) => (
                   <li key={i}>
-                    <strong>{nombreDe(c.profesor)}</strong> tiene dos grupos a la vez:{' '}
+                    <strong><BotonPersona persona={personaDe(c.profesor)}>{nombreDe(c.profesor)}</BotonPersona></strong> tiene dos grupos a la vez:{' '}
                     {c.grupos.map((g) => g.nombre || g.id).join(' y ')}
                     {' · '}{c.dias.join(', ')}
                   </li>
@@ -344,6 +346,12 @@ export default function GruposAcademia({
                   deshabilitado={ocupado}
                   onGuardar={(datos) => guardarHorario(g, datos)}
                 />
+                {/* LA MATRÍCULA SALE DE ESTE GRUPO (21-09-2026): generación, mes
+                    de inicio, día de clase y turno. Si falta cualquiera de los
+                    cuatro, a sus alumnos NO se les puede emitir matrícula, y
+                    eso hay que verlo aquí —donde se arregla— y no en el
+                    mostrador con alguien delante esperando. */}
+                <SerieDelGrupo grupo={g} />
                 <span className={`pc-estado ${activo ? 'activo' : 'inactivo'}`}>{activo ? 'activo' : 'inactivo'}</span>
                 <span className="pc-acciones">
                   <button className="pc-copiar" onClick={() => copiar(g.id)}>Copiar</button>
@@ -460,5 +468,32 @@ export default function GruposAcademia({
         />
       )}
     </section>
+  )
+}
+
+/**
+ * Qué matrícula emite este grupo, o qué le falta para poder emitir alguna.
+ *
+ * Desde el 21-09-2026 la matrícula sale de aquí: generación, mes de inicio, día
+ * de clase y turno. Si falta cualquiera de los cuatro, a sus alumnos no se les
+ * puede emitir ninguna, y eso hay que verlo DONDE SE ARREGLA —esta pantalla— y
+ * no en el mostrador con alguien delante esperando.
+ *
+ * Es informativo: no bloquea nada aquí. El bloqueo real está donde se emite
+ * (lib/firebase/matriculas.js), porque una pantalla se puede saltar.
+ */
+function SerieDelGrupo({ grupo }) {
+  const s = serieDeGrupo(grupo)
+  if (s.ok) {
+    return (
+      <small className="pg-serie">
+        Matrículas <code>{s.serie}xx</code> · {s.turno === 'vespertino' ? 'de tarde, desde el 51' : 'de mañana, desde el 01'}
+      </small>
+    )
+  }
+  return (
+    <small className="pg-serie pg-serie--vacia">
+      Sin matrículas todavía: {s.problemas.join(' ')}
+    </small>
   )
 }

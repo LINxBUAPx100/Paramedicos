@@ -1,0 +1,246 @@
+/* ============================================================
+   Recepción — estilos del entorno de mostrador
+   ------------------------------------------------------------
+   SE IMPORTA DESDE `components/staff/StaffShell.jsx`, no desde `main.jsx`.
+   Así Vite lo emite en el trozo diferido de recepción y no viaja en la hoja
+   global: quien nunca abre el mostrador no lo descarga. Es el mismo criterio
+   que se aplicó al temario en el trabajo P2.
+
+   DOS REGLAS QUE MANDAN AQUÍ:
+     · Se opera DE PIE, a veces en tableta: objetivos táctiles de 44 px y una
+       sola columna por debajo de 900 px.
+     · Lo importante se lee a un metro: matrícula, «en clase» y saldo van
+       grandes; lo demás, a tamaño normal.
+
+   Usa los tokens del sistema (`styles/tokens.css`): nada de colores sueltos.
+   ============================================================ */
+
+.staff-pagina { padding-bottom: var(--e-48, 3rem); }
+.staff-cabecera h1 { margin-bottom: var(--e-8); }
+
+.staff-puerta { display: grid; gap: var(--e-12); justify-items: start; max-width: 52ch; }
+
+/* --- buscador -------------------------------------------------------------- */
+
+.staff-mostrador { display: grid; gap: var(--e-20); }
+.staff-mostrador--vacio { min-height: 50vh; align-content: start; }
+
+.staff-buscador { background: var(--ui-papel); border: 1px solid var(--ui-linea); border-radius: var(--ui-radio-panel); padding: var(--e-24); box-shadow: var(--ui-sombra); }
+.staff-buscador-campo span { font-size: var(--t-base); font-weight: 600; color: var(--texto); }
+.staff-buscador-fila { display: flex; gap: var(--e-12); align-items: stretch; }
+.staff-buscador-fila input { font-size: clamp(1.1rem, 2.4vw, 1.5rem); min-height: 56px; }
+.staff-buscador-fila .btn { display: inline-flex; align-items: center; gap: var(--e-8); padding-inline: var(--e-20); min-height: 56px; white-space: nowrap; }
+
+/* `staff-ayuda`, `staff-aviso`, `staff-agotado` y `staff-sr` viven en
+   `componentes.css`: las comparten la tienda y la ficha de persona, que cargan
+   su CSS por separado. */
+.staff-pie { max-width: 60ch; }
+
+.staff-resultados ul { list-style: none; padding: 0; margin: var(--e-12) 0 0; display: grid; gap: var(--e-8); }
+.staff-resultado { display: grid; grid-template-columns: 1fr auto auto; gap: var(--e-12); align-items: center; width: 100%; min-height: 44px; padding: var(--e-12); text-align: left; background: var(--bg-2); border: 1px solid var(--borde); border-radius: var(--ui-radio); color: inherit; font: inherit; cursor: pointer; }
+.staff-resultado:hover, .staff-resultado:focus-visible { background: var(--bg-3); }
+.staff-resultado span { color: var(--texto-2); font-size: var(--t-sm); }
+
+.staff-vacio { display: grid; grid-template-columns: auto 1fr auto; gap: var(--e-16); align-items: center; margin-top: var(--e-20); padding: var(--e-20); border: 1px solid var(--borde-fuerte); border-left: 4px solid var(--primario); border-radius: var(--ui-radio); background: var(--bg-2); }
+.staff-vacio h3 { margin: 0 0 var(--e-4); font-size: var(--t-lg); }
+.staff-vacio p { margin: 0; color: var(--texto-2); font-size: var(--t-sm); }
+.staff-vacio .btn { display: inline-flex; align-items: center; gap: var(--e-8); min-height: 44px; }
+
+/* --- ficha ----------------------------------------------------------------- */
+
+.staff-ficha { background: var(--ui-papel); border: 1px solid var(--ui-linea); border-radius: var(--ui-radio-panel); padding: var(--e-24); box-shadow: var(--ui-sombra); display: grid; gap: var(--e-16); }
+.staff-ficha-identidad h2 { margin: var(--e-4) 0; font: 800 clamp(1.5rem, 3vw, 2.2rem)/1.1 var(--fuente-display); }
+.staff-ficha-sub { margin: 0; color: var(--texto-2); }
+
+.staff-ficha-señales { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--e-12); }
+.staff-señal { display: flex; gap: var(--e-8); align-items: center; margin: 0; padding: var(--e-12) var(--e-16); border: 1px solid var(--borde); border-radius: var(--ui-radio); background: var(--bg-2); font-size: var(--t-sm); }
+.staff-señal b { display: block; font-size: var(--t-base); }
+.staff-señal--si { border-color: var(--exito); }
+.staff-señal--deuda { border-color: var(--peligro); background: var(--peligro-suave); }
+
+.staff-ficha-datos { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--e-12); margin: 0; }
+.staff-ficha-datos dt { color: var(--texto-2); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: .08em; }
+.staff-ficha-datos dd { margin: 0; }
+.staff-ficha-quien { display: block; font-size: var(--t-xs); }
+
+.staff-ficha-acciones { display: flex; flex-wrap: wrap; gap: var(--e-12); align-items: center; }
+.staff-ficha-acciones .btn { display: inline-flex; align-items: center; gap: var(--e-6); min-height: 44px; }
+
+/* --- pestañas -------------------------------------------------------------- */
+
+/* Las SECCIONES son el trabajo de recepción y están siempre; las PESTAÑAS solo
+   existen mientras hay alguien atendido. Se pintan igual a propósito —es el
+   mismo gesto— pero la barra de secciones lleva una línea debajo para que se
+   lea como el nivel de arriba y no como siete botones sueltos. */
+.staff-secciones { display: flex; flex-wrap: wrap; gap: var(--e-8); padding-bottom: var(--e-16); border-bottom: 1px solid var(--ui-linea); }
+.staff-pestanas { display: flex; flex-wrap: wrap; gap: var(--e-8); }
+.staff-pestana { display: inline-flex; align-items: center; gap: var(--e-8); min-height: 44px; padding: var(--e-8) var(--e-16); border: 1px solid var(--borde-fuerte); border-radius: var(--ui-radio); background: var(--bg-2); color: inherit; font: 600 var(--t-sm) var(--fuente-cuerpo); cursor: pointer; }
+.staff-pestana.es-activa { background: var(--primario); border-color: var(--primario); color: #fff; }
+
+/* --- paneles --------------------------------------------------------------- */
+
+.staff-panel h3 { margin-top: 0; }
+.staff-panel h4 { margin-block: var(--e-20) var(--e-8); font-size: var(--t-base); }
+.staff-form { display: grid; gap: var(--e-16); margin-block: var(--e-16); }
+.staff-form .btn { display: inline-flex; align-items: center; gap: var(--e-8); justify-self: start; min-height: 44px; }
+
+.staff-boton-grande { display: flex; align-items: center; justify-content: center; gap: var(--e-12); width: 100%; min-height: 72px; font-size: clamp(1.05rem, 2.2vw, 1.3rem); }
+
+
+.staff-lista-dias, .staff-lista-agenda, .staff-carrito, .staff-ordenes { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--e-8); }
+.staff-lista-dias li { display: flex; justify-content: space-between; gap: var(--e-12); padding: var(--e-8) var(--e-12); border-bottom: 1px solid var(--borde); }
+.staff-lista-dias li.es-hoy { background: var(--bg-3); font-weight: 600; }
+.staff-hora { color: var(--texto-2); font-variant-numeric: tabular-nums; }
+
+.staff-lista-agenda li { display: grid; gap: var(--e-4); padding: var(--e-12); border: 1px solid var(--borde); border-radius: var(--ui-radio); background: var(--bg-2); }
+.staff-lista-agenda--apagada li { opacity: .75; }
+.staff-horario { padding: var(--e-8) var(--e-12); background: var(--bg-3); border-radius: var(--ui-radio); }
+
+/* --- caja ------------------------------------------------------------------ */
+
+.staff-saldo { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--e-12); }
+.staff-saldo p { display: grid; gap: var(--e-4); margin: 0; padding: var(--e-16); border: 1px solid var(--borde); border-radius: var(--ui-radio); background: var(--bg-2); }
+.staff-saldo span { color: var(--texto-2); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: .08em; }
+.staff-saldo b { font: 800 clamp(1.3rem, 3vw, 1.9rem)/1 var(--fuente-display); font-variant-numeric: tabular-nums; }
+.staff-saldo--deuda { border-color: var(--peligro); background: var(--peligro-suave); }
+
+/* --- tienda ---------------------------------------------------------------- */
+
+.staff-carrito li { display: grid; grid-template-columns: 1fr 90px auto auto; gap: var(--e-12); align-items: center; padding: var(--e-8) var(--e-12); border: 1px solid var(--borde); border-radius: var(--ui-radio); }
+.staff-carrito-cantidad { min-width: 0; }
+.staff-total { display: flex; justify-content: space-between; gap: var(--e-12); margin-block: var(--e-12); font-size: var(--t-lg); }
+.staff-total b { font-variant-numeric: tabular-nums; }
+
+.staff-orden { display: grid; gap: var(--e-8); padding: var(--e-16); border: 1px solid var(--borde); border-radius: var(--ui-radio); background: var(--bg-2); }
+.staff-orden > div:first-child { display: flex; justify-content: space-between; gap: var(--e-12); }
+.staff-orden p { margin: 0; }
+.staff-orden--entregado { opacity: .7; }
+.staff-orden--cancelado { opacity: .6; text-decoration: line-through; }
+.staff-orden-acciones { display: flex; flex-wrap: wrap; gap: var(--e-8); align-items: center; }
+.staff-orden-acciones .btn { min-height: 44px; }
+
+/* --- mensajes -------------------------------------------------------------- */
+
+.staff-plantillas { display: flex; flex-wrap: wrap; gap: var(--e-8); margin-block: var(--e-12); }
+.staff-plantillas .btn { min-height: 44px; }
+.staff-previa { font-family: var(--fuente-cuerpo); min-height: 9rem; resize: vertical; }
+.staff-desactivado { opacity: .5; pointer-events: none; }
+
+/* --- edición --------------------------------------------------------------- */
+
+.staff-cambios { padding: var(--e-16); border: 1px solid var(--borde-fuerte); border-left: 4px solid var(--primario); border-radius: var(--ui-radio); background: var(--bg-2); }
+.staff-cambios h4 { margin-top: 0; }
+.staff-cambios ul { margin: 0 0 var(--e-8); padding-left: var(--e-20); }
+.staff-vetados { display: grid; gap: var(--e-8); margin: 0; }
+.staff-vetados dt { font-weight: 600; }
+.staff-vetados dd { margin: 0; color: var(--texto-2); font-size: var(--t-sm); }
+
+/* --- cifras del padrón y del corte ----------------------------------------- */
+
+.staff-cifras { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--e-12); margin-block: var(--e-16); }
+.staff-cifras p, .staff-cifra-boton { display: grid; gap: var(--e-4); margin: 0; padding: var(--e-16); border: 1px solid var(--borde); border-radius: var(--ui-radio); background: var(--bg-2); text-align: left; font: inherit; color: inherit; }
+.staff-cifras span { color: var(--texto-2); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: .08em; }
+.staff-cifras b { font: 800 clamp(1.4rem, 3vw, 2rem)/1 var(--fuente-display); font-variant-numeric: tabular-nums; }
+/* Las dos cifras que son listas de trabajo se pulsan: filtran la tabla. */
+.staff-cifra-boton { cursor: pointer; min-height: 44px; }
+.staff-cifra-boton:hover, .staff-cifra-boton:focus-visible { background: var(--bg-3); border-color: var(--primario); }
+
+.staff-pendiente { color: var(--peligro); font-weight: 600; }
+.staff-ok { color: var(--exito); font-weight: 600; }
+.staff-no { color: var(--texto-2); }
+
+/* --- reporte --------------------------------------------------------------- */
+
+.staff-casillas { border: 1px solid var(--borde); border-radius: var(--ui-radio); padding: var(--e-16); display: grid; gap: var(--e-12); }
+.staff-casillas legend { padding-inline: var(--e-8); font-weight: 600; }
+.staff-casillas label { display: grid; grid-template-columns: auto 1fr; gap: var(--e-12); align-items: start; min-height: 44px; cursor: pointer; }
+.staff-casillas input { width: 20px; height: 20px; margin-top: 2px; }
+.staff-casillas em { display: block; }
+/* En línea cuando las opciones son tres palabras y no hacen falta descripciones. */
+.staff-casillas--linea { display: flex; flex-wrap: wrap; gap: var(--e-20); align-items: center; }
+.staff-casillas--linea label { grid-template-columns: auto auto; }
+
+.staff-previa-hoja { margin-top: var(--e-24); padding: var(--e-16); background: var(--bg-3); border-radius: var(--ui-radio); overflow: auto; }
+
+/* --- LA HOJA --------------------------------------------------------------- */
+
+.staff-hoja { position: relative; background: #fff; color: #111; width: min(100%, 210mm); min-height: 240mm; margin-inline: auto; padding: 18mm 16mm; box-shadow: 0 2px 12px rgb(0 0 0 / .18); font-family: var(--fuente-cuerpo, system-ui); }
+.staff-hoja-marca { position: absolute; inset: 0; margin: auto; width: 60%; max-height: 60%; object-fit: contain; opacity: .06; pointer-events: none; }
+.staff-hoja-cabecera { position: relative; display: flex; gap: 8mm; align-items: flex-start; border-bottom: 2px solid #111; padding-bottom: 6mm; margin-bottom: 8mm; }
+.staff-hoja-logo { max-height: 22mm; max-width: 45mm; object-fit: contain; }
+.staff-hoja-nombre { font-size: 1.4rem; font-weight: 800; margin: 0; max-width: 45mm; }
+.staff-hoja-cabecera h1 { margin: 0 0 2mm; font-size: 1.6rem; }
+.staff-hoja-cabecera p { margin: 0; }
+.staff-hoja-fecha { color: #555; font-size: .85rem; }
+
+.staff-hoja-bloque { position: relative; margin-bottom: 7mm; break-inside: avoid; }
+.staff-hoja-bloque h2 { font-size: 1.05rem; margin: 0 0 3mm; padding-bottom: 1.5mm; border-bottom: 1px solid #bbb; }
+.staff-hoja-pares { display: grid; grid-template-columns: repeat(auto-fit, minmax(60mm, 1fr)); gap: 3mm; margin: 0; }
+.staff-hoja-pares dt { font-size: .75rem; color: #555; text-transform: uppercase; letter-spacing: .06em; }
+.staff-hoja-pares dd { margin: 0; font-size: .95rem; }
+.staff-hoja-tabla { width: 100%; border-collapse: collapse; font-size: .85rem; }
+.staff-hoja-tabla th { text-align: left; border-bottom: 1.5px solid #111; padding: 2mm 2mm 1.5mm; }
+.staff-hoja-tabla td { border-bottom: 1px solid #ddd; padding: 1.8mm 2mm; }
+.staff-hoja-vacio, .staff-hoja-nota { color: #555; font-size: .8rem; margin: 2mm 0 0; }
+.staff-hoja-pie { border-top: 1px solid #bbb; padding-top: 3mm; color: #555; font-size: .75rem; }
+
+/* --- IMPRESIÓN ------------------------------------------------------------- */
+
+@media print {
+  /* Todo lo que no sea la hoja desaparece. Se esconde por ANCESTRO y no por
+     una lista de selectores de la aplicación: así sigue funcionando el día que
+     el rediseño cambie los nombres de las clases de fuera. */
+  body * { visibility: hidden !important; }
+  .staff-hoja, .staff-hoja * { visibility: visible !important; }
+  .staff-hoja {
+    position: absolute; inset: 0; margin: 0; width: 100%; min-height: 0;
+    box-shadow: none; padding: 12mm;
+  }
+  .staff-previa-hoja { position: static; padding: 0; background: none; overflow: visible; }
+  /* Sin esto, el navegador se «ahorra» la marca de agua y los fondos al
+     imprimir en modo económico, y la hoja sale sin el logo que se pidió. */
+  .staff-hoja, .staff-hoja-marca { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  @page { size: A4; margin: 10mm; }
+}
+
+/* --- Corrección del concepto de un pago (dirección y super-admin) ---------- */
+/* Un selector DENTRO de una celda: se queda al ancho de su columna para que la
+   tabla de pagos no se ensanche por él y empuje al importe fuera de la vista. */
+.staff-concepto { min-width: 8rem; }
+.staff-concepto select { width: 100%; }
+.staff-nota-corregido { display: block; margin-top: var(--e-4); }
+
+/* --- Compromisos de pago y abonos ------------------------------------------ */
+/* Un compromiso es una tarjeta, no una fila de tabla: lleva dentro su lista de
+   abonos y sus acciones, y en una tabla eso no cabe sin volverse ilegible en
+   una tableta, que es donde se atiende de pie. */
+.staff-compromisos { display: grid; gap: var(--e-12); list-style: none; padding: 0; margin: 0 0 var(--e-16); }
+.staff-compromiso {
+  padding: var(--e-12); border: 1px solid var(--borde); border-radius: var(--ui-radio);
+  background: var(--bg-2); display: grid; gap: var(--e-8);
+}
+.staff-compromiso-cab { display: flex; gap: var(--e-8); align-items: center; flex-wrap: wrap; }
+/* Lo vencido se ve antes de leerlo: es lo que hay que reclamar hoy. */
+.staff-compromiso.es-vencido { border-left: 4px solid var(--peligro); }
+.staff-compromiso--liquidado, .staff-compromiso--cancelado { opacity: .7; }
+.staff-abonos { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--e-4); font-size: var(--t-xs); }
+.staff-abonos li { display: flex; justify-content: space-between; gap: var(--e-8); }
+.staff-cobro-pedido { margin-top: var(--e-8); padding-top: var(--e-8); border-top: 1px dashed var(--borde); }
+.staff-detalle summary { cursor: pointer; padding: var(--e-8) 0; }
+
+/* --- ESTRECHO: una sola columna, siempre ----------------------------------- */
+
+@media (max-width: 900px) {
+  .staff-buscador-fila { flex-direction: column; }
+  .staff-vacio { grid-template-columns: 1fr; text-align: left; }
+  .staff-resultado { grid-template-columns: 1fr; gap: var(--e-4); }
+  .staff-carrito li { grid-template-columns: 1fr auto; row-gap: var(--e-8); }
+  .staff-ficha-señales { grid-template-columns: 1fr; }
+  /* El buscador se queda a la vista mientras se baja por la ficha: es el
+     control que más se usa. */
+  .staff-mostrador--vacio .staff-buscador { position: sticky; top: var(--e-8); z-index: 2; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .staff-pestana, .staff-resultado { transition: none; }
+}

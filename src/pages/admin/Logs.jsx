@@ -4,6 +4,7 @@ import {
   leerAccion, familiaDe, filtrarHistorial, camposCambiados, contarPorFamilia, FAMILIAS,
 } from '../../lib/historialModelo.js'
 import Icon from '../../components/Icon.jsx'
+import BotonPersona from '../../components/usuarios/BotonPersona.jsx'
 
 // ============================================================
 //  Registro de actividad de la plataforma (super-admin)
@@ -56,6 +57,15 @@ export default function AdminLogs() {
 
   // Nombre legible en vez de un uid crudo: un registro que solo enseña
   // identificadores obliga a buscar cada uno a mano para entender nada.
+  // El objeto entero, para poder abrir su ficha desde el registro: con el
+  // uid suelto no se sabe ni su rol ni su academia, y sin eso la ficha no
+  // puede decidir qué se le deja tocar.
+  const personaDe = useMemo(() => {
+    const map = {}
+    for (const u of usuarios || []) map[u.id] = { ...u, uid: u.id }
+    return (uid) => map[uid] || (uid ? { uid } : null)
+  }, [usuarios])
+
   const nombreDe = useMemo(() => {
     const map = {}
     for (const u of usuarios || []) map[u.id] = u.nombre || u.email || u.id
@@ -151,7 +161,7 @@ export default function AdminLogs() {
                 return (
                   <tr key={e.id} className={`logs-fila logs-fila--${familiaDe(e.accion)}`}>
                     <td className="logs-fecha">{fmt(e.fecha)}</td>
-                    <td>{nombreDe(e.usuario)}</td>
+                    <td><BotonPersona persona={personaDe(e.usuario)}>{nombreDe(e.usuario)}</BotonPersona></td>
                     <td>
                       <span className={`logs-accion logs-accion--${accion.tono}`}>{accion.texto}</span>
                       {cambios.length > 0 && (

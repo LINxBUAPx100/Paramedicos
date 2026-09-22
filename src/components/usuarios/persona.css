@@ -1,0 +1,46 @@
+/* ============================================================
+   El nombre pulsable de una persona
+   ------------------------------------------------------------
+   Va APARTE de `ficha.css` a propósito. El modal se carga solo cuando alguien
+   abre una ficha; el botón se pinta en cuanto hay una tabla de personas en
+   pantalla. Si compartieran archivo, los nombres saldrían sin estilo hasta que
+   se abriera la primera ficha — y quien no abriera ninguna los vería sin
+   estilo siempre.
+   ============================================================ */
+
+/* El nombre pulsable. Se parece a un enlace y no a un botón a propósito: está
+   dentro de tablas densas, y un botón con caja rompería la lectura de la fila. */
+.persona-enlace {
+  display: inline;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--enlace);
+  text-align: left;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.persona-enlace:hover, .persona-enlace:focus-visible { text-decoration-style: solid; }
+
+/* El tirador pequeño, para donde el nombre ya es un botón que hace otra cosa
+   (el avance y el seguimiento lo usan para desplegar el historial). 28 px de
+   caja visible con área de toque de 36: va incrustado en filas densas, y un
+   objetivo de 44 las rompería. */
+.persona-icono {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin-inline-start: var(--e-6);
+  padding: 0;
+  border: 1px solid var(--borde);
+  border-radius: 50%;
+  background: var(--bg-2);
+  color: var(--enlace);
+  cursor: pointer;
+  vertical-align: middle;
+}
+.persona-icono:hover, .persona-icono:focus-visible { background: var(--bg-3); border-color: var(--primario); }

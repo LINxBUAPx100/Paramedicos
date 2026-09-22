@@ -25,7 +25,7 @@
 // ============================================================
 import { db } from './init.js'
 import { doc, setDoc, addDoc, collection, serverTimestamp } from 'firebase/firestore'
-import { reservarMatricula } from './matriculas.js'
+import { matriculaParaGrupo } from './matriculas.js'
 import { altaParaGuardar, pagoParaGuardar, problemasDelAlta, problemasDelPago } from '../recepcionModelo.js'
 import { generarCodigoInvitacion } from '../invitacionesModelo.js'
 
@@ -47,7 +47,14 @@ export async function altaDeRecepcion({ alta, pago = null, academiaId, creadoPor
   if (fallos.length) throw new Error(fallos.join(' '))
 
   // 1. La matrícula. Irreversible, así que va primero y sola.
-  const matricula = await reservarMatricula(academiaId)
+  //
+  // LA EMITE EL GRUPO. Sus cuatro primeros dígitos son la generación y el mes
+  // de inicio del grupo, y el quinto su día de clase (ver lib/matriculas.js),
+  // así que sin grupo no hay matrícula que emitir — y por eso el grupo es
+  // obligatorio en `problemasDelAlta`. Si el grupo elegido todavía no tiene
+  // generación, fecha de inicio, día único u hora, esto falla con la frase
+  // concreta que hay que arreglar, y no se ha escrito nada.
+  const { matricula } = await matriculaParaGrupo({ academiaId, grupoId: alta?.grupoId })
   const datos = altaParaGuardar(alta, { academiaId, matricula, creadoPor })
 
   // 2. La invitación personal: un solo uso, con la ficha dentro. Al canjearla,

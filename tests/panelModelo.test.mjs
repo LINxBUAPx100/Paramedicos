@@ -18,7 +18,7 @@ const ids = (secciones) => secciones.map((s) => s.id)
 test('el director ve todo su panel; el editor depende del plan', () => {
   const pro = seccionesPanel({ rol: 'admin_escuela', capacidades: { editorContenido: true } })
   assert.deepEqual(ids(pro), [
-    'resumen', 'recepcion', 'miembros', 'grupos', 'invitaciones', 'accesos', 'calificaciones',
+    'resumen', 'recepcion', 'tienda', 'miembros', 'grupos', 'invitaciones', 'accesos', 'calificaciones',
     'contenido', 'academia',
   ])
 
@@ -26,7 +26,7 @@ test('el director ve todo su panel; el editor depende del plan', () => {
   // lleve a una pantalla que le va a decir que no puede).
   const base = seccionesPanel({ rol: 'admin_escuela', capacidades: { editorContenido: false } })
   assert.deepEqual(ids(base), [
-    'resumen', 'recepcion', 'miembros', 'grupos', 'invitaciones', 'accesos', 'calificaciones', 'academia',
+    'resumen', 'recepcion', 'tienda', 'miembros', 'grupos', 'invitaciones', 'accesos', 'calificaciones', 'academia',
   ])
 })
 

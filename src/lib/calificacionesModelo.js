@@ -52,6 +52,16 @@ export function normalizarEvaluacion(ev) {
     // Material o instrucciones. La escribe una persona, asi que quien la pinte
     // debe pasarla por hrefSeguro: nunca va directa a un href.
     enlace: String(ev?.enlace || ''),
+    // PRÁCTICA DE RCP (21-09-2026). Cuando el profesorado lo marca, el alumno
+    // ve en esa actividad el ritmo de compresiones: la playlist y el metrónomo
+    // (ver lib/ritmoRCP.js). `ritmoEnlace` deja poner OTRA música para esa
+    // práctica concreta; vacío usa la de la academia o la de por defecto.
+    //
+    // Es una bandera y no un «tipo de evaluación» porque una práctica de RCP
+    // puede ser un examen presencial, un taller o un simulacro: lo que cambia
+    // no es cómo se califica, sino que hace falta marcar el ritmo.
+    practicaRCP: ev?.practicaRCP === true,
+    ritmoEnlace: String(ev?.ritmoEnlace || ''),
     // Ponderación 1 por defecto: sin ella, todas pesan igual, que es lo que
     // espera quien no configuró nada.
     ponderacion: Number.isFinite(pond) && pond > 0 ? pond : 1,

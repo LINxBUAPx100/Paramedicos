@@ -16,6 +16,7 @@ import {
   serverTimestamp, writeBatch,
 } from 'firebase/firestore'
 import { idCalificacion, validarValor } from '../calificacionesModelo.js'
+import { urlDeSpotify } from '../ritmoRCP.js'
 
 const uidActual = () => auth.currentUser?.uid || null
 
@@ -34,7 +35,7 @@ export async function listarEvaluaciones(academiaId) {
 
 export async function crearEvaluacion({
   academiaId, grupoId = null, titulo, descripcion = '', ponderacion = 1, fecha = null,
-  fechaEntrega = null, enlace = '',
+  fechaEntrega = null, enlace = '', practicaRCP = false, ritmoEnlace = '',
 }) {
   const limpio = String(titulo || '').trim()
   if (!academiaId) throw new Error('Falta la academia.')
@@ -55,6 +56,14 @@ export async function crearEvaluacion({
     // las 23:59 locales, porque «entregar el día 20» incluye el día 20 entero.
     fechaEntrega: fechaEntrega ? new Date(`${fechaEntrega}T23:59:59`) : null,
     enlace: String(enlace || '').trim().slice(0, 500),
+    // PRÁCTICA DE RCP: el alumno verá el ritmo de compresiones en esta
+    // actividad. `ritmoEnlace` se guarda YA NORMALIZADO —solo el tipo y el id
+    // que `parsearSpotify` reconoce— y nunca la cadena pegada: lo que se
+    // guarda es lo que después arma un `src` de iframe, así que no puede ser
+    // texto libre de una persona. Si no se reconoce, se guarda vacío y se usa
+    // la lista de la academia.
+    practicaRCP: practicaRCP === true,
+    ritmoEnlace: practicaRCP === true ? (urlDeSpotify(ritmoEnlace) || '') : '',
     creadoPor: uidActual(),
     creadoEn: serverTimestamp(),
   })

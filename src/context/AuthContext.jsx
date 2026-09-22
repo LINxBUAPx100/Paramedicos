@@ -337,6 +337,11 @@ export function AuthProvider({ children }) {
     // canjeó un código temporal, al vencer queda fuera del panel igual que del
     // temario (las reglas hacen lo mismo con esStaffDe()).
     esStaff: esSuperadmin || (!pruebaTerminada && ROLES_STAFF.includes(rol)),
+    // RECEPCIÓN NO ES `esStaff`, y no puede serlo: `esStaff` abre el panel del
+    // director y, en las reglas, su gemelo `esStaffDe()` abre el temario. Es
+    // una bandera aparte, para que el armazón sepa vaciarle el menú de alumno
+    // sin darle nada más. Ver `motivoSinPrograma` en lib/programasModelo.js.
+    esRecepcion: !pruebaTerminada && rol === 'recepcion',
     // Plan comercial y capacidades de LA ACADEMIA DEL USUARIO (fuente única:
     // src/lib/capacidades.js). El superadmin opera academias ajenas desde
     // /admin con los datos de cada academia, no con estos.

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { mensajeError } from '../../lib/panelModelo.js'
 import Icon from '../Icon.jsx'
+import BotonPersona from '../usuarios/BotonPersona.jsx'
 
 // ============================================================
 //  Solicitudes de acceso DESDE FUERA + ficha del directorio (Bloque K)
@@ -160,7 +161,7 @@ export default function SolicitudesDeAcceso({ academiaId, academiaNombre = '', m
           {pendientes.map((s) => (
             <li key={s.id} className="psa-item">
               <div>
-                <strong>{s.nombre || 'Sin nombre'}</strong>
+                <strong><BotonPersona persona={{ uid: s.uid, nombre: s.nombre, email: s.email }}>{s.nombre || 'Sin nombre'}</BotonPersona></strong>
                 <small>{s.email}</small>
                 {s.mensaje && <p className="psa-mensaje">«{s.mensaje}»</p>}
               </div>

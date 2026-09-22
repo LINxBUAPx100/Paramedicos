@@ -40,6 +40,22 @@ export const ACCIONES = {
   'archivar-nodo': { texto: 'Archivó contenido', tono: 'baja' },
   'publicar-nodo': { texto: 'Publicó contenido', tono: 'alta' },
   'borrar-evaluacion': { texto: 'Borró una evaluación', tono: 'peligro' },
+  // --- Recepción (20-09-2026) -------------------------------------------
+  // La edición de una ficha por parte del mostrador es la razón por la que
+  // estas entradas existen: se pidió expresamente saber QUÉ persona del staff
+  // cambió qué dato. El detalle campo a campo lo arma `staff/edicionPerfil.js`.
+  'editar-alumno': { texto: 'Editó la ficha de un alumno', tono: 'aviso' },
+  'registrar-entrada': { texto: 'Registró una entrada', tono: 'alta' },
+  'cobrar-mostrador': { texto: 'Cobró en mostrador', tono: 'alta' },
+  'apartar-articulos': { texto: 'Apartó artículos de tienda', tono: 'alta' },
+  'entregar-articulos': { texto: 'Entregó artículos y descontó inventario', tono: 'aviso' },
+  'cancelar-orden': { texto: 'Canceló una orden de tienda', tono: 'baja' },
+  // La ficha única de persona (20-09-2026). `editar-alumno` se conserva porque
+  // el historial es append-only y hay entradas escritas con esa clave desde el
+  // mostrador; lo nuevo entra con nombre propio porque ahora la ficha la abren
+  // también el director y el super-admin, sobre cualquier rol.
+  'editar-persona': { texto: 'Modificó la ficha de una persona', tono: 'aviso' },
+  'reset-contrasena': { texto: 'Envió el correo para restablecer una contraseña', tono: 'aviso' },
 }
 
 export function leerAccion(accion) {

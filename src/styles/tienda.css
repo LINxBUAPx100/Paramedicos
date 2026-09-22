@@ -1,0 +1,243 @@
+/* ============================================================
+   Tienda — catálogo, ficha de producto, carrito y editor
+   ------------------------------------------------------------
+   MECÁNICA DE AMAZON / MERCADO LIBRE, ESTÉTICA DE PTEM.
+
+   Lo que se copia de esas tiendas es la disposición y los gestos: barra de
+   búsqueda fija, filtros a un lado con sus contadores, rejilla de tarjetas
+   pulsables enteras, ficha de producto a dos columnas, carrito con resumen
+   pegado. Lo que NO se copia es su aspecto: aquí no hay naranja de Amazon ni
+   amarillo de Mercado Libre. Todo sale de `styles/tokens.css` —los mismos
+   colores, la misma tipografía y los mismos botones que el resto de PTEM—,
+   así que la tienda se siente parte de la aplicación y no una pestaña
+   incrustada de otra web.
+
+   Se importa desde `pages/tienda/TiendaLayout.jsx` y desde el editor del
+   catálogo: viaja en sus trozos diferidos y no lo descarga quien nunca entra.
+   ============================================================ */
+
+.tienda { display: grid; gap: var(--e-20); padding-bottom: var(--e-48, 3rem); }
+
+/* --- barra superior -------------------------------------------------------- */
+
+.tienda-barra {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: var(--e-16);
+  align-items: center;
+  padding: var(--e-12) var(--e-16);
+  background: var(--ui-papel);
+  border: 1px solid var(--ui-linea);
+  border-radius: var(--ui-radio-panel);
+  box-shadow: var(--ui-sombra);
+}
+.tienda-marca { display: inline-flex; gap: var(--e-8); align-items: center; font: 700 var(--t-base) var(--fuente-display); color: inherit; text-decoration: none; white-space: nowrap; }
+.tienda-barra-acciones { display: flex; gap: var(--e-8); align-items: center; }
+.tienda-accion { position: relative; display: inline-flex; gap: var(--e-6); align-items: center; min-height: 44px; padding: var(--e-8) var(--e-12); border-radius: var(--ui-radio); color: inherit; text-decoration: none; font-size: var(--t-sm); }
+.tienda-accion:hover, .tienda-accion.active { background: var(--bg-3); }
+.tienda-accion--carrito { border: 1px solid var(--borde-fuerte); }
+/* El contador del carrito. Es el único elemento «de tienda» que se permite en
+   color de acento: es lo que se busca con el rabillo del ojo. */
+.tienda-globo { position: absolute; top: 2px; right: 2px; min-width: 18px; height: 18px; display: grid; place-items: center; padding-inline: 4px; border-radius: 9px; background: var(--primario); color: #fff; font: 700 var(--t-xs)/1 var(--fuente-cuerpo); }
+
+/* --- buscador con sugerencias ---------------------------------------------- */
+
+.tienda-buscador { position: relative; }
+.tienda-buscador form { display: flex; gap: var(--e-8); align-items: center; padding-inline-start: var(--e-12); background: var(--bg-2); border: 1px solid var(--borde-fuerte); border-radius: var(--ui-radio); color: var(--texto-2); }
+.tienda-buscador form:focus-within { border-color: var(--primario); }
+.tienda-buscador input { flex: 1; min-width: 0; min-height: 44px; padding: var(--e-8); border: 0; background: none; color: var(--texto); font: 400 var(--t-base) var(--fuente-cuerpo); }
+.tienda-buscador input:focus { outline: none; }
+.tienda-buscador-limpiar { display: grid; place-items: center; width: 32px; height: 32px; border: 0; border-radius: 50%; background: none; color: var(--texto-2); cursor: pointer; }
+.tienda-buscador-limpiar:hover { background: var(--bg-3); }
+.tienda-buscador-enviar { min-height: 44px; border-radius: 0 var(--ui-radio) var(--ui-radio) 0; }
+
+.tienda-sugerencias { position: absolute; z-index: 6; inset-inline: 0; top: calc(100% + 4px); list-style: none; margin: 0; padding: var(--e-4); background: var(--ui-papel); border: 1px solid var(--borde-fuerte); border-radius: var(--ui-radio); box-shadow: 0 10px 28px rgb(0 0 0 / .18); }
+.tienda-sugerencias button { display: flex; gap: var(--e-8); align-items: center; width: 100%; min-height: 40px; padding: var(--e-8) var(--e-12); border: 0; border-radius: var(--ui-radio); background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.tienda-sugerencias button.es-activa { background: var(--bg-3); }
+
+/* --- catálogo: filtros + rejilla ------------------------------------------- */
+
+.tienda-catalogo { display: grid; grid-template-columns: 260px 1fr; gap: var(--e-24); align-items: start; }
+
+.tienda-filtros { position: sticky; top: 90px; display: grid; gap: var(--e-16); padding: var(--e-20); background: var(--ui-papel); border: 1px solid var(--ui-linea); border-radius: var(--ui-radio-panel); }
+.tienda-filtros-tirador { display: none; }
+.tienda-filtros-cuerpo { display: grid; gap: var(--e-20); }
+.tienda-filtro h3 { margin: 0 0 var(--e-8); font: 600 var(--t-sm) var(--fuente-sub); text-transform: uppercase; letter-spacing: .08em; color: var(--texto-2); }
+.tienda-filtro select, .tienda-filtro input[type="range"] { width: 100%; }
+.tienda-filtro select { min-height: var(--ui-control); padding: var(--e-8) var(--e-12); background: var(--bg-2); color: var(--texto); border: 1px solid var(--borde-fuerte); border-radius: var(--ui-radio); font: 400 var(--t-base) var(--fuente-cuerpo); }
+
+/* El número al lado de cada filtro es la mitad del filtro: dice de antemano
+   si pulsar ahí lleva a algún sitio. */
+.tienda-facetas { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.tienda-facetas button { display: flex; justify-content: space-between; gap: var(--e-8); width: 100%; min-height: 36px; padding: var(--e-6) var(--e-8); border: 0; border-radius: var(--ui-radio); background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.tienda-facetas button:hover { background: var(--bg-3); }
+.tienda-facetas button.es-activa { background: var(--bg-3); font-weight: 700; box-shadow: inset 3px 0 0 var(--primario); }
+.tienda-facetas b { color: var(--texto-2); font-variant-numeric: tabular-nums; font-weight: 500; }
+.tienda-filtros-cuenta { border-top: 1px solid var(--ui-linea); padding-top: var(--e-12); }
+
+.tienda-check { display: flex; gap: var(--e-8); align-items: center; min-height: 44px; cursor: pointer; }
+.tienda-check input { width: 18px; height: 18px; }
+
+.tienda-resultados { display: grid; gap: var(--e-16); align-content: start; }
+.tienda-cuenta { margin: 0; color: var(--texto-2); font-size: var(--t-sm); }
+
+/* Las pastillas: la salida del callejón sin salida de cuatro filtros y cero
+   resultados. Se quita el que estorba de un clic, sin adivinar. */
+.tienda-pastillas { display: flex; flex-wrap: wrap; gap: var(--e-8); }
+.tienda-pastilla { display: inline-flex; gap: var(--e-6); align-items: center; min-height: 32px; padding: var(--e-4) var(--e-12); border: 1px solid var(--borde-fuerte); border-radius: 999px; background: var(--bg-2); color: inherit; font-size: var(--t-sm); cursor: pointer; }
+.tienda-pastilla:hover { background: var(--bg-3); border-color: var(--primario); }
+
+/* --- rejilla y tarjeta ----------------------------------------------------- */
+
+.tienda-rejilla { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--e-16); grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); }
+
+.tienda-tarjeta { display: grid; grid-template-rows: 1fr auto; background: var(--ui-papel); border: 1px solid var(--ui-linea); border-radius: var(--ui-radio-panel); overflow: hidden; transition: box-shadow var(--ui-duracion), transform var(--ui-duracion); }
+.tienda-tarjeta:hover { box-shadow: 0 8px 24px rgb(0 0 0 / .12); transform: translateY(-2px); }
+.tienda-tarjeta.es-agotada { opacity: .72; }
+/* Toda la tarjeta es el enlace: en una rejilla, obligar a apuntar al título
+   con el dedo es la diferencia entre mirar diez productos y mirar dos. */
+.tienda-tarjeta-enlace { display: grid; gap: var(--e-12); color: inherit; text-decoration: none; }
+.tienda-tarjeta-accion { padding: 0 var(--e-16) var(--e-16); }
+.tienda-tarjeta-accion .btn { width: 100%; min-height: 40px; }
+
+.tienda-img { position: relative; aspect-ratio: 4 / 3; display: grid; place-items: center; overflow: hidden; background: var(--bg-3); }
+.tienda-img img { width: 100%; height: 100%; object-fit: cover; }
+.tienda-sin-img { color: var(--texto-2); }
+.tienda-cinta { position: absolute; inset-block-start: var(--e-8); inset-inline-start: var(--e-8); padding: var(--e-4) var(--e-8); border-radius: 4px; background: var(--peligro); color: #fff; font: 700 var(--t-xs) var(--fuente-cuerpo); text-transform: uppercase; letter-spacing: .06em; }
+
+.tienda-datos { display: grid; gap: var(--e-4); padding-inline: var(--e-16); align-content: start; }
+.tienda-categoria { color: var(--texto-2); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: .08em; }
+.tienda-datos h3 { margin: 0; font: 500 var(--t-base)/1.3 var(--fuente-cuerpo); }
+.tienda-precio { margin: var(--e-4) 0 0; font: 800 var(--t-xl) var(--fuente-display); font-variant-numeric: tabular-nums; }
+.tienda-stock { margin: 0; color: var(--texto-2); font-size: var(--t-sm); }
+.tienda-pocas { margin: 0; color: var(--peligro); font-size: var(--t-sm); font-weight: 600; }
+
+.tienda-cantidad { display: inline-flex; align-items: center; gap: var(--e-4); width: 100%; justify-content: space-between; border: 1px solid var(--borde-fuerte); border-radius: var(--ui-radio); padding: 2px; }
+.tienda-cantidad button { display: grid; place-items: center; width: 38px; height: 38px; border: 0; border-radius: var(--ui-radio); background: var(--bg-2); color: inherit; cursor: pointer; }
+.tienda-cantidad button:hover:not(:disabled) { background: var(--bg-3); }
+.tienda-cantidad button:disabled { opacity: .4; cursor: not-allowed; }
+.tienda-cantidad b { font-variant-numeric: tabular-nums; }
+
+/* Esqueleto: la rejilla no salta de tamaño al llegar los datos, que es lo que
+   hace pulsar el artículo de al lado. */
+.tienda-tarjeta.es-esqueleto { min-height: 300px; background: var(--bg-3); border-style: dashed; }
+
+.tienda-vacio { display: grid; gap: var(--e-12); justify-items: center; text-align: center; padding: var(--e-48, 3rem) var(--e-24); background: var(--ui-papel); border: 1px solid var(--ui-linea); border-radius: var(--ui-radio-panel); color: var(--texto-2); }
+.tienda-vacio h2 { margin: 0; font: 700 var(--t-xl) var(--fuente-display); color: var(--texto); }
+.tienda-vacio p { margin: 0; max-width: 46ch; }
+
+/* --- ficha de producto ----------------------------------------------------- */
+
+.tienda-migas { display: flex; flex-wrap: wrap; gap: var(--e-6); align-items: center; color: var(--texto-2); font-size: var(--t-sm); }
+.tienda-migas a { color: var(--enlace); }
+
+.tienda-ficha { display: grid; gap: var(--e-24); }
+.tienda-ficha-cuerpo { display: grid; grid-template-columns: minmax(280px, 45%) 1fr; gap: var(--e-32, 2rem); align-items: start; background: var(--ui-papel); border: 1px solid var(--ui-linea); border-radius: var(--ui-radio-panel); padding: var(--e-24); }
+.tienda-ficha-img { aspect-ratio: 1; display: grid; place-items: center; overflow: hidden; background: var(--bg-3); border-radius: var(--ui-radio); }
+.tienda-ficha-img img { width: 100%; height: 100%; object-fit: contain; }
+.tienda-ficha-datos { display: grid; gap: var(--e-12); align-content: start; }
+.tienda-ficha-datos h1 { margin: 0; font: 700 clamp(1.4rem, 3vw, 2.1rem)/1.2 var(--fuente-display); }
+.tienda-ficha-precio { margin: 0; font: 800 clamp(1.8rem, 4vw, 2.6rem)/1 var(--fuente-display); font-variant-numeric: tabular-nums; }
+.tienda-ficha-stock { display: flex; gap: var(--e-6); align-items: center; margin: 0; color: var(--exito); font-weight: 600; }
+.tienda-ficha-desc { margin: 0; color: var(--texto-2); max-width: 60ch; }
+.tienda-ficha-compra { display: grid; gap: var(--e-12); padding: var(--e-16); border: 1px solid var(--borde); border-radius: var(--ui-radio); background: var(--bg-2); }
+.tienda-ficha-cantidad { max-width: 140px; }
+.tienda-ficha-botones { display: flex; flex-wrap: wrap; gap: var(--e-12); }
+.tienda-ficha-botones .btn { flex: 1; min-width: 180px; min-height: 48px; display: inline-flex; align-items: center; justify-content: center; gap: var(--e-8); }
+.tienda-ficha-nota { display: flex; gap: var(--e-8); align-items: start; margin: 0; padding: var(--e-12); border-left: 3px solid var(--primario); background: var(--bg-3); border-radius: var(--ui-radio); color: var(--texto-2); font-size: var(--t-sm); }
+
+.tienda-relacionados h2 { font: 700 var(--t-xl) var(--fuente-display); margin-block: 0 var(--e-12); }
+
+/* --- carrito --------------------------------------------------------------- */
+
+.tienda-carrito-pagina { display: grid; gap: var(--e-16); }
+.tienda-carrito-cuerpo { display: grid; grid-template-columns: 1fr 320px; gap: var(--e-24); align-items: start; }
+.tienda-carrito-lista { padding: var(--e-24); background: var(--ui-papel); border: 1px solid var(--ui-linea); border-radius: var(--ui-radio-panel); }
+.tienda-carrito-lista h1 { margin: 0 0 var(--e-16); font: 700 var(--t-xl) var(--fuente-display); }
+.tienda-carrito-lista > ul { list-style: none; margin: 0 0 var(--e-16); padding: 0; display: grid; gap: var(--e-12); }
+
+.tienda-linea { display: grid; grid-template-columns: 72px 1fr auto auto auto; gap: var(--e-12); align-items: center; padding-bottom: var(--e-12); border-bottom: 1px solid var(--borde); }
+.tienda-linea-img { display: grid; place-items: center; aspect-ratio: 1; overflow: hidden; background: var(--bg-3); border-radius: var(--ui-radio); }
+.tienda-linea-img img { width: 100%; height: 100%; object-fit: cover; }
+.tienda-linea-datos { display: grid; gap: 2px; min-width: 0; }
+.tienda-linea-datos a { color: inherit; text-decoration: none; }
+.tienda-linea-datos a:hover { text-decoration: underline; }
+.tienda-linea-cantidad { max-width: 80px; }
+.tienda-linea-subtotal { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* El resumen va pegado: en una lista larga, bajar hasta el final para ver el
+   total y el botón es lo que hace abandonar un pedido a medias. */
+.tienda-resumen { position: sticky; top: 90px; display: grid; gap: var(--e-12); padding: var(--e-20); background: var(--ui-papel); border: 1px solid var(--borde-fuerte); border-radius: var(--ui-radio-panel); }
+.tienda-resumen h2 { margin: 0; font: 700 var(--t-lg) var(--fuente-display); }
+.tienda-resumen-linea { display: flex; justify-content: space-between; gap: var(--e-12); margin: 0; font-size: var(--t-lg); }
+.tienda-resumen-linea b { font-variant-numeric: tabular-nums; }
+.tienda-resumen-enviar { min-height: 48px; display: inline-flex; align-items: center; justify-content: center; gap: var(--e-8); }
+
+/* --- mis pedidos ----------------------------------------------------------- */
+
+.tienda-pedidos { display: grid; gap: var(--e-16); }
+.tienda-pedidos h1 { margin: 0; font: 700 var(--t-xl) var(--fuente-display); }
+.tienda-lista-pedidos { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--e-16); }
+.tienda-pedido { display: grid; gap: var(--e-12); padding: var(--e-20); background: var(--ui-papel); border: 1px solid var(--ui-linea); border-radius: var(--ui-radio-panel); }
+.tienda-pedido.es-cancelado { opacity: .6; }
+.tienda-pedido header { display: flex; justify-content: space-between; gap: var(--e-12); align-items: baseline; }
+.tienda-pedido header div { display: grid; gap: 2px; }
+.tienda-pedido-total { font-variant-numeric: tabular-nums; font-size: var(--t-lg); }
+.tienda-pedido-lineas { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; color: var(--texto-2); font-size: var(--t-sm); }
+
+/* La línea de estados: quita el noventa por ciento de las preguntas en el
+   mostrador, porque se ve en qué va sin preguntar. */
+.tienda-pasos { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--e-16); }
+.tienda-pasos li { display: flex; gap: var(--e-6); align-items: center; color: var(--texto-2); font-size: var(--t-sm); }
+.tienda-paso-punto { width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--borde-fuerte); }
+.tienda-pasos li.es-hecho { color: var(--texto); font-weight: 600; }
+.tienda-pasos li.es-hecho .tienda-paso-punto { background: var(--exito); border-color: var(--exito); }
+
+/* --- editor del catálogo (dirección) --------------------------------------- */
+
+.tienda-editor { display: grid; gap: var(--e-16); }
+.tienda-form { display: grid; gap: var(--e-16); }
+.tienda-form h4 { margin: 0; }
+.tienda-previa-img { display: grid; gap: var(--e-8); justify-items: start; }
+.tienda-previa-img img { max-width: 220px; max-height: 160px; object-fit: cover; border-radius: var(--ui-radio); border: 1px solid var(--ui-linea); }
+.tienda-rejilla--admin .tienda-tarjeta { grid-template-rows: auto auto auto; }
+.tienda-rejilla--admin .tienda-datos { padding-bottom: var(--e-8); }
+.tienda-acciones { display: flex; flex-wrap: wrap; gap: var(--e-8); align-items: center; padding: 0 var(--e-16) var(--e-16); }
+.tienda-acciones .btn { min-height: 40px; display: inline-flex; align-items: center; gap: var(--e-6); }
+.tienda-confirma { display: inline-flex; gap: var(--e-8); align-items: center; flex-wrap: wrap; }
+.tienda-desc { margin: 0; color: var(--texto-2); font-size: var(--t-sm); }
+.tienda-total { display: flex; justify-content: space-between; gap: var(--e-12); margin: 0; font-size: var(--t-lg); }
+.tienda-total b { font-variant-numeric: tabular-nums; }
+
+/* --- ESTRECHO -------------------------------------------------------------- */
+
+@media (max-width: 1000px) {
+  .tienda-catalogo { grid-template-columns: 1fr; }
+  .tienda-carrito-cuerpo { grid-template-columns: 1fr; }
+  .tienda-filtros { position: static; }
+  /* En un teléfono, una barra de filtros fija empuja el catálogo fuera de la
+     vista: ahí se pliega y nace cerrada. */
+  .tienda-filtros-tirador { display: inline-flex; align-items: center; gap: var(--e-8); }
+  .tienda-filtros-cuerpo { display: none; }
+  .tienda-filtros.es-abierta .tienda-filtros-cuerpo { display: grid; }
+  .tienda-resumen { position: sticky; bottom: 0; top: auto; }
+}
+
+@media (max-width: 760px) {
+  .tienda-barra { grid-template-columns: 1fr auto; row-gap: var(--e-12); }
+  .tienda-buscador { grid-column: 1 / -1; order: 3; }
+  .tienda-ficha-cuerpo { grid-template-columns: 1fr; }
+  .tienda-linea { grid-template-columns: 56px 1fr auto; row-gap: var(--e-8); }
+  .tienda-linea-subtotal { grid-column: 2; }
+  .tienda-rejilla { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .tienda-accion span { display: none; }
+  .tienda-buscador-enviar { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tienda-tarjeta { transition: none; }
+  .tienda-tarjeta:hover { transform: none; }
+}

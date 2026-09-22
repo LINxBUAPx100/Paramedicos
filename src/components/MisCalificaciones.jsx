@@ -4,6 +4,7 @@ import {
   misCalificaciones, normalizarEvaluacion, estadoDeActividad, textoDePlazo, APROBADO,
 } from '../lib/calificacionesModelo.js'
 import { hrefSeguro } from '../lib/enlaceSeguro.js'
+import RitmoRCP from './RitmoRCP.jsx'
 import Icon from './Icon.jsx'
 
 // ============================================================
@@ -93,6 +94,19 @@ export default function MisCalificaciones() {
                   <a className="mc-enlace" href={href} target="_blank" rel="noopener noreferrer">
                     <Icon name="descarga" size={14} /> Ver el material
                   </a>
+                )}
+                {/* PRÁCTICA DE RCP: lo marcó quien preparó la clase, y aquí el
+                    alumno tiene el ritmo de compresiones sin salir de su lista
+                    de actividades. Plegado, porque esta pantalla es un resumen
+                    de notas: se abre cuando toca practicar. */}
+                {evaluacion.practicaRCP && (
+                  <details className="mc-ritmo">
+                    <summary>Práctica de RCP · ritmo de compresiones</summary>
+                    <RitmoRCP
+                      enlaceActividad={evaluacion.ritmoEnlace}
+                      titulo="Ritmo para esta práctica"
+                    />
+                  </details>
                 )}
               </div>
               <span className={`mc-plazo mc-plazo--${est.estado}`}>

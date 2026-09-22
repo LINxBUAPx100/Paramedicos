@@ -64,6 +64,43 @@ export async function actualizarUsuario(uid, cambios) {
 }
 
 /**
+ * Mueve a un ALUMNO de grupo y le rehace la matrícula en la misma escritura.
+ *
+ * POR QUÉ NO BASTA CON `actualizarUsuario({ grupoId })`. Desde el 21-09-2026 la
+ * matrícula la dicta el grupo —generación, mes de inicio, día de clase y
+ * turno—, así que un alumno movido de grupo sin rehacerle el número lleva una
+ * matrícula que afirma algo falso: que entró en un grupo en el que ya no está.
+ * Se pidió expresamente que cambiar de grupo la regenere.
+ *
+ * VA EN UNA SOLA ESCRITURA, y la regla de `usuarios` lo exige: la matrícula de
+ * alguien que ya la tenía solo se puede reescribir SI en el mismo parche cambia
+ * su grupo. Partirlo en dos escrituras se denegaría, y con razón: sería la
+ * forma de reescribir matrículas sin cambiar a nadie de sitio.
+ *
+ * Si su grupo nuevo es de la misma serie y turno, CONSERVA su matrícula: el
+ * número no diría nada distinto y cambiarlo solo le invalidaría la credencial.
+ *
+ * @returns {{matricula: string, cambio: boolean, motivo: string}}
+ */
+export async function moverAlumnoDeGrupo({ alumno, grupoId, academiaId }) {
+  const uid = alumno?.uid || alumno?.id
+  if (!uid) throw new Error('Falta la persona que se mueve de grupo.')
+  if (!grupoId) throw new Error('Elige el grupo al que pasa: sin grupo no ve contenido ni puede tener matrícula.')
+
+  const { matriculaAlMoverDeGrupo, parcheDeMatricula } = await import('./matriculas.js')
+  const resultado = await matriculaAlMoverDeGrupo({
+    academiaId: academiaId || alumno?.academiaId,
+    grupoId,
+    matriculaActual: alumno?.matricula || '',
+  })
+
+  const parche = { grupoId }
+  if (resultado.cambio) Object.assign(parche, parcheDeMatricula(alumno, resultado.matricula))
+  await updateDoc(doc(db, 'usuarios', uid), parche)
+  return resultado
+}
+
+/**
  * Asigna a un PROFESOR los grupos con los que trabaja (Fase 2: multi-grupo).
  *
  * Hasta ahora un profesor cabía en un solo grupo porque el perfil tenía un

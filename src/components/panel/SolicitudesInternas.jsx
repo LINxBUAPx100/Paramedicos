@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Icon from '../Icon.jsx'
+import BotonPersona from '../usuarios/BotonPersona.jsx'
 
 // ============================================================
 //  Solicitudes de DENTRO de la academia (siguiente módulo / ver códigos)
@@ -80,7 +81,7 @@ export default function SolicitudesInternas({
             {visibles.map((s) => (
               <li key={s.id} className="ps-item">
                 <div className="ps-info">
-                  <strong>{s.nombre || '—'}</strong>
+                  <strong><BotonPersona persona={{ uid: s.uid, nombre: s.nombre }}>{s.nombre || '—'}</BotonPersona></strong>
                   {s.tipo === 'codigos' ? (
                     <span className="ps-detalle">pide <b>ver los códigos</b> de academia y grupos</span>
                   ) : (

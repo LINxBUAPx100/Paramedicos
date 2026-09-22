@@ -16,6 +16,8 @@ import { ResumenTema, ObjetivosTema, ConceptosTema } from '../components/Bloques
 import Icon from '../components/Icon.jsx'
 import Recursos from '../components/Recursos.jsx'
 import Actividades from '../components/Actividades.jsx'
+import RitmoRCP from '../components/RitmoRCP.jsx'
+import { tieneRitmo } from '../lib/ritmoRCP.js'
 import AvisoEditorial, { CuerpoSinContenido } from '../components/AvisoEditorial.jsx'
 import FichaEvaluacion from '../components/FichaEvaluacion.jsx'
 import RevisionDocente from '../components/RevisionDocente.jsx'
@@ -207,6 +209,11 @@ export default function TemaPage() {
           </div>
         </section>
       )}
+
+      {/* EL RITMO DE COMPRESIONES, solo en los temas donde se practica (ver la
+          lista en lib/ritmoRCP.js). Va DESPUÉS del contenido y antes de las
+          actividades: primero se lee cómo se hace, después se practica. */}
+      {tieneRitmo(temaId) && <RitmoRCP />}
 
       <Recursos recursos={tema.recursos} />
 

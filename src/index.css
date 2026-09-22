@@ -1338,6 +1338,30 @@ textarea:focus-visible,
 }
 .pg-programa--vacio select { border-color: var(--aviso); }
 .pg-programa-aviso { color: var(--aviso); font-size: .74rem; line-height: 1.3; }
+/* La serie de matrículas del grupo: informativa cuando está completa, y en
+   color de aviso cuando falta un dato, porque entonces sus alumnos no pueden
+   recibir matrícula. */
+/* --- Ritmo de compresiones (RCP) ------------------------------------------ */
+/* El bloque va dentro de una lección y dentro de una tarjeta de actividad, así
+   que no impone ancho: se adapta al hueco que tenga. */
+.ritmo-rcp {
+  margin: var(--e-24) 0; padding: var(--e-16);
+  border: 1px solid var(--borde); border-radius: var(--ui-radio, 12px);
+  background: var(--bg-2);
+}
+.ritmo-ayuda { font-size: .85rem; line-height: 1.45; color: var(--texto-2); margin: var(--e-8) 0; }
+.ritmo-metronomo { display: flex; gap: var(--e-16); align-items: center; flex-wrap: wrap; margin: var(--e-12) 0; }
+/* El deslizador ocupa lo que sobre, pero nunca menos de lo que se puede
+   arrastrar con el pulgar de pie y con guantes. */
+.ritmo-slider { display: grid; gap: var(--e-4); flex: 1 1 12rem; min-width: 12rem; font-size: .85rem; }
+.ritmo-slider input { width: 100%; }
+.ritmo-spotify { border: 0; border-radius: 12px; margin-top: var(--e-12); }
+.ritmo-cargar { margin-top: var(--e-12); }
+.mc-ritmo summary { cursor: pointer; font-size: .85rem; padding: var(--e-4) 0; }
+
+.pg-serie { font-size: .74rem; line-height: 1.3; color: var(--texto-2); }
+.pg-serie code { font-family: var(--mono, monospace); }
+.pg-serie--vacia { color: var(--aviso); }
 .panel-tag-grupo {
   margin-left: var(--e-8);
   padding: 2px var(--e-8);

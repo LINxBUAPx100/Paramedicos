@@ -164,7 +164,7 @@ test('se valida ANTES de reservar la matrícula', () => {
   // Un número gastado por un formulario incompleto es un hueco en la
   // numeración que ya no se recupera.
   const iValida = CAPA.indexOf('problemasDelAlta(alta)')
-  const iReserva = CAPA.indexOf('await reservarMatricula')
+  const iReserva = CAPA.indexOf('await matriculaParaGrupo')
   assert.ok(iValida > 0 && iReserva > 0)
   assert.ok(iValida < iReserva, 'la matrícula se reserva antes de comprobar el formulario')
 })
@@ -190,12 +190,25 @@ test('el perfil solo puede copiar la matrícula que dice SU invitación', () => 
     'la matrícula del perfil dejó de estar atada a la de su invitación')
 })
 
-test('UN PAGO NO SE EDITA', () => {
+test('EL DINERO DE UN PAGO NO SE EDITA', () => {
   // Es un asiento: describe algo que ocurrió. Reescribir un importe borra la
   // única prueba de lo que se apuntó primero.
+  //
+  // El 21-09-2026 se abrió UNA excepción, y solo una: el CONCEPTO, que es la
+  // clasificación con la que se reparte el corte y no el dinero, lo puede
+  // corregir la DIRECCIÓN (no recepción, que es quien lo teclea). El importe,
+  // el método y la matrícula siguen cerrados, y el `hasOnly` es lo que lo
+  // impone: por esa puerta no cabe un importe.
   const bloque = REGLAS.slice(REGLAS.indexOf('match /pagos/'))
   const hasta = bloque.slice(0, bloque.indexOf('match /contadores/'))
-  assert.match(hasta, /allow update: if false/, 'los pagos volvieron a ser editables')
+  assert.match(hasta, /hasOnly\(\['concepto', 'conceptoCorregidoPor', 'conceptoCorregido'\]\)/,
+    'la edición de un pago dejó de estar acotada a su concepto')
+  assert.match(hasta, /esSuper\(\) \|\| esAdminDe/,
+    'corregir el concepto dejó de ser solo de dirección')
+  for (const campo of ['monto', 'metodo', 'matricula']) {
+    assert.ok(!hasta.includes(`'${campo}', 'concepto`),
+      `un ${campo} registrado se volvió editable`)
+  }
   assert.match(hasta, /allow delete: if esSuper\(\)/, 'borrar un pago dejó de ser del super-admin')
   assert.match(hasta, /monto > 0/, 'la regla dejó de comprobar el importe')
 })

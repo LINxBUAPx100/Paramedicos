@@ -1,50 +1,45 @@
 import { useAcademiaAdmin } from '../../../components/admin/AcademiaShell.jsx'
-import { useDatosAcademia } from '../../../components/panel/datosAcademia.js'
-import AltaDeRecepcion from '../../../components/panel/AltaDeRecepcion.jsx'
+import StaffShell from '../../../components/staff/StaffShell.jsx'
 
 // ============================================================
 //  Academia · RECEPCIÓN — el mismo mostrador, desde la consola
 // ------------------------------------------------------------
 //  Paridad del super-admin (trabajo Z): «el super admin debe poder hacer TODO
-//  lo que hacen los demás usuarios». El director da de alta desde
-//  /panel/recepcion; aquí se hace lo mismo sobre la academia que se esté
-//  mirando, con el MISMO formulario —montarlo dos veces sería mantener dos.
+//  lo que hacen los demás usuarios». Desde el 21-09-2026 eso ya no significa
+//  «el mismo formulario de alta», significa **la misma pantalla entera**: se
+//  monta el mismo `StaffShell` que ven recepción y la dirección, sobre la
+//  academia que se esté mirando en la consola.
+//
+//  Lo que había antes era solo el alta, y con ella el super-admin no podía
+//  buscar a nadie, ni cobrar una mensualidad, ni entregar material, ni atender
+//  un pedido de la tienda de esa academia.
+//
+//  Ya NO se leen aquí los grupos: los lee el propio armazón con el `academiaId`
+//  que recibe, que es lo que hace que esta página sea seis líneas y no cien.
 //
 //  Las reglas ya lo permitían: `esSuper()` está en el `allow` de invitaciones,
-//  pagos y del contador de matrículas. Lo que faltaba era dónde pulsarlo, que
-//  es exactamente el hueco que `tests/paridadSuperAdmin.test.mjs` vigila.
+//  pagos, órdenes y del contador de matrículas. Lo que faltaba era dónde
+//  pulsarlo, que es el hueco que `tests/paridadSuperAdmin.test.mjs` vigila.
 // ============================================================
 export default function AcademiaRecepcion() {
   const { academiaId, academiaNombre, miUid } = useAcademiaAdmin()
-  const datos = useDatosAcademia(academiaId)
-
-  if (datos.cargando && !datos.hayDatos) {
-    return (
-      <div className="ruta-cargando" role="status">
-        <span className="ruta-spinner" aria-hidden="true" /> <span>Cargando academia…</span>
-      </div>
-    )
-  }
-  if (datos.error) return <p className="cuenta-error" role="alert">{datos.error}</p>
-
-  const nombreGrupo = (id) => datos.grupos.find((g) => g.id === id)?.nombre || id
 
   return (
     <div className="cs-seccion">
       <header className="cs-cabecera">
         <h1>Recepción</h1>
         <p>
-          Alta de mostrador de esta academia: ficha, grupo, matrícula y primer pago. La matrícula
-          sale del contador de <strong>esta</strong> academia, no de un contador de la plataforma.
+          El mostrador de <strong>{academiaNombre || academiaId}</strong>, completo y sobre esta
+          academia: buscar, registrar entrada, cobrar, dar de alta, entregar material y atender la
+          tienda. La matrícula sale de la serie del grupo de <strong>esta</strong> academia.
         </p>
       </header>
 
-      <AltaDeRecepcion
+      <StaffShell
         academiaId={academiaId}
-        academiaNombre={academiaNombre}
-        grupos={datos.grupos}
+        academia={{ id: academiaId, nombre: academiaNombre }}
         miUid={miUid}
-        nombreGrupo={nombreGrupo}
+        puedeCorregirPagos
       />
     </div>
   )

@@ -21,6 +21,7 @@ const SEMANA_SEG = 7 * 24 * 3600
 export const SECCIONES_PANEL = [
   { id: 'resumen', ruta: '/panel', fin: true, icono: 'progreso', etiqueta: 'Resumen' },
   { id: 'recepcion', ruta: '/panel/recepcion', icono: 'mas', etiqueta: 'Recepción' },
+  { id: 'tienda', ruta: '/panel/tienda', icono: 'carpeta', etiqueta: 'Tienda' },
   { id: 'miembros', ruta: '/panel/miembros', icono: 'usuario', etiqueta: 'Miembros' },
   { id: 'grupos', ruta: '/panel/grupos', icono: 'capas', etiqueta: 'Grupos' },
   { id: 'invitaciones', ruta: '/panel/invitaciones', icono: 'llave', etiqueta: 'Invitaciones' },
@@ -48,6 +49,10 @@ export function seccionesPanel({ rol, capacidades = null, permisosEditor = null,
     // `recepcion` entrará por aquí, y NO metiéndolo en `esStaffDe()` de las
     // reglas, que le regalaría el temario completo.
     recepcion: dirige,
+    // La TIENDA es inventario y precios de la academia, no contenido: la
+    // gobierna el director aunque un profesor tenga permisos editoriales. Las
+    // reglas imponen lo mismo (esAdminDe en `articulos`).
+    tienda: dirige,
     miembros: true, // el profesor la ve en solo lectura
     accesos: true, // el profesor pide aquí ver los códigos
     grupos: dirige,

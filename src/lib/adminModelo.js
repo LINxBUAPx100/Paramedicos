@@ -56,6 +56,10 @@ export const SECCIONES_ACADEMIA = [
   // Recepción es de la ACADEMIA, no de un programa: la matrícula sale del
   // contador de la academia y la persona todavía no está en ningún curso.
   { id: 'recepcion', sufijo: 'recepcion', icono: 'mas', etiqueta: 'Recepción', deLaAcademia: true },
+  // La tienda es de la ACADEMIA y no de un programa: un uniforme no pertenece
+  // al plan de paramédicos ni al de enfermería, y partirlo por programa
+  // obligaría a publicar el mismo artículo dos veces.
+  { id: 'tienda', sufijo: 'tienda', icono: 'carpeta', etiqueta: 'Tienda', deLaAcademia: true },
   { id: 'ajustes', sufijo: 'ajustes', icono: 'editar', etiqueta: 'Ajustes de la academia', deLaAcademia: true },
 ]
 

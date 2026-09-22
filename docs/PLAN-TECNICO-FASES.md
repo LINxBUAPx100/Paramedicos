@@ -96,6 +96,9 @@ real.
 | Trabajo | De dónde venía |
 |---|---|
 | **A** — Calidad editorial v2: el molde v2 en las 268 lecciones con material (07-09-2026) | `PLAN-LMS.md` §25 |
+| **O4c** — Entorno del rol `recepcion`: home propio, buscador, asistencia, caja, tienda y reporte imprimible (20-09-2026) | trabajo O · pedido el 20-09-2026 |
+| **Ma** — Tienda: catálogo con imágenes (director y super-admin), carrito del alumno y pedido que recepción confirma, cobra y entrega (20-09-2026) | trabajo M · pedido el 20-09-2026 |
+| **O3** — Check-in de 8 horas (`asistencias`, vigencia derivada de `expira`) | trabajo O · entró con O4c |
 | ~~Planes comerciales y capacidades centralizadas~~ | PLAN-LMS F1 |
 | ~~Aislamiento de contenido por academia + plantillas~~ | PLAN-LMS F2 |
 | ~~Editor estructural de contenido~~ | PLAN-LMS F3 |
@@ -144,17 +147,16 @@ real.
 | **B** | Mi Botiquín (inventario de videojuego) | lógica corta · media con la capa visual | **concepto cerrado 07-09-2026** (`docs/BOTIQUIN-CONCEPTO.md`) · B.0-B.2 sin dependencias, empiezan ya · las imágenes esperan presupuesto · **comparte catálogo con M** |
 | **R2** | Retar a un compañero | 2-3 semanas | **R1** ✔ · **F2** (tiempo real) · **A** (sin temas validados no hay banco) |
 | **O2** | Bloqueo por pago + bypass auditado | 3-5 días | O1 |
-| **O3** | Check-in de 8 horas | 3-5 días | O1 |
 | **F2** | Contratar Blaze + alertas de gasto + RTDB + respaldos | 1 día | medir consumo real primero |
 | **J** | Paginación de `/admin` y auditoría | media | **va con F2**: en Blaze el exceso ya no se corta, se cobra |
 | **L** | Suscripción y cobro (pasarela, webhook, recepción, corte de caja) | 2 semanas | **F2** · O2 |
 | **O4b** | La Function que crea la cuenta con contraseña temporal y dispara el mensaje | 3-5 días | **F2** (Functions) · O4a ✔ |
 | **C** | Clase en vivo con actividades calificables **(incluye el simulador de escenas)** | 2-3 semanas | A, **F2** · **O3** (la bandera «en clase» decide a quién se puede calificar) |
 | **D** | Entrenador de farmacología | media | catálogo de fármacos de la academia |
-| **M** | Tienda (uniformes e insumos) | 2 semanas | L · **el catálogo se diseña en B y se reutiliza aquí** |
-| **O5** | Feed de logística de tienda en recepción | 3-5 días | M · O4 |
-| **O6** | Credencial con código + escáner USB | 1-2 días | O4 |
-| **N** | Inventario simple | 1 semana | M |
+| **Mb** | Tienda: pago EN LÍNEA (lo demás se entregó en **Ma**) | 1 semana | **L** (pasarela) · **F2** |
+| **O5** | Feed de logística de tienda en recepción (en vivo, onSnapshot) | 3-5 días | M · **O4c ✔** trae ya la parte de mostrador: existencias, apartar y entregar |
+| **O6** | Credencial con código + escáner USB | 1-2 días | **O4c ✔** · el buscador ya nace enfocado, así que falta la credencial, no el software |
+| **N** | Inventario propio: kardex, entrada de mercancía, ajustes con motivo, mínimos, conteo y devolución | 1-2 semanas | **Ma ✔** · SIN ERP: decidido el 21-09-2026 |
 | **Y** | Visor de material por tema: PDF con la marca de agua incrustada, subida desde el editor y firma del enlace en servidor | media | **el modelo y sus reglas están hechos** (31-08-2026) · la firma necesita Functions ⇒ **F2** |
 | **H** | Certificados con QR verificable | 2-3 semanas | F1 (dominio) · F2 (Functions) |
 | **G** | Migración a Next.js | 3-5 semanas | F1 · **reevaluar tras A**, no comprometido |
@@ -2316,6 +2318,161 @@ base).
 existe) o única en toda la plataforma? Si es por academia, la credencial impresa
 tiene que llevar también la academia.
 
+### O1bis — Matrícula por generación · HECHA el 21-09-2026
+
+**Sustituye al correlativo de O1**, que estuvo vigente entre el 02-09 y el
+21-09-2026. La matrícula ya no cuenta alumnos de una academia: **describe al
+grupo en el que entró la persona**.
+
+```
+GG MM D NN        04 · 11 · 1 · 15   →   0411115
+│  │  │  └── orden de llegada: 01–49 de mañana, 51–99 de tarde (el 50 no se emite)
+│  │  └───── día de clase: 1 sábado · 2 domingo · 3 miércoles
+│  └──────── mes en que empieza el grupo (de horario.fechaInicio)
+└─────────── generación del grupo
+```
+
+Decisiones que tomó el dueño del producto al pedirla, y que no se cambian sin él:
+
+- **El mes es el de inicio del GRUPO**, no el del alta de cada alumno: así todos
+  los de un grupo comparten los cinco primeros dígitos.
+- **Un grupo solo puede tener UN día de clase.** El formato reserva una sola
+  posición; un grupo de sábado y domingo no puede emitir matrículas y la pantalla
+  de grupos lo dice (`SerieDelGrupo`).
+- **Sin grupo no hay alta.** Ya lo exigía `problemasDelAlta`.
+- **Cambiar de grupo REHACE la matrícula**, salvo que el grupo nuevo sea de la
+  misma serie y turno.
+- **Se regeneraron todas**, incluidas las del formato anterior (`RE0000007`).
+
+Tres consecuencias que hay que tener presentes:
+
+1. **Se perdió el prefijo de academia.** La matrícula nueva es única *dentro* de
+   una academia, no en la plataforma. Es sostenible porque ninguna consulta por
+   matrícula deja de filtrar por `academiaId`; deja de serlo el día que haya que
+   imprimir una credencial interacademias.
+2. **Caben 49 alumnos por turno y serie.** Al llegar ahí la emisión falla con un
+   mensaje, no da la vuelta al contador.
+3. **Los pagos son inmutables y guardan la matrícula del día del cobro**, así que
+   cada persona conserva las suyas en `matriculasAnteriores` y las pantallas
+   buscan su dinero por todas. Borrar ese campo pierde el historial de cobros.
+
+Piezas: `src/lib/matriculas.js` (puro), `src/lib/firebase/matriculas.js` (un
+contador por serie y turno en `contadores/{academiaId}/series/{clave}`),
+`moverAlumnoDeGrupo` en `usuarios.js`, `guardarFicha` en `staff/alumnos.js`, la
+regla `matriculaCoherente()` y el script `npm run migrar:matriculas` (en seco por
+defecto, lista a quién no puede emitirle y por qué).
+
+### O7 — Recepción completa para dirección y super-admin · HECHA el 21-09-2026
+
+`/panel/recepcion` y la consola por academia montaban **solo el formulario de
+alta**: el director podía dar de alta y cobrar el primer pago, pero no buscar a
+nadie, ni cobrar una mensualidad, ni entregar material, ni atender un pedido de
+la tienda sin irse a `/recepcion`, que no está en su menú. Ahora las dos montan
+el mismo `StaffShell`.
+
+Con una diferencia, que es la que se pidió: **dirección y super-admin pueden
+corregir el CONCEPTO de un pago ya registrado**; recepción no. El importe, el
+método, la matrícula y la fecha siguen siendo inmutables —son la prueba con la
+que se cuadra una caja— y la regla lo impone con un `hasOnly` por el que no cabe
+un importe. Queda rastro en el propio asiento (`conceptoCorregidoPor`) y en
+`historial`.
+
+### O8 — La matrícula se emite sola · HECHA el 21-09-2026
+
+No hay botón de «emitir matrícula». Dos caminos, porque hay dos formas de
+conseguir grupo:
+
+- **Lo asigna el personal** (alta de mostrador, ficha de recepción, selector del
+  padrón) → la matrícula sale en la misma escritura. La regla lo exige: una
+  matrícula ya emitida solo se reescribe si en el mismo parche cambia el grupo.
+- **La persona lo consigue sola** (código de grupo, invitación, solicitud
+  aceptada) → no hay nada del lado del servidor que pueda emitirla: sin Cloud
+  Functions no corre nada cuando el alumno escribe su perfil, y la regla de
+  `contadores` no le deja mover el contador, a propósito. La emite la primera
+  pantalla de personal que lo vea: el padrón, la gestión de miembros o la ficha
+  del mostrador (`useMatriculasAlDia`, `asegurarMatriculas`).
+
+**Consecuencia que hay que aceptar:** alguien que se une por código no tiene
+matrícula hasta que alguien del personal abra una de esas pantallas. Con Blaze
+esto se convierte en un trigger y las llamadas se quitan sin tocar pantallas.
+
+### Corte de caja en cero — BUG ARREGLADO el 21-09-2026
+
+`cobrosDelDia` cruza `academiaId ==` con `creado >=`, y eso exige índice
+compuesto. **No estaba declarado en `firestore.indexes.json`**, así que la
+consulta fallaba con `failed-precondition`… y el `catch` devolvía `[]`. El corte
+enseñaba «$0.00 · sin cobros en este periodo» con el cajón lleno, sin un solo
+mensaje.
+
+Tres cosas cambiaron: el índice está declarado (falta **desplegarlo**:
+`firebase deploy --only firestore:indexes`), el fallo ya no se traga —hay un
+camino sin índice que lee la academia y filtra en memoria, y avisa en pantalla
+de que va por ahí, además de decir si el resultado quedó recortado por el tope—,
+y dos pruebas impiden que vuelva el `return []` silencioso.
+
+### O9 — Compromisos de pago: parciales, apartados y liquidaciones · HECHA el 21-09-2026
+
+Pedido así: «poder recibir pagos parciales, apartados, liquidaciones, etc., y
+registrarlo como tal, haciendo que en caja no haya faltantes pero en la
+información del alumno sí haya compromisos de pago y sus historiales».
+
+**La separación que lo resuelve**: el `pago` es dinero que entró (inmutable, se
+cuadra contra el cajón) y el `adeudo` es una promesa (vive en la ficha, se puede
+cancelar). Un abono de $500 sobre $3 000 deja $500 en caja y $2 500 pendientes:
+ni faltante ni deuda olvidada.
+
+- Colección `adeudos` con `origen` (manual o el pedido que lo generó), vencimiento
+  y estado. El saldo **se deriva** de los pagos que lo señalan (`pago.adeudoId`);
+  `pagado` es solo caché para listar sin leer los pagos de la academia.
+- La regla no deja reescribir el importe, bajar lo abonado ni cambiar de dueño.
+- **Cobrar desde la tienda** (`PanelTienda`): el pedido confirmado deja su
+  compromiso y se cobra ahí mismo, entero o a plazos, llamando a la MISMA
+  `cobrar()` de la caja. No hay un segundo camino para el dinero.
+- Un pedido con compromiso deja de contar como cargo suelto (`deudaTotal`), así
+  que la deuda no se duplica; los pedidos anteriores siguen contando como antes
+  y **no hay que migrar nada**.
+
+Índices nuevos en `firestore.indexes.json` (`adeudos` por uid, por estado y por
+`origen.id`). **Hay que desplegarlos**: `firebase deploy --only firestore:indexes`.
+
+Un fallo que cazó la comprobación en el navegador y que las pruebas no veían:
+`normalizarPago` perdía `adeudoId`, así que el saldo salía bien pero el historial
+de abonos de cada compromiso salía vacío.
+
+### O10 — Ritmo de compresiones (música de RCP) · HECHA el 21-09-2026
+
+Pedido: «un reproductor de música de Spotify para la sección de RCP y en
+actividades/simuladores donde la maestra/o definan que habrá práctica de RCP».
+
+Dos sitios y una constante:
+
+- **En el temario**, en los cuatro temas donde de verdad se comprime
+  (`TEMAS_CON_RITMO`). Lista explícita, no búsqueda por título: «paro
+  cardiorrespiratorio» aparece en temas de farmacología y de ECG.
+- **En la actividad**, cuando el profesorado marca «Habrá práctica de RCP» al
+  crear la evaluación. Puede pegar ahí su propia música; si no, se usa la de la
+  academia.
+
+Dos decisiones que no son de estilo:
+
+1. **La URL se construye, no se copia.** El enlace lo pega una persona; meterlo
+   en el `src` de un iframe abriría la aplicación a cualquier página incrustada
+   con la sesión del alumno delante. `parsearSpotify` extrae tipo e id, los
+   valida contra una lista cerrada y un patrón exacto, y la URL se arma desde
+   cero. Acepta la URL de compartir, el URI `spotify:` y el iframe entero del
+   botón «Insertar».
+2. **Hay un metrónomo propio (WebAudio) además de la música**, porque el
+   reproductor incrustado de Spotify solo suena entero con una cuenta Premium
+   iniciada en ese navegador; si no, da una vista previa de ~30 s, y una práctica
+   son dos minutos. El iframe además no se monta hasta que alguien lo pide, para
+   no dejar cookies de terceros a quien solo pasa a leer.
+
+**PENDIENTE (una línea):** `PLAYLIST_DE_LA_ACADEMIA` en `src/lib/ritmoRCP.js`
+está vacío. El id de «RCP México» se transcribió de una captura en la que el
+diálogo de Spotify cortaba el enlace, y al abrirlo daba «Page not found», así
+que se retiró en vez de dejar uno que abriría la lista de otra persona. Basta
+pegar ahí el enlace de compartir.
+
 ### O2 — Bloqueo por pago + bypass auditado · 3-5 días · dificultad media
 
 - `accesoHasta` (fecha) en el perfil, leído por `calcularAcceso()`.
@@ -2434,7 +2591,93 @@ el primer día con quien ya tiene permiso. Cuando se cree, entra por
 `seccionesPanel` y por un predicado propio en las reglas — ver el aviso de más
 abajo.
 
-#### El resto de O4, lo que sigue pendiente
+#### O4c — HECHO el 20 de septiembre de 2026
+
+El rol `recepcion` existe, tiene ruta propia (`/recepcion`) y es su HOME: la
+raíz redirige a quien lo tiene, porque su trabajo no es estudiar y el Home de
+estudio carga justo el temario que su rol NO puede leer.
+
+| Qué | Dónde |
+|---|---|
+| Aritmética pura (sin React, sin Firebase) | `src/lib/staff/*.js` |
+| Capa de datos, una por colección | `src/lib/firebase/staff/*.js` |
+| Dueño único de «quién está en el mostrador» | `src/context/FichaStaffContext.jsx` |
+| Piezas tontas (reciben props, no leen Firestore) | `src/components/staff/*.jsx` |
+| Armazón y página | `components/staff/StaffShell.jsx` → `pages/staff/Recepcion.jsx` |
+
+**Lo que trae:** buscador que entiende matrícula, nombre, correo y teléfono —y
+completa el número con el prefijo de la academia, así que en el mostrador se
+teclea «7»—; alta desde el propio buscador cuando no existe (reutiliza
+`AltaDeRecepcion`, de O4a); check-in de 8 h (**O3**); consulta en lectura de lo
+que el profesor creó para su grupo; caja con historial y estado de cuenta;
+tienda con existencias, apartado y entrega que descuenta inventario en
+transacción; cinco plantillas de WhatsApp con los datos ya dentro; edición de
+ficha auditada en `historial`; y estado de cuenta imprimible por casillas, con
+el logo de la academia como encabezado y marca de agua.
+
+**Tres costuras, puestas donde el dueño avisó que va a cortar:**
+
+1. **La matrícula** — `lib/staff/resolverAlumno.js` habla con un ADAPTADOR de
+   tres funciones. Cuando cambie la numeración se escribe otro adaptador y el
+   buscador, la ficha y el reporte no se tocan. Hay una prueba que lo demuestra
+   sustituyéndolo entero.
+2. **La tienda** — `lib/firebase/staff/tienda.js` es un PUERTO de cinco
+   funciones. Cuando llegue **M** se reescribe ese archivo y ni un componente
+   cambia.
+3. **El aspecto** — `StaffShell.jsx` + `styles/staff.css`. El rediseño reescribe
+   esos dos; las capas de aritmética, datos, estado y piezas siguen en pie.
+
+**El aislamiento, que es la parte delicada.** `esRecepcionDe()` es un predicado
+PROPIO: meter `recepcion` dentro de `esStaffDe()` le habría regalado el temario
+completo, que es el aviso escrito aquí abajo desde antes de que el rol
+existiera. Comprobado contra el emulador (`tests/rules/recepcion.rules.test.mjs`,
+19 pruebas): recepción **no** lee `temas` ni `cursos`, no cruza de academia, no
+asciende a nadie, no reescribe una matrícula, no sube inventario y no edita un
+pago. `tests/staffAislamiento.test.mjs` (17) vigila lo mismo sobre el texto de
+las reglas, para que se caiga en `npm test` sin necesitar Java.
+
+**Dónde está la raya de la edición de ficha.** Se pidió «absolutamente todos»
+los datos; quedan fuera cuatro y el motivo está en `lib/staff/edicionPerfil.js`
+y en las reglas: `rol` (convertiría a un alumno en profesor, y un profesor lee
+el temario), `estado` (es la puerta de acceso), `academiaId` (es un traslado) y
+`matricula` (escribirla salta el contador, que es lo único que impide repartir
+dos veces el mismo número). Los cuatro se enseñan en lectura con quién los
+cambia.
+
+**Sin librería de PDF:** `window.print()` sobre una hoja `@media print`. El
+navegador ya ofrece «Guardar como PDF», y ~300 kB de dependencia habrían
+desandado lo que costaron P2 y P5. El código de recepción viaja en su propio
+trozo (49 kB, 15 comprimido) y no toca el paquete de entrada.
+
+**Corregido el mismo día, al verlo en pantalla:** a recepción se le pintaba el
+recorrido completo de estudio —examen, flashcards, atlas, botiquín, logros,
+progreso y el buscador del temario—, porque `motivoSinPrograma` no contemplaba
+el rol y bastaba con conservar un `grupoId` de cuando era alumna para pasar las
+dos puertas que deciden qué se ve. No era desorden: las reglas ya le niegan
+`temas` y `cursos`, así que cada enlace prometía una pantalla que iba a fallar.
+Ahora el menú se le vacía entero y solo le queda su mostrador.
+
+**Y se le añadió lo administrativo que faltaba**, también ese día: el alta como
+sección propia (no solo como premio de una búsqueda fallida), el padrón con
+cuántos alumnos hay y las dos listas de trabajo que se pueden pulsar —sin grupo
+y sin matrícula—, el corte de caja por periodo, las solicitudes en lectura y la
+tienda. Todo imprimible con el mismo componente de hoja.
+
+**Lo que NO trae, y sigue esperando a Blaze:** la cuenta de Auth con contraseña
+temporal y el envío por API de mensajería (**O4b**). Hoy el botón abre WhatsApp
+web con el texto dentro.
+
+**Decisiones que necesitan a la academia:** quién será `recepcion`; si el
+adeudo debe incluir colegiaturas (hoy no hay plan de cobro y el estado de cuenta
+lo dice en la hoja, para que un saldo en cero no se lea como «está al
+corriente»); y quién da de alta los artículos de `articulos`, que hoy es la
+dirección.
+
+#### El resto de O4, tal como se planeó — CUMPLIDO en O4c
+
+> Se conserva porque su **aviso de arquitectura** sigue siendo la razón de que
+> `esRecepcionDe()` exista, y porque quien vuelva aquí tiene que encontrarlo
+> antes de tocar las reglas. Lo demás de este apartado ya está hecho (ver O4c).
 
 Rol nuevo `recepcion` y ruta `/recepcion`. Buscador enfocado al abrir,
 operable **sin ratón**, con el resultado y sus tres botones —Check-in, Cobrar,
@@ -2455,6 +2698,216 @@ Responsivo de verdad: se opera en un mostrador, a veces desde una tableta. Vale
 la regla que ya se aplicó en la barra de revisión —rejilla en pantalla estrecha
 y objetivos táctiles de 44 px— y **una sola columna por debajo de 900 px**, con
 el buscador fijo arriba.
+
+#### Ma — Tienda, borrador funcional · HECHO el 20 de septiembre de 2026
+
+Pedido ese día: «crea la tienda o un borrador, para que el director pueda poner
+productos (también el superadmin) con imágenes, y todo, carrito etc».
+
+Lo que hace hoy, entero y sin depender de Blaze:
+
+> la dirección publica artículos → el alumno los mira y arma su pedido → recepción
+> lo confirma con los precios del catálogo, lo cobra en mostrador y lo entrega
+> descontando inventario.
+
+| Qué | Dónde |
+|---|---|
+| Catálogo y pedido (lógica pura) | `src/lib/tiendaModelo.js` |
+| Datos: catálogo y pedido | `src/lib/firebase/tienda.js` |
+| Confirmación y bandeja del mostrador | `src/lib/firebase/staff/tienda.js` |
+| Editor del catálogo (un componente, dos consolas) | `src/components/tienda/EditorCatalogo.jsx` |
+| Puerta del director | `src/pages/panel/Tienda.jsx` → `/panel/tienda` |
+| Puerta del super-admin | `src/pages/admin/academia/Tienda.jsx` → `/admin/aca/:id/tienda` |
+| Tienda del alumno | `src/pages/TiendaPage.jsx` → `/tienda` |
+| Bandeja de pedidos en recepción | `src/components/staff/BandejaDeTienda.jsx` |
+
+**LA DECISIÓN QUE GOBIERNA TODO LO DEMÁS: el pedido del alumno no lleva dinero
+ni reserva inventario.** Nace `solicitado`, con artículos y cantidades y nada
+más. Dos motivos, los dos concretos:
+
+1. **El precio no se puede validar en el servidor.** Las reglas de Firestore no
+   tienen bucles, así que no hay forma de comprobar línea a línea que un precio
+   enviado coincide con el del catálogo. Si el pedido trajera importes,
+   cualquiera mandaría un total de cero y recepción cobraría eso. La regla
+   exige `total == 0`, y los precios los pone recepción al confirmar leyendo el
+   catálogo del servidor.
+2. **Un pedido sin atender no puede retener existencias.** Si `solicitado`
+   reservara, bastaría con pedir diez férulas desde el teléfono y no aparecer
+   para dejar sin material a quien sí viene. Reserva `apartado`, que lo crea
+   una persona del mostrador.
+
+El estado nuevo entra al principio de la cadena: `solicitado` → `apartado` →
+`pagado` → `entregado` (+ `cancelado`). El inventario del estante solo baja al
+ENTREGAR, en una transacción que comprueba antes que alcance.
+
+**Las imágenes son un ENLACE `https`.** Firebase Storage exige Blaze y en esta
+instalación está apagado (`STORAGE_ACTIVO`), así que un botón de subida se
+rompería al pulsarlo — el mismo criterio que ya se aplicó en el editor de
+contenido. El día que haya bucket, el botón aparece solo: el código de subida
+ya existe y solo mira esa bandera. La regla acota el esquema (`^https://`)
+porque este catálogo lo ven todos los alumnos a la vez.
+
+**Comprobado de punta a punta contra el emulador**, con la aplicación real: el
+director publicó un artículo, la alumna armó un pedido de dos piezas y lo envió,
+el documento quedó en Firestore con `estado: solicitado` y `total: 0` y líneas
+sin precio, recepción lo confirmó por **$1 010** —el importe del catálogo, no el
+del cliente— y al entregarlo el inventario del estante bajó de 12 a 11 y de 24 a
+23. Más 18 pruebas puras (`tests/tienda.test.mjs`) y 15 de reglas
+(`tests/rules/tienda.rules.test.mjs`).
+
+**Rehecha el 20-09-2026 con mecánica de tienda de verdad**, a petición del
+dueño («que funcione como Amazon o Mercado Libre, respetando la estética
+actual»). Lo que se copió es la MECÁNICA, no el aspecto — sigue usando los
+tokens, la tipografía y los botones de PTEM:
+
+| Pieza | Dónde |
+|---|---|
+| Buscar, filtrar y ordenar (puro) | `src/lib/tiendaVista.js` |
+| Carrito que sobrevive a navegar | `src/context/CarritoContext.jsx` |
+| Armazón con barra y carrito | `src/pages/tienda/TiendaLayout.jsx` |
+| Catálogo, ficha, carrito, pedidos | `src/pages/tienda/*.jsx` |
+
+La tienda dejó de ser una pantalla y pasó a ser un árbol de rutas
+(`/tienda`, `/tienda/articulo/:id`, `/tienda/carrito`, `/tienda/pedidos`).
+**Los filtros viven en la URL**, que es lo que hace que «atrás» deshaga un
+filtro en vez de sacarte de la tienda, y que un producto se pueda pasar por
+WhatsApp. El carrito vive en `localStorage` **por academia**: no es un dato de
+la academia, nadie lo audita, y guardarlo en Firestore costaría una escritura
+por cada «+».
+
+Detalles que se copiaron porque resuelven algo, no por parecerse: los
+contadores de cada filtro **se calculan sin su propio filtro** (con «Uniformes»
+puesto, al lado de «Libros» sigue diciendo cuántos hay); las pastillas de
+filtro activo, que son la salida del callejón de cuatro filtros y cero
+resultados; el buscador que perdona acentos y orden de palabras; la línea
+«Pedido → Apartado → Pagado → Entregado» en cada pedido, que quita la mayoría
+de las preguntas en el mostrador.
+
+**Lo que NO cambió es la defensa:** el pedido del alumno sigue viajando sin
+precios y con `total: 0`. Comprobado otra vez de punta a punta contra el
+emulador con la aplicación real. 22 pruebas puras nuevas
+(`tests/tiendaVista.test.mjs`).
+
+**Lo que NO trae, y hay que decirlo:** pago en línea. La pasarela es el trabajo
+**L** y necesita una Cloud Function. Hoy se paga en caja, que es lo que la
+academia hace. Tampoco trae el feed en vivo de **O5**: la bandeja se lee bajo
+demanda, con su botón de actualizar, porque una pestaña abierta todo el día con
+un `onSnapshot` mal filtrado se come la cuota.
+
+**Decisiones que quedan para la academia:** si el catálogo lo publica solo la
+dirección (hoy sí) o también recepción; y qué pasa con un pedido que nadie
+recoge —hoy se queda abierto hasta que alguien lo cancela—.
+
+### N — Inventario propio · 1-2 semanas · dificultad media
+
+> **Decidido el 21 de septiembre de 2026**, al preguntar el dueño cómo enlazar
+> los productos con Odoo «o algún sistema de stock automático»: **no se
+> conecta ningún ERP. PTEM es el único inventario.** Lo que sigue es qué le
+> falta para serlo de verdad, y qué puerta se deja abierta por si algún día se
+> cambia de opinión.
+
+#### Lo que YA funciona, para no volver a construirlo
+
+El descuento automático al entregar **ya existe y es transaccional**
+(`entregar()` en `src/lib/firebase/staff/tienda.js`): lee todos los artículos,
+comprueba que alcanza para TODAS las líneas, y solo entonces baja las
+existencias y cierra la orden. Si falta una pieza de un solo artículo, no
+ocurre nada de lo demás — entregar media orden es peor que no entregar.
+
+Y lo apartado **reserva sin descontar**: lo que está en la cuenta de alguien
+deja de aparecer como disponible para otro, pero sigue en el estante hasta que
+se entrega. Eso ya lo distingue la tienda entre «Disponible» y «En estante».
+
+Así que la pregunta «cómo hacer que al procesar la compra baje el stock» ya
+está contestada en el código. Lo que falta es lo de alrededor.
+
+#### Por qué NO hace falta Odoo (y qué costaría si lo hiciera falta)
+
+Odoo aporta órdenes de compra, proveedores, contabilidad, multi-almacén y
+recepción con código de barras. Una academia que vende doce referencias
+—uniformes, dos libros, insumos y un par de trámites— no necesita nada de eso,
+y a cambio pagaría:
+
+- **una licencia y un servidor más** que mantener;
+- **dos fuentes de verdad** sobre cuántas playeras hay, que es exactamente
+  como se rompe un inventario;
+- **una dependencia en el mostrador**: con Odoo mandando, una entrega falla
+  cuando Odoo está caído, con la persona delante.
+
+Y una trampa técnica que conviene dejar escrita para quien lo evalúe en el
+futuro: en Odoo **`qty_available` es un campo calculado y no se puede
+escribir**. No existe «pon el stock en 3» por API. Hay que crear un documento
+—un ajuste (`stock.quant` + `action_apply_inventory`) o un albarán de salida
+(`stock.picking` con sus `stock.move`)—, y la llamada es XML-RPC contra
+`/xmlrpc/2/object` con una API key **que no puede vivir en el navegador**
+(Odoo tampoco manda cabeceras CORS). O sea: Cloud Function, o sea **F2**.
+
+#### Lo que le falta al inventario propio, en orden de valor
+
+| # | Qué | Por qué |
+|---|---|---|
+| **N1** | **Kardex**: un movimiento por cada cambio de existencias, escrito en la MISMA transacción que lo provoca | Hoy se sabe que quedan 3 y no por qué. El kardex contesta «¿quién se llevó las otras 2 y cuándo?», que es la única pregunta que se hace de verdad cuando un número no cuadra |
+| **N2** | **Entrada de mercancía**: la dirección registra lo que llega, con proveedor, costo y fecha | Hoy solo se puede subir el número a mano en el editor. Sin entrada no hay historia de compra y el kardex nace cojo |
+| **N3** | **Ajuste con motivo**: subir o bajar exige elegir por qué (conteo físico, merma, robo, devolución, error de captura) | Un ajuste sin motivo es un número que alguien cambió. Con motivo es contabilidad |
+| **N4** | **Mínimos y aviso**: cada artículo con su punto de reorden; la tienda del director avisa de lo que está por acabarse | Que un uniforme se agote el día de la inscripción es el fallo caro, y hoy solo se descubre mirando |
+| **N5** | **Conteo físico**: una pantalla para contar el estante y registrar la diferencia como ajuste | Es lo que hace que el número de la pantalla vuelva a ser cierto una vez al mes |
+| **N6** | **Devolución**: revertir una entrega, devolviendo las piezas al estante con su movimiento | Hoy una entrega es definitiva. Cuando alguien devuelve una playera, la única salida es un ajuste a mano |
+
+**N1 es la pieza que sostiene a las demás** y la que hay que hacer primero: N2,
+N3, N5 y N6 son, cada una, un tipo de movimiento del kardex con su pantalla.
+
+#### El diseño de N1, para que N2-N6 sean baratas
+
+Una colección `movimientosStock/{id}` con:
+
+```
+academiaId · articuloId · delta (+ entrada, − salida) · existenciasResultantes
+tipo: entrega | entrada | ajuste | devolucion | conteo
+motivo (texto, obligatorio en `ajuste`) · ordenId · registradoPor · creado
+clave  (única e idempotente: `orden:<id>:entrega`, `conteo:<fecha>:<articulo>`)
+```
+
+Tres decisiones que conviene fijar antes de escribir una línea:
+
+1. **El movimiento se escribe DENTRO de la transacción que cambia las
+   existencias**, nunca después. Escribirlo fuera significa que una caída de
+   red entre las dos deja un descuento sin rastro, y un kardex con huecos no
+   sirve para cuadrar nada — es peor que no tenerlo, porque se confía en él.
+2. **`existenciasResultantes` se guarda en el movimiento**, aunque sea
+   redundante. Es lo que permite reconstruir el saldo en cualquier fecha sin
+   sumar la colección entera, y lo que delata un descuadre en cuanto un
+   movimiento no encaja con el siguiente.
+3. **`clave` es única.** Es lo que hace que reintentar una entrega no descuente
+   dos veces, y lo que haría idempotente un empuje a un sistema externo si
+   algún día lo hay.
+
+#### La puerta que se deja abierta, sin construirla
+
+Si algún día entra Odoo —o Contafiscal, o Alegra— el patrón ya está elegido y
+**no exige rehacer la tienda**:
+
+- `lib/firebase/staff/tienda.js` ya es un **puerto** de cinco funciones. Un
+  sistema externo se enchufa cambiando ese archivo, no los componentes.
+- El kardex de N1 **es la bandeja de salida**: una Cloud Function escucha
+  `movimientosStock`, empuja cada uno al ERP y marca `enviado` o `error` con
+  reintentos. Como el movimiento ya se escribió en la transacción, no se puede
+  perder; como lleva `clave`, no se puede duplicar.
+- La regla sería **PTEM manda en el momento, el ERP es el libro**: el mostrador
+  nunca espera a un tercero, y una reconciliación periódica compara los dos
+  saldos y **avisa de la deriva en vez de sobrescribir en silencio**.
+
+Nada de eso se construye ahora. Se escribe aquí para que el día que se decida,
+la decisión ya esté tomada y el trabajo sea desplegar una función.
+
+#### Lo que hace falta de la academia
+
+| Para | Hace falta |
+|---|---|
+| N2 | Si se registra el COSTO de compra (para valorar el inventario) o solo la cantidad |
+| N3 | La lista de motivos de ajuste que quieren poder justificar |
+| N4 | El punto de reorden de cada artículo, o una regla general |
+| N5 | Cada cuánto se cuenta el estante, y quién |
+| Todo N | Si recepción puede registrar entradas o eso es solo de dirección (hoy recepción solo puede BAJAR existencias, y solo al entregar) |
 
 ### O5 — Feed de logística de tienda · 3-5 días · dificultad media · depende de M
 

@@ -7,6 +7,7 @@ import { rolAlReactivar, avisoDeReactivacion } from '../lib/cuentaModelo.js'
 import Icon from '../components/Icon.jsx'
 import FiltrosUsuarios from '../components/panel/FiltrosUsuarios.jsx'
 import { prepararLista, FILTRO_VACIO, ORDEN_DEFECTO } from '../lib/listaUsuarios.js'
+import BotonPersona from '../components/usuarios/BotonPersona.jsx'
 
 // ============================================================
 //  Consola del super-admin · ACADEMIAS y USUARIOS (Bloque N)
@@ -200,7 +201,7 @@ export default function AdminPage({ seccion = 'academias' }) {
                             <>
                               {sinNombre
                                 ? <span className="panel-sin-nombre">Sin nombre registrado</span>
-                                : <strong>{u.nombre}</strong>}
+                                : <strong><BotonPersona persona={{ ...u, uid: u.id }} /></strong>}
                               {soyYo && <span className="panel-tag-yo">tú</span>}
                             </>
                           )}

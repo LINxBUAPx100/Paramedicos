@@ -1,0 +1,75 @@
+/* ============================================================
+   Ficha de persona — el modal que se abre desde cualquier lista
+   ------------------------------------------------------------
+   Se importa desde el propio modal, no desde `main.jsx`: viaja en el trozo
+   diferido de la ficha y no lo descarga quien nunca abre una. Mismo criterio
+   que `staff.css` y `tienda.css`.
+
+   El BOTÓN que abre la ficha tiene su propio archivo (`persona.css`), porque
+   se pinta mucho antes: en cuanto hay una tabla de personas en pantalla.
+   ============================================================ */
+
+/* --- el modal -------------------------------------------------------------- */
+
+.ficha-velo {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: var(--e-16);
+  background: rgb(0 0 0 / .55);
+  overflow: auto;
+}
+
+.ficha-caja {
+  width: min(820px, 100%);
+  max-height: min(90vh, 900px);
+  overflow: auto;
+  display: grid;
+  gap: var(--e-16);
+  padding: var(--e-24);
+  background: var(--ui-papel);
+  border: 1px solid var(--ui-linea);
+  border-radius: var(--ui-radio-panel);
+  box-shadow: 0 18px 50px rgb(0 0 0 / .3);
+}
+
+.ficha-cabecera { display: flex; gap: var(--e-16); align-items: flex-start; justify-content: space-between; border-bottom: 1px solid var(--ui-linea); padding-bottom: var(--e-16); }
+.ficha-cabecera h2 { margin: var(--e-4) 0; font: 800 clamp(1.3rem, 3vw, 1.9rem)/1.15 var(--fuente-display); }
+.ficha-sub { margin: 0; color: var(--texto-2); }
+.ficha-cerrar { min-width: 44px; min-height: 44px; display: grid; place-items: center; border: 1px solid var(--borde); border-radius: var(--ui-radio); background: var(--bg-2); color: inherit; cursor: pointer; }
+.ficha-cerrar:hover { background: var(--bg-3); }
+
+.ficha-motivo { display: flex; gap: var(--e-8); align-items: center; margin: 0; padding: var(--e-12) var(--e-16); background: var(--bg-3); border-radius: var(--ui-radio); color: var(--texto-2); font-size: var(--t-sm); }
+
+/* Dos columnas en pantalla ancha: la ficha son nueve campos y en una sola
+   columna obliga a desplazarse para ver el botón de guardar. */
+.ficha-form { display: grid; gap: var(--e-16); grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); align-items: start; }
+.ficha-form > .ui-atajos,
+.ficha-form > .ficha-cambios,
+.ficha-form > .ui-nota-error { grid-column: 1 / -1; }
+.ficha-form .ui-atajos .btn { min-height: 44px; display: inline-flex; align-items: center; gap: var(--e-8); }
+
+/* Lo que no se puede editar se ENSEÑA igual: esconderlo no lo protege, solo
+   hace que se pregunte por teléfono a la dirección. */
+.ficha-lectura p { margin: 0; min-height: var(--ui-control); display: flex; align-items: center; padding: var(--e-8) var(--e-12); background: var(--bg-3); border: 1px dashed var(--borde); border-radius: var(--ui-radio); color: var(--texto-2); }
+
+.ficha-cambios { padding: var(--e-16); border: 1px solid var(--borde-fuerte); border-left: 4px solid var(--primario); border-radius: var(--ui-radio); background: var(--bg-2); }
+.ficha-cambios h3 { margin: 0 0 var(--e-8); font-size: var(--t-base); }
+.ficha-cambios ul { margin: 0 0 var(--e-8); padding-left: var(--e-20); }
+
+.ficha-contrasena { border-top: 1px solid var(--ui-linea); padding-top: var(--e-16); display: grid; gap: var(--e-12); justify-items: start; }
+.ficha-contrasena h3 { margin: 0; font-size: var(--t-base); }
+.ficha-contrasena .btn { min-height: 44px; display: inline-flex; align-items: center; gap: var(--e-8); }
+.ficha-confirmar { margin: 0; padding: var(--e-12) var(--e-16); border-left: 4px solid var(--peligro); background: var(--peligro-suave); border-radius: var(--ui-radio); }
+
+@media (max-width: 700px) {
+  .ficha-velo { padding: 0; align-items: end; }
+  .ficha-caja { width: 100%; max-height: 92vh; border-radius: var(--ui-radio-panel) var(--ui-radio-panel) 0 0; }
+  .ficha-form { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ficha-caja { transition: none; }
+}

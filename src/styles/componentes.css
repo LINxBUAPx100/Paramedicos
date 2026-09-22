@@ -47,3 +47,15 @@
   .ui-herramientas { align-items: stretch; }
 }
 @media (prefers-reduced-motion: reduce) { .btn { transition: none; } }
+
+/* --- Auxiliares compartidas -------------------------------------------------
+   Nacieron en `staff.css` con el prefijo del mostrador, y se quedaron cortas
+   en cuanto la tienda y la ficha de persona —que cargan su CSS por separado—
+   empezaron a usarlas: las clases existían en el marcado y no tenían estilo,
+   y el texto reservado a lectores de pantalla llegó a verse en el carrito.
+   Viven aquí porque son de toda la aplicación; conservan el nombre para no
+   reescribir quince archivos por un prefijo. */
+.staff-ayuda { color: var(--texto-2); font-size: var(--t-sm); font-style: normal; }
+.staff-aviso { padding: var(--e-12) var(--e-16); border-left: 4px solid var(--exito); background: var(--bg-2); border-radius: var(--ui-radio); }
+.staff-agotado { color: var(--peligro); font-weight: 700; }
+.staff-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

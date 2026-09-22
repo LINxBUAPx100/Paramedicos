@@ -20,6 +20,7 @@
     "replicar": "node scripts/replicar-contenido.mjs",
     "deploy": "npm run build",
     "seed:programas": "node scripts/seed-programas.mjs",
+    "migrar:matriculas": "node scripts/migrar-matriculas.mjs",
     "gen:plan": "node scripts/gen-plan-rescate.mjs",
     "gen:activos": "node scripts/gen-activos-ligeros.mjs",
     "inventario": "node scripts/inventario-contenido.mjs",

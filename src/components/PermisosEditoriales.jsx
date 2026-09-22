@@ -4,6 +4,7 @@ import PaseRevisor from './PaseRevisor.jsx'
 import {
   PERMISOS_EDITOR, ETIQUETA_PERMISO, DESCRIPCION_PERMISO, normalizarPermisos,
 } from '../lib/permisosEditor.js'
+import BotonPersona from './usuarios/BotonPersona.jsx'
 
 // ============================================================
 //  Permisos editoriales de profesores (Fase 6) — panel del director PRO
@@ -183,7 +184,7 @@ function FilaProfesor({ profesor, cursos, onCambio }) {
     <li className="pe-profesor">
       <details>
         <summary>
-          <strong>{profesor.nombre || profesor.email || profesor.id}</strong>
+          <strong>{profesor.nombre || profesor.email || profesor.id}</strong><BotonPersona persona={{ ...profesor, uid: profesor.id }} variante="icono" />
           <span className="pe-badge">
             {concedidos === 0 ? 'sin permisos' : `${concedidos} permiso${concedidos !== 1 ? 's' : ''}`}
           </span>

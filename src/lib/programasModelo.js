@@ -603,6 +603,28 @@ export function motivoSinPrograma({
   rol, esSuperadmin = false, grupo = null, programasDeAcademia = null,
 }) {
   if (esSuperadmin || rol === 'instructor' || rol === 'admin_escuela') return null
+  // RECEPCIÓN NO ESTUDIA, y por eso se corta aquí y no en cada pantalla.
+  //
+  // Esta función es una de las DOS puertas que deciden qué ve alguien: la usan
+  // `RutaProtegida` (para negar la página) y `Layout` (para vaciar el menú).
+  // Con recepción fuera de ella, a la persona del mostrador se le pintaba el
+  // recorrido completo de estudio —examen, flashcards, atlas, botiquín, logros,
+  // progreso y el buscador del temario—, y bastaba con que conservara un
+  // `grupoId` de cuando era alumno para que pasara las dos comprobaciones.
+  //
+  // No es solo desorden: las reglas ya le niegan `temas` y `cursos`, así que
+  // cada uno de esos enlaces era la promesa de una pantalla que iba a fallar.
+  // Un menú que ofrece lo que el servidor deniega no es un menú, es una trampa.
+  if (rol === 'recepcion') {
+    return {
+      codigo: 'recepcion',
+      titulo: 'Esta zona es para alumnos',
+      texto: 'Tu cuenta es de recepción: trabajas con personas, cobros y entregas, '
+        + 'no con el temario. Todo lo tuyo está en el mostrador.',
+      destino: '/recepcion',
+      cta: 'Ir al mostrador',
+    }
+  }
   if (!grupo) {
     return {
       codigo: 'sin-grupo',

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { problemaDelEnlace } from '../../lib/ritmoRCP.js'
 import { usePanel, FiltroGrupo } from '../../components/panel/PanelShell.jsx'
 import { useAuth } from '../../context/AuthContext.jsx'
 import ConfirmacionReforzada from '../../components/ConfirmacionReforzada.jsx'
@@ -8,6 +9,7 @@ import {
   normalizarEvaluacion, indexarCalificaciones, resumenDelGrupo, resumenDeEvaluacion,
   validarValor, resumenPorGrupos, APROBADO,
 } from '../../lib/calificacionesModelo.js'
+import BotonPersona from '../../components/usuarios/BotonPersona.jsx'
 
 // ============================================================
 //  Libro de calificaciones (Bloque S)
@@ -138,6 +140,10 @@ export function LibroDeCalificaciones({ academiaId, alumnos, grupos, grupoFiltro
         ponderacion: nueva.ponderacion,
         fechaEntrega: nueva.fechaEntrega,
         enlace: nueva.enlace,
+        practicaRCP: Boolean(nueva.practicaRCP),
+        // Solo si es de RCP: guardar una playlist en una actividad que no la
+        // enseña deja un dato que nadie vuelve a mirar y que confunde al leerlo.
+        ritmoEnlace: nueva.practicaRCP ? String(nueva.ritmoEnlace || '').trim() : '',
       })
       setNueva(null)
       setAviso('Evaluación creada. Ya puedes calificar en su columna.')
@@ -257,7 +263,7 @@ export function LibroDeCalificaciones({ academiaId, alumnos, grupos, grupoFiltro
         <button
           type="button"
           className="btn btn--primario"
-          onClick={() => setNueva({ titulo: '', descripcion: '', ponderacion: 1, paraGrupo: true, fechaEntrega: '', enlace: '' })}
+          onClick={() => setNueva({ titulo: '', descripcion: '', ponderacion: 1, paraGrupo: true, fechaEntrega: '', enlace: '', practicaRCP: false, ritmoEnlace: '' })}
         >
           <Icon name="mas" size={15} /> Nueva actividad o evaluación
         </button>
@@ -301,6 +307,28 @@ export function LibroDeCalificaciones({ academiaId, alumnos, grupos, grupoFiltro
               onChange={(e) => setNueva({ ...nueva, enlace: e.target.value })}
             />
           </label>
+          {/* PRÁCTICA DE RCP: lo marca quien prepara la clase, y con eso sus
+              alumnos ven el ritmo de compresiones dentro de esa actividad. */}
+          <label className="cal-check">
+            <input
+              type="checkbox" checked={Boolean(nueva.practicaRCP)}
+              onChange={(e) => setNueva({ ...nueva, practicaRCP: e.target.checked })}
+            />
+            Habrá práctica de RCP (añade el ritmo de compresiones)
+          </label>
+          {nueva.practicaRCP && (
+            <label className="pc-nota">
+              Música para esta práctica (opcional)
+              <input
+                type="text" value={nueva.ritmoEnlace || ''}
+                placeholder="Enlace de Spotify; vacío = la lista de la academia"
+                onChange={(e) => setNueva({ ...nueva, ritmoEnlace: e.target.value })}
+              />
+              {problemaDelEnlace(nueva.ritmoEnlace || '') && (
+                <small className="pg-programa-aviso">{problemaDelEnlace(nueva.ritmoEnlace || '')}</small>
+              )}
+            </label>
+          )}
           {grupoFiltro && grupoFiltro !== 'sin' && (
             <label className="cal-check">
               <input
@@ -370,7 +398,7 @@ export function LibroDeCalificaciones({ academiaId, alumnos, grupos, grupoFiltro
               {filasPagina.map((fila) => (
                 <tr key={fila.alumno.id}>
                   <th scope="row" className="panel-alumno">
-                    {fila.alumno.nombre || fila.alumno.email || fila.alumno.id}
+                    <BotonPersona persona={{ ...fila.alumno, uid: fila.alumno.id }} />
                     {fila.pendientes > 0 && (
                       <span className="panel-tag-grupo">{fila.pendientes} sin calificar</span>
                     )}

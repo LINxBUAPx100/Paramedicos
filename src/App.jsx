@@ -43,16 +43,29 @@ const LogrosPage = lazy(() => import('./pages/LogrosPage.jsx'))
 const AtlasAnatomicoPage = lazy(() => import('./pages/AtlasAnatomicoPage.jsx'))
 // Inventario visual: la escena procedural y el catálogo solo viajan al entrar.
 const BotiquinPage = lazy(() => import('./pages/BotiquinPage.jsx'))
+// La tienda del alumno (borrador del trabajo M): catálogo, carrito y pedido
+// que se paga y se recoge en recepción.
+const TiendaLayout = lazy(() => import('./pages/tienda/TiendaLayout.jsx'))
+const TiendaCatalogo = lazy(() => import('./pages/tienda/Catalogo.jsx'))
+const TiendaArticulo = lazy(() => import('./pages/tienda/Articulo.jsx'))
+const TiendaCarrito = lazy(() => import('./pages/tienda/Carrito.jsx'))
+const TiendaPedidos = lazy(() => import('./pages/tienda/MisPedidos.jsx'))
 // Créditos del material visual. Es una obligación de las licencias CC BY del
 // Atlas, no una página informativa: va FUERA de RutaProtegida porque el crédito
 // tiene que poder consultarse sin haber entrado en una academia.
 const CreditosPage = lazy(() => import('./pages/CreditosPage.jsx'))
 const TemarioPage = lazy(() => import('./pages/TemarioPage.jsx'))
 const Cuenta = lazy(() => import('./pages/Cuenta.jsx'))
+// El home del personal de mostrador. Ruta propia y no una sección del panel:
+// quien atiende un mostrador entra y teclea una matrícula, no navega un menú.
+// Su código —buscador, caja, tienda, hoja imprimible— viaja aparte y no lo
+// descarga nadie más.
+const RecepcionStaff = lazy(() => import('./pages/staff/Recepcion.jsx'))
 const PanelShell = lazy(() => import('./components/panel/PanelShell.jsx'))
 const PanelResumen = lazy(() => import('./pages/panel/Resumen.jsx'))
 const PanelRevision = lazy(() => import('./pages/panel/Revision.jsx'))
 const PanelRecepcion = lazy(() => import('./pages/panel/Recepcion.jsx'))
+const PanelTienda = lazy(() => import('./pages/panel/Tienda.jsx'))
 const PanelMiembros = lazy(() => import('./pages/panel/Miembros.jsx'))
 const PanelGrupos = lazy(() => import('./pages/panel/Grupos.jsx'))
 const PanelInvitaciones = lazy(() => import('./pages/panel/Invitaciones.jsx'))
@@ -77,6 +90,7 @@ const AcaGrupos = lazy(() => import('./pages/admin/academia/Grupos.jsx'))
 const AcaAccesos = lazy(() => import('./pages/admin/academia/Accesos.jsx'))
 const AcaInvitaciones = lazy(() => import('./pages/admin/academia/Invitaciones.jsx'))
 const AcaRecepcion = lazy(() => import('./pages/admin/academia/Recepcion.jsx'))
+const AcaTienda = lazy(() => import('./pages/admin/academia/Tienda.jsx'))
 const AcaContenido = lazy(() => import('./pages/admin/academia/Contenido.jsx'))
 const AcaRevision = lazy(() => import('./pages/admin/academia/Revision.jsx'))
 const AcaCalificaciones = lazy(() => import('./pages/admin/academia/Calificaciones.jsx'))
@@ -112,9 +126,14 @@ function Cargando() {
 // El super-admin y el staff sin academia van a Home: su sitio es el panel, no
 // una pantalla que les pide un código de alumno.
 function Inicio() {
-  const { autenticado, cargando, accesoCargando, academiaId, esStaff, enPrueba } = useAuth()
+  const { autenticado, cargando, accesoCargando, academiaId, esStaff, enPrueba, rol } = useAuth()
   if (cargando || accesoCargando) return <Cargando />
   if (!autenticado) return <PortadaPTEM />
+  // RECEPCIÓN TIENE OTRO HOME. Su trabajo no es estudiar: es el mostrador. Si
+  // la raíz le sirviera el recorrido de estudio tendría que navegar hasta su
+  // pantalla cada mañana, y el temario que ese Home carga es justo lo que su
+  // rol NO puede leer (ver `esRecepcionDe` en firestore.rules).
+  if (rol === 'recepcion') return <Navigate to="/recepcion" replace />
   if (!academiaId && !esStaff && !enPrueba) return <Bienvenida />
   return <Home />
 }
@@ -190,6 +209,19 @@ export default function App() {
             <Route path="/logros" element={<RutaProtegida><LogrosPage /></RutaProtegida>} />
             <Route path="/atlas-anatomico" element={<RutaProtegida><AtlasAnatomicoPage /></RutaProtegida>} />
             <Route path="/botiquin" element={<RutaProtegida><BotiquinPage /></RutaProtegida>} />
+            {/* Tienda del alumno. Va tras RutaProtegida porque el catálogo es
+                de la academia: quien no pertenece a ninguna no tiene tienda. */}
+            {/* La tienda es un ÁRBOL y no una pantalla: catálogo, ficha de
+                producto, carrito y pedidos. Cada uno con su dirección, que es
+                lo que permite compartir un producto y que «atrás» deshaga un
+                filtro en vez de sacarte de la tienda. El carrito vive en el
+                armazón para sobrevivir a moverse entre ellas. */}
+            <Route path="/tienda" element={<RutaProtegida><TiendaLayout /></RutaProtegida>}>
+              <Route index element={<TiendaCatalogo />} />
+              <Route path="articulo/:articuloId" element={<TiendaArticulo />} />
+              <Route path="carrito" element={<TiendaCarrito />} />
+              <Route path="pedidos" element={<TiendaPedidos />} />
+            </Route>
             <Route path="/creditos" element={<CreditosPage />} />
             {/* El Atlas pasó a llamarse Logros. La ruta vieja sigue viva porque
                 está en enlaces compartidos, en el historial de los alumnos y en
@@ -198,6 +230,12 @@ export default function App() {
             <Route path="/temario" element={<RutaProtegida><TemarioPage /></RutaProtegida>} />
             <Route path="/progreso" element={<RutaProtegida><ProgresoPage /></RutaProtegida>} />
             <Route path="/buscar" element={<RutaProtegida><BuscarPage /></RutaProtegida>} />
+
+            {/* Home del personal de recepción. NO va dentro de RutaProtegida:
+                esa puerta decide el acceso AL CONTENIDO —academia activa, grupo
+                con programa, prueba vigente— y recepción no lee contenido. La
+                página valida su propio rol, y la barrera real son las reglas. */}
+            <Route path="/recepcion" element={<RecepcionStaff />} />
 
             {/* Consola del director (Bloque O): mismo patrón que /admin. Antes
                 era UNA página que apilaba avance, solicitudes, grupos, miembros,
@@ -208,6 +246,7 @@ export default function App() {
               <Route index element={<PanelResumen />} />
               <Route path="revision" element={<PanelRevision />} />
               <Route path="recepcion" element={<PanelRecepcion />} />
+              <Route path="tienda" element={<PanelTienda />} />
               <Route path="miembros" element={<PanelMiembros />} />
               <Route path="grupos" element={<PanelGrupos />} />
               <Route path="invitaciones" element={<PanelInvitaciones />} />
@@ -255,6 +294,7 @@ export default function App() {
                 <Route path="accesos" element={<AcaAccesos />} />
                 <Route path="invitaciones" element={<AcaInvitaciones />} />
                 <Route path="recepcion" element={<AcaRecepcion />} />
+                <Route path="tienda" element={<AcaTienda />} />
                 <Route path="ajustes" element={<AcaAjustes />} />
                 <Route path="c/:cursoId">
                   <Route index element={<AcaResumen />} />

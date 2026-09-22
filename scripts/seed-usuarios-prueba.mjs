@@ -77,15 +77,21 @@ const ACADEMIAS = [
       { uid: 'p-profe-susp', nombre: 'Práxedes Suspendido', correo: 'profe-susp@prueba.ptem',
         rol: 'instructor', grupo: 'pr-matutino', estado: 'suspendido',
         porQue: 'NO debe salir en permisos de edición' },
-      { uid: 'p-alumno-1', nombre: 'Ana Alumna', correo: 'alumno1@prueba.ptem',
+      // Recepción (20-09-2026). Sin ella no hay forma de comprobar lo único
+      // que de verdad importa de ese rol: que abre el mostrador y NO abre el
+      // temario. Sin grupo a propósito — recepción no cursa nada.
+      { uid: 'p-recepcion', nombre: 'Rocío Recepción', correo: 'recepcion@prueba.ptem',
+        rol: 'recepcion', grupo: null,
+        porQue: 'mostrador: SÍ personas y pagos, NO temario' },
+      { uid: 'p-alumno-1', matricula: 'PR0000001', nombre: 'Ana Alumna', correo: 'alumno1@prueba.ptem',
         rol: 'alumno', grupo: 'pr-matutino', porQue: 'alumno normal' },
-      { uid: 'p-alumno-2', nombre: 'álvaro alumno', correo: 'alumno2@prueba.ptem',
+      { uid: 'p-alumno-2', matricula: 'PR0000002', nombre: 'álvaro alumno', correo: 'alumno2@prueba.ptem',
         rol: 'alumno', grupo: 'pr-matutino', porQue: 'minúsculas + acento inicial' },
-      { uid: 'p-alumno-10', nombre: 'Alumno 10', correo: 'alumno10@prueba.ptem',
+      { uid: 'p-alumno-10', matricula: 'PR0000003', nombre: 'Alumno 10', correo: 'alumno10@prueba.ptem',
         rol: 'alumno', grupo: 'pr-sabatino', porQue: 'orden numérico: tras el 2' },
-      { uid: 'p-alumno-2b', nombre: 'Alumno 2', correo: 'alumno2b@prueba.ptem',
+      { uid: 'p-alumno-2b', matricula: 'PR0000004', nombre: 'Alumno 2', correo: 'alumno2b@prueba.ptem',
         rol: 'alumno', grupo: 'pr-sabatino', porQue: 'orden numérico: antes del 10' },
-      { uid: 'p-sin-grupo', nombre: 'Zoe Sin Grupo', correo: 'singrupo@prueba.ptem',
+      { uid: 'p-sin-grupo', matricula: 'PR0000005', nombre: 'Zoe Sin Grupo', correo: 'singrupo@prueba.ptem',
         rol: 'alumno', grupo: null, porQue: 'sin plan: no ve temario' },
       { uid: 'p-baja', nombre: 'Bruno Baja', correo: 'baja@prueba.ptem',
         rol: 'alumno', grupo: null, academiaId: null, estado: 'eliminado',
@@ -105,7 +111,7 @@ const ACADEMIAS = [
         rol: 'admin_escuela', grupo: null, porQue: 'NO debe ver nada de PRUEBA' },
       { uid: 'c-profe', nombre: 'Carmen Profesora', correo: 'profe@cruzverde.ptem',
         rol: 'instructor', grupo: 'cv-nocturno', porQue: 'staff de la OTRA academia' },
-      { uid: 'c-alumno', nombre: 'César Alumno', correo: 'alumno@cruzverde.ptem',
+      { uid: 'c-alumno', matricula: 'CR0000001', nombre: 'César Alumno', correo: 'alumno@cruzverde.ptem',
         rol: 'alumno', grupo: 'cv-nocturno', porQue: 'NO debe ver el temario de PRUEBA' },
     ],
   },
@@ -228,6 +234,12 @@ async function crearPersona(p, academiaId) {
     creado: FieldValue.serverTimestamp(),
   }
   if (p.grupoIds) perfil.grupoIds = p.grupoIds
+  // La MATRÍCULA. Sin ella, el mostrador no puede buscar a nadie por su número
+  // ni cobrarle (su regla exige `matricula is string`), así que un sembrado sin
+  // matrículas no sirve para probar recepción. El contador de cada academia se
+  // deja más abajo en el número más alto sembrado, para que el siguiente alta
+  // continúe la serie en vez de repetir un número ya repartido.
+  if (p.matricula) perfil.matricula = p.matricula
   await db.doc(`usuarios/${p.uid}`).set(perfil, { merge: true })
 }
 
@@ -310,6 +322,24 @@ async function sembrar() {
       }, { merge: true })
     }
 
+    // EL CONTADOR DE MATRÍCULAS, en el número más alto ya repartido.
+    //
+    // No es un adorno del sembrado: si se dejara en cero, el primer alta desde
+    // recepción emitiría `PR0000001` y se la daría a una segunda persona. Una
+    // matrícula reutilizada convierte el historial de dos personas en el de
+    // una, que es exactamente lo que el contador existe para impedir
+    // (src/lib/firebase/matriculas.js).
+    const ultima = a.personas
+      .map((p) => Number(String(p.matricula || '').slice(-7)) || 0)
+      .reduce((mayor, n) => Math.max(mayor, n), 0)
+    if (ultima > 0) {
+      await db.doc(`contadores/${a.id}`).set({
+        academiaId: a.id,
+        ultimaMatricula: ultima,
+        actualizado: FieldValue.serverTimestamp(),
+      }, { merge: true })
+    }
+
     for (const p of a.personas) await crearPersona(p, a.id)
     console.log(`  ✓ ${a.id}: 1 programa, ${TEMAS.length} temas, ${a.grupos.length} grupos, ${a.personas.length} personas`)
   }
@@ -333,6 +363,9 @@ async function retirar() {
     }
     await db.doc(`cursos/${cursoId}`).delete().catch(() => {})
     for (const g of a.grupos) await db.doc(`grupos/${g.id}`).delete().catch(() => {})
+    // El contador también: dejarlo vivo sin su academia haría que un sembrado
+    // posterior empezara a numerar desde donde lo dejó el anterior.
+    await db.doc(`contadores/${a.id}`).delete().catch(() => {})
     await db.doc(`academias/${a.id}`).delete().catch(() => {})
     console.log(`  ✓ retirada ${a.id}`)
   }

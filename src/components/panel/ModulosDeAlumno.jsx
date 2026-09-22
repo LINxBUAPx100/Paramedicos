@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Icon from '../Icon.jsx'
 import { avanceDeAlumno, modulosHasta } from '../../lib/avanceAlumno.js'
+import BotonPersona from '../usuarios/BotonPersona.jsx'
 
 // ============================================================
 //  Qué módulos ve UN alumno, y abrirle cualquiera
@@ -36,7 +37,7 @@ export default function ModulosDeAlumno({ alumno, modulos, modulosOcultosDelGrup
   return (
     <div className="fa-panel">
       <div className="fa-cab">
-        <strong>Módulos de {alumno.nombre || alumno.email || alumno.id}</strong>
+        <strong>Módulos de <BotonPersona persona={{ ...alumno, uid: alumno.id }} /></strong>
         <span className="fa-resumen">
           Ve {avance.visibles} de {avance.total}
           {avance.individuales > 0 && ` · ${avance.individuales} abiertas por ti`}

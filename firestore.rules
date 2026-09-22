@@ -89,6 +89,36 @@ service cloud.firestore {
         // temporal conservaba el panel de la academia al vencer.
         && !pruebaVencida();
     }
+    // ¿El solicitante es RECEPCIÓN de esa academia?
+    //
+    // PREDICADO PROPIO, Y ESTO NO ES ESTILO. `esStaffDe()` significa
+    // «instructor o director», y con eso se abre la lectura de `temas`,
+    // `cursos` y `dictamenes`. Meter `recepcion` dentro de `esStaffDe()` le
+    // regalaría el temario COMPLETO de la academia a quien solo tiene que
+    // cobrar y marcar entradas — es el aviso que el plan técnico dejó escrito
+    // antes de que este rol existiera, y la razón de que exista esta función.
+    //
+    // Lo que abre, y nada más: `usuarios`, `asistencias`, `pagos`, `ordenes`,
+    // `articulos`, `contadores`, `historial`, la lista de `grupos` y la
+    // emisión de invitaciones de ALUMNO. Cada una lo nombra explícitamente;
+    // no hay ningún sitio donde se herede por ser «staff».
+    function esRecepcionDe(acaId) {
+      return autenticado()
+        && exists(/databases/$(database)/documents/usuarios/$(request.auth.uid))
+        && miDoc().get('rol', '') == 'recepcion'
+        && miDoc().get('academiaId', null) == acaId
+        // Igual que esStaffDe y esAdminDe: una prueba vencida no atiende
+        // ningún mostrador.
+        && !pruebaVencida();
+    }
+
+    // Quien puede operar el MOSTRADOR de una academia: recepción, su director
+    // —que lo cubre cuando hace falta— y el super-admin. Un PROFESOR no: cobrar
+    // y editar fichas no es su trabajo.
+    function enMostradorDe(acaId) {
+      return esSuper() || esAdminDe(acaId) || esRecepcionDe(acaId);
+    }
+
     // ¿El solicitante PERTENECE a esa academia (cualquier rol, alumno incluido)?
     function perteneceA(acaId) {
       return autenticado()
@@ -261,6 +291,26 @@ service cloud.firestore {
     // presente, tiene que ser una lista con tope. El tope no es pedagógico: sin
     // él, un documento de perfil podría crecer sin control.
     // El espejo en el cliente es MAX_GRUPOS en src/lib/gruposDeUsuario.js.
+    // Forma de los datos de contacto de un perfil. La comparten la edición de
+    // recepción y la del director, y por eso está aquí: dos copias con topes
+    // distintos harían que el mismo formulario se aceptara o se denegara según
+    // quién lo mandara. Espejo de `problemasDeFicha` en src/lib/fichaUsuario.js.
+    //
+    // Con `.get(campo, defecto)` en los opcionales: un perfil antiguo puede no
+    // tener `telefono` ni `notaRecepcion`, y comparar un campo ausente es un
+    // error de evaluación que tumba la regla entera, no un simple false.
+    function datosDeContactoValidos() {
+      return request.resource.data.nombre is string
+        && request.resource.data.nombre.size() > 0
+        && request.resource.data.nombre.size() <= 120
+        && request.resource.data.email is string
+        && request.resource.data.email.size() <= 200
+        && request.resource.data.get('telefono', '') is string
+        && request.resource.data.get('telefono', '').size() <= 20
+        && request.resource.data.get('notaRecepcion', '') is string
+        && request.resource.data.get('notaRecepcion', '').size() <= 300;
+    }
+
     function grupoIdsFormaValida() {
       return !('grupoIds' in request.resource.data)
         || (
@@ -380,7 +430,7 @@ service cloud.firestore {
              < invitacionDoc(request.resource.data.invitacionUsada).get('maxUsos', 0)
         )
         && invitacionDoc(request.resource.data.invitacionUsada).rol
-             in ['alumno', 'instructor', 'admin_escuela']
+             in ['alumno', 'instructor', 'recepcion', 'admin_escuela']
         && request.resource.data.rol == invitacionDoc(request.resource.data.invitacionUsada).rol
         // `.get('rol', 'alumno')` y no `resource.data.rol`: un perfil al que
         // le falte el campo (alta a medias, esquema anterior) haría ERROR de
@@ -388,7 +438,7 @@ service cloud.firestore {
         // «Missing or insufficient permissions» al activar su invitación. El
         // valor por defecto es el rol MÍNIMO, así que no abre nada: 'superadmin'
         // sigue fuera de la lista por ambos lados.
-        && resource.data.get('rol', 'alumno') in ['alumno', 'instructor', 'admin_escuela']
+        && resource.data.get('rol', 'alumno') in ['alumno', 'instructor', 'recepcion', 'admin_escuela']
         && request.resource.data.academiaId
              == invitacionDoc(request.resource.data.invitacionUsada).academiaId
         && academiaActiva(request.resource.data.academiaId)
@@ -490,8 +540,14 @@ service cloud.firestore {
     // porque quien lo hace tiene que ser quien responde de la contabilidad, no
     // quien cobró.
     match /pagos/{id} {
-      allow read: if esSuper() || esStaffDe(resource.data.academiaId);
-      allow create: if (esSuper() || esAdminDe(request.resource.data.academiaId))
+      allow read: if esSuper() || esStaffDe(resource.data.academiaId)
+        || esRecepcionDe(resource.data.academiaId);
+      // `adeudoId` (opcional) dice a qué COMPROMISO se aplica este cobro. No
+      // se valida aquí a propósito: si no existiera, lo único que pasa es que
+      // el abono no descuenta de ninguna deuda; el dinero registrado es el
+      // mismo. Si algún día esta regla se acota con `hasOnly`, hay que incluir
+      // ese campo o los abonos dejarán de poder registrarse.
+      allow create: if enMostradorDe(request.resource.data.academiaId)
         && request.resource.data.registradoPor == request.auth.uid
         && request.resource.data.academiaId is string
         && request.resource.data.monto is number
@@ -500,21 +556,317 @@ service cloud.firestore {
         && request.resource.data.concepto is string
         && request.resource.data.metodo is string
         && request.resource.data.matricula is string;
-      allow update: if false;
+      // UN PAGO NO SE EDITA, CON UNA EXCEPCIÓN ACOTADA (21-09-2026).
+      //
+      // El importe, el método, la matrícula y la fecha siguen siendo INMUTABLES
+      // y lo serán siempre: son la prueba de lo que se apuntó, y con ellos se
+      // cuadra una caja. Una corrección de dinero se hace con otro asiento.
+      //
+      // El CONCEPTO es otra cosa: no es dinero, es la clasificación de por qué
+      // entró. Que recepción teclee «mensualidad» donde era «inscripción» es el
+      // error más común del mostrador, y hasta hoy no había forma de arreglarlo
+      // —el corte de caja quedaba mal repartido para siempre—. Lo pidió la
+      // dirección, y por eso lo puede corregir la DIRECCIÓN o el SUPER-ADMIN, no
+      // recepción: quien se equivoca no se corrige a sí mismo sin dejar rastro.
+      //
+      // `hasOnly` es lo que lo hace seguro: por esta puerta no cabe un importe.
+      // Y `conceptoCorregidoPor` deja en el propio asiento quién lo tocó, además
+      // de la línea de `historial` que escribe la aplicación.
+      allow update: if (esSuper() || esAdminDe(resource.data.academiaId))
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['concepto', 'conceptoCorregidoPor', 'conceptoCorregido'])
+        && request.resource.data.concepto is string
+        && request.resource.data.concepto.size() > 0
+        && request.resource.data.concepto.size() <= 40
+        && request.resource.data.get('conceptoCorregidoPor', '') == request.auth.uid;
+      allow delete: if esSuper();
+    }
+
+    // --- COMPROMISOS DE PAGO (adeudos) ---------------------------------------
+    //
+    //  UN ADEUDO NO ES DINERO, y de ahí sale toda esta regla. El dinero son los
+    //  `pagos`, que son inmutables y se cuadran contra el cajón; un adeudo es lo
+    //  que alguien quedó a deber. Por eso aquí SÍ se puede escribir después de
+    //  crear: cancelar una deuda no devuelve un peso, solo deja de reclamarla.
+    //
+    //  LO QUE NO SE PUEDE, y es lo que esta regla protege:
+    //
+    //   · **Reescribir el importe.** Un compromiso mal tecleado se cancela y se
+    //     apunta otro; cambiarle el total al que ya tiene abonos convierte su
+    //     historial en un relato que no cuadra.
+    //   · **Bajar lo abonado.** `pagado` es la caché de lo que se cobró contra
+    //     este adeudo (la verdad es la suma de los pagos que lo señalan). Que
+    //     pudiera bajar sería la forma de «desabonar» dinero ya registrado.
+    //   · **Cambiar de dueño.** Mover un adeudo de una persona a otra le
+    //     traslada la deuda a quien no la contrajo.
+    //
+    //  El ALUMNO lo LEE —es su cuenta, y tiene derecho a ver lo que debe— y no
+    //  lo escribe: apuntarse o quitarse una deuda es del mostrador.
+    match /adeudos/{id} {
+      allow read: if esSuper()
+        || esStaffDe(resource.data.academiaId)
+        || esRecepcionDe(resource.data.academiaId)
+        || esDueno(resource.data.uid);
+
+      allow create: if enMostradorDe(request.resource.data.academiaId)
+        && request.resource.data.academiaId is string
+        && request.resource.data.registradoPor == request.auth.uid
+        && request.resource.data.concepto is string
+        && request.resource.data.total is number
+        && request.resource.data.total > 0
+        && request.resource.data.total <= 100000
+        // Nace SIN abonos y abierto: un compromiso que naciera medio pagado
+        // sería dinero apuntado que nunca pasó por caja.
+        && request.resource.data.pagado == 0
+        && request.resource.data.estado == 'abierto';
+
+      allow update: if enMostradorDe(resource.data.academiaId)
+        && request.resource.data.academiaId == resource.data.academiaId
+        && request.resource.data.uid == resource.data.uid
+        && request.resource.data.total == resource.data.total
+        && request.resource.data.pagado is number
+        && request.resource.data.pagado >= resource.data.get('pagado', 0)
+        && request.resource.data.estado in ['abierto', 'liquidado', 'cancelado'];
+
+      // Borrarlo se llevaría por delante el rastro de una deuda que existió.
+      // Para dejar de reclamarla está `cancelado`.
       allow delete: if esSuper();
     }
 
     match /contadores/{academiaId} {
-      allow read: if esSuper() || esStaffDe(academiaId);
-      allow create: if (esSuper() || esStaffDe(academiaId))
+      allow read: if esSuper() || esStaffDe(academiaId) || esRecepcionDe(academiaId);
+      // Recepción SÍ mueve el contador: es quien da de alta en el mostrador, y
+      // un alta sin matrícula reservada no es un alta. Sigue sin poder
+      // ESCRIBIR la matrícula en un perfil a mano (ver /usuarios): solo
+      // emitirla a través de esta transacción, que es lo único que impide
+      // repartir dos veces el mismo número.
+      allow create: if (esSuper() || esStaffDe(academiaId) || esRecepcionDe(academiaId))
         && request.resource.data.ultimaMatricula is int
         && request.resource.data.ultimaMatricula >= 1;
-      allow update: if (esSuper() || esStaffDe(academiaId))
+      allow update: if (esSuper() || esStaffDe(academiaId) || esRecepcionDe(academiaId))
         && request.resource.data.ultimaMatricula is int
         && request.resource.data.ultimaMatricula > resource.data.ultimaMatricula;
       // No se borran: borrar el contador reinicia la numeración de una
       // academia y devuelve a la circulación matrículas ya repartidas.
       allow delete: if false;
+
+      // UN CONTADOR POR SERIE Y TURNO (21-09-2026).
+      //
+      // La matrícula dejó de ser correlativa dentro de la academia: sus dos
+      // últimos dígitos cuentan a los alumnos de una SERIE —generación, mes de
+      // inicio y día de clase— dentro de UN turno, con la tarde a partir del
+      // 51. Así que el contador ya no puede ser uno por academia; es uno por
+      // serie, y el id del documento es esa serie (`04111-m`, `04111-v`).
+      //
+      // El documento padre `contadores/{academiaId}` se queda donde está: lo
+      // sigue usando el formato anterior mientras queden matrículas viejas, y
+      // borrarlo devolvería a la circulación números ya repartidos.
+      //
+      // MISMA REGLA DE ORO QUE ARRIBA: solo sube. Un contador que baja reparte
+      // dos veces el mismo número, y dos alumnos con la misma matrícula es
+      // exactamente lo que esto existe para impedir.
+      match /series/{serie} {
+        allow read: if esSuper() || esStaffDe(academiaId) || esRecepcionDe(academiaId);
+        allow create: if (esSuper() || esStaffDe(academiaId) || esRecepcionDe(academiaId))
+          && request.resource.data.ultimo is int
+          && request.resource.data.ultimo >= 1
+          && request.resource.data.ultimo <= 99;
+        allow update: if (esSuper() || esStaffDe(academiaId) || esRecepcionDe(academiaId))
+          && request.resource.data.ultimo is int
+          && request.resource.data.ultimo <= 99
+          && request.resource.data.ultimo > resource.data.ultimo;
+        allow delete: if false;
+      }
+    }
+
+    // --- ASISTENCIAS (check-in de mostrador) ---------------------------------
+    //
+    // EL ID ES `{uid}__{AAAA-MM-DD}` y eso hace el trabajo de una restricción
+    // de unicidad: dos pases el mismo día son el mismo documento, así que no
+    // hay forma de inflar el recuento pulsando dos veces ni carrera posible
+    // entre dos mostradores.
+    //
+    // «EN CLASE» NO ES UN CAMPO: se deriva de `expira > ahora`. Un booleano
+    // exigiría un proceso que lo apagara, y en plan Spark no hay ni TTL ni
+    // cron: alguien se quedaría «en clase» para siempre. Por eso `expira` es
+    // obligatorio y tiene que ser posterior a `inicio`.
+    //
+    // El propio alumno LEE las suyas —es su registro de asistencia— y no las
+    // escribe: si pudiera, se marcaría entrada desde casa.
+    match /asistencias/{id} {
+      allow read: if esSuper()
+        || esStaffDe(resource.data.academiaId)
+        || esRecepcionDe(resource.data.academiaId)
+        || esDueno(resource.data.uid);
+
+      allow create, update: if enMostradorDe(request.resource.data.academiaId)
+        && request.resource.data.uid is string
+        && request.resource.data.academiaId is string
+        && request.resource.data.registradoPor == request.auth.uid
+        && request.resource.data.inicio is timestamp
+        && request.resource.data.expira is timestamp
+        && request.resource.data.expira > request.resource.data.inicio
+        && request.resource.data.medio in ['manual', 'codigo']
+        // El id tiene que corresponder a la persona: sin esto, un documento
+        // con el uid de alguien y el id de otro rompería el recuento.
+        && id.split('__')[0] == request.resource.data.uid
+        // En un update no se puede cambiar de persona ni de academia.
+        && (resource == null || (
+          resource.data.uid == request.resource.data.uid
+          && resource.data.academiaId == request.resource.data.academiaId
+        ));
+
+      // Una asistencia registrada no se borra desde el mostrador: es el
+      // sustituto de una firma en papel, y una firma no se arranca de la hoja.
+      // Un error se corrige desde la dirección.
+      allow delete: if esSuper() || esAdminDe(resource.data.academiaId);
+    }
+
+    // Forma de un artículo del catálogo. Se usa en `create` y en `update`, y
+    // por eso mira `request.resource` en los dos casos.
+    function articuloFormaValida() {
+      return request.resource.data.nombre is string
+        && request.resource.data.nombre.size() > 0
+        && request.resource.data.nombre.size() <= 80
+        && request.resource.data.get('descripcion', '') is string
+        && request.resource.data.get('descripcion', '').size() <= 500
+        && request.resource.data.precio is number
+        && request.resource.data.precio >= 0
+        && request.resource.data.precio <= 100000
+        && request.resource.data.existencias is int
+        && request.resource.data.existencias >= 0
+        && request.resource.data.existencias <= 99999
+        && request.resource.data.get('activo', true) is bool
+        // La imagen es un enlace https, o nada. `data:` queda fuera a
+        // propósito: incrustarla infla el catálogo, que se lee entero de una
+        // vez para todos los alumnos.
+        && (
+          request.resource.data.get('imagen', '') == ''
+          || request.resource.data.imagen.matches('^https://.*')
+        );
+    }
+
+    // --- ARTÍCULOS de la tienda (inventario de la academia) ------------------
+    //
+    // Los da de alta la DIRECCIÓN. Recepción solo puede bajar `existencias`, y
+    // solo al entregar: la transacción de `lib/firebase/staff/tienda.js`
+    // comprueba antes que alcance. Que el mostrador no pueda SUBIR el
+    // inventario es deliberado — quien recibe mercancía es quien la da de alta.
+    match /articulos/{id} {
+      allow read: if esSuper()
+        || esStaffDe(resource.data.academiaId)
+        || esRecepcionDe(resource.data.academiaId)
+        || perteneceA(resource.data.academiaId);
+
+      // Separados a propósito: en un `delete` no existe `request.resource`, y
+      // en un `create` no existe `resource`. Juntarlos en una sola expresión
+      // hace que la regla FALLE al evaluarse, no que deniegue.
+      //
+      // La FORMA se comprueba aquí y no solo en el cliente: este catálogo lo
+      // ven todos los alumnos de la academia, y un precio que llegue como texto
+      // o una imagen con un esquema raro se reparten a todos a la vez. Espejo
+      // de `problemasDelArticulo` en src/lib/tiendaModelo.js.
+      allow create: if (esSuper() || esAdminDe(request.resource.data.academiaId))
+        && articuloFormaValida();
+      allow delete: if esSuper() || esAdminDe(resource.data.academiaId);
+
+      // La DIRECCIÓN edita el artículo entero, dentro de su academia.
+      allow update: if (esSuper() || esAdminDe(resource.data.academiaId))
+        && request.resource.data.academiaId == resource.data.academiaId
+        && articuloFormaValida();
+
+      // RECEPCIÓN: solo existencias, solo hacia abajo y nunca por debajo de
+      // cero. Un inventario negativo es un artículo prometido dos veces, y eso
+      // se descubre con la persona delante.
+      //
+      // Va en su propio `allow` y no pegado al de arriba con un `||`: mezclar
+      // dos permisos distintos en una expresión con `&&` y `||` es cómo se
+      // cuela una precedencia equivocada que nadie relee.
+      allow update: if esRecepcionDe(resource.data.academiaId)
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['existencias', 'actualizado'])
+        && request.resource.data.existencias is int
+        && request.resource.data.existencias >= 0
+        && request.resource.data.existencias < resource.data.existencias;
+    }
+
+    // --- ÓRDENES de tienda (la cuenta de un alumno) --------------------------
+    //
+    // `apartado` → `pagado` → `entregado`, más `cancelado`. Una orden ENTREGADA
+    // es inmutable: ya se descontó del inventario, así que reabrirla dejaría el
+    // inventario descuadrado sin que nada lo señalara.
+    match /ordenes/{id} {
+      allow read: if esSuper()
+        || esStaffDe(resource.data.academiaId)
+        || esRecepcionDe(resource.data.academiaId)
+        || esDueno(resource.data.uid);
+
+      // Desde el MOSTRADOR: nace apartado, con sus precios ya puestos.
+      allow create: if enMostradorDe(request.resource.data.academiaId)
+        && request.resource.data.academiaId is string
+        && request.resource.data.matricula is string
+        && request.resource.data.registradoPor == request.auth.uid
+        && request.resource.data.lineas is list
+        && request.resource.data.lineas.size() > 0
+        && request.resource.data.total is number
+        && request.resource.data.total >= 0
+        && request.resource.data.estado == 'apartado';
+
+      // Desde la TIENDA, por el propio alumno: nace `solicitado`, SIN DINERO.
+      //
+      // `total == 0` no es un detalle: las reglas de Firestore no tienen
+      // bucles, así que no hay forma de comprobar línea a línea que un precio
+      // enviado coincide con el del catálogo. Si el pedido pudiera traer
+      // importes, cualquiera mandaría un total de cero y recepción cobraría
+      // eso. Al exigir que venga en cero, el único sitio donde se ponen precios
+      // es la confirmación de recepción, que lee el catálogo del servidor.
+      //
+      // Y `solicitado` NO reserva inventario (ver ESTADOS_RESERVAN en
+      // src/lib/staff/carritoModelo.js): si reservara, bastaría con pedir diez
+      // férulas desde el teléfono y no aparecer para dejar sin material a quien
+      // sí viene.
+      allow create: if perteneceA(request.resource.data.academiaId)
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.registradoPor == request.auth.uid
+        && request.resource.data.estado == 'solicitado'
+        && request.resource.data.total == 0
+        && request.resource.data.lineas is list
+        && request.resource.data.lineas.size() > 0
+        && request.resource.data.lineas.size() <= 20;
+
+      allow update: if enMostradorDe(resource.data.academiaId)
+        && resource.data.estado != 'entregado'
+        && request.resource.data.academiaId == resource.data.academiaId
+        && request.resource.data.matricula == resource.data.matricula
+        // LAS LÍNEAS Y EL TOTAL SON INMUTABLES una vez confirmada la cuenta:
+        // cambiar lo que alguien apartó después de habérselo cobrado es
+        // reescribir la cuenta. Se cancela y se hace otra.
+        //
+        // La excepción es exactamente una, y es la que da sentido al pedido del
+        // alumno: mientras está `solicitado` no tiene precios, así que
+        // confirmarlo consiste precisamente en escribírselos desde el catálogo.
+        && (
+          resource.data.estado == 'solicitado'
+          || (
+            request.resource.data.lineas == resource.data.lineas
+            && request.resource.data.total == resource.data.total
+          )
+        )
+        && request.resource.data.total is number
+        && request.resource.data.total >= 0
+        && request.resource.data.estado in ['apartado', 'pagado', 'entregado', 'cancelado'];
+
+      // El ALUMNO solo puede CANCELAR lo suyo, y solo antes de que alguien lo
+      // confirme. En cuanto recepción lo aparta hay material reservado y una
+      // conversación de por medio: cancelarlo entonces es una gestión de
+      // mostrador, no un botón.
+      allow update: if esDueno(resource.data.uid)
+        && resource.data.estado == 'solicitado'
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['estado', 'actualizado'])
+        && request.resource.data.estado == 'cancelado';
+
+      allow delete: if esSuper();
     }
 
     match /solicitudesAcceso/{id} {
@@ -529,10 +881,14 @@ service cloud.firestore {
         && academiaActiva(request.resource.data.academiaId)
         && request.resource.data.mensaje is string
         && request.resource.data.mensaje.size() <= 300;
-      // Leer: el solicitante (ve en qué va lo suyo) y el staff de esa academia.
+      // Leer: el solicitante (ve en qué va lo suyo), el staff de esa academia
+      // y su RECEPCIÓN — en el mostrador se pregunta «¿ya me aceptaron?», y
+      // poder contestarlo sin ir a buscar al director es media gestión. Ver
+      // NO es resolver: el veredicto sigue siendo del director (abajo).
       allow read: if esDueno(resource.data.uid)
         || esSuper()
-        || esStaffDe(resource.data.academiaId);
+        || esStaffDe(resource.data.academiaId)
+        || esRecepcionDe(resource.data.academiaId);
       // Resolver: solo el director o el super-admin, y solo el veredicto.
       // Aceptar NO mete al alumno en la academia: solo marca 'aceptada'. Es el
       // propio interesado quien completa su alta (regla de usuarios), así que
@@ -558,8 +914,10 @@ service cloud.firestore {
     match /grupos/{codigo} {
       // Consultar un código concreto: cualquier autenticado (para unirse).
       allow get: if autenticado();
-      // Listar: super-admin o staff de esa academia.
-      allow list: if esSuper() || esStaffDe(resource.data.academiaId);
+      // Listar: super-admin, staff de esa academia, o su recepción — necesita
+      // los nombres para poner al alumno en un grupo y para leer su horario.
+      allow list: if esSuper() || esStaffDe(resource.data.academiaId)
+        || esRecepcionDe(resource.data.academiaId);
       // Crear/renombrar/activar/borrar: super-admin o el DIRECTOR de esa
       // academia (los profesores no crean ni renombran grupos).
       allow create: if (esSuper() || esAdminDe(request.resource.data.academiaId))
@@ -587,10 +945,53 @@ service cloud.firestore {
     }
 
     // --- USUARIOS ---
+    // LA MATRÍCULA SE MUEVE DE DOS MANERAS Y DE NINGUNA OTRA (21-09-2026):
+    //
+    //  · EMITIRLA a quien no tenía ninguna;
+    //  · REHACERLA en la MISMA escritura en la que cambia de grupo.
+    //
+    // Lo segundo es nuevo y hay que explicarlo, porque antes reescribirla
+    // estaba simplemente prohibido: desde que la matrícula la dicta el grupo
+    // —generación, mes de inicio, día de clase y turno—, un alumno movido de
+    // grupo con su número viejo lleva una matrícula que afirma algo falso. Lo
+    // que sigue estando prohibido, y es lo que de verdad importa, es
+    // reescribirla A SECAS: sin cambio de grupo no hay motivo, y ese sería el
+    // hueco por donde se le daría a dos personas el mismo número desde la
+    // interfaz, sin pasar por el contador.
+    //
+    // La FORMA se comprueba aquí y no solo en el cliente: siete dígitos. Una
+    // regla que confía en que el cliente formatee bien no comprueba nada.
+    // (El formato anterior, dos letras y siete dígitos, ya no se emite: las que
+    // quedan se conservan tal cual y esta regla no las deja reescribir a mano.)
+    function matriculaCoherente() {
+      return request.resource.data.get('matricula', '') == resource.data.get('matricula', '')
+        || (
+          request.resource.data.matricula is string
+          && request.resource.data.matricula.matches('^[0-9]{7}$')
+          && (
+            resource.data.get('matricula', '') == ''
+            || request.resource.data.get('grupoId', null) != resource.data.get('grupoId', null)
+          )
+        );
+    }
+
+    // El historial de matrículas: lo escribe quien la rehace y sirve para
+    // encontrar los pagos viejos, que son inmutables y conservan la matrícula
+    // que estaba vigente el día del cobro. Solo se acota la forma.
+    function historialMatriculaValido() {
+      return !('matriculasAnteriores' in request.resource.data)
+        || (request.resource.data.matriculasAnteriores is list
+            && request.resource.data.matriculasAnteriores.size() <= 30);
+    }
+
     match /usuarios/{uid} {
       // El propio usuario, el super-admin, o el staff de su misma academia (para
       // que el maestro/admin vea a sus alumnos).
-      allow read: if esDueno(uid) || esSuper() || esStaffDe(resource.data.academiaId);
+      allow read: if esDueno(uid) || esSuper() || esStaffDe(resource.data.academiaId)
+        // Recepción lee a las personas de SU academia: es lo que hace el
+        // buscador del mostrador. Leer una ficha no es poder editarla; lo que
+        // puede escribir está mucho más abajo, acotado campo a campo.
+        || esRecepcionDe(resource.data.academiaId);
 
       // Alta: solo tu propio doc, y siempre como 'alumno' (nadie se autonombra rol alto).
       allow create: if esDueno(uid)
@@ -753,33 +1154,31 @@ service cloud.firestore {
       // grupo y aprobar el acceso a códigos. Nunca a sí mismo, nunca a otro
       // admin/superadmin, no puede moverlos de academia, y NO puede tocar
       // ningún otro campo del perfil (affectedKeys lo acota técnicamente).
+      // `recepcion` entra en esta lista el 20-09-2026: es el rol nuevo del
+      // mostrador y quien lo reparte es el director, igual que 'instructor'.
+      // Sigue sin poder nombrar a otro director ni a un super-admin, que es lo
+      // que esta regla existe para impedir. Espejo de ROLES_DIRECTOR en
+      // src/lib/roles.js.
       allow update: if esAdminDe(resource.data.academiaId)
         && request.auth.uid != uid
-        && resource.data.rol in ['alumno', 'instructor']
-        && request.resource.data.rol in ['alumno', 'instructor']
+        && resource.data.rol in ['alumno', 'instructor', 'recepcion']
+        && request.resource.data.rol in ['alumno', 'instructor', 'recepcion']
         && request.resource.data.academiaId == resource.data.academiaId
+        // Los cuatro campos de CONTACTO entran el 20-09-2026, con la ficha
+        // única de persona: se pidió que el director pudiera «modificar
+        // absolutamente todos» los datos de su gente, y hasta entonces no
+        // podía ni corregirle un apellido mal escrito — solo moverle el rol,
+        // el estado y el grupo. Su forma se acota aquí abajo; la academia y
+        // la matrícula siguen fuera de su alcance (la primera por la línea de
+        // arriba, la segunda por la cláusula de emisión única).
         && request.resource.data.diff(resource.data).affectedKeys()
-             .hasOnly(['rol', 'estado', 'grupoId', 'grupoIds', 'puedeVerCodigos', 'matricula'])
-        // MATRÍCULA: el director solo puede EMITIRLA, nunca reescribirla.
-        //
-        // Emitir es pasar de vacía a un número que la transacción del contador
-        // acaba de reservar. Reescribir una ya emitida es otra cosa: sería la
-        // forma de darle a dos personas el mismo número desde la interfaz, sin
-        // pasar por el contador y sin que nada lo impidiera. Cambiarla solo
-        // ocurre en un traslado de academia, y los traslados son del
-        // super-admin.
-        //
-        // La forma se comprueba aquí y no solo en el cliente: dos letras y
-        // siete dígitos. Una regla que confía en que el cliente formatee bien
-        // no está comprobando nada.
-        && (
-          request.resource.data.get('matricula', '') == resource.data.get('matricula', '')
-          || (
-            resource.data.get('matricula', '') == ''
-            && request.resource.data.matricula is string
-            && request.resource.data.matricula.matches('^[A-Z]{2}[0-9]{7}$')
-          )
-        )
+             .hasOnly(['rol', 'estado', 'grupoId', 'grupoIds', 'puedeVerCodigos', 'matricula',
+                       'matriculasAnteriores', 'nombre', 'email', 'telefono', 'notaRecepcion'])
+        && datosDeContactoValidos()
+        && historialMatriculaValido()
+        // MATRÍCULA: emitirla, o rehacerla al cambiarlo de grupo. Nada más.
+        // El porqué está entero en matriculaCoherente(), arriba.
+        && matriculaCoherente()
         // Si asigna grupo, debe ser un grupo de SU academia (o quitarlo).
         && (
           request.resource.data.get('grupoId', null) == resource.data.get('grupoId', null)
@@ -818,6 +1217,52 @@ service cloud.firestore {
         && academiaOtorgaPermisos(resource.data.academiaId)
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['permisosEditor'])
         && permisosEditorFormaValida();
+
+      // RECEPCIÓN edita la FICHA de los alumnos de su academia.
+      //
+      // DÓNDE ESTÁ LA RAYA, y por qué está ahí (decisión del 20-09-2026). Se
+      // pidió que recepción pudiera cambiar «absolutamente todos» los datos.
+      // Cuatro se quedan fuera, y no por cautela genérica:
+      //
+      //  · `rol`      — con él, el mostrador convierte a un alumno en profesor,
+      //                 y un profesor lee el temario completo de la academia.
+      //  · `estado`   — es la puerta de acceso a la plataforma.
+      //  · `academiaId` — moverlo de academia es un traslado, y arrastra
+      //                 matrícula, grupo e historial.
+      //  · `matricula` — escribirla a mano salta el contador transaccional,
+      //                 que es lo ÚNICO que impide dos personas con el mismo
+      //                 número. Recepción la emite (ver /contadores), no la
+      //                 teclea. Desde el 21-09-2026 sí viaja en el parche
+      //                 CUANDO cambia de grupo, porque el grupo la dicta; lo
+      //                 que la acota es matriculaCoherente(), no la lista.
+      //
+      // `affectedKeys().hasOnly()` es lo que lo impone: no hace falta prohibir
+      // cada campo, basta con enumerar los cinco que sí. La lista es espejo de
+      // `CAMPOS_EDITABLES` en src/lib/staff/edicionPerfil.js; si cambia una,
+      // cambia la otra.
+      //
+      // Y solo sobre ALUMNOS: recepción no edita la ficha de un profesor ni la
+      // de su director.
+      allow update: if esRecepcionDe(resource.data.academiaId)
+        && request.auth.uid != uid
+        && resource.data.get('rol', 'alumno') == 'alumno'
+        && request.resource.data.diff(resource.data).affectedKeys()
+             .hasOnly(['nombre', 'email', 'telefono', 'grupoId', 'notaRecepcion',
+                       'matricula', 'matriculasAnteriores'])
+        && matriculaCoherente()
+        && historialMatriculaValido()
+        && datosDeContactoValidos()
+        // Si le cambia el grupo, tiene que ser un grupo de SU MISMA academia:
+        // el grupo lleva el `programaId`, o sea el plan de estudios. Un grupo
+        // ajeno colado aquí le daría al alumno el temario de otra escuela.
+        && (
+          request.resource.data.get('grupoId', null) == resource.data.get('grupoId', null)
+          || request.resource.data.get('grupoId', null) == null
+          || (
+            exists(/databases/$(database)/documents/grupos/$(request.resource.data.grupoId))
+            && grupoDoc(request.resource.data.grupoId).academiaId == resource.data.academiaId
+          )
+        );
 
       // El STAFF (profesor o director) puede HABILITAR módulos a los alumnos
       // de su academia: SOLO el campo modulosDesbloqueados (anula lo oculto del
@@ -937,9 +1382,17 @@ service cloud.firestore {
             profesorConCodigos(request.resource.data.academiaId)
             && request.resource.data.rol == 'alumno'
           )
+          // RECEPCIÓN, solo invitaciones de ALUMNO: es el alta de mostrador
+          // (reserva la matrícula, guarda la ficha dentro y manda el enlace).
+          // Repartir un rol —instructor o director— sería fabricar un ascenso
+          // desde el mostrador, y eso sigue siendo del director.
+          || (
+            esRecepcionDe(request.resource.data.academiaId)
+            && request.resource.data.rol == 'alumno'
+          )
         )
         && request.resource.data.creadoPor == request.auth.uid
-        && request.resource.data.rol in ['alumno', 'instructor', 'admin_escuela']
+        && request.resource.data.rol in ['alumno', 'instructor', 'recepcion', 'admin_escuela']
         && request.resource.data.estado == 'activo'
         && request.resource.data.expira > request.time
         && request.resource.data.usos == 0
@@ -1015,11 +1468,14 @@ service cloud.firestore {
         // perteneceA() y no una comparación suelta: una PRUEBA VENCIDA deja de
         // pertenecer a la academia, y con ella se cierra también esta puerta.
         && perteneceA(request.resource.data.academiaId);
-      // Leer: el dueño (consulta el estado de las suyas), el super-admin o
-      // el staff de esa academia (las atiende en su panel).
+      // Leer: el dueño (consulta el estado de las suyas), el super-admin, el
+      // staff de esa academia (las atiende en su panel) y su RECEPCIÓN, que
+      // las CONSULTA para informar en el mostrador. Resolverlas sigue siendo
+      // del staff: recepción no aparece en ningún `allow update` de aquí.
       allow read: if esDueno(resource.data.uid)
         || esSuper()
-        || esStaffDe(resource.data.academiaId);
+        || esStaffDe(resource.data.academiaId)
+        || esRecepcionDe(resource.data.academiaId);
       // Resolver: módulo → cualquier staff de la academia; códigos → solo el
       // director o el super-admin (un profesor no se auto-aprueba: además,
       // puedeVerCodigos solo lo escribe el director/super en usuarios).
@@ -1422,9 +1878,14 @@ service cloud.firestore {
 
     // --- HISTORIAL de cambios de contenido (auditoría append-only) ---
     match /historial/{id} {
-      // Crear: staff de la academia o super-admin, firmando con su uid.
+      // Crear: staff de la academia, su recepción, o el super-admin, siempre
+      // firmando con su uid. Recepción escribe aquí porque se pidió saber QUÉ
+      // persona del mostrador cambió qué dato; sin este `allow`, la auditoría
+      // de sus ediciones se denegaría en silencio.
       allow create: if request.resource.data.usuario == request.auth.uid
-        && (esSuper() || esStaffDe(request.resource.data.academiaId));
+        && (esSuper()
+            || esStaffDe(request.resource.data.academiaId)
+            || esRecepcionDe(request.resource.data.academiaId));
       // Leer: super-admin o el director de esa academia.
       allow read: if esSuper() || esAdminDe(resource.data.academiaId);
       // Append-only: nadie edita; solo el super-admin puede depurar.

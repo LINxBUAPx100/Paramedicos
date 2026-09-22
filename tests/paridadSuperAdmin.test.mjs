@@ -74,6 +74,7 @@ const EQUIVALE = {
   invitaciones: 'invitaciones',
   accesos: 'accesos',
   recepcion: 'recepcion',  // el alta de mostrador, con el MISMO formulario
+  tienda: 'tienda',        // el catálogo de la academia, con el MISMO editor
   calificaciones: 'calificaciones',
   contenido: 'contenido',
   revision: 'revision', // ya existe por academia/curso con la gestión de dictámenes
