@@ -73,9 +73,14 @@ export function temaDesdeDoc(docTema) {
 //  - Por defecto solo entra lo PUBLICADO (lo que ve el alumno).
 //  - `faltantes` lista temas presentes en la estructura sin doc de contenido
 //    (clonación parcial): el resolutor decide si sirve o cae a legacy.
-export function ensamblarModulos(estructura, temasPorId, { incluirBorradores = false } = {}) {
+//  - `modulosCerrados` (R03): módulos que el grupo de quien pide le oculta.
+//    Sus temas NO se bajaron —las reglas los niegan— y entran como FICHA
+//    CERRADA: id y título, que es lo que ya enseña el índice, y nada más. Así
+//    la numeración y el menú no cambian, y ninguno cuenta como faltante.
+export function ensamblarModulos(estructura, temasPorId, { incluirBorradores = false, modulosCerrados = null } = {}) {
   const visible = (x) => incluirBorradores || (x.estado || 'publicado') === 'publicado'
   const buscar = (id) => (temasPorId instanceof Map ? temasPorId.get(id) : temasPorId?.[id])
+  const cerrado = (f) => Boolean(modulosCerrados?.has?.(f.id))
   const faltantes = []
   const modulos = (estructura || []).filter(visible).map((f) => ({
     id: f.id,
@@ -89,6 +94,7 @@ export function ensamblarModulos(estructura, temasPorId, { incluirBorradores = f
       .flatMap((m) => m.temas || [])
       .filter(visible)
       .map((t) => {
+        if (cerrado(f)) return { ...temaDesdeDoc({ temaId: t.id, titulo: t.titulo }), cerrado: true }
         const docTema = buscar(t.id)
         if (!docTema) {
           faltantes.push(t.id)
@@ -301,12 +307,19 @@ export function construirApi(modulosBase) {
  * @param {Object} opciones.indice        índice ligero ya cargado (modulos + stats).
  * @param {Function} opciones.cargarTema  (temaId) => Promise<tema|null>
  * @param {Function} opciones.cargarAgregado (tipo, moduloId|null) => Promise<any>
+ * @param {Set<string>} [opciones.modulosCerrados] módulos que el grupo de quien
+ *   pide le oculta (R03). No se piden: las reglas los niegan. Sus lecciones
+ *   responden null y sus agregados, vacío. El índice los sigue listando.
  */
 export function construirApiBajoDemanda({
-  indice, cargarTema, cargarAgregado,
+  indice, cargarTema, cargarAgregado: cargarAgregadoFuente,
   fuente = 'firestore', academiaId = null, cursoId = null, cursos = [],
+  modulosCerrados = null,
 }) {
   const modulos = indice?.modulos || []
+  const abierto = (moduloId) => !moduloId || !modulosCerrados?.has?.(moduloId)
+  const cargarAgregado = async (tipo, moduloId) =>
+    (abierto(moduloId) ? cargarAgregadoFuente(tipo, moduloId) : null)
 
   // Plano de navegación: id de tema → su ficha ligera y su módulo. Se arma una
   // vez sobre el índice (que ya está en memoria) y responde vecinos, número y
@@ -353,6 +366,7 @@ export function construirApiBajoDemanda({
   //   · `numero` sale SIEMPRE del índice, porque es posicional: lo calcula el
   //     orden del plan, no el documento.
   const getTemaAsync = async (temaId) => {
+    if (!abierto(getTemaLigero(temaId)?.moduloId)) return null
     const tema = await cargarTema(temaId)
     if (!tema) return null
     const ficha = getTemaLigero(temaId)
@@ -364,7 +378,7 @@ export function construirApiBajoDemanda({
   // lecturas como módulos (7 en el plan actual) y solo lo piden las pantallas
   // que de verdad abarcan el curso entero: el examen general y el mazo completo.
   const deTodosLosModulos = async (tipo) => {
-    const partes = await Promise.all(modulos.map((m) => cargarAgregado(tipo, m.id)))
+    const partes = await Promise.all(modulos.filter((m) => abierto(m.id)).map((m) => cargarAgregado(tipo, m.id)))
     return partes.flatMap((p) => p || [])
   }
 

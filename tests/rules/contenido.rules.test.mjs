@@ -85,22 +85,22 @@ async function preparar() {
         clonacion: { plantillaId: 'tum', version: 1, completa: true },
       })
       await pon(`temas/${aca}__tum__t1`, {
-        academiaId: aca, cursoId: `${aca}__tum`, temaId: 't1', version: 1, creadoPor: 'seed',
+        academiaId: aca, cursoId: `${aca}__tum`, temaId: 't1', moduloId: 'f1', version: 1, creadoPor: 'seed',
         titulo: 'T1', estado: 'publicado', quiz: [], flashcards: [], secciones: [],
       })
     }
     await pon('temas/ACA-A__tum__t2', {
-      academiaId: 'ACA-A', cursoId: 'ACA-A__tum', temaId: 't2', version: 1, creadoPor: 'seed',
+      academiaId: 'ACA-A', cursoId: 'ACA-A__tum', temaId: 't2', moduloId: 'f1', version: 1, creadoPor: 'seed',
       titulo: 'Borrador', estado: 'borrador', quiz: [], flashcards: [], secciones: [],
     })
     // t3: reservado para las pruebas de versión/metadatos (Fase 3).
     await pon('temas/ACA-A__tum__t3', {
-      academiaId: 'ACA-A', cursoId: 'ACA-A__tum', temaId: 't3', version: 1, creadoPor: 'seed',
+      academiaId: 'ACA-A', cursoId: 'ACA-A__tum', temaId: 't3', moduloId: 'f1', version: 1, creadoPor: 'seed',
       titulo: 'T3', estado: 'publicado', quiz: [], flashcards: [], secciones: [],
     })
     // t4: reservado para las pruebas de permisos FINOS por campo (Fase 6).
     await pon('temas/ACA-A__tum__t4', {
-      academiaId: 'ACA-A', cursoId: 'ACA-A__tum', temaId: 't4', version: 1, creadoPor: 'seed',
+      academiaId: 'ACA-A', cursoId: 'ACA-A__tum', temaId: 't4', moduloId: 'f1', version: 1, creadoPor: 'seed',
       titulo: 'T4', estado: 'publicado', quiz: [], flashcards: [], secciones: [], recursos: null, actividades: null,
     })
     await pon('historial/h1', {
@@ -128,7 +128,7 @@ async function preparar() {
     })
     // t7: tema con SELLO de origen (para probar que un editor no lo toca).
     await pon('temas/ACA-A__tum__t7', {
-      academiaId: 'ACA-A', cursoId: 'ACA-A__tum', temaId: 't7', version: 1, creadoPor: 'seed',
+      academiaId: 'ACA-A', cursoId: 'ACA-A__tum', temaId: 't7', moduloId: 'f1', version: 1, creadoPor: 'seed',
       titulo: 'T7', estado: 'publicado', quiz: [], flashcards: [], secciones: [],
       origen: { plantillaId: 'tum', version: 1, hash: 'sello', replicacionId: 'clonacion' },
     })
@@ -154,7 +154,7 @@ async function preparar() {
       clonacion: { plantillaId: 'enfermeria', version: 1, completa: true },
     })
     await pon('temas/ACA-A__enfermeria__e-t1', {
-      academiaId: 'ACA-A', cursoId: 'ACA-A__enfermeria', temaId: 'e-t1', version: 1, creadoPor: 'seed',
+      academiaId: 'ACA-A', cursoId: 'ACA-A__enfermeria', temaId: 'e-t1', moduloId: 'f1', version: 1, creadoPor: 'seed',
       titulo: 'ET1', estado: 'publicado', quiz: [], flashcards: [], secciones: [],
     })
   })
@@ -220,11 +220,16 @@ test('temas: consultas del alumno acotadas a su curso y a lo publicado', { skip 
   // evalúan contra los campos de la CONSULTA, así que sin ese filtro
   // `resource.data.academiaId` es undefined y la regla revienta en vez de
   // permitir. Es exactamente lo que hace temasDeCurso() en la app.
+  //
+  // Y por módulo (R03, 25-09-2026): la regla del alumno exige que el módulo
+  // del tema esté abierto para su grupo, y sin filtrar por `moduloId` no puede
+  // demostrarlo para lo que la consulta devolvería.
   await assertSucceeds(getDocs(query(
     collection(db, 'temas'),
     where('cursoId', '==', 'ACA-A__tum'),
     where('academiaId', '==', 'ACA-A'),
-    where('estado', '==', 'publicado')
+    where('estado', '==', 'publicado'),
+    where('moduloId', 'in', ['f1'])
   )))
   // Sin el filtro de publicado, la consulta podría devolver borradores → se niega.
   await assertFails(getDocs(query(collection(db, 'temas'), where('cursoId', '==', 'ACA-A__tum'))))

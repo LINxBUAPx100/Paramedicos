@@ -74,24 +74,30 @@ export default function TemaPage() {
 
   if (error) return <ErrorContenido onReintentar={reintentar} />
   if (cargando) return <CargandoContenido variante="tema" />
+
+  // Tema oculto para el grupo del alumno: aún no disponible.
+  //
+  // ANTES de mirar si la lección llegó (R03, 25-09-2026): la de un módulo
+  // cerrado ya no se descarga —las reglas la niegan y el cliente ni la pide—,
+  // así que `tema` llega en null. Comprobarlo después pintaría «no existe»,
+  // que es falso; la visibilidad sale del índice y no necesita la lección.
+  if (!temaVisible(temaId)) {
+    const moduloId = tema?.moduloId || api?.getTemaLigero?.(temaId)?.moduloId
+    return (
+      <div className="acceso-restringido" role="alert">
+        <span className="acceso-ico"><Icon name="candado" size={30} /></span>
+        <h1>Tema aún no disponible</h1>
+        <p>Tu profesor todavía no libera este tema para tu grupo. Vuelve más adelante.</p>
+        <Link to={moduloId ? `/modulo/${moduloId}` : '/temario'} className="btn btn--pildora btn--carbon">Volver al módulo</Link>
+      </div>
+    )
+  }
   if (!tema) return <NotFound />
   // Un nodo de EXAMEN anuncia cuántos reactivos tiene, y esa cifra sale de las
   // lecciones de su alcance. Mientras no lleguen diría «0 preguntas», que es
   // falso. Solo espera el examen: una lección normal no tiene alcance y se
   // pinta de inmediato.
   if (tema.alcanceExamen && temasCargados === null) return <CargandoContenido variante="tema" />
-
-  // Tema oculto para el grupo del alumno: aún no disponible.
-  if (!temaVisible(tema.id)) {
-    return (
-      <div className="acceso-restringido" role="alert">
-        <span className="acceso-ico"><Icon name="candado" size={30} /></span>
-        <h1>Tema aún no disponible</h1>
-        <p>Tu profesor todavía no libera este tema para tu grupo. Vuelve más adelante.</p>
-        <Link to={`/modulo/${tema.moduloId}`} className="btn btn--pildora btn--carbon">Volver al módulo</Link>
-      </div>
-    )
-  }
 
   // Vecinos SIN lecturas: salen del índice, que el shell ya tenía cargado.
   const vecinos = api.getTemaVecinos(temaId)

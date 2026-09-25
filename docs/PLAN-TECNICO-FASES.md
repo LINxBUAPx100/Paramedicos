@@ -220,12 +220,49 @@ dos campos nuevos; con las reglas nuevas y el cliente viejo, firmar falla). No
 se hizo la referencia a la versión del contenido en cada firma que pedía R04:
 es cambio de modelo, no de reglas.
 
+### S3a — R03, módulos completos · HECHO el 25-09-2026 · reglas SIN desplegar
+
+**Decisión del dueño (25-09-2026):** lo que un alumno no puede ver no lo puede
+descargar por ningún camino. Se usan las dos cosas —ocultar módulos enteros y
+temas sueltos— y se empieza por los módulos.
+
+- **Reglas.** `temas` y los agregados POR MÓDULO exigen, en la rama del
+  alumno, `moduloAbiertoParaMi()`: el módulo no está en
+  `grupos/{id}.modulosOcultos`, o está en `usuarios/{uid}.modulosDesbloqueados`.
+  Un tema **sin `moduloId` queda cerrado** al alumno: fallo seguro. Los
+  agregados globales (términos del glosario, atlas de claves, contadores) y el
+  sello siguen abiertos: solo llevan lo que ya enseña el índice.
+- **`moduloId` en cada tema**, copiado de la estructura del curso
+  (`modulosPorTema`). Lo escriben la clonación, el editor (crear, duplicar y
+  MOVER de módulo, sincronizado igual que el `estado`), la replicación y
+  «Generar los índices», que además sella los temas que no lo tengan.
+- **Cliente** (`lib/modulosCerrados.js`): no pide lo cerrado. La consulta del
+  curso completo de un alumno filtra SIEMPRE por `moduloId in [abiertos]` —la
+  regla lo exige aunque no tenga nada oculto—; los módulos cerrados entran como
+  fichas sin contenido, así que el menú no cambia. Abrir un módulo cambia la
+  clave de caché y el contenido se resuelve otra vez. La página de la lección
+  muestra «aún no disponible» aunque la lección ya no llegue.
+
+Pruebas: `tests/rules/visibilidad.rules.test.mjs` (una por puerta: lección
+suelta, consulta completa, cada agregado, desbloqueo individual, tema sin
+módulo) y `tests/modulosCerrados.test.mjs`. Reglas: **212/212**.
+
+**ORDEN DE DESPLIEGUE — no se puede alterar:**
+1. Publicar la aplicación nueva.
+2. Un super-admin pulsa **«Generar los índices»** en Panel → Contenido para
+   cada curso. Debe decir «Se anotó el módulo en N tema(s)»; si dice que alguno
+   quedó sin módulo, volver a pulsar.
+3. Solo entonces, desplegar `firestore.rules`.
+
+Con las reglas antes que el paso 2, **todos los alumnos se quedan sin
+temario**: los 288 temas de producción no tienen `moduloId`.
+
 ### S2 — Lo que queda
 
 | | Qué | De quién |
 |---|---|---|
 | **R01** | El repositorio de GitHub es PÚBLICO (comprobado de nuevo el 25-09): el temario con respuestas se descarga sin cuenta | del dueño: cambiar visibilidad cuidando GitHub Pages |
-| **R03** | Ocultar un tema a un grupo es solo de pantalla | decisión: ¿confidencial o pedagógico? |
+| **R03b** | Temas SUELTOS ocultos dentro de un módulo visible: la lección se puede cerrar igual, pero sus preguntas, fichas y glosario viajan en el agregado de su módulo | siguiente paso de S3 |
 | R05-R13 | Storage por curso, visor protegido, imágenes, cuentas compartidas, App Check, exámenes en cliente, continuidad | ver la auditoría |
 
 ---

@@ -22,6 +22,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import { useAuth } from './AuthContext.jsx'
 import { academiaMigrada } from '../lib/contenidoApi.js'
 import { programasDeGrupo } from '../lib/programasModelo.js'
+import { firmaDeCierre } from '../lib/modulosCerrados.js'
 import { registrar } from '../lib/registro.js'
 import { apiConValidaciones } from '../lib/validacionesModelo.js'
 import { stats as statsBundle } from '../data/navIndice.js'
@@ -56,15 +57,19 @@ function guardarCurso(academiaId, cursoId) {
 }
 
 export function ContenidoProvider({ children }) {
-  const { academia, rol, grupo, esSuperadmin } = useAuth()
+  const { academia, rol, grupo, esSuperadmin, perfil } = useAuth()
   const academiaId = academia?.id || null
   const migrada = academiaMigrada(academia)
   // ALCANCE de programas de esta persona: define QUÉ contenido resuelve el
   // resolutor (un alumno de Enfermería no recibe TUM). Se memoiza para no
   // recrear el objeto en cada render y disparar los efectos de más.
+  // `desbloqueados` son los módulos que el profesor le abrió a ESTA persona
+  // aunque su grupo los oculte: con los ocultos del grupo deciden qué módulos
+  // se piden y cuáles no (R03, ver lib/modulosCerrados.js).
+  const desbloqueados = perfil?.modulosDesbloqueados
   const acceso = useMemo(
-    () => ({ rol, esSuperadmin, grupo }),
-    [rol, esSuperadmin, grupo]
+    () => ({ rol, esSuperadmin, grupo, desbloqueados }),
+    [rol, esSuperadmin, grupo, desbloqueados]
   )
   // Identidad de la FUENTE: si cambia (login/logout, cambio de academia, fin
   // de la clonación o CAMBIO DE GRUPO), se descarta lo cargado y se resuelve
@@ -72,7 +77,7 @@ export function ContenidoProvider({ children }) {
   // sin él, quien pasa de un grupo a otro seguiría viendo el temario anterior.
   const claveAcceso = esSuperadmin || rol === 'instructor' || rol === 'admin_escuela'
     ? '*'
-    : programasDeGrupo(grupo).sort().join(',') || '∅'
+    : `${programasDeGrupo(grupo).sort().join(',') || '∅'}~${firmaDeCierre(acceso)}`
 
   // CURSO ELEGIDO. Una academia puede impartir varios (paramédico,
   // enfermería…) y un grupo puede cursar su carrera más una especialización.

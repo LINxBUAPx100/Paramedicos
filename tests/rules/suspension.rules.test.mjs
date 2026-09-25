@@ -83,7 +83,7 @@ async function preparar() {
         plantillaOrigenId: 'tum', versionOrigen: 1, version: 1, creadoPor: 'seed', estructura: [],
       })
       await pon(`temas/${aca}__tum__t1`, {
-        academiaId: aca, cursoId: `${aca}__tum`, temaId: 't1', version: 1, creadoPor: 'seed',
+        academiaId: aca, cursoId: `${aca}__tum`, temaId: 't1', moduloId: 'f1', version: 1, creadoPor: 'seed',
         titulo: 'T1', estado: 'publicado', quiz: [], flashcards: [], secciones: [],
       })
     }

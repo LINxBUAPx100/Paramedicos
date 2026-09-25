@@ -83,8 +83,19 @@ export function CursoConIndices({ curso, academiaId, sello }) {
     setResultado(null)
     try {
       const api = await import('../../lib/firebase/contenido.js')
-      await api.regenerarAgregados(academiaId, curso.id)
-      setResultado({ ok: true, texto: 'Índices generados. Recarga para verlo reflejado.' })
+      const { sellado } = await api.regenerarAgregados(academiaId, curso.id)
+      // El sellado de módulos (R03) va dentro: si falla, los índices sí se
+      // generaron, pero los temas sin módulo quedan cerrados para los alumnos en
+      // cuanto se desplieguen las reglas. Eso hay que decirlo, no esconderlo.
+      if (sellado?.error) {
+        setResultado({
+          ok: false,
+          texto: `Índices generados, pero ${sellado.pendientes - sellado.escritos} tema(s) quedaron sin su módulo: ${sellado.error}. Vuelve a pulsar.`,
+        })
+      } else {
+        const extra = sellado?.escritos ? ` Se anotó el módulo en ${sellado.escritos} tema(s).` : ''
+        setResultado({ ok: true, texto: `Índices generados.${extra} Recarga para verlo reflejado.` })
+      }
     } catch (err) {
       registrar('panel:regenerar-agregados', err)
       // El motivo importa: casi siempre será un permiso, y quien lo pulsa tiene

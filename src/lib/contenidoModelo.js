@@ -231,13 +231,57 @@ export function cursoDesdePlantilla({ academiaId, plantilla }) {
   }
 }
 
+// MÓDULO DE CADA TEMA, sacado de la estructura del curso.
+//
+// Existe por la auditoría de riesgos del 19-09-2026 (R03): ocultar un módulo a
+// un grupo era solo de pantalla, y las reglas no podían negarle la lección a
+// un alumno porque el documento del tema no decía a qué módulo pertenece. La
+// estructura del curso sigue siendo la fuente de verdad —el orden y el módulo
+// los define ella—; el `moduloId` del documento es una COPIA para que la
+// regla pueda leerla sin recorrer listas anidadas, cosa que no sabe hacer.
+//
+// Toda escritura de un documento de tema pasa por aquí: clonación, editor
+// (crear, duplicar, mover), replicación y el script de sellado. Si una se
+// olvidara, el tema quedaría sin módulo y los alumnos dejarían de verlo, que
+// es el fallo seguro: nunca uno que abra lo que estaba oculto.
+export function modulosPorTema(estructura) {
+  const mapa = new Map()
+  for (const modulo of estructura || []) {
+    if (!modulo?.id) continue
+    for (const unidad of modulo.unidades || []) {
+      for (const t of unidad?.temas || []) {
+        if (t?.id && !mapa.has(t.id)) mapa.set(t.id, modulo.id)
+      }
+    }
+  }
+  return mapa
+}
+
+// Temas cuyo documento NO dice el módulo que les da la estructura: los que se
+// escribieron antes del 25-09-2026 y cualquiera que se haya desalineado.
+// Devuelve lo que hay que escribir, sin escribir nada. Un tema que la
+// estructura ya no contiene no se toca: no hay módulo correcto que ponerle.
+export function temasPorSellar(estructura, temasDocs) {
+  const modulos = modulosPorTema(estructura)
+  const out = []
+  for (const t of temasDocs || []) {
+    const correcto = modulos.get(t?.temaId)
+    if (!correcto || t.moduloId === correcto) continue
+    out.push({ docId: t.docId, temaId: t.temaId, moduloId: correcto, version: t.version ?? 0 })
+  }
+  return out
+}
+
 // A partir de los docs de una plantilla, calcula los docs de contenido que le
 // tocan a UNA academia al clonar (namespace de la academia). No escribe nada;
 // solo mapea (lo usan la clonación real y las pruebas de aislamiento).
 // Cada campo anidado se CLONA en profundidad: la copia de la academia no
 // comparte ninguna referencia con la plantilla ni con otras copias.
-export function docsClonadosParaAcademia({ academiaId, plantillaId, plantillaTemas }) {
+// `estructura` es la del curso que se crea: de ella sale el `moduloId` de cada
+// tema (ver modulosPorTema). Sin ella, el tema conserva el que ya trajera.
+export function docsClonadosParaAcademia({ academiaId, plantillaId, plantillaTemas, estructura = null }) {
   const cursoId = cursoIdDe(academiaId, plantillaId)
+  const modulos = modulosPorTema(estructura)
   return {
     cursoId,
     temas: (plantillaTemas || []).map((t) => ({
@@ -245,6 +289,7 @@ export function docsClonadosParaAcademia({ academiaId, plantillaId, plantillaTem
       academiaId,
       cursoId,
       temaId: t.temaId,
+      moduloId: modulos.get(t.temaId) || t.moduloId || null,
       titulo: t.titulo,
       tituloVisible: t.tituloVisible || '',
       tituloOficial: t.tituloOficial || '',

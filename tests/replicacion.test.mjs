@@ -450,3 +450,16 @@ test('integración: clonar con sello y comparar da "sin cambios" en todo el tema
   assert.equal(r.resumen.conflicto, 0)
   assert.equal(huellaEstructura(estructura), huellaEstructura(structuredClone(estructura)))
 })
+
+test('plan: cada tema escrito lleva el moduloId de la estructura que va a quedar (R03)', async () => {
+  const { modulosPorTema } = await import('../src/lib/contenidoModelo.js')
+  const plan = planCompleto('reemplazar_con_origen', (c) => { c.temas[0].resumen = 'editado por A' })
+  assert.ok(plan.docsTemas.length > 0)
+  // Las escrituras de temas son `set` completos: sin el campo, el tema perdería
+  // el módulo que tenía y las reglas se lo cerrarían a sus alumnos.
+  const esperado = modulosPorTema(plan.docCurso.datos.estructura)
+  for (const d of plan.docsTemas) {
+    assert.ok(d.datos.moduloId, `${d.docId} sin moduloId`)
+    assert.equal(d.datos.moduloId, esperado.get(d.datos.temaId))
+  }
+})

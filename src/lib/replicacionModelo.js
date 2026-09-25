@@ -12,7 +12,7 @@
 //  estrategia predeterminada es CONSERVAR_LOCAL y REEMPLAZAR_CON_ORIGEN
 //  exige respaldo previo + confirmación reforzada.
 // ============================================================
-import { clonProfundo, cursoIdDe, temaDocIdEnCurso, lotes } from './contenidoModelo.js'
+import { clonProfundo, cursoIdDe, temaDocIdEnCurso, lotes, modulosPorTema } from './contenidoModelo.js'
 import { capacidadesDe, planEfectivo } from './capacidades.js'
 
 // ---------- Huella de contenido (hash determinista, igual en Node y navegador) ----------
@@ -514,6 +514,12 @@ export function planParaAcademia({
     acciones: elementosConAccion,
     mapaDuplicados,
   })
+  // El MÓDULO de cada tema escrito sale de la estructura que va a quedar, no
+  // de la plantilla: la fusión puede colocarlo en otro sitio. Las escrituras
+  // de temas son `set` completos, así que un tema sin este campo perdería el
+  // que tenía y sus alumnos dejarían de verlo (R03, ver modulosPorTema).
+  const moduloDe = modulosPorTema(estructuraFusionada)
+  for (const d of docsTemas) d.datos.moduloId = moduloDe.get(d.datos.temaId) || null
   if (cursoDestino) respaldar.push({ coleccion: 'cursos', docId: cursoId })
 
   const docCurso = {

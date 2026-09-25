@@ -302,6 +302,8 @@ async function sembrar() {
         academiaId: a.id,
         cursoId,
         temaId: t.id,
+        // Las reglas cierran al alumno todo tema sin módulo (R03, 25-09-2026).
+        moduloId: 'mod-prueba',
         titulo: `${t.titulo} de ${a.nombre}`,
         estado: t.estado,
         estadoEditorial: t.estado === 'publicado' ? 'publicado' : 'borrador',

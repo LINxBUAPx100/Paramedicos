@@ -30,7 +30,9 @@ import {
 } from '../permisosEditor.js'
 import { validarContenidoTema, normalizarContenido } from '../temaContenidoModelo.js'
 import { validarReferenciasStorage } from '../archivosModelo.js'
-import { lotes, seccionesParaFirestore, seccionesDesdeFirestore } from '../contenidoModelo.js'
+import {
+  lotes, seccionesParaFirestore, seccionesDesdeFirestore, modulosPorTema,
+} from '../contenidoModelo.js'
 import {
   registrarHistorial, limpiarCacheContenido, programarRegeneracionAgregados,
 } from './contenido.js'
@@ -232,14 +234,22 @@ export async function guardarEstructura(contexto, destino, cursoId, versionEsper
         for (const t of m.temas || []) estadoAntes.set(t.id, t.estado || 'publicado')
       }
     }
+    // Y lo mismo con el MÓDULO (R03): mover un tema de módulo en la estructura
+    // tiene que moverlo también en su documento, porque la regla que se lo
+    // niega al grupo que tiene ese módulo oculto lee el documento, no la
+    // estructura. Un `moduloId` viejo dejaría pasar lo que ahora está oculto.
+    const moduloAntes = modulosPorTema(cursoSnap.data().estructura)
+    const moduloAhora = modulosPorTema(estructura)
     const temasEstadoCambiado = []
     for (const f of estructura) {
       for (const m of f.unidades || []) {
         for (const t of m.temas || []) {
           const antes = estadoAntes.get(t.id)
           const ahora = t.estado || 'publicado'
-          if (antes !== undefined && antes !== ahora) {
-            temasEstadoCambiado.push({ temaId: t.id, estado: ahora })
+          const cambiaEstado = antes !== undefined && antes !== ahora
+          const cambiaModulo = moduloAntes.has(t.id) && moduloAntes.get(t.id) !== moduloAhora.get(t.id)
+          if (cambiaEstado || cambiaModulo) {
+            temasEstadoCambiado.push({ temaId: t.id, estado: ahora, moduloId: moduloAhora.get(t.id) })
           }
         }
       }
@@ -276,14 +286,17 @@ export async function guardarEstructura(contexto, destino, cursoId, versionEsper
     for (const { cambio, version: vTema } of docsEstado) {
       tx.update(doc(db, col.temas, `${cursoId}__${cambio.temaId}`), {
         estado: cambio.estado,
+        moduloId: cambio.moduloId || null,
         version: vTema + 1,
         actualizado: serverTimestamp(),
         actualizadoPor: uid,
       })
     }
     for (const t of temasNuevos) {
-      tx.set(doc(db, col.temas, `${cursoId}__${t.temaId}`),
-        docTemaNuevo(destino, cursoId, t.temaId, t.titulo, uid))
+      tx.set(doc(db, col.temas, `${cursoId}__${t.temaId}`), {
+        ...docTemaNuevo(destino, cursoId, t.temaId, t.titulo, uid),
+        moduloId: moduloAhora.get(t.temaId) || null,
+      })
     }
     for (const { dup, datos } of origenes) {
       const base = docTemaNuevo(destino, cursoId, dup.nuevoId, '', uid)
@@ -294,6 +307,7 @@ export async function guardarEstructura(contexto, destino, cursoId, versionEsper
         ...base,
         ...copia,
         temaId: dup.nuevoId,
+        moduloId: moduloAhora.get(dup.nuevoId) || null,
         estado: 'borrador',
         duplicadoDe: dup.origenId,
         ...(destino.modo === 'plantilla'
@@ -534,6 +548,7 @@ export async function duplicarCursoEditor(contexto, destino, curso) {
     actualizadoPor: uid,
     ultimaAccion: 'duplicar-curso',
   })
+  const moduloDe = modulosPorTema(datosCurso.estructura)
   for (const grupo of lotes(temas, 20)) {
     const batch = writeBatch(db)
     for (const t of grupo) {
@@ -542,6 +557,7 @@ export async function duplicarCursoEditor(contexto, destino, curso) {
       delete datos.actualizado; delete datos.actualizadoPor
       batch.set(doc(db, 'temas', temaDocId), {
         ...datos,
+        moduloId: moduloDe.get(datos.temaId) || datos.moduloId || null,
         version: 1,
         creadoPor: uid,
         creadoEn: serverTimestamp(),

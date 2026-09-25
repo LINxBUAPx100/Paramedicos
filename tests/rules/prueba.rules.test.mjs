@@ -62,7 +62,7 @@ async function preparar() {
       estructura: [{ id: 'f1', titulo: 'F1', estado: 'publicado', unidades: [{ id: 'principal', temas: [{ id: 't1', titulo: 'T1', estado: 'publicado' }] }] }],
     })
     await pon('temas/ACA-P__tum__t1', {
-      academiaId: 'ACA-P', cursoId: 'ACA-P__tum', temaId: 't1', version: 1, creadoPor: 'seed',
+      academiaId: 'ACA-P', cursoId: 'ACA-P__tum', temaId: 't1', moduloId: 'f1', version: 1, creadoPor: 'seed',
       titulo: 'T1', estado: 'publicado', quiz: [], flashcards: [], secciones: [],
     })
     await pon('evaluaciones/ev1', {

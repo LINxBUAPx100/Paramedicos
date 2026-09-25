@@ -338,6 +338,7 @@ async function clonar(academiaId) {
   const curso = cursoDesdePlantilla({ academiaId, plantilla })
   const { cursoId, temas } = docsClonadosParaAcademia({
     academiaId, plantillaId: plantilla.id, plantillaTemas: temasPlantilla,
+    estructura: curso.estructura,
   })
   console.log(`Clonación "${plantilla.id}" → academia ${academiaId}`)
   console.log(`  curso destino: cursos/${cursoId} · temas destino: ${temas.length} docs en temas/`)

@@ -211,6 +211,24 @@ service cloud.firestore {
     function alumnoLeeCurso(acaId, estado, cursoId) {
       return perteneceA(acaId) && estado == 'publicado' && cursoEnMiPrograma(cursoId);
     }
+    // ¿Este MÓDULO está abierto para mí? (R03, auditoría del 19-09-2026)
+    //
+    // Ocultar un módulo a un grupo era solo de pantalla: useVisibilidad lo
+    // escondía en el menú, pero la lección y sus resúmenes se servían a quien
+    // los pidiera por id. Decisión del dueño (25-09-2026): lo que un alumno no
+    // puede ver, no lo puede descargar por ningún camino.
+    //
+    // Espejo de moduloVisible() en src/lib/useVisibilidad.js: oculto en el
+    // grupo y NO desbloqueado a este alumno en concreto = cerrado.
+    //
+    // Un tema SIN `moduloId` queda cerrado para el alumno. Es el fallo seguro:
+    // si una escritura se olvida de sellarlo, el alumno deja de verlo (y se
+    // nota); nunca ve algo que estaba oculto (y nadie se entera).
+    function moduloAbiertoParaMi(moduloId) {
+      return moduloId is string
+        && (!(moduloId in miGrupo().get('modulosOcultos', []))
+          || moduloId in miDoc().get('modulosDesbloqueados', []));
+    }
     // Plan EFECTIVO de una academia (espejo de src/lib/capacidades.js):
     // tipo 'avanzado' fuerza 'pro'; sin campo planComercial = 'pro' (academia
     // previa a los planes). Solo se evalúa en ESCRITURAS, nunca en lecturas.
@@ -1728,9 +1746,11 @@ service cloud.firestore {
       // alumnos de la academia SOLO temas publicados DE SU PROGRAMA (los
       // borradores no se filtran a los alumnos ni de su propia academia, y el
       // temario de otra carrera tampoco: el tema lleva su `cursoId`).
+      // Y del alumno, además, solo los de un módulo que su grupo no le oculte.
       allow get, list: if esSuper()
         || esStaffDe(resource.data.academiaId)
-        || alumnoLeeCurso(resource.data.academiaId, resource.data.estado, resource.data.cursoId);
+        || (alumnoLeeCurso(resource.data.academiaId, resource.data.estado, resource.data.cursoId)
+          && moduloAbiertoParaMi(resource.data.get('moduloId', null)));
       // Crear: super; director PRO; o profesor con permiso de edición sobre el
       // curso Y el permiso crearTemas (crear un tema nuevo es "crear").
       allow create: if (esSuper()
@@ -1819,7 +1839,14 @@ service cloud.firestore {
             ? (esStaffDe(docId.split('__')[0]) || perteneceA(docId.split('__')[0]))
             : (
               esStaffDe(resource.data.academiaId)
-              || alumnoLeeCurso(resource.data.academiaId, resource.data.estado, resource.data.cursoId)
+              // Un agregado POR MÓDULO trae preguntas, fichas, flashcards,
+              // glosario e imágenes de ese módulo: se cierra igual que sus
+              // lecciones (R03). Los globales (moduloId nulo) solo llevan
+              // términos del glosario, el atlas de claves y contadores, lo
+              // mismo que ya enseña el índice del curso, y siguen abiertos.
+              || (alumnoLeeCurso(resource.data.academiaId, resource.data.estado, resource.data.cursoId)
+                && (resource.data.get('moduloId', null) == null
+                  || moduloAbiertoParaMi(resource.data.moduloId)))
             )
         );
 

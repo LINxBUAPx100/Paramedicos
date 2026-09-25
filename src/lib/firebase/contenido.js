@@ -17,7 +17,7 @@ import {
   query, where, writeBatch, serverTimestamp,
 } from 'firebase/firestore'
 import {
-  cursoIdDe, lotes, cursoDesdePlantilla, docsClonadosParaAcademia,
+  cursoIdDe, lotes, cursoDesdePlantilla, docsClonadosParaAcademia, temasPorSellar,
 } from '../contenidoModelo.js'
 import {
   academiaMigrada, ensamblarModulos, construirApi, construirApiBajoDemanda,
@@ -33,6 +33,9 @@ import { programasVisibles, programasDeGrupo } from '../programasModelo.js'
 import { cursosDelUsuario, cursoAServir } from '../cursosDelUsuario.js'
 import { obtenerPlantilla, temasDePlantilla } from './plantillas.js'
 import { contenidoVacio } from '../contenidoVacio.js'
+import {
+  modulosCerrados, firmaDeCierre, trozosParaIn, leePorRamaDeAlumno,
+} from '../modulosCerrados.js'
 
 // --- Estado de migración de la academia (academias/{id}.contenido) ---------
 // Solo lo escribe el super-admin (las reglas del doc de academia ya lo acotan:
@@ -114,7 +117,9 @@ export async function clonarPlantillaAAcademia({ academiaId, plantillaId, onProg
   await marcarEstadoContenido(academiaId, { estado: 'migrando', plantillaId, version })
   try {
     const curso = cursoDesdePlantilla({ academiaId, plantilla })
-    const { cursoId, temas } = docsClonadosParaAcademia({ academiaId, plantillaId, plantillaTemas })
+    const { cursoId, temas } = docsClonadosParaAcademia({
+      academiaId, plantillaId, plantillaTemas, estructura: curso.estructura,
+    })
 
     const { docId, ...datosCurso } = curso
     await setDoc(doc(db, 'cursos', docId), {
@@ -246,12 +251,25 @@ export async function estructuraDeCurso(cursoId) {
 // El fallo era invisible: ContenidoContext traga ese error y cae al temario del
 // bundle, así que una academia migrada mostraba el contenido genérico como si
 // fuera el suyo. Lo destapó el CI (tests/rules/contenido.rules.test.mjs).
-export async function temasDeCurso(cursoId, { academiaId = null, soloPublicados = true } = {}) {
+//
+// `modulos` (R03): si llega, solo se piden los temas de ESOS módulos. Es lo que
+// hace posible la consulta de un alumno con módulos ocultos: una consulta tiene
+// que poder demostrarse permitida para TODO lo que podría devolver, y sin este
+// filtro incluiría los temas cerrados y las reglas la negarían entera.
+export async function temasDeCurso(cursoId, { academiaId = null, soloPublicados = true, modulos = null } = {}) {
   const filtros = [where('cursoId', '==', cursoId)]
   if (academiaId) filtros.push(where('academiaId', '==', academiaId))
   if (soloPublicados) filtros.push(where('estado', '==', 'publicado'))
-  const snap = await getDocs(query(collection(db, 'temas'), ...filtros))
-  return snap.docs.map((d) => ({ docId: d.id, ...d.data() }))
+  const consulta = async (extra = []) => {
+    const snap = await getDocs(query(collection(db, 'temas'), ...filtros, ...extra))
+    return snap.docs.map((d) => ({ docId: d.id, ...d.data() }))
+  }
+  if (!modulos) return consulta()
+  if (!modulos.length) return []
+  const partes = await Promise.all(
+    trozosParaIn(modulos).map((trozo) => consulta([where('moduloId', 'in', trozo)]))
+  )
+  return partes.flat()
 }
 
 export async function temaDeCurso(cursoId, temaId) {
@@ -294,8 +312,12 @@ function claveAlcance(acceso) {
 // El CURSO entra en la clave: dos cursos de la misma academia y el mismo
 // alcance son contenidos distintos, y sin esto el segundo se serviría desde
 // la caché del primero.
+//
+// Y los MÓDULOS CERRADOS (R03): cuando el profesor abre uno, la clave cambia y
+// el contenido se resuelve otra vez. Sin esto, el alumno seguiría con el
+// módulo cerrado —o abierto— hasta recargar la página.
 const claveContenido = (academiaId, acceso, cursoPreferido = null) =>
-  `${academiaId}||${claveAlcance(acceso)}||${cursoPreferido || "auto"}`
+  `${academiaId}||${claveAlcance(acceso)}||${cursoPreferido || "auto"}||${firmaDeCierre(acceso)}`
 
 /**
  * Cursos que esta persona puede leer, PIDIENDO SOLO LOS SUYOS.
@@ -383,9 +405,19 @@ async function cargarDeFirestore(academiaId, acceso, cursoPreferido = null) {
   }
   // academiaId es OBLIGATORIO aquí: es el camino del ALUMNO y su regla de
   // lectura se apoya en ese campo (ver el comentario de temasDeCurso).
-  const temas = await temasDeCurso(curso.id, { academiaId })
+  //
+  // Un alumno pide solo los módulos abiertos (R03), aunque no tenga ninguno
+  // cerrado: la regla lo exige para poder permitir la consulta. Los cerrados
+  // entran como fichas sin contenido: el menú sigue igual y nada oculto baja.
+  const cerrados = modulosCerrados(acceso)
+  const temas = await temasDeCurso(curso.id, {
+    academiaId,
+    modulos: leePorRamaDeAlumno(acceso)
+      ? (curso.estructura || []).map((m) => m.id).filter((id) => id && !cerrados.has(id))
+      : null,
+  })
   const temasPorId = new Map(temas.map((t) => [t.temaId, t]))
-  const { modulos, faltantes } = ensamblarModulos(curso.estructura, temasPorId)
+  const { modulos, faltantes } = ensamblarModulos(curso.estructura, temasPorId, { modulosCerrados: cerrados })
   if (faltantes.length) {
     throw new Error(`Faltan ${faltantes.length} temas del curso ${curso.id}: ${faltantes.slice(0, 5).join(', ')}…`)
   }
@@ -588,6 +620,7 @@ async function bajoDemandaDeFirestore(academia, acceso, cursoPreferido) {
       return docTema ? temaDesdeDoc(docTema) : null
     },
     cargarAgregado: (tipo, moduloId) => leerAgregado(cursoId, tipo, moduloId),
+    modulosCerrados: modulosCerrados(acceso),
   })
 }
 
@@ -652,9 +685,51 @@ export async function regenerarAgregados(academiaId, cursoId) {
     modulos: construirApi(modulos).modulos,
     version: (sello?.version || 0) + 1,
   })
+  const sellado = await sellarModulosDeTemas(curso.estructura, temas)
   limpiarCacheContenido(academiaId)
   cacheBajoDemanda.clear()
-  return resultado
+  return { ...resultado, sellado }
+}
+
+/**
+ * Escribe en cada tema el `moduloId` que le da la estructura, si no lo tiene.
+ *
+ * Va DENTRO de la regeneración de índices a propósito (R03, 25-09-2026). Las
+ * reglas nuevas cierran al alumno todo tema sin módulo, así que los 288 temas
+ * de producción, escritos antes de que existiera el campo, tienen que llevarlo
+ * ANTES de desplegar esas reglas. Pulsar «Generar los índices» ya lee todos
+ * los temas del curso; sellarlos ahí no cuesta ni una lectura más, y no pide
+ * la clave de servicio que exigiría un script.
+ *
+ * Sube la `version` de cada tema que toca porque así lo exige la regla de
+ * edición del director. Cuando no hay nada que sellar no escribe nada, que es
+ * el caso normal de todas las regeneraciones siguientes.
+ *
+ * Nunca tumba la regeneración: los índices ya están escritos, y un sellado a
+ * medias se completa en la siguiente pasada.
+ */
+async function sellarModulosDeTemas(estructura, temas) {
+  const pendientes = temasPorSellar(estructura, temas)
+  let escritos = 0
+  try {
+    for (const grupo of lotes(pendientes, 20)) {
+      const batch = writeBatch(db)
+      for (const p of grupo) {
+        batch.update(doc(db, 'temas', p.docId), {
+          moduloId: p.moduloId,
+          version: p.version + 1,
+          actualizado: serverTimestamp(),
+          actualizadoPor: auth.currentUser?.uid || null,
+        })
+      }
+      await batch.commit()
+      escritos += grupo.length
+    }
+    return { pendientes: pendientes.length, escritos, error: null }
+  } catch (err) {
+    console.warn('[contenido] Sellado de módulos incompleto:', err?.code || err?.message || err)
+    return { pendientes: pendientes.length, escritos, error: err?.message || String(err) }
+  }
 }
 
 // Temporizadores de regeneración por curso.
