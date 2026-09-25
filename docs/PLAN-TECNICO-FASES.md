@@ -95,6 +95,7 @@ real.
 
 | Trabajo | De dónde venía |
 |---|---|
+| **S1** — Suspender revoca en el servidor (R02) y la firma docente exige pase en reglas (R04) (25-09-2026) | auditoría de riesgos del 19-09-2026 · ver «Trabajo S» |
 | **A** — Calidad editorial v2: el molde v2 en las 268 lecciones con material (07-09-2026) | `PLAN-LMS.md` §25 |
 | **O4c** — Entorno del rol `recepcion`: home propio, buscador, asistencia, caja, tienda y reporte imprimible (20-09-2026) | trabajo O · pedido el 20-09-2026 |
 | **Ma** — Tienda: catálogo con imágenes (director y super-admin), carrito del alumno y pedido que recepción confirma, cobra y entrega (20-09-2026) | trabajo M · pedido el 20-09-2026 |
@@ -144,6 +145,7 @@ real.
 | # | Trabajo | Duración | Depende de |
 |---|---|---|---|
 | **F1** | Dominio propio + Firebase Hosting + `BrowserRouter` | 1-2 días | — · **cabe en Spark** · las portadas de P4 ya existen y esperan sus URLs |
+| **S2** | Resto de la auditoría de riesgos: R03, R05-R13 | variable | **R01 (repo público) es del dueño y va antes que todo** · R03 espera una decisión · ver «Trabajo S» |
 | **B** | Mi Botiquín (inventario de videojuego) | lógica corta · media con la capa visual | **concepto cerrado 07-09-2026** (`docs/BOTIQUIN-CONCEPTO.md`) · B.0-B.2 sin dependencias, empiezan ya · las imágenes esperan presupuesto · **comparte catálogo con M** |
 | **R2** | Retar a un compañero | 2-3 semanas | **R1** ✔ · **F2** (tiempo real) · **A** (sin temas validados no hay banco) |
 | **O2** | Bloqueo por pago + bypass auditado | 3-5 días | O1 |
@@ -176,6 +178,55 @@ real.
 > academias **muy a futuro**, hoy solo se trabaja para RESCATE, y el contenido
 > tiene que quedar blindado antes que cualquier función nueva. El bloque P es
 > ese blindaje, más la portada pública que la venta futura va a necesitar.
+
+---
+
+## Trabajo S — Auditoría de riesgos del 19-09-2026
+
+`docs/AUDITORIA-RIESGOS-RESCATE-2026-09-19.md` encontró trece riesgos y este
+plan **no la registraba**: la auditoría se entregó el 19 y el trabajo del 20 y
+el 21 siguió con recepción y tienda como si no existiera.
+
+### S1 — R02 y R04 · HECHO el 25-09-2026 · reglas SIN desplegar
+
+- **R02 — suspender ya revoca en el servidor.** `perteneceA`, `esStaffDe`,
+  `esAdminDe` y `esRecepcionDe` exigen ahora `cuentaActiva()` y
+  `academiaEnServicio()`, espejo de `calcularAcceso()`: perfil sin `estado` =
+  activo, y una prueba vigente no depende del estado de la academia. Un
+  super-admin POR ROL también se suspende; el supremo, no. Lo mismo en
+  `storage.rules`. Coste: un `get()` más por petición (el documento de la
+  academia, cacheado dentro de ella).
+- **R04 — la firma docente exige pase en las reglas.** Escribir
+  `validaciones/{academiaId}` pide ser director, profesor con pase vigente o
+  con permiso de publicar, o super-admin (espejo de `puedeRevisar()`). Cada
+  escritura declara el tema que toca (`ultimoTema`) y quién la hace
+  (`ultimoUid`); la firma lleva el uid de la sesión y la fecha la pone el
+  servidor. Un profesor retira solo SU firma; el director, cualquiera; borrar
+  el documento entero, solo el super-admin. El pase `hasta` (AAAA-MM-DD) vale
+  hasta el final de ese día en México: 00:00 UTC + 30 h.
+- **Destapado de paso:** `datosDeContactoValidos()` exigía `nombre` y `email`
+  aunque no cambiaran, así que un perfil sin nombre no aceptaba NINGUNA
+  edición del director (grupos, códigos). Cuatro pruebas de reglas fallaban
+  desde el 20-09. Ahora solo se validan si cambian.
+
+Pruebas: `tests/rules/suspension.rules.test.mjs` (nuevo) y
+`validaciones.rules.test.mjs` (reescrito con los negativos de la auditoría:
+sin pase, pase vencido, firma ajena, dos temas en una escritura, borrado).
+`npm run test:rules`: **204/204** (antes 182/186).
+
+**Falta:** desplegar `firestore.rules` y `storage.rules` —lo hace el dueño—
+y, a la vez, publicar el cliente (`lib/firebase/validaciones.js` manda ya los
+dos campos nuevos; con las reglas nuevas y el cliente viejo, firmar falla). No
+se hizo la referencia a la versión del contenido en cada firma que pedía R04:
+es cambio de modelo, no de reglas.
+
+### S2 — Lo que queda
+
+| | Qué | De quién |
+|---|---|---|
+| **R01** | El repositorio de GitHub es PÚBLICO (comprobado de nuevo el 25-09): el temario con respuestas se descarga sin cuenta | del dueño: cambiar visibilidad cuidando GitHub Pages |
+| **R03** | Ocultar un tema a un grupo es solo de pantalla | decisión: ¿confidencial o pedagógico? |
+| R05-R13 | Storage por curso, visor protegido, imágenes, cuentas compartidas, App Check, exámenes en cliente, continuidad | ver la auditoría |
 
 ---
 

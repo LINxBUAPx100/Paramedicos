@@ -81,6 +81,13 @@ async function preparar() {
     })
     await setDoc(doc(db, 'usuarios/alumA'), { rol: 'alumno', academiaId: 'ACA-A', estado: 'activo' })
     await setDoc(doc(db, 'usuarios/alumB'), { rol: 'alumno', academiaId: 'ACA-B', estado: 'activo' })
+    // R02 (auditoría del 19-09-2026): suspendido, y activo de una academia
+    // suspendida. Sin cuentaActiva()/academiaEnServicio() en storage.rules los
+    // dos seguían descargando los adjuntos con la sesión abierta.
+    await setDoc(doc(db, 'academias/ACA-S'), { nombre: 'S', estado: 'suspendida', planComercial: 'pro' })
+    await setDoc(doc(db, 'usuarios/alumSuspSt'), { rol: 'alumno', academiaId: 'ACA-A', estado: 'suspendido' })
+    await setDoc(doc(db, 'usuarios/alumAcaSuspSt'), { rol: 'alumno', academiaId: 'ACA-S', estado: 'activo' })
+    await setDoc(doc(db, 'usuarios/dirSuspSt'), { rol: 'admin_escuela', academiaId: 'ACA-A', estado: 'suspendido' })
     // Acceso de PRUEBA de la academia A, uno vivo y uno vencido. El vencido
     // es el que importa: sin pruebaVencida() en storage.rules el temario
     // quedaba cerrado y sus adjuntos se seguían descargando.
@@ -98,6 +105,11 @@ async function preparar() {
   await env.withSecurityRulesDisabled(async (ctx) => {
     const { ref, uploadBytes } = st
     await uploadBytes(ref(ctx.storage(), 'academias/ACA-A/archivos/existente.pdf'), PDF, {
+      contentType: 'application/pdf',
+    })
+    // Y otro en la academia suspendida: sin él, la prueba de R02 fallaría por
+    // «no existe» y no por la regla.
+    await uploadBytes(ref(ctx.storage(), 'academias/ACA-S/archivos/existente.pdf'), PDF, {
       contentType: 'application/pdf',
     })
   })
@@ -195,4 +207,14 @@ test('storage: una prueba VENCIDA deja de descargar los adjuntos de la academia'
   await assertSucceeds(getBytes(ref(almacenDe('pruebaVivaSt'), archivo)))
   // Al vencer deja de pertenecer, y con ello pierde también los archivos.
   await assertFails(getBytes(ref(almacenDe('pruebaMuertaSt'), archivo)))
+})
+
+test('storage R02: suspendido, o de academia suspendida, no descarga ni sube', { skip }, async () => {
+  await preparar()
+  const { ref, getBytes, uploadBytes } = st
+  const { assertFails } = rut
+  await assertFails(getBytes(ref(almacenDe('alumSuspSt'), 'academias/ACA-A/archivos/existente.pdf')))
+  await assertFails(getBytes(ref(almacenDe('alumAcaSuspSt'), 'academias/ACA-S/archivos/existente.pdf')))
+  // El director suspendido tampoco sube: puedeEditar() pasa por perteneceA().
+  await assertFails(uploadBytes(ref(almacenDe('dirSuspSt'), 'academias/ACA-A/archivos/susp.pdf'), PDF, { contentType: 'application/pdf' }))
 })

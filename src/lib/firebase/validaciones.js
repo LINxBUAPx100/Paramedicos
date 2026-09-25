@@ -17,10 +17,13 @@
 //  usa `merge` sobre la rama del tema, así que dos docentes que validan temas
 //  distintos a la vez no se pisan.
 //
-//  La barrera REAL es firestore.rules: escribir exige ser super-admin o staff
-//  de esa misma academia. Aquí se comprueba la forma antes de tocar la red.
+//  La barrera REAL es firestore.rules (R04, 19-09-2026): escribir exige ser
+//  super-admin, director de esa academia o profesor con pase vigente. Cada
+//  escritura declara el ÚNICO tema que toca (`ultimoTema`) y quién la hace
+//  (`ultimoUid`), y la firma nueva lleva el uid de quien escribe; sin eso las
+//  reglas la rechazan. Aquí se comprueba la forma antes de tocar la red.
 // ============================================================
-import { db } from './init.js'
+import { auth, db } from './init.js'
 import { doc, getDoc, setDoc, deleteField, serverTimestamp } from 'firebase/firestore'
 import {
   DOC_PLATAFORMA, combinarValidaciones, docValidacionesDe, mapaDeValidaciones,
@@ -28,6 +31,14 @@ import {
 } from '../validacionesModelo.js'
 
 const refDe = (academiaId) => doc(db, 'validaciones', docValidacionesDe(academiaId))
+
+// Quién escribe, tal como lo verá la regla. Sale de la sesión y no de un
+// parámetro: la firma es de quien la pone, no de lo que diga quien llama.
+function uidDeSesion() {
+  const uid = auth.currentUser?.uid
+  if (!uid) throw new Error('Inicia sesión para firmar la revisión.')
+  return uid
+}
 
 /**
  * Mapa `temaId → validación` de una academia. Una lectura.
@@ -73,8 +84,10 @@ export async function validarTema({
   revisadoPor, comentario = '', fuentes = [], fecha, uid = null, nombre = '',
 }) {
   if (!temaId) throw new Error('Falta el tema que se va a validar.')
+  const firmante = uidDeSesion()
+  if (uid && uid !== firmante) throw new Error('La firma no coincide con la sesión abierta.')
   const validacion = normalizarValidacion({
-    estado, revisadoPor, comentario, fuentes, fecha, uid, nombre,
+    estado, revisadoPor, comentario, fuentes, fecha, uid: firmante, nombre,
   })
   await setDoc(
     refDe(academiaId),
@@ -82,6 +95,8 @@ export async function validarTema({
       academiaId: academiaId || null,
       temas: { [temaId]: validacion },
       actualizado: serverTimestamp(),
+      ultimoTema: temaId,
+      ultimoUid: firmante,
     },
     { merge: true }
   )
@@ -100,7 +115,13 @@ export async function retirarValidacionTema({ academiaId = null, temaId }) {
   if (!temaId) throw new Error('Falta el tema cuya validacion se retira.')
   await setDoc(
     refDe(academiaId),
-    { temas: { [temaId]: deleteField() }, actualizado: serverTimestamp() },
+    {
+      academiaId: academiaId || null,
+      temas: { [temaId]: deleteField() },
+      actualizado: serverTimestamp(),
+      ultimoTema: temaId,
+      ultimoUid: uidDeSesion(),
+    },
     { merge: true }
   )
 }

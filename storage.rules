@@ -44,11 +44,25 @@ service firebase.storage {
         && !(miDoc().get('pruebaHasta', null) is timestamp
              && miDoc().pruebaHasta > request.time);
     }
+    // Suspendido, o de una academia suspendida = no pertenece (R02, auditoría
+    // del 19-09-2026). MISMO criterio que cuentaActiva()/academiaEnServicio()
+    // en firestore.rules: sin `estado` = activo, y una prueba vigente no
+    // depende del estado de la academia. Si cambias uno, cambia el otro.
+    function cuentaActiva() {
+      return miDoc().get('estado', 'activo') == 'activo';
+    }
+    function academiaEnServicio(acaId) {
+      return miDoc().get('esPrueba', false) == true
+        || (firestore.exists(/databases/(default)/documents/academias/$(acaId))
+          && academiaDoc(acaId).get('estado', '') == 'activo');
+    }
     function perteneceA(acaId) {
       return autenticado()
         && firestore.exists(/databases/(default)/documents/usuarios/$(request.auth.uid))
         && miDoc().academiaId == acaId
-        && !pruebaVencida();
+        && !pruebaVencida()
+        && cuentaActiva()
+        && academiaEnServicio(acaId);
     }
     // --- Capacidades de la academia: MISMO cuerpo que en firestore.rules ---
     // Esta función derivaba el plan por su cuenta y le faltaban DOS cosas que

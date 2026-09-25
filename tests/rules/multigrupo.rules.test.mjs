@@ -134,10 +134,15 @@ test('asignar grupos no sirve para colar otros cambios en el perfil', { skip }, 
   const { assertFails } = rut
 
   // La lista blanca de campos del director sigue en pie: `grupoIds` se suma a
-  // ella, no la abre. Un correo o unos permisos editoriales cambiados de paso
-  // pasarían inadvertidos entre asignaciones de grupo.
+  // ella, no la abre. Una marca de prueba o unos permisos editoriales
+  // cambiados de paso pasarían inadvertidos entre asignaciones de grupo.
+  //
+  // Hasta el 25-09-2026 el primer caso era el CORREO, y pasaba por accidente:
+  // la ficha única del 20-09 le dio al director permiso para corregir el correo
+  // de su gente, pero la regla de contacto reventaba con perfiles sin `nombre`
+  // —como este— y la escritura se denegaba por el motivo equivocado.
   await assertFails(
-    updateDoc(doc(como('dirA'), 'usuarios/profA2'), { grupoIds: ['G-A1'], email: 'otro@ejemplo.mx' })
+    updateDoc(doc(como('dirA'), 'usuarios/profA2'), { grupoIds: ['G-A1'], esPrueba: true })
   )
   await assertFails(
     updateDoc(doc(como('dirA'), 'usuarios/profA2'), {
