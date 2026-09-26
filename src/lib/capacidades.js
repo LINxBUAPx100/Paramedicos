@@ -42,6 +42,8 @@ export const ETIQUETA_TIPO = {
 const POR_PLAN = {
   base: {
     editorContenido: false,
+    // Entrenador de farmacología (PLAN-LMS §27, decisión 15: solo Pro).
+    entrenadorFarmacologia: false,
     personalizacionVisual: false,
     paginaInicioConfigurable: false,
     certificados: false,
@@ -60,6 +62,8 @@ const POR_PLAN = {
   },
   pro: {
     editorContenido: true,
+    // Entrenador de farmacología (PLAN-LMS §27, decisión 15: solo Pro).
+    entrenadorFarmacologia: true,
     personalizacionVisual: true,
     paginaInicioConfigurable: true,
     certificados: true,
@@ -78,6 +82,8 @@ const POR_PLAN = {
   },
   curso: {
     editorContenido: true, // limitado a su único curso (maxCursos)
+    // Entrenador de farmacología (PLAN-LMS §27, decisión 15: solo Pro).
+    entrenadorFarmacologia: false,
     personalizacionVisual: true,
     paginaInicioConfigurable: true, // página enfocada en la capacitación
     certificados: true, // opcional: la academia decide activarlo

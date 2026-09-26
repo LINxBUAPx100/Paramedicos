@@ -1,0 +1,602 @@
+// ============================================================
+//  Dosis citadas fuera de AHA 2025 y presentaciones mexicanas
+// ------------------------------------------------------------
+//  Misma regla que dosis.js: cada cifra se leyó en su fuente durante la
+//  investigación del 25-09-2026 y lleva documento, edición, año, sección o
+//  página y una cita literal. Las presentaciones salen del Compendio
+//  Nacional de Insumos para la Salud 2025 (DOF 26-04-2025), con su clave.
+// ============================================================
+
+const op = (texto, porque, correcta = false) => ({ texto, porque, correcta })
+
+const dm = (producto, setid, edicion, anio, seccion) => ({
+  documento: `${producto}, información para prescribir (FDA, DailyMed)`,
+  edicion, anio, seccion,
+  url: `https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=${setid}`,
+})
+const NASEMSO = (seccion, pagina) => ({
+  documento: 'NASEMSO National Model EMS Clinical Guidelines (EE. UU.)',
+  edicion: 'Versión 3.0, marzo 2022', anio: 2022, seccion, pagina,
+  url: 'https://ems.utah.gov/wp-content/uploads/sites/34/2024/05/National-Model-EMS-Clinical-Guidelines_2022.pdf',
+})
+const AES = {
+  documento: 'Glauser T et al. Evidence-Based Guideline: Treatment of Convulsive Status Epilepticus in Children and Adults (American Epilepsy Society). Epilepsy Curr 16(1):48-61',
+  edicion: '2016', anio: 2016, seccion: 'Figura 1, fase de terapia inicial',
+  url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC4749120/',
+}
+const WAO = {
+  documento: 'Cardona V et al. World Allergy Organization Anaphylaxis Guidance 2020. World Allergy Organ J 13:100472',
+  edicion: '2020', anio: 2020, seccion: 'Acute treatment of anaphylaxis; Tabla 6',
+  url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC7607509/',
+}
+const CNIS = (pagina) => ({
+  documento: 'Compendio Nacional de Insumos para la Salud, versión 2025 (CSG)',
+  edicion: 'DOF 26-04-2025', anio: 2025, pagina: `${pagina} del PDF`,
+  url: 'https://www.csg.gob.mx/Comp26042025.pdf',
+})
+
+export const DOSIS_URGENCIAS = {
+  adrenalina: [
+    {
+      id: 'anafilaxia-adulto',
+      indicacion: 'Anafilaxia',
+      escenario: 'Anafilaxia con compromiso respiratorio tras una picadura',
+      poblacion: 'adulto',
+      via: 'IM',
+      dosisTexto: '0.01 mg/kg de la solución 1 mg/mL, hasta 0.5 mg por dosis; en adolescentes y adultos, 0.5 mg.',
+      repeticion: 'Repetir cada 5-15 minutos si los síntomas no ceden.',
+      calculo: { tipo: 'fija', valor: 0.5, unidadMasa: 'mg', presentacion: '1mg-1ml' },
+      administracion: {
+        pregunta: '¿Dónde se aplica?',
+        opciones: [
+          op('Cara anterolateral del muslo (vasto lateral)', 'Correcto: la guía indica IM en la cara anterolateral del muslo.', true),
+          op('Deltoides', 'La guía indica la cara anterolateral del muslo, no el deltoides.'),
+          op('Glúteo', 'La guía indica la cara anterolateral del muslo.'),
+          op('Bolo IV directo de la ampolleta 1 mg/mL', 'En anafilaxia la vía de primera línea es IM; el bolo IV de 1 mg es el esquema del PARO, y no son intercambiables.'),
+        ],
+      },
+      fuente: WAO,
+      cita: '0.01 mg/kg of body weight, to a maximum total dose of 0.5 mg',
+    },
+    {
+      id: 'anafilaxia-pediatrica',
+      indicacion: 'Anafilaxia',
+      escenario: 'Anafilaxia tras ingerir cacahuate',
+      poblacion: 'pediatrico',
+      via: 'IM',
+      dosisTexto: '0.01 mg/kg (0.01 mL/kg de 1 mg/mL), máximo 0.5 mg por dosis.',
+      repeticion: 'Repetir cada 5-15 minutos si los síntomas no ceden.',
+      calculo: { tipo: 'porKg', valor: 0.01, unidadMasa: 'mg', maximo: 0.5, presentacion: '1mg-1ml' },
+      fuente: WAO,
+      cita: 'Dosing should be repeated every 5–15 min if symptoms are refractory to treatment',
+    },
+  ],
+  noradrenalina: [
+    {
+      id: 'hipotension-infusion',
+      indicacion: 'Hipotensión aguda que requiere vasopresor',
+      escenario: 'Hipotensión que no responde a líquidos; se indica infusión de noradrenalina por vena grande',
+      poblacion: 'adulto',
+      via: 'IV',
+      dosisTexto: 'Inicio 8-12 mcg/min; mantenimiento típico 2-4 mcg/min. La etiqueta diluye 4 mg en 1000 mL de dextrosa 5 % (4 mcg/mL).',
+      repeticion: 'Titular según la presión arterial; mantenimiento típico 2-4 mcg/min.',
+      nota: 'El Compendio Nacional de Insumos 2025 da 16-24 mcg/min. El ejercicio usa la etiqueta FDA.',
+      calculo: { tipo: 'infusionFija', valor: 8, dilucion: { mg: 4, ml: 1000 }, dilucionCitada: true },
+      fuente: dm('LEVOPHED (noradrenalina)', '2c7dd2b0-cc10-4db6-bf56-6eb154ebeb10', 'vigente 12-06-2025', 2025, '2.2 Dosage; 2.3 Preparation of Diluted Solution'),
+      cita: 'After an initial dosage of 8 to 12 mcg per minute via intravenous infusion, assess patient response and adjust dosage',
+    },
+  ],
+  fentanilo: [
+    {
+      id: 'analgesia',
+      indicacion: 'Dolor moderado a severo',
+      escenario: 'Fractura de fémur cerrada con dolor intenso, sin datos de choque',
+      poblacion: 'adulto',
+      via: 'IV',
+      dosisTexto: '1 mcg/kg IN, IM, IV o IO; dosis inicial máxima 100 mcg.',
+      repeticion: 'Se puede repetir a los 5 minutos si el dolor y los signos vitales lo permiten.',
+      nota: 'Guía de EMS de EE. UU., no protocolo mexicano. El Compendio da 0.05-0.15 mg/kg, que es la dosis de ANESTESIA general, no la analgésica.',
+      calculo: { tipo: 'porKg', valor: 1, unidadMasa: 'mcg', maximo: 100, presentacion: '0.5mg-10ml' },
+      fuente: NASEMSO('General Medical – Pain Management, 6.b.i', '94 del PDF'),
+      cita: 'Fentanyl: i. 1 mcg/kg IN, IM, IV or IO (maximum initial dose of 100 mcg)',
+    },
+  ],
+  ketamina: [
+    {
+      id: 'analgesia',
+      indicacion: 'Dolor moderado a severo (dosis subdisociativa)',
+      escenario: 'Paciente atrapado con dolor intenso; se elige ketamina a dosis analgésica',
+      poblacion: 'adulto',
+      via: 'IV',
+      dosisTexto: '0.25 mg/kg IM, IV o IO; dosis inicial máxima 25 mg; acumulada máxima 100 mg.',
+      repeticion: 'Se puede repetir a los 5 minutos según reevaluación, sin pasar de 100 mg acumulados.',
+      nota: 'Uso fuera de etiqueta; guía de EMS de EE. UU.',
+      calculo: { tipo: 'porKg', valor: 0.25, unidadMasa: 'mg', maximo: 25, presentacion: '500mg-10ml' },
+      fuente: NASEMSO('General Medical – Pain Management, 6.d.i', '94 del PDF'),
+      cita: 'Ketamine: i. 0.25 mg/kg IM, IV or IO (maximum initial dose 25 mg; maximum cumulative dose 100 mg)',
+    },
+  ],
+  midazolam: [
+    {
+      id: 'status-im',
+      indicacion: 'Estado epiléptico convulsivo sin acceso IV',
+      escenario: 'Crisis convulsiva de más de 5 minutos, sin acceso venoso',
+      poblacion: 'adulto',
+      via: 'IM',
+      dosisTexto: '10 mg IM si pesa más de 40 kg; 5 mg si pesa 13-40 kg. Dosis única.',
+      repeticion: 'Dosis única en la fase inicial.',
+      calculo: { tipo: 'fija', valor: 10, unidadMasa: 'mg', presentacion: '15mg-3ml' },
+      administracion: {
+        pregunta: 'Si el paciente pesara 30 kg, ¿qué dosis correspondería?',
+        opciones: [
+          op('5 mg', 'Correcto: de 13 a 40 kg, 5 mg; por encima de 40 kg, 10 mg.', true),
+          op('10 mg', 'Esa es la dosis para más de 40 kg.'),
+          op('0.2 mg/kg', 'La guía da dosis fijas por tramo de peso para el midazolam IM.'),
+          op('15 mg, la ampolleta completa', 'No existe esa dosis en la guía.'),
+        ],
+      },
+      fuente: AES,
+      cita: 'Intramuscular midazolam (10 mg for > 40 kg, 5 mg for 13-40 kg, single dose, Level A)',
+    },
+  ],
+  diazepam: [
+    {
+      id: 'status-iv',
+      indicacion: 'Estado epiléptico convulsivo',
+      escenario: 'Crisis convulsiva de más de 5 minutos con acceso IV permeable',
+      poblacion: 'adulto',
+      via: 'IV',
+      dosisTexto: '0.15-0.2 mg/kg/dosis, máximo 10 mg por dosis; puede repetirse una vez.',
+      repeticion: 'Puede repetirse una vez.',
+      calculo: { tipo: 'porKg', valor: 0.2, unidadMasa: 'mg', maximo: 10, presentacion: '10mg-2ml' },
+      fuente: AES,
+      cita: 'Intravenous diazepam (0.15-0.2 mg/kg/dose, max: 10 mg/dose, may repeat dose once, Level A)',
+    },
+  ],
+  etomidato: [
+    {
+      id: 'induccion',
+      indicacion: 'Inducción para intubación',
+      escenario: 'Intubación de secuencia rápida autorizada por el protocolo del servicio',
+      poblacion: 'adulto',
+      via: 'IV',
+      dosisTexto: '0.2-0.6 mg/kg; dosis habitual 0.3 mg/kg, en 30-60 segundos.',
+      calculo: { tipo: 'porKg', valor: 0.3, unidadMasa: 'mg', presentacion: '20mg-10ml' },
+      administracion: {
+        pregunta: '¿Qué NO aporta el etomidato?',
+        opciones: [
+          op('Analgesia', 'Correcto: es un hipnótico sin efecto analgésico; el dolor se trata aparte.', true),
+          op('Hipnosis', 'La hipnosis es precisamente su efecto.'),
+          op('Inicio rápido', 'Se inyecta en 30-60 segundos para la inducción.'),
+          op('Nada: es un anestésico completo', 'No proporciona analgesia.'),
+        ],
+      },
+      fuente: dm('AMIDATE (etomidato)', 'b7ed5bf8-ba75-44dc-8f81-96b4ad5766be', 'vigente 20-05-2026', 2026, 'Dosage and Administration'),
+      cita: 'The usual dose for induction in these patients is 0.3 mg/kg, injected over a period of 30 to 60 seconds.',
+    },
+  ],
+  propofol: [
+    {
+      id: 'induccion',
+      indicacion: 'Inducción de anestesia general',
+      escenario: 'Inducción en un adulto menor de 65 años, ASA I-II, con vigilancia avanzada',
+      poblacion: 'adulto',
+      via: 'IV',
+      dosisTexto: 'Adulto menor de 65 años ASA I-II: 2-2.5 mg/kg; ancianos o ASA III-IV: 1-1.5 mg/kg. Titular.',
+      calculo: { tipo: 'porKg', valor: 2, unidadMasa: 'mg', presentacion: '200mg-20ml' },
+      fuente: dm('Propofol emulsión inyectable (Pfizer)', '3acf8e6c-827d-11e2-9e96-0800200c9a66', 'vigente 18-09-2026', 2026, '2.2 Induction of General Anesthesia'),
+      cita: 'Most adult patients under 65 years of age and classified as ASA-PS I or II require 2 mg/kg to 2.5 mg/kg',
+    },
+  ],
+  'rocuronio-vecuronio': [
+    {
+      id: 'rocuronio-isr',
+      indicacion: 'Rocuronio para intubación de secuencia rápida',
+      escenario: 'Secuencia rápida autorizada; el equipo usa 1 mg/kg de rocuronio, dentro del rango de 0.6-1.2 mg/kg',
+      poblacion: 'adulto',
+      via: 'IV',
+      dosisTexto: 'Intubación: 0.6 mg/kg. Secuencia rápida: 0.6-1.2 mg/kg.',
+      calculo: { tipo: 'porKg', valor: 1, unidadMasa: 'mg', presentacion: 'roc-50mg-5ml' },
+      administracion: {
+        pregunta: '¿Qué produce el bloqueador neuromuscular?',
+        opciones: [
+          op('Parálisis, sin inconsciencia ni analgesia', 'Correcto: por eso exige sedación y analgesia suficientes durante todo su efecto.', true),
+          op('Sedación profunda', 'No seda: un paciente paralizado puede estar despierto.'),
+          op('Analgesia', 'No quita el dolor.'),
+          op('Parálisis y sueño', 'No produce inconsciencia.'),
+        ],
+      },
+      fuente: dm('Bromuro de rocuronio inyectable (Fresenius Kabi)', '04c9812d-5aa3-4949-ad02-c618028f1bb0', 'vigente 02-08-2026', 2026, '2.2 Tracheal Intubation; 2.3 Rapid Sequence Intubation'),
+      cita: 'Rocuronium Bromide Injection 0.6 mg/kg to 1.2 mg/kg will provide excellent or good intubating conditions in most patients in less than 2 minutes',
+    },
+    {
+      id: 'vecuronio-intubacion',
+      indicacion: 'Vecuronio para intubación',
+      escenario: 'Intubación autorizada; el equipo usa vecuronio a 0.1 mg/kg',
+      poblacion: 'adulto',
+      via: 'IV',
+      dosisTexto: 'Dosis inicial 0.08-0.1 mg/kg.',
+      calculo: { tipo: 'porKg', valor: 0.1, unidadMasa: 'mg', presentacion: 'vec-4mg-1ml' },
+      fuente: dm('Bromuro de vecuronio para inyección (Sun Pharma)', 'a14da3ee-a731-4282-be9d-407473517470', 'vigente 24-07-2026', 2026, 'Dosage and Administration'),
+      cita: 'The recommended initial dose of vecuronium bromide is 0.08 to 0.1 mg/kg',
+    },
+  ],
+  ketorolaco: [
+    {
+      id: 'dosis-unica-iv',
+      indicacion: 'Dolor agudo moderadamente severo',
+      escenario: 'Cólico renoureteral en un adulto de 40 años sin sangrado ni daño renal conocido',
+      poblacion: 'adulto',
+      via: 'IV',
+      dosisTexto: 'IV: una dosis de 30 mg (15 mg en ≥65 años, daño renal o <50 kg). IM: 60 mg (30 mg en esos grupos).',
+      repeticion: 'En dosis múltiples, 30 mg cada 6 h, máximo 120 mg/día y no más de 5 días en total.',
+      nota: 'El Compendio limita la duración a 4 días en adultos; la etiqueta FDA, a 5.',
+      calculo: { tipo: 'fija', valor: 30, unidadMasa: 'mg', presentacion: '30mg-1ml' },
+      administracion: {
+        pregunta: 'Si el paciente tuviera 70 años, ¿qué dosis IV correspondería?',
+        opciones: [
+          op('15 mg', 'Correcto: en ≥65 años, daño renal o menos de 50 kg, la dosis IV baja a 15 mg.', true),
+          op('30 mg', 'Es la dosis para menores de 65 años sin factores de riesgo.'),
+          op('60 mg', 'Es la dosis IM de adulto, no la IV.'),
+          op('No se ajusta por edad', 'La etiqueta la reduce a partir de 65 años.'),
+        ],
+      },
+      fuente: dm('Ketorolaco trometamina inyectable (Cardinal Health)', '6758cb38-dec8-468f-94e2-613772e39b9a', 'vigente 28-08-2026', 2026, 'Dosage and Administration – Single-Dose Treatment'),
+      cita: 'Intravenous Dosing • Patients <65 years of age: One dose of 30 mg.',
+    },
+  ],
+  metamizol: [
+    {
+      id: 'dolor-im',
+      indicacion: 'Dolor agudo o fiebre',
+      escenario: 'Dolor agudo de moderada intensidad en un adulto sin antecedentes hematológicos',
+      poblacion: 'adulto',
+      via: 'IM',
+      dosisTexto: 'IM profunda: 1 g cada 6 u 8 horas. IV: 1 a 2 g cada 12 horas.',
+      calculo: { tipo: 'fija', valor: 1, unidadMasa: 'g', presentacion: '1g-2ml' },
+      fuente: { ...CNIS(4), seccion: 'Grupo Analgesia, metamizol sódico, clave 010.000.0109.00' },
+      cita: '1 g cada 6 u 8 horas por vía intramuscular profunda. 1 a 2 g cada 12 horas por vía intravenosa.',
+    },
+  ],
+  nalbufina: [
+    {
+      id: 'dolor',
+      indicacion: 'Dolor moderado a severo',
+      escenario: 'Dolor moderado a severo en un adulto de alrededor de 70 kg',
+      poblacion: 'adulto',
+      via: 'IV',
+      dosisTexto: '10 mg por cada 70 kg, cada 3-6 h si hace falta; máximo 20 mg por dosis y 160 mg al día.',
+      calculo: { tipo: 'fija', valor: 10, unidadMasa: 'mg', presentacion: '10mg-1ml' },
+      fuente: dm('Clorhidrato de nalbufina inyectable (Hospira)', 'a99fe500-f52b-483c-807c-178f1a78a02b', 'vigente 16-07-2026', 2026, 'Dosage and Administration – Initial Dosage'),
+      cita: 'the recommended single maximum dose is 20 mg with a maximum total daily dose of 160 mg.',
+    },
+  ],
+  ondansetron: [
+    {
+      id: 'nausea-iv',
+      indicacion: 'Náusea y vómito',
+      escenario: 'Vómito persistente en un adulto sin QT largo conocido',
+      poblacion: 'adulto',
+      via: 'IV',
+      dosisTexto: '4 mg IV en dosis única, en al menos 30 segundos (mejor 2-5 minutos).',
+      nota: 'La etiqueta es para náusea posoperatoria; el uso prehospitalario es fuera de etiqueta.',
+      calculo: { tipo: 'fija', valor: 4, unidadMasa: 'mg', presentacion: '8mg-4ml' },
+      administracion: {
+        pregunta: '¿En cuánto tiempo se administra?',
+        opciones: [
+          op('En al menos 30 segundos, mejor en 2-5 minutos', 'Correcto: la etiqueta pide no menos de 30 s y prefiere 2-5 minutos.', true),
+          op('En bolo rápido de 1 segundo', 'La etiqueta pide al menos 30 segundos.'),
+          op('En infusión de 8 horas', 'Es una dosis única, no una infusión prolongada.'),
+          op('Da igual la velocidad', 'La etiqueta especifica la velocidad.'),
+        ],
+      },
+      fuente: dm('Ondansetrón inyectable (Hospira)', '6a11f61b-2318-4382-2b91-4366e4bb53fa', 'vigente 22-05-2026', 2026, '2.2 Prevention of Postoperative Nausea and/or Vomiting'),
+      cita: 'infuse undiluted syringe contents (4 mg) over at least 30 seconds and preferably longer (over 2 to 5 minutes).',
+    },
+  ],
+  haloperidol: [
+    {
+      id: 'agitacion-im',
+      indicacion: 'Agitación aguda de origen psiquiátrico',
+      escenario: 'Agitación aguda de origen psiquiátrico ya descartadas causas orgánicas; el caso usa 5 mg',
+      poblacion: 'adulto',
+      via: 'IM',
+      dosisTexto: '2-5 mg IM; puede repetirse cada hora según respuesta; máximo 20 mg al día.',
+      calculo: { tipo: 'fija', valor: 5, unidadMasa: 'mg', presentacion: '5mg-1ml' },
+      fuente: dm('Lactato de haloperidol inyectable (Mylan)', '909259a3-7627-4d1e-91d3-3363b3493599', 'vigente 14-11-2024', 2024, 'Dosage and Administration'),
+      cita: 'administered intramuscularly in doses of 2 mg to 5 mg, is utilized for prompt control of the acutely agitated schizophrenic patient',
+    },
+  ],
+  naloxona: [
+    {
+      id: 'opioides-adulto',
+      indicacion: 'Depresión respiratoria por opioides',
+      escenario: 'Sobredosis de opioides con frecuencia respiratoria baja; ya se ventila con bolsa-válvula-mascarilla',
+      poblacion: 'adulto',
+      via: 'IV',
+      dosisTexto: '0.4-2 mg IV al inicio; repetir cada 2-3 minutos. Si no hay respuesta tras 10 mg, reconsiderar el diagnóstico.',
+      repeticion: 'Repetir cada 2-3 minutos; vigilar la recurrencia, porque el opioide puede durar más que la naloxona.',
+      calculo: { tipo: 'fija', valor: 0.4, unidadMasa: 'mg', presentacion: '0.4mg-1ml' },
+      fuente: dm('Clorhidrato de naloxona 0.4 mg/mL (Somerset)', '9bcff682-1196-7cef-e053-2a95a90aa954', 'revisión 08/2019', 2019, 'Dosage and Administration – Opioid Overdose'),
+      cita: 'An initial dose of 0.4 mg to 2 mg of naloxone hydrochloride may be administered intravenously.',
+    },
+    {
+      id: 'opioides-pediatrico',
+      indicacion: 'Depresión respiratoria por opioides',
+      escenario: 'Ingesta accidental de opioides con depresión respiratoria',
+      poblacion: 'pediatrico',
+      via: 'IV',
+      dosisTexto: '0.01 mg/kg IV al inicio; si no mejora, 0.1 mg/kg.',
+      calculo: { tipo: 'porKg', valor: 0.01, unidadMasa: 'mg', presentacion: '0.4mg-1ml' },
+      fuente: dm('Clorhidrato de naloxona 0.4 mg/mL (Somerset)', '9bcff682-1196-7cef-e053-2a95a90aa954', 'revisión 08/2019', 2019, 'Dosage and Administration – Usage in Children'),
+      cita: 'The usual initial dose in children is 0.01 mg/kg body weight given intravenously.',
+    },
+  ],
+  'dextrosa-50': [
+    {
+      id: 'hipoglucemia-adulto',
+      indicacion: 'Hipoglucemia',
+      escenario: 'Hipoglucemia con alteración del estado de alerta en un paciente que usa insulina',
+      poblacion: 'adulto',
+      via: 'IV',
+      dosisTexto: '10-25 g de dextrosa (20-50 mL de dextrosa al 50 %).',
+      calculo: { tipo: 'fija', valor: 25, unidadMasa: 'g', presentacion: 'd50-25g-50ml' },
+      administracion: {
+        pregunta: '¿Qué hay que vigilar especialmente al administrarla?',
+        opciones: [
+          op('La permeabilidad del acceso: es hipertónica y lesiona si se extravasa', 'Correcto: la dextrosa 50 % es hipertónica; el catálogo marca el riesgo por extravasación.', true),
+          op('Nada: es solo azúcar', 'Es una solución hipertónica con riesgo por extravasación.'),
+          op('Que se aplique IM', 'Se administra IV.'),
+          op('Que se use la misma dosis en niños', 'En pediatría se requieren concentración y dosis específicas.'),
+        ],
+      },
+      fuente: dm('Dextrosa 50 % inyectable (Hospira)', '763b1cb8-1151-5f59-e053-2991aa0a4e01', 'etiqueta 22-02-2024', 2024, 'Dosage and Administration'),
+      cita: '10 to 25 grams of dextrose (20 to 50 mL of 50% dextrose)',
+    },
+    {
+      id: 'hipoglucemia-pediatrica',
+      indicacion: 'Hipoglucemia grave en niños con diabetes (dextrosa al 10 %)',
+      poblacion: 'pediatrico',
+      via: 'IV',
+      dosisTexto: '0.2 g/kg de glucosa = 2 mL/kg de dextrosa al 10 %; máximo 0.5 g/kg (5 mL/kg).',
+      nota: 'La guía advierte que la dextrosa al 50 % se asocia con riesgo de lesión cerebral hiperosmolar en niños.',
+      fuente: {
+        documento: 'Abraham MB et al. ISPAD Clinical Practice Consensus Guidelines 2022: Assessment and management of hypoglycemia. Pediatr Diabetes 23:1322',
+        edicion: '2022', anio: 2022, seccion: 'Sección 9, Hypoglycemia treatment',
+        url: 'https://europepmc.org/articles/PMC10107518',
+      },
+      cita: '0.2 g/kg of glucose which equates to 2 ml/kg of 10% dextrose with a maximum dose of 0.5 g/kg',
+    },
+  ],
+  'sulfato-magnesio': [
+    {
+      id: 'eclampsia-carga',
+      indicacion: 'Convulsiones en preeclampsia grave o eclampsia (dosis de carga)',
+      escenario: 'Eclampsia: convulsión en una paciente con 34 semanas de gestación e hipertensión',
+      poblacion: 'embarazo',
+      via: 'IV',
+      dosisTexto: 'Carga de 4 g IV, a no más de 150 mg/min (salvo eclampsia grave con convulsiones); mantenimiento 1-2 g/h en infusión continua.',
+      repeticion: 'Mantenimiento de 1-2 g/h. Vigilar reflejo patelar, frecuencia respiratoria y diuresis.',
+      calculo: { tipo: 'fija', valor: 4, unidadMasa: 'g', presentacion: '1g-10ml' },
+      administracion: {
+        pregunta: 'Sin convulsión activa, a 150 mg/min como máximo, ¿cuánto tarda como mínimo la carga de 4 g?',
+        opciones: [
+          op('Unos 27 minutos', 'Correcto: 4000 mg ÷ 150 mg/min ≈ 26.7 minutos.', true),
+          op('1 minuto, en bolo', 'Demasiado rápido: la etiqueta limita la velocidad a 150 mg/min.'),
+          op('4 horas', 'Es mucho más lento de lo necesario para una carga.'),
+          op('No tiene límite de velocidad', 'La etiqueta fija un máximo de 150 mg/min.'),
+        ],
+      },
+      fuente: dm('Sulfato de magnesio en agua inyectable', '22ca78b4-f5a3-4144-cf89-5f633acf1e6d', 'revisión 06/2026', 2026, 'Dosage and Administration – Pre-eclampsia or Eclampsia'),
+      cita: 'The rate of I.V. infusion should generally not exceed 150 mg/minute',
+    },
+  ],
+  oxitocina: [
+    {
+      id: 'prevencion-hpp',
+      indicacion: 'Prevención de la hemorragia posparto',
+      escenario: 'Parto vaginal atendido en el traslado; alumbramiento dirigido',
+      poblacion: 'embarazo',
+      via: 'IM',
+      dosisTexto: '10 UI IM o IV.',
+      calculo: { tipo: 'fija', valor: 10, unidadMasa: 'UI', presentacion: '5ui-1ml' },
+      fuente: {
+        documento: 'FIGO/ICM. Joint statement of recommendation for the use of uterotonics for the prevention of PPH',
+        edicion: '2021 (basada en OMS 2018)', anio: 2021, seccion: 'Recomendación',
+        url: 'https://www.figo.org/joint-statement-recommendation-uterotonics-prevention-pph',
+      },
+      cita: 'Oxytocin (10IU, IM/IV)',
+    },
+  ],
+  hidralazina: [
+    {
+      id: 'crisis-embarazo',
+      indicacion: 'Hipertensión grave en el embarazo o puerperio (≥160/110 persistente)',
+      escenario: 'Presión de 170/115 mmHg sostenida 15 minutos en una embarazada de 36 semanas; el caso usa 5 mg',
+      poblacion: 'embarazo',
+      via: 'IV',
+      dosisTexto: '5 o 10 mg IV en más de 2 minutos; medir la PA a los 20 minutos y, si sigue sobre el umbral, 10 mg IV.',
+      repeticion: 'Reevaluar a los 20 minutos. Tras dos dosis sin control, el algoritmo cambia de fármaco.',
+      nota: 'La GPC mexicana SS-020-08 (2008) usa 5-10 mg cada 30 minutos con máximo de 20 mg. La academia debe decidir cuál enseñar.',
+      calculo: { tipo: 'fija', valor: 5, unidadMasa: 'mg', presentacion: '20mg-1ml' },
+      fuente: {
+        documento: 'ACOG Committee Opinion No. 767. Obstet Gynecol 2019;133(2):e174-80',
+        edicion: '2019', anio: 2019, seccion: 'Box 2, primera línea con hidralazina', pagina: 'e177',
+        url: 'https://npqic.org/file_download/inline/ca8cf159-e4de-47b0-b88c-28d336b4b900',
+      },
+      cita: 'administer hydralazine (5 mg or 10 mg intravenously [IV] for more than 2 minutes).',
+    },
+  ],
+  'acido-acetilsalicilico': [
+    {
+      id: 'carga-iamcest',
+      indicacion: 'Infarto con elevación del ST (dosis de carga)',
+      escenario: 'Dolor torácico con elevación del ST, sin alergia ni sangrado activo',
+      poblacion: 'adulto',
+      via: 'VO',
+      dosisTexto: 'Carga de 300 mg VO en dosis única y continuar 150 mg cada 24 h (algoritmo de fibrinólisis). Sin AAS previo, 325 mg antes de la ICP.',
+      nota: 'GPC para mayores de 65 años (2013). No se pudo leer la guía ACC/AHA 2025 de síndrome coronario agudo.',
+      fuente: {
+        documento: 'IMSS. GPC Diagnóstico y tratamiento del IAM con elevación del ST en mayores de 65 años (IMSS-357-13)',
+        edicion: '2013', anio: 2013, seccion: 'Algoritmo 2, fibrinólisis', pagina: '73',
+        url: 'https://www.imss.gob.mx/sites/all/statics/guiasclinicas/357GER.pdf',
+      },
+      cita: 'Aspirina 300mg en carga VO DU y continuar 150mg VO c/ 24hrs.',
+    },
+  ],
+  salbutamol: [
+    {
+      id: 'crisis-asma',
+      indicacion: 'Crisis asmática leve a moderada',
+      poblacion: 'adulto',
+      via: 'Inhalada',
+      dosisTexto: '4-10 disparos con inhalador de dosis medida y espaciador, cada 20 minutos durante la primera hora.',
+      repeticion: 'Reevaluar a la hora. Aplica también a niños de 6-11 años.',
+      fuente: {
+        documento: 'GINA. Summary Guide for Asthma Management and Prevention',
+        edicion: '2024', anio: 2024, seccion: 'Figure 9 (Box 4-3), exacerbaciones en atención primaria', pagina: '39',
+        url: 'https://ginasthma.org/wp-content/uploads/2024/12/GINA-Summary-Guide-2024-WEB-WMS.pdf',
+      },
+      cita: 'SABA 4–10 puffs by pMDI + spacer, repeat every 20 minutes for 1 hour',
+    },
+  ],
+  ipratropio: [
+    {
+      id: 'asma-grave',
+      indicacion: 'Crisis asmática grave',
+      poblacion: 'adulto',
+      via: 'Inhalada',
+      dosisTexto: '8 disparos de 21 mcg (168 mcg) con espaciador cada 20 minutos la primera hora; después cada 4-6 h durante 24 h.',
+      nota: 'GINA 2024 recomienda el ipratropio en la crisis grave pero no da la dosis; la cifra es de la guía australiana.',
+      fuente: {
+        documento: 'National Asthma Council Australia. Australian Asthma Handbook: acute asthma in adults and adolescents in the ED',
+        edicion: 'versión en línea 2025', anio: 2025, seccion: 'Tabla de tratamiento inmediato',
+        url: 'https://www.asthmahandbook.org.au/acute-asthma/adults-and-adolescents/managing-acute-asthma-in-adults-and-adolescents-in-the-ed',
+      },
+      cita: '8 actuations (21 microg/actuation) via pressurised metered-dose inhaler and spacer every 20 minutes for first hour',
+    },
+  ],
+  clopidogrel: [
+    {
+      id: 'carga-sca',
+      indicacion: 'Síndrome coronario agudo (dosis de carga)',
+      escenario: 'Síndrome coronario agudo; la dirección médica indica carga de clopidogrel',
+      poblacion: 'adulto',
+      via: 'VO',
+      dosisTexto: 'Carga única de 300 mg VO y después 75 mg al día. En ICP con stent, la GPC IMSS-357-13 usa 600 mg.',
+      calculo: { tipo: 'fija', valor: 300, unidadMasa: 'mg', presentacion: 'clop-75mg' },
+      fuente: dm('PLAVIX (clopidogrel)', 'de8b0b67-eb25-4684-83b5-7ad785314227', 'revisión 30-05-2025', 2025, '2.1 Acute Coronary Syndrome'),
+      cita: 'Initiate Plavix with a single 300 mg oral loading dose and then continue at 75 mg once daily.',
+    },
+  ],
+  flumazenil: [
+    {
+      id: 'benzodiacepinas',
+      indicacion: 'Sobredosis de benzodiacepinas',
+      escenario: 'Sedación profunda por benzodiacepinas en un paciente sin uso crónico ni ingesta de tricíclicos',
+      poblacion: 'adulto',
+      via: 'IV',
+      dosisTexto: '0.2 mg IV en 30 s; a los 30 s, 0.3 mg; después 0.5 mg cada minuto hasta un acumulado de 3 mg.',
+      repeticion: 'Inicio de acción en 1-2 minutos. Riesgo de convulsiones: más frecuente con uso crónico de benzodiacepinas o intoxicación por antidepresivos cíclicos.',
+      calculo: { tipo: 'fija', valor: 0.2, unidadMasa: 'mg', presentacion: '0.5mg-5ml' },
+      administracion: {
+        pregunta: '¿Cuál es la dosis acumulada máxima?',
+        opciones: [
+          op('3 mg', 'Correcto: 0.2, 0.3 y luego 0.5 mg cada minuto hasta 3 mg acumulados.', true),
+          op('0.2 mg', 'Es solo la primera dosis.'),
+          op('10 mg', 'Esa cifra es de la naloxona, no del flumazenil.'),
+          op('Sin máximo', 'Tiene un tope de 3 mg acumulados.'),
+        ],
+      },
+      fuente: dm('Flumazenil inyectable', '436f5616-9626-4b6a-9deb-2986444179d0', 'actualizada 21-06-2024', 2024, 'Boxed Warning; Dosage and Administration – Benzodiazepine Overdose'),
+      cita: 'THE USE OF FLUMAZENIL HAS BEEN ASSOCIATED WITH THE OCCURRENCE OF SEIZURES.',
+    },
+  ],
+  'acido-tranexamico': [
+    {
+      id: 'hpp',
+      indicacion: 'Hemorragia posparto',
+      escenario: 'Hemorragia posparto a los 40 minutos del nacimiento, además del manejo uterotónico',
+      poblacion: 'embarazo',
+      via: 'IV',
+      dosisTexto: '1 g IV a 1 mL/min (10 minutos), dentro de las 3 h posteriores al nacimiento; segunda dosis de 1 g si el sangrado sigue a los 30 minutos o reinicia en 24 h.',
+      nota: 'Leído en el resumen técnico MCSP/USAID que transcribe la recomendación OMS 2017; la guía de la OMS no se pudo abrir. La pauta de trauma (CRASH-2) no se incluye porque no se pudo leer su texto.',
+      calculo: { tipo: 'fija', valor: 1, unidadMasa: 'g', presentacion: 'txa-1g-10ml' },
+      administracion: {
+        pregunta: '¿Hasta cuándo se puede INICIAR?',
+        opciones: [
+          op('Dentro de las 3 horas posteriores al nacimiento', 'Correcto: después de 3 horas no se inicia.', true),
+          op('En cualquier momento de las primeras 24 horas', 'Las 24 horas se refieren a la segunda dosis si el sangrado reinicia, no al inicio.'),
+          op('Solo si pasaron más de 3 horas', 'Es al revés: no se inicia después de 3 horas.'),
+          op('Sin límite de tiempo', 'Tiene una ventana de 3 horas.'),
+        ],
+      },
+      fuente: {
+        documento: 'OMS. Recommendation on tranexamic acid for the treatment of PPH (WHO/RHR/17.21), según el resumen técnico MCSP/USAID',
+        edicion: '2017', anio: 2017, seccion: 'Recomendación y observaciones', pagina: '1-2',
+        url: 'https://www.rhsupplies.org/uploads/tx_rhscpublications/TXA_WHO_MCSP_briefer.pdf',
+      },
+      cita: 'TXA for PPH treatment should not be initiated more than 3 hours after birth.',
+    },
+  ],
+}
+
+// ---------- Presentaciones (Compendio Nacional de Insumos 2025) -----------
+
+const pres = (id, texto, cantidad, unidad, volumenMl, clave, pagina, forma = 'solucion') => ({
+  id, texto, cantidad, unidad, volumenMl, forma,
+  fuente: { ...CNIS(pagina), clave },
+})
+const tab = (id, texto, cantidad, clave, pagina) => pres(id, texto, cantidad, 'mg', null, clave, pagina, 'tableta')
+
+export const PRESENTACIONES = {
+  adrenalina: [pres('1mg-1ml', 'ampolleta de 1 mg/1 mL (1:1000)', 1, 'mg', 1, '010.000.0611.00', 37)],
+  atropina: [pres('1mg-1ml', 'ampolleta de 1 mg/1 mL', 1, 'mg', 1, '010.000.0204.00', 19)],
+  amiodarona: [pres('150mg-3ml', 'ampolleta de 150 mg/3 mL', 150, 'mg', 3, '010.000.4107.00', 48)],
+  adenosina: [pres('6mg-2ml', 'frasco ámpula de 6 mg/2 mL', 6, 'mg', 2, '010.000.5099.00', 46)],
+  lidocaina: [
+    pres('100mg-5ml', 'ampolleta de 100 mg/5 mL', 100, 'mg', 5, '010.000.0522.00', 67),
+    pres('2pct-50ml', 'frasco ámpula al 2 %, 1 g/50 mL', 1000, 'mg', 50, '010.000.0262.00', 19),
+  ],
+  noradrenalina: [pres('4mg-4ml', 'ampolleta de 4 mg/4 mL', 4, 'mg', 4, '010.000.0612.00', 70)],
+  dopamina: [pres('200mg-5ml', 'ampolleta de 200 mg/5 mL', 200, 'mg', 5, '010.000.0614.00', 56)],
+  dobutamina: [pres('250mg-5ml', 'ampolleta de 250 mg/5 mL', 250, 'mg', 5, '010.000.0615.00', 55)],
+  furosemida: [pres('20mg-2ml', 'ampolleta de 20 mg/2 mL', 20, 'mg', 2, '010.000.2308.00', 410)],
+  fentanilo: [pres('0.5mg-10ml', 'ampolleta de 0.5 mg/10 mL (50 mcg/mL)', 0.5, 'mg', 10, '040.000.0242.00', 24)],
+  ketamina: [pres('500mg-10ml', 'frasco ámpula de 500 mg/10 mL', 500, 'mg', 10, '040.000.0226.00', 26)],
+  midazolam: [
+    pres('15mg-3ml', 'ampolleta de 15 mg/3 mL', 15, 'mg', 3, '040.000.4057.00', 26),
+    pres('50mg-10ml', 'ampolleta de 50 mg/10 mL', 50, 'mg', 10, '040.000.4060.00', 26),
+  ],
+  diazepam: [pres('10mg-2ml', 'ampolleta de 10 mg/2 mL', 10, 'mg', 2, '040.000.0202.00', 22)],
+  etomidato: [pres('20mg-10ml', 'ampolleta de 20 mg/10 mL', 20, 'mg', 10, '040.000.0243.00', 23)],
+  propofol: [pres('200mg-20ml', 'emulsión de 200 mg/20 mL (10 mg/mL)', 200, 'mg', 20, '010.000.0246.00', 29)],
+  'rocuronio-vecuronio': [
+    pres('roc-50mg-5ml', 'rocuronio, 50 mg/5 mL', 50, 'mg', 5, '010.000.4059.00', 30),
+    pres('vec-4mg-1ml', 'vecuronio, 4 mg liofilizado con 1 mL de diluyente (4 mg/mL)', 4, 'mg', 1, '010.000.0254.00', 33),
+  ],
+  ketorolaco: [pres('30mg-1ml', 'ampolleta de 30 mg/1 mL', 30, 'mg', 1, '010.000.3422.00', 11)],
+  metamizol: [pres('1g-2ml', 'ampolleta de 1 g/2 mL', 1, 'g', 2, '010.000.0109.00', 4)],
+  nalbufina: [pres('10mg-1ml', 'ampolleta de 10 mg/1 mL', 10, 'mg', 1, '040.000.0132.00', 14)],
+  butilhioscina: [pres('20mg-1ml', 'ampolleta de 20 mg/1 mL', 20, 'mg', 1, '010.000.1207.00', 297)],
+  difenidol: [pres('40mg-2ml', 'ampolleta de 40 mg/2 mL', 40, 'mg', 2, '010.000.3112.00', 664)],
+  hidrocortisona: [pres('100mg-2ml', 'frasco ámpula de 100 mg con 2 mL de diluyente', 100, 'mg', 2, '010.000.0474.00', 285)],
+  hidralazina: [pres('20mg-1ml', 'ampolleta de 20 mg/1 mL', 20, 'mg', 1, '010.000.4201.00', 38)],
+  haloperidol: [pres('5mg-1ml', 'ampolleta de 5 mg/1 mL', 5, 'mg', 1, '040.000.3253.00', 687)],
+  'dextrosa-50': [pres('d50-25g-50ml', 'solución glucosada al 50 %, 25 g/50 mL', 25, 'g', 50, '010.000.3607.00', 728)],
+  'sulfato-magnesio': [pres('1g-10ml', 'ampolleta de 1 g/10 mL (100 mg/mL)', 1, 'g', 10, '010.000.3629.00', 736)],
+  'gluconato-calcio': [pres('1g-10ml', 'ampolleta de 1 g/10 mL', 1, 'g', 10, '010.000.3620.00', 734)],
+  naloxona: [pres('0.4mg-1ml', 'ampolleta de 0.4 mg/1 mL', 0.4, 'mg', 1, '040.000.0302.00', 27)],
+  ondansetron: [pres('8mg-4ml', 'ampolleta de 8 mg/4 mL', 8, 'mg', 4, '010.000.5428.00', 627)],
+  oxitocina: [pres('5ui-1ml', 'ampolleta de 5 UI/1 mL', 5, 'UI', 1, '010.000.1542.00', 346)],
+  'acido-acetilsalicilico': [
+    tab('asa-100mg', 'tabletas de 100 mg', 100, '010.000.6222.00', 34),
+    tab('asa-500mg', 'tabletas de 500 mg', 500, '010.000.0101.00', 2),
+  ],
+  clopidogrel: [tab('clop-75mg', 'tabletas de 75 mg', 75, '010.000.4246.00', 53)],
+  flumazenil: [pres('0.5mg-5ml', 'ampolleta de 0.5 mg/5 mL (0.1 mg/mL)', 0.5, 'mg', 5, '040.000.4054.00', 24)],
+  'acido-tranexamico': [
+    pres('txa-1g-10ml', 'vial de 1 g/10 mL (100 mg/mL)', 1, 'g', 10, '010.000.7021.01', 350),
+    pres('txa-500mg-5ml', 'ampolleta de 500 mg/5 mL', 500, 'mg', 5, '010.000.7033.00', 350),
+  ],
+}

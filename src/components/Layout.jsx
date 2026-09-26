@@ -40,6 +40,7 @@ const NAV = [
   { to: '/flashcards', icon: 'flashcards', label: 'Flashcards', soloConAcceso: true },
   { to: '/atlas-anatomico', icon: 'atlas', label: 'Atlas anatómico 3D', soloConAcceso: true },
   { to: '/botiquin', icon: 'cruz', label: 'Mi Botiquín 3D', soloConAcceso: true },
+  { to: '/farmacos', icon: 'pildora', label: 'Entrenador de farmacología', soloConAcceso: true, capacidad: 'entrenadorFarmacologia' },
   { to: '/tienda', icon: 'carpeta', label: 'Tienda', soloConAcceso: true },
   { to: '/logros', icon: 'atlas', label: 'Logros', soloConAcceso: true },
   { to: '/progreso', icon: 'progreso', label: 'Mi progreso', soloConAcceso: true },
@@ -55,6 +56,7 @@ export default function Layout({ children }) {
   const { estado, alternarTema } = useProgress()
   const {
     autenticado, perfil, user, esStaff, esSuperadmin, esRecepcion, puedeAcceder, rol, grupo,
+    capacidades,
   } = useAuth()
   const { modulos } = useIndiceContenido() // índice de LA academia (bundle si legacy)
   const { moduloVisible, temaVisible } = useVisibilidad()
@@ -86,7 +88,10 @@ export default function Layout({ children }) {
   const bloqueoDePrograma = motivoSinPrograma({ rol, esSuperadmin, grupo })
   const veContenido = puedeAcceder && !bloqueoDePrograma
   const conAcceso = (item) => !item.soloConAcceso || veContenido
-  const visible = (item) => soloStaff(item) && conAcceso(item)
+  // Lo que depende del PLAN de la academia (lib/capacidades.js). El
+  // super-admin lo ve siempre: opera academias ajenas y no tiene plan propio.
+  const conCapacidad = (item) => !item.capacidad || esSuperadmin || Boolean(capacidades?.[item.capacidad])
+  const visible = (item) => soloStaff(item) && conAcceso(item) && conCapacidad(item)
   // A RECEPCIÓN NO LE QUEDA NADA DE LAS DOS LISTAS BASE, ni siquiera «Inicio»:
   // su inicio ES el mostrador —la raíz la redirige— y un segundo enlace al
   // mismo sitio solo ocupa espacio en una barra que se mira de pie. `veContenido`
@@ -409,6 +414,7 @@ export default function Layout({ children }) {
               <Link to="/flashcards">Flashcards</Link>
               <Link to="/atlas-anatomico">Atlas anatómico 3D</Link>
               <Link to="/botiquin">Mi Botiquín 3D</Link>
+              {(esSuperadmin || capacidades?.entrenadorFarmacologia) && <Link to="/farmacos">Farmacología</Link>}
               <Link to="/logros">Logros</Link>
             </div>
           )}

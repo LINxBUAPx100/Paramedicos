@@ -1,5 +1,5 @@
 import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import {
   useTema, useCargaDeAgregado, CargandoContenido, ErrorContenido,
 } from '../context/ContenidoContext.jsx'
@@ -26,6 +26,9 @@ import { bancoDeExamen, temasEsperandoValidacion } from '../lib/bancoExamen.js'
 import { tituloVisibleDe } from '../data/contenido/titulosVisibles.js'
 import NotFound from './NotFound.jsx'
 import IndiceLeccion from '../components/ui/IndiceLeccion.jsx'
+
+// El catálogo de fármacos viaja aparte: la lección no lo necesita para pintarse.
+const FarmacosDelTema = lazy(() => import('../components/FarmacosDelTema.jsx'))
 
 export default function TemaPage() {
   const { temaId } = useParams()
@@ -222,6 +225,8 @@ export default function TemaPage() {
       {tieneRitmo(temaId) && <RitmoRCP />}
 
       <Recursos recursos={tema.recursos} />
+
+      <Suspense fallback={null}><FarmacosDelTema temaId={temaId} /></Suspense>
 
       <ConceptosTema conceptos={tema.conceptosClave} />
 

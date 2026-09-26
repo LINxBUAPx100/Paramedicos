@@ -154,7 +154,7 @@ real.
 | **L** | Suscripción y cobro (pasarela, webhook, recepción, corte de caja) | 2 semanas | **F2** · O2 |
 | **O4b** | La Function que crea la cuenta con contraseña temporal y dispara el mensaje | 3-5 días | **F2** (Functions) · O4a ✔ |
 | **C** | Clase en vivo con actividades calificables **(incluye el simulador de escenas)** | 2-3 semanas | A, **F2** · **O3** (la bandera «en clase» decide a quién se puede calificar) |
-| **D** | Entrenador de farmacología | media | catálogo de fármacos de la academia |
+| **D2** | Entrenador de farmacología: dosis (D1 sin cifras **hecho** el 25-09-2026) | media | autorización y fuentes de dosis de la academia |
 | **Mb** | Tienda: pago EN LÍNEA (lo demás se entregó en **Ma**) | 1 semana | **L** (pasarela) · **F2** |
 | **O5** | Feed de logística de tienda en recepción (en vivo, onSnapshot) | 3-5 días | M · **O4c ✔** trae ya la parte de mostrador: existencias, apartar y entregar |
 | **O6** | Credencial con código + escáner USB | 1-2 días | **O4c ✔** · el buscador ya nace enfocado, así que falta la credencial, no el software |
@@ -1362,6 +1362,30 @@ node scripts/seed-andamio.mjs
 Eso es un dry-run. Con `--apply` escribe, y exige emulador (`FIRESTORE_EMULATOR_HOST`)
 o `--produccion` con credenciales. `--retirar --apply` lo borra.
 
+### Ampliado el 25-09-2026: cuatro módulos por carrera, y a una academia
+
+Pedido: «llena con lorem ipsum los otros cursos, crea módulos ficticios listos
+para ser borrados después de las pruebas». Con un solo módulo no se podía
+probar R03 —ocultar un módulo dejaba el programa vacío—.
+
+- **4 módulos × 3 lecciones por carrera** (48 lecciones), mismo lorem ipsum,
+  mismas barreras. Los MÓDULOS también llevan el prefijo `andamio-`.
+- **`scripts/seed-andamio.mjs` vuelve** (se había borrado en la limpieza del
+  05-09 con `15cad9e`) y ahora sabe clonar a una academia:
+  `--academia=CODIGO` crea un curso por carrera (`{academia}__andamio-…`) con
+  sus temas —con `moduloId`—, sus agregados y su sello. `--publicar` los deja
+  publicados para probar con una cuenta de alumno; sin él, en borrador.
+- **`--retirar --academia=CODIGO --apply`** borra cursos, temas, agregados y
+  plantillas, y SOLO documentos cuyo id lleva el prefijo. Antes avisa de los
+  grupos que todavía apuntan a un curso de andamio.
+
+Probado en el emulador: sembrar → 4 cursos, 48 temas, 96 agregados, 4
+plantillas; resembrar da las mismas cifras; retirar deja cero y un tema real
+de control intacto.
+
+**No se ha sembrado en producción.** Hace falta `GOOGLE_APPLICATION_CREDENTIALS`
+—una clave de servicio— y la única conocida es la que se filtró el 31-08.
+
 ### Pendiente de la Fase 3
 - [ ] **Sembrar en producción**, si la academia quiere ver sus carreras futuras.
       No se ha hecho: `CLAUDE.md` prohíbe sembrar producción sin autorización.
@@ -2169,10 +2193,114 @@ hace sabiendo eso y con la opción de que el profesor lo apague por grupo.
 
 ---
 
-## Trabajo D — Entrenador de farmacología · PENDIENTE · bloqueado
+## Trabajo D — Entrenador de farmacología · D1 HECHO el 25-09-2026 · sin dosis
 
-Detalle en `PLAN-LMS.md` §27. **No empieza hasta que llegue el catálogo de
-fármacos de la academia**, con presentaciones y concentraciones.
+**El catálogo llegó el 25-09-2026.** El dueño entregó
+`Farmacologia_Prehospitalaria_Avanzada_Mexico.pdf` (10 páginas, revisión
+25/09/2026) con la indicación de «trabajar conforme a esta lista de momento».
+**Ese PDF excluye a propósito dosis, diluciones y algoritmos**, así que D1 es el
+entrenador SIN cifras; la parte de dosis queda como D2.
+
+### D1 — hecho
+
+| Pieza | Dónde |
+|---|---|
+| Catálogo: 43 fichas (23 del mínimo NOM-034 A-D + 20 del formulario ampliado), marco jurídico, dotación por tipo de unidad, ficha institucional y las 9 referencias con URL | `src/data/farmacos/catalogo.js` |
+| Lógica pura: validación, índice inverso tema→fármacos, filtro, tarjetas, preguntas y clasificación | `src/lib/farmacosModelo.js` |
+| Pantalla `/farmacos` (catálogo, tarjetas, preguntas, clasificación relámpago, marco legal) y `/farmacos/:id` (ficha) | `src/pages/FarmacosPage.jsx` |
+| Tira «Fármacos de este tema» al pie de la lección, carga diferida | `src/components/FarmacosDelTema.jsx` |
+| Capacidad `entrenadorFarmacologia` (solo Pro; academia sin `planComercial` = Pro) y entrada de menú con puerta de capacidad | `src/lib/capacidades.js`, `Layout.jsx` |
+| Guardarraíles | `tests/farmacos.test.mjs` (12 pruebas) |
+
+Decisiones que no son de estilo:
+
+1. **«Dosis relámpago» pasa a «clasificación relámpago»**: sin cifras en el
+   catálogo, el modo contrarreloj pregunta dónde figura cada fármaco (apéndice
+   A/B/C/D o formulario ampliado) y enseña el numeral. «Casos» se sustituye por
+   preguntas generadas del propio catálogo; no se redactó ningún caso clínico.
+2. **Las preguntas no pueden enseñar nada que la ficha no diga**: se construyen
+   con grupo, uso, precaución y apéndice, y los distractores son esos mismos
+   campos de otras fichas.
+3. **Un enlace a una lección solo existe si la lección nombra el fármaco**; la
+   prueba lo comprueba con el `patron` de cada ficha. Resultado honesto: casi
+   todo el mínimo NOM enlaza a `m4-far-nom-034`, y los 20 del formulario
+   ampliado no enlazan a nada porque ninguna lección los nombra.
+4. Las 43 fichas nacen en `borrador` y enseñan el aviso editorial y el de
+   protocolo, que no se pueden descartar.
+
+### D2 — HECHO el 25-09-2026: dosis, cálculo y entrenamiento interactivo
+
+Pedido del dueño ese mismo día: «investiga, enseña a calcular dosis y
+administraciones; debe ser un entrenador, no una chuleta». Llegó además la
+«Guía Farmacología» del alumnado (banco de examen sin respuestas), que añade
+clopidogrel, flumazenil y ácido tranexámico y los fundamentos que pregunta.
+
+| Pieza | Dónde |
+|---|---|
+| 36 dosis con fuente primaria leída (AHA 2025 Part 9, WAO 2020, AES 2016, GINA 2024, ISPAD 2022, ACOG 767, FIGO, OMS vía resumen MCSP, GPC IMSS-357-13, CNIS 2025 y etiquetas FDA), cada una con cita literal | `src/data/farmacos/dosis.js`, `dosisUrgencias.js` |
+| 39 presentaciones del Compendio Nacional de Insumos 2025 con clave y página | `dosisUrgencias.js` |
+| Motor de cálculo con diagnóstico del error (×1000 mg/mcg, ×60 min/h, peso, factor de goteo, operación invertida, tope) | `src/lib/calculoDosis.js` |
+| 8 habilidades de cálculo: explicación, fórmula, ejemplo y ejercicios nuevos cada vez | `src/lib/ejerciciosCalculo.js`, `components/farmacos/AprenderCalculo.jsx` |
+| 33 casos clínicos: fármaco → vía → dosis para el peso → mL o tabletas de la presentación real → técnica | `src/lib/casosFarmacologia.js`, `components/farmacos/CasosClinicos.jsx` |
+| Fundamentos: 35 hechos citados y 32 preguntas (LGS, StatPearls, NOM-022, etiquetas) | `src/data/farmacos/fundamentos.js` |
+| Ejercicio guiado paso a paso (pista al fallar, resolución solo tras dos intentos y marcada como asistida, racha de dominio por navegador) | `components/farmacos/EjercicioGuiado.jsx`, `lib/dominioFarmacos.js` |
+
+Reglas que no se negocian: una cifra entra solo si se leyó en la fuente; un
+distractor que TAMBIÉN sirve para esa condición no se usa; una vía que la
+fuente admite no se marca como error. Las tres tienen prueba.
+
+### D3 — Segunda ronda, 26-09-2026: «investiga a profundidad»
+
+Cinco investigaciones en paralelo con una regla más estricta: la cita se copia
+del **texto extraído** del documento (curl + pdftotext, HTML de PMC o SPL de
+DailyMed), no del resumen de una herramienta. Resultado: de 36 a **96 dosis**
+y de 33 a **65 casos**; 44 de 46 fichas con dosis. Las dos sin dosis lo están
+a propósito y la ficha lo explica: glucosa 5 % (no es líquido de reanimación)
+y ranitidina (suspendida por COFEPRIS, aunque el Compendio 2025 la sigue
+listando).
+
+Lo que se cerró de los pendientes de D2: **PALS 2025 pediátrico** (algoritmos
+oficiales y Part 8 vía archivo web), **AHA Part 10 y 11**, **CRASH-2 y
+CRASH-3** (archivo abierto de NCBI), **guía europea de sangrado en trauma
+2023** (tranexámico en ruta), **guía SCA ACC/AHA 2025**, **ABA 2024 y
+Parkland (OMS 2024)** —cumple la comparación que pide CLAUDE.md §9.2—, OMS
+pediátrico (choque, planes A/B/C), EPR-3, BTS/SIGN 158, GOLD 2025, BTS
+oxígeno, UKKA hiperpotasemia, Endocrine Society, ESC 2021 IC, etiquetas FDA y
+ficha AEMPS. Archivo nuevo: `src/data/farmacos/dosisAmpliacion.js`; el motor
+ganó bolos por kilo, fórmula de quemados y la unidad mEq.
+
+Hallazgo técnico: al añadir por rondas, cuatro fichas tenían la clave
+repetida en el mismo objeto y la segunda borraba en silencio a la primera.
+Se agrupan con sufijo `#n` y una prueba impide que vuelva a pasar.
+
+**Pendientes, con la pregunta concreta:**
+
+1. **Sin cifra en ninguna fuente leída**: magnesio en torsades en gramos (RCUK
+   da 8 mmol), dosis de vasopresores posparo, calcio y bicarbonato en paro por
+   hiperpotasemia, captopril en crisis hipertensiva (ninguna guía lo
+   recomienda). No se inventan.
+2. **Verificación visual**: en la guía SCA 2025 el texto extraído pierde «≥»,
+   «≤» y «µ» (PAS ≥90, edad ≤75); conviene mirar la página del PDF.
+3. **Erratas del Compendio 2025** que impiden usar ciertas presentaciones:
+   salbutamol para nebulizar (5 mg/mL frente a «1 mL = 500 µg»), dosis
+   pediátrica de ipratropio-salbutamol, dobutamina «40 µg/minuto» sin «/kg».
+4. **Decisiones de la academia**: metamizol en niños (el Compendio dice «No se
+   recomienda en niños»); diazepam pediátrico máx. 10 mg (AES) frente a 8 mg
+   (FDA); adrenalina IM pediátrica por edad (WAO) frente a corte de 25 kg
+   (NASEMSO); hidrocortisona pediátrica en mg/m² (Endocrine Society) frente a
+   2 mg/kg (NASEMSO); furosemida 40 mg (FDA) frente a 100-200 mg (Compendio);
+   y además: hidralazina ACOG (cada 20 min) frente a la
+   GPC SS-020-08 (cada 30 min, máx. 20 mg); ketorolaco 5 días (FDA) frente a 4
+   (CNIS); noradrenalina 8-12 mcg/min (FDA) frente a 16-24 (CNIS); atropina
+   AHA 2025 frente a 0.5-1 mg del CNIS (el entrenador sigue AHA por CLAUDE.md §9.2).
+5. **Diluciones estándar del servicio**: las de dopamina y adrenalina (y la de 1 mg en 10 mL para el paro pediátrico) en
+   infusión son datos de ejercicio y el enunciado lo dice.
+6. Varias fuentes son de EE. UU. (NASEMSO, FDA): enseñan la cifra de la guía
+   citada, no el protocolo mexicano; el aviso permanente de cada pantalla lo dice.
+
+---
+
+Detalle original en `PLAN-LMS.md` §27.
 
 Ficha propia por fármaco con enlace bidireccional a los temas de M4 derivado
 del catálogo (no se edita ninguna lección). Cuatro modos: ficha, tarjetas,

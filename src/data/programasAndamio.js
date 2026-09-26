@@ -8,9 +8,12 @@
 //  desde antes—, pero eso no se había ejercitado nunca: ningún programa que no
 //  fuera TUM había existido de verdad.
 //
-//  Esto son DOS LECCIONES POR PROGRAMA para comprobar de punta a punta que un
-//  programa nuevo funciona: que aparece en el temario, que se abre, que tiene
-//  quiz, que guarda progreso y que entra en el aislamiento por grupo. Nada más.
+//  Esto son CUATRO MÓDULOS DE TRES LECCIONES POR PROGRAMA para comprobar de
+//  punta a punta que un programa nuevo funciona: que aparece en el temario, que
+//  se abre, que tiene quiz, que guarda progreso, que entra en el aislamiento
+//  por grupo y —desde el 25-09-2026— que ocultar y desbloquear MÓDULOS a un
+//  grupo funciona (R03). Con un solo módulo no había nada que ocultar sin
+//  dejar el programa vacío. Nada más.
 //
 //  EL TEXTO ES LOREM IPSUM A PROPÓSITO.
 //
@@ -30,33 +33,44 @@
 //   4. No tocan `src/data/contenido/` ni el plan oficial. Este archivo NO se
 //      importa desde `src/data/index.js`: solo lo lee el script de siembra.
 //
-//  CUÁNDO SE BORRA: el día que llegue el temario de verdad de cada carrera.
+//  CUÁNDO SE BORRA: el día que llegue el temario de verdad de cada carrera, o
+//  al terminar las pruebas. `node scripts/seed-andamio.mjs --retirar --apply`
+//  (con `--academia=CODIGO` si se clonó a una academia) lo quita entero.
 // ============================================================
 
 // Marca única de todo lo que sale de este archivo. Las pruebas la usan para
 // distinguir el andamio del contenido real sin listar ids a mano.
 export const PREFIJO_ANDAMIO = 'andamio-'
 
-// Bloques de relleno. Se reparten entre las dos lecciones de cada programa para
-// que el andamio ejercite los tipos de bloque que la aplicación sabe pintar
-// —párrafo, lista, callout, tabla y pasos— y no solo el más simple.
+// Bloques de relleno, repartidos entre las lecciones de cada programa.
 const P1 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.'
 const P2 = 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt.'
 const P3 = 'Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.'
 
-// Construye las dos lecciones de un programa. Son iguales en forma para todos
-// los programas a propósito: lo que se prueba es la plomería, no el contenido,
-// y una diferencia entre ellas solo añadiría sitios donde equivocarse.
-function leccionesDeAndamio(clave, etiqueta) {
-  const id = (n) => `${PREFIJO_ANDAMIO}${clave}-t${n}`
-  return [
-    {
-      id: id(1),
-      titulo: `${etiqueta} — lección de prueba 1`,
-      icono: 'libro',
-      duracion: '10 min',
-      estado: 'borrador',
-      esAndamio: true,
+// Cuántos módulos y lecciones lleva cada programa. Cuatro módulos dejan
+// ocultar dos y desbloquear uno sin vaciar el programa; tres lecciones por
+// módulo dejan probar la navegación dentro del módulo y el salto al siguiente.
+export const MODULOS_POR_PROGRAMA = 4
+export const LECCIONES_POR_MODULO = 3
+
+// Una lección de relleno. Las impares y las pares usan plantillas distintas
+// para que el andamio ejercite todos los tipos de bloque que la aplicación
+// sabe pintar —párrafo, lista, callout, tabla y pasos— y no solo el más simple.
+// Lo que se prueba es la plomería, no el contenido.
+function leccionDeAndamio({ clave, etiqueta, m, n }) {
+  const id = `${PREFIJO_ANDAMIO}${clave}-m${m}-t${n}`
+  const comun = {
+    id,
+    titulo: `${etiqueta} — módulo ${m}, lección de prueba ${n}`,
+    icono: 'libro',
+    duracion: '10 min',
+    estado: 'borrador',
+    esAndamio: true,
+    actividades: null,
+  }
+  if (n % 2 === 1) {
+    return {
+      ...comun,
       resumen: 'Lección de relleno para comprobar que este programa funciona. No es contenido académico.',
       objetivos: [
         'Comprobar que la lección se abre y se pinta con el formato de siempre.',
@@ -89,16 +103,16 @@ function leccionesDeAndamio(clave, etiqueta) {
         },
       ],
       conceptosClave: [
-        { termino: 'Lorem ipsum', definicion: 'Texto de relleno usado para comprobar la maquetación.' },
-        { termino: 'Andamio', definicion: 'Estructura provisional que sostiene una obra mientras se construye.' },
+        { termino: `Lorem ipsum ${m}.${n}`, definicion: 'Texto de relleno usado para comprobar la maquetación.' },
+        { termino: `Andamio ${m}.${n}`, definicion: 'Estructura provisional que sostiene una obra mientras se construye.' },
       ],
       flashcards: [
-        { frente: '¿Qué es esta lección?', reverso: 'Un andamio de prueba, sin valor académico.' },
-        { frente: '¿Cuándo desaparece?', reverso: 'Cuando llegue el temario real de este programa.' },
+        { frente: `¿Qué es la lección ${m}.${n}?`, reverso: 'Un andamio de prueba, sin valor académico.' },
+        { frente: '¿Cuándo desaparece?', reverso: 'Cuando llegue el temario real de este programa o terminen las pruebas.' },
       ],
       quiz: [
         {
-          pregunta: '¿Qué es esta lección?',
+          pregunta: `¿Qué es la lección ${m}.${n}?`,
           opciones: [
             'Contenido académico validado.',
             'Una lección de prueba para comprobar que el programa funciona.',
@@ -109,76 +123,69 @@ function leccionesDeAndamio(clave, etiqueta) {
           explicacion: 'Es un andamio técnico: existe para comprobar la plomería del programa, no para estudiarse.',
         },
         {
-          pregunta: '¿Qué estado editorial tiene?',
+          pregunta: '¿Qué estado editorial tiene al nacer?',
           opciones: ['Publicado', 'Validado', 'Borrador', 'Archivado'],
           correcta: 2,
-          explicacion: 'Nace en borrador para que ningún alumno pueda alcanzarla.',
+          explicacion: 'Nace en borrador para que ningún alumno pueda alcanzarla sin una decisión expresa.',
         },
       ],
-      actividades: null,
-    },
-    {
-      id: id(2),
-      titulo: `${etiqueta} — lección de prueba 2`,
-      icono: 'libro',
-      duracion: '10 min',
-      estado: 'borrador',
-      esAndamio: true,
-      resumen: 'Segunda lección de relleno: comprueba la navegación entre temas del mismo programa.',
-      objetivos: [
-        'Comprobar que «anterior» y «siguiente» enlazan dentro del programa.',
-        'Comprobar que el quiz registra un intento.',
-      ],
-      secciones: [
-        {
-          titulo: 'Sed ut perspiciatis',
-          bloques: [
-            { tipo: 'p', texto: P3 },
-            {
-              tipo: 'pasos',
-              items: [
-                'Lorem ipsum dolor sit amet.',
-                'Consectetur adipiscing elit.',
-                'Sed do eiusmod tempor incididunt.',
-              ],
-            },
-          ],
-        },
-        {
-          titulo: 'Unde omnis iste',
-          bloques: [
-            { tipo: 'p', texto: P1 },
-            {
-              tipo: 'callout',
-              variante: 'nota',
-              titulo: 'Recordatorio',
-              texto: 'Si estás leyendo esto como alumno, avisa: no deberías poder verlo.',
-            },
-          ],
-        },
-      ],
-      conceptosClave: [
-        { termino: 'Relleno', definicion: 'Material provisional que ocupa el sitio del definitivo.' },
-      ],
-      flashcards: [
-        { frente: '¿Para qué sirve esta lección?', reverso: 'Para comprobar la navegación entre temas.' },
-      ],
-      quiz: [
-        {
-          pregunta: '¿Qué comprueba esta segunda lección?',
-          opciones: [
-            'La navegación entre temas del programa.',
-            'La dosificación de fármacos.',
-            'El alcance de un examen final.',
-            'La emisión de certificados.',
-          ],
-          correcta: 0,
-          explicacion: 'Existe para verificar que «anterior» y «siguiente» funcionan dentro de un programa nuevo.',
-        },
-      ],
-      actividades: null,
-    },
-  ]
+    }
+  }
+  return {
+    ...comun,
+    resumen: 'Lección de relleno: comprueba la navegación entre temas del mismo programa. No es contenido académico.',
+    objetivos: [
+      'Comprobar que «anterior» y «siguiente» enlazan dentro del programa.',
+      'Comprobar que el quiz registra un intento.',
+    ],
+    secciones: [
+      {
+        titulo: 'Sed ut perspiciatis',
+        bloques: [
+          { tipo: 'p', texto: P3 },
+          {
+            tipo: 'pasos',
+            items: [
+              'Lorem ipsum dolor sit amet.',
+              'Consectetur adipiscing elit.',
+              'Sed do eiusmod tempor incididunt.',
+            ],
+          },
+        ],
+      },
+      {
+        titulo: 'Unde omnis iste',
+        bloques: [
+          { tipo: 'p', texto: P1 },
+          {
+            tipo: 'callout',
+            variante: 'nota',
+            titulo: 'Recordatorio',
+            texto: 'Contenido de relleno para pruebas: no tiene ningún valor académico.',
+          },
+        ],
+      },
+    ],
+    conceptosClave: [
+      { termino: `Relleno ${m}.${n}`, definicion: 'Material provisional que ocupa el sitio del definitivo.' },
+    ],
+    flashcards: [
+      { frente: `¿Para qué sirve la lección ${m}.${n}?`, reverso: 'Para comprobar la navegación entre temas.' },
+    ],
+    quiz: [
+      {
+        pregunta: `¿Qué comprueba la lección ${m}.${n}?`,
+        opciones: [
+          'La navegación entre temas del programa.',
+          'La dosificación de fármacos.',
+          'El alcance de un examen final.',
+          'La emisión de certificados.',
+        ],
+        correcta: 0,
+        explicacion: 'Existe para verificar que «anterior» y «siguiente» funcionan dentro de un programa nuevo.',
+      },
+    ],
+  }
 }
 
 // Un programa de andamio completo, con la MISMA forma que espera
@@ -186,32 +193,35 @@ function leccionesDeAndamio(clave, etiqueta) {
 // temario oficial: así el programa nuevo recorre exactamente el mismo camino y
 // la prueba significa algo.
 function programaDeAndamio({ id, clave, tipoPrograma, titulo, etiqueta, color }) {
-  const temas = leccionesDeAndamio(clave, etiqueta)
-  const moduloId = `${PREFIJO_ANDAMIO}${clave}-m1`
-  const modulo = {
-    id: moduloId,
-    titulo: `${etiqueta} — módulo de prueba`,
-    subtitulo: 'Andamio técnico, sin contenido académico',
-    descripcion: 'Módulo de relleno para comprobar que este programa funciona de punta a punta.',
-    color,
-    icono: 'libro',
-    temas,
+  const modulos = []
+  for (let m = 1; m <= MODULOS_POR_PROGRAMA; m++) {
+    const temas = []
+    for (let n = 1; n <= LECCIONES_POR_MODULO; n++) temas.push(leccionDeAndamio({ clave, etiqueta, m, n }))
+    modulos.push({
+      id: `${PREFIJO_ANDAMIO}${clave}-m${m}`,
+      titulo: `${etiqueta} — módulo de prueba ${m}`,
+      subtitulo: 'Andamio técnico, sin contenido académico',
+      descripcion: 'Módulo de relleno para comprobar que este programa funciona de punta a punta.',
+      color,
+      icono: 'libro',
+      temas,
+    })
   }
   return {
     id,
     tipoPrograma,
     titulo,
     esAndamio: true,
-    modulos: [modulo],
+    modulos,
     // Aplanado con los datos de módulo que la API añade, igual que
     // `todosLosTemas` en src/data/index.js.
-    todosLosTemas: temas.map((t) => ({
+    todosLosTemas: modulos.flatMap((modulo, i) => modulo.temas.map((t) => ({
       ...t,
-      moduloId,
-      moduloNumero: 1,
+      moduloId: modulo.id,
+      moduloNumero: i + 1,
       moduloTitulo: modulo.titulo,
       moduloColor: color,
-    })),
+    }))),
   }
 }
 

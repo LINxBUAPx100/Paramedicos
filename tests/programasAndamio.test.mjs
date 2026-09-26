@@ -14,7 +14,9 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 
 import * as legacy from '../src/data/index.js'
-import { PROGRAMAS_ANDAMIO, PREFIJO_ANDAMIO, esDeAndamio } from '../src/data/programasAndamio.js'
+import {
+  PROGRAMAS_ANDAMIO, PREFIJO_ANDAMIO, esDeAndamio, MODULOS_POR_PROGRAMA, LECCIONES_POR_MODULO,
+} from '../src/data/programasAndamio.js'
 import { plantillaDesdeData, contenidoTema } from '../src/lib/contenidoModelo.js'
 import { TIPOS_PROGRAMA } from '../src/lib/programasModelo.js'
 import { construirApi } from '../src/lib/contenidoApi.js'
@@ -145,11 +147,15 @@ test('todos declaran un tipo de programa que el catálogo conoce', () => {
   }
 })
 
-test('cada programa trae dos lecciones con la forma completa de una lección', () => {
+test('cada programa trae sus módulos de lecciones con la forma completa de una lección', () => {
   // Si al andamio le faltara un campo, probaría menos de lo que parece: el
   // programa nuevo se vería «bien» y fallaría con contenido real.
   for (const p of PROGRAMAS_ANDAMIO) {
-    assert.equal(p.todosLosTemas.length, 2, `${p.id} no tiene dos lecciones`)
+    assert.equal(p.modulos.length, MODULOS_POR_PROGRAMA, `${p.id} no tiene ${MODULOS_POR_PROGRAMA} módulos`)
+    for (const m of p.modulos) {
+      assert.equal(m.temas.length, LECCIONES_POR_MODULO, `${m.id} no tiene ${LECCIONES_POR_MODULO} lecciones`)
+    }
+    assert.equal(p.todosLosTemas.length, MODULOS_POR_PROGRAMA * LECCIONES_POR_MODULO)
     for (const t of p.todosLosTemas) {
       for (const campo of ['id', 'titulo', 'icono', 'duracion', 'resumen', 'objetivos', 'secciones', 'conceptosClave', 'flashcards', 'quiz']) {
         assert.ok(campo in t, `${t.id} no trae "${campo}"`)
@@ -172,8 +178,8 @@ test('el andamio recorre el mismo camino que el temario oficial', () => {
     const { plantilla, temas } = plantillaDesdeData({
       id: p.id, nombre: p.titulo, modulos: p.modulos, todosLosTemas: p.todosLosTemas,
     })
-    assert.equal(temas.length, 2, `${p.id}: no salieron dos documentos de tema`)
-    assert.equal(plantilla.estructura.length, 1, `${p.id}: no salió un módulo`)
+    assert.equal(temas.length, MODULOS_POR_PROGRAMA * LECCIONES_POR_MODULO, `${p.id}: faltan documentos de tema`)
+    assert.equal(plantilla.estructura.length, MODULOS_POR_PROGRAMA, `${p.id}: no salieron sus módulos`)
     for (const t of temas) {
       assert.ok(t.docId.startsWith(`${p.id}__`), `${t.docId} no cuelga de su plantilla`)
     }
@@ -183,4 +189,23 @@ test('el andamio recorre el mismo camino que el temario oficial', () => {
 test('los ids de tema son únicos en todo el andamio', () => {
   const ids = TODOS_LOS_TEMAS.map((t) => t.id)
   assert.equal(new Set(ids).size, ids.length, 'hay ids de tema repetidos entre programas')
+})
+
+test('los MÓDULOS del andamio también llevan el prefijo, y son únicos', () => {
+  // Retirar el andamio borra por prefijo: un módulo sin él sobreviviría a la
+  // limpieza, y un id repetido entre carreras mezclaría lo que se oculta.
+  const ids = PROGRAMAS_ANDAMIO.flatMap((p) => p.modulos.map((m) => m.id))
+  for (const id of ids) assert.ok(esDeAndamio(id), `${id} no lleva el prefijo de andamio`)
+  assert.equal(new Set(ids).size, ids.length, 'hay ids de módulo repetidos')
+})
+
+test('cada lección cuelga del módulo que la contiene (lo que copia moduloId)', () => {
+  for (const p of PROGRAMAS_ANDAMIO) {
+    for (const m of p.modulos) {
+      for (const t of m.temas) {
+        const plano = p.todosLosTemas.find((x) => x.id === t.id)
+        assert.equal(plano.moduloId, m.id, `${t.id} no apunta a su módulo`)
+      }
+    }
+  }
 })
