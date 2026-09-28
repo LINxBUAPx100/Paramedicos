@@ -7,6 +7,7 @@ import { casosDisponibles, construirCaso } from '../../lib/casosFarmacologia.js'
 import { nuevaSemilla } from '../../lib/azar.js'
 import { leerDominio, registrarIntento, RACHA_PARA_DOMINAR, leerErrores, guardarErrores } from '../../lib/dominioFarmacos.js'
 import { sumarErrores } from '../../lib/rutaFarmacos.js'
+import { useSincronizarErrores } from './useSincronizarErrores.js'
 import { AVISO_PROTOCOLO } from '../../lib/farmacosModelo.js'
 
 function Fuente({ fuente, cita }) {
@@ -29,6 +30,7 @@ export default function CasosClinicos({ farmacoId = null }) {
   const [seleccion, setSeleccion] = useState(null) // { f, d }
   const [semilla, setSemilla] = useState(() => nuevaSemilla('caso'))
   const [dominio, setDominio] = useState(() => leerDominio())
+  const sincronizar = useSincronizarErrores()
   const lista = filtro === 'todos' ? todos : todos.filter(({ f }) => f.id === filtro)
   const farmacosConCaso = [...new Map(todos.map(({ f }) => [f.id, f])).values()]
 
@@ -58,7 +60,7 @@ export default function CasosClinicos({ farmacoId = null }) {
             cabecera={<p className="ui-antetitulo">Caso · {seleccion.f.nombre}</p>}
             onTerminar={(rs) => {
               // Los tipos de error se acumulan: la ruta dice qué practicar.
-              guardarErrores(sumarErrores(leerErrores(), rs))
+              sincronizar(guardarErrores(sumarErrores(leerErrores(), rs)))
               setDominio(registrarIntento(clave, rs.every((r) => r.primera && !r.asistido)))
             }}
             pie={(

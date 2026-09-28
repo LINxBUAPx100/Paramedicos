@@ -43,7 +43,9 @@ Prototipo: claude.ai/artifact/V1LjAwUwq69CZzQHbCzhHj. Lógica en `src/lib/rutaFa
 
 4. **Práctica.** Las opciones falsas de las preguntas salen primero de la misma sección del catálogo (`preguntasDe`). Comparador de dos fichas (`?modo=comparar&a=&b=`), enlazado desde cada ficha. Relámpago con tres variantes (apéndice, unidad mínima que lo lleva, grupo) y mejor marca por variante; apéndice y unidad cuentan para «Clasifica», grupo no. Teclado numérico propio en pantallas táctiles; la unidad del paso sigue fija porque la respuesta se califica en ella.
 
-**Pendiente:** la vista del profesor con los errores del grupo necesita sincronizar estos datos (misma decisión de reglas que el resto de Pulso).
+5. **Vista del profesor.** Cada alumno sube a `erroresCalculo/{uid}` solo sus cuentas por tipo de error (sin respuestas ni contenido) al terminar un cálculo o un caso; el panel (`components/panel/ErroresDelGrupo.jsx`, en Resumen) dice cuántos alumnos repiten cada error (≥ 2 veces), quiénes, y qué reforzar en clase. Colección APARTE del progreso: si la regla no está desplegada solo falla ese envío. Regla en `firestore.rules` con pruebas en `tests/rules/erroresCalculo.rules.test.mjs` (el alumno solo escribe lo suyo, con su academia y su grupo reales; lee el staff de su academia).
+
+**Para que funcione en producción hay que DESPLEGAR `firestore.rules`** (`firebase deploy --only firestore:rules`); el push a `main` no publica reglas.
 
 ## Optimización (27-09-2026)
 

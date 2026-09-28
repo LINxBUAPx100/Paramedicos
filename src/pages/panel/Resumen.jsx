@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import SeguimientoAlumnos from '../../components/panel/SeguimientoAlumnos.jsx'
 import { usePanel, FiltroGrupo } from '../../components/panel/PanelShell.jsx'
 import Estadisticas from '../../components/panel/Estadisticas.jsx'
+import ErroresDelGrupo from '../../components/panel/ErroresDelGrupo.jsx'
 import { ETIQUETA_PLAN, ETIQUETA_TIPO, planEfectivo } from '../../lib/capacidades.js'
 import Icon from '../../components/Icon.jsx'
 
@@ -52,6 +53,9 @@ export default function PanelResumen() {
       <FiltroGrupo />
 
       <SeguimientoAlumnos alumnos={alumnos} porAlumno={porAlumno} modulos={modulos} />
+
+      {/* PTEM Pulso: qué conviene reforzar del cálculo farmacológico. */}
+      <ErroresDelGrupo academiaId={academiaId} grupoId={soloGrupo || null} alumnos={alumnos} />
 
       <details className="ui-resumen-ampliado">
         <summary>Ver estadísticas de la academia y de cada módulo</summary>

@@ -1644,6 +1644,44 @@ service cloud.firestore {
       allow update, delete: if esSuper();
     }
 
+    // --- ERRORES DE CÁLCULO del entrenador de farmacología (PTEM Pulso) ---
+    //  Un documento por alumno (id = su uid) con CUÁNTAS VECES cometió cada
+    //  tipo de error que reconoce diagnosticar(): unidades, tiempo, peso… No
+    //  guarda respuestas, fármacos ni nada del contenido. Sirve para que el
+    //  profesor vea qué conviene reforzar en clase.
+    //
+    //  Colección APARTE de progreso/{uid} a propósito: si esta regla todavía no
+    //  está desplegada, solo falla este envío; el progreso sigue
+    //  sincronizándose igual (su `hasOnly` no se toca).
+    match /erroresCalculo/{uid} {
+      function erroresValidos(e) {
+        return e is map
+          && e.keys().hasOnly(['unidades', 'decimal', 'invertido', 'peso', 'tope', 'tiempo', 'factor'])
+          && e.get('unidades', 0) is int && e.get('unidades', 0) >= 0 && e.get('unidades', 0) <= 100000
+          && e.get('decimal', 0) is int && e.get('decimal', 0) >= 0 && e.get('decimal', 0) <= 100000
+          && e.get('invertido', 0) is int && e.get('invertido', 0) >= 0 && e.get('invertido', 0) <= 100000
+          && e.get('peso', 0) is int && e.get('peso', 0) >= 0 && e.get('peso', 0) <= 100000
+          && e.get('tope', 0) is int && e.get('tope', 0) >= 0 && e.get('tope', 0) <= 100000
+          && e.get('tiempo', 0) is int && e.get('tiempo', 0) >= 0 && e.get('tiempo', 0) <= 100000
+          && e.get('factor', 0) is int && e.get('factor', 0) >= 0 && e.get('factor', 0) <= 100000;
+      }
+      // Escribir: solo el alumno, en SU documento, con SU academia y SU grupo
+      // (no puede colgarse de otro grupo para aparecer en otro panel).
+      allow create, update: if esDueno(uid)
+        && request.resource.data.keys().hasOnly(['uid', 'academiaId', 'grupoId', 'errores', 'actualizado'])
+        && request.resource.data.uid == uid
+        && perteneceA(request.resource.data.academiaId)
+        && request.resource.data.get('grupoId', null) == miGrupoId()
+        && erroresValidos(request.resource.data.errores)
+        && request.resource.data.actualizado == request.time;
+      // Leer: el dueño, el super-admin o el staff de su academia (igual que
+      // los intentos de examen).
+      allow read: if esDueno(resource.data.uid)
+        || esSuper()
+        || esStaffDe(resource.data.academiaId);
+      allow delete: if esDueno(uid) || esSuper();
+    }
+
     // --- CONFIGURACIÓN global de la plataforma (solo super-admin) ---
     //  p. ej. configuracion/anuncio = banner que ven todos los usuarios.
     match /configuracion/{doc} {

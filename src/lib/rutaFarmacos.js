@@ -143,3 +143,34 @@ export function partirPorFarmacos(texto, farmacos = []) {
   if (resto) salida.push({ texto: resto })
   return salida
 }
+
+// ---------- Vista del profesor: errores del grupo ----------
+
+// Un error que se repite dos veces ya es un patrón; uno suelto es un despiste.
+export const REPETICIONES_PATRON = 2
+
+/**
+ * Resumen de los errores de cálculo de un grupo.
+ * `docs`: documentos de erroresCalculo; `alumnos`: [{ id, nombre }] del grupo.
+ * Devuelve por tipo cuántos alumnos lo repiten (≥ REPETICIONES_PATRON), el
+ * total y quiénes; cuántos alumnos ya tienen datos, y la sugerencia de clase:
+ * el tipo que más alumnos repiten.
+ */
+export function resumenErroresGrupo(docs = [], alumnos = []) {
+  const delGrupo = new Map(alumnos.map((a) => [a.id, a]))
+  const conDatos = docs.filter((d) => delGrupo.has(d.uid))
+  const porTipo = Object.keys(NOMBRE_ERROR).map((tipo) => {
+    const quienes = conDatos
+      .filter((d) => (d.errores?.[tipo] || 0) >= REPETICIONES_PATRON)
+      .map((d) => ({ uid: d.uid, nombre: delGrupo.get(d.uid)?.nombre || delGrupo.get(d.uid)?.email || d.uid, n: d.errores[tipo] }))
+      .sort((a, b) => b.n - a.n)
+    const total = conDatos.reduce((s, d) => s + (d.errores?.[tipo] || 0), 0)
+    return { tipo, nombre: NOMBRE_ERROR[tipo], habilidad: HABILIDAD_PARA_ERROR[tipo] || null, alumnos: quienes.length, quienes, total }
+  }).filter((t) => t.total > 0).sort((a, b) => b.alumnos - a.alumnos || b.total - a.total)
+  return {
+    porTipo,
+    conDatos: conDatos.length,
+    total: alumnos.length,
+    sugerencia: porTipo[0] && porTipo[0].alumnos > 0 ? porTipo[0] : null,
+  }
+}

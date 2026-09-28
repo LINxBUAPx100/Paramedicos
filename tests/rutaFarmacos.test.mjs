@@ -152,3 +152,38 @@ test('el cálculo trae teclado numérico propio en pantallas táctiles', () => {
   assert.match(src, /inputMode=\{tactil \? 'none' : 'decimal'\}/, 'con teclado propio no debe abrirse el del sistema')
   assert.match(src, /\{tactil && !visto && <TecladoNumerico/)
 })
+
+// ---------- Vista del profesor ----------
+
+test('el resumen del grupo cuenta patrones, ignora alumnos de fuera y sugiere el más repetido', async () => {
+  const { resumenErroresGrupo } = await import('../src/lib/rutaFarmacos.js')
+  const alumnos = [{ id: 'a', nombre: 'Ana' }, { id: 'b', nombre: 'Beto' }, { id: 'c', nombre: 'Cris' }]
+  const docs = [
+    { uid: 'a', errores: { tiempo: 3, unidades: 1 } },
+    { uid: 'b', errores: { tiempo: 2 } },
+    { uid: 'z', errores: { tiempo: 9 } }, // de otro grupo: no cuenta
+  ]
+  const r = resumenErroresGrupo(docs, alumnos)
+  assert.equal(r.conDatos, 2)
+  assert.equal(r.total, 3)
+  assert.equal(r.porTipo[0].tipo, 'tiempo')
+  assert.equal(r.porTipo[0].alumnos, 2)
+  assert.deepEqual(r.porTipo[0].quienes.map((q) => q.nombre), ['Ana', 'Beto'])
+  const unidades = r.porTipo.find((t) => t.tipo === 'unidades')
+  assert.equal(unidades.alumnos, 0, 'un error suelto no es un patrón')
+  assert.equal(r.sugerencia.tipo, 'tiempo')
+  assert.equal(resumenErroresGrupo([], alumnos).sugerencia, null)
+})
+
+test('el alumno sube solo cuentas por tipo y el profesor las ve en su panel', () => {
+  const firebase = leer('src/lib/firebase/erroresCalculo.js')
+  assert.match(firebase, /uid, academiaId, grupoId: grupoId \|\| null, errores: limpiar\(errores\), actualizado: serverTimestamp\(\)/)
+  const hook = leer('src/components/farmacos/useSincronizarErrores.js')
+  assert.match(hook, /rol !== 'alumno'/, 'solo los alumnos suben errores')
+  assert.match(hook, /registrar\('erroresCalculo:subir'/, 'un rechazo de la regla no rompe la pantalla')
+  assert.match(leer('src/pages/panel/Resumen.jsx'), /<ErroresDelGrupo academiaId=\{academiaId\}/)
+  const reglas = leer('firestore.rules')
+  assert.match(reglas, /match \/erroresCalculo\/\{uid\}/)
+  // El progreso no se tocó: sigue con su lista cerrada de campos.
+  assert.match(reglas, /hasOnly\(\s*\['leidos', 'quizzes', 'examenes', 'actividad', 'racha', 'updatedAt'\]\)/)
+})

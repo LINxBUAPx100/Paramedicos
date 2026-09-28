@@ -5,6 +5,7 @@ import { HABILIDADES, HABILIDAD_POR_ID } from '../../lib/ejerciciosCalculo.js'
 import { generador, nuevaSemilla } from '../../lib/azar.js'
 import { leerDominio, registrarIntento, RACHA_PARA_DOMINAR, leerErrores, guardarErrores } from '../../lib/dominioFarmacos.js'
 import { sumarErrores } from '../../lib/rutaFarmacos.js'
+import { useSincronizarErrores } from './useSincronizarErrores.js'
 
 // Ruta de aprendizaje del cálculo: explicación → ejemplo resuelto → práctica
 // guiada con números nuevos. Una habilidad se da por dominada con
@@ -16,6 +17,7 @@ export default function AprenderCalculo({ habilidadInicial = null }) {
   const [semilla, setSemilla] = useState(() => nuevaSemilla('calc'))
   const [dominio, setDominio] = useState(() => leerDominio())
   const [verEjemplo, setVerEjemplo] = useState(false)
+  const sincronizar = useSincronizarErrores()
   const h = habilidadId ? HABILIDAD_POR_ID[habilidadId] : null
   const ejercicio = useMemo(() => (h ? h.generar(generador(semilla)) : null), [h, semilla])
 
@@ -23,7 +25,7 @@ export default function AprenderCalculo({ habilidadInicial = null }) {
   const otro = () => setSemilla(nuevaSemilla('calc'))
 
   function terminar(resultados) {
-    guardarErrores(sumarErrores(leerErrores(), resultados))
+    sincronizar(guardarErrores(sumarErrores(leerErrores(), resultados)))
     const limpio = resultados.every((r) => r.primera && !r.asistido)
     setDominio(registrarIntento(`calc:${h.id}`, limpio))
   }
