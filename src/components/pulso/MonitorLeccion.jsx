@@ -16,6 +16,21 @@ import IndiceLeccion from '../ui/IndiceLeccion.jsx'
 // no demuestra que se haya leído (ver la auditoría UX, flujo 1), así que la
 // marca sigue siendo una acción del alumno.
 const id = (i) => `leccion-seccion-${i}`
+const ESPERA_COMPRIMIR = 3500
+const CONSULTA_MOVIL = '(max-width: 640px)'
+
+function useEsMovil() {
+  const [movil, setMovil] = useState(() => typeof window !== 'undefined' && Boolean(window.matchMedia?.(CONSULTA_MOVIL).matches))
+  useEffect(() => {
+    const mq = window.matchMedia?.(CONSULTA_MOVIL)
+    if (!mq) return undefined
+    const cambio = () => setMovil(mq.matches)
+    cambio()
+    mq.addEventListener?.('change', cambio)
+    return () => mq.removeEventListener?.('change', cambio)
+  }, [])
+  return movil
+}
 
 export default function MonitorLeccion({ temaId, titulo, secciones = [], nivel = 0 }) {
   const total = secciones.length
@@ -32,6 +47,29 @@ export default function MonitorLeccion({ temaId, titulo, secciones = [], nivel =
   const vistas = lectura?.total === total ? lectura.vistas || [] : []
   const atajo = seccionLoQueMasSePregunta(secciones)
   const saltoInicial = useRef(false)
+  const caja = useRef(null)
+
+  // En celular el monitor completo se come media pantalla. A los pocos
+  // segundos sin tocarlo se comprime a solo el trazo (sin texto ni botones)
+  // y espera arriba a que el alumno lo toque para abrirse otra vez.
+  const esMovil = useEsMovil()
+  const [abierto, setAbierto] = useState(true)
+  const [toques, setToques] = useState(0)
+  const compacto = esMovil && !abierto
+  useEffect(() => {
+    if (!esMovil || !abierto) return undefined
+    const t = setTimeout(() => {
+      const el = caja.current
+      // No se cierra mientras el alumno está dentro: índice abierto o foco en un control.
+      if (el?.querySelector('details[open]') || el?.contains(document.activeElement)) {
+        setToques((n) => n + 1)
+        return
+      }
+      setAbierto(false)
+    }, ESPERA_COMPRIMIR)
+    return () => clearTimeout(t)
+  }, [esMovil, abierto, toques])
+  const alTocar = () => { if (esMovil && abierto) setToques((n) => n + 1) }
 
   const ir = (i, bloque = null) => {
     const seccion = document.getElementById(id(i))
@@ -104,8 +142,29 @@ export default function MonitorLeccion({ temaId, titulo, secciones = [], nivel =
   if (!total) return null
   const etiquetas = secciones.map((s) => s.titulo)
   const enCurso = actual >= 0 ? actual : 0
+  if (compacto) {
+    return (
+      <div className="pl-monitor pl-monitor--compacto" role="navigation" aria-label="Avance de la lección">
+        <button
+          type="button"
+          className="pl-monitor-abrir"
+          onClick={() => setAbierto(true)}
+          aria-label={`Abrir el monitor de la lección. ${actual >= 0 ? `${etiquetas[enCurso]}, sección ${enCurso + 1} de ${total}` : `${total} secciones`}`}
+        >
+          <TrazoMonitor total={total} vistas={vistas} actual={actual} progreso={progreso} alto={20} />
+        </button>
+      </div>
+    )
+  }
   return (
-    <div className="pl-monitor" role="navigation" aria-label="Avance de la lección">
+    <div
+      ref={caja}
+      className="pl-monitor"
+      role="navigation"
+      aria-label="Avance de la lección"
+      onPointerDown={alTocar}
+      onKeyDown={alTocar}
+    >
       <div className="pl-franja" aria-hidden="true" />
       <div className="pl-monitor-fila">
         <div className="pl-monitor-titulo">

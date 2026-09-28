@@ -130,6 +130,16 @@
 /* El índice de siempre viaja dentro del monitor: deja de ser su propia pieza
    fija (pantallas.css la fijaba sola). */
 .tema-page .pl-monitor .ui-indice { position: static; box-shadow: none; border: 0; border-top: 1px solid var(--borde); border-radius: 0; margin: 0; background: transparent; }
+/* Celular: el monitor se comprime a solo el trazo y espera a que lo toquen. */
+.tema-page .pl-monitor--compacto { border-radius: 999px; margin-block: var(--e-8) var(--e-12); animation: pl-comprime 0.25s ease-out; }
+.pl-monitor-abrir {
+  display: block; width: 100%; min-height: 0; padding: 6px var(--e-16);
+  border: 0; background: transparent; cursor: pointer; color: inherit;
+}
+.pl-monitor-abrir:focus-visible { outline: 2px solid var(--primario); outline-offset: -2px; border-radius: 999px; }
+.pl-monitor--compacto .pl-trazo-punta { width: 8px; height: 8px; margin: -4px 0 0 -4px; }
+@keyframes pl-comprime { from { opacity: 0.4; transform: scaleY(0.6); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .tema-page .pl-monitor--compacto { animation: none; } }
 
 /* ---------- Tablero de turno (inicio) ---------- */
 .pl-tablero { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: var(--e-16); margin-block: var(--e-24); }
