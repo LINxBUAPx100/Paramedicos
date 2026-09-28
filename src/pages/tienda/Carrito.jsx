@@ -33,7 +33,8 @@ export default function Carrito() {
       await crearPedido({ carrito: lineas, alumno, academiaId })
       vaciar()
       await recargar()
-      navegar('/tienda/pedidos?nuevo=1')
+      // `replace`: el carrito ya está vacío; volver a él con «atrás» no sirve.
+      navegar('/tienda/pedidos?nuevo=1', { replace: true })
     } catch (err) {
       setError(textoDeError(err, 'No se pudo enviar el pedido', 'ordenes'))
     } finally {

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Link, useParams, useSearchParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import Icon from '../components/Icon.jsx'
 import Quiz from '../components/Quiz.jsx'
 import AvisoEditorial from '../components/AvisoEditorial.jsx'
@@ -112,6 +112,9 @@ const ANCLAS_FICHA = [
 ]
 
 function Ficha({ f }) {
+  const navigate = useNavigate()
+  // 'default' es la primera entrada de la sesión: no hay pantalla previa de la app.
+  const vieneDeLaApp = useLocation().key !== 'default'
   const { modulos = [] } = useIndiceContenido() || {}
   const { temaVisible } = useVisibilidad()
   const titulos = useMemo(() => {
@@ -307,7 +310,11 @@ function Ficha({ f }) {
         </section>
       )}
 
-      <p><Link to="/farmacos?modo=catalogo" className="btn btn--suave"><Icon name="chevronIzq" size={15} /> Volver al catálogo</Link></p>
+      {/* Se vuelve a donde se abrió la ficha (Ruta, Casos, Comparar…). Solo si
+          se llegó de fuera —enlace directo, marcador— se ofrece el catálogo. */}
+      <p>{vieneDeLaApp
+        ? <button type="button" className="btn btn--suave" onClick={() => navigate(-1)}><Icon name="chevronIzq" size={15} /> Volver</button>
+        : <Link to="/farmacos?modo=catalogo" className="btn btn--suave"><Icon name="chevronIzq" size={15} /> Volver al catálogo</Link>}</p>
     </article>
   )
 }

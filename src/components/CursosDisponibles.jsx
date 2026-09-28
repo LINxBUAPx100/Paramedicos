@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import Icon from './Icon.jsx'
 import Reveal from './Reveal.jsx'
 import { useCursos } from '../context/ContenidoContext.jsx'
+import { useAuth } from '../context/AuthContext.jsx'
 import { hayVariosCursos } from '../lib/cursosDelUsuario.js'
 
 // ============================================================
@@ -23,13 +24,18 @@ import { hayVariosCursos } from '../lib/cursosDelUsuario.js'
 export default function CursosDisponibles() {
   const { cursos, cursoId, elegirCurso } = useCursos()
   const navigate = useNavigate()
+  const { esStaff } = useAuth()
 
   if (!hayVariosCursos(cursos)) return null
 
   const abrir = (curso) => {
     if (!curso.listo) return
     if (curso.id !== cursoId) elegirCurso(curso.id)
-    navigate('/temario')
+    // /temario es SOLO del personal: un alumno que elegía curso aterrizaba en
+    // «Sección del personal». El alumno se queda en el inicio, que ya pinta el
+    // curso elegido, y sube arriba para verlo cambiar.
+    if (esStaff) navigate('/temario')
+    else window.scrollTo({ top: 0, behavior: window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
   }
 
   return (

@@ -115,8 +115,8 @@ export default function AcademiaShell() {
             </span>
           </p>
         </div>
-        <Link className="btn btn--sm btn--suave" to="/admin">
-          <Icon name="chevronIzq" size={14} /> Toda la plataforma
+        <Link className="btn btn--sm btn--suave" to="/admin/academias">
+          <Icon name="chevronIzq" size={14} /> Todas las academias
         </Link>
       </header>
 

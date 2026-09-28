@@ -45,7 +45,7 @@ export default function AcaProgramas() {
       {cursos.length === 0 ? (
         <p className="panel-vacio">
           Esta academia todavía no tiene ningún programa. Se crean desde{' '}
-          <Link to="/admin/replicacion">Contenido de la plataforma</Link>.
+          <Link to="/admin/contenido">Contenido de la plataforma</Link>.
         </p>
       ) : (
         <ul className="prog-lista">

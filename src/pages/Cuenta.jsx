@@ -102,7 +102,8 @@ function Acceso({ codigoInvitacion = '' }) {
 
   // Con invitación NO navegamos fuera: al autenticarse, Cuenta re-renderiza y
   // muestra el perfil con el código ya pre-llenado para activarlo.
-  const trasEntrar = () => { if (!codigoInvitacion) navigate('/') }
+  // `replace`: tras entrar, «atrás» no debe devolver al formulario de acceso.
+  const trasEntrar = () => { if (!codigoInvitacion) navigate('/', { replace: true }) }
   const mostrarError = (err) => {
     setError(traducirError(err))
     // Solo el código conocido del SDK, nunca credenciales ni objetos de sesión.

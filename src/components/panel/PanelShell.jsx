@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { Link, NavLink, Navigate, Outlet, useOutletContext } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { useIndiceAcademia } from '../../context/ContenidoContext.jsx'
@@ -6,6 +6,8 @@ import { pasaFiltroGrupo, seccionesPanel } from '../../lib/panelModelo.js'
 import { gruposDelPanel, filtroDeGrupoDelPanel } from '../../lib/gruposDeUsuario.js'
 import Icon from '../Icon.jsx'
 import { useDatosAcademia } from './datosAcademia.js'
+import { useDeTrabajo } from '../../lib/useDeTrabajo.js'
+import { filtroValido } from '../../lib/grupoDeTrabajo.js'
 
 // ============================================================
 //  Consola del director — armazón (Bloque O)
@@ -50,7 +52,10 @@ export default function PanelShell() {
   )
   // Al profesor con UN solo grupo se le sigue enseñando cuál es, sin selector.
   const soloGrupo = !esDirector && misGrupos.length === 1 ? misGrupos[0].id : null
-  const [grupoFiltro, setGrupoFiltro] = useState('') // director: '' = todos; 'sin' = sin grupo
+  // Director: '' = todos; 'sin' = sin grupo. Recordado por academia y
+  // compartido con Alumnos y Calificaciones de la administración.
+  const [filtroRecordado, setGrupoFiltro] = useDeTrabajo('filtro', academiaId)
+  const grupoFiltro = filtroValido(filtroRecordado, datos.grupos)
 
   // El director filtra libremente; el profesor está acotado a lo suyo, y su
   // filtro NO es un estado aparte: es el grupo activo de la sesión. `null`

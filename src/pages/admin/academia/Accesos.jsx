@@ -4,6 +4,7 @@ import { useAcademiaAdmin } from '../../../components/admin/AcademiaShell.jsx'
 import { useDatosAcademia } from '../../../components/panel/datosAcademia.js'
 import SolicitudesInternas from '../../../components/panel/SolicitudesInternas.jsx'
 import SolicitudesDeAcceso from '../../../components/panel/SolicitudesDeAcceso.jsx'
+import { rutaDeAcademia } from '../../../lib/adminModelo.js'
 
 // ============================================================
 //  Academia · ACCESOS, desde la consola del super-admin
@@ -42,7 +43,7 @@ export default function AcademiaAccesos() {
         <p>
           Quién pide entrar a <strong>{academiaNombre}</strong> y quién pide avanzar. Para repartir
           acceso —códigos, invitaciones y pruebas— ve a{' '}
-          <Link to={`/admin/academia/${academiaId}/invitaciones`}>Invitaciones</Link>.
+          <Link to={rutaDeAcademia(academiaId, 'invitaciones')}>Invitaciones</Link>.
         </p>
       </header>
 

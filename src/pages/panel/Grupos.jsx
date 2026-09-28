@@ -2,8 +2,8 @@ import { usePanel } from '../../components/panel/PanelShell.jsx'
 import GruposAcademia from '../../components/panel/GruposAcademia.jsx'
 import VisibilidadGrupos from '../../components/panel/VisibilidadGrupos.jsx'
 import Icon from '../../components/Icon.jsx'
-import { useState } from 'react'
 import InvitacionesRol from '../../components/panel/InvitacionesRol.jsx'
+import { useDeTrabajo } from '../../lib/useDeTrabajo.js'
 
 // ============================================================
 //  Panel del director · GRUPOS (Bloque O)
@@ -15,7 +15,8 @@ import InvitacionesRol from '../../components/panel/InvitacionesRol.jsx'
 
 export default function PanelGrupos() {
   const { academiaId, academiaNombre, grupos, miembros, miUid, recargar, gestion, quienEmite } = usePanel()
-  const [seleccion, setSeleccion] = useState('')
+  // El grupo de trabajo se recuerda entre pantallas (el mismo que en Temario).
+  const [seleccion, setSeleccion] = useDeTrabajo('grupo', academiaId)
   const grupo = grupos.find((g) => g.id === seleccion) || grupos[0]
 
   return (

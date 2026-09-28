@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useAuth } from '../../../context/AuthContext.jsx'
 import { useAcademiaAdmin } from '../../../components/admin/AcademiaShell.jsx'
 import { useDatosAcademia } from '../../../components/panel/datosAcademia.js'
@@ -7,6 +6,8 @@ import { pasaFiltroGrupo } from '../../../lib/panelModelo.js'
 import AvanceAlumnos from '../../../components/panel/AvanceAlumnos.jsx'
 import GestionMiembros from '../../../components/panel/GestionMiembros.jsx'
 import PermisosEditoriales from '../../../components/PermisosEditoriales.jsx'
+import { useDeTrabajo } from '../../../lib/useDeTrabajo.js'
+import { filtroValido } from '../../../lib/grupoDeTrabajo.js'
 
 // Academia · ALUMNOS Y STAFF: el avance de cada alumno, el alta y baja de
 // miembros y los permisos de los profesores. El filtro por grupo vive aquí,
@@ -16,7 +17,8 @@ export default function AcademiaAlumnos() {
   const { academiaId, miUid } = useAcademiaAdmin()
   const { modulos } = useIndiceAcademia(academiaId)
   const datos = useDatosAcademia(academiaId)
-  const [grupoFiltro, setGrupoFiltro] = useState('') // '' = todos; 'sin' = sin grupo
+  // El filtro se recuerda entre Alumnos, Calificaciones y el panel (por academia).
+  const [filtroRecordado, setGrupoFiltro] = useDeTrabajo('filtro', academiaId) // '' = todos; 'sin' = sin grupo
 
   if (datos.cargando && !datos.hayDatos) {
     return (
@@ -27,6 +29,7 @@ export default function AcademiaAlumnos() {
   }
   if (datos.error) return <p className="cuenta-error" role="alert">{datos.error}</p>
 
+  const grupoFiltro = filtroValido(filtroRecordado, datos.grupos)
   const nombreGrupo = (id) => datos.grupos.find((g) => g.id === id)?.nombre || id
   const alumnos = datos.miembros.filter(
     (m) => m.rol === 'alumno' && pasaFiltroGrupo(m, grupoFiltro)

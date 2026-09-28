@@ -166,7 +166,7 @@ export default function AcademiaAdminPage() {
   return (
     <div className="panel-page admin-page">
       <nav className="migas">
-        <Link to="/admin">Dashboard general</Link> <span>/</span> {academia.id}
+        <Link to="/admin">Dashboard general</Link> <span>/</span> <Link to="/admin/academias">Academias</Link> <span>/</span> {academia.id}
       </nav>
 
       <header className="panel-header">

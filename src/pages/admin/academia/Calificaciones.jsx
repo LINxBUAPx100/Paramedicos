@@ -1,9 +1,10 @@
-import { useState } from 'react'
 import { useAcademiaAdmin } from '../../../components/admin/AcademiaShell.jsx'
 import { useDatosAcademia } from '../../../components/panel/datosAcademia.js'
 import { pasaFiltroGrupo } from '../../../lib/panelModelo.js'
 import { gruposDelPrograma } from '../../../lib/programasModelo.js'
 import { LibroDeCalificaciones } from '../../panel/Calificaciones.jsx'
+import { useDeTrabajo } from '../../../lib/useDeTrabajo.js'
+import { filtroValido } from '../../../lib/grupoDeTrabajo.js'
 
 // ============================================================
 //  Academia · CALIFICACIONES, desde la consola del super-admin
@@ -25,7 +26,8 @@ import { LibroDeCalificaciones } from '../../panel/Calificaciones.jsx'
 export default function AcademiaCalificaciones() {
   const { academiaId, cursoId, academiaNombre } = useAcademiaAdmin()
   const datos = useDatosAcademia(academiaId)
-  const [grupoFiltro, setGrupoFiltro] = useState('') // '' = todos; 'sin' = sin grupo
+  // El filtro se recuerda entre Alumnos, Calificaciones y el panel (por academia).
+  const [filtroRecordado, setGrupoFiltro] = useDeTrabajo('filtro', academiaId) // '' = todos; 'sin' = sin grupo
 
   if (datos.cargando && !datos.hayDatos) {
     return (
@@ -37,6 +39,7 @@ export default function AcademiaCalificaciones() {
   if (datos.error) return <p className="cuenta-error" role="alert">{datos.error}</p>
 
   const grupos = gruposDelPrograma(datos.grupos, cursoId)
+  const grupoFiltro = filtroValido(filtroRecordado, grupos)
   const nombreGrupo = (id) => datos.grupos.find((g) => g.id === id)?.nombre || id
   const alumnos = datos.miembros.filter(
     (m) => m.rol === 'alumno' && pasaFiltroGrupo(m, grupoFiltro)

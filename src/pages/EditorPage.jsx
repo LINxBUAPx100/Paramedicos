@@ -28,12 +28,18 @@ function editorLib() {
 }
 
 function Bloqueo({ icono = 'candado', titulo, children }) {
+  // Se vuelve a donde se entra al editor, no al inicio: el director llega desde
+  // el panel (Contenido) y el super-admin desde el suyo.
+  const { esStaff, esSuperadmin } = useAuth()
+  const [destino, texto] = esSuperadmin
+    ? ['/admin/contenido', 'Volver a Contenido']
+    : esStaff ? ['/panel/contenido', 'Volver al panel'] : ['/', 'Volver al inicio']
   return (
     <div className="acceso-restringido" role="alert">
       <span className="acceso-ico"><Icon name={icono} size={30} /></span>
       <h1>{titulo}</h1>
       {children}
-      <Link to="/" className="btn btn--pildora btn--carbon">Volver al inicio</Link>
+      <Link to={destino} className="btn btn--pildora btn--carbon">{texto}</Link>
     </div>
   )
 }
@@ -166,7 +172,10 @@ export default function EditorPage() {
   }, [cargando, permiso.permitido, recargar, destino])
 
   // Al cambiar de curso se limpia la caché de temas (jamás se mezcla nada).
-  useEffect(() => { setTemasCache({}); setSeleccion(null) }, [cursoSelId])
+  // La SELECCIÓN no se toca aquí: quien cambia de curso ya dice qué queda
+  // elegido. Este efecto corría después y la borraba, así que elegir un curso
+  // o crearlo nunca dejaba su panel abierto (27-09-2026).
+  useEffect(() => { setTemasCache({}) }, [cursoSelId])
 
   // Cambios sin guardar: aviso al salir de la página.
   useEffect(() => {
@@ -434,6 +443,7 @@ export default function EditorPage() {
             const nuevo = await ed.duplicarCursoEditor(contexto, destino, curso)
             await recargar()
             setCursoSelId(nuevo.id)
+            setSeleccion({ curso: true })
             setGuardado({ estado: 'ok', mensaje: 'Curso duplicado' })
           } catch (err) {
             setGuardado({ estado: 'error', mensaje: err?.message })

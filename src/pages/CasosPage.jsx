@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { CASOS } from '../data/casos/index.js'
 import { casosParaElAlumno, decidir, resumenRecorrido } from '../lib/casosModelo.js'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
@@ -11,7 +11,16 @@ import { useVisibilidad } from '../lib/useVisibilidad.js'
 export default function CasosPage() {
   const { temaVisible } = useVisibilidad()
   const casos = casosParaElAlumno(CASOS, { temaVisible })
-  const [activo, setActivo] = useState(null)
+  // El caso abierto va en la URL (?caso=…): «atrás» vuelve a la lista de
+  // casos en vez de salir de Modo llamada, y recargar no lo cierra.
+  const [params, setParams] = useSearchParams()
+  const activo = params.get('caso')
+  const navigate = useNavigate()
+  const { state } = useLocation()
+  const abrir = (id) => setParams({ caso: id }, { state: { desdeLista: true } })
+  // Salir deshace la entrada que abrió el caso; si se llegó con un enlace
+  // directo al caso, no hay lista detrás y se reemplaza por ella.
+  const salir = () => (state?.desdeLista ? navigate(-1) : setParams({}, { replace: true }))
   const caso = casos.find((c) => c.id === activo) || null
 
   return (
@@ -23,12 +32,12 @@ export default function CasosPage() {
         <p>Entra una llamada, eliges qué evaluar y qué hacer, y el caso responde a tus decisiones. Cada decisión te lleva a la lección que la explica.</p>
       </header>
       {caso ? (
-        <ReproductorCaso key={caso.id} caso={caso} onSalir={() => setActivo(null)} />
+        <ReproductorCaso key={caso.id} caso={caso} onSalir={salir} />
       ) : casos.length ? (
         <ul className="pl-casos-lista">
           {casos.map((c) => (
             <li key={c.id}>
-              <button type="button" onClick={() => setActivo(c.id)}>
+              <button type="button" onClick={() => abrir(c.id)}>
                 <b>{c.titulo}</b>
                 {c.resumen && <span>{c.resumen}</span>}
               </button>
