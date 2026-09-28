@@ -24,6 +24,7 @@ import { registrarIntento } from '../lib/dominioFarmacos.js'
 import { tarjetasParaRepaso } from '../lib/rutaFarmacos.js'
 import Fundamentos from '../components/farmacos/Fundamentos.jsx'
 import '../styles/farmacos.css'
+import TarjetaVolteable from '../components/ui/TarjetaVolteable.jsx'
 
 // ============================================================
 //  Entrenador de farmacología (trabajo D · PLAN-LMS §27)
@@ -410,11 +411,7 @@ function TarjetasLibres() {
         <span>Tarjeta {indice + 1} de {cartas.length}</span>
         <button className="btn btn--suave" onClick={barajar}>Barajar</button>
       </div>
-      <button type="button" className={`ui-tarjeta-repaso ${volteada ? 'ui-tarjeta-repaso--respuesta' : ''}`} aria-pressed={volteada} onClick={() => setVolteada((v) => !v)}>
-        <span className="ui-antetitulo">{volteada ? 'Respuesta' : 'Pregunta'}</span>
-        <span className="ui-tarjeta-texto">{volteada ? carta.reverso : carta.frente}</span>
-        <span className="ui-tarjeta-pista">{volteada ? 'Volver a la pregunta' : 'Mostrar respuesta'} · Enter, espacio o clic</span>
-      </button>
+      <TarjetaVolteable frente={carta.frente} reverso={carta.reverso} volteada={volteada} onVoltear={() => setVolteada((v) => !v)} />
       <div className="ui-repaso-barra">
         <button className="btn btn--suave" disabled={indice === 0} onClick={() => avanzar(-1)}><Icon name="chevronIzq" size={15} /> Anterior</button>
         <button className="btn btn--primario" disabled={indice === cartas.length - 1} onClick={() => avanzar(1)}>Siguiente <Icon name="chevronDer" size={15} /></button>

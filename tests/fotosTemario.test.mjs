@@ -41,9 +41,8 @@ test('los archivos existen en TODOS los anchos declarados', () => {
     for (const w of ANCHOS) {
       for (const ext of ['webp', 'avif']) {
         const rel = path.join('public', 'imagenes', CARPETA, `${f.clave}-${w}.${ext}`)
-        // El ancho mayor puede faltar si el original era más pequeño; el
-        // script lo omite a propósito en vez de agrandar. Los dos primeros no.
-        if (w === ANCHOS[ANCHOS.length - 1]) continue
+        // Sin excepciones, tampoco para el ancho mayor: el celular de alta
+        // densidad es quien lo pide, y faltando le salía la foto vacía.
         assert.ok(existsSync(path.join(RAIZ, rel)),
           `falta ${rel} — regenera con npm run optimizar:fotos`)
       }

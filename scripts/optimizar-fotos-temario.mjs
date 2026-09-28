@@ -47,9 +47,14 @@ for (const archivo of archivos.sort()) {
   const meta = await sharp(entrada).metadata()
   const orig = await stat(entrada)
   const pesos = []
+  const mayor = ANCHOS[ANCHOS.length - 1]
   for (const w of ANCHOS) {
-    if (w > meta.width) continue
-    const base = sharp(entrada).resize({ width: w, withoutEnlargement: true })
+    // El ancho MAYOR se genera siempre, aunque haya que agrandar un poco: el
+    // `srcset` lo anuncia para todas las fotos, y un celular de alta densidad
+    // es justo quien lo pide. Omitirlo le servía un 404 y la foto no cargaba
+    // (27-09-2026). Agrandar aquí no pierde nada: el navegador lo haría igual.
+    if (w > meta.width && w !== mayor) continue
+    const base = sharp(entrada).resize({ width: w, withoutEnlargement: w !== mayor })
     const webp = path.join(destino, `${nombre}-${w}.webp`)
     const avif = path.join(destino, `${nombre}-${w}.avif`)
     await base.clone().webp({ quality: 80, effort: 6 }).toFile(webp)

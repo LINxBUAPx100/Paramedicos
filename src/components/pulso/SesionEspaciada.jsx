@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useProgress } from '../../context/ProgressContext.jsx'
 import { claveTarjeta, sesionDeRepaso, etiquetaIntervalo } from '../../lib/pulsoModelo.js'
+import TarjetaVolteable from '../ui/TarjetaVolteable.jsx'
 
 // ============================================================
 //  Repaso de hoy (PTEM Pulso): repetición espaciada
@@ -48,11 +49,7 @@ export default function SesionEspaciada({ cartas }) {
         <span role="status">{cola.length} por repasar · {hechas} hechas</span>
         {nueva && <span className="pl-insignia">Nueva</span>}
       </div>
-      <button type="button" className={`ui-tarjeta-repaso ${volteada ? 'ui-tarjeta-repaso--respuesta' : ''}`} aria-pressed={volteada} onClick={() => setVolteada((v) => !v)}>
-        <span className="ui-antetitulo">{volteada ? 'Respuesta' : 'Pregunta'}</span>
-        <span className="ui-tarjeta-texto">{volteada ? carta.reverso : carta.frente}</span>
-        <span className="ui-tarjeta-pista">{volteada ? '¿Qué tan bien la recordaste?' : 'Mostrar respuesta'} · Enter, espacio o clic</span>
-      </button>
+      <TarjetaVolteable frente={carta.frente} reverso={carta.reverso} volteada={volteada} onVoltear={() => setVolteada((v) => !v)} pistaReverso="¿Qué tan bien la recordaste?" />
       {volteada ? (
         <div className="pl-calificar" role="group" aria-label="¿Qué tan bien la recordaste?">
           {[['Otra vez', 'var(--urgencia)'], ['Difícil', 'var(--alerta)'], ['Bien', 'var(--primario)'], ['Fácil', 'var(--exito-solido)']].map(([txt, color], c) => (

@@ -162,9 +162,19 @@
 .ui-repaso { max-width: 840px; width: 100%; margin-inline: auto; }
 .ui-repaso-barra { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-block: 20px; }
 .ui-repaso-barra > span { font-family: var(--fuente-cifra); font-size: 14px; color: var(--texto-2); }
-.ui-tarjeta-repaso { display: flex; flex-direction: column; gap: 24px; width: 100%; min-height: 280px; padding: clamp(24px, 5vw, 48px); text-align: left; border: 1px solid var(--borde-fuerte); border-top: 4px solid var(--primario); border-radius: var(--ui-radio-panel); background: var(--bg-2); color: var(--texto); cursor: pointer; box-shadow: var(--ui-sombra); }
-.ui-tarjeta-repaso:hover { border-color: var(--enlace); }
-.ui-tarjeta-repaso--respuesta { background: var(--bg-3); }
+/* La tarjeta se voltea en 3D (TarjetaVolteable.jsx): el botón da la
+   perspectiva, el giro rota y las dos caras se apilan en la misma celda. */
+.ui-tarjeta-repaso { display: block; width: 100%; padding: 0; border: 0; background: transparent; color: var(--texto); text-align: left; cursor: pointer; perspective: 1600px; border-radius: var(--ui-radio-panel); }
+.ui-tarjeta-repaso:focus-visible { outline: 2px solid var(--enlace); outline-offset: 4px; }
+.ui-tarjeta-giro { display: grid; transform-style: preserve-3d; transition: transform 0.55s cubic-bezier(0.3, 0.7, 0.2, 1); }
+.ui-tarjeta-repaso--respuesta .ui-tarjeta-giro { transform: rotateY(180deg); }
+.ui-tarjeta-cara { grid-area: 1 / 1; display: flex; flex-direction: column; gap: 24px; min-height: 280px; padding: clamp(24px, 5vw, 48px); border: 1px solid var(--borde); border-radius: var(--ui-radio-panel); background: var(--bg-2); box-shadow: 0 1px 3px rgb(0 0 0 / 0.06), 0 10px 28px rgb(0 0 0 / 0.07); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.ui-tarjeta-cara--reverso { background: color-mix(in srgb, var(--primario) 8%, var(--bg-2)); border-color: color-mix(in srgb, var(--primario) 35%, var(--borde)); transform: rotateY(180deg); }
+.ui-tarjeta-repaso:hover .ui-tarjeta-cara { box-shadow: 0 2px 6px rgb(0 0 0 / 0.08), 0 12px 32px rgb(0 0 0 / 0.07); }
+@media (prefers-reduced-motion: reduce) {
+  /* Sin giro: la cara cambia en seco. */
+  .ui-tarjeta-giro { transition: none; }
+}
 .ui-tarjeta-texto { font: 500 clamp(19px, 2.6vw, 25px)/1.65 var(--fuente-cuerpo); white-space: pre-wrap; overflow-wrap: anywhere; }
 .ui-tarjeta-pista { margin-top: auto; font: 400 14px/1.5 var(--fuente-cuerpo); color: var(--texto-2); }
 .ui-repaso-origen { margin-top: 24px; line-height: 1.6; }
@@ -174,5 +184,5 @@
   .progreso-page .progreso-resumen { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .progreso-page .progreso-tema-fila { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px 12px; }
   .progreso-page .progreso-tema-titulo { min-width: 0; overflow-wrap: anywhere; }
-  .ui-tarjeta-repaso { min-height: 240px; }
+  .ui-tarjeta-cara { min-height: 240px; }
 }

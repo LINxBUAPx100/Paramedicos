@@ -6,6 +6,7 @@ import { useTema, useTodasLasFlashcards, CargandoContenido, ErrorContenido } fro
 import { useVisibilidad } from '../lib/useVisibilidad.js'
 import Icon from '../components/Icon.jsx'
 import NotFound from './NotFound.jsx'
+import TarjetaVolteable from '../components/ui/TarjetaVolteable.jsx'
 
 export default function FlashcardsPage() {
   const { temaId } = useParams()
@@ -105,11 +106,7 @@ function SesionFlashcards({ cartas }) {
         <span role="status">Tarjeta {indice + 1} de {cartas.length}</span>
         <button className="btn btn--suave" onClick={barajar}>Barajar</button>
       </div>
-      <button type="button" className={`ui-tarjeta-repaso ${volteada ? 'ui-tarjeta-repaso--respuesta' : ''}`} aria-pressed={volteada} onClick={() => setVolteada((valor) => !valor)}>
-        <span className="ui-antetitulo">{volteada ? 'Respuesta' : 'Pregunta'}</span>
-        <span className="ui-tarjeta-texto">{volteada ? carta.reverso : carta.frente}</span>
-        <span className="ui-tarjeta-pista">{volteada ? 'Volver a la pregunta' : 'Mostrar respuesta'} · Enter, espacio o clic</span>
-      </button>
+      <TarjetaVolteable frente={carta.frente} reverso={carta.reverso} volteada={volteada} onVoltear={() => setVolteada((valor) => !valor)} />
       <div className="ui-repaso-barra">
         <button className="btn btn--suave" disabled={indice === 0} onClick={() => avanzar(-1)}><Icon name="chevronIzq" size={15} /> Anterior</button>
         <button className="btn btn--primario" disabled={indice === cartas.length - 1} onClick={() => avanzar(1)}>Siguiente <Icon name="chevronDer" size={15} /></button>

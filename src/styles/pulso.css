@@ -430,22 +430,23 @@ html[data-una-mano="si"] .tema-page .pl-trazo-latidos button { min-height: 40px;
 /* ============================================================
    Entrega 4 — repaso espaciado y turno de hoy
    ============================================================ */
-.pl-modo { display: inline-flex; gap: 4px; padding: 4px; border-radius: 12px; background: var(--bg-3); border: 1px solid var(--borde); margin-bottom: var(--e-12); }
+/* Pestañas y calificación sin cajas: texto y una línea de color bastan. */
+.pl-modo { display: flex; gap: var(--e-20); border-bottom: 1px solid var(--borde); margin-bottom: var(--e-16); }
 .pl-modo button {
-  border: 0; background: transparent; color: var(--texto-2); cursor: pointer;
-  padding: var(--e-8) var(--e-16); border-radius: 9px; font-family: var(--fuente-display); font-weight: 700; font-size: var(--t-sm);
+  border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; background: transparent; color: var(--texto-2); cursor: pointer;
+  padding: var(--e-8) 0; font-family: var(--fuente-display); font-weight: 700; font-size: var(--t-sm);
 }
-.pl-modo button.es-activo { background: var(--bg-2); color: var(--texto); box-shadow: var(--sombra); }
+.pl-modo button:hover { color: var(--texto); }
+.pl-modo button.es-activo { color: var(--texto); border-bottom-color: var(--primario); }
 .pl-calificar { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--e-8); margin-block: var(--e-12); }
 .pl-calificar button {
-  display: grid; gap: 2px; align-content: center; min-height: 58px; cursor: pointer;
-  border: 1px solid var(--borde); border-top: 4px solid var(--c); border-radius: 10px;
-  background: var(--bg-2); color: var(--texto); font-family: var(--fuente-display); font-weight: 700;
+  display: grid; gap: 2px; align-content: center; justify-items: center; min-height: 52px; cursor: pointer;
+  border: 0; border-radius: 12px; background: color-mix(in srgb, var(--c) 13%, var(--bg-2)); color: var(--texto); font-family: var(--fuente-display); font-weight: 700;
   transition: background var(--dur-rapida), transform var(--dur-rapida);
 }
-.pl-calificar button:hover { background: color-mix(in srgb, var(--c) 10%, var(--bg-2)); }
+.pl-calificar button:hover { background: color-mix(in srgb, var(--c) 24%, var(--bg-2)); }
 .pl-calificar button:active { transform: scale(0.97); }
-.pl-calificar small { font-family: var(--fuente-cifra); font-weight: 500; font-size: var(--t-xs); color: var(--texto-3); }
+.pl-calificar small { font-family: var(--fuente-cifra); font-weight: 500; font-size: var(--t-xs); color: var(--texto-2); }
 @media (max-width: 520px) { .pl-calificar { grid-template-columns: repeat(2, 1fr); } }
 .pl-repaso-fin { margin-top: var(--e-16); }
 
@@ -978,3 +979,46 @@ html[data-una-mano="si"] .ej-teclado button { min-height: 56px; font-size: 1.3re
 .pl-errores-quienes span { font-family: var(--fuente-cifra); font-size: var(--t-xs); color: var(--texto-3); }
 .pl-errores-sugerencia { margin: 0; background: color-mix(in srgb, var(--primario) 8%, var(--bg-2)); border-radius: 10px; padding: var(--e-12) var(--e-16); font-size: var(--t-sm); }
 @media (max-width: 560px) { .pl-errores-fila { grid-template-columns: 1fr auto; } .pl-errores-barra { grid-column: 1 / -1; } }
+
+/* ============================================================
+   Lección con menos cajas (27-09-2026)
+   Criterio: no vaciar la página, sino JUNTAR. Lo que antes eran seis
+   tarjetas sueltas (conceptos, errores) ahora es un solo panel con filas
+   separadas por una línea fina, y los avisos pierden el contorno pero
+   conservan su relleno de color, que es lo que dice qué son.
+   ============================================================ */
+/* Avisos: relleno sin contorno */
+.tema-page .c-callout,
+.tema-page .c-callout--alerta,
+.tema-page .c-callout--clinico,
+.tema-page .c-callout--dosis { border: 0; border-radius: 12px; }
+.tema-page .c-callout--clave { border: 0; border-radius: 12px; background: color-mix(in srgb, var(--alerta) 16%, var(--bg-2)); }
+.tema-page .objetivos { border: 0; border-radius: 14px; }
+.tema-page .c-formula { border: 0; }
+.tema-page .c-fuentes { border: 0; border-radius: 12px; }
+.tema-page .ritmo-rcp { border: 0; border-radius: 14px; box-shadow: var(--ui-sombra); }
+
+/* «Errores frecuentes»: los errores seguidos forman UN panel */
+.tema-page .seccion--errores .c-callout--alerta {
+  border: 0; border-radius: 0; margin: 0; background: var(--bg-2);
+  padding: var(--e-16) var(--e-20);
+}
+.tema-page .seccion--errores .c-callout--alerta:not(.c-callout--alerta + .c-callout--alerta) {
+  border-top-left-radius: 14px; border-top-right-radius: 14px; margin-top: var(--e-8);
+}
+.tema-page .seccion--errores .c-callout--alerta:not(:has(+ .c-callout--alerta)) {
+  border-bottom-left-radius: 14px; border-bottom-right-radius: 14px; margin-bottom: var(--e-20);
+  box-shadow: var(--ui-sombra);
+}
+.tema-page .seccion--errores .c-callout--alerta + .c-callout--alerta { border-top: 1px solid var(--borde); }
+
+/* «Conceptos clave»: un glosario en un solo panel, no una rejilla de tarjetas */
+.tema-page .conceptos-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0;
+  background: var(--bg-2); border-radius: 14px; box-shadow: var(--ui-sombra); overflow: hidden;
+}
+.tema-page .concepto-card {
+  border: 0; border-radius: 0; background: transparent;
+  padding: var(--e-16) var(--e-20);
+  border-top: 1px solid var(--borde); margin-top: -1px;
+}
