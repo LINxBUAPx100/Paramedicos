@@ -3,13 +3,16 @@ import Icon from '../Icon.jsx'
 import EjercicioGuiado from './EjercicioGuiado.jsx'
 import { HABILIDADES, HABILIDAD_POR_ID } from '../../lib/ejerciciosCalculo.js'
 import { generador, nuevaSemilla } from '../../lib/azar.js'
-import { leerDominio, registrarIntento, RACHA_PARA_DOMINAR } from '../../lib/dominioFarmacos.js'
+import { leerDominio, registrarIntento, RACHA_PARA_DOMINAR, leerErrores, guardarErrores } from '../../lib/dominioFarmacos.js'
+import { sumarErrores } from '../../lib/rutaFarmacos.js'
 
 // Ruta de aprendizaje del cálculo: explicación → ejemplo resuelto → práctica
 // guiada con números nuevos. Una habilidad se da por dominada con
 // RACHA_PARA_DOMINAR ejercicios seguidos resueltos sin ayuda y a la primera.
-export default function AprenderCalculo() {
-  const [habilidadId, setHabilidadId] = useState(null)
+// `habilidadInicial`: la ruta abre directamente la habilidad que entrena el
+// error más frecuente del alumno (?habilidad=<id>).
+export default function AprenderCalculo({ habilidadInicial = null }) {
+  const [habilidadId, setHabilidadId] = useState(() => (habilidadInicial && HABILIDAD_POR_ID[habilidadInicial] ? habilidadInicial : null))
   const [semilla, setSemilla] = useState(() => nuevaSemilla('calc'))
   const [dominio, setDominio] = useState(() => leerDominio())
   const [verEjemplo, setVerEjemplo] = useState(false)
@@ -20,6 +23,7 @@ export default function AprenderCalculo() {
   const otro = () => setSemilla(nuevaSemilla('calc'))
 
   function terminar(resultados) {
+    guardarErrores(sumarErrores(leerErrores(), resultados))
     const limpio = resultados.every((r) => r.primera && !r.asistido)
     setDominio(registrarIntento(`calc:${h.id}`, limpio))
   }

@@ -7,7 +7,8 @@ import { useVisibilidad } from '../lib/useVisibilidad.js'
 import { bancoDeExamen, motivoExamenInactivo } from '../lib/bancoExamen.js'
 import { seleccionarPreguntas, temasCubiertos } from '../lib/examenModelo.js'
 import { nuevaSemilla } from '../lib/azar.js'
-import Quiz from '../components/Quiz.jsx'
+// PTEM Pulso: modo examen (sin corrección inmediata, mapa, entregar al final).
+import ExamenPulso from '../components/pulso/ExamenPulso.jsx'
 import Icon from '../components/Icon.jsx'
 import NotFound from './NotFound.jsx'
 
@@ -112,7 +113,7 @@ export default function ExamenUnidadPage() {
             <p>Modulo {tema.moduloNumero} · {tema.moduloTitulo}</p>
           </header>
 
-          <Quiz
+          <ExamenPulso
             key={semilla}
             preguntas={preguntas}
             titulo={tema.evaluacion?.titulo || tema.titulo}

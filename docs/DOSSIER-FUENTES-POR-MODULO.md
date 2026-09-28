@@ -183,7 +183,7 @@ Distribución:
 Distribución:
 
 - Epidemiología: fuentes oficiales de salud pública; enseñar clasificación y utilidad prehospitalaria, no estadística inventada.
-- Farmacología: COFEPRIS/IPP vigente, guía de la indicación, NOM-034 y formulario/protocolo local. Un “vademécum” sin identificar no sirve.
+- Farmacología: COFEPRIS/IPP vigente, guía de la indicación, NOM-034 y formulario/protocolo local. Un “vademécum” sin identificar no sirve. Desde el 26-09-2026, a petición del usuario, el Manual MSD (versión para profesionales, sección «Farmacología clínica», capítulos revisados 2024-2025) se cita como obra de consulta para principios generales —farmacocinética, farmacodinámica, reacciones adversas, interacciones y errores de medicación—; nunca para dosis, indicaciones o concentraciones, y su aceptación como apoyo queda a decisión de la academia.
 - Respiratorias: OMS 2026/BEC para evaluación y estabilización inicial; GINA 2026 para asma; GOLD 2026 para EPOC; AHA/ACC/HFSA para edema pulmonar cardiogénico; BTS 2023 para neumotórax espontáneo; ESC 2019 para TEP; ATS/IDSA 2019 para neumonía adulta. AMLS es apoyo curricular, no sustituto de esas guías. Todo tratamiento farmacológico requiere además IPP, dotación vigente, protocolo local y límites prehospitalarios.
 - Gastrointestinales: AMLS más el manual de urgencias confirmado; centrarse en reconocimiento de gravedad, shock, hidratación y traslado, no en diagnóstico hospitalario definitivo.
 - Cardiológicas: AHA ALS 2025 para paro y arritmias; ACLS 2020 solo como antecedente del plan. Cualquier fármaco debe contrastarse con algoritmo vigente y protocolo local.

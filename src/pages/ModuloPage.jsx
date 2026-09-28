@@ -9,6 +9,9 @@ import Icon from '../components/Icon.jsx'
 import MedicalIcon from '../components/MedicalIcon.jsx'
 import { estadoEditorialDeFicha, estaAvalado, ETIQUETA_ESTADO } from '../lib/estadoEditorial.js'
 import { tituloVisibleDe } from '../data/contenido/titulosVisibles.js'
+import RutaModulo from '../components/pulso/RutaModulo.jsx'
+import { fotoDeModulo } from '../data/fotosModulo.js'
+import DescargarModulo from '../components/pulso/DescargarModulo.jsx'
 
 export default function ModuloPage() {
   const { moduloId } = useParams()
@@ -57,8 +60,20 @@ export default function ModuloPage() {
         <Link to="/">Inicio</Link> <span>/</span> Modulo {modulo.numero}
       </nav>
 
-      <header className="modulo-header">
-        <span className="modulo-header-ico"><MedicalIcon id={modulo.icono} size={34} /></span>
+      {/* PTEM Pulso: la cabecera lleva la MISMA foto y el color del módulo que
+          su tarjeta del inicio, a sangre, con el texto encima. Sin foto, el
+          degradado del color. */}
+      <header className="modulo-header pl-modulo-heroe">
+        {(() => {
+          const foto = fotoDeModulo(modulo.id)
+          return foto ? (
+            <picture className="pl-modulo-heroe-foto" aria-hidden="true">
+              <source type="image/avif" srcSet={foto.srcSetAvif} sizes="(max-width: 900px) 100vw, 1000px" />
+              <source type="image/webp" srcSet={foto.srcSet} sizes="(max-width: 900px) 100vw, 1000px" />
+              <img src={foto.src} alt="" decoding="async" fetchpriority="high" onError={(e) => { e.currentTarget.closest('picture').style.display = 'none' }} />
+            </picture>
+          ) : null
+        })()}
         <div>
           <span className="modulo-header-num">Modulo {modulo.numero}</span>
           <h1>{modulo.tituloVisible || modulo.titulo}</h1>
@@ -67,6 +82,11 @@ export default function ModuloPage() {
       </header>
 
       <p className="modulo-desc">{modulo.descripcion}</p>
+
+      {/* PTEM Pulso: la ruta de traslado del módulo. Solo con los temas que el
+          grupo tiene liberados, igual que la lista de abajo. */}
+      <RutaModulo modulo={modulo} temas={temas} />
+      <DescargarModulo modulo={modulo} temas={temas} api={api} />
 
       <section className="ui-modulo-indice" aria-label="Encontrar un tema del módulo">
         <div className="ui-herramientas">

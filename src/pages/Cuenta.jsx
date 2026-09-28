@@ -14,6 +14,7 @@ import { codigoInvitacionActual, limpiarCodigoInvitacion } from '../lib/codigoIn
 // que hace los mismos canjes, mostraba el texto en inglés del SDK.
 import { mensajeDeError as traducirError } from '../lib/mensajeError.js'
 import Icon from '../components/Icon.jsx'
+import CredencialUsuario, { PreferenciasEstudio } from '../components/pulso/CredencialUsuario.jsx'
 
 // --- Perfiles recordados (solo correo y nombre; NUNCA contraseñas) ---
 const LS_PERFILES = 'ptem-perfiles'
@@ -287,45 +288,15 @@ function Perfil({ user, perfil, salir, codigoInvitacion = '', onConsumir }) {
   }
 
   return (
-    <div className="cuenta-card">
-      <h1 className="cuenta-titulo">Mi cuenta</h1>
-      <dl className="cuenta-datos">
-        <div><dt>Nombre</dt><dd>{perfil?.nombre || user.displayName || '—'}</dd></div>
-        <div><dt>Correo</dt><dd>{user.email}</dd></div>
-        <div><dt>Rol</dt><dd><span className="cuenta-badge">{perfil?.rol || '—'}</span></dd></div>
-        <div>
-          <dt>Academia</dt>
-          <dd>
-            {perfil?.academiaId ? (
-              <span className="cuenta-badge cuenta-badge--ok">
-                {academia?.nombre || (puedeVerCodigos ? perfil.academiaId : 'Tu academia')}
-              </span>
-            ) : (
-              <em>Sin academia</em>
-            )}
-          </dd>
-        </div>
-        {perfil?.grupoId && (
-          <div>
-            <dt>Grupo</dt>
-            <dd>
-              <span className="cuenta-badge">
-                {grupo?.nombre || (puedeVerCodigos ? perfil.grupoId : 'Tu grupo')}
-              </span>
-            </dd>
-          </div>
-        )}
-        {pruebaSeg > 0 && (
-          <div>
-            <dt>Prueba</dt>
-            <dd>
-              <span className={`cuenta-badge ${pruebaVigente ? 'cuenta-badge--ok' : ''}`}>
-                {pruebaVigente ? `Acceso hasta el ${fechaPrueba}` : `Expiró el ${fechaPrueba}`}
-              </span>
-            </dd>
-          </div>
-        )}
-      </dl>
+    <div className="cuenta-card pl-cuenta">
+      {/* PTEM Pulso: la cabecera es una credencial con tu avance. */}
+      <CredencialUsuario user={user} perfil={perfil} academia={academia} grupo={grupo} puedeVerCodigos={puedeVerCodigos} />
+
+      {pruebaSeg > 0 && (
+        <p className={`pl-aviso-prueba ${pruebaVigente ? 'es-vigente' : ''}`} role="status">
+          {pruebaVigente ? `Acceso de prueba hasta el ${fechaPrueba}.` : `Tu acceso de prueba expiró el ${fechaPrueba}.`}
+        </p>
+      )}
 
       {(!perfil?.academiaId || perfil?.esPrueba || codigoInvitacion) && (
         <form className="cuenta-unir" onSubmit={unir}>
@@ -358,10 +329,20 @@ function Perfil({ user, perfil, salir, codigoInvitacion = '', onConsumir }) {
       )}
       {msg && perfil?.academiaId && <p className="cuenta-ok" role="status">{msg}</p>}
 
-      <button className="cuenta-editar-toggle" onClick={() => setEditando((v) => !v)}>
-        {editando ? 'Cerrar edición' : 'Editar mis datos'}
-      </button>
-      {editando && <EditarMisDatos user={user} perfil={perfil} />}
+      <PreferenciasEstudio />
+
+      <section className="pl-ajustes" aria-labelledby="pl-acceso-titulo">
+        <div className="pl-ajuste">
+          <div>
+            <h2 id="pl-acceso-titulo">Datos de acceso</h2>
+            <span>Nombre, correo de acceso y contraseña.</span>
+          </div>
+          <button className="btn btn--fantasma btn--sm" aria-expanded={editando} onClick={() => setEditando((v) => !v)}>
+            {editando ? 'Cerrar' : 'Editar'}
+          </button>
+        </div>
+        {editando && <EditarMisDatos user={user} perfil={perfil} />}
+      </section>
 
       <RepetirTutoriales />
 
@@ -369,9 +350,12 @@ function Perfil({ user, perfil, salir, codigoInvitacion = '', onConsumir }) {
           verlo sin ir a buscarlo. Solo aparece cuando hay algo que enviar. */}
       <EnviarDiagnostico user={user} perfil={perfil} />
 
-      <button className="btn btn--pildora btn--fantasma cuenta-salir" onClick={salir}>
-        Cerrar sesión
-      </button>
+      <div className="pl-salir">
+        <button className="btn btn--pildora btn--fantasma cuenta-salir" onClick={salir}>
+          Cerrar sesión
+        </button>
+        <span className="pl-nota-pie">Al salir se borran de este equipo las lecciones descargadas para estudiar sin conexión.</span>
+      </div>
     </div>
   )
 }

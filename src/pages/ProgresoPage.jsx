@@ -10,6 +10,7 @@ import { useAuth } from '../context/AuthContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
 import { filtrarTemasEstudio, paginarLista, resumenLectura } from '../lib/listasEstudio.js'
 import Paginacion from '../components/ui/Paginacion.jsx'
+import SignosDeEstudio from '../components/pulso/SignosDeEstudio.jsx'
 
 function formatoFecha(ts) {
   return new Date(ts).toLocaleDateString('es-MX', {
@@ -87,6 +88,9 @@ function MiProgreso({ conCabecera = true }) {
   const consulta = params.get('q') || ''
   const lectura = params.get('lectura') || 'todos'
   const [recarga, setRecarga] = useState(0)
+  // Reiniciar se confirma EN la pantalla: el diálogo del navegador no se ve igual en
+  // todos los navegadores y en algunos visores ni aparece.
+  const [confirmandoReinicio, setConfirmandoReinicio] = useState(false)
   const cambiarFiltro = (clave, valor) => {
     const siguientes = new URLSearchParams(params)
     if (valor && valor !== 'todos') siguientes.set(clave, valor)
@@ -137,11 +141,6 @@ function MiProgreso({ conCabecera = true }) {
   const quizzesHechos = resumen.quizzes
   const promedioQuiz = resumen.promedio
 
-  function confirmarReinicio() {
-    if (window.confirm('¿Seguro que quieres reiniciar todo tu progreso? Esta acción no se puede deshacer.')) {
-      reiniciar()
-    }
-  }
 
   return (
     <div className={conCabecera ? 'progreso-page' : ''}>
@@ -174,6 +173,9 @@ function MiProgreso({ conCabecera = true }) {
           <div className="resumen-label">Promedio en quizzes</div>
         </div>
       </div>
+
+      {/* PTEM Pulso: racha, mapa de dominio y qué repasar. */}
+      <SignosDeEstudio modulos={modulos} estado={estado} />
 
       <section className="progreso-modulos">
         <h2 className="seccion-titulo">Avance por módulo</h2>
@@ -266,9 +268,20 @@ function MiProgreso({ conCabecera = true }) {
       <MisCalificaciones />
 
       <div className="progreso-reinicio">
-        <button className="btn btn--peligro" onClick={confirmarReinicio}>
-          Reiniciar mi progreso
-        </button>
+        {confirmandoReinicio ? (
+          <div className="pl-confirmar" role="alertdialog" aria-labelledby="pl-reinicio-titulo">
+            <b id="pl-reinicio-titulo">¿Reiniciar todo tu progreso?</b>
+            <p>Se borran tus lecturas, quizzes, repasos, el historial de exámenes generales y la racha. No se puede deshacer. Tus intentos de examen de módulo y las calificaciones de tu maestro se conservan.</p>
+            <div className="pl-acciones">
+              <button className="btn btn--critico-pl" onClick={() => { reiniciar(); setConfirmandoReinicio(false) }}>Sí, reiniciar</button>
+              <button className="btn btn--fantasma" onClick={() => setConfirmandoReinicio(false)} autoFocus>Cancelar</button>
+            </div>
+          </div>
+        ) : (
+          <button className="btn btn--peligro" onClick={() => setConfirmandoReinicio(true)}>
+            Reiniciar mi progreso
+          </button>
+        )}
       </div>
     </div>
   )

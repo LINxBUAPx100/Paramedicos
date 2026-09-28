@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useRef, useState, useCallback } f
 import { useAuth } from './AuthContext.jsx'
 import { registrar } from '../lib/registro.js'
 import { sumarActividad } from '../lib/logrosModelo.js'
+import { anotarLectura, programarTarjeta } from '../lib/pulsoModelo.js'
 
 const ProgressContext = createContext(null)
 
@@ -33,6 +34,31 @@ function defecto() {
     // historial se recorta; `actual` se recalcula al pintar (lib/logrosModelo).
     actividad: {},
     racha: { actual: 0, mejor: 0, ultimoDia: null },
+    // PTEM Pulso: en qué sección de cada lección se quedó el alumno, para el
+    // botón «Reanudar» y el trazo del monitor.
+    //   lecturas: { temaId: { seccion, total, vistas: [i…], fecha } }
+    // Vive SOLO en este dispositivo: no se sube a Firestore (la escritura de
+    // abajo enumera sus campos y este no está), así que no toca las reglas ni
+    // el presupuesto de escrituras. Sincronizarlo es una decisión aparte.
+    lecturas: {},
+    // Más datos de Pulso, con la misma regla: SOLO en este dispositivo.
+    //   aplicadas:    { temaId: { aciertos, total, fecha } } — actividades al primer intento
+    //   srs:          { claveTarjeta: { intervalo, facilidad, vence, repeticiones, fallos } }
+    //   repasoRapido: { temaId: [índices marcados como sabidos] }
+    //   oral:         { temaId: { i: 0 | 1 | 2 } } — cómo le salió cada pregunta oral
+    //   mochila:      [temaId, …] — temas guardados para después
+    //   preferencias: { letra: 0-3, unaMano: bool }
+    // Para sincronizarlos hay que añadir `pulso` a la regla de progreso/{uid}
+    // (firestore.rules) y DESPLEGARLA antes de subir el campo; si no, la regla
+    // rechaza el documento entero y el progreso deja de sincronizarse en
+    // silencio. Ver docs/ux/PULSO.md.
+    aplicadas: {},
+    srs: {},
+    repasoRapido: {},
+    oral: {},
+    mochila: [],
+    preferencias: { letra: 0, unaMano: false },
+    lecturasUid: null,
     tema: 'claro', // claro | oscuro (preferencia del dispositivo, no se sincroniza)
   }
 }
@@ -43,6 +69,10 @@ function defecto() {
 // mantiene sola no significa nada.
 const conActividad = (s) => ({ ...s, ...sumarActividad(s) })
 
+// Datos locales de Pulso que pertenecen a UNA cuenta. Las preferencias de
+// lectura son del dispositivo y se conservan.
+const PULSO_VACIO = () => ({ lecturas: {}, aplicadas: {}, srs: {}, repasoRapido: {}, oral: {}, mochila: [] })
+
 export function ProgressProvider({ children }) {
   const [estado, setEstado] = useState(cargarEstado)
   const { user } = useAuth()
@@ -50,18 +80,58 @@ export function ProgressProvider({ children }) {
   const timerRef = useRef(0)
 
   // Cache local (siempre; también es el modo sin sesión y el respaldo offline).
-  useEffect(() => {
+  //
+  // Agrupada: con el repaso espaciado el estado puede pesar cientos de kB, y
+  // serializarlo entero en CADA acción (cada tarjeta calificada, cada sección
+  // leída) bloqueaba el hilo principal. Se escribe como mucho cada 300 ms y,
+  // sin esperar, al ocultar o cerrar la pestaña, para no perder nada.
+  const ultimoEstado = useRef(estado)
+  ultimoEstado.current = estado
+  const pendienteLocal = useRef(0)
+  const escribirLocal = useCallback(() => {
+    if (pendienteLocal.current) { clearTimeout(pendienteLocal.current); pendienteLocal.current = 0 }
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(estado))
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(ultimoEstado.current))
     } catch {
       /* almacenamiento no disponible */
     }
-  }, [estado])
+  }, [])
+  useEffect(() => {
+    if (pendienteLocal.current) clearTimeout(pendienteLocal.current)
+    pendienteLocal.current = setTimeout(escribirLocal, 300)
+  }, [estado, escribirLocal])
+  useEffect(() => {
+    const alOcultar = () => { if (document.visibilityState === 'hidden') escribirLocal() }
+    window.addEventListener('pagehide', escribirLocal)
+    document.addEventListener('visibilitychange', alOcultar)
+    return () => {
+      window.removeEventListener('pagehide', escribirLocal)
+      document.removeEventListener('visibilitychange', alOcultar)
+      escribirLocal()
+    }
+  }, [escribirLocal])
 
   // Aplica el tema al documento.
   useEffect(() => {
     document.documentElement.dataset.tema = estado.tema
   }, [estado.tema])
+
+  // Preferencias de lectura de Pulso (tamaño de letra y modo una mano): igual
+  // que el tema, se aplican al documento y las resuelve pulso.css.
+  const letra = estado.preferencias?.letra || 0
+  const unaMano = Boolean(estado.preferencias?.unaMano)
+  useEffect(() => {
+    const raiz = document.documentElement
+    if (letra) raiz.dataset.letra = String(letra); else delete raiz.dataset.letra
+    if (unaMano) raiz.dataset.unaMano = 'si'; else delete raiz.dataset.unaMano
+  }, [letra, unaMano])
+
+  // Las descargas sin conexión son de UNA cuenta: se atan a quien tiene la
+  // sesión y se borran al salir (ver lib/descargas.js).
+  // Import dinámico: el almacén de descargas no viaja en el paquete principal.
+  useEffect(() => {
+    import('../lib/descargas.js').then((m) => m.fijarDuenoDescargas(user?.uid || null)).catch(() => {})
+  }, [user])
 
   // Al iniciar sesión: cargar el progreso remoto. Si existe, MANDA (evita mezclar
   // progreso de otro usuario que quedara en localStorage de un equipo compartido).
@@ -71,6 +141,12 @@ export function ProgressProvider({ children }) {
       hidratadoRef.current = false
       return
     }
+    // Las lecturas son locales y no las reemplaza el progreso remoto, así que
+    // en un equipo compartido se quedarían las del alumno anterior y su
+    // «Reanudar» aparecería en la cuenta de otro. Se atan a la cuenta.
+    setEstado((local) => (local.lecturasUid === user.uid
+      ? local
+      : { ...local, ...PULSO_VACIO(), lecturasUid: user.uid }))
     let activo = true
     ;(async () => {
       const [{ db, firebaseListo }, fs] = await Promise.all([
@@ -173,12 +249,69 @@ export function ProgressProvider({ children }) {
     }))
   }, [])
 
+  // Se llama al desplazarse por la lección. `anotarLectura` devuelve el mismo
+  // objeto si nada cambió, y entonces no hay render.
+  const registrarLectura = useCallback((temaId, seccion, total) => {
+    setEstado((s) => {
+      const lecturas = anotarLectura(s.lecturas || {}, temaId, seccion, total)
+      return lecturas === s.lecturas ? s : { ...s, lecturas }
+    })
+  }, [])
+
+  // Actividades del tema resueltas: se guarda el primer intento completo.
+  const registrarAplicada = useCallback((temaId, aciertos, total) => {
+    setEstado((s) => {
+      if (s.aplicadas?.[temaId]) return s
+      return conActividad({ ...s, aplicadas: { ...(s.aplicadas || {}), [temaId]: { aciertos, total, fecha: Date.now() } } })
+    })
+  }, [])
+
+  // Repaso espaciado: calificar una tarjeta programa su próxima aparición.
+  const calificarTarjeta = useCallback((clave, calificacion) => {
+    setEstado((s) => {
+      const srs = { ...(s.srs || {}), [clave]: programarTarjeta(s.srs?.[clave], calificacion) }
+      // Tope: el temario tiene del orden de 1 500 tarjetas.
+      const claves = Object.keys(srs)
+      if (claves.length > 3000) {
+        claves.sort((a, b) => (srs[a].vence || 0) - (srs[b].vence || 0))
+        for (const k of claves.slice(0, claves.length - 3000)) delete srs[k]
+      }
+      return conActividad({ ...s, srs })
+    })
+  }, [])
+
+  const marcarRepasoRapido = useCallback((temaId, indice, sabido) => {
+    setEstado((s) => {
+      const previos = new Set(s.repasoRapido?.[temaId] || [])
+      if (sabido) previos.add(indice); else previos.delete(indice)
+      return { ...s, repasoRapido: { ...(s.repasoRapido || {}), [temaId]: [...previos].sort((a, b) => a - b) } }
+    })
+  }, [])
+
+  const calificarOral = useCallback((temaId, indice, resultado) => {
+    setEstado((s) => conActividad({
+      ...s, oral: { ...(s.oral || {}), [temaId]: { ...(s.oral?.[temaId] || {}), [indice]: resultado } },
+    }))
+  }, [])
+
+  const alternarMochila = useCallback((temaId) => {
+    setEstado((s) => {
+      const actual = s.mochila || []
+      const mochila = actual.includes(temaId) ? actual.filter((t) => t !== temaId) : [temaId, ...actual].slice(0, 100)
+      return { ...s, mochila }
+    })
+  }, [])
+
+  const fijarPreferencia = useCallback((clave, valor) => {
+    setEstado((s) => ({ ...s, preferencias: { ...(s.preferencias || {}), [clave]: valor } }))
+  }, [])
+
   const alternarTema = useCallback(() => {
     setEstado((s) => ({ ...s, tema: s.tema === 'claro' ? 'oscuro' : 'claro' }))
   }, [])
 
   const reiniciar = useCallback(() => {
-    setEstado((s) => ({ ...defecto(), tema: s.tema }))
+    setEstado((s) => ({ ...defecto(), tema: s.tema, preferencias: s.preferencias }))
   }, [])
 
   const valor = {
@@ -186,6 +319,13 @@ export function ProgressProvider({ children }) {
     marcarLeido,
     registrarQuiz,
     registrarExamen,
+    registrarLectura,
+    registrarAplicada,
+    calificarTarjeta,
+    marcarRepasoRapido,
+    calificarOral,
+    alternarMochila,
+    fijarPreferencia,
     alternarTema,
     reiniciar,
   }

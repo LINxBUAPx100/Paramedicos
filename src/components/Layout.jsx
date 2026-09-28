@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom'
+import BarraInferior from './pulso/BarraInferior.jsx'
+import { aReanudar } from '../lib/pulsoModelo.js'
 import { useProgress } from '../context/ProgressContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useIndiceContenido } from '../context/ContenidoContext.jsx'
@@ -45,6 +47,7 @@ const NAV = [
   { to: '/logros', icon: 'atlas', label: 'Logros', soloConAcceso: true },
   { to: '/progreso', icon: 'progreso', label: 'Mi progreso', soloConAcceso: true },
   { to: '/buscar', icon: 'buscar', label: 'Buscar', soloConAcceso: true },
+  { to: '/casos', icon: 'examen', label: 'Modo llamada', soloConAcceso: true },
 ]
 
 export default function Layout({ children }) {
@@ -391,6 +394,16 @@ export default function Layout({ children }) {
           {children}
         </main>
       </div>
+
+      {/* PTEM Pulso: pestañas inferiores en teléfono. Mismas puertas que el
+          menú: solo con acceso al contenido y fuera de consolas, editor y 3D. */}
+      {veContenido && !esRecepcion && !esConsola && !esAtlas && !location.pathname.startsWith('/editor') && (
+        <BarraInferior destinoRuta={(() => {
+          const m = aReanudar({ modulos: modulosVisibles, leidos: estado.leidos, lecturas: estado.lecturas || {} }).tema?.moduloId
+            || modulosVisibles[0]?.id
+          return m ? `/modulo/${m}` : '/'
+        })()} />
+      )}
 
       <footer className="app-footer">
         <div className="footer-in">

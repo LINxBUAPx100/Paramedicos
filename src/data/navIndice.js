@@ -10,8 +10,8 @@ export const stats = {
   "modulos": 7,
   "temas": 287,
   "preguntas": 944,
-  "flashcards": 1428,
-  "conceptos": 1127
+  "flashcards": 1430,
+  "conceptos": 1130
 }
 
 // temaId → estado editorial del temario oficial. Solo lo usa el panel de

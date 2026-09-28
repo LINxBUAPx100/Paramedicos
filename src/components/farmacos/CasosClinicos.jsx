@@ -5,7 +5,8 @@ import EjercicioGuiado from './EjercicioGuiado.jsx'
 import { FARMACOS } from '../../data/farmacos/catalogo.js'
 import { casosDisponibles, construirCaso } from '../../lib/casosFarmacologia.js'
 import { nuevaSemilla } from '../../lib/azar.js'
-import { leerDominio, registrarIntento, RACHA_PARA_DOMINAR } from '../../lib/dominioFarmacos.js'
+import { leerDominio, registrarIntento, RACHA_PARA_DOMINAR, leerErrores, guardarErrores } from '../../lib/dominioFarmacos.js'
+import { sumarErrores } from '../../lib/rutaFarmacos.js'
 import { AVISO_PROTOCOLO } from '../../lib/farmacosModelo.js'
 
 function Fuente({ fuente, cita }) {
@@ -55,7 +56,11 @@ export default function CasosClinicos({ farmacoId = null }) {
             key={semilla}
             ejercicio={caso}
             cabecera={<p className="ui-antetitulo">Caso · {seleccion.f.nombre}</p>}
-            onTerminar={(rs) => setDominio(registrarIntento(clave, rs.every((r) => r.primera && !r.asistido)))}
+            onTerminar={(rs) => {
+              // Los tipos de error se acumulan: la ruta dice qué practicar.
+              guardarErrores(sumarErrores(leerErrores(), rs))
+              setDominio(registrarIntento(clave, rs.every((r) => r.primera && !r.asistido)))
+            }}
             pie={(
               <>
                 {caso.repeticion && <p><strong>Después:</strong> {caso.repeticion}</p>}

@@ -18,13 +18,43 @@ import { diagnosticar, leerNumero, fmt } from '../../lib/calculoDosis.js'
 
 const INTENTOS_ANTES_DE_AYUDA = 2
 
+// Teclado numérico propio en pantallas táctiles (PTEM Pulso): teclas de 48 px,
+// sin abrir el teclado del sistema, que tapa media pantalla y cambia de forma
+// entre teléfonos. Con teclado físico se sigue pudiendo escribir.
+const esTactil = () => typeof window !== 'undefined' && Boolean(window.matchMedia?.('(pointer: coarse)').matches)
+const TECLAS = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '.', '0', 'borrar']
+
+function TecladoNumerico({ onTecla, desactivado }) {
+  return (
+    <div className="ej-teclado" role="group" aria-label="Teclado numérico">
+      {TECLAS.map((t) => (
+        <button
+          key={t}
+          type="button"
+          disabled={desactivado}
+          aria-label={t === 'borrar' ? 'Borrar' : t === '.' ? 'Punto decimal' : t}
+          onClick={() => onTecla(t)}
+        >
+          {t === 'borrar' ? '⌫' : t}
+        </button>
+      ))}
+    </div>
+  )
+}
+
 function PasoNumerico({ p, onResuelto }) {
   const [valor, setValor] = useState('')
   const [intentos, setIntentos] = useState(0)
   const [diag, setDiag] = useState(null)
   const [visto, setVisto] = useState(false)
   const input = useRef(null)
-  useEffect(() => { input.current?.focus() }, [])
+  const [tactil] = useState(esTactil)
+  useEffect(() => { if (!tactil) input.current?.focus() }, [tactil])
+  const tecla = (t) => setValor((v) => {
+    if (t === 'borrar') return v.slice(0, -1)
+    if (t === '.' && /[.,]/.test(v)) return v
+    return (v + t).slice(0, 12)
+  })
 
   function comprobar(e) {
     e.preventDefault()
@@ -47,7 +77,7 @@ function PasoNumerico({ p, onResuelto }) {
         <input
           id={`ej-${p.id}`}
           ref={input}
-          inputMode="decimal"
+          inputMode={tactil ? 'none' : 'decimal'}
           autoComplete="off"
           value={valor}
           onChange={(e) => setValor(e.target.value)}
@@ -57,6 +87,7 @@ function PasoNumerico({ p, onResuelto }) {
         <span className="ej-unidad">{p.unidad}</span>
         {!visto && <button className="btn btn--primario" type="submit" disabled={!valor.trim()}>Comprobar</button>}
       </div>
+      {tactil && !visto && <TecladoNumerico onTecla={tecla} desactivado={visto} />}
       {diag && !visto && (
         <p id={`ej-${p.id}-diag`} className="ej-pista" role="alert">
           <Icon name="alerta" size={16} /> {diag.pista}

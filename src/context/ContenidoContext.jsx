@@ -367,7 +367,16 @@ export function useCargaDeAgregado(pedir, deps = []) {
 /** Una lección completa. Una lectura. */
 export function useTema(temaId) {
   const { dato, api, cargando, error, reintentar } = useCargaDeApi(
-    (a) => (temaId ? a.getTemaAsync(temaId) : null),
+    // Sin red, una lección DESCARGADA por el alumno sustituye a la lectura que
+    // falló (PTEM Pulso). Con red manda siempre Firestore.
+    (a) => (temaId
+      ? a.getTemaAsync(temaId).catch(async (err) => {
+        const { leerTemaDescargado } = await import('../lib/descargas.js')
+        const copia = await leerTemaDescargado(temaId)
+        if (copia) return { ...copia, sinConexion: true }
+        throw err
+      })
+      : null),
     [temaId]
   )
   return { tema: dato, api, cargando: Boolean(temaId) && cargando, error, reintentar }

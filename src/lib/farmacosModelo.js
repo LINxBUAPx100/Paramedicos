@@ -158,10 +158,13 @@ export function tarjetasDe(farmacos) {
 }
 
 // Elige `n` valores distintos entre sí y distintos de `correcto`.
-function distractores(valores, correcto, n, rng) {
+// PTEM Pulso: `cercanos` va PRIMERO (los de la misma sección del catálogo) y
+// solo se completa con el resto si no alcanzan. Una opción de una sección
+// lejana se descarta sola; una vecina obliga a distinguir.
+function distractores(valores, correcto, n, rng, cercanos = []) {
   const vistos = new Set([normalizar(correcto)])
   const out = []
-  for (const v of barajarCon(rng, valores)) {
+  for (const v of [...barajarCon(rng, cercanos), ...barajarCon(rng, valores)]) {
     const k = normalizar(v)
     if (vistos.has(k)) continue
     vistos.add(k)
@@ -187,8 +190,9 @@ export function preguntasDe(farmacos, { semilla = null, catalogo = farmacos } = 
   const casillas = [...APENDICES, 'ampliado'].map((c) => ETIQUETA_ORIGEN[c])
   const preguntas = []
 
-  const agregar = (f, tipo, pregunta, correcto, pool, explicacion) => {
-    const otros = distractores(pool, correcto, 3, rng)
+  const agregar = (f, tipo, pregunta, correcto, pool, explicacion, campo = null) => {
+    const cercanos = campo ? catalogo.filter((x) => x.id !== f.id && x.seccion === f.seccion).map((x) => x[campo]) : []
+    const otros = distractores(pool, correcto, 3, rng, cercanos)
     if (otros.length < 3) return
     preguntas.push({
       id: `${f.id}-${tipo}`,
@@ -202,13 +206,13 @@ export function preguntasDe(farmacos, { semilla = null, catalogo = farmacos } = 
 
   for (const f of farmacos) {
     agregar(f, 'grupo', `¿A qué grupo pertenece ${f.nombre}?`, f.grupo, grupos,
-      `${f.nombre} es ${f.grupo.toLowerCase()}.`)
+      `${f.nombre} es ${f.grupo.toLowerCase()}.`, 'grupo')
     agregar(f, 'uso', `¿Qué uso le asigna el catálogo a ${f.nombre}?`, f.uso, usos,
-      `${f.nombre}: ${f.uso}`)
+      `${f.nombre}: ${f.uso}`, 'uso')
     agregar(f, 'precaucion', `¿Qué precaución corresponde a ${f.nombre}?`, f.precaucion, precauciones,
-      `${f.nombre}: ${f.precaucion}`)
+      `${f.nombre}: ${f.precaucion}`, 'precaucion')
     agregar(f, 'inverso', `¿Qué fármaco del catálogo corresponde a este uso? «${f.uso}»`, f.nombre, nombres,
-      `Es ${f.nombre} (${f.grupo.toLowerCase()}).`)
+      `Es ${f.nombre} (${f.grupo.toLowerCase()}).`, 'nombre')
     agregar(f, 'origen', `¿Dónde figura ${f.nombre}?`, ETIQUETA_ORIGEN[casillaDe(f)], casillas,
       f.apendice
         ? `Está en el mínimo de la NOM-034, apéndice ${f.apendice}.`
@@ -226,4 +230,55 @@ export function tandaClasificacion(farmacos, n = 12, semilla = null) {
 
 export function evaluarClasificacion(f, casilla) {
   return casillaDe(f) === casilla
+}
+
+// ---------- Relámpago con variantes (PTEM Pulso) ----------
+//
+//  apendice — ¿en qué apéndice de la NOM-034 está? (la de siempre)
+//  unidad   — ¿cuál es la unidad MÍNIMA que lo lleva? La dotación es
+//             acumulativa: el apéndice A va desde Traslado, el B desde
+//             Urgencias básicas… Sin apéndice, «según formulario del servicio».
+//  grupo    — ¿a qué grupo farmacológico pertenece? Las opciones falsas salen
+//             primero de su misma sección.
+export const VARIANTES_RELAMPAGO = {
+  apendice: 'Apéndice NOM-034',
+  unidad: 'Unidad que lo lleva',
+  grupo: 'Grupo',
+}
+export const SIN_UNIDAD = 'Según formulario del servicio'
+
+export function unidadMinima(f, unidades = []) {
+  if (!f.apendice) return SIN_UNIDAD
+  return unidades.find((u) => u.apendices.includes(f.apendice))?.tipo || SIN_UNIDAD
+}
+
+/** Opciones y respuesta de una ficha en una variante. */
+export function preguntaRelampago(f, variante, { unidades = [], catalogo = [], semilla = null } = {}) {
+  if (variante === 'unidad') {
+    return { opciones: [...unidades.map((u) => u.tipo), SIN_UNIDAD], correcta: unidadMinima(f, unidades) }
+  }
+  if (variante === 'grupo') {
+    const rng = semilla == null ? Math.random : generador(semilla)
+    const cercanos = catalogo.filter((x) => x.id !== f.id && x.seccion === f.seccion).map((x) => x.grupo)
+    const otros = distractores(catalogo.map((x) => x.grupo), f.grupo, 3, rng, cercanos)
+    return { opciones: barajarCon(rng, [f.grupo, ...otros]), correcta: f.grupo }
+  }
+  return { opciones: [...APENDICES, 'ampliado'].map((c) => ETIQUETA_ORIGEN[c]), correcta: ETIQUETA_ORIGEN[casillaDe(f)] }
+}
+
+// ---------- Comparador (PTEM Pulso) ----------
+
+/** Filas de un comparador de dos fichas, solo con campos que ya existen. */
+export function filasComparador(a, b, unidades = []) {
+  const unidadesDe = (f) => (f.apendice ? unidades.filter((u) => u.apendices.includes(f.apendice)).map((u) => u.tipo).join(', ') : SIN_UNIDAD)
+  const filas = [
+    ['Grupo', a.grupo, b.grupo],
+    ['Origen', ETIQUETA_ORIGEN[casillaDe(a)], ETIQUETA_ORIGEN[casillaDe(b)]],
+    ['Unidades que lo llevan', unidadesDe(a), unidadesDe(b)],
+    ['Presentación en la NOM', a.presentacionNom || 'No figura', b.presentacionNom || 'No figura'],
+    ['Uso', a.uso, b.uso],
+    ['Precaución clave', a.precaucion, b.precaucion],
+    ['Dosis verificadas', String(a.dosis?.length || 'Ninguna'), String(b.dosis?.length || 'Ninguna')],
+  ]
+  return filas.map(([campo, va, vb]) => ({ campo, a: va, b: vb, difiere: normalizar(va) !== normalizar(vb) }))
 }

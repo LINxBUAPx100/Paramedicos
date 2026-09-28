@@ -1,5 +1,6 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import Icon from './Icon.jsx'
+import OrdenarArrastrable from './pulso/OrdenarArrastrable.jsx'
 
 // Baraja una copia del array (Fisher–Yates). Math.random es válido en el navegador.
 function barajar(arr) {
@@ -82,15 +83,6 @@ function Ordenar({ titulo, pasos }) {
   })
   const [comprobado, setComprobado] = useState(false)
 
-  const mover = (pos, dir) => {
-    const destino = pos + dir
-    if (destino < 0 || destino >= orden.length) return
-    const n = [...orden]
-    ;[n[pos], n[destino]] = [n[destino], n[pos]]
-    setOrden(n)
-    setComprobado(false)
-  }
-
   const correctos = orden.filter((v, i) => v === i).length
 
   return (
@@ -99,26 +91,8 @@ function Ordenar({ titulo, pasos }) {
         <h4><Icon name="temario" size={18} /> Ordena: {titulo}</h4>
         {comprobado && <span className="act-progreso">{correctos}/{pasos.length}</span>}
       </div>
-      <ol className="ordenar-lista">
-        {orden.map((idx, pos) => {
-          const ok = comprobado && idx === pos
-          const mal = comprobado && idx !== pos
-          return (
-            <li key={idx} className={`ordenar-item ${ok ? 'is-ok' : ''} ${mal ? 'is-mal' : ''}`}>
-              <span className="ordenar-num">{pos + 1}</span>
-              <span className="ordenar-txt">{pasos[idx]}</span>
-              <span className="ordenar-flechas">
-                <button type="button" onClick={() => mover(pos, -1)} disabled={pos === 0} aria-label="Subir">
-                  <Icon name="chevronArriba" size={16} />
-                </button>
-                <button type="button" onClick={() => mover(pos, 1)} disabled={pos === orden.length - 1} aria-label="Bajar">
-                  <Icon name="chevronAbajo" size={16} />
-                </button>
-              </span>
-            </li>
-          )
-        })}
-      </ol>
+      {/* Arrastre + animación de cambio de lugar (PTEM Pulso). */}
+      <OrdenarArrastrable pasos={pasos} orden={orden} setOrden={setOrden} comprobado={comprobado} onMover={() => setComprobado(false)} />
       <button className="btn btn--primario act-comprobar" onClick={() => setComprobado(true)}>
         Comprobar orden
       </button>
@@ -128,20 +102,20 @@ function Ordenar({ titulo, pasos }) {
 }
 
 // ---- Completar huecos: elige la palabra que falta en la frase ----
-function Completar({ items }) {
+function Completar({ items, onResponder }) {
   return (
     <div className="act act--completar">
       <div className="act-cabe">
         <h4><Icon name="chispa" size={18} /> Completa la frase</h4>
       </div>
       {items.map((it, i) => (
-        <CompletarItem key={i} item={it} />
+        <CompletarItem key={i} item={it} onResponder={(ok) => onResponder?.(`c${i}`, ok)} />
       ))}
     </div>
   )
 }
 
-function CompletarItem({ item }) {
+function CompletarItem({ item, onResponder }) {
   const [elegida, setElegida] = useState(null)
   const partes = item.texto.split('___')
   const resuelto = elegida != null
@@ -160,7 +134,7 @@ function CompletarItem({ item }) {
           <button
             key={i}
             className={`completar-op ${resuelto && i === item.correcta ? 'is-ok' : ''}`}
-            onClick={() => elegida == null && setElegida(i)}
+            onClick={() => { if (elegida == null) { setElegida(i); onResponder?.(i === item.correcta) } }}
             disabled={resuelto}
           >
             {op}
@@ -173,7 +147,7 @@ function CompletarItem({ item }) {
 }
 
 // ---- Preguntas extra (repaso adicional con explicación) ----
-function PreguntaItem({ q }) {
+function PreguntaItem({ q, onResponder }) {
   const [elegida, setElegida] = useState(null)
   return (
     <div className="act-preg">
@@ -193,7 +167,7 @@ function PreguntaItem({ q }) {
             <button
               key={i}
               className={`act-preg-op ${clase}`}
-              onClick={() => elegida == null && setElegida(i)}
+              onClick={() => { if (elegida == null) { setElegida(i); onResponder?.(i === q.correcta) } }}
               disabled={elegida != null}
             >
               {op}
@@ -207,7 +181,24 @@ function PreguntaItem({ q }) {
 }
 
 // Sección de actividades de un tema. Recibe pares (conceptosClave), `ordenar` y `preguntas`.
-export default function Actividades({ pares = [], ordenar, completar = [], preguntas = [] }) {
+// `onCompletar(aciertos, total)` se llama UNA vez, cuando se han contestado
+// todas las frases para completar y todas las preguntas: es la evidencia que
+// PTEM Pulso usa para el nivel «Aplica». Cuenta el PRIMER intento de cada una
+// (cada ítem admite una sola respuesta). Unir y ordenar no entran: permiten
+// reintentar hasta acertar y no dirían nada del primer intento.
+export default function Actividades({ pares = [], ordenar, completar = [], preguntas = [], onCompletar = null }) {
+  const respuestas = useRef({})
+  const avisado = useRef(false)
+  const totalEvaluable = completar.length + preguntas.length
+  const onResponder = (clave, ok) => {
+    if (clave in respuestas.current) return
+    respuestas.current[clave] = ok
+    const hechas = Object.values(respuestas.current)
+    if (!avisado.current && totalEvaluable > 0 && hechas.length === totalEvaluable) {
+      avisado.current = true
+      onCompletar?.(hechas.filter(Boolean).length, totalEvaluable)
+    }
+  }
   const hayUnir = pares.length >= 2
   if (!hayUnir && !ordenar && completar.length === 0 && preguntas.length === 0) return null
 
@@ -216,14 +207,14 @@ export default function Actividades({ pares = [], ordenar, completar = [], pregu
       <h2 className="seccion-titulo">Actividades de repaso</h2>
       {hayUnir && <UnirPalabras pares={pares} />}
       {ordenar && <Ordenar titulo={ordenar.titulo} pasos={ordenar.pasos} />}
-      {completar.length > 0 && <Completar items={completar} />}
+      {completar.length > 0 && <Completar items={completar} onResponder={onResponder} />}
       {preguntas.length > 0 && (
         <div className="act act--preguntas">
           <div className="act-cabe">
             <h4><Icon name="pregunta" size={18} /> Preguntas de repaso</h4>
           </div>
           {preguntas.map((q, i) => (
-            <PreguntaItem key={i} q={q} />
+            <PreguntaItem key={i} q={q} onResponder={(ok) => onResponder(`p${i}`, ok)} />
           ))}
         </div>
       )}

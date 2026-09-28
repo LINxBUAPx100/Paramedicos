@@ -1,5 +1,5 @@
 import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { lazy, Suspense, useEffect } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import {
   useTema, useCargaDeAgregado, CargandoContenido, ErrorContenido,
 } from '../context/ContenidoContext.jsx'
@@ -25,7 +25,11 @@ import { estadoEditorialDe, muestraContenido, esNodoDeEvaluacion } from '../lib/
 import { bancoDeExamen, temasEsperandoValidacion } from '../lib/bancoExamen.js'
 import { tituloVisibleDe } from '../data/contenido/titulosVisibles.js'
 import NotFound from './NotFound.jsx'
-import IndiceLeccion from '../components/ui/IndiceLeccion.jsx'
+import MonitorLeccion from '../components/pulso/MonitorLeccion.jsx'
+import PracticaLeccion, { ANCLA_PRACTICA } from '../components/pulso/PracticaLeccion.jsx'
+import CierreLeccion from '../components/pulso/CierreLeccion.jsx'
+import { ProveedorFarmacosEnLeccion } from '../components/pulso/FarmacosEnTexto.jsx'
+import { dominioDeTema, claveTarjeta } from '../lib/pulsoModelo.js'
 
 // El catálogo de fármacos viaja aparte: la lección no lo necesita para pintarse.
 const FarmacosDelTema = lazy(() => import('../components/FarmacosDelTema.jsx'))
@@ -38,7 +42,9 @@ export default function TemaPage() {
   // Contenido de LA ACADEMIA del usuario (resolutor: Firestore o bundle).
   // Se pide SOLO esta lección: antes se bajaba el curso entero para leer una.
   const { tema, api, cargando, error, reintentar } = useTema(temaId)
-  const { estado, marcarLeido } = useProgress()
+  const { estado, marcarLeido, registrarAplicada } = useProgress()
+  const [cierreAbierto, setCierreAbierto] = useState(false)
+  useEffect(() => { setCierreAbierto(false) }, [temaId])
   const { temaVisible } = useVisibilidad()
 
   // Temas que entran en el examen, cuando ESTE nodo es un examen. Son los
@@ -110,6 +116,19 @@ export default function TemaPage() {
   // ¿Es el ÚLTIMO tema de su módulo? Al terminarlo, el "Siguiente" lleva
   // directo al EXAMEN del módulo (no al primer tema del módulo que sigue).
   const ultimoDeModulo = !vecinos.siguiente || vecinos.siguiente.moduloId !== tema.moduloId
+  // Siguiente parada de la ruta: el tema que sigue en el plan o, al final del
+  // módulo, su examen (la misma regla que la navegación de abajo).
+  const siguienteParada = ultimoDeModulo
+    ? { titulo: `Examen del Módulo ${tema.moduloNumero}`, ruta: `/modulo/${tema.moduloId}/examen` }
+    : { titulo: `${vecinos.siguiente.numero} ${vecinos.siguiente.titulo}`, ruta: `/tema/${vecinos.siguiente.id}` }
+  // Dominio de ESTUDIO del tema (PTEM Pulso): leído → quiz → actividades →
+  // tarjetas consolidadas. No es competencia clínica.
+  const nivel = dominioDeTema({
+    leido: Boolean(leido),
+    quiz: estado.quizzes[temaId],
+    aplicada: estado.aplicadas?.[temaId],
+    tarjetas: (tema.flashcards || []).map((f) => estado.srs?.[claveTarjeta(temaId, f.frente)]).filter(Boolean),
+  })
   // Estado EDITORIAL (de dónde salió el material y quién respondió por él); no
   // confundir con la visibilidad por grupo que se resolvió arriba.
   const estadoEd = estadoEditorialDe(tema)
@@ -152,10 +171,26 @@ export default function TemaPage() {
       <RevisionDocente tema={tema} />
       {hayContenido && <>
         <div className="ui-atajos">
-          {tema.quiz.length > 0 && <Link className="btn btn--primario" to={`/tema/${temaId}/quiz`}>Hacer el quiz</Link>}
+          {tema.quiz.length > 0 && (
+            // El quiz vive ahora al final de la lección (PTEM Pulso): el atajo
+            // baja hasta él en vez de sacar al alumno a otra página.
+            <button
+              type="button"
+              className="btn btn--primario"
+              onClick={() => {
+                const el = document.getElementById(ANCLA_PRACTICA)
+                el?.focus({ preventScroll: true })
+                el?.scrollIntoView({ block: 'start', behavior: 'smooth' })
+              }}
+            >
+              Ir a la práctica
+            </button>
+          )}
           {tema.flashcards.length > 0 && <Link className="btn btn--suave" to={`/flashcards/${temaId}`}>Repasar flashcards</Link>}
         </div>
-        <IndiceLeccion secciones={tema.secciones} />
+        {/* El monitor de PTEM Pulso: índice, latidos por sección y posición
+            de lectura para «Reanudar». Lleva dentro el índice de siempre. */}
+        <MonitorLeccion temaId={temaId} titulo={tituloVisibleDe(tema)} secciones={tema.secciones} nivel={nivel} />
       </>}
       {!esEvaluacion && <CuerpoSinContenido estado={estadoEd} revision={tema.revision} />}
 
@@ -199,7 +234,10 @@ export default function TemaPage() {
         </div>
       )}
 
-      <Contenido secciones={tema.secciones} />
+      {/* Los fármacos que el catálogo liga a esta lección se marcan en el texto. */}
+      <ProveedorFarmacosEnLeccion temaId={temaId}>
+        <Contenido secciones={tema.secciones} temaId={hayContenido ? temaId : null} />
+      </ProveedorFarmacosEnLeccion>
 
       {galeria.length > 0 && (
         <section className="tema-galeria">
@@ -235,22 +273,30 @@ export default function TemaPage() {
         ordenar={tema.actividades?.ordenar}
         completar={tema.actividades?.completar || []}
         preguntas={tema.actividades?.preguntas || []}
+        onCompletar={(aciertos, total) => registrarAplicada(temaId, aciertos, total)}
       />
+
+      {/* El quiz del tema, dentro de la lección (PTEM Pulso). */}
+      {hayContenido && tema.quiz.length > 0 && <PracticaLeccion tema={tema} />}
 
       {/* Sin material no hay nada que marcar como leído ni que evaluar: ofrecer
           un quiz de cero preguntas es prometer un estudio que no existe. */}
       {hayContenido && (
         <div className="tema-acciones">
-          <button
-            className={`btn ${leido ? 'btn--exito' : 'btn--suave'}`}
-            onClick={() => marcarLeido(temaId, !leido)}
-          >
-            {leido ? 'Marcado como leído' : 'Marcar como leído'}
-          </button>
-          {tema.quiz.length > 0 && (
-            <Link to={`/tema/${temaId}/quiz`} className="btn btn--primario">
-              <Icon name="matraz" size={17} /> Hacer el quiz de este tema
-            </Link>
+          {/* «Terminar lección» es la misma marca de leído de siempre, más
+              la pantalla de cierre con la siguiente parada. Desmarcar sigue
+              siendo posible. */}
+          {leido ? (
+            <button className="btn btn--exito" onClick={() => marcarLeido(temaId, false)}>
+              Marcado como leído
+            </button>
+          ) : (
+            <button
+              className="btn btn--reanudar pl-sin-icono"
+              onClick={() => { marcarLeido(temaId, true); setCierreAbierto(true) }}
+            >
+              Terminar lección
+            </button>
           )}
           {tema.flashcards.length > 0 && (
             <Link to={`/flashcards/${temaId}`} className="btn btn--suave">
@@ -290,6 +336,16 @@ export default function TemaPage() {
           </button>
         )}
       </nav>
+
+      {cierreAbierto && (
+        <CierreLeccion
+          nivel={nivel}
+          preguntas={tema.quiz.length}
+          siguiente={siguienteParada}
+          onIr={() => { setCierreAbierto(false); navigate(siguienteParada.ruta) }}
+          onCerrar={() => setCierreAbierto(false)}
+        />
+      )}
     </article>
   )
 }

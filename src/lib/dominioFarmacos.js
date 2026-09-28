@@ -43,3 +43,23 @@ export function registrarIntento(clave, limpio) {
   try { almacen()?.setItem(CLAVE, JSON.stringify(nuevo)) } catch { /* sin almacenamiento: seguimos */ }
   return nuevo
 }
+
+// ---------- Errores de cálculo (PTEM Pulso) ----------
+//
+// Mismo almacén y misma regla que el dominio: comodidad del alumno, en este
+// navegador. Guarda cuántas veces cometió cada TIPO de error que reconoce
+// diagnosticar() (unidades, tiempo, peso…), para decirle qué practicar.
+const CLAVE_ERRORES = 'ptem.farmacos.errores.v1'
+
+export function leerErrores() {
+  try {
+    const crudo = almacen()?.getItem(CLAVE_ERRORES)
+    const e = crudo ? JSON.parse(crudo) : {}
+    return e && typeof e === 'object' ? e : {}
+  } catch { return {} }
+}
+
+export function guardarErrores(errores) {
+  try { almacen()?.setItem(CLAVE_ERRORES, JSON.stringify(errores)) } catch { /* sin almacenamiento */ }
+  return errores
+}

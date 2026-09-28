@@ -2,6 +2,8 @@ import { Fragment, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { partirTexto } from '../lib/glosario.js'
 import { useGlosario } from '../lib/useGlosario.js'
+import { partirPorFarmacos } from '../lib/rutaFarmacos.js'
+import { useFarmacosEnLeccion, ChipFarmaco } from './pulso/FarmacosEnTexto.jsx'
 
 // ============================================================
 //  Texto de una lección con sus tecnicismos enlazados al glosario
@@ -20,13 +22,20 @@ import { useGlosario } from '../lib/useGlosario.js'
 // ============================================================
 export default function TextoGlosario({ texto }) {
   const glosario = useGlosario()
-  const segmentos = useMemo(
-    () => partirTexto(texto, glosario, { regex: glosario.regex }),
-    [texto, glosario]
-  )
+  // PTEM Pulso: los fármacos de ESTA lección, si el plan incluye el
+  // entrenador. Se buscan en los tramos que el glosario dejó sin enlazar: un
+  // término del glosario nunca se convierte en ficha de fármaco.
+  const farmacos = useFarmacosEnLeccion()
+  const segmentos = useMemo(() => {
+    const base = partirTexto(texto, glosario, { regex: glosario.regex })
+    if (!farmacos?.lista?.length) return base
+    return base.flatMap((s) => (s.entrada ? [s] : partirPorFarmacos(s.texto, farmacos.lista)))
+  }, [texto, glosario, farmacos])
 
   return segmentos.map((s, i) =>
-    s.entrada ? (
+    s.farmaco ? (
+      <ChipFarmaco key={i} f={s.farmaco} texto={s.texto} etiqueta={farmacos.etiqueta} casilla={farmacos.casilla} />
+    ) : s.entrada ? (
       <Link
         key={i}
         to={`/logros?t=${s.entrada.slug}`}

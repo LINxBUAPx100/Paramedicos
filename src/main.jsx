@@ -12,6 +12,7 @@ import './index.css'
 import './styles/tokens.css'
 import './styles/componentes.css'
 import './styles/pantallas.css'
+import './styles/pulso.css'
 
 // Antes de montar: si un trozo de la aplicación no se puede traer porque se
 // publicó una versión nueva mientras esta pestaña estaba abierta, se recarga

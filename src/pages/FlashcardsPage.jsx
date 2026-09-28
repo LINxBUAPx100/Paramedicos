@@ -1,5 +1,7 @@
 import { useParams, Link, useSearchParams } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useAuth } from '../context/AuthContext.jsx'
+import SesionEspaciada from '../components/pulso/SesionEspaciada.jsx'
 import { useTema, useTodasLasFlashcards, CargandoContenido, ErrorContenido } from '../context/ContenidoContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
 import Icon from '../components/Icon.jsx'
@@ -20,11 +22,27 @@ function Flashcards({ tema, flashcards }) {
   const { temaVisible } = useVisibilidad()
   const [params, setParams] = useSearchParams()
   const temaFiltro = params.get('tema') || ''
+  // PTEM Pulso: «hoy» es el repaso espaciado (vencidas + algunas nuevas);
+  // «libre» es el recorrido de siempre, en orden o barajado.
+  const modo = params.get('modo') === 'libre' ? 'libre' : 'hoy'
+  const cambiar = (clave, valor) => {
+    const siguiente = new URLSearchParams(params)
+    if (valor) siguiente.set(clave, valor)
+    else siguiente.delete(clave)
+    setParams(siguiente, { replace: true })
+  }
   const base = tema
     ? tema.flashcards.map((carta, i) => ({ ...carta, id: `${tema.id}-${i}`, temaId: tema.id, temaTitulo: tema.titulo }))
     : flashcards.filter((carta) => temaVisible(carta.temaId))
+  // PTEM Pulso: con el entrenador de farmacología en el plan, sus tarjetas
+  // entran al repaso global (una opción más del selector y parte de «todos»).
+  const farmacos = useTarjetasDeFarmacos(!tema)
   const temas = [...new Map(base.map((carta) => [carta.temaId, carta.temaTitulo])).entries()]
-  const cartas = tema || !temaFiltro ? base : base.filter((carta) => carta.temaId === temaFiltro)
+  const cartas = tema
+    ? base
+    : temaFiltro === 'farmacos' ? farmacos
+      : temaFiltro ? base.filter((carta) => carta.temaId === temaFiltro)
+        : [...base, ...farmacos]
   if (tema && !temaVisible(tema.id)) return (
     <div className="acceso-restringido" role="alert">
       <h1>Flashcards no disponibles</h1>
@@ -40,18 +58,24 @@ function Flashcards({ tema, flashcards }) {
         <h1>Flashcards</h1>
         <p>{tema ? `Repaso de ${tema.titulo}` : 'Elige un tema o recorre las tarjetas disponibles para tu grupo.'}</p>
       </header>
+      <div className="pl-modo" role="tablist" aria-label="Tipo de repaso">
+        <button type="button" role="tab" aria-selected={modo === 'hoy'} className={modo === 'hoy' ? 'es-activo' : ''} onClick={() => cambiar('modo', '')}>
+          Repaso de hoy
+        </button>
+        <button type="button" role="tab" aria-selected={modo === 'libre'} className={modo === 'libre' ? 'es-activo' : ''} onClick={() => cambiar('modo', 'libre')}>
+          Repaso libre
+        </button>
+      </div>
       {!tema && <label className="ui-campo">Tema para repasar
-        <select value={temaFiltro} onChange={(e) => {
-          const siguiente = new URLSearchParams(params)
-          if (e.target.value) siguiente.set('tema', e.target.value)
-          else siguiente.delete('tema')
-          setParams(siguiente, { replace: true })
-        }}>
+        <select value={temaFiltro} onChange={(e) => cambiar('tema', e.target.value)}>
           <option value="">Todos los temas disponibles</option>
+          {farmacos.length > 0 && <option value="farmacos">Fármacos del entrenador</option>}
           {temas.map(([id, titulo]) => <option key={id} value={id}>{titulo}</option>)}
         </select>
       </label>}
-      {cartas.length
+      {cartas.length && modo === 'hoy'
+        ? <SesionEspaciada key={`hoy-${temaFiltro}-${tema?.id || ''}-${farmacos.length}`} cartas={cartas} />
+        : cartas.length
         ? <SesionFlashcards key={cartas.map((c) => c.id).join('|')} cartas={cartas} />
         : <div className="ui-estado"><h2>No hay tarjetas para este repaso</h2><p>{base.length ? 'Elige otro tema o vuelve a todos los temas disponibles.' : 'Puedes continuar estudiando el temario mientras se preparan las tarjetas.'}</p><Link to={tema ? `/tema/${tema.id}` : '/'} className="btn btn--suave">Volver al estudio</Link></div>}
     </div>
@@ -94,4 +118,25 @@ function SesionFlashcards({ cartas }) {
       <p className="ui-repaso-origen"><Link to={`/tema/${carta.temaId}`}>Volver a la lección: {carta.temaTitulo || 'abrir tema'}</Link></p>
     </section>
   )
+}
+
+// Tarjetas del entrenador de farmacología, solo si el plan lo incluye. El
+// catálogo viaja aparte: se pide al entrar, no con la página.
+function useTarjetasDeFarmacos(activo) {
+  const { capacidades, esSuperadmin } = useAuth()
+  const puede = activo && (esSuperadmin || Boolean(capacidades?.entrenadorFarmacologia))
+  const [lista, setLista] = useState([])
+  useEffect(() => {
+    if (!puede) { setLista([]); return undefined }
+    let vivo = true
+    Promise.all([
+      import('../data/farmacos/catalogo.js'),
+      import('../lib/farmacosModelo.js'),
+      import('../lib/rutaFarmacos.js'),
+    ]).then(([cat, mod, ruta]) => {
+      if (vivo) setLista(ruta.tarjetasParaRepaso(mod.tarjetasDe(cat.FARMACOS), cat.FARMACOS))
+    }).catch(() => { if (vivo) setLista([]) })
+    return () => { vivo = false }
+  }, [puede])
+  return lista
 }

@@ -45,6 +45,8 @@ const AtlasAnatomicoPage = lazy(() => import('./pages/AtlasAnatomicoPage.jsx'))
 const BotiquinPage = lazy(() => import('./pages/BotiquinPage.jsx'))
 // Entrenador de farmacología (trabajo D): catálogo y práctica, solo al entrar.
 const FarmacosPage = lazy(() => import('./pages/FarmacosPage.jsx'))
+// Modo llamada (PTEM Pulso): casos ramificados, solo validados.
+const CasosPage = lazy(() => import('./pages/CasosPage.jsx'))
 // La tienda del alumno (borrador del trabajo M): catálogo, carrito y pedido
 // que se paga y se recoge en recepción.
 const TiendaLayout = lazy(() => import('./pages/tienda/TiendaLayout.jsx'))
@@ -212,6 +214,7 @@ export default function App() {
             <Route path="/atlas-anatomico" element={<RutaProtegida><AtlasAnatomicoPage /></RutaProtegida>} />
             <Route path="/botiquin" element={<RutaProtegida><BotiquinPage /></RutaProtegida>} />
             <Route path="/farmacos" element={<RutaProtegida><FarmacosPage /></RutaProtegida>} />
+            <Route path="/casos" element={<RutaProtegida><CasosPage /></RutaProtegida>} />
             <Route path="/farmacos/:farmacoId" element={<RutaProtegida><FarmacosPage /></RutaProtegida>} />
             {/* Tienda del alumno. Va tras RutaProtegida porque el catálogo es
                 de la academia: quien no pertenece a ninguna no tiene tienda. */}

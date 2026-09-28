@@ -107,6 +107,12 @@
       "url": "https://drive.google.com/file/d/1HaZkra5LrXyOvAqjLTDlr3Mg73drRRfu/view",
       "condicion": "Apoyo fisiológico. Contrastar toda conducta clínica con la guía vigente específica."
     },
+    "msd_farmacologia_clinica_prof": {
+      "nombre": "Manual MSD, versión para profesionales. Sección Farmacología clínica (capítulos revisados 2024-2025)",
+      "tipo": "obra_consulta_profesional_actualizada",
+      "url": "https://www.msdmanuals.com/es/professional/farmacolog%C3%ADa-cl%C3%ADnica",
+      "condicion": "Añadida el 2026-09-26 a petición del usuario. Autoría y fecha de revisión por capítulo. Útil para principios de farmacocinética, farmacodinámica, reacciones adversas, interacciones y errores de medicación; no gobierna dosis, indicaciones ni concentraciones. No figura en la bibliografía del plan: su aceptación como apoyo la decide la academia."
+    },
     "katzung_12_drive": {
       "nombre": "Katzung. Farmacología básica y clínica, 12.ª edición",
       "tipo": "manual_comercial_farmacologia_historico",
@@ -476,7 +482,7 @@
     },
     "m4-farmacologia": {
       "primarias": ["cofepris_ipp", "nom_034"],
-      "apoyo": ["amls_4", "katzung_12_drive"],
+      "apoyo": ["amls_4", "katzung_12_drive", "msd_farmacologia_clinica_prof"],
       "requiere": ["protocolo_local"],
       "bloqueos": ["Vademécum no identificado", "Dosis e infusiones sin formulario y concentraciones locales"]
     },

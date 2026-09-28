@@ -1,7 +1,7 @@
 // ============================================================
 //  Helpers de autenticación (Firebase Auth + perfil en Firestore)
 // ============================================================
-import { auth, db } from './init.js'
+import { auth, db, CLAVE_SIN_CONEXION, CLAVE_LIMPIAR_CACHE } from './init.js'
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -78,8 +78,27 @@ export async function entrarGoogle() {
   return cred.user
 }
 
-export function salir() {
-  return signOut(auth)
+export async function salir() {
+  await signOut(auth)
+  // Lo descargado para estudiar sin conexión es de esta cuenta: se borra ya,
+  // sin esperar a que la aplicación note el cambio de sesión.
+  try { await (await import('../descargas.js')).borrarTodasLasDescargas() } catch { /* sin IndexedDB */ }
+  // Si esta cuenta activó el estudio sin conexión, su caché se va con ella:
+  // en un equipo compartido, lo leído no puede quedarse para el siguiente.
+  let conCache = false
+  try { conCache = localStorage.getItem(CLAVE_SIN_CONEXION) === '1' } catch { /* sin almacenamiento */ }
+  if (!conCache) return
+  try { localStorage.removeItem(CLAVE_SIN_CONEXION) } catch { /* sin almacenamiento */ }
+  try {
+    const { terminate, clearIndexedDbPersistence } = await import('firebase/firestore')
+    await terminate(db)
+    await clearIndexedDbPersistence(db)
+  } catch {
+    // No se pudo borrar ahora: init.js la borra en el próximo arranque.
+    try { localStorage.setItem(CLAVE_LIMPIAR_CACHE, '1') } catch { /* sin almacenamiento */ }
+  }
+  // La instancia terminada ya no sirve: se recarga la aplicación limpia.
+  window.location.reload()
 }
 
 export function observarAuth(cb) {

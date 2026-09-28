@@ -6,6 +6,7 @@ import { ATLAS_TEMAS } from '../data/imagenes.js'
 import { hrefSeguro } from '../lib/enlaceSeguro.js'
 import { juegoResponsivo } from '../lib/imagenLocal.js'
 import { ANCHOS as ANCHOS_FOTO, CARPETA as CARPETA_FOTO } from '../data/fotosTemario.js'
+import { esTablaSigla, FichasSigla, RepasoRapido, ModoOral } from './pulso/BloquesPulso.jsx'
 
 // «imagenes/temario/<nombre>-<ancho>.webp» → el juego responsivo de esa foto.
 // Devuelve null para cualquier otra ruta, que es la mayoría.
@@ -86,6 +87,7 @@ function Bloque({ bloque, enlazarGlosario = true }) {
       )
 
     case 'tabla':
+      if (esTablaSigla(bloque)) return <FichasSigla bloque={bloque} />
       return (
         <div className="c-tabla-wrap">
           {bloque.titulo && <h4 className="c-lista-titulo">{bloque.titulo}</h4>}
@@ -177,6 +179,8 @@ function Bloque({ bloque, enlazarGlosario = true }) {
                   <span>{f.nombre}</span>
                 )}
                 {f.nota && <span className="c-fuentes-nota"> — {f.nota}</span>}
+                {/* Las deudas bibliográficas se ven, no se esconden. */}
+                {/pendiente/i.test(f.nota || '') && <span className="pl-pendiente">Dato pendiente de precisar</span>}
               </li>
             ))}
           </ul>
@@ -188,17 +192,35 @@ function Bloque({ bloque, enlazarGlosario = true }) {
   }
 }
 
-export default function Contenido({ secciones, enlazarGlosario = true }) {
+// Secciones del molde v2 que PTEM Pulso presenta de otra forma. Se reconocen
+// por su título, que el molde fija (src/data/contenido/moldeV2.js).
+const normaliza = (t) => String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim()
+const MOLDE = {
+  'errores frecuentes': 'errores',
+  'repaso rapido': 'repaso',
+  'preguntas de repaso oral': 'oral',
+  fuentes: 'fuentes',
+}
+
+// `temaId` activa las piezas interactivas de Pulso (repaso y modo oral), que
+// guardan su estado por tema. Sin él —vista previa del editor— se pinta la
+// lista tal cual.
+export default function Contenido({ secciones, enlazarGlosario = true, temaId = null }) {
   return (
     <div className="contenido-tema">
-      {secciones.map((sec, i) => (
-        <section className="seccion" id={`leccion-seccion-${i}`} tabIndex={-1} key={i}>
-          <h2 className="seccion-titulo">{sec.titulo}</h2>
-          {sec.bloques.map((b, j) => (
-            <Bloque bloque={b} key={j} enlazarGlosario={enlazarGlosario} />
-          ))}
-        </section>
-      ))}
+      {secciones.map((sec, i) => {
+        const molde = MOLDE[normaliza(sec.titulo)] || null
+        return (
+          <section className={`seccion${molde ? ` seccion--${molde}` : ''}`} id={`leccion-seccion-${i}`} tabIndex={-1} key={i}>
+            <h2 className="seccion-titulo">{sec.titulo}</h2>
+            {sec.bloques.map((b, j) => {
+              if (temaId && b.tipo === 'lista' && molde === 'repaso') return <RepasoRapido key={j} temaId={temaId} bloque={b} />
+              if (temaId && b.tipo === 'lista' && molde === 'oral') return <ModoOral key={j} temaId={temaId} bloque={b} />
+              return <Bloque bloque={b} key={j} enlazarGlosario={enlazarGlosario} />
+            })}
+          </section>
+        )
+      })}
     </div>
   )
 }

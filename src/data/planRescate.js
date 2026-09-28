@@ -28145,12 +28145,14 @@ export const planRescate = [
             "El plan de estudios cita un «Vademécum farmacología» que no se ha podido identificar por título, autor ni edición. No se cita en ninguna parte de esta unidad hasta que la academia lo identifique o lo sustituya por la IPP y su formulario.",
             "CORRECCIÓN 2026-08-16: se retiró la afirmación de que un fármaco intravenoso periférico «se queda en el trayecto» durante el shock. La lección ahora distingue absorción —que la vía intravenosa omite— de distribución, que la hipoperfusión sí puede retrasar, y localiza el fallo de absorción donde corresponde: vías intramuscular y subcutánea.",
             "CORRECCIÓN 2026-08-16: la ventana o margen terapéutico se define como intervalo de CONCENTRACIONES de carácter poblacional, no como distancia entre dos dosis, y se distingue del índice terapéutico. Se declara expresamente que dentro de la ventana el efecto adverso es menos probable, no imposible.",
-            "CORRECCIÓN 2026-08-16: se eliminó el absoluto «la alergia no depende de la cantidad». Se enseña lo comprobable y clínicamente útil: una dosis pequeña no permite descartar una reacción alérgica."
+            "CORRECCIÓN 2026-08-16: se eliminó el absoluto «la alergia no depende de la cantidad». Se enseña lo comprobable y clínicamente útil: una dosis pequeña no permite descartar una reacción alérgica.",
+            "AMPLIACIÓN 2026-09-26, a petición del usuario: principios de farmacocinética, farmacodinámica, reacciones adversas e interacciones tomados del Manual MSD (profesionales). Sin dosis, indicaciones ni concentraciones; su aceptación como apoyo la decide la academia."
           ],
           "fuentes": [
             "COFEPRIS. Información para Prescribir y registro sanitario (consultada 2026-08-16).",
             "NOM-034-SSA3-2013, DOF.",
-            "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
+            "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente).",
+            "Manual MSD, versión para profesionales. Farmacología clínica: Farmacocinética (Le J, nov. 2024), Farmacodinámica (Farinde A, jun. 2025), Reacciones adversas, Interacciones, Tolerancia y resistencia (Lynch SS, mar. 2025). Consultado 2026-09-26."
           ]
         },
         "icono": "cp-servier-descenso-exponencial",
@@ -28160,6 +28162,7 @@ export const planRescate = [
           "Diferenciar farmacocinética de farmacodinamia.",
           "Relacionar la vía de administración con el inicio y la previsibilidad del efecto.",
           "Interpretar el margen terapéutico y su relación con la toxicidad.",
+          "Explicar qué factores del paciente y qué otros fármacos modifican la respuesta.",
           "Aplicar la verificación previa a toda administración."
         ],
         "secciones": [
@@ -28226,6 +28229,50 @@ export const planRescate = [
               {
                 "tipo": "p",
                 "texto": "Los medicamentos actúan uniéndose a estructuras del organismo —habitualmente receptores— y modificando su función. Un agonista la activa; un antagonista impide que otra sustancia la active. Esa distinción explica por qué existen antídotos que no «neutralizan» un tóxico sino que le disputan el sitio donde actúa."
+              },
+              {
+                "tipo": "tabla",
+                "titulo": "Cómo interactúa un fármaco con su receptor",
+                "headers": [
+                  "Concepto",
+                  "Qué significa"
+                ],
+                "filas": [
+                  [
+                    "Afinidad",
+                    "Probabilidad de que el fármaco ocupe el receptor; no dice si lo activará."
+                  ],
+                  [
+                    "Actividad intrínseca",
+                    "Grado en que el fármaco, una vez unido, activa el receptor."
+                  ],
+                  [
+                    "Agonista parcial",
+                    "Activa el receptor sin llegar a la respuesta máxima y puede bloquear a un agonista completo."
+                  ],
+                  [
+                    "Agonista inverso",
+                    "Estabiliza el receptor en su forma inactiva: produce el efecto contrario al del agonista."
+                  ],
+                  [
+                    "Antagonista reversible o irreversible",
+                    "Bloquea la activación. Si la unión es reversible, un exceso de agonista puede desplazarlo; si es irreversible, el bloqueo persiste aunque haya más agonista."
+                  ],
+                  [
+                    "Potencia",
+                    "Cantidad de fármaco necesaria para un efecto dado. Un fármaco más potente consigue el mismo efecto con menos cantidad."
+                  ],
+                  [
+                    "Eficacia máxima",
+                    "Mayor respuesta que el fármaco puede producir, por mucho que se aumente la cantidad. Más potente no significa más eficaz."
+                  ]
+                ]
+              },
+              {
+                "tipo": "callout",
+                "variante": "clave",
+                "titulo": "Los receptores se adaptan",
+                "texto": "La exposición continuada a un fármaco puede reducir o aumentar el número de receptores disponibles. Esa adaptación explica dos fenómenos que se encuentran en la calle: la tolerancia —hace falta más cantidad para el mismo efecto— y los síntomas de retirada cuando un tratamiento crónico se suspende bruscamente. Por eso interesa saber qué toma el paciente de forma habitual y si lo ha dejado de tomar."
               },
               {
                 "tipo": "p",
@@ -28332,6 +28379,121 @@ export const planRescate = [
                 "variante": "clinico",
                 "titulo": "En hipoperfusión, las vías dependientes de absorción fallan",
                 "texto": "La vía intramuscular y la subcutánea dependen de que el músculo o el tejido subcutáneo estén perfundidos. En un paciente en shock esa perfusión está reducida, de modo que el fármaco puede no absorberse y, al restaurarse la circulación, absorberse de golpe. Es una razón por la que las vías se eligen según el estado del paciente y no por comodidad."
+              },
+              {
+                "tipo": "p",
+                "texto": "La biodisponibilidad es la proporción y la velocidad con que la forma activa de un fármaco llega a la circulación general. La vía intravenosa la entrega entera y de inmediato, y por eso sirve de referencia. La vía oral pierde parte en el efecto de primer paso: antes de llegar a la circulación general, el fármaco atraviesa la pared intestinal y el hígado, que pueden metabolizar una fracción. Es la razón por la que un mismo principio activo no se administra en la misma cantidad por vías distintas."
+              }
+            ]
+          },
+          {
+            "titulo": "Factores que modifican la respuesta",
+            "bloques": [
+              {
+                "tipo": "p",
+                "texto": "Tres parámetros resumen el recorrido farmacocinético. La semivida es el tiempo que tarda la concentración en plasma en reducirse a la mitad. La depuración expresa la capacidad del organismo para eliminar el fármaco, por el hígado, por el riñón o por ambos. El volumen aparente de distribución es un volumen teórico: indica cuánto se fija el fármaco a los tejidos en comparación con lo que queda en la sangre, y no corresponde a ningún compartimento real del cuerpo. Cuando la depuración disminuye, la semivida se alarga y el fármaco se acumula con cada dosis repetida."
+              },
+              {
+                "tipo": "tabla",
+                "titulo": "Qué modifica la cantidad de fármaco que actúa",
+                "headers": [
+                  "Factor",
+                  "Qué ocurre",
+                  "Consecuencia práctica"
+                ],
+                "filas": [
+                  [
+                    "Unión a proteínas del plasma",
+                    "Solo la fracción libre, no unida, sale a los tejidos, actúa y se filtra en el riñón",
+                    "Si las proteínas disminuyen o dos fármacos compiten por ellas, la fracción libre y el efecto pueden aumentar"
+                  ],
+                  [
+                    "Barrera hematoencefálica",
+                    "Los fármacos liposolubles la atraviesan con facilidad; los polares, no",
+                    "Explica por qué solo algunos actúan sobre el sistema nervioso central"
+                  ],
+                  [
+                    "Depósito en tejidos",
+                    "Algunos fármacos se acumulan en tejidos y se liberan lentamente",
+                    "El efecto puede prolongarse aunque la concentración en sangre ya haya bajado"
+                  ],
+                  [
+                    "Metabolismo hepático",
+                    "Fase I (oxidación, reducción o hidrólisis) y fase II (conjugación, que vuelve la molécula más hidrosoluble). Muchas oxidaciones dependen del sistema citocromo P450",
+                    "Un fármaco que induce el citocromo P450 acelera la eliminación de otro y puede dejarlo sin efecto; uno que lo inhibe la frena y puede volverlo tóxico"
+                  ],
+                  [
+                    "Saturación del metabolismo",
+                    "Normalmente se elimina una proporción constante del fármaco (cinética de primer orden). Si las enzimas se saturan, se elimina una cantidad fija por unidad de tiempo (cinética de orden cero)",
+                    "Con el metabolismo saturado, la semivida deja de ser constante y un aumento pequeño de la cantidad puede elevar mucho la concentración"
+                  ],
+                  [
+                    "Excreción renal",
+                    "Filtración glomerular del fármaco libre, reabsorción tubular y secreción tubular activa; el pH de la orina modifica la reabsorción",
+                    "La lesión renal aguda reduce la eliminación y favorece la acumulación"
+                  ]
+                ]
+              },
+              {
+                "tipo": "callout",
+                "variante": "clinico",
+                "titulo": "Los extremos de la vida cambian el recorrido",
+                "texto": "En el adulto mayor la capacidad del hígado para metabolizar por el citocromo P450 disminuye un 30 % o más, y la depuración renal a los 80 años suele ser la mitad que a los 30. En el recién nacido los sistemas enzimáticos todavía son inmaduros y la conjugación es especialmente lenta. En ambos casos la semivida puede alargarse mucho: la misma cantidad produce concentraciones más altas y efectos más duraderos. Qué ajuste corresponde lo fija la IPP del producto y el protocolo, no esta lección."
+              },
+              {
+                "tipo": "p",
+                "texto": "Se habla de reacción adversa cuando un medicamento produce un efecto no buscado que resulta indeseable, desagradable o dañino. Clasificarla ayuda a prever cuáles pueden evitarse."
+              },
+              {
+                "tipo": "tabla",
+                "titulo": "Tipos de reacción adversa",
+                "headers": [
+                  "Tipo",
+                  "Rasgo",
+                  "Qué implica"
+                ],
+                "filas": [
+                  [
+                    "A, intrínseca",
+                    "Previsible y dependiente de la dosis; deriva de la acción farmacológica del propio fármaco",
+                    "Puede prevenirse con una dosificación y una vigilancia correctas"
+                  ],
+                  [
+                    "B, idiosincrásica",
+                    "Imprevisible y no dependiente de la dosis, como la alergia",
+                    "No se evita reduciendo la cantidad: se evita preguntando antecedentes"
+                  ],
+                  [
+                    "C, crónica",
+                    "Aparece con el uso prolongado",
+                    "Puede ser la causa de la llamada"
+                  ],
+                  [
+                    "D, diferida",
+                    "Aparece tiempo después de la exposición",
+                    "Ejemplo: efectos sobre el feto"
+                  ],
+                  [
+                    "E, de retirada",
+                    "Aparece poco después de suspender el fármaco",
+                    "Puede explicar el cuadro"
+                  ],
+                  [
+                    "F, de fracaso",
+                    "Falta inesperada del efecto terapéutico, a veces por una interacción",
+                    "Que «no funcione» también es una reacción adversa"
+                  ]
+                ]
+              },
+              {
+                "tipo": "p",
+                "texto": "Una interacción farmacológica es la alteración del efecto de un fármaco por el uso reciente o simultáneo de otro. Es farmacodinámica cuando un fármaco modifica la sensibilidad del tejido al otro, porque ambos actúan sobre los mismos receptores o sobre funciones relacionadas. Es farmacocinética cuando altera su absorción, su unión a proteínas, su metabolismo o su excreción, y con ello la cantidad que llega al sitio de acción. La duplicación terapéutica —dos fármacos con propiedades similares administrados a la vez— suma efectos y puede resultar tóxica."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
+                "titulo": "Quiénes tienen más riesgo",
+                "texto": "Las reacciones adversas y las interacciones se concentran en los adultos mayores, en quien toma varios medicamentos a la vez, en la insuficiencia renal o hepática y en quien recibe fármacos de margen terapéutico estrecho o que inducen o inhiben el metabolismo hepático. En la atención prehospitalaria la medida que está al alcance es concreta: preguntar por todos los medicamentos del paciente —también los suplementos y los que haya suspendido—, registrarlos y entregarlos al hospital, porque la información que se pierde en el traslado entre niveles de atención es una causa reconocida de error."
               }
             ]
           },
@@ -28406,6 +28568,12 @@ export const planRescate = [
               {
                 "tipo": "callout",
                 "variante": "alerta",
+                "titulo": "No preguntar por la medicación habitual",
+                "texto": "Las interacciones y la retirada de un tratamiento crónico explican cuadros que de otro modo no se entienden; la lista se registra y se entrega al hospital."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
                 "titulo": "Sustituir la verificación por experiencia",
                 "texto": "Los errores ocurren con ruido, prisa, mala iluminación y una sola persona preparando. La comprobación se ejecuta siempre igual, y en voz alta cuando hay un segundo prestador."
               }
@@ -28419,15 +28587,15 @@ export const planRescate = [
                 "titulo": "Lo que hay que llevarse de esta lección",
                 "items": [
                   "Farmacocinética: qué le hace el organismo al medicamento. Farmacodinamia: qué le hace el medicamento al organismo.",
-                  "Liberación: el principio activo queda disponible desde su forma farmacéutica.",
-                  "Absorción: paso del sitio de administración a la circulación; la vía intravenosa la omite.",
-                  "Distribución: reparto desde la sangre hacia los tejidos; depende del gasto cardiaco y del flujo regional.",
-                  "En shock la distribución hacia el sitio de acción puede ser más lenta aunque el fármaco ya esté en la circulación.",
-                  "Metabolismo: transformación, sobre todo hepática; la enfermedad hepática y las interacciones lo alteran.",
-                  "Excreción: eliminación, sobre todo renal; la insuficiencia renal prolonga el efecto y favorece la acumulación.",
-                  "La ventana terapéutica es un intervalo de concentraciones descrito para poblaciones: dentro de él el efecto adverso es menos probable, no imposible.",
-                  "El índice terapéutico compara fármacos entre sí y no es lo mismo que la ventana.",
-                  "El agonista activa el receptor; el antagonista impide que otra sustancia lo active.",
+                  "Recorrido: liberación, absorción, distribución, metabolismo —sobre todo hepático— y excreción —sobre todo renal—.",
+                  "La vía intravenosa omite la absorción; en shock lo que puede retrasarse es la distribución hacia el sitio de acción.",
+                  "Biodisponibilidad: proporción y velocidad con que la forma activa llega a la circulación general; la vía oral pierde parte en el primer paso.",
+                  "Solo la fracción libre, no unida a proteínas, sale a los tejidos y actúa.",
+                  "El citocromo P450 puede inducirse —acelera la eliminación de otro fármaco— o inhibirse —la frena y puede volverlo tóxico—.",
+                  "Cuando baja la depuración, la semivida se alarga y el fármaco se acumula; en el adulto mayor la depuración renal a los 80 años suele ser la mitad que a los 30.",
+                  "La ventana terapéutica es un intervalo de concentraciones descrito para poblaciones y no es lo mismo que el índice terapéutico.",
+                  "Potencia: cantidad necesaria para un efecto. Eficacia máxima: mayor respuesta posible. Más potente no significa más eficaz.",
+                  "Reacciones adversas: A intrínseca, B idiosincrásica, C crónica, D diferida, E de retirada y F de fracaso.",
                   "La alergia puede desencadenarse con cantidades muy pequeñas: una dosis reducida no permite descartarla.",
                   "Comprobación sistemática: paciente, medicamento, indicación, dosis, concentración, vía, momento y velocidad, caducidad, alergias y registro inmediato."
                 ]
@@ -28445,13 +28613,15 @@ export const planRescate = [
                 "tipo": "lista",
                 "items": [
                   "Diferencia farmacocinética de farmacodinamia.",
-                  "Recorre los procesos farmacocinéticos y di por qué importa cada uno en urgencias.",
                   "¿Qué proceso omite la vía intravenosa, y cuál sigue dependiendo del gasto cardiaco?",
+                  "¿Qué es el efecto de primer paso y a qué vía afecta?",
                   "Explica la ventana terapéutica y en qué se distingue del índice terapéutico.",
-                  "Diferencia agonista de antagonista.",
+                  "Diferencia potencia de eficacia máxima.",
+                  "¿Qué le ocurre a otro fármaco cuando se induce o se inhibe el citocromo P450?",
+                  "Enumera los tipos de reacción adversa y di cuál se evita preguntando antecedentes.",
                   "¿Se puede descartar una alergia por la cantidad administrada?",
-                  "Recita la comprobación sistemática previa a administrar.",
-                  "¿Por qué la ampolleta no se identifica por su forma?"
+                  "¿Por qué hay que preguntar por la medicación habitual y por la que el paciente ha suspendido?",
+                  "Recita la comprobación sistemática previa a administrar."
                 ]
               }
             ]
@@ -28476,6 +28646,21 @@ export const planRescate = [
                     "nombre": "NAEMT. Advanced Medical Life Support (AMLS), 4.ª edición.",
                     "url": "https://www.naemt.org/education/medical-education/amls",
                     "nota": "Fuente de APOYO asignada por el registro académico para el razonamiento clínico de la urgencia médica. Capítulo y página PENDIENTES: solo puede precisarlos quien consulte la copia licenciada de la academia. No se usa para sostener ninguna dosis."
+                  },
+                  {
+                    "nombre": "Manual MSD, versión para profesionales. Farmacología clínica › Farmacocinética. Le J, revisión de noviembre de 2024. Consultado el 26 de septiembre de 2026.",
+                    "url": "https://www.msdmanuals.com/es/professional/farmacolog%C3%ADa-cl%C3%ADnica/farmacocin%C3%A9tica/generalidades-sobre-la-farmacocin%C3%A9tica",
+                    "nota": "Capítulos de generalidades, absorción, biodisponibilidad, distribución, metabolismo y excreción. Solo principios; no sostiene dosis."
+                  },
+                  {
+                    "nombre": "Manual MSD, versión para profesionales. Farmacología clínica › Farmacodinámica. Farinde A, revisión de junio de 2025. Consultado el 26 de septiembre de 2026.",
+                    "url": "https://www.msdmanuals.com/es/professional/farmacolog%C3%ADa-cl%C3%ADnica/farmacodin%C3%A1mica/interacciones-f%C3%A1rmaco-receptor",
+                    "nota": "Capítulos «Interacciones fármaco-receptor» y «Relaciones dosis-respuesta»."
+                  },
+                  {
+                    "nombre": "Manual MSD, versión para profesionales. Farmacología clínica › Conceptos farmacoterapéuticos y Factores que afectan la respuesta a los fármacos. Consultado el 26 de septiembre de 2026.",
+                    "url": "https://www.msdmanuals.com/es/professional/farmacolog%C3%ADa-cl%C3%ADnica/conceptos-farmacoterap%C3%A9uticos/reacciones-adversas-a-los-f%C3%A1rmacos",
+                    "nota": "Reacciones adversas (clasificación A–F), interacciones y tolerancia (Lynch SS, mar. 2025). La notificación que describe es la de EE. UU.; en México corresponde a COFEPRIS."
                   }
                 ]
               }
@@ -28510,6 +28695,18 @@ export const planRescate = [
           {
             "termino": "Reacción alérgica",
             "definicion": "Respuesta inmunitaria en un paciente sensibilizado que puede desencadenarse con cantidades muy pequeñas; por eso una dosis reducida no permite descartarla."
+          },
+          {
+            "termino": "Biodisponibilidad",
+            "definicion": "Proporción y velocidad con que la forma activa de un fármaco llega a la circulación general; la vía intravenosa sirve de referencia y la oral pierde parte en el efecto de primer paso."
+          },
+          {
+            "termino": "Semivida",
+            "definicion": "Tiempo que tarda la concentración en plasma en reducirse a la mitad; se alarga cuando disminuye la depuración."
+          },
+          {
+            "termino": "Interacción farmacológica",
+            "definicion": "Alteración del efecto de un fármaco por el uso reciente o simultáneo de otro; es farmacodinámica si cambia la sensibilidad del tejido y farmacocinética si cambia la cantidad que llega al sitio de acción."
           }
         ],
         "flashcards": [
@@ -28536,6 +28733,14 @@ export const planRescate = [
           {
             "frente": "¿Permite una dosis pequeña descartar una reacción alérgica?",
             "reverso": "No: es una respuesta inmunitaria en un paciente sensibilizado y puede desencadenarse con cantidades muy pequeñas."
+          },
+          {
+            "frente": "Potencia frente a eficacia máxima",
+            "reverso": "La potencia es la cantidad necesaria para un efecto; la eficacia máxima, la mayor respuesta posible. Más potente no significa más eficaz."
+          },
+          {
+            "frente": "Inducir frente a inhibir el citocromo P450",
+            "reverso": "Inducirlo acelera la eliminación de otro fármaco y puede dejarlo sin efecto; inhibirlo la frena y puede volverlo tóxico."
           },
           {
             "frente": "¿Cómo se identifica un medicamento antes de cargarlo?",
@@ -28621,7 +28826,42 @@ export const planRescate = [
               "Metabolismo",
               "Excreción"
             ]
-          }
+          },
+          "completar": [
+            {
+              "texto": "Un paciente toma de forma habitual un fármaco que INHIBE el citocromo P450. Si recibe otro fármaco que se elimina por esa vía, su eliminación se ___ y el riesgo de toxicidad aumenta.",
+              "opciones": [
+                "frena",
+                "acelera",
+                "mantiene igual",
+                "traslada al riñón"
+              ],
+              "correcta": 0,
+              "explicacion": "Inhibir el citocromo P450 frena la eliminación del otro fármaco; inducirlo la acelera y puede dejarlo sin efecto."
+            },
+            {
+              "texto": "Un adulto mayor con función renal disminuida recibe una dosis repetida de un fármaco de eliminación renal. La depuración baja, la semivida se ___ y el fármaco se acumula.",
+              "opciones": [
+                "alarga",
+                "acorta",
+                "vuelve constante",
+                "anula"
+              ],
+              "correcta": 0,
+              "explicacion": "Cuando disminuye la depuración, la semivida se alarga y cada dosis repetida se suma a lo que aún queda."
+            },
+            {
+              "texto": "Un paciente suspendió bruscamente un tratamiento crónico y presenta síntomas poco después. Es una reacción adversa de tipo ___.",
+              "opciones": [
+                "E, de retirada",
+                "A, intrínseca",
+                "D, diferida",
+                "F, de fracaso"
+              ],
+              "correcta": 0,
+              "explicacion": "La reacción de retirada aparece poco después de suspender el fármaco y se relaciona con la adaptación de los receptores."
+            }
+          ]
         },
         "unidadId": "m4-farmacologia",
         "unidadTitulo": "FARMACOLOGÍA",
@@ -29329,12 +29569,14 @@ export const planRescate = [
             "El plan de estudios cita un «Vademécum farmacología» que no se ha podido identificar por título, autor ni edición. No se cita en ninguna parte de esta unidad hasta que la academia lo identifique o lo sustituya por la IPP y su formulario.",
             "BLOQUEO PARCIAL DECLARADO: la tabla de medicamentos con sus dosis NO se publica. Se enseña el método de verificación, los datos que exige una dosis y lo que la modifica por población.",
             "PREGUNTA CONCRETA PARA LA ACADEMIA: ¿cuál es su formulario aprobado, con qué presentaciones y concentraciones reales, para qué indicaciones, en qué tipos de unidad y con qué dirección médica de respaldo? Con esos datos el tema se completa; sin ellos, no.",
-            "CORRECCIÓN 2026-08-16: se retiró el absoluto que presentaba la repetición de la orden en voz alta como el «único» control posible. Se enseña como primer eslabón de una cadena de controles sucesivos, cada uno de los cuales detecta un tipo de error distinto."
+            "CORRECCIÓN 2026-08-16: se retiró el absoluto que presentaba la repetición de la orden en voz alta como el «único» control posible. Se enseña como primer eslabón de una cadena de controles sucesivos, cada uno de los cuales detecta un tipo de error distinto.",
+            "AMPLIACIÓN 2026-09-26, a petición del usuario: se añadió el origen de los errores de medicación (órdenes poco claras, almacenamiento, caducidad y transiciones de atención) desde el capítulo «Errores de medicación» del Manual MSD. Sin cifras ni dosis; la tabla sigue bloqueada."
           ],
           "fuentes": [
             "COFEPRIS. Información para Prescribir y registro sanitario (consultada 2026-08-16).",
             "NOM-034-SSA3-2013, DOF.",
-            "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente)."
+            "NAEMT. AMLS, 4.ª ed. (apoyo; página pendiente).",
+            "Manual MSD, versión para profesionales. Farmacología clínica › Errores de medicación. Consultado 2026-09-26."
           ]
         },
         "icono": "cp-servier-dosis-efecto",
@@ -29436,6 +29678,16 @@ export const planRescate = [
                 "variante": "alerta",
                 "titulo": "La repetición en voz alta no es una formalidad",
                 "texto": "Repetir la orden al emisor y esperar su confirmación actúa ANTES de cargar, y es lo que detecta una orden mal escuchada en el punto donde se generó el malentendido. No agota los controles de la cadena: la lectura de la etiqueta, el cálculo a partir de la concentración real, la verificación por un segundo prestador y la vigilancia posterior actúan después y detectan errores distintos. Cada uno cubre un fallo que los demás no ven, y por eso se ejecutan todos aunque la orden se haya repetido."
+              },
+              {
+                "tipo": "lista",
+                "titulo": "De dónde vienen los errores de medicación",
+                "items": [
+                  "Órdenes poco claras: letra ilegible y abreviaturas que se confunden entre sí. Ante la duda, la orden se aclara antes de cargar; no se interpreta.",
+                  "Almacenamiento inadecuado: el calor y la humedad pueden degradar un medicamento. El compartimento de una ambulancia expuesto al sol no es un almacén neutro, y las condiciones de conservación las indica la etiqueta y la IPP del producto.",
+                  "Caducidad excedida: un medicamento caducado puede perder eficacia y, en algunos casos, volverse nocivo. La caducidad se comprueba en cada administración y en cada revisión de la dotación.",
+                  "Pérdida de información en las transiciones: lo que se administró y lo que el paciente toma de forma habitual se pierde con facilidad al pasar de un equipo a otro. El registro y la entrega verbal al hospital cierran esa brecha."
+                ]
               }
             ]
           },
@@ -29516,6 +29768,12 @@ export const planRescate = [
               {
                 "tipo": "callout",
                 "variante": "alerta",
+                "titulo": "Entregar al paciente sin la lista de lo administrado",
+                "texto": "La información que se pierde al pasar de un equipo a otro es una causa reconocida de error: qué, cuánto, por qué vía y a qué hora se registra y se entrega."
+              },
+              {
+                "tipo": "callout",
+                "variante": "alerta",
                 "titulo": "Confiar en una tabla memorizada",
                 "texto": "Las presentaciones cambian, las recomendaciones cambian y el alcance cambia. La competencia no es recordar cifras, sino saber reunirlas y verificarlas."
               }
@@ -29586,6 +29844,11 @@ export const planRescate = [
                     "nombre": "NAEMT. Advanced Medical Life Support (AMLS), 4.ª edición.",
                     "url": "https://www.naemt.org/education/medical-education/amls",
                     "nota": "Fuente de APOYO asignada por el registro académico para el razonamiento clínico de la urgencia médica. Capítulo y página PENDIENTES: solo puede precisarlos quien consulte la copia licenciada de la academia. No se usa para sostener ninguna dosis."
+                  },
+                  {
+                    "nombre": "Manual MSD, versión para profesionales. Farmacología clínica › Conceptos farmacoterapéuticos › Errores de medicación. Consultado el 26 de septiembre de 2026.",
+                    "url": "https://www.msdmanuals.com/es/professional/farmacolog%C3%ADa-cl%C3%ADnica/conceptos-farmacoterap%C3%A9uticos/errores-de-medicaci%C3%B3n",
+                    "nota": "Respalda las fuentes de error descritas: órdenes poco claras y abreviaturas, almacenamiento inadecuado, caducidad excedida y pérdida de información en las transiciones de atención. No sostiene ninguna dosis."
                   }
                 ]
               }

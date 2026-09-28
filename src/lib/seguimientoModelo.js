@@ -12,3 +12,29 @@ export function filasSeguimiento(alumnos = [], porAlumno = {}, { consulta = '', 
     ? (a.promedio ?? -1) - (b.promedio ?? -1) || String(a.alumno.nombre).localeCompare(String(b.alumno.nombre), 'es')
     : String(a.alumno.nombre || a.alumno.email).localeCompare(String(b.alumno.nombre || b.alumno.email), 'es'))
 }
+
+/**
+ * Semáforo de UN módulo en el grupo (PTEM Pulso): cuántos alumnos lo aprueban,
+ * cuántos están por debajo y cuántos no tienen intento. «Sin intento» NO es
+ * reprobación y se cuenta aparte.
+ */
+export function semaforoDeModulo(alumnos = [], porAlumno = {}, moduloId) {
+  let aprobados = 0
+  let bajo = 0
+  let sinIntento = 0
+  for (const a of alumnos) {
+    const nota = porAlumno[a.id]?.[moduloId]?.mejor
+    if (!Number.isFinite(nota)) sinIntento += 1
+    else if (nota >= APROBADO) aprobados += 1
+    else bajo += 1
+  }
+  return { aprobados, bajo, sinIntento, total: alumnos.length }
+}
+
+/** A quién atender primero: los de promedio más bajo, luego los sin evidencia. */
+export function atenderPrimero(alumnos = [], porAlumno = {}, cuantos = 5) {
+  const filas = filasSeguimiento(alumnos, porAlumno, { orden: 'promedio' })
+  const riesgo = filas.filter((f) => f.categoria === 'riesgo')
+  const sin = filas.filter((f) => f.categoria === 'sin-evidencia')
+  return [...riesgo, ...sin].slice(0, cuantos)
+}

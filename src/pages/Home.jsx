@@ -14,6 +14,7 @@ import Imagen from '../components/Imagen.jsx'
 import Contador from '../components/Contador.jsx'
 import ModulosCarrusel from '../components/ModulosCarrusel.jsx'
 import BloqueAcademia from '../components/BloqueAcademia.jsx'
+import TableroTurno from '../components/pulso/TableroTurno.jsx'
 import CursosDisponibles from '../components/CursosDisponibles.jsx'
 import IconoEstrella from '../components/marca/IconoEstrella.jsx'
 import { IMG } from '../data/imagenes.js'
@@ -66,8 +67,6 @@ export default function Home() {
   const { modulos, stats } = useIndiceContenido()
   const { moduloVisible } = useVisibilidad()
   const leidos = estado.leidos
-  const temasLeidos = Object.values(leidos).filter(Boolean).length
-  const progresoGlobal = Math.round((temasLeidos / stats.temas) * 100)
   // El carrusel solo muestra los módulos liberadas para el grupo del alumno.
   const modulosVisibles = modulos.filter((f) => moduloVisible(f.id))
 
@@ -93,9 +92,10 @@ export default function Home() {
         haySeccionModulos={secciones.includes('modulos')}
       />
     ),
-    progreso: temasLeidos > 0 ? (
-      <SeccionProgreso temasLeidos={temasLeidos} total={stats.temas} pct={progresoGlobal} />
-    ) : null,
+    // PTEM Pulso: el tablero de turno sustituye a la barra «Tu progreso» en
+    // el MISMO lugar configurable. Aparece también antes de leer el primer
+    // tema: entonces ofrece «Empezar» con el primero del plan.
+    progreso: <TableroTurno modulos={modulosVisibles} total={stats.temas} />,
     cursos: <CursosDisponibles />,
     modulos: <SeccionModulos modulos={modulosVisibles} leidos={leidos} />,
     prueba: <SeccionPrueba />,
@@ -256,31 +256,6 @@ function SeccionHero({ stats, primerModulo, haySeccionModulos = true }) {
         </div>
       </div>
     </section>
-  )
-}
-
-// ===== Progreso (si ya hay temas leídos) =====
-function SeccionProgreso({ temasLeidos, total, pct }) {
-  return (
-    <div className="ph-wrap">
-      <Reveal as="section" className="ph-progreso">
-        <div className="ph-progreso-info">
-          <strong>Tu progreso</strong>
-          <span>
-            {temasLeidos} de {total} temas · {pct}%
-          </span>
-        </div>
-        <div className="ph-progreso-barra">
-          <span style={{ width: `${pct}%` }} />
-        </div>
-        {/* A la vista PERSONAL: quien da clase (y el super-admin) tiene además
-            la de sus alumnos, y sin este parámetro «Ver detalle» le abría esa
-            en vez de la barra que acaba de leer aquí. */}
-        <Link to="/progreso?vista=mio" className="ph-link">
-          Ver detalle <Icon name="chevronDer" size={15} />
-        </Link>
-      </Reveal>
-    </div>
   )
 }
 

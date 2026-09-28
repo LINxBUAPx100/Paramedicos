@@ -17,7 +17,10 @@
 // ============================================================
 import { initializeApp } from 'firebase/app'
 import { getAuth, connectAuthEmulator } from 'firebase/auth'
-import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore'
+import {
+  getFirestore, connectFirestoreEmulator, initializeFirestore, persistentLocalCache, persistentMultipleTabManager,
+  clearIndexedDbPersistence,
+} from 'firebase/firestore'
 import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check'
 
 const firebaseConfig = {
@@ -79,7 +82,38 @@ if (appCheckListo) {
 }
 
 export const auth = getAuth(app)
-export const db = getFirestore(app)
+// CACHÉ SIN CONEXIÓN, SOLO PARA QUIEN LA PIDE (PTEM Pulso, entrega 6).
+//
+// Estudiar sin red necesita más que las lecciones: el perfil, la academia y el
+// índice del curso también vienen de Firestore. Por eso se usa la caché
+// persistente del SDK — pero NO para todos: guarda en el equipo cada documento
+// leído, y eso choca con el blindaje del contenido. Se enciende solo cuando el
+// alumno descarga un módulo (marca `ptem:sin-conexion`) y se borra entera al
+// cerrar sesión (`salir` en auth.js).
+export const CLAVE_SIN_CONEXION = 'ptem:sin-conexion'
+const conCacheSinConexion = (() => {
+  try { return localStorage.getItem(CLAVE_SIN_CONEXION) === '1' } catch { return false }
+})()
+function crearDb() {
+  if (!conCacheSinConexion) return getFirestore(app)
+  try {
+    return initializeFirestore(app, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) })
+  } catch (err) {
+    console.warn('[Firestore] Sin caché persistente:', err)
+    return getFirestore(app)
+  }
+}
+export const db = crearDb()
+
+// Una caché que no se pudo borrar al cerrar sesión se borra aquí, antes de la
+// primera lectura (clearIndexedDbPersistence exige una instancia sin arrancar).
+export const CLAVE_LIMPIAR_CACHE = 'ptem:limpiar-cache'
+try {
+  if (!conCacheSinConexion && localStorage.getItem(CLAVE_LIMPIAR_CACHE) === '1') {
+    localStorage.removeItem(CLAVE_LIMPIAR_CACHE)
+    clearIndexedDbPersistence(db).catch(() => {})
+  }
+} catch { /* sin almacenamiento */ }
 
 // --- EMULADOR local (solo desarrollo) -------------------------------------
 //

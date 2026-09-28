@@ -6,7 +6,8 @@ import {
 import { useProgress } from '../context/ProgressContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { useVisibilidad } from '../lib/useVisibilidad.js'
-import Quiz from '../components/Quiz.jsx'
+// PTEM Pulso: modo examen (sin corrección inmediata, mapa, entregar al final).
+import ExamenPulso from '../components/pulso/ExamenPulso.jsx'
 import Icon from '../components/Icon.jsx'
 import { nuevaSemilla } from '../lib/azar.js'
 import { seleccionarPreguntas } from '../lib/examenModelo.js'
@@ -90,7 +91,7 @@ export default function ExamenPage() {
           </h1>
           <p>{config.preguntas.length} preguntas aleatorias de todo el temario.</p>
         </header>
-        <Quiz
+        <ExamenPulso
           key={config.semilla}
           preguntas={config.preguntas}
           titulo="Examen general"

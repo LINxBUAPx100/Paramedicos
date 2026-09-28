@@ -321,11 +321,23 @@ test('lo que se escribe también se vuelve a LEER al iniciar sesión', () => {
   }
 })
 
-test('la actividad se apunta al leer, al resolver un quiz y al terminar un examen', () => {
-  // Y en ningún otro sitio: abrir la aplicación y cerrarla no es estudiar, y
-  // una racha que se mantiene sola no significa nada.
+test('la actividad se apunta solo en las acciones que son estudiar', () => {
+  // Abrir la aplicación y cerrarla no es estudiar, y una racha que se mantiene
+  // sola no significa nada. Son seis sitios: leer, resolver un quiz y terminar
+  // un examen (R1), y desde PTEM Pulso (27-09-2026) resolver las actividades,
+  // calificar una tarjeta del repaso espaciado y responder el modo oral: el
+  // «turno de hoy» es repasar, y un día solo de repaso también es estudiar.
+  // Guardar en la mochila, marcar el repaso rápido o cambiar la letra NO.
   const usos = (CONTEXTO.match(/conActividad\(/g) || []).length
-  assert.equal(usos, 3, 'cambió dónde se apunta la actividad: son tres sitios, ni uno más')
+  assert.equal(usos, 6, 'cambió dónde se apunta la actividad: son seis sitios, ni uno más')
+  for (const accion of ['registrarAplicada', 'calificarTarjeta', 'calificarOral']) {
+    const cuerpo = CONTEXTO.slice(CONTEXTO.indexOf(`const ${accion}`), CONTEXTO.indexOf('}, [])', CONTEXTO.indexOf(`const ${accion}`)))
+    assert.match(cuerpo, /conActividad\(/, `${accion} debería contar como estudio`)
+  }
+  for (const accion of ['alternarMochila', 'marcarRepasoRapido', 'fijarPreferencia', 'registrarLectura']) {
+    const cuerpo = CONTEXTO.slice(CONTEXTO.indexOf(`const ${accion}`), CONTEXTO.indexOf('}, [])', CONTEXTO.indexOf(`const ${accion}`)))
+    assert.doesNotMatch(cuerpo, /conActividad\(/, `${accion} no es estudiar: no debe mantener la racha`)
+  }
   assert.match(CONTEXTO, /valor \? conActividad\(siguiente\) : siguiente/,
     'desmarcar un tema volvió a contar como actividad')
 })

@@ -1,8 +1,47 @@
 {
   "version": "0.0.1",
   "configurations": [
-    { "name": "dev", "runtimeExecutable": "npm", "runtimeArgs": ["run", "dev"], "port": 5173 },
-    { "name": "preview", "runtimeExecutable": "npm", "runtimeArgs": ["run", "preview", "--", "--port", "4173"], "port": 4173 },
-    { "name": "preview-b", "runtimeExecutable": "npm", "runtimeArgs": ["run", "preview", "--", "--port", "4180"], "port": 4180 }
+    {
+      "name": "dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "port": 5173
+    },
+    {
+      "name": "preview",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "preview",
+        "--",
+        "--port",
+        "4173"
+      ],
+      "port": 4173
+    },
+    {
+      "name": "preview-b",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "preview",
+        "--",
+        "--port",
+        "4180"
+      ],
+      "port": 4180
+    },
+    {
+      "name": "dev-emu",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": [
+        "/c",
+        "set VITE_FIREBASE_EMULADOR=1&& npx vite --port 5174 --strictPort"
+      ],
+      "port": 5174
+    }
   ]
 }

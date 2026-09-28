@@ -33,7 +33,7 @@ export const SECCIONES_HOME = [
   {
     id: 'progreso',
     etiqueta: 'Tu progreso',
-    descripcion: 'Barra con los temas leídos del alumno (solo aparece si ya empezó).',
+    descripcion: 'Tablero de hoy: botón para reanudar la última lección, triage de lo que conviene estudiar y avance de lectura.',
   },
   {
     // Solo se pinta cuando la persona tiene MÁS DE UN curso a su alcance.
