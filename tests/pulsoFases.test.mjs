@@ -6,8 +6,9 @@ import {
   programarTarjeta, etiquetaIntervalo, tarjetasVencidas, sesionDeRepaso, claveTarjeta,
   triageDeHoy, turnoDeHoy, aReanudar,
 } from '../src/lib/pulsoModelo.js'
-import { validarCaso, casosParaElAlumno, decidir, resumenRecorrido } from '../src/lib/casosModelo.js'
+import { validarCaso, casosParaElAlumno, casosParaElPersonal, decidir, resumenRecorrido } from '../src/lib/casosModelo.js'
 import { CASOS } from '../src/data/casos/index.js'
+import CONTENIDO from '../src/data/contenido/index.js'
 import { FOTO_POR_MODULO } from '../src/data/fotosModulo.js'
 
 const leer = (ruta) => readFileSync(new URL(`../${ruta}`, import.meta.url), 'utf8')
@@ -152,8 +153,32 @@ test('el motor recorre el caso y resume lo que hay que repasar', () => {
   assert.deepEqual(res.repasar, ['m3-ep-avdi'])
 })
 
-test('no se publica ningún caso clínico sin la academia', () => {
-  assert.deepEqual(CASOS, [], 'los casos los escribe y valida la academia (CLAUDE.md §4)')
+// Hasta el 05-10-2026 esta prueba exigía CASOS vacío. Desde entonces hay
+// borradores redactados a petición del usuario, y lo que se protege es lo de
+// fondo: la IA no aprueba casos (CLAUDE.md §4) y el alumno no ve borradores.
+test('ningún caso clínico llega al alumno sin la academia', () => {
+  for (const c of CASOS) {
+    assert.ok(['borrador', 'en_revision'].includes(c.estado),
+      `${c.id}: validar o publicar un caso es decisión de un docente, no de la IA`)
+  }
+  assert.deepEqual(casosParaElAlumno(CASOS), [], 'un borrador no debe llegar al alumno')
+  assert.equal(casosParaElPersonal(CASOS).length, CASOS.length, 'el personal ve todos para revisarlos')
+})
+
+test('cada caso está bien formado y se apoya en lecciones reales', () => {
+  for (const c of CASOS) {
+    assert.deepEqual(validarCaso(c), [], c.id)
+    for (const t of c.temas) {
+      assert.ok(CONTENIDO[t]?.secciones?.length, `${c.id}: cita ${t}, que no tiene lección`)
+    }
+    // Cada decisión remite a una lección del propio caso: así el alumno puede
+    // repasar justo lo que sostiene esa decisión, y no otra cosa.
+    for (const [id, n] of Object.entries(c.nodos)) {
+      for (const o of n.opciones || []) {
+        assert.ok(o.tema && c.temas.includes(o.tema), `${c.id}/${id}: «${o.texto}» remite a un tema que el caso no cita`)
+      }
+    }
+  }
 })
 
 // ---------- Integración y garantías ----------

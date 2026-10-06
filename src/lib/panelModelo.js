@@ -27,6 +27,7 @@ export const SECCIONES_PANEL = [
   { id: 'invitaciones', ruta: '/panel/invitaciones', icono: 'llave', etiqueta: 'Invitaciones' },
   { id: 'accesos', ruta: '/panel/accesos', icono: 'candado', etiqueta: 'Accesos' },
   { id: 'calificaciones', ruta: '/panel/calificaciones', icono: 'examen', etiqueta: 'Calificaciones' },
+  { id: 'escenarios', ruta: '/panel/escenarios', icono: 'pregunta', etiqueta: 'Escenarios' },
   { id: 'contenido', ruta: '/panel/contenido', icono: 'herramientas', etiqueta: 'Contenido' },
   { id: 'academia', ruta: '/panel/academia', icono: 'temario', etiqueta: 'Mi academia' },
 ]
@@ -64,6 +65,10 @@ export function seccionesPanel({ rol, capacidades = null, permisosEditor = null,
     // El profesor SI la ve: es quien evalua a su grupo. Es la unica seccion de
     // escritura que un profesor tiene sin permisos editoriales, y es a proposito.
     calificaciones: true,
+    // Escenarios del Modo llamada: los escribe y los valida el personal
+    // docente (director y profesores), sin permiso editorial aparte. Las
+    // reglas de `casos` imponen lo mismo con esStaffDe().
+    escenarios: dirige || rol === 'instructor',
     contenido: puedeEditar,
     academia: dirige,
   }

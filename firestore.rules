@@ -1682,6 +1682,56 @@ service cloud.firestore {
       allow delete: if esDueno(uid) || esSuper();
     }
 
+    // --- ESCENARIOS del Modo llamada creados por la academia (05-10-2026) ---
+    //  Los escribe su personal (director o profesor) y el super-admin. El
+    //  alumno de esa academia solo LEE los validados o publicados: un
+    //  borrador es contenido clínico sin revisar y no le llega.
+    //  Validar deja firma: un caso avalado lleva `revision.por` = quien lo
+    //  guarda. Así nadie avala en nombre de otro, y quien edita un caso ya
+    //  validado lo tiene que volver a firmar (el editor lo devuelve a revisión).
+    match /casos/{casoId} {
+      function avalado(estado) {
+        return estado in ['validado', 'publicado'];
+      }
+      function casoValido(d) {
+        return d.keys().hasOnly(['academiaId', 'autorUid', 'titulo', 'resumen', 'estado', 'temas',
+            'fuentes', 'signos', 'inicio', 'nodos', 'revision', 'actualizado',
+            'rol', 'paciente', 'historia', 'testigos'])
+          && d.get('rol', 'tum') in ['tum', 'lego']
+          && d.get('paciente', 'adulto') in ['adulto', 'nino', 'lactante']
+          && d.get('historia', '') is string && d.get('historia', '').size() <= 1000
+          && d.get('testigos', '') is string && d.get('testigos', '').size() <= 1000
+          && d.academiaId is string
+          && d.titulo is string && d.titulo.size() > 0 && d.titulo.size() <= 160
+          && d.resumen is string && d.resumen.size() <= 600
+          && d.estado in ['borrador', 'en_revision', 'validado', 'publicado']
+          && d.temas is list && d.temas.size() <= 20
+          && d.fuentes is list && d.fuentes.size() <= 12
+          && (d.signos == null || d.signos is map)
+          && d.inicio is string
+          && d.nodos is map && d.nodos.size() <= 60
+          && d.actualizado == request.time
+          && (avalado(d.estado)
+            ? (d.revision is map && d.revision.get('por', '') == request.auth.uid)
+            : d.revision == null);
+      }
+      allow read: if esSuper()
+        || esStaffDe(resource.data.academiaId)
+        || (perteneceA(resource.data.academiaId) && avalado(resource.data.estado));
+      allow create: if (esSuper() || esStaffDe(request.resource.data.academiaId))
+        && request.resource.data.autorUid == request.auth.uid
+        && casoValido(request.resource.data);
+      // No se muda de academia ni cambia de autor al editarse.
+      allow update: if (esSuper() || esStaffDe(resource.data.academiaId))
+        && request.resource.data.academiaId == resource.data.academiaId
+        && request.resource.data.autorUid == resource.data.autorUid
+        && casoValido(request.resource.data);
+      // Borra el director (o el super-admin); el profesor, solo lo suyo.
+      allow delete: if esSuper()
+        || esAdminDe(resource.data.academiaId)
+        || (esStaffDe(resource.data.academiaId) && resource.data.autorUid == request.auth.uid);
+    }
+
     // --- CONFIGURACIÓN global de la plataforma (solo super-admin) ---
     //  p. ej. configuracion/anuncio = banner que ven todos los usuarios.
     match /configuracion/{doc} {

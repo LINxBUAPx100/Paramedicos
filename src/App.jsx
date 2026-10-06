@@ -76,6 +76,8 @@ const PanelInvitaciones = lazy(() => import('./pages/panel/Invitaciones.jsx'))
 const PanelAccesos = lazy(() => import('./pages/panel/Accesos.jsx'))
 const PanelCalificaciones = lazy(() => import('./pages/panel/Calificaciones.jsx'))
 const PanelContenido = lazy(() => import('./pages/panel/Contenido.jsx'))
+const PanelEscenarios = lazy(() => import('./pages/panel/Escenarios.jsx'))
+const AcaEscenarios = lazy(() => import('./pages/admin/academia/Escenarios.jsx'))
 const PanelMiAcademia = lazy(() => import('./pages/panel/MiAcademia.jsx'))
 const AdminShell = lazy(() => import('./components/admin/AdminShell.jsx'))
 const AdminPage = lazy(() => import('./pages/AdminPage.jsx'))
@@ -259,6 +261,7 @@ export default function App() {
               <Route path="invitaciones" element={<PanelInvitaciones />} />
               <Route path="accesos" element={<PanelAccesos />} />
               <Route path="calificaciones" element={<PanelCalificaciones />} />
+              <Route path="escenarios" element={<PanelEscenarios />} />
               <Route path="contenido" element={<PanelContenido />} />
               <Route path="academia" element={<PanelMiAcademia />} />
             </Route>
@@ -302,6 +305,7 @@ export default function App() {
                 <Route path="invitaciones" element={<AcaInvitaciones />} />
                 <Route path="recepcion" element={<AcaRecepcion />} />
                 <Route path="tienda" element={<AcaTienda />} />
+                <Route path="escenarios" element={<AcaEscenarios />} />
                 <Route path="ajustes" element={<AcaAjustes />} />
                 <Route path="c/:cursoId">
                   <Route index element={<AcaResumen />} />

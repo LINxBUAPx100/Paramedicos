@@ -525,6 +525,8 @@ html[data-una-mano="si"] .tema-page .pl-trazo-latidos button { min-height: 40px;
 .pl-casos-lista button:hover { border-color: var(--primario); }
 .pl-casos-lista b { font-family: var(--fuente-display); font-size: var(--t-md); }
 .pl-casos-lista span { color: var(--texto-2); font-size: var(--t-sm); }
+.pl-casos-lista .pl-casos-estado { justify-self: start; font-family: var(--fuente-sub); font-size: var(--t-xs); font-weight: 600; letter-spacing: 0.04em; color: color-mix(in srgb, var(--alerta) 70%, var(--texto)); background: color-mix(in srgb, var(--alerta) 14%, var(--bg-2)); padding: 2px 8px; border-radius: 999px; }
+.pl-casos-aviso { margin: 0 0 var(--e-16); padding: var(--e-12) var(--e-16); border-radius: 12px; background: color-mix(in srgb, var(--alerta) 12%, var(--bg-2)); color: var(--texto-2); font-size: var(--t-sm); }
 .pl-caso { background: var(--bg-2); border: 1px solid var(--borde); border-radius: 18px; padding: var(--e-20); display: grid; gap: var(--e-16); }
 .pl-caso-cab { display: flex; justify-content: space-between; align-items: center; gap: var(--e-8); }
 .pl-caso-cab b { font-family: var(--fuente-display); }
@@ -1021,4 +1023,193 @@ html[data-una-mano="si"] .ej-teclado button { min-height: 56px; font-size: 1.3re
   border: 0; border-radius: 0; background: transparent;
   padding: var(--e-16) var(--e-20);
   border-top: 1px solid var(--borde); margin-top: -1px;
+}
+
+/* ============================================================
+   Modo llamada — monitor de signos (05-10-2026)
+   Aspecto de monitor de paciente: fondo oscuro, un color por signo como en
+   los equipos reales. No colorea «normal/anormal»: los umbrales son contenido
+   clínico de las lecciones, no del monitor.
+   ============================================================ */
+.pl-monitor-signos {
+  --ms-fondo: #0d1117; --ms-borde: #263041; --ms-texto: #e6edf3; --ms-tenue: #8b98a9;
+  --ms-fc: #3ddc84; --ms-spo2: #4cc9f0; --ms-fr: #ffd166; --ms-ta: #f8f9fa; --ms-avdi: #c77dff; --ms-otro: #e6edf3;
+  background: var(--ms-fondo); color: var(--ms-texto); border: 1px solid var(--ms-borde);
+  border-radius: 14px; padding: var(--e-12) var(--e-16) var(--e-16); display: grid; gap: var(--e-8);
+}
+.pl-ms-cab { display: flex; align-items: center; gap: var(--e-8); }
+.pl-ms-titulo { font-family: var(--fuente-sub); font-weight: 600; font-size: var(--t-xs); letter-spacing: 0.12em; text-transform: uppercase; }
+.pl-ms-nota { margin-left: auto; font-size: 11px; color: var(--ms-tenue); }
+.pl-ms-corazon { color: var(--ms-fc); font-size: 18px; line-height: 1; display: inline-block; }
+.pl-ms-corazon.late { animation: pl-latido var(--pl-latido, 1s) ease-in-out infinite; }
+.pl-ms-corazon.parado { color: #ff4d6d; animation: pl-parpadeo 1s steps(2) infinite; }
+@keyframes pl-latido { 0%, 100% { transform: scale(1); } 12% { transform: scale(1.35); } 24% { transform: scale(1); } }
+@keyframes pl-parpadeo { 50% { opacity: 0.25; } }
+.pl-ms-rejilla { margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: var(--e-8); }
+.pl-ms-signo { --c: var(--ms-otro); border-radius: 10px; padding: 8px 10px; background: rgb(255 255 255 / 4%); border: 1px solid transparent; min-width: 0; }
+.pl-ms-signo.largo { grid-column: span 2; }
+.pl-ms-signo dt { font-family: var(--fuente-sub); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; color: var(--c); opacity: 0.85; }
+.pl-ms-signo dd { margin: 2px 0 0; display: flex; align-items: baseline; gap: 4px; min-width: 0; }
+.pl-ms-valor { font-family: var(--fuente-cifra); font-weight: 700; font-size: 1.6rem; line-height: 1.1; color: var(--c); overflow-wrap: anywhere; }
+.pl-ms-signo.largo .pl-ms-valor, .pl-ms-signo--piel .pl-ms-valor, .pl-ms-signo--ritmo .pl-ms-valor { font-family: var(--fuente-cuerpo); font-size: 1rem; font-weight: 600; }
+.pl-ms-unidad { font-size: 11px; color: var(--ms-tenue); }
+.pl-ms-flecha { font-size: 11px; margin-left: auto; }
+.pl-ms-flecha.sube { color: #ffb4a2; }
+.pl-ms-flecha.baja { color: #90e0ef; }
+.pl-ms-signo--fc { --c: var(--ms-fc); }
+.pl-ms-signo--spo2 { --c: var(--ms-spo2); }
+.pl-ms-signo--fr { --c: var(--ms-fr); }
+.pl-ms-signo--ta { --c: var(--ms-ta); }
+.pl-ms-signo--avdi { --c: var(--ms-avdi); }
+.pl-ms-signo.cambia { animation: pl-destello 1.4s ease-out; }
+@keyframes pl-destello { 0% { border-color: var(--c); background: color-mix(in srgb, var(--c) 28%, transparent); } 100% { border-color: transparent; background: rgb(255 255 255 / 4%); } }
+.pl-ms-cambios { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.pl-ms-cambios li { font-family: var(--fuente-cifra); font-size: var(--t-xs); padding: 3px 10px; border-radius: 999px; background: var(--bg-2); border: 1px solid var(--borde); }
+.pl-ms-cambios li.sube { border-color: color-mix(in srgb, var(--peligro) 45%, var(--borde)); }
+.pl-ms-cambios li.baja { border-color: color-mix(in srgb, var(--primario) 45%, var(--borde)); }
+@media (prefers-reduced-motion: reduce) {
+  .pl-ms-corazon.late, .pl-ms-corazon.parado, .pl-ms-signo.cambia { animation: none; }
+}
+@media (max-width: 520px) { .pl-ms-rejilla { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ============================================================
+   Panel › Escenarios — editor del Modo llamada (05-10-2026)
+   ============================================================ */
+.pl-casos-lista .pl-casos-estado--propio { color: var(--enlace); background: color-mix(in srgb, var(--primario) 12%, var(--bg-2)); }
+.es-desde { min-width: 260px; }
+.es-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--e-8); }
+.es-lista button { width: 100%; text-align: left; display: grid; grid-template-columns: 1fr auto; gap: 4px var(--e-12); padding: var(--e-16); border-radius: 14px; border: 1px solid var(--borde); background: var(--bg-2); color: var(--texto); cursor: pointer; font: inherit; }
+.es-lista button:hover { border-color: var(--primario); }
+.es-lista b { font-family: var(--fuente-display); }
+.es-resumen { grid-column: 1 / -1; color: var(--texto-2); font-size: var(--t-sm); }
+.es-estado { justify-self: start; align-self: start; font-family: var(--fuente-sub); font-size: var(--t-xs); font-weight: 600; letter-spacing: 0.04em; padding: 2px 10px; border-radius: 999px; background: color-mix(in srgb, var(--alerta) 14%, var(--bg-2)); }
+.es-estado--validado, .es-estado--publicado { background: var(--exito-suave); color: var(--exito); }
+.es-estado--en_revision { background: color-mix(in srgb, var(--primario) 12%, var(--bg-2)); color: var(--enlace); }
+.es-editor { display: grid; gap: var(--e-20); }
+.es-bloque { background: var(--bg-2); border-radius: 16px; padding: var(--e-20); display: grid; gap: var(--e-12); box-shadow: var(--ui-sombra); }
+.es-bloque h2 { font-family: var(--fuente-display); font-size: var(--t-lg); margin: 0; }
+.es-bloque-cab { display: flex; justify-content: space-between; align-items: center; gap: var(--e-12); flex-wrap: wrap; }
+.es-ayuda { margin: 0; color: var(--texto-2); font-size: var(--t-sm); }
+.es-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-block: 4px; }
+.es-chip { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 999px; background: var(--bg-3); font-size: var(--t-xs); font-weight: 600; }
+.es-chip button { border: 0; background: transparent; cursor: pointer; font-size: 15px; line-height: 1; color: var(--texto-2); padding: 0 2px; }
+.es-fuentes { border: 0; padding: 0; margin: 0; display: grid; gap: var(--e-8); }
+.es-fuentes legend { font-size: var(--t-sm); font-weight: 600; margin-bottom: var(--e-4); }
+.es-fila { display: flex; gap: var(--e-8); flex-wrap: wrap; align-items: center; }
+.es-fila > input, .es-fila > select { flex: 1 1 200px; min-width: 0; }
+.es-signos { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: var(--e-8); }
+.es-signo { display: grid; gap: 2px; font-size: var(--t-xs); font-weight: 600; color: var(--texto-2); }
+.es-signo input, .es-signo select { font-size: var(--t-sm); }
+.es-momento { border-radius: 14px; padding: var(--e-16); background: var(--bg); display: grid; gap: var(--e-8); }
+.es-momento--fin { background: color-mix(in srgb, var(--primario) 5%, var(--bg)); }
+.es-momento-cab { display: flex; align-items: center; gap: var(--e-8); flex-wrap: wrap; }
+.es-momento-cab .ui-atajos { margin: 0 0 0 auto; }
+.es-opciones { display: grid; gap: var(--e-8); }
+.es-opcion { border-left: 3px solid var(--borde-fuerte); padding: var(--e-8) var(--e-12); display: grid; gap: var(--e-8); background: var(--bg-2); border-radius: 10px; }
+.es-opcion--correcta { border-left-color: var(--exito-solido, var(--exito)); }
+.es-opcion--aceptable { border-left-color: var(--alerta); }
+.es-opcion--riesgo { border-left-color: var(--peligro); }
+.es-detalle summary { cursor: pointer; font-size: var(--t-sm); color: var(--enlace); }
+.es-detalle[open] summary { margin-bottom: var(--e-8); }
+.es-acciones { border: 1px solid var(--borde); }
+.es-ok { margin: 0; color: var(--exito); font-weight: 600; display: flex; align-items: center; gap: 6px; }
+.es-errores summary { cursor: pointer; font-weight: 600; color: var(--peligro); }
+.es-errores ul { margin: var(--e-8) 0 0; padding-left: var(--e-20); font-size: var(--t-sm); color: var(--texto-2); max-height: 160px; overflow: auto; }
+.es-validar { display: grid; gap: var(--e-8); border-top: 1px solid var(--borde); padding-top: var(--e-12); }
+.es-aviso { margin: 0; font-weight: 600; }
+
+/* ============================================================
+   Modo llamada — exploración activa (06-10-2026)
+   ============================================================ */
+.pl-ms-edad { display: block; margin-top: 2px; font-size: 10.5px; color: var(--ms-tenue); }
+.pl-ms-signo.sin-medir .pl-ms-valor { color: var(--ms-tenue); opacity: 0.7; }
+.pl-ms-signo.vieja .pl-ms-valor { opacity: 0.6; }
+.pl-explorar { display: grid; gap: var(--e-12); padding: var(--e-16); border-radius: 14px; background: var(--bg); }
+.pl-explorar h3 { margin: 0; font-family: var(--fuente-sub); font-size: var(--t-xs); letter-spacing: 0.12em; text-transform: uppercase; color: var(--texto-2); }
+.pl-explorar-acciones { display: flex; flex-wrap: wrap; gap: 6px; }
+.pl-explorar-acciones button {
+  display: inline-flex; align-items: baseline; gap: 6px; padding: 7px 12px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--borde); background: var(--bg-2); color: var(--texto); font: inherit; font-size: var(--t-sm);
+}
+.pl-explorar-acciones button:hover { border-color: var(--primario); }
+.pl-explorar-acciones button small { font-family: var(--fuente-cifra); font-size: 11px; color: var(--texto-3); }
+.pl-explorar-acciones button.hecho { background: color-mix(in srgb, var(--primario) 10%, var(--bg-2)); border-color: color-mix(in srgb, var(--primario) 40%, var(--borde)); }
+.pl-explorar-acciones .pl-explorar-clasificar { background: color-mix(in srgb, var(--alerta) 16%, var(--bg-2)); border-color: color-mix(in srgb, var(--alerta) 45%, var(--borde)); font-weight: 600; }
+.pl-hallazgos { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; max-height: 260px; overflow: auto; }
+.pl-hallazgos li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 10px; padding: 8px 12px; border-radius: 10px; background: var(--bg-2); font-size: var(--t-sm); }
+.pl-hallazgos li b { grid-column: 1; font-size: var(--t-xs); color: var(--texto-2); font-weight: 600; }
+.pl-hallazgos li span { grid-column: 1; }
+.pl-hallazgos li small { grid-column: 2; grid-row: 1 / span 2; align-self: center; font-size: 11px; color: var(--texto-3); }
+.pl-hallazgos li.antes { opacity: 0.6; }
+.pl-clasificar { display: grid; gap: var(--e-12); padding: var(--e-16); border-radius: 12px; background: var(--bg-2); }
+.pl-clasificar fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: var(--e-8); }
+.pl-clasificar legend { font-weight: 600; font-size: var(--t-sm); margin-bottom: 4px; }
+.pl-clasificar-avdi { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.pl-clasificar-avdi label { display: grid; justify-items: center; gap: 2px; padding: 8px 4px; border-radius: 10px; border: 1px solid var(--borde); cursor: pointer; text-align: center; }
+.pl-clasificar-avdi label.elegido { border-color: var(--primario); background: color-mix(in srgb, var(--primario) 10%, var(--bg-2)); }
+.pl-clasificar-avdi input { position: absolute; opacity: 0; pointer-events: none; }
+.pl-clasificar-avdi b { font-family: var(--fuente-cifra); font-size: 1.3rem; }
+.pl-clasificar-avdi span { font-size: 11px; color: var(--texto-2); }
+.pl-clasificar-avdi label:has(input:focus-visible) { outline: 2px solid var(--enlace); outline-offset: 2px; }
+.pl-clasificar-gcs { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: var(--e-8); }
+.pl-clasificar-gcs label { display: grid; gap: 4px; font-size: var(--t-sm); font-weight: 600; }
+.pl-conciencia { padding: var(--e-12) var(--e-16); border-radius: 12px; display: grid; gap: 6px; }
+.pl-conciencia.bien { background: var(--exito-suave); }
+.pl-conciencia.mal { background: var(--peligro-suave); }
+.pl-conciencia ul { margin: 0; padding-left: var(--e-20); font-size: var(--t-sm); display: grid; gap: 2px; }
+.pl-conciencia li.ok::marker { color: var(--exito); }
+.pl-conciencia li.no::marker { color: var(--peligro); }
+.pl-conciencia-avisos { color: var(--texto-2); }
+.pl-caso-nota { margin: 0; font-size: var(--t-sm); color: var(--texto-2); }
+@media (max-width: 520px) { .pl-clasificar-avdi { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ============================================================
+   Modo llamada — los recuadros del monitor son instrumentos (07-10-2026)
+   Mientras se sostiene o el equipo trabaja, el recuadro emite ondas
+   concéntricas (como un sonar) y una barra marca el avance.
+   ============================================================ */
+.pl-ms-boton {
+  position: relative; overflow: hidden; display: block; width: 100%; text-align: left; cursor: pointer;
+  font: inherit; color: inherit; border: 1px solid rgb(255 255 255 / 8%);
+  touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+  transition: border-color var(--dur-rapida), background var(--dur-rapida), transform var(--dur-rapida);
+}
+.pl-ms-boton:hover { border-color: color-mix(in srgb, var(--c) 55%, transparent); background: color-mix(in srgb, var(--c) 8%, rgb(255 255 255 / 4%)); }
+.pl-ms-boton:focus-visible { outline: 2px solid var(--c); outline-offset: 2px; }
+.pl-ms-boton:active { transform: scale(0.98); }
+.pl-ms-boton:disabled { cursor: default; opacity: 0.55; }
+.pl-ms-gesto {
+  display: block; margin-top: 6px; font-family: var(--fuente-sub); font-size: 10px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase; color: color-mix(in srgb, var(--c) 70%, var(--ms-tenue));
+}
+.pl-ms-gesto.en-curso { text-transform: none; letter-spacing: 0; font-family: var(--fuente-cifra); font-size: 12px; color: var(--c); }
+.pl-ms-signo.con-aviso .pl-ms-gesto { font-family: var(--fuente-cuerpo); font-size: 11.5px; color: #ffb4a2; text-transform: none; letter-spacing: 0; }
+.pl-ms-signo--avdi.pl-ms-boton { --c: var(--ms-avdi); }
+
+/* Ondas: tres anillos que nacen en el centro y se expanden desfasados. */
+.pl-ms-ondas { position: absolute; inset: 0; pointer-events: none; display: grid; place-items: center; }
+.pl-ms-ondas i {
+  grid-area: 1 / 1; width: 46px; height: 46px; border-radius: 50%;
+  border: 2px solid var(--c); opacity: 0;
+  animation: pl-onda 1.8s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+}
+.pl-ms-ondas i:nth-child(2) { animation-delay: 0.6s; }
+.pl-ms-ondas i:nth-child(3) { animation-delay: 1.2s; }
+@keyframes pl-onda {
+  0% { transform: scale(0.3); opacity: 0.75; }
+  100% { transform: scale(4.2); opacity: 0; }
+}
+.pl-ms-boton.activo { border-color: var(--c); background: color-mix(in srgb, var(--c) 12%, rgb(255 255 255 / 4%)); }
+.pl-ms-boton.activo .pl-ms-valor { animation: pl-respira 1.2s ease-in-out infinite; }
+@keyframes pl-respira { 50% { opacity: 0.45; } }
+
+/* Barra de avance del gesto o de la lectura. */
+.pl-ms-barra { position: absolute; left: 0; bottom: 0; height: 3px; width: 100%; background: rgb(255 255 255 / 8%); }
+.pl-ms-barra::after {
+  content: ""; position: absolute; inset: 0; background: var(--c);
+  transform-origin: left; transform: scaleX(var(--p, 0)); box-shadow: 0 0 10px var(--c);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pl-ms-boton.activo .pl-ms-valor { animation: none; }
 }

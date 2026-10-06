@@ -60,6 +60,9 @@ export const SECCIONES_ACADEMIA = [
   // al plan de paramédicos ni al de enfermería, y partirlo por programa
   // obligaría a publicar el mismo artículo dos veces.
   { id: 'tienda', sufijo: 'tienda', icono: 'carpeta', etiqueta: 'Tienda', deLaAcademia: true },
+  // Los escenarios del Modo llamada son de la ACADEMIA: un caso puede apoyarse
+  // en lecciones de más de un programa.
+  { id: 'escenarios', sufijo: 'escenarios', icono: 'pregunta', etiqueta: 'Escenarios', deLaAcademia: true },
   { id: 'ajustes', sufijo: 'ajustes', icono: 'editar', etiqueta: 'Ajustes de la academia', deLaAcademia: true },
 ]
 

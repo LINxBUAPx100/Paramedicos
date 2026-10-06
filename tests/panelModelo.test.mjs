@@ -19,14 +19,14 @@ test('el director ve todo su panel; el editor depende del plan', () => {
   const pro = seccionesPanel({ rol: 'admin_escuela', capacidades: { editorContenido: true } })
   assert.deepEqual(ids(pro), [
     'resumen', 'recepcion', 'tienda', 'miembros', 'grupos', 'invitaciones', 'accesos', 'calificaciones',
-    'contenido', 'academia',
+    'escenarios', 'contenido', 'academia',
   ])
 
   // Plan BASE: sin editor de contenido, la sección no existe (no un botón que
   // lleve a una pantalla que le va a decir que no puede).
   const base = seccionesPanel({ rol: 'admin_escuela', capacidades: { editorContenido: false } })
   assert.deepEqual(ids(base), [
-    'resumen', 'recepcion', 'tienda', 'miembros', 'grupos', 'invitaciones', 'accesos', 'calificaciones', 'academia',
+    'resumen', 'recepcion', 'tienda', 'miembros', 'grupos', 'invitaciones', 'accesos', 'calificaciones', 'escenarios', 'academia',
   ])
 })
 
@@ -50,7 +50,7 @@ test('INVITACIONES solo la ve quien dirige la academia', () => {
 
 test('el profesor entra al mismo armazón con menos secciones', () => {
   const profe = seccionesPanel({ rol: 'instructor' })
-  assert.deepEqual(ids(profe), ['resumen', 'miembros', 'accesos', 'calificaciones'])
+  assert.deepEqual(ids(profe), ['resumen', 'miembros', 'accesos', 'calificaciones', 'escenarios'])
 
   // Un permiso editorial explícito le abre Contenido, aunque no dirija nada.
   const conPermiso = seccionesPanel({
@@ -58,7 +58,7 @@ test('el profesor entra al mismo armazón con menos secciones', () => {
     capacidades: { editorContenido: true }, // la capacidad del plan no le basta…
     permisosEditor: { editarContenido: true }, // …el permiso propio sí
   })
-  assert.deepEqual(ids(conPermiso), ['resumen', 'miembros', 'accesos', 'calificaciones', 'contenido'])
+  assert.deepEqual(ids(conPermiso), ['resumen', 'miembros', 'accesos', 'calificaciones', 'escenarios', 'contenido'])
 
   // Y la capacidad del plan por sí sola NO le abre el editor.
   const sinPermiso = seccionesPanel({ rol: 'instructor', capacidades: { editorContenido: true } })

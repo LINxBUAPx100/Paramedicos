@@ -78,6 +78,7 @@ const EQUIVALE = {
   calificaciones: 'calificaciones',
   contenido: 'contenido',
   revision: 'revision', // ya existe por academia/curso con la gestión de dictámenes
+  escenarios: 'escenarios', // misma pantalla (EscenariosDeAcademia), a nivel de academia
 }
 
 test('el recorrido encuentra los dos árboles de rutas', () => {
